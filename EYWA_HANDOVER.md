@@ -1,12 +1,9 @@
-> **EYWA_HANDOVER v1.1** is the latest. Full content in this file.
-> Updated: Section 5 (Planning File Schema) + cross-references to Bible v3.11 + Schema v1.7
-
 # 🚀 EYWA™ Protocol — Brand Onboarding Handover
 
 > **For Claude (and any AI assistant) working on a new brand within the EYWA portfolio.**  
 > **Read this file first, every new project, every new session.**
 
-**Document Version:** 1.1  
+**Document Version:** 1.2  
 **Last Updated:** 2026-05-07  
 **Companion to:** EYWA Bible v3.11 + Schema Overview v1.7  
 **Created by:** The Gifted Digital Marketing Co., Ltd.
@@ -23,6 +20,7 @@
 - **ทำงานยังไง** ให้ต่อเนื่อง consistent ข้าม sessions
 - **เช็คอะไรก่อน** ทุก deliverable
 - **Schema สำหรับ planning files** (โครงสร้างตารางที่ใช้)
+- **Folder structure ของ per-brand repo** (NEW v1.2)
 
 > **คำเตือนสำคัญ:** EYWA ไม่ใช่แค่ "ทำเว็บ SEO ให้แบรนด์". มันคือ portfolio-wide knowledge graph ที่หลายแบรนด์ใช้ร่วมกัน. ทุก decision ที่ทำสำหรับแบรนด์เดียว อาจกระทบ federation ทั้งหมด. **คิดเสมอว่าคุณกำลังเขียนเข้า shared system, ไม่ใช่ silo.**
 
@@ -234,6 +232,244 @@ Both yield same database result via Two-Phase Sync.
 
 ---
 
+### 5.10 Per-Brand Repo Folder Structure (NEW in v1.2)
+
+ทุก per-brand repo (`eywa-{brand-slug}`) ต้องใช้โครงสร้างเดียวกัน เพื่อให้ทุก brand work-flow consistent + onboarding ใหม่หา file ไม่หลง.
+
+#### 5.10.1 Standard Folder Tree
+
+```
+eywa-{brand-slug}/                       Example: eywa-vth-biodent/
+│
+├── README.md                           # Brand overview + folder map + quick links
+├── brand-config.json                   # Federation config (brand_scope, vertical, languages)
+├── .gitignore
+│
+├── docs/                               # 📚 Brand documentation (human-authored)
+│   ├── README.md                       # Index of docs/
+│   ├── brand-concept.md                # Brand identity, voice, positioning, USP
+│   ├── decision-records.md             # Brand-specific DRs (link global for shared)
+│   └── changelog.md                    # Brand version history
+│
+├── content-plan/                       # 🌳 PLANNING PHASE (markdown — Section 5 schemas)
+│   ├── README.md                       # Index + file purpose
+│   ├── research-notes.md               # Phase B output (DataForSEO, competitors, journey)
+│   ├── entities.md                     # 12-col schema (§5.3) — knowledge graph entities
+│   ├── clusters.md                     # 6-col schema (§5.4) — topic cluster index
+│   ├── sitemap.md                      # 7-col schema (§5.5) — page hierarchy
+│   ├── relationships.md                # 5-col schema (§5.6) — typed edges (10 types)
+│   ├── content-priorities.md           # 7-col schema (§5.7, optional) — calendar
+│   ├── internal-linking-plan.md        # Phase E output — link strategy
+│   ├── audit-report.md                 # Sitemap health audit results
+│   └── egp-output-summary.md           # Entity Genesis Protocol summary (Bible 2.6)
+│
+├── content-drafts/                     # 📝 DRAFTING PHASE (before Notion sync)
+│   ├── README.md
+│   ├── pillar-pages/                   # Layer 4 pillar drafts (cornerstone content)
+│   ├── supporting-pages/               # Layer 5+ supporting drafts
+│   └── citations/                      # Curated citation list (pre-Supabase upload)
+│
+├── theme/                              # 🎨 BRAND VISUAL (Elementor stack)
+│   ├── README.md
+│   ├── elementor-templates-overrides/  # Brand-specific template tweaks (JSON exports)
+│   ├── custom-css/                     # Brand stylesheet overrides (CSS files)
+│   ├── site-settings.json              # Elementor Global Colors + Fonts export
+│   └── brand-assets/                   # Logo, hero images, mascot, brand photos
+│
+├── deployment/                         # 🚀 INFRA & SYNC config
+│   ├── README.md
+│   ├── notion-workspace-config.md      # Notion DB IDs, workspace metadata
+│   ├── n8n-flow-overrides.md           # Brand-specific n8n flow tweaks (rare)
+│   ├── wp-plugins-list.md              # Active WP plugins for this brand
+│   ├── acf-overrides/                  # Brand-specific ACF JSON (if any)
+│   └── ENV.md                          # Environment variable names (NO secrets!)
+│
+├── multilingual/                       # 🌐 i18n (only if multi-language brand)
+│   ├── README.md
+│   ├── translation-status.md           # Per-page translation status tracker
+│   └── glossary.md                     # Brand-specific terminology per language
+│
+└── reports/                            # 📊 Periodic measurement reports
+    ├── README.md
+    ├── kpi-baseline.md                 # Day 1 measurement baseline
+    ├── monthly/                        # Monthly health reports
+    └── quarterly/                      # Quarterly cluster reviews
+```
+
+#### 5.10.2 Folder Purpose Quick Reference
+
+| Folder | When to use | Sync target | Authority |
+|--------|-------------|-------------|-----------|
+| `docs/` | Brand identity, decisions | Manual reference | Brand team |
+| `content-plan/` | EGP output, sitemap, planning | → Supabase + Notion (via n8n) | EYWA spec authority |
+| `content-drafts/` | Page content before publish | → Notion (manual or n8n) | Editorial team |
+| `theme/` | Visual customization | → WordPress (manual deploy) | Designer |
+| `deployment/` | Infrastructure config | → n8n / WP / Notion (operational) | DevOps |
+| `multilingual/` | i18n tracking | → WPML + Supabase | Translation team |
+| `reports/` | KPI measurement | Read-only output | Analytics |
+
+#### 5.10.3 Required vs Optional Folders
+
+```yaml
+required_for_every_brand:
+  - README.md                    # Always
+  - brand-config.json            # Always
+  - .gitignore                   # Always
+  - docs/                        # Always (at minimum brand-concept.md)
+  - content-plan/                # Always (core EYWA workflow)
+  - theme/                       # Always (even if minimal — branding required)
+  - deployment/                  # Always (Notion config required)
+
+optional_per_brand:
+  - content-drafts/              # If using markdown-first drafting
+  - multilingual/                # Only if active_languages > 1
+  - reports/                     # Generated as KPIs accumulate (Day 30+)
+```
+
+#### 5.10.4 Naming Conventions
+
+```yaml
+file_naming:
+  - kebab-case for markdown: brand-concept.md, internal-linking-plan.md
+  - snake_case for JSON: brand-config.json (exception: hyphen ok for top-level)
+  - PascalCase NEVER (avoid Windows case-insensitive issues)
+  - lowercase for folder names: content-plan/ NOT Content-Plan/
+
+folder_naming:
+  - All lowercase
+  - Hyphen-separated (kebab-case) for multi-word
+  - No underscores in folder names
+  - No spaces (ever)
+
+slug_pattern:
+  - Brand slug: kebab-case (vth-biodent, the-brand, vital-sleep)
+  - Repo name: eywa-{brand-slug}
+  - Folder names match slug pattern
+```
+
+#### 5.10.5 README Requirements Per Folder
+
+ทุก folder (ยกเว้น root + brand-assets/) ต้องมี `README.md` อธิบาย: folder purpose, files inside, when to update, cross-references to Bible/Handover.
+
+ทำไม? เพราะ Claude (และคนใหม่) ที่เข้ามา repo ครั้งแรก ต้อง orient ตัวเองได้ทันที.
+
+#### 5.10.6 Where Sitemap & Entities Files Live
+
+**ตอบคำถามตรงๆ ที่ถามบ่อย:**
+
+```yaml
+"ไซต์แมปเสร็จ + entity เสร็จ จะเก็บที่ไหน?"
+
+answer:
+  📁 eywa-{brand-slug}/content-plan/
+     ├── entities.md         ← Entity list (§5.3, 12 columns)
+     ├── sitemap.md          ← Sitemap (§5.5, 7 columns)
+     ├── clusters.md         ← Cluster index (§5.4, 6 columns)
+     └── relationships.md    ← Edges (§5.6, 5 columns)
+
+reasoning:
+  - "Plan" = ก่อน execute ลง Supabase + Notion
+  - "Content" = ครอบ knowledge graph + sitemap + content artifacts
+  - Markdown = human-editable + GitHub-diffable
+  - Universal: ทุก brand ใช้โครงสร้างเดียวกัน
+```
+
+#### 5.10.7 Lifecycle of Planning Files
+
+```yaml
+planning_files_lifecycle:
+
+  draft_phase:
+    location: eywa-{brand}/content-plan/*.md
+    edited_by: AI assistant + brand team (PR review)
+    iterations: many (markdown is fast)
+    state: text refs only (no notion_id yet)
+  
+  approved_phase:
+    trigger: brand owner approves planning files
+    action: commit to GitHub main branch
+    state: locked for Phase 1 sync
+  
+  phase_1_sync:
+    trigger: n8n flow `phase_1_load_markdown`
+    target: Supabase tables (with text refs as parent fields)
+    state: sync_state='flat_loaded'
+    
+  phase_1_to_notion:
+    trigger: n8n flow `phase_1_supabase_to_notion`
+    target: Notion (creates pages, captures notion_id back to Supabase)
+    state: sync_state='notion_synced'
+  
+  phase_2_backfill:
+    trigger: n8n flow `phase_2_relation_backfill`
+    target: Notion (sets parent_relation property)
+    state: sync_state='relations_backfilled'
+  
+  live_phase:
+    state: sync_state='live'
+    edits: bidirectional Notion ↔ Supabase
+    markdown_role: 
+      - Historical record (audit trail)
+      - Re-baseline source (if rollback needed)
+      - NOT the source of truth anymore (DB is)
+```
+
+> 🔄 **After Phase 2:** Markdown planning files become **historical reference**. Active edits happen in Notion → propagated to Supabase. Edit markdown only for major restructure (re-baseline scenarios).
+
+#### 5.10.8 What NOT to Put in Per-Brand Repo
+
+```yaml
+do_not_store_here:
+  ❌ Bible files (lives in eywa-protocol-spec)
+  ❌ Schema_Overview (lives in eywa-protocol-spec)
+  ❌ DECISION_RECORDS.md global (lives in eywa-protocol-spec)
+  ❌ Shared Elementor templates (lives in eywa-elementor-templates)
+  ❌ Shared n8n flows (lives in eywa-n8n-flows or central)
+  ❌ Database credentials, API keys, passwords (NEVER)
+  ❌ Patient/customer PII data (PDPA — never in git)
+  ❌ Production-secret URLs with tokens
+  ❌ WP plugin code (lives in eywa-{plugin-name} repos)
+
+instead:
+  - Reference shared specs by URL/path in docs/
+  - brand-config.json links to shared resources
+  - deployment/ENV.md lists ENV var NAMES only (values in vault)
+```
+
+#### 5.10.9 Repo Initialization Checklist
+
+```yaml
+☐ Repo created on GitHub: eywa-{brand-slug}
+☐ Set to Private (Internal preferred for org-wide visibility)
+☐ Default branch: main
+☐ Clone or open via GitHub MCP
+☐ All 7 required folders exist (or create them)
+☐ All folders have README.md
+☐ Root has: README.md, brand-config.json, .gitignore
+☐ brand-config.json validated (brand_scope, vertical, languages, branches)
+☐ Linked to global EYWA infrastructure:
+   - Notion workspace ID in deployment/notion-workspace-config.md
+   - Supabase project ID in deployment/ENV.md
+   - n8n flow set IDs in deployment/n8n-flow-overrides.md
+☐ Initial commit message: "init: EYWA brand structure v1.2"
+```
+
+#### 5.10.10 Cross-References
+
+| Topic | See |
+|-------|-----|
+| Planning file schemas | Handover §5.3-5.7 |
+| Why text-based parents | Handover §5.8 |
+| Hierarchy encoding | Handover §5.9 |
+| Two-Phase Sync pattern | Bible Part 18.8 |
+| Entity Genesis Protocol | Bible Part 2.6 |
+| Sitemap methodology | Bible Part 4.1 |
+| Federation pattern | Bible Section 10.7 |
+| Brand-config.json schema | Handover §1.3 |
+| Elementor template overrides | Bible Section 25.11.7 |
+
+---
+
 ## 🛠️ Section 6 — Workflow Phases for New Brand
 
 ### 6.1 Overview — 7 Phases (A-G)
@@ -386,6 +622,7 @@ Bootstrap complete when:
 ✅ Quality gates before any deliverable
 ✅ Escalate when uncertain
 ✅ Use planning schema (Section 5) — text-based parents
+✅ Follow folder structure (Section 5.10) for all per-brand repos
 
 🚫 Never edit Bible from brand context
 🚫 Never assume entity doesn't exist without searching
@@ -393,6 +630,7 @@ Bootstrap complete when:
 🚫 Never skip citation tier validation
 🚫 Never proceed with spec ambiguity unresolved
 🚫 Never use notion_id in markdown planning files
+🚫 Never store secrets/PII in per-brand repo
 ```
 
 **Ready to work?** Section 9 (Pre-Flight) → Section 6 (Phase A-G).
@@ -402,6 +640,23 @@ Bootstrap complete when:
 ---
 
 ## 📜 Changelog
+
+### v1.2 (2026-05-07) — Per-Brand Repo Folder Structure 📁
+- ➕ **Section 5.10 (NEW):** Per-Brand Repo Folder Structure
+  - 5.10.1: Standard folder tree (7 required + 3 optional folders)
+  - 5.10.2: Folder purpose quick reference table
+  - 5.10.3: Required vs optional folders
+  - 5.10.4: Naming conventions (kebab-case, lowercase, no underscores)
+  - 5.10.5: README requirements per folder
+  - 5.10.6: Where sitemap & entities files live (FAQ answer)
+  - 5.10.7: Planning files lifecycle (draft → Phase 1 → Phase 2 → live)
+  - 5.10.8: What NOT to put in per-brand repo (security + scope)
+  - 5.10.9: Repo initialization checklist
+  - 5.10.10: Cross-references to Bible
+- 🔗 References Bible Part 18.8, Part 2.6, Section 10.7, Section 25.11.7
+- 🎯 Closes gap: comprehensive folder structure was scattered across Bible — now consolidated
+- 🎯 Applies to: ALL existing + future per-brand repos
+- 🎯 Action item: existing brand repos must align with v1.2 structure
 
 ### v1.1 (2026-05-07) — Planning Schema Specification 📊
 - ➕ **Section 5 (NEW):** Planning File Schema — comprehensive spec
