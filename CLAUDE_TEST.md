@@ -1,4 +1,11 @@
-# Connection Test
+# Connection verified ✅
 
-This is a test from Claude to verify write access.
-Created: 2026-05-07
+This file confirms that Claude (via MCP connector) successfully wrote to this repository.
+
+**Verification details:**
+- Owner: the-gifted-digital
+- Repo: eywa-protocol-spec
+- Date: 2026-05-07
+- Status: SUCCESS
+
+This file can be safely deleted at any time.
