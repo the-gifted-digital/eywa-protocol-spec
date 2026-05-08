@@ -1,0 +1,1424 @@
+# 🚀 EYWA™ Protocol — Brand Onboarding Handover
+
+> **For Claude (and any AI assistant) working on a new brand within the EYWA portfolio.**  
+> **Read this file first, every new project, every new session.**
+
+**Document Version:** 1.3  
+**Last Updated:** 2026-05-08  
+**Companion to:** EYWA Bible v3.12 + Schema Overview v1.8  
+**Created by:** The Gifted Digital Marketing Co., Ltd.
+
+---
+
+## 📌 What This Document Is
+
+ไฟล์นี้คือ **operating manual** สำหรับ Claude (หรือ AI assistant ใดก็ตาม) ที่จะเริ่มทำงานบน brand ใหม่ภายใต้ EYWA Protocol ecosystem. มันบอกว่า:
+
+- **อ่านอะไรก่อน** เริ่มงาน
+- **คิดงานยังไง** ในระบบที่เป็น federation
+- **ป้องกันอะไรบ้าง** เพื่อไม่ให้เสียหลักการของ EYWA
+- **ทำงานยังไง** ให้ต่อเนื่อง consistent ข้าม sessions
+- **เช็คอะไรก่อน** ทุก deliverable
+- **Schema สำหรับ planning files** (โครงสร้างตารางที่ใช้)
+
+> **คำเตือนสำคัญ:** EYWA ไม่ใช่แค่ "ทำเว็บ SEO ให้แบรนด์". มันคือ portfolio-wide knowledge graph ที่หลายแบรนด์ใช้ร่วมกัน. ทุก decision ที่ทำสำหรับแบรนด์เดียว อาจกระทบ federation ทั้งหมด. **คิดเสมอว่าคุณกำลังเขียนเข้า shared system, ไม่ใช่ silo.**
+
+---
+
+## 🎯 Section 1 — Project Setup Checklist (ก่อนเริ่มทุกอย่าง)
+
+### 1.1 Required Files in Project Knowledge
+
+ตรวจให้แน่ใจว่า project นี้มีไฟล์ครบ:
+
+```
+☑ EYWA_PROTOCOL_v3_X_X.md          ← Bible (latest version)
+☑ Schema_Overview_EYWA_v1_X.md     ← Database schema spec
+☑ EYWA_HANDOVER.md                 ← This file
+☐ {brand}_concept.md               ← Brand-specific context (optional but preferred)
+☐ {brand}_research_notes.md        ← Research data (optional)
+```
+
+> **If Bible/Schema are missing or outdated:** STOP. Ask the operator to upload latest versions from `https://github.com/the-gifted-digital/eywa-protocol-spec/`. Do not proceed with stale specs.
+
+### 1.2 Verify GitHub Connection
+
+```yaml
+verification_steps:
+  
+  1. Test GitHub MCP connector:
+     → Try reading a file from `the-gifted-digital/eywa-protocol-spec`
+     → If fails: alert operator to check MCP permissions
+  
+  2. Confirm brand-specific repo exists:
+     → Format: `the-gifted-digital/eywa-{brand-slug}`
+     → If not: ask operator to create it (Private, with README)
+  
+  3. Verify can write:
+     → Test push a small file (e.g., README update)
+     → If fails: write access not granted yet
+```
+
+### 1.3 Confirm Brand Context
+
+```yaml
+required_context_before_work_starts:
+  
+  brand_basics:
+    □ Brand name (legal + display)
+    □ Domain (e.g., vth-biodent.com)
+    □ Vertical family (healthcare | media | other)
+    □ Healthcare format (single_specialty | multi_specialty | dental | hospital | etc.)
+    □ Specialty focus (list of services)
+    □ Branch count (single | multiple)
+    □ Active languages (TH default, others?)
+  
+  brand_unique_value:
+    □ Why this brand exists (mission)
+    □ Who it serves (target audience)
+    □ What makes it different (USP)
+    □ Signature methodologies/products (if any)
+  
+  business_context:
+    □ Stage (pre-launch | active | rebranding)
+    □ Existing content (yes — migration | no — greenfield)
+    □ Competitor landscape
+    □ Existing brand assets (logo, colors, voice)
+```
+
+**If brand concept file is provided:** Read it thoroughly first.
+
+**If NOT provided:** Ask the operator structured questions to build understanding (see Section 5).
+
+---
+
+## 🏛️ Section 2 — The Federation Mindset
+
+### 2.1 What "Federation" Means in EYWA
+
+EYWA is **not** a collection of independent brand websites. It is a **knowledge graph federation** where shared backend (Supabase + Notion + n8n) feeds isolated frontends (per-brand WordPress).
+
+**Implication:** When working on Brand A, your decisions can affect Brands B, C, D... You are never "working in isolation" even though the website looks isolated.
+
+### 2.2 The brand_scope[] Pattern (CRITICAL)
+
+Every shared entity, citation, cluster has a `brand_scope[]` field:
+
+- `['*']` — Universal, available to ALL brands (e.g., "TMJ Disorder")
+- `['vth-biodent']` — Single-brand exclusive (e.g., "EmSmile®")
+- `['vth-biodent', 'vitalsleep']` — Multi-brand shared subset
+
+### 2.3 Reuse Before Create (HARD RULE)
+
+Before creating ANY new entity, citation, or cluster:
+
+1. Search seo_entity_graph for universal (`brand_scope=['*']`)
+2. Search for other-brand existing entities (consider adopting)
+3. Only create new when truly novel
+
+**Anti-Patterns to AVOID:**
+- ❌ Creating "TMJ Disorder" if it already exists universally
+- ❌ Duplicating citations across brands
+- ✅ Search FIRST, every time
+
+### 2.4 Cross-Brand Decision Awareness
+
+Always ask:
+1. Does this affect `['*']` resources?
+2. Could other brands benefit?
+3. Brand-specific quirk OR federation gap?
+4. Will this scale to 5+ more brands?
+
+---
+
+## 📚 Section 3 — Source of Truth Hierarchy
+
+### 3.1 The Three Sources (in priority order)
+
+1. **GitHub (Canonical)** — `the-gifted-digital/eywa-protocol-spec/` and `eywa-{brand}/`. Final truth. GitHub wins on conflicts.
+2. **Project Knowledge (Cache)** — Files uploaded to current Claude project. May lag GitHub.
+3. **Conversation Context (Working Memory)** — Lowest priority. Always verify against GitHub.
+
+### 3.2 When to Update Each Source
+
+**Spec changes (Bible/Schema):** Master scope → sandbox → GitHub eywa-protocol-spec FIRST → re-upload to all brand projects.
+
+**Brand-specific changes:** Brand project → GitHub eywa-{brand} → if pattern emerges, promote to spec.
+
+**Decisions:** Document in DECISION_RECORDS.md → push to appropriate repo → reference DR-NNN going forward.
+
+### 3.3 Anti-Drift Rules
+
+1. **Single source** — never have 2 places where same fact lives without sync
+2. **Canonical first** — sandbox → GitHub → project knowledge
+3. **Changelog discipline** — every spec change = version bump + entry
+4. **Mention version** — always specify "Bible v3.12 Part 4..." not just "Part 4..."
+
+---
+
+## 🎨 Section 4 — Brand Uniqueness Philosophy
+
+### 4.1 The Core Tenet
+
+> **"Same Skeleton. Different Soul."**
+
+Every EYWA brand uses the **same 8-section sitemap** (Bible Part 4.2): Home, Our Uniqueness, Services, Technology, By Concern, Knowledge, Case Studies, Contact/Branches.
+
+**BUT:** No two EYWA brands should ever look or feel the same. The skeleton is universal. The presentation, content, voice, and emphasis must be unique.
+
+### 4.2 What Must Differ Per Brand
+
+- **Visual design:** color palette, typography, imagery, layout emphasis
+- **Voice/tone:** formal vs friendly vs clinical vs luxe
+- **Content emphasis:** which section is dominant for this brand
+- **Signature offerings:** unique programs/methodologies highlighted
+- **Evidence emphasis:** research-led vs story-led vs methodology-led
+
+### 4.3 What Must Stay Consistent
+
+- Schema markup (Tier 1 + Tier 2)
+- Citation standards (6 tiers)
+- WCAG AA accessibility
+- Knowledge graph integrity (entity types, edges)
+- Editorial quality gates
+
+### 4.4 The Test: Would a User Notice?
+
+1. **Visual swap test** — copy text to another brand's design — does it feel wrong?
+2. **Blind recognition** — without logo, can someone identify the brand?
+3. **Value prop clarity** — what's unique about this brand's approach?
+4. **Journey distinctiveness** — why choose THIS brand over a sister brand?
+
+---
+
+## 📊 Section 5 — Planning File Schema (NEW in v1.1)
+
+> **Why this section exists:** EYWA workflow แยก **planning** กับ **implementation** ชัดเจน. Planning ทำใน markdown files (.md) — fast iteration, human-readable, GitHub-friendly. Implementation ทำใน Supabase + Notion (production system). Section นี้กำหนด schema มาตรฐานสำหรับ planning files
+
+### 5.1 Planning vs Implementation — Mental Model
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│  PLANNING PHASE (Markdown files)                                      │
+│  Speed: Fast iteration, low friction                                  │
+│  Format: .md tables with minimal columns (focused on decisions)       │
+│  Location: GitHub eywa-{brand}/content-plan/                          │
+│  Iterations: Many (operator + Claude refining together)               │
+│  Output: Approved plan ready for implementation                       │
+├─────────────────────────────────────────────────────────────────────┤
+│                              ↓ ETL ↓                                  │
+├─────────────────────────────────────────────────────────────────────┤
+│  IMPLEMENTATION PHASE (Supabase + Notion)                             │
+│  Speed: Deliberate, validated                                         │
+│  Format: Full database schema with all columns + indexes              │
+│  Location: Supabase project + Notion workspace                        │
+│  Iterations: Less frequent (production data)                          │
+│  Output: Operational federation system                                │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### 5.2 Planning Files — Required Set
+
+ทุก brand มี planning files เหล่านี้ใน `eywa-{brand}/content-plan/`:
+
+```yaml
+required_planning_files:
+  
+  1_entities.md:
+    purpose: "Knowledge graph entities (universal + brand-specific)"
+    pattern: Group by topic_cluster, table per cluster
+    columns: 12 (see 5.3)
+  
+  2_clusters.md:
+    purpose: "Topic cluster index + metadata"
+    pattern: Single master table
+    columns: 6 (see 5.4)
+  
+  3_sitemap.md:
+    purpose: "Page hierarchy + properties"
+    pattern: Group by section, table per section
+    columns: 7 (see 5.5)
+  
+  4_relationships.md:
+    purpose: "Typed edges between entities (10 edges per Bible Part 2.7)"
+    pattern: Single master table
+    columns: 5 (see 5.6)
+  
+  5_content_priorities.md (optional):
+    purpose: "Editorial calendar + production sequence"
+    pattern: Sprint-based grouping
+    columns: 7 (see 5.7)
+```
+
+### 5.3 Schema — Entities Planning File
+
+**File:** `entities.md` (or per-cluster: `entities/{cluster-id}.md`)
+
+**Structure:**
+
+```markdown
+# {Brand Name} — Entity Graph (Planning File)
+
+## Entity Type Distribution
+| Type | Count | % |
+| ... | ... | ... |
+
+## Topic Cluster Index
+(reference to clusters.md)
+
+---
+
+## {cluster-id}: {Cluster Name}
+**Brand Scope:** ['*'] | ['{brand}'] | ['{brand}', '{other}']
+**Pillar Page:** {sitemap_node_id}
+**Domain:** {domain-id}
+
+| # | Entity Name | Slug | Type | Schema.org | Parent (text) | ICD-10 | Lifecycle | Primary Page | Aliases | Brand Scope | Notes |
+|---|-------------|------|------|------------|---------------|--------|-----------|--------------|---------|-------------|-------|
+| 1 | TMJ Disorder | tmj-disorder | Condition | MedicalCondition | — | M26.609 | Mature | 5.2 | TMD, ... | ['*'] | (link to cluster anchor) |
+| 2 | TMJ Pain | tmj-pain | Symptom | Symptom | tmj-disorder | M26.629 | Mature | 5.2.1 | ... | ['*'] | symptom_of relationship |
+```
+
+**Column specs (12 columns):**
+
+| Column | Required | Description |
+|--------|----------|-------------|
+| `#` | Yes | Sequential numbering (within cluster) |
+| `Entity Name` | Yes | Display name |
+| `Slug` | Yes | URL-safe identifier (kebab-case) |
+| `Type` | Yes | One of 15 types (Bible Part 2.5) |
+| `Schema.org` | Yes | schema.org type (e.g., MedicalCondition) |
+| `Parent (text)` | Optional | text-based parent reference (entity slug) — for Two-Phase Sync |
+| `ICD-10` | Optional | ICD-10 code (or "—" if N/A) |
+| `Lifecycle` | Yes | emerging / growing / mature / deprecated |
+| `Primary Page` | Yes | sitemap_node_id (e.g., "5.2.1") |
+| `Aliases` | Recommended | Comma-separated alternative names |
+| `Brand Scope` | Yes | `['*']` / `['{brand}']` / `['{brand}', '{other}']` |
+| `Notes` | Optional | Additional context, planned relationships, etc. |
+
+> **Important:** `Parent (text)` column uses entity slug — NOT notion_id. Notion ID does not exist yet at planning phase. This is **intentional** — see Bible Part 18.8 (Two-Phase Hierarchy Sync Pattern).
+
+### 5.4 Schema — Clusters Planning File
+
+**File:** `clusters.md`
+
+```markdown
+# {Brand Name} — Topic Clusters (Planning File)
+
+| Cluster ID | Cluster Name | Domain | Parent Cluster (text) | Pillar Page | Brand Scope |
+|------------|--------------|--------|----------------------|-------------|-------------|
+| tmj-orofacial-pain | TMJ & Orofacial Pain | A: TMJ & Jaw | — | 6.1.14 | ['*'] |
+| bruxism-clenching | Bruxism & Clenching | A: TMJ & Jaw | tmj-orofacial-pain | 6.1.15 | ['*'] |
+```
+
+**Column specs (6 columns):**
+
+| Column | Required | Description |
+|--------|----------|-------------|
+| `Cluster ID` | Yes | kebab-case-noun-phrase (globally unique) |
+| `Cluster Name` | Yes | Display name |
+| `Domain` | Yes | Domain ID + name (e.g., "A: TMJ & Jaw") |
+| `Parent Cluster (text)` | Optional | Parent cluster ID (for nested SKOS hierarchy) |
+| `Pillar Page` | Yes | sitemap_node_id of L5 pillar guide |
+| `Brand Scope` | Yes | `['*']` / `['{brand}']` / `['{brand}', '{other}']` |
+
+### 5.5 Schema — Sitemap Planning File
+
+**File:** `sitemap.md`
+
+```markdown
+# {Brand Name} — Sitemap (Planning File)
+
+## Tier Distribution
+- Tier A: ...
+- Tier B: ...
+
+## Layer Distribution
+- L1: ...
+
+---
+
+## Section 5: TREATMENT BY CONCERNS (147 pages)
+
+| # | Page Name | Layer | Tier | Funnel | Page Type | Primary Entity (text) |
+|---|-----------|-------|------|--------|-----------|----------------------|
+| 5.2 | TMJ & Jaw Disorders Hub | L4 | B | top | A | tmj-disorder |
+| 5.2.1 | TMJ Pain — symptom guide | L4 | C | top | A | tmj-pain |
+```
+
+**Column specs (7 columns):**
+
+| Column | Required | Description |
+|--------|----------|-------------|
+| `#` | Yes | sitemap_node_id (e.g., "5.2.1") — defines hierarchy via numbering |
+| `Page Name` | Yes | Display name |
+| `Layer` | Yes | L1-L7 (Bible Part 3.2) |
+| `Tier` | Yes | A / B / C / D (Bible Part 3.3) |
+| `Funnel` | Yes | top / mid / bottom / retention (Bible Part 3.4) |
+| `Page Type` | Yes | A (Standard) / B (Branch Landing) / C (Programmatic) / D (Tagged) |
+| `Primary Entity (text)` | Optional | Entity slug if page anchored to specific entity |
+
+> **Hierarchy via numbering:** Page "5.2.1" is automatically child of "5.2" (no separate parent column needed in sitemap — numbering encodes hierarchy)
+
+### 5.6 Schema — Relationships Planning File
+
+**File:** `relationships.md`
+
+```markdown
+# {Brand Name} — Entity Relationships (Planning File)
+
+> Edges defined per Bible Part 2.7 (10-edge vocabulary)
+
+| From Entity | Edge Type | To Entity | Bidirectional | Notes |
+|-------------|-----------|-----------|---------------|-------|
+| tmj-pain | symptom_of | tmj-disorder | No (auto-paired) | Symptom presents as TMJ pain |
+| tmj-disorder | treats | tmj-non-surgical | No (auto-paired) | Treatment option |
+| tmj-injection | uses | hyaluronic-acid | No (auto-paired) | Material used in injection |
+| tmj-disorder | related_to | bruxism | Yes | Bidirectional clinical association |
+```
+
+**Column specs (5 columns):**
+
+| Column | Required | Description |
+|--------|----------|-------------|
+| `From Entity` | Yes | Entity slug (must exist in entities.md) |
+| `Edge Type` | Yes | One of 10 edges (Bible Part 2.7) |
+| `To Entity` | Yes | Entity slug (must exist in entities.md) |
+| `Bidirectional` | Yes | Yes / No (auto-paired edges = No) |
+| `Notes` | Optional | Context, evidence link, exceptions |
+
+**Valid edge types (Bible Part 2.7):**
+- `parent_of` / `child_of` (paired hierarchy)
+- `subtype_of`
+- `treats` / `treated_by` (paired)
+- `symptom_of`
+- `uses` / `used_by` (paired)
+- `alternative_to`
+- `part_of` / `contains` (paired)
+- `requires_assessment`
+- `evidenced_by`
+- `related_to` (bidirectional default)
+
+### 5.7 Schema — Content Priorities Planning File (Optional)
+
+**File:** `content-priorities.md`
+
+```markdown
+# {Brand Name} — Content Production Priorities
+
+| Priority | Page Node | Layer | Tier | Sprint | Status | Owner |
+|----------|-----------|-------|------|--------|--------|-------|
+| 1 | 1.0 | L1 | A | Sprint 1 | Drafting | @writer1 |
+| 2 | 2.1 | L1 | B | Sprint 1 | Planned | @writer2 |
+| 3 | 3.1 | L2 | A | Sprint 1 | Planned | @writer1 |
+```
+
+**Column specs (7 columns):**
+
+| Column | Required | Description |
+|--------|----------|-------------|
+| `Priority` | Yes | Sequential priority order |
+| `Page Node` | Yes | sitemap_node_id |
+| `Layer` | Yes | L1-L7 |
+| `Tier` | Yes | A/B/C/D (typically Tier A first) |
+| `Sprint` | Yes | Sprint identifier |
+| `Status` | Yes | Planned / Drafting / Reviewing / Published |
+| `Owner` | Yes | Writer/team assigned |
+
+### 5.8 Why "Parent" is Text (Not Notion ID) at Planning
+
+> **Critical principle:** ที่ planning phase, **เราไม่มี Notion ID** เพราะยังไม่ได้ sync เข้า Notion. ทุก parent reference ต้องเป็น **text-based** (entity slug, sitemap_node_id, cluster_id).
+
+**Why this is correct:**
+
+```yaml
+benefits_of_text_based_parent:
+  
+  human_readable:
+    "Parent: tmj-disorder" → operator เข้าใจทันที
+    "Parent: notion-abc-123-def" → meaningless without lookup
+  
+  portable:
+    Markdown file ทำงานได้ stand-alone
+    ไม่ต้อง dependency กับ Notion ID
+  
+  iteration_friendly:
+    เปลี่ยนใจ parent ได้ง่าย — แก้ text refs
+    ไม่ต้องไปแก้ relations ใน Notion
+  
+  github_friendly:
+    Diff ของ parent change = 1 line of text
+    Reviewable in pull request
+  
+  matches_supabase_storage:
+    Supabase ใช้ entity_fingerprint (text)
+    Markdown ก็ใช้ slug เดียวกัน — direct mapping
+
+how_it_becomes_native_relation:
+  
+  Phase 1 (Flat Load):
+    Markdown text refs → Supabase text refs → Notion text properties
+  
+  Phase 2 (Backfill):
+    n8n flow resolves text → Notion ID
+    UPDATE Notion: parent_relation = parent's notion_id
+  
+  Result:
+    Notion UI shows tree (relation-based)
+    Markdown stays simple (text-based)
+    Best of both worlds
+```
+
+→ **See Bible Part 18.8** for complete Two-Phase Hierarchy Sync Pattern
+
+### 5.9 Hierarchy Encoding — Two Methods
+
+```yaml
+method_1_explicit_parent_column:
+  used_in: entities.md, clusters.md
+  format: separate "Parent (text)" column
+  reason: 
+    - Hierarchy is logical, not positional
+    - Same-level entities exist (TMJ Pain + Jaw Lock = both children of TMJ Disorder)
+    - Explicit clarity
+
+method_2_implicit_via_numbering:
+  used_in: sitemap.md
+  format: numbered IDs (5.2.1 child of 5.2)
+  reason:
+    - Hierarchy is positional + sequential
+    - Numbering encodes both parent AND order
+    - No separate column needed
+    - Bible Part 4.4 standard
+
+both_methods_yield_same_database_result:
+  Phase 1: text refs in Supabase
+  Phase 2: parent_notion_id backfilled
+  Phase 3: Notion native relations rendering tree
+```
+
+---
+
+### 5.10 Per-Brand Repo Folder Structure (NEW in v1.2)
+
+ทุก per-brand repo (`eywa-{brand-slug}`) ต้องใช้โครงสร้างเดียวกัน เพื่อให้ทุก brand work-flow consistent + onboarding ใหม่หา file ไม่หลง.
+
+#### 5.10.1 Standard Folder Tree
+
+```
+eywa-{brand-slug}/                       Example: eywa-vth-biodent/
+│
+├── README.md                           # Brand overview + folder map + quick links
+├── brand-config.json                   # Federation config (brand_scope, vertical, languages)
+├── .gitignore
+│
+├── docs/                               # 📚 Brand documentation (human-authored)
+│   ├── README.md                       # Index of docs/
+│   ├── brand-concept.md                # Brand identity, voice, positioning, USP
+│   ├── decision-records.md             # Brand-specific DRs (link global for shared)
+│   └── changelog.md                    # Brand version history
+│
+├── content-plan/                       # 🌳 PLANNING PHASE (markdown — Section 5 schemas)
+│   ├── README.md                       # Index + file purpose
+│   ├── research-notes.md               # Phase B output (DataForSEO, competitors, journey)
+│   ├── entities.md                     # 12-col schema (§5.3) — knowledge graph entities
+│   ├── clusters.md                     # 6-col schema (§5.4) — topic cluster index
+│   ├── sitemap.md                      # 7-col schema (§5.5) — page hierarchy
+│   ├── relationships.md                # 5-col schema (§5.6) — typed edges (10 types)
+│   ├── content-priorities.md           # 7-col schema (§5.7, optional) — calendar
+│   ├── internal-linking-plan.md        # Phase E output — link strategy
+│   ├── audit-report.md                 # Sitemap health audit results
+│   └── egp-output-summary.md           # Entity Genesis Protocol summary (Bible 2.6)
+│
+├── content-drafts/                     # 📝 DRAFTING PHASE (before Notion sync)
+│   ├── README.md
+│   ├── pillar-pages/                   # Layer 4 pillar drafts (cornerstone content)
+│   ├── supporting-pages/               # Layer 5+ supporting drafts
+│   └── citations/                      # Curated citation list (pre-Supabase upload)
+│
+├── theme/                              # 🎨 BRAND VISUAL (Elementor stack)
+│   ├── README.md
+│   ├── elementor-templates-overrides/  # Brand-specific template tweaks (JSON exports)
+│   ├── custom-css/                     # Brand stylesheet overrides (CSS files)
+│   ├── site-settings.json              # Elementor Global Colors + Fonts export
+│   └── brand-assets/                   # Logo, hero images, mascot, brand photos
+│
+├── deployment/                         # 🚀 INFRA & SYNC config
+│   ├── README.md
+│   ├── notion-workspace-config.md      # Notion DB IDs, workspace metadata
+│   ├── n8n-flow-overrides.md           # Brand-specific n8n flow tweaks (rare)
+│   ├── wp-plugins-list.md              # Active WP plugins for this brand
+│   ├── acf-overrides/                  # Brand-specific ACF JSON (if any)
+│   └── ENV.md                          # Environment variable names (NO secrets!)
+│
+├── multilingual/                       # 🌐 i18n (only if multi-language brand)
+│   ├── README.md
+│   ├── translation-status.md           # Per-page translation status tracker
+│   └── glossary.md                     # Brand-specific terminology per language
+│
+└── reports/                            # 📊 Periodic measurement reports
+    ├── README.md
+    ├── kpi-baseline.md                 # Day 1 measurement baseline
+    ├── monthly/                        # Monthly health reports
+    └── quarterly/                      # Quarterly cluster reviews
+```
+
+#### 5.10.2 Folder Purpose Quick Reference
+
+| Folder | When to use | Sync target | Authority |
+|--------|-------------|-------------|-----------|
+| `docs/` | Brand identity, decisions | Manual reference | Brand team |
+| `content-plan/` | EGP output, sitemap, planning | → Supabase + Notion (via n8n) | EYWA spec authority |
+| `content-drafts/` | Page content before publish | → Notion (manual or n8n) | Editorial team |
+| `theme/` | Visual customization | → WordPress (manual deploy) | Designer |
+| `deployment/` | Infrastructure config | → n8n / WP / Notion (operational) | DevOps |
+| `multilingual/` | i18n tracking | → WPML + Supabase | Translation team |
+| `reports/` | KPI measurement | Read-only output | Analytics |
+
+#### 5.10.3 Required vs Optional Folders
+
+```yaml
+required_for_every_brand:
+  - README.md                    # Always
+  - brand-config.json            # Always
+  - .gitignore                   # Always
+  - docs/                        # Always (at minimum brand-concept.md)
+  - content-plan/                # Always (core EYWA workflow)
+  - theme/                       # Always (even if minimal — branding required)
+  - deployment/                  # Always (Notion config required)
+
+optional_per_brand:
+  - content-drafts/              # If using markdown-first drafting
+  - multilingual/                # Only if active_languages > 1
+  - reports/                     # Generated as KPIs accumulate (Day 30+)
+```
+
+#### 5.10.4 Naming Conventions
+
+```yaml
+file_naming:
+  - kebab-case for markdown: brand-concept.md, internal-linking-plan.md
+  - snake_case for JSON: brand-config.json (exception: hyphen ok for top-level)
+  - PascalCase NEVER (avoid Windows case-insensitive issues)
+  - lowercase for folder names: content-plan/ NOT Content-Plan/
+
+folder_naming:
+  - All lowercase
+  - Hyphen-separated (kebab-case) for multi-word
+  - No underscores in folder names
+  - No spaces (ever)
+
+slug_pattern:
+  - Brand slug: kebab-case (vth-biodent, the-brand, vital-sleep)
+  - Repo name: eywa-{brand-slug}
+  - Folder names match slug pattern
+```
+
+#### 5.10.5 README Requirements Per Folder
+
+ทุก folder (ยกเว้น root + brand-assets/) ต้องมี `README.md` อธิบาย:
+
+```markdown
+# {Folder Name}
+
+> One-line purpose
+
+## Files in this folder
+| File | Purpose |
+|------|---------|
+| ... | ... |
+
+## When to update
+- Trigger 1
+- Trigger 2
+
+## Cross-references
+- See Bible Part X.Y
+- See Handover Section Z
+```
+
+ทำไม? เพราะ Claude (และคนใหม่) ที่เข้ามา repo ครั้งแรก ต้อง orient ตัวเองได้ทันที.
+
+#### 5.10.6 Where Sitemap & Entities Files Live
+
+**ตอบคำถามตรงๆ ที่ถามบ่อย:**
+
+```yaml
+"ไซต์แมปเสร็จ + entity เสร็จ จะเก็บที่ไหน?"
+
+answer:
+  📁 eywa-{brand-slug}/content-plan/
+     ├── entities.md         ← Entity list (§5.3, 12 columns)
+     ├── sitemap.md          ← Sitemap (§5.5, 7 columns)
+     ├── clusters.md         ← Cluster index (§5.4, 6 columns)
+     └── relationships.md    ← Edges (§5.6, 5 columns)
+
+reasoning:
+  - "Plan" = ก่อน execute ลง Supabase + Notion
+  - "Content" = ครอบ knowledge graph + sitemap + content artifacts
+  - Markdown = human-editable + GitHub-diffable
+  - Universal: ทุก brand ใช้โครงสร้างเดียวกัน
+```
+
+#### 5.10.7 Lifecycle of Planning Files
+
+```yaml
+planning_files_lifecycle:
+
+  draft_phase:
+    location: eywa-{brand}/content-plan/*.md
+    edited_by: AI assistant + brand team (PR review)
+    iterations: many (markdown is fast)
+    state: text refs only (no notion_id yet)
+  
+  approved_phase:
+    trigger: brand owner approves planning files
+    action: commit to GitHub main branch
+    state: locked for Phase 1 sync
+  
+  phase_1_sync:
+    trigger: n8n flow `phase_1_load_markdown`
+    target: Supabase tables (with text refs as parent fields)
+    state: sync_state='flat_loaded'
+    
+  phase_1_to_notion:
+    trigger: n8n flow `phase_1_supabase_to_notion`
+    target: Notion (creates pages, captures notion_id back to Supabase)
+    state: sync_state='notion_synced'
+  
+  phase_2_backfill:
+    trigger: n8n flow `phase_2_relation_backfill`
+    target: Notion (sets parent_relation property)
+    state: sync_state='relations_backfilled'
+  
+  live_phase:
+    state: sync_state='live'
+    edits: bidirectional Notion ↔ Supabase
+    markdown_role: 
+      - Historical record (audit trail)
+      - Re-baseline source (if rollback needed)
+      - NOT the source of truth anymore (DB is)
+```
+
+> 🔄 **After Phase 2:** Markdown planning files become **historical reference**. Active edits happen in Notion → propagated to Supabase. Edit markdown only for major restructure (re-baseline scenarios).
+
+#### 5.10.8 What NOT to Put in Per-Brand Repo
+
+```yaml
+do_not_store_here:
+  ❌ Bible files (lives in eywa-protocol-spec)
+  ❌ Schema_Overview (lives in eywa-protocol-spec)
+  ❌ DECISION_RECORDS.md global (lives in eywa-protocol-spec)
+  ❌ Shared Elementor templates (lives in eywa-elementor-templates)
+  ❌ Shared n8n flows (lives in eywa-n8n-flows or central)
+  ❌ Database credentials, API keys, passwords (NEVER)
+  ❌ Patient/customer PII data (PDPA — never in git)
+  ❌ Production-secret URLs with tokens
+  ❌ WP plugin code (lives in eywa-{plugin-name} repos)
+
+instead:
+  - Reference shared specs by URL/path in docs/
+  - brand-config.json links to shared resources
+  - deployment/ENV.md lists ENV var NAMES only (values in vault)
+```
+
+#### 5.10.9 Repo Initialization Checklist
+
+ก่อนเริ่มทำงานใน brand repo ใหม่ ตรวจ:
+
+```yaml
+☐ Repo created on GitHub: eywa-{brand-slug}
+☐ Set to Private (Internal preferred for org-wide visibility)
+☐ Default branch: main
+☐ Clone or open via GitHub MCP
+☐ All 7 required folders exist (or create them)
+☐ All folders have README.md
+☐ Root has: README.md, brand-config.json, .gitignore
+☐ brand-config.json validated (brand_scope, vertical, languages, branches)
+☐ Linked to global EYWA infrastructure:
+   - Notion workspace ID in deployment/notion-workspace-config.md
+   - Supabase project ID in deployment/ENV.md
+   - n8n flow set IDs in deployment/n8n-flow-overrides.md
+☐ Initial commit message: "init: EYWA brand structure v1.2"
+```
+
+#### 5.10.10 Cross-References
+
+| Topic | See |
+|-------|-----|
+| Planning file schemas | Handover §5.3-5.7 |
+| Why text-based parents | Handover §5.8 |
+| Hierarchy encoding | Handover §5.9 |
+| Two-Phase Sync pattern | Bible Part 18.8 |
+| Entity Genesis Protocol | Bible Part 2.6 |
+| Sitemap methodology | Bible Part 4.1 |
+| Federation pattern | Bible Section 10.7 |
+| Brand-config.json schema | Handover §1.3 |
+| Elementor template overrides | Bible Section 25.11.7 |
+
+---
+
+
+## 🏗️ Section 6 — Phase 1 Status (Supabase Database Foundation)
+
+> **Added v1.3 (2026-05-08)** — Active phase tracking for Phase 1 work. This section documents what is locked, what is pending, and the migration plan for the Supabase database upgrade.
+
+### 6.1 Phase 1 Scope
+
+```yaml
+phase_1_supabase_foundation:
+  
+  goal: "Upgrade GTGT Supabase project schema to align with Bible v3.12 / Schema v1.8"
+  
+  in_scope:
+    - Schema upgrade (ALTER existing tables, CREATE new tables)
+    - Helper functions (ULID generator, fingerprint generators, display generators)
+    - Triggers (auto-generation, immutability, refresh)
+    - Indexes (GIN for jsonb/arrays, B-tree for lookups)
+    - Two-Column Identity Pattern application
+    - Multilingual jsonb columns (Tier 1) + translation_group_id (Tier 2)
+    - brand_slug standardization
+  
+  out_of_scope:
+    - Data migration (existing entity/page data may be discarded)
+    - n8n workflow rewrites (deferred to later phase)
+    - Notion database restructure (separate effort)
+    - WordPress integration (Phase 3+)
+    - EEAT scoring implementation (Phase 3+)
+    - AI citation tracking (Phase 3+)
+    - Performance dashboards (Phase 4+)
+```
+
+### 6.2 Locked Decisions (DR-007 through DR-010)
+
+| DR | Title | Status | Source |
+|----|-------|--------|--------|
+| **DR-007** | In-Place GTGT Schema Upgrade | 🔒 Locked | DECISION_RECORDS.md |
+| **DR-008** | Two-Column Identity Pattern | 🔒 Locked | DECISION_RECORDS.md + Bible §18.9 |
+| **DR-009** | Multilingual Strategy v2 (Two-Tier) | 🔒 Locked | DECISION_RECORDS.md + Schema Appendix E |
+| **DR-010** | Brand Scope Architecture | 🔒 Locked | DECISION_RECORDS.md |
+
+**Key Patterns Locked:**
+
+```yaml
+fingerprint_format:
+  general: "{tablecode}_{ULID16}"  # e.g., "ent_01HZP5K2XQR7N3MF"
+  exception: 
+    keyword: "{brand_slug}::{market}::{language}::{keyword}"  # existing format kept
+  
+display_name_format:
+  formula: "{fp_last_6}::{type}::{slug_or_name}::{key_data}"
+  separator: "::"
+  example_entity: "n3mf::condition::sleep-apnea::g47.3"
+  example_page: "mfqr::pillar::airway-optimization::th::vth-biodent"
+
+multilingual:
+  tier_1_concept: 
+    pattern: "1 row + jsonb translations"
+    columns: [canonical_names, aliases, descriptions]
+    tables: [ent, clus, brnd, auth, doc, brch, cite]
+  
+  tier_2_content:
+    pattern: "1 row per language + translation_group_id"
+    columns: [translation_group_id, page_language, is_source_page, source_translation_fp]
+    tables: [page, kw, rev]
+
+brand_scope:
+  pattern_a_array: 
+    column: "brand_scope text[]"
+    tables: [ent, clus, auth, cite]
+    examples: ["['*']", "['vth-biodent']", "['vth-biodent', 'vitalsleep']"]
+  pattern_b_scalar:
+    column: "brand_slug text NOT NULL"  
+    tables: [page, doc, brch, kw]
+
+table_codes:
+  ent:  seo_entity_graph
+  page: seo_website_page_master
+  clus: seo_topic_cluster_master
+  kw:   seo_x_ads_keywords_contextual_master  # exception
+  brnd: brands
+  auth: seo_authors
+  doc:  seo_brand_doctors
+  brch: seo_brand_branches
+  cite: seo_citations
+  pcit: seo_page_citations
+  rev:  seo_editorial_reviews
+  aici: seo_ai_citation_tracking
+  asc:  seo_brand_authority_scores
+  chs:  seo_cluster_health_scores
+  eas:  seo_entity_authority_scores
+  eeat: seo_eeat_scores
+  gov:  seo_governance_audit
+  kpi:  seo_kpi_baseline
+  tg:   translation_group_id  # namespace, not a table
+```
+
+### 6.3 Migration Plan — 26 Files
+
+**Phase 1A: Foundation (5 migrations) — Non-Breaking**
+
+```yaml
+20260508_001_create_ulid_function.sql:
+  purpose: "Pure SQL ULID generator (Crockford Base32, time-encoded)"
+  function: generate_ulid() RETURNS text
+
+20260508_002_create_fingerprint_helpers.sql:
+  purpose: "Universal fingerprint creator + per-table display generators"
+  functions:
+    - generate_fingerprint_v2(p_tablecode text)
+    - generate_entity_display_name(...)
+    - generate_page_display_name(...)
+    - generate_brand_display_name(...)
+    - generate_cluster_display_name(...)
+    - generate_author_display_name(...)
+    - generate_doctor_display_name(...)
+    - generate_branch_display_name(...)
+    - generate_citation_display_name(...)
+
+20260508_003_add_two_column_identity_to_existing.sql:
+  purpose: "Add fingerprint + fingerprint_display_name columns to existing tables"
+  affected_tables: [brands, seo_entity_graph, seo_website_page_master]
+  pattern: ADD COLUMN IF NOT EXISTS (nullable initially)
+
+20260508_004_add_multilingual_columns.sql:
+  purpose: "Add jsonb columns for Tier 1 multilingual"
+  affected_tables: [seo_entity_graph, brands]
+  columns_added:
+    - canonical_names jsonb DEFAULT '{}'::jsonb
+    - aliases jsonb DEFAULT '{}'::jsonb
+    - descriptions jsonb DEFAULT '{}'::jsonb
+    - brand_display_names jsonb DEFAULT '{}'::jsonb (entity_graph only)
+
+20260508_005_add_brand_slug_to_brands.sql:
+  purpose: "Standardize brand identification via brand_slug"
+  changes:
+    - ADD COLUMN brand_slug text UNIQUE
+    - Backfill from brand_name (kebab-case)
+    - Set NOT NULL after backfill
+```
+
+**Phase 1B: New Tables (~14 migrations)**
+
+```yaml
+20260508_010_create_seo_topic_cluster_master.sql
+20260508_011_create_seo_authors.sql
+20260508_012_create_seo_brand_doctors.sql
+20260508_013_create_seo_brand_branches.sql
+20260508_014_create_seo_citations.sql
+20260508_015_create_seo_page_citations.sql
+20260508_016_create_seo_editorial_reviews.sql
+20260508_017_create_seo_ai_citation_tracking.sql
+20260508_018_create_seo_brand_authority_scores.sql
+20260508_019_create_seo_cluster_health_scores.sql
+20260508_020_create_seo_entity_authority_scores.sql
+20260508_021_create_seo_eeat_scores.sql
+20260508_022_create_seo_governance_audit.sql
+20260508_023_create_seo_kpi_baseline.sql
+```
+
+**Phase 1C: Triggers & Constraints (4 migrations)**
+
+```yaml
+20260508_030_add_fingerprint_triggers_existing.sql:
+  purpose: "Auto-gen + immutability + display refresh for existing tables"
+
+20260508_031_add_fingerprint_triggers_new.sql:
+  purpose: "Same pattern for newly-created tables"
+
+20260508_032_add_immutability_constraints.sql:
+  purpose: "trg_prevent_fingerprint_change() on every table"
+
+20260508_033_add_fk_constraints.sql:
+  purpose: "Cross-table FK references using fingerprint"
+```
+
+**Phase 1D: Indexes & Performance (3 migrations)**
+
+```yaml
+20260508_040_add_gin_indexes_jsonb.sql:
+  purpose: "GIN indexes on canonical_names, aliases, descriptions"
+
+20260508_041_add_gin_indexes_arrays.sql:
+  purpose: "GIN indexes on brand_scope[], related_fps[], related_entities_fps[]"
+
+20260508_042_add_btree_indexes_lookups.sql:
+  purpose: "B-tree indexes on brand_slug, page_language, translation_group_id, sync columns"
+```
+
+### 6.4 Pre-Phase-1 Audit Results (GTGT)
+
+**Production State (audited 2026-05-07):**
+
+```yaml
+gtgt_supabase_state:
+  project_id: lffcbeszjqzioobqfdav
+  region: ap-northeast-1
+  postgres_version: 17.6.1
+  
+  tables_existing: 13
+  tables_in_v1_8_target: 30
+  tables_to_create: ~17
+  
+  rls_enabled: false (Phase 2 concern)
+  
+  data_volumes:
+    brands: 15 rows (all in single Notion workspace VT Intelligence Space)
+    seo_entity_graph: 466 rows (287 VTH BioDent + 179 VitalSleep)
+    seo_website_page_master: 1,376 rows (all VitalSleep, all Planned)
+    seo_x_ads_keywords_contextual_master: 12,526 rows (active n8n feed)
+    seo_x_ads_keywords_monthly_market_snapshot: 12,156 rows
+    seo_x_ads_keyword_serp_competitors: 8,589 rows
+    logs_2026: 89,960 rows (5K-7K/day from 5 brands)
+    logs_2025: 0 rows
+  
+  active_n8n_workflows: 6
+  workflow_dependencies: HIGH on keyword table fingerprint format
+  
+  existing_migrations: 30 (2026-03-10 to 2026-03-23)
+  preserved_as: historical baseline (no rollback)
+```
+
+### 6.5 Open Items (Pending Decisions)
+
+```yaml
+pending_decisions:
+  
+  DR-020_migration_repo:
+    question: "Separate eywa-supabase-migrations repo, or subfolder in eywa-protocol-spec?"
+    blocking: false
+    blocking_phase_1A: false
+    can_decide_during: Phase 1A execution
+  
+  DR-021_notion_sync_scope:
+    question: "Which v1.8 tables sync to Notion? Which are Supabase-only?"
+    blocking: false
+    blocking_phase_1A: false
+    blocking_phase_1B: partial (affects table design choices)
+    can_decide_during: between Phase 1B and Phase 1C
+  
+  DR-022_branch_testing_protocol:
+    question: "Test migrations on Supabase development branch before main?"
+    blocking: false
+    recommended: yes (low cost, high safety)
+    can_decide_during: before first migration applied
+```
+
+### 6.6 Resume Instructions for Next Session
+
+When resuming Phase 1 work, follow this checklist:
+
+```yaml
+session_resume_checklist:
+  
+  step_1_read_priority:
+    - DECISION_RECORDS.md (DR-007 through DR-010)
+    - Bible Section 18.9 (Two-Column Identity Pattern)
+    - Schema_Overview Appendix B, E, F
+    - PHASE_1_DECISIONS.md (this session's summary)
+  
+  step_2_verify_audit_state:
+    - Run `Supabase:list_tables` on lffcbeszjqzioobqfdav
+    - Compare to "tables_existing: 13" baseline
+    - Note any divergence (someone may have added tables manually)
+  
+  step_3_decide_open_items:
+    - DR-020 (migration repo location)
+    - DR-021 (Notion sync scope)
+    - DR-022 (branch testing)
+  
+  step_4_choose_starting_action:
+    options:
+      A: "Start writing Phase 1A migrations (5 SQL files)"
+      B: "Export existing 30 migrations to git as historical baseline"
+      C: "Set up eywa-supabase-migrations repo structure"
+      D: "Create Supabase development branch for testing"
+  
+  step_5_remember_constraints:
+    - Migration files must be idempotent (IF NOT EXISTS, IF EXISTS)
+    - Existing 25K+ keyword rows MUST NOT break
+    - 6 active n8n workflows MUST continue functioning
+    - Operator commits to git themselves (Claude doesn't push)
+```
+
+### 6.7 Session History (Phase 1 Tracking)
+
+```yaml
+session_2026_05_07:
+  duration: ~6 hours
+  outcomes:
+    - GTGT audit completed
+    - n8n workflows analyzed (6 workflows)
+    - Multilingual strategy designed
+    - Two-Phase Hierarchy Sync (DR-006) finalized
+    - Bible v3.11 created
+    - Schema v1.7 created
+    - Handover v1.2 created
+
+session_2026_05_08:
+  duration: ~3 hours
+  outcomes:
+    - Two-Column Identity Pattern designed (DR-008)
+    - Multilingual Strategy v2 (DR-009) — Two-Tier
+    - Brand Scope Architecture (DR-010)
+    - In-Place GTGT Upgrade (DR-007) confirmed
+    - Bible v3.12 (Section 18.9 added)
+    - Schema v1.8 (Appendices B/E/F)
+    - Handover v1.3 (this Section 6)
+    - Phase 1 migration plan (26 files outlined)
+  
+  status: "Documentation phase complete. Next: write migrations."
+```
+
+
+---
+
+
+
+## 🛠️ Section 7 — Workflow Phases for New Brand
+
+### 7.1 Overview — 7 Phases
+
+```
+PHASE A: Brand Understanding       ← Before any technical work
+PHASE B: Research & Discovery      ← Data gathering
+PHASE C: Entity Genesis            ← Knowledge graph building
+PHASE D: Cluster & Domain Mapping  ← Topical organization
+PHASE E: Sitemap Architecture      ← Page structure
+PHASE F: Content Production        ← Writing & validation
+PHASE G: Deployment                ← Schema + publish
+```
+
+### 7.2 Phase A — Brand Understanding
+
+**Goal:** Build a complete mental model of the brand before doing anything technical.
+
+**If brand concept document exists:** Read fully → extract vertical/audience/USP/voice → confirm understanding.
+
+**If NOT provided:** Use 20-question interview framework covering identity, competitive, service, audience journey, business context.
+
+**Output:** `eywa-{brand}/docs/brand-concept.md` — get operator approval.
+
+### 7.3 Phase B — Research & Discovery
+
+- **Competitor analysis** (DataForSEO + manual)
+- **Keyword research** (DataForSEO Labs + Google Keyword Planner)
+- **Patient journey mapping** (interviews + reviews)
+- **Existing content audit** (if migration scenario)
+
+**Output:** `eywa-{brand}/content-plan/research-notes.md`
+
+### 7.4 Phase C — Entity Genesis (EGP — Bible Part 2.6)
+
+**5 Steps:**
+
+0. Brand profile validation
+1. Domain mapping (3-9 domains: anatomical + methodological + cross-cutting)
+2. Cluster identification (15-30 clusters typical)
+3. Entity population (Tier 1 mandatory: condition+procedure+treatment; Tier 2 optional; Tier 3 cross-cutting). **Search before create.**
+4. Relationship wiring (10-edge vocabulary)
+5. Validation (4 health checks)
+
+**Output Files (per Section 5 schemas):**
+- `clusters.md` — cluster index (6 columns)
+- `entities.md` (or `entities/{cluster}.md`) — 12 columns per entity
+- `relationships.md` — 5 columns per edge
+- `egp-output-summary.md` — overall stats
+
+### 7.5 Phase D — Cluster & Domain Mapping
+
+Validate: pillar-supporting ratio (8-25), domain balance, cross-brand overlap with correct brand_scope[].
+
+### 7.6 Phase E — Sitemap Architecture (Bible Part 4)
+
+5 steps: section assignment → numbered hierarchy → page typing → internal linking → health audit.
+
+**Output:** `sitemap.md` (7 columns), `internal-linking-plan.md`, `audit-report.md`
+
+### 7.7 Phase F — Content Production
+
+Per-page requirements: schema planned, citations ≥layer minimum, author+reviewer assigned, multilingual fields, WCAG AA, internal links per plan, citable patterns used.
+
+5-stage editorial workflow: Medical → SEO → Brand Voice → Legal/PDPA → Final Sign-off.
+
+### 7.8 Phase G — Deployment
+
+Pre-launch checklist (entities pushed, schema active, ACF imported, CPTs activated, sitemap.xml, robots.txt, hreflang).
+
+**Two-Phase Sync execution:** Planning files → Phase 1 (Supabase flat) → Phase 2 (Notion backfill) → Live.
+
+---
+
+## ⚠️ Section 8 — Red Flags & Quality Gates
+
+### 8.1 STOP Signs
+
+Stop and escalate to operator if:
+
+**Knowledge graph:**
+- About to create entity that "feels familiar" without searching first
+- Entity_fingerprint conflicts
+- brand_scope decision impacts other brand's pages
+- Edge doesn't fit standard 10 edges
+
+**Content quality:**
+- Citation tier <3 used as primary evidence
+- Citation older than freshness threshold
+- No author/reviewer for medical content
+- Direct quotes >15 words (copyright)
+
+**Schema:**
+- Tier 1 + Tier 2 not linked via @id
+- Page lacks hasCredential when brand is healthcare
+- Schema type inconsistent with page Layer
+
+**Federation:**
+- Decision affects ['*'] entities
+- Pattern emerges that other brands should adopt
+- Spec ambiguity affecting multiple brands
+
+**Deployment:**
+- WCAG AA failure
+- LCP > 2.5s
+- Schema validation errors
+- Missing alt text/aria labels
+
+### 8.2 Quality Gates Per Deliverable
+
+**Entity:** searched? brand_scope correct? fingerprint unique? type valid? linked to cluster?
+
+**Cluster:** anchor entity? ≥5 entities? L5 pillar planned? naming format? domain mapped?
+
+**Page:** 3 dimensions defined? schema matches Layer? citations meet minimums? author+reviewer? multilingual fields? internal links per plan?
+
+**Citation:** evidence_tier set? within freshness? COI disclosed? schema:MedicalEvidenceLevel mapped?
+
+**Schema:** Tier 1 via WPCode? Tier 2 via Schema Pipeline? @graph + @id? validates in Rich Results Test?
+
+**Planning files:** All required columns present? text-based parents (not notion_id)? brand_scope set?
+
+### 8.3 Continuity Discipline
+
+**Before ending session:** commit to GitHub, update DECISION_RECORDS, note next steps.
+
+**Starting new session:** read this handover, read DECISION_RECORDS, check GitHub for recent commits, read brand-config, verify Bible/Schema versions.
+
+**Cross-session:** never assume previous Claude remembers. Always read DECISION_RECORDS to catch up.
+
+---
+
+## 🔄 Section 9 — Update & Sync Protocols
+
+### 9.1 When Spec Changes
+
+1. Read changelog of new version
+2. Identify affected current work
+3. Replace project knowledge files (delete old, upload new)
+4. Update brand-config.json metadata (eywa_protocol_version)
+5. Re-validate pending entities/pages against new spec
+6. Document forced refactors in DECISION_RECORDS
+
+### 9.2 When Brand Config Changes
+
+Triggers: new service line, specialty add/remove, CPT flag changes, new language.
+
+Steps: update brand-config.json → push GitHub → if structural, re-run affected EGP steps → update sitemap → re-validate cluster health.
+
+### 9.3 When Decision Made
+
+Document context, options, choice, rationale, consequences, references in DR-NNN format. Append-only. Universal decisions go to eywa-protocol-spec, brand-specific to eywa-{brand}/docs/.
+
+---
+
+## 📋 Section 10 — Pre-Flight Checklist for Every Session
+
+```yaml
+session_kickoff_checklist:
+  
+  context_verification:
+    ☐ Read EYWA_HANDOVER.md (this file)
+    ☐ Read latest Bible version
+    ☐ Read latest Schema version
+    ☐ Read brand-config.json
+    ☐ Read DECISION_RECORDS.md (if exists)
+    ☐ Read brand-concept.md (if exists)
+  
+  infrastructure_verification:
+    ☐ GitHub MCP working
+    ☐ Brand repo accessible
+    ☐ Bible version matches latest
+  
+  state_verification:
+    ☐ Current phase (A-G)?
+    ☐ Last completed?
+    ☐ Blockers?
+    ☐ Operator's priority for this session?
+  
+  federation_verification:
+    ☐ Recent updates in seo_entity_graph
+    ☐ Universal entities relevant
+    ☐ Cross-brand impact noted
+```
+
+---
+
+## 🌟 Section 11 — Success Criteria
+
+A brand is **bootstrap complete** when:
+
+**Knowledge graph:** all entities created/adopted, clusters validated, edges wired, brand_scope correct.
+
+**Sitemap:** 8 sections decided, every page has Layer+Tier+Funnel+Type, hierarchy consistent, linking plan complete, health audit passed.
+
+**Content:** 6-month editorial calendar, first 5 cornerstone pages drafted, 50+ citations, author/reviewer profiles, brand voice approved.
+
+**Technical:** Schema Tier 1 + Tier 2 active, ACF imported, CPTs activated, multilingual setup.
+
+**Governance:** decision records up to date, KPI baseline measured, editorial workflow active, sync flows running.
+
+---
+
+## 🆘 Section 12 — When in Doubt
+
+**Spec ambiguity:** ask operator → reference latest Bible → document interpretation in DECISION_RECORDS
+
+**Cross-brand conflict:** stop → discuss in master spec → resolve before continuing
+
+**Technical uncertainty:** reference Bible/Schema → ask operator → don't guess
+
+**Ethical/legal concern:** STOP → flag immediately (PDPA, medical misinformation, copyright)
+
+**Scope creep:** note as future work → don't expand without approval → document as deferred
+
+---
+
+## 📞 Quick Reference — Key Bible Sections
+
+```yaml
+knowledge_graph:
+  Entity Genesis Protocol:    Part 2.6
+  Entity Polymorphism:        Part 2.5
+  Edge Vocabulary (10 edges): Part 2.7
+
+sitemap:
+  8-Section Universal:        Part 4.2
+  Section ↔ Layer Mapping:    Part 4.3
+  Numbered Hierarchy:         Part 4.4
+  Health Metrics:             Part 4.10
+
+page_definition:
+  3-Dimensional Definition:   Part 3.1
+  Layer Definitions (1-7):    Part 3.2
+  Tier System (A-D):          Part 3.3
+  Funnel Stages:              Part 3.4
+
+schema:
+  2-Tier Strategy:            Section 7.5.0 (start here!)
+  Tier 1 Implementation:      Section 8.6 (WPCode)
+  Tier 2 Implementation:      Part 26 (Schema Pipeline)
+  @graph Pattern:             Section 7.5.5
+
+content_quality:
+  Citation Tier System:       Part 23.1
+  Editorial Review:           Part 23.4
+  Citable Patterns (A-F):     Part 6
+  WCAG AA:                    Part 23.6
+
+multilingual:
+  Strategy Overview:          Part 28
+  URL Structure:              Section 28.2
+  Schema Per Language:        Section 28.7
+
+federation:
+  Federation Pattern:         Section 10.7
+  Cross-Brand Tracking:       Section 4.12
+  brand_scope Usage:          Throughout, see Section 10.7.3
+
+scoring:
+  Scoring Framework:          Part 27
+  15 KPIs:                    Part 20
+
+wordpress:
+  Stack Decision:             Section 25.11 (Elementor Pro)
+  Plugin Architecture:        Part 25
+  ACF Fields:                 Section 25.5
+  Schema Pipeline:            Part 26
+
+sync_patterns:
+  Two-Phase Hierarchy Sync:   Part 18.8 (NEW in v3.11)
+  Multi-Workspace Sync:       Section 18.7
+  Notion ↔ Supabase Mapping:  Section 18.5
+```
+
+---
+
+## 🏁 Final Notes
+
+```
+✅ Read this file every session
+✅ Reference Bible + Schema for technical decisions
+✅ Search before create (entities, citations, clusters)
+✅ Document decisions (DECISION_RECORDS.md)
+✅ Push to GitHub (canonical source)
+✅ Think federation, not silo
+✅ Maintain brand uniqueness within shared structure
+✅ Quality gates before any deliverable
+✅ Escalate when uncertain
+✅ Use planning schema (Section 5) — text-based parents
+
+🚫 Never edit Bible from brand context
+🚫 Never assume entity doesn't exist without searching
+🚫 Never duplicate work across brands
+🚫 Never skip citation tier validation
+🚫 Never proceed with spec ambiguity unresolved
+🚫 Never use notion_id in markdown planning files
+```
+
+**Ready to work?** Start with Section 10 (Pre-Flight Checklist), then proceed to the appropriate phase based on brand state.
+
+🌿 **Welcome to EYWA. Let's build something exceptional.**
+
+---
+
+## 📜 Changelog
+
+### v1.2 (2026-05-07) — Per-Brand Repo Folder Structure 📁
+
+- ➕ **Section 5.10 (NEW):** Per-Brand Repo Folder Structure
+  - 5.10.1: Standard folder tree (7 required + 3 optional folders)
+  - 5.10.2: Folder purpose quick reference table
+  - 5.10.3: Required vs optional folders
+  - 5.10.4: Naming conventions (kebab-case, lowercase, no underscores)
+  - 5.10.5: README requirements per folder
+  - 5.10.6: Where sitemap & entities files live (FAQ answer)
+  - 5.10.7: Planning files lifecycle (draft → Phase 1 → Phase 2 → live)
+  - 5.10.8: What NOT to put in per-brand repo (security + scope)
+  - 5.10.9: Repo initialization checklist
+  - 5.10.10: Cross-references to Bible
+- 🔗 References Bible Part 18.8, Part 2.6, Section 10.7, Section 25.11.7
+- 🎯 Closes gap: comprehensive folder structure was scattered across Bible — now consolidated in one place
+- 🎯 Applies to: ALL existing + future per-brand repos
+- 🎯 Action item: existing brand repos must align with v1.2 structure
+
+### v1.1 (2026-05-07) — Planning Schema Specification 📊
+- ➕ **Section 5 (NEW):** Planning File Schema — comprehensive spec for markdown planning files
+  - Section 5.2: Required planning file set (5 files)
+  - Section 5.3: Entities schema (12 columns)
+  - Section 5.4: Clusters schema (6 columns)
+  - Section 5.5: Sitemap schema (7 columns)
+  - Section 5.6: Relationships schema (5 columns)
+  - Section 5.7: Content priorities schema (7 columns, optional)
+  - Section 5.8: Why parent is text (not notion_id) at planning
+  - Section 5.9: Hierarchy encoding methods (explicit vs numbering)
+- 🔗 References Bible Part 18.8 (Two-Phase Hierarchy Sync Pattern)
+- 🔗 References Schema_Overview v1.7 (parent_notion_id + sync_state fields)
+- 📌 Section renumbering: previous Section 5 (Workflow Phases) → Section 6, etc.
+
+### v1.0 (2026-05-07) — Initial Release
+- Complete operating manual for Claude/AI assistants
+- 10 sections covering project setup → escalation paths
+- Quick reference to Bible sections
+
+---
+
+*This document is part of the EYWA Protocol governance suite. For updates, see GitHub: `the-gifted-digital/eywa-protocol-spec/EYWA_HANDOVER.md`*
