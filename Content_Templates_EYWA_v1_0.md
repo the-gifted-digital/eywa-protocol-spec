@@ -3,10 +3,22 @@
 > **Companion document to** EYWA Bible v3.14 + Schema Overview v1.10
 > **Universal Content Production Standards across 13 brands × 6 verticals**
 
-**Version:** v1.1 (DRAFT 2026-05-10)
+**Version:** v1.2 (DRAFT 2026-05-10)
 **Status:** Proposed — pending DR-020 lock
 **Companion to:** Bible v3.14 + Schema Overview v1.10 + DECISION_RECORDS v1.6
-**Format:** Append-only with semantic versioning (v1.0 → v1.1 backward compatible)
+**Format:** Append-only with semantic versioning (v1.0 → v1.1 → v1.2 backward compatible)
+
+## v1.2 Changelog (2026-05-10) — Part 1 / Part 2 Strict Separation
+
+Operator review of v1.1 worked example (T1 OSA) surfaced UX issues with mixing technical annotations into review-ready content. v1.2 enforces strict separation.
+
+- ➕ **§7 Part 1 / Part 2 Editorial-Production Separation Pattern (NEW)** — formal spec for content-team-friendly Part 1 (WYSIWYG, copy-paste-ready) vs technical Part 2 (multi-toggle spec)
+- ➕ **§7.1 On-Page SEO Brief Table** — required at top of Part 1 with focus keyword, related keywords, SEO title (50-60 char optimal), meta description (120-155 char optimal), URL slug, target word count, Featured Snippet target. Char count + status indicator (✅ Optimal / ⚠️ Borderline / ❌ Revise) included.
+- ➕ **§7.2 Citation Map Table** — replaces inline `📌 Citable #N — Pattern X:` markers. Lives in Part 2 toggle. Tracks: section, sentence preview, pattern, citation_id, notes.
+- ➕ **§7.3 Section Brief Table** — replaces inline `> 📖 Annotation:` blocks. Lives in Part 2. Per-section: purpose + length target + speakable flag + schema feed.
+- ➕ **§7.4 CSS Class Map Table** — centralizes per-section CSS class assignments (no longer inline in Part 1).
+- 🔄 **§2.8 update** — `editorial_marker_convention` now mandates Part 2 Citation Map location (NOT inline in Part 1)
+- 🔄 **All 25 templates** — tagged with new Part 1 / Part 2 structure. Skeleton + worked example pattern in `examples/` directory demonstrates compliance.
 
 ## v1.1 Changelog (2026-05-10) — OSA Master Example Integration
 
@@ -741,7 +753,9 @@ cross_brand_quality_check:
   - cluster_id may differ (e.g., 'sleep-apnea-airway' for VTH vs 'sleep-disordered-breathing' for VitalSleep)
 ```
 
+---
 
+## 3. Layer 2 — Content Type Templates (25)
 
 ### 3.1 Core Universal Templates (12)
 
@@ -1876,16 +1890,220 @@ implementation_notes:
 
 ---
 
-## 7. Reference Implementations
+## 7. Editorial-Production Separation Pattern 🆕 v1.2
 
-### 7.1 Gold Standard References
+**Problem this solves:** Mixing technical annotations + CSS hints + editorial markers into review-ready content creates:
+- Cognitive load on non-technical content reviewers
+- Risk of human error (copy-paste of editorial markers into live web CMS)
+- Loss of WYSIWYG — reviewer can't tell what users will see
+
+**Solution:** Strict 2-part structure for every content file (skeleton + worked example).
+
+### 7.1 Part 1 — WYSIWYG Content (review-ready)
+
+```yaml
+purpose: "Pure content that goes on the live web page"
+audience: "Content team reviewer + webmaster who copies content out"
+mental_model: "What you see in Part 1 = exactly what users see on published page"
+
+structure:
+  position_1_top: "On-Page SEO Brief table (REQUIRED — see §7.5)"
+  position_2_h1: "H1 — clean page title (no annotations)"
+  position_3_body: "Numbered sections (1, 2, 3, ... no block codes)"
+
+allowed_in_part_1:
+  - On-Page SEO Brief table (top)
+  - H1 (clean)
+  - Section headings (numbered, no block codes like — B01)
+  - Body prose
+  - Tables that go on web (Quick Facts, Comparison, Severity Grading)
+  - Patient Journey cards (anonymized)
+  - FAQ Q&A pairs (clean — no intent-type tags inline)
+  - Crisis Disclosure callout (visual representation, role="alert")
+  - Doctor Review block (clean visual)
+  - References (numbered list)
+  - Internal link arrows (→ [text](/path))
+  - Brand stance prefix "🎯 จุดยืนของ {brand}:" (this IS user-facing content)
+
+forbidden_in_part_1:
+  - Editorial annotations (📖 Annotation:)
+  - CSS hints (CSS: .speakable-block)
+  - Block codes (— B01, — B25a in headings)
+  - Inline citable markers (📌 Citable #N — Pattern X: ...)
+  - Intent-type tags inline (e.g., [Intent: definitional] next to FAQ Q)
+  - Validation checkboxes
+  - TODO comments (only in skeleton, removed in worked example output)
+```
+
+### 7.2 Part 2 — Technical + Editorial Spec (multi-toggle)
+
+```yaml
+purpose: "Implementation guidance + editorial tracking — for writer/editor/dev/webmaster"
+audience: "Different roles open different toggles based on need"
+ui_pattern: "Multiple <details><summary> blocks — independently collapsible"
+
+required_toggles_in_order:
+  toggle_1: "📋 Section Brief — purpose + length per section (writer guide)"
+  toggle_2: "🎨 CSS Class Map per Section"
+  toggle_3: "📌 Citation Map (Editorial Tracking — replaces inline 📌 markers)"
+  toggle_4: "🏗️ Schema Markup (Tier 1/2/3 JSON-LD)"
+  toggle_5: "🔧 ACF Field Mapping"
+  toggle_6: "🔗 Internal Link Checklist"
+  toggle_7: "🖼️ Image Specs"
+  toggle_8: "🤖 Predicted Prompts Bank — B26 (off-render)"
+  toggle_9: "📝 Dev Notes & Validation Checklist"
+
+ordering_rationale:
+  toggle_1_first: "Writer reads Section Brief BEFORE writing Part 1 prose"
+  toggle_2_3: "CSS + Citation Map = lookup tables (frequently referenced)"
+  toggle_4_5: "Schema + ACF = dev implementation"
+  toggle_6_7: "Links + images = production checklist"
+  toggle_8_9: "Predicted prompts + validation = QA before publish"
+```
+
+### 7.3 Section Brief Table (Part 2 Toggle 1)
+
+Replaces inline `> 📖 Annotation:` blockquotes. Per-section table:
+
+```markdown
+| § | Section Name | Block | Purpose | Required Length | Speakable? | Schema Feeds |
+|---|--------------|-------|---------|-----------------|------------|--------------|
+| 1 | Hero Summary | B01 | Featured Snippet capture + voice search target | 40-60 words | ✅ .speakable-block | Article + SpeakableSpec |
+| 2 | Quick Facts | B02 | Entity Signal — feeds MedicalCondition | 6-12 rows | — | MedicalCondition.code |
+| ... | ... | ... | ... | ... | ... | ... |
+```
+
+### 7.4 CSS Class Map Table (Part 2 Toggle 2)
+
+Replaces inline `> CSS: .speakable-block` hints. Per-section table:
+
+```markdown
+| § | Section | CSS Class | Notes |
+|---|---------|-----------|-------|
+| 1 | Hero Summary | `.speakable-block` | SpeakableSpecification cssSelector target |
+| 2 | Quick Facts | `.quick-facts-table` | Sticky header on scroll |
+| 7.7 | Brand Stance | `.brand-stance-block` | ⭐ Pattern E callout (brand color gradient) |
+| 12 | Crisis Disclosure | `.crisis-disclosure` | role="alert" |
+| inline | Citables | `.citable-quote` | Apply per Citation Map entries |
+```
+
+### 7.5 On-Page SEO Brief Table (Part 1 Top — REQUIRED)
+
+```yaml
+purpose: "Content team sees focus KW + title/meta with char counts BEFORE writing"
+position: "Top of Part 1, before H1"
+required_fields:
+  - Focus Keyword
+  - Related Keywords (5-10 secondary, comma-separated)
+  - SEO Title (with char count + status indicator)
+  - Meta Description (with char count + status indicator)
+  - URL Slug
+  - Target Word Count (with Bible §9.8 range reference)
+  - Featured Snippet Target (predicted query + answer location)
+  - Schema Type (informational — link to Part 2 for full)
+
+char_count_thresholds:
+  seo_title:
+    optimal: 50-60        # ✅
+    borderline_low: 40-49  # ⚠️
+    borderline_high: 61-70 # ⚠️
+    revise_below: 40       # ❌ too short for SERP
+    revise_above: 70       # ❌ truncates in SERP
+  
+  meta_description:
+    optimal: 120-155       # ✅
+    borderline_low: 100-119 # ⚠️
+    borderline_high: 156-165 # ⚠️
+    revise_below: 100      # ❌ underutilized
+    revise_above: 165      # ❌ truncates in SERP
+
+status_emoji_legend:
+  - ✅ Optimal — within target range
+  - ⚠️ Borderline — usable but consider tightening
+  - ❌ Revise needed — outside acceptable range
+
+table_template: |
+  | Field | Value | Length | Status |
+  |-------|-------|--------|--------|
+  | **Focus Keyword** | {primary keyword} | — | 🎯 Primary |
+  | **Related Keywords** | {kw1}, {kw2}, {kw3}, {kw4}, {kw5} | — | {N} secondary |
+  | **SEO Title** | {browser tab title} | **{N} chars** | {✅/⚠️/❌} |
+  | **Meta Description** | {SERP description} | **{N} chars** | {✅/⚠️/❌} |
+  | **URL Slug** | `/{path}/{slug}` | — | — |
+  | **Target Word Count** | {N} (Bible §9.8 {Layer}: {range}) | — | — |
+  | **Featured Snippet Target** | "{predicted query}" ({intent type}, §{N}) | — | 🎯 Position 0 |
+  | **Schema Type** | {primary} + {secondary} + {tier 3} | — | (see Part 2) |
+```
+
+### 7.6 Citation Map Table (Part 2 Toggle 3)
+
+Replaces inline `📌 Citable #N — 🟢 Pattern A:` markers. Per-citable table:
+
+```markdown
+| Citable # | Section | Sentence Preview | Pattern | Citation ID | Notes |
+|-----------|---------|------------------|---------|-------------|-------|
+| 1 | §1 Hero | "{first 80 chars of citable sentence}..." | 🟢 A — Clinical Data | cite_PLACEHOLDER_001 | [DEMO DATA — verify] |
+| 2 | §3 Definition | "{...}" | Tier 1 External | cite_DEMO_AASM_2022 | — |
+| ... | ... | ... | ... | ... | ... |
+```
+
+**Citation Map purposes:**
+1. **Editorial review:** verify Pattern coverage minimums (≥3 Pattern A, ≥1 Pattern E for T1)
+2. **Webmaster:** apply `.citable-quote` CSS class per section row
+3. **Sync to DB:** future n8n flow reads this table → populates `seo_page_citations` junction
+4. **Audit trail:** which sentences are evidence-backed vs editorial
+
+**Editorial marker convention (UPDATED v1.2):**
+- ❌ ~~Inline draft markers `📌 Citable #N — Pattern X:` in Part 1~~ (REMOVED)
+- ✅ Citation Map table in Part 2 (single source of truth)
+- ✅ Color emoji preserved per Pattern: 🟢 A / 🔵 B / 🟡 C / 🟠 D / 🟣 E
+
+### 7.7 Migration from v1.1 → v1.2
+
+For existing content drafts written under v1.1 marker convention:
+
+```yaml
+v1_1_pattern:
+  inline_in_part_1: "📌 Citable #5 — 🟢 Pattern A: ผู้ป่วย CPAP ลด AHI 80%"
+
+v1_2_pattern:
+  in_part_1: "ผู้ป่วย CPAP ลด AHI 80%"  # clean prose
+  in_part_2_citation_map: |
+    | 5 | §7.2 Treatment | "ผู้ป่วย CPAP ลด AHI 80%..." | 🟢 A | cite_DEMO_VTH_001 | — |
+
+migration_workflow:
+  step_1: "Scan Part 1 for 📌 Citable markers"
+  step_2: "Extract: section / sentence / pattern / citation_id"
+  step_3: "Add row to Part 2 Citation Map"
+  step_4: "Strip inline marker from Part 1 (keep prose)"
+  
+estimated_effort: "5-10 minutes per page (manual); future n8n flow can automate"
+```
+
+### 7.8 Reference Implementation
+
+See `/examples/T1-medical-condition-SKELETON.md` and `/examples/T1-osa-vth-biodent-WORKED-EXAMPLE.md` for v1.2-compliant template structure.
+
+Key validation:
+- Part 1 contains ZERO `📖 Annotation:`, `📌 Citable`, `CSS:`, `— B##` markers
+- Part 1 starts with `## 📊 On-Page SEO Brief` table
+- Part 2 has ≥9 `<details>` toggles in specified order
+- Citation Map in Part 2 tracks all citables with section + pattern + citation_id
+
+---
+
+## 8. Reference Implementations
+
+### 8.1 Gold Standard References
 
 | Template | Reference | Notes |
 |----------|-----------|-------|
 | T1 Medical Condition | `/legacy/Sitemap Deezy/VTH Biodent/ตัวอย่างเนื้อหา 355be9c6bf3c806fadabe4828a694200.md` | Sleep apnea sample — 13 sections, full annotations, all required blocks present |
 | T1 Medical Condition (real, mixed quality) | https://www.vthbiodent.com/mouth-biomapping/ | ✅ Visual EEAT good, ❌ Structured EEAT broken — see §6.2 |
+| T1 v1.2 SKELETON | `/examples/T1-medical-condition-SKELETON.md` | Strict Part 1/Part 2 separation boilerplate |
+| T1 v1.2 WORKED EXAMPLE | `/examples/T1-osa-vth-biodent-WORKED-EXAMPLE.md` | OSA filled with VTH dental sleep angle, demonstrates v1.2 pattern |
 
-### 7.2 What to Replicate from Sleep Apnea Sample
+### 8.2 What to Replicate from Sleep Apnea Sample
 
 ```yaml
 strengths_to_emulate:
@@ -1904,7 +2122,7 @@ weaknesses_to_avoid:
   - Image references missing alt-text guidance
 ```
 
-### 7.3 What VTH /mouth-biomapping/ Does Right (Visual)
+### 8.3 What VTH /mouth-biomapping/ Does Right (Visual)
 
 - ✅ Doctor displayed: ทพ. ดร. อมรพงษ์ วชิรมน with credentials
 - ✅ "20+ ปีประสบการณ์" counter
@@ -1912,7 +2130,7 @@ weaknesses_to_avoid:
 - ✅ FAQPage schema with Q/A pairs
 - ✅ BreadcrumbList + Organization schema
 
-### 7.4 What VTH /mouth-biomapping/ Gets Wrong (Structured)
+### 8.4 What VTH /mouth-biomapping/ Gets Wrong (Structured)
 
 - ❌ Article author = "advthdent" (admin) not the doctor
 - ❌ No reviewedBy property
@@ -1925,9 +2143,9 @@ weaknesses_to_avoid:
 
 ---
 
-## 8. Implementation Guidance
+## 9. Implementation Guidance
 
-### 8.1 Notion (Editorial Source of Truth)
+### 9.1 Notion (Editorial Source of Truth)
 
 ```yaml
 notion_database: "Content Production"
@@ -1949,7 +2167,7 @@ editorial_workflow:
   stage_5: "Final signoff → push to WordPress"
 ```
 
-### 8.2 WordPress (Publication Layer)
+### 9.2 WordPress (Publication Layer)
 
 ```yaml
 acf_field_groups_per_template:
@@ -1972,7 +2190,7 @@ eywa_schema_pipeline_plugin:
     - Inject medical_reviewer_fp → Person/Physician schema
 ```
 
-### 8.3 Supabase (Data Layer)
+### 9.3 Supabase (Data Layer)
 
 ```yaml
 page_master_columns_already_exist:
@@ -1994,7 +2212,7 @@ future_constraint_pending:
 
 ---
 
-## 9. Open Questions for Review
+## 10. Open Questions for Review
 
 ```yaml
 Q1_template_count_too_many:
@@ -2045,7 +2263,7 @@ Q6_template_versioning:
 
 ---
 
-## 10. References
+## 11. References
 
 - Bible Part 6 (Citable Formulas + Perspective Layer) — content philosophy
 - Bible Part 9 (Template Anatomy + WCAG AA + Length Standards §9.8)
