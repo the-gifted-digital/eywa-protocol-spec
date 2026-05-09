@@ -87,3 +87,6 @@ data-snapshots/
 # Force include essential files
 !.env.example
 !.gitkeep
+
+# AI-only context (read locally by Claude, not for public spec)
+PROJECT_MEMORY.md
