@@ -2,7 +2,7 @@
 
 > **Append-only architectural decision log.** Each record explains WHY a decision was made — not just WHAT.
 
-**Document Version:** 1.5  
+**Document Version:** 1.6  
 **Last Updated:** 2026-05-10  
 **Format:** Reverse chronological (newest first)
 
@@ -31,6 +31,122 @@
 ---
 
 ## Decisions Log
+
+### [DR-020] — Universal Content Template Standard (2026-05-10) 🌱
+
+**Status:** Proposed (review until 2026-06-07 — paired with DR-019 lock cycle)
+**Bible Reference:** Part 6 (Content Standard) — references new companion file; Part 9 (Templates) — references new companion file
+**Schema Reference:** v1.10 — no DDL change for v1.0 of standard; future v1.1+ may add `template_id text` + `template_version jsonb` columns to page_master
+**Phase 1 Reference:** No migration required for spec lock; ACF field group updates per template (operational)
+**Companion File:** `Content_Templates_EYWA_v1_0.md` (in repo root with DRAFT status header — formal lock + Bible reference upon DR-020 approval)
+**Companion DRs:** DR-017 (content_brief — captures block tweaks), DR-018 (length standards — drives word count targets), DR-019 (schema strategy — defines emission purpose)
+
+**Context:**
+
+EYWA spec covers WHAT to build (Bible) + WHERE data lives (Schema), but lacks a UNIVERSAL standard for HOW to compose content blocks across 13 brands × 6 verticals. Real-world evidence:
+
+```yaml
+gaps_observed:
+  vth_biodent:
+    issue: "/mouth-biomapping/ has perfect visual EEAT but broken structured EEAT"
+    cause: "AIOSEO emits author='advthdent' (admin), reviewed-by-doctor visual not in JSON-LD"
+    impact: "Google sees anonymous-authored medical content (E-E-A-T weak signal)"
+  
+  deezy_dental:
+    issue: "13 distinct page types in actual sitemap, no template framework to ensure consistency"
+    types_observed:
+      - Service procedure pages (Section 3, 225 pages)
+      - Concern pages (Section 5, 124 pages)
+      - Clinical Guide (Section 6.1, 31 pages — NEW page type, no template)
+      - Glossary topical (Section 6.3, 26 pages)
+      - FAQ Library (Section 6.5, 28 pages)
+      - Case studies (Section 7, 56 pages)
+      - Branch pages (Section 8.2, 33 pages)
+      - Hyper-local programmatic (Section 9, 68+ pages — NEW, no template)
+    impact: "Content writers reinvent structure per page; thin-page risk; EEAT inconsistency"
+
+field_test_evidence:
+  sample_content_doc: "ตัวอย่างเนื้อหา 355be9c6bf3c806fadabe4828a694200.md"
+  observation: |
+    Sleep apnea sample has 13 well-organized sections with annotations.
+    Operator already has the pattern internalized — just needs codification
+    + extension across content types beyond Medical Condition.
+```
+
+**Decision:**
+
+Lock the following 4 sub-decisions together (final lock 2026-06-07):
+
+1. **Companion File Architecture** — `Content_Templates_EYWA_v1_0.md` becomes the 3rd canonical reference alongside Bible + Schema. Bible/Schema reference it; do not duplicate content.
+
+2. **3-Layer Composition System:**
+   - **Layer 1:** ~25 Universal Section Building Blocks (atomic units, high reuse)
+   - **Layer 2:** 25 Content Type Templates (12 core + 5 T2 variants + 7 specialized + 1 T6a Guide)
+   - **Layer 3:** Customization Hooks (block_substitution / addition / removal / reordering with HARD RULE: never remove REQUIRED blocks)
+
+3. **EEAT Requirement Matrix** — locked per template type (see companion file §5):
+   - Medical YMYL templates (T1, T2, T2a-e, T3, T4, T6a, T7, T8, T14, T15, T17): author + medical_reviewer + last_reviewed REQUIRED
+   - Conditional (T5, T6, T12): required if YMYL/medical claim
+   - Not required (T9 self-EEAT, T10, T11, T13, T16, T18 page-level, T19): operational/branch-level
+   - Decision rule: "If reader makes a health decision based on this page → reviewer REQUIRED"
+
+4. **Schema Enforcement Pattern** — beyond visual EEAT, structured emission must include:
+   - Article schema with `author` linked to Physician (not WP admin)
+   - `reviewedBy` property explicit
+   - `lastReviewed` property
+   - `medicalAudience` declaration
+   - Citations as schema `citation` array (not text-only)
+   - Organization typed as `MedicalBusiness` (specialty subtype)
+
+**Rationale:**
+
+- **Why companion file (not in Bible)?** Bible is 26K lines already; templates evolve faster than philosophy; mirrors Schema_Overview pattern; easier to version/maintain.
+- **Why 25 templates (not 12 or 50)?** 12 too few (misses verticals like aesthetic/wellness/genomic); 50 = overengineering. 25 derives from actual sitemap analysis (Deezy 13 page types + 6 verticals × 2-3 specialized variants each).
+- **Why 3-layer composition?** Block reuse maximizes consistency without duplication. Templates are recipes; blocks are LEGO units. Layer 3 hooks allow brand identity without breaking standard.
+- **Why schema enforcement beyond visual?** VTH /mouth-biomapping/ audit proves visual EEAT can be perfect while structured EEAT silently fails. Google's Medical YMYL guidelines (E-E-A-T 2026) explicitly check structured signals.
+- **Why pair with DR-019?** DR-019 governs schema emission purpose (serp/ai/forbidden); DR-020 governs content composition. Together they form the complete content production stack.
+- **Why no DDL for v1.0?** Existing columns (author_fp, medical_reviewer_fp, last_reviewed_at, schema_org_type, schema_markup_planned, content_brief, viability_assessment) suffice. Future template_id column can be added in v1.1 without breaking changes.
+
+**Consequences:**
+
+- ✅ Universal standard across 13 brands eliminates "writer reinvents structure" waste
+- ✅ EEAT enforcement (visual + structured) closes the silent failure gap audited at VTH
+- ✅ T18 Programmatic Local solves Deezy 68+ hyper-local pages problem (and all multi-branch brand scaling)
+- ✅ T6a Guide solves "คู่มือ" search intent (31 pages in Deezy alone)
+- ✅ Block-level reuse means future template additions are cheap (compose from existing blocks)
+- ✅ Per-template length standards consume DR-018 §9.8 directly
+- ✅ Per-template schema mappings consume DR-019 emission taxonomy directly
+- ⚠️ ACF field groups need refactor (~15-20 hours dev) — one ACF group per template
+- ⚠️ `eywa-schema-pipeline` plugin needs medical_reviewer_fp injection logic (~6 hours dev)
+- ⚠️ Editorial workflow gains template_id selection step (Notion DB schema update)
+- ⚠️ Existing pages need template_id back-fill (audit task, can be opportunistic)
+- 🚧 Follow-up: separate DR-021 may add `template_id` + `template_version` columns to page_master (v1.1)
+- 🚧 Follow-up: phase 2 EEAT enforcement (CHECK constraint) targeted 2026-09-01 after doctor onboarding
+
+**Open Questions for Review (must answer before lock):**
+
+1. Template count — 25 too many? *(Recommend: keep, each addresses real page type from sitemap analysis)*
+2. T6 vs T6a Guide overlap — risk of confusion? *(Recommend: editorial reviewer makes call; border cases default to T6 lower bar)*
+3. T18 Programmatic Local uniqueness enforcement — algorithmic check or manual? *(Recommend: manual v1, algorithmic v2 with cosine similarity threshold <0.7)*
+4. EEAT phase 2 hard-block timing — 2026-09-01 OK? *(Prerequisite: ≥80% of brand clinic doctors registered in seo_authors)*
+5. Template versioning strategy — semantic versioning vs date-stamped? *(Recommend: semver, store in page_master.template_version jsonb in v1.1)*
+6. ~~Should `Content_Templates_EYWA_v1_0.md` move to repo root immediately or wait for lock?~~ **RESOLVED 2026-05-10:** placed at repo root with DRAFT status in frontmatter (gitignore excludes `drafts/` folder; root placement enables claude.ai project sync during review window).
+
+**References:**
+
+- Companion file: `Content_Templates_EYWA_v1_0.md` (DRAFT, 1,456 lines, 25 templates, ~25 blocks)
+- DR-017 (content_brief — captures block-level tweaks at sitemap design phase)
+- DR-018 (length standards — drives per-template word count targets)
+- DR-019 (schema strategy — defines emission purpose for each template's schemas)
+- Bible Part 6 (Citable Formulas + Perspective Layer — content philosophy that templates implement)
+- Bible Part 9 (Template Anatomy + WCAG AA + §9.8 Length Standards)
+- Bible Part 23.4 (Multi-Stage Editorial Review — gains template_id selection step)
+- Schema v1.10 §5.1 (page_master columns: author_fp, medical_reviewer_fp, last_reviewed_at, schema_org_type, schema_markup_planned, content_brief, viability_assessment)
+- Reference content sample: `/legacy/Sitemap Deezy/VTH Biodent/ตัวอย่างเนื้อหา 355be9c6bf3c806fadabe4828a694200.md`
+- Live audit reference: https://www.vthbiodent.com/mouth-biomapping/ (audited 2026-05-10 — visual EEAT good, structured EEAT 6 failures)
+- Sitemap gap analysis source: `/legacy/Sitemap Deezy/Deezy Dental/deezy-sitemap.md` (13 page types observed)
+
+---
 
 ### [DR-019] — Schema Strategy for Post-Rich-Results Era (2026-05-10) 🌱
 
@@ -1879,6 +1995,18 @@ decision_record_governance:
 ---
 
 ## Changelog
+
+### v1.6 (2026-05-10) — DR-020 Proposed (Universal Content Template Standard) 🌱
+
+Triggered by VTH BioDent /mouth-biomapping/ EEAT audit (visual EEAT good, structured EEAT broken — 6 failures) + Deezy sitemap gap analysis (13 page types, no template framework). Operator field test confirmed need for universal content composition standard across 13 brands × 6 verticals.
+
+- ➕ **DR-020 (NEW, Proposed):** Universal Content Template Standard — 4 sub-decisions: (1) Companion file architecture, (2) 3-layer composition (~25 blocks → 25 templates → customization hooks), (3) EEAT requirement matrix locked per template, (4) Schema enforcement beyond visual.
+- 📁 **New companion file:** `Content_Templates_EYWA_v1_0.md` (placed at repo root with DRAFT status in frontmatter, 1,456 lines, 25 templates) — formal Bible cross-reference upon DR-020 approval.
+- 📝 **Review cycle:** 4 weeks (until 2026-06-07) — paired with DR-019 lock cycle.
+- 📝 **No DDL change for v1.0** — existing page_master columns suffice. Future template_id + template_version columns deferred to v1.1.
+- 📝 **EEAT phase 2 hard-block targeted 2026-09-01** — prerequisite: ≥80% brand doctor onboarding to seo_authors.
+- 📝 **Independent of DR-013/014** — different governance scope (content composition layer vs entity edge vocabulary layer).
+- 📝 **Companion to DR-017/018/019** — together form complete content production stack.
 
 ### v1.5 (2026-05-10) — DR-019 Proposed (Schema Strategy Post-Rich-Results) 🌱
 

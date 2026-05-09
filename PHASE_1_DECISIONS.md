@@ -1,11 +1,11 @@
 # EYWA™ Protocol — Phase 1 Decisions Summary
 
-**Document Version**: 1.4
+**Document Version**: 1.5
 **Date**: 2026-05-10
-**Status**: 🔒 Locked (Phase 1A specs + DR-015..018) + 🌱 DR-013/014 + DR-019 Proposed
+**Status**: 🔒 Locked (Phase 1A specs + DR-015..018) + 🌱 DR-013/014 + DR-019 + DR-020 Proposed
 **Phase**: 1 — Supabase Database Foundation
 **Project**: GTGT (in-place upgrade)
-**Companion to**: Bible v3.14 + Schema Overview v1.10 + Handover v1.6 + DECISION_RECORDS v1.5
+**Companion to**: Bible v3.14 + Schema Overview v1.10 + Handover v1.6 + DECISION_RECORDS v1.6 + Content_Templates_EYWA_v1_0.md (DRAFT)
 
 ---
 
@@ -345,6 +345,18 @@ These items emerged from real EGP work (Naphannop S.) and are now in Proposed st
   - Forbidden schemas to BLOCK in `eywa-schema-pipeline`: CourseInfo, ClaimReview, EstimatedSalary, LearningVideo, SpecialAnnouncement, VehicleListing, PracticeProblem
   - Independent of DR-013/014 (different governance scope — emission layer vs edge vocabulary)
 
+- 🌱 **DR-020 — Universal Content Template Standard**: Triggered by VTH /mouth-biomapping/ EEAT audit + Deezy sitemap gap analysis.
+  - Status: Proposed (review until 2026-06-07 — paired with DR-019 cycle)
+  - Blocking: NO for Phase 1A migrations (no DDL change for v1.0)
+  - Companion file: `Content_Templates_EYWA_v1_0.md` (DRAFT in `drafts/`, 1,456 lines)
+  - 4 sub-decisions: Companion architecture / 3-layer composition / EEAT requirement matrix / Schema enforcement pattern
+  - 25 templates: 12 core + 5 T2 vertical variants + 7 specialized (T13-T19) + T6a Guide
+  - ~25 universal blocks compose templates (LEGO architecture)
+  - EEAT phasing: Soft-warn now → Hard-block 2026-09-01 (prerequisite: ≥80% doctor onboarding)
+  - Future Phase 1F: ACF field group refactor (~15-20h) + eywa-schema-pipeline plugin update (~6h)
+  - Future v1.1 Schema may add `template_id` + `template_version` columns (deferred)
+  - Independent of DR-013/014; complements DR-017/018/019
+
 ### Phase 1 Operational Items (renumbered from v1.1)
 
 These items will become DR-022+ when decided:
@@ -398,4 +410,17 @@ These items will become DR-022+ when decided:
 
 ---
 
-**End of Phase 1 Decisions Summary v1.4**
+## 🆕 v1.5 Changelog (2026-05-10)
+
+- 🔄 Reference updated: DR v1.5 → v1.6 (DR-020 Proposed)
+- 🌱 Added DR-020 to Active Open Items section (Proposed, review until 2026-06-07 — paired with DR-019 cycle)
+- 📁 New companion file: `Content_Templates_EYWA_v1_0.md` at repo root (DRAFT status in frontmatter, 1,456 lines, 25 templates, ~25 blocks)
+- 📝 No DDL change from DR-020 v1.0 — existing page_master columns suffice
+- 📝 Future v1.1 of DR-020 may add `template_id` + `template_version` columns to page_master (deferred)
+- 📝 EEAT phase 2 hard-block targeted 2026-09-01 (prerequisite: ≥80% brand doctor onboarding)
+- 📝 Trigger: VTH `/mouth-biomapping/` EEAT audit (visual EEAT good, structured EEAT broken — 6 failures) + Deezy sitemap gap analysis (13 page types, no template framework)
+- 📝 Companion to DR-017 (content_brief), DR-018 (length standards), DR-019 (schema strategy) — together form complete content production stack
+
+---
+
+**End of Phase 1 Decisions Summary v1.5**

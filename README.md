@@ -36,9 +36,10 @@ EYWA™ is a registered trademark of **The Gifted Digital Marketing Co., Ltd.** 
 | `PROJECT_MEMORY.md` | Project context for AI sessions + onboarding | ~880 | 🧠 Memory (local-only, gitignored) |
 | `EYWA_PROTOCOL_v3_14.md` | The Bible — full specification | ~26,000 | 🔒 Active |
 | `Schema_Overview_EYWA_v1_10.md` | Database schema companion | ~2,600 | 🔒 Active |
-| `EYWA_HANDOVER.md` | Operating manual for Claude/AI | ~1,800 | 🔒 Active (v1.6) |
-| `DECISION_RECORDS.md` | Architecture decision log | ~2,000 | 🔒 Active (v1.4) |
-| `PHASE_1_DECISIONS.md` | Phase 1 quick reference | ~370 | 🔒 Active (v1.3) |
+| `EYWA_HANDOVER.md` | Operating manual for Claude/AI | ~1,850 | 🔒 Active (v1.6) |
+| `DECISION_RECORDS.md` | Architecture decision log | ~2,250 | 🔒 Active (v1.6) |
+| `PHASE_1_DECISIONS.md` | Phase 1 quick reference | ~390 | 🔒 Active (v1.4) |
+| `Content_Templates_EYWA_v1_0.md` | Universal Content Templates (DR-020 companion) | ~1,460 | 🌱 DRAFT — pending DR-020 lock 2026-06-07 |
 | `archive/EYWA_PROTOCOL_v3_13.md` | Bible (previous version) | ~25,460 | 📦 Archived |
 | `archive/Schema_Overview_EYWA_v1_9.md` | Schema (previous version) | ~3,985 | 📦 Archived |
 | `archive/EYWA_PROTOCOL_v3_12.md` | Bible (older version) | ~24,800 | 📦 Archived |
@@ -73,6 +74,36 @@ Real-world feedback from VTH BioDent (Naphannop S.) surfaced 4 process gaps in t
 - `008_add_sitemap_design_columns.sql`
 
 > **Scope note:** v3.14/v1.10 is sitemap design layer refinement. Edge vocabulary remains 10 LOCKED (DR-013/014 governance review continues independently — see below).
+
+---
+
+## 🌱 Governance Update — DR-020 Proposed (2026-05-10)
+
+**Trigger:** VTH BioDent /mouth-biomapping/ EEAT audit (visual EEAT good, structured EEAT broken — 6 failures) + Deezy sitemap gap analysis (13 distinct page types, no universal template framework).
+
+- 🌱 **DR-020 (Proposed):** Universal Content Template Standard — review until **2026-06-07** (paired with DR-019 cycle)
+
+**4 sub-decisions to lock together:**
+1. **Companion File Architecture** — `Content_Templates_EYWA_v1_0.md` becomes 3rd canonical reference (alongside Bible + Schema)
+2. **3-Layer Composition System** — ~25 Universal Building Blocks → 25 Content Type Templates → Customization Hooks
+3. **EEAT Requirement Matrix** — locked per template type (medical YMYL: required; institutional: not required)
+4. **Schema Enforcement Pattern** — beyond visual EEAT (Article author = Physician, reviewedBy explicit, lastReviewed property, medicalAudience, citation array, MedicalBusiness typing)
+
+**Templates summary (25 total):**
+- **Core Universal (12):** T1 Medical Condition, T2 Medical Procedure, T3 Diagnostic, T4 Medical Device, T5 Service Page, T6 Concept, T6a Guide 🆕, T7 Comparison, T8 Case Study, T9 Author Profile, T10 Branch, T11 Institutional, T12 Hub
+- **T2 Vertical Variants (5):** T2a Aesthetic, T2b Dental, T2c Wellness Program, T2d Physiotherapy, T2e Genomic
+- **Specialized (7):** T13 Pricing List, T14 Trending, T15 Quiz, T16 Insurance, T17 Care Instructions, T18 Programmatic Local 🆕, T19 Promotion 🆕
+
+**No DDL change** — existing page_master columns suffice. Future v1.1 may add `template_id` + `template_version` columns.
+
+**EEAT enforcement phasing:** Soft-warn now → Hard-block 2026-09-01 (prerequisite: ≥80% brand doctor onboarding).
+
+**If LOCKED 2026-06-07:** `Content_Templates_EYWA_v1_0.md` moves to repo root + Bible v3.15 references it + ACF field group refactor + eywa-schema-pipeline plugin update for medical_reviewer injection.
+
+**If REJECTED:** Document remains as advisory pattern in scratchpad; per-brand customization via existing flexibility.
+
+> **Note:** DR-020 is independent of DR-013/014, complements DR-017/018/019. Together with DR-019 forms complete content production stack (composition + emission).
+
 
 ---
 
@@ -332,7 +363,8 @@ See `EYWA_HANDOVER.md` Section 6 + `PHASE_1_DECISIONS.md` for details.
 | **DR-017** | **Page Content Brief Field** | 🔒 **Locked (NEW v1.4)** |
 | **DR-018** | **Page Content Length Standards** | 🔒 **Locked (NEW v1.4)** |
 | **DR-019** | **Schema Strategy for Post-Rich-Results Era (FAQ/HowTo/AggregateRating)** | 🌱 **Proposed (NEW v1.5 — review until 2026-06-07)** |
-| DR-020..026 | Various (WordPress hosting, Supabase tier, migration repo, Notion sync scope, branch testing, etc.) | ⏳ Placeholder |
+| **DR-020** | **Universal Content Template Standard (25 templates × ~25 blocks)** | 🌱 **Proposed (NEW v1.6 — review until 2026-06-07)** |
+| DR-021..026 | Various (WordPress hosting, Supabase tier, migration repo, Notion sync scope, branch testing, etc.) | ⏳ Placeholder |
 
 See `DECISION_RECORDS.md` for full rationale.
 
@@ -397,7 +429,8 @@ The EYWA database schema (v1.10) consists of **28 tables organized into 9 groups
 - v1.0 (2026-05-07) — Initial release
 
 **Decision Records:**
-- **v1.5 (2026-05-10)** — DR-019 (Schema Strategy Post-Rich-Results) Proposed 🌱 *(current)*
+- **v1.6 (2026-05-10)** — DR-020 (Universal Content Template Standard) Proposed 🌱 *(current)*
+- v1.5 (2026-05-10) — DR-019 (Schema Strategy Post-Rich-Results) Proposed 🌱
 - v1.4 (2026-05-10) — DR-015..018 (Market Reconciliation + Viability + Brief + Length Standards) 🔒
 - v1.3 (2026-05-09) — DR-013 (Edge v3.5 Expansion) + DR-014 (Concept Subtype Lock) Proposed 🌱
 - v1.2 (2026-05-08) — DR-011 (EUG) + DR-012 (Edge Evolution) added
@@ -408,10 +441,15 @@ The EYWA database schema (v1.10) consists of **28 tables organized into 9 groups
 - 🔮 **Bible v3.15** (combined trigger):
   - DR-013/014 lock → Edge vocabulary 10 → 12 + typed edge_note + concept subtype lock
   - DR-019 lock → Part 26 restructure (3-purpose schema taxonomy) + Part 9 Featured Snippet pattern + Part 20 KPI replacement
-- 🔮 **Schema v1.11** (DR-013/014 only, no DDL from DR-019):
+  - DR-020 lock → Part 6 + Part 9 reference new companion file (Content_Templates_EYWA_v1_0.md)
+- 🔮 **Schema v1.11** (DR-013/014 only, no DDL from DR-019/020 v1.0):
   - edge_evidence_citation + medical_reviewer_signoff fields + Phase 1E migrations
+  - Future v1.1 of DR-020 may add `template_id` + `template_version` columns to page_master
+- 🔮 **New canonical companion file** (post DR-020 lock):
+  - `Content_Templates_EYWA_v1_0.md` upgrades from DRAFT to LOCKED status (already in repo root)
 - ⚠️ DR-013/014 review 2026-05-15 (lock or reject)
-- ⚠️ DR-019 review 2026-06-07 (lock 1 week after Google June 2026 effective date for behavioural confirmation)
+- ⚠️ DR-019 review 2026-06-07 (lock 1 week after Google June 2026 effective date)
+- ⚠️ DR-020 review 2026-06-07 (paired with DR-019 cycle)
 
 ---
 

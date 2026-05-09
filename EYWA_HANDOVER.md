@@ -5,7 +5,7 @@
 
 **Document Version:** 1.6  
 **Last Updated:** 2026-05-10  
-**Companion to:** EYWA Bible v3.14 + Schema Overview v1.10 + DECISION_RECORDS v1.5  
+**Companion to:** EYWA Bible v3.14 + Schema Overview v1.10 + DECISION_RECORDS v1.6 + Content_Templates_EYWA_v1_0.md (DRAFT)  
 **Created by:** The Gifted Digital Marketing Co., Ltd.
 
 ---
@@ -1329,6 +1329,58 @@ session_2026_05_10_part_2:  # 🆕 NEW v1.6 (continued — same calendar day)
       - Document workaround pattern (selective per-page emission via existing schema_markup_planned jsonb)
   
   status: "Proposed — review window active until 2026-06-07. No DDL change. No Phase 1A blocker."
+
+session_2026_05_10_part_3:  # 🆕 NEW v1.6 (continued — same calendar day)
+  duration: ~2 hours
+  trigger: "Operator request for universal content writing standard + VTH /mouth-biomapping/ EEAT audit reveal + Deezy sitemap gap analysis"
+  parallel_workstream: "Independent of DR-013/014, DR-015..018, DR-019 — complements all"
+  
+  problem_surfaced:
+    - "EYWA spec covers WHAT (Bible) + WHERE (Schema) but not HOW to compose content blocks"
+    - "VTH /mouth-biomapping/ visual EEAT good (doctor with credentials) but structured EEAT broken (Article author='advthdent' admin)"
+    - "Deezy sitemap has 13 distinct page types — no universal template framework"
+    - "Operator has working content sample (sleep apnea T1) but no codification across types"
+    - "Aesthetic/Wellness/Genomic/Programmatic-Local page types had no template coverage"
+  
+  outcomes:
+    - DR-020 (Universal Content Template Standard) — Proposed
+    - Content_Templates_EYWA_v1_0.md DRAFT created (1,456 lines, 25 templates, ~25 blocks)
+    - DECISION_RECORDS v1.5 → v1.6
+    - PHASE_1_DECISIONS v1.4 → v1.5 (added DR-020 to Open Items)
+    - EYWA_HANDOVER v1.6 (companion ref + content template awareness checklist + this entry)
+    - README updated (Governance section + DR table + Future versions + 4th canonical doc reference)
+  
+  scope: "Content composition layer — complements DR-019 schema emission layer"
+  source: "Operator approval Auto Mode 2026-05-10 — apply as Proposed (4-week review until 2026-06-07)"
+  
+  governance_milestone: "Third use of Proposed-status pattern (DR-013/014, DR-019, DR-020 in same review cycle)"
+  
+  templates_summary:
+    core_universal_12: [T1, T2, T3, T4, T5, T6, T6a_Guide, T7, T8, T9, T10, T11, T12]  
+    t2_variants_5: [T2a_Aesthetic, T2b_Dental, T2c_Wellness_Program, T2d_Physiotherapy, T2e_Genomic]
+    specialized_7: [T13_Pricing, T14_Trending, T15_Quiz, T16_Insurance, T17_Care_Instructions, T18_Programmatic_Local, T19_Promotion]
+    blocks_total: ~25 universal building blocks (B01-B100 placeholder space)
+  
+  pending_actions:
+    review_window:
+      - Review until 2026-06-07 (paired with DR-019 cycle)
+      - Border cases T6 vs T6a need editorial reviewer judgment
+      - T18 Programmatic Local uniqueness enforcement strategy needs decision (manual vs algorithmic)
+    
+    if_locked_2026_06_07:
+      - Upgrade Content_Templates_EYWA_v1_0.md from DRAFT to LOCKED (already at repo root)
+      - Bible v3.15 — Part 6 + Part 9 add reference to companion file
+      - ACF field group refactor (one group per template, ~15-20h dev)
+      - eywa-schema-pipeline plugin — medical_reviewer_fp injection logic (~6h dev)
+      - Notion editorial DB — add template_id property + template_version
+      - Schema v1.11 (deferred) — add template_id text + template_version jsonb to page_master
+      - Phase 2 EEAT enforcement (CHECK constraint) targeted 2026-09-01 after doctor onboarding
+    
+    if_rejected:
+      - Document remains advisory pattern in scratchpad
+      - Per-brand customization via existing flexibility (no enforcement)
+  
+  status: "Proposed — review window active until 2026-06-07. No DDL change for v1.0. No Phase 1A blocker."
 ```
 
 ---
@@ -1507,7 +1559,8 @@ session_kickoff_checklist:
     ☐ Read latest Bible version (v3.14 as of 2026-05-10)
     ☐ Read latest Schema version (v1.10 as of 2026-05-10)
     ☐ Read brand-config.json
-    ☐ Read DECISION_RECORDS.md (v1.5, DR-001..DR-019 — DR-013/014/019 Proposed; DR-015..DR-018 Locked)
+    ☐ Read DECISION_RECORDS.md (v1.6, DR-001..DR-020 — DR-013/014/019/020 Proposed; DR-015..DR-018 Locked)
+    ☐ Read Content_Templates_EYWA_v1_0.md (DRAFT — pending DR-020 lock)
     ☐ Read brand-concept.md (if exists)
   
   infrastructure_verification:
@@ -1542,6 +1595,16 @@ session_kickoff_checklist:
     ☐ FAQPage / HowTo emit OK but expect ZERO SERP rich result post-June 2026? (AI citation only)
     ☐ Featured Snippet pattern applied? (H2/H3 question + 40-60 word direct answer — DR-019 Decision 2)
     ☐ AggregateRating compliant? (min 5 verifiable reviews + crawler-accessible source)
+  
+  content_template_awareness:  # 🆕 v1.6 (DR-020 Proposed — soft guidance until lock 2026-06-07)
+    ☐ Page assigned a template_id? (T1-T19, see Content_Templates_EYWA_v1_0.md)
+    ☐ All REQUIRED blocks present per template? (e.g., T1 needs B19 doctor_review_block)
+    ☐ EEAT signals match template requirement? (medical YMYL = author + reviewer + lastReviewed REQUIRED)
+    ☐ Structured EEAT not just visual? (Article author = Physician, NOT WP admin like 'advthdent')
+    ☐ Schema reviewedBy property explicit? (NOT just visual reviewer block)
+    ☐ Citations in schema citation array? (NOT text-only in body)
+    ☐ Organization typed as MedicalBusiness? (NOT generic Organization for clinics)
+    ☐ medicalAudience declared? ({audienceType: 'Patient'} default)
 ```
 
 ---
