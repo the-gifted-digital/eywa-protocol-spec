@@ -3,9 +3,9 @@
 > **For Claude (and any AI assistant) working on a new brand within the EYWA portfolio.**  
 > **Read this file first, every new project, every new session.**
 
-**Document Version:** 1.5  
-**Last Updated:** 2026-05-09  
-**Companion to:** EYWA Bible v3.13 + Schema Overview v1.9 + DECISION_RECORDS v1.3  
+**Document Version:** 1.6  
+**Last Updated:** 2026-05-10  
+**Companion to:** EYWA Bible v3.14 + Schema Overview v1.10 + DECISION_RECORDS v1.4  
 **Created by:** The Gifted Digital Marketing Co., Ltd.
 
 ---
@@ -121,7 +121,7 @@ Before creating ANY new entity, citation, or cluster:
 - ❌ Duplicating citations across brands
 - ✅ Search FIRST, every time
 
-> 🆕 **v1.4 Note — Entity Uniqueness Guard (EUG):** Per Bible v3.13 Section 2.6.6.1, EUG v1.0 enforces "Search Before Create" at the database level via 4 SQL functions. After Phase 1A migration `006_create_entity_uniqueness_guard.sql` deploys, n8n entity creation flows must call `eug_preflight_check()` before INSERT. This catches typos, format variations, and synonym duplicates automatically. See DR-011 for full rationale.
+> 🆕 **v1.4 Note — Entity Uniqueness Guard (EUG):** Per Bible v3.14 Section 2.6.6.1, EUG v1.0 enforces "Search Before Create" at the database level via 4 SQL functions. After Phase 1A migration `006_create_entity_uniqueness_guard.sql` deploys, n8n entity creation flows must call `eug_preflight_check()` before INSERT. This catches typos, format variations, and synonym duplicates automatically. See DR-011 for full rationale.
 
 ### 2.4 Cross-Brand Decision Awareness
 
@@ -154,7 +154,7 @@ Always ask:
 1. **Single source** — never have 2 places where same fact lives without sync
 2. **Canonical first** — sandbox → GitHub → project knowledge
 3. **Changelog discipline** — every spec change = version bump + entry
-4. **Mention version** — always specify "Bible v3.13 Part 4..." not just "Part 4..."
+4. **Mention version** — always specify "Bible v3.14 Part 4..." not just "Part 4..."
 
 ---
 
@@ -398,7 +398,7 @@ required_planning_files:
 - `evidenced_by`
 - `related_to` (bidirectional default)
 
-> 🆕 **v1.4 Reminder — Edge Vocabulary is LOCKED:** Per Bible v3.13 Section 2.7.5 (Edge Vocabulary Evolution Policy) and DR-012, the 10-edge vocabulary is locked. New edges require formal DR with 4 criteria met (real cases ≥3, cross-brand, schema.org mapping, orthogonality). Use `related_to` + `Notes` for edge cases. See parking lot in DR-012 for future edge candidates.
+> 🆕 **v1.4 Reminder — Edge Vocabulary is LOCKED:** Per Bible v3.14 Section 2.7.5 (Edge Vocabulary Evolution Policy) and DR-012, the 10-edge vocabulary is locked. New edges require formal DR with 4 criteria met (real cases ≥3, cross-brand, schema.org mapping, orthogonality). Use `related_to` + `Notes` for edge cases. See parking lot in DR-012 for future edge candidates.
 
 ### 5.7 Schema — Content Priorities Planning File (Optional)
 
@@ -1261,6 +1261,33 @@ session_2026_05_09:  # 🆕 NEW v1.5
     - Bible v3.13 (stays canonical until DR-013/014 lock)
     - Schema v1.9 (stays canonical until DR-013/014 lock)
     - Phase 1A migrations 001-006 (unchanged)
+
+session_2026_05_10:  # 🆕 NEW v1.6
+  duration: ~3 hours
+  trigger: "VTH BioDent field test feedback (Naphannop S.) — 4 process gaps surfaced during real sitemap design"
+  parallel_workstream: "Independent of Stream A/B (DR-013/014 still in governance review)"
+  
+  problems_surfaced:
+    - "Strict EGP vetoed legitimate market-demand pages (e.g., general dentistry)"
+    - "Sitemap accepted thin/redundant pages (no quality gate at design time)"
+    - "Page intent lost between sitemap design and content writing weeks later"
+    - "Word count standards informal — inconsistent depth across pages"
+  
+  outcomes:
+    - DR-015 (Brand Scope Market Reconciliation Pattern) — Locked
+    - DR-016 (Page Viability Assessment / Thin Page Detection) — Locked
+    - DR-017 (Page Content Brief Field) — Locked
+    - DR-018 (Page Content Length Standards) — Locked
+    - Bible v3.13 → v3.14 (Sections 4.13, 4.14, 9.8 added)
+    - Schema v1.9 → v1.10 (4 new page_master columns)
+    - DECISION_RECORDS v1.3 → v1.4
+    - EYWA_HANDOVER v1.5 → v1.6 (this update)
+    - 2 new migrations: 007_add_content_brief.sql, 008_add_sitemap_design_columns.sql
+  
+  scope: "Sitemap design layer (Phase E) refinement — independent of DR-013/014 edge work"
+  source: "Operator approval 2026-05-10 (single session, all 4 DRs approved together)"
+  
+  status: "Bible/Schema/Handover/DR all v1.10/v3.14/v1.6/v1.4 synced. Migrations 007/008 ready for Phase 1A."
 ```
 
 ---
@@ -1324,9 +1351,15 @@ Validate: pillar-supporting ratio (8-25), domain balance, cross-brand overlap wi
 
 ### 7.6 Phase E — Sitemap Architecture (Bible Part 4)
 
-5 steps: section assignment → numbered hierarchy → page typing → internal linking → health audit.
+5+1 steps (v3.14): section assignment → numbered hierarchy → page typing → **Phase 4.5 Sitemap Quality Gates (§4.1)** 🆕 → internal linking → health audit.
 
-**Output:** `sitemap.md` (7 columns), `internal-linking-plan.md`, `audit-report.md`
+> 🆕 **v1.6 Note — Phase 4.5 Sitemap Quality Gates** (Bible §4.1 Phase 4.5, run in this order):
+> - **Gate 1 — Market Reconciliation (§4.13, DR-015):** for healthcare brands, MUST run the 3-step pass (Strict EGP → Reconciliation pass → Operator review). Pages outside strict scope but with high market demand get repackaged via Necessity/Brand-Fit/SEO Opportunity scoring. Status stored in `page_master.marketplace_proposal_status`.
+> - **Gate 2 — Page Viability Assessment (§4.14, DR-016):** every page passes the 4-criteria gate (predicted volume, search volume, topic distinctness, intent distinctness). Result stored in `page_master.viability_assessment` (jsonb). Decision: standalone / collapse / merge / exception. **HARD RULE:** L4/L5 pillars NEVER thin.
+> - **Gate 3 — Content Brief (DR-017):** every page gets `content_brief` filled at design time. **REQUIRED** for collapsed pages, **RECOMMENDED** for all others. Preserves intent across weeks/writers/AI sessions.
+> - **Reference — Content Length Standards (§9.8, DR-018):** word count targets per Layer × Tier × language. Drives QA and informs viability assessment.
+
+**Output:** `sitemap.md` (now 11 columns including `content_brief`, `marketplace_proposal_status`, `reconciliation_notes`, `viability_assessment`), `internal-linking-plan.md`, `audit-report.md`
 
 ### 7.7 Phase F — Content Production
 
@@ -1429,11 +1462,11 @@ Document context, options, choice, rationale, consequences, references in DR-NNN
 session_kickoff_checklist:
   
   context_verification:
-    ☐ Read EYWA_HANDOVER.md (this file — v1.5)
-    ☐ Read latest Bible version (v3.13 as of 2026-05-08)
-    ☐ Read latest Schema version (v1.9 as of 2026-05-08)
+    ☐ Read EYWA_HANDOVER.md (this file — v1.6)
+    ☐ Read latest Bible version (v3.14 as of 2026-05-10)
+    ☐ Read latest Schema version (v1.10 as of 2026-05-10)
     ☐ Read brand-config.json
-    ☐ Read DECISION_RECORDS.md (v1.3, DR-001..DR-014 — DR-013/014 Proposed)
+    ☐ Read DECISION_RECORDS.md (v1.4, DR-001..DR-018 — DR-013/014 Proposed; DR-015..DR-018 Locked)
     ☐ Read brand-concept.md (if exists)
   
   infrastructure_verification:
@@ -1456,6 +1489,12 @@ session_kickoff_checklist:
     ☐ EUG preflight available? (post-Phase 1A check)
     ☐ Edge vocabulary unchanged from 10 locked edges?
     ☐ brands table Two-Column compliance applied? (post-Phase 1B check)
+  
+  sitemap_quality_gates:  # 🆕 v1.6 (Phase E)
+    ☐ Market Reconciliation pass run? (mandatory for healthcare — Bible §4.13)
+    ☐ Page Viability Assessment performed for every page? (Bible §4.14)
+    ☐ Content Brief filled for collapsed pages? (Bible §4.5, DR-017)
+    ☐ Word count targets reviewed against §9.8 standards?
 ```
 
 ---

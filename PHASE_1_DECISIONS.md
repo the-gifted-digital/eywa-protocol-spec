@@ -1,11 +1,11 @@
 # EYWA™ Protocol — Phase 1 Decisions Summary
 
-**Document Version**: 1.2
-**Date**: 2026-05-09
-**Status**: 🔒 Locked (Phase 1A specs) + 🌱 DR-013/014 Proposed (future v3.14/v1.10)
+**Document Version**: 1.3
+**Date**: 2026-05-10
+**Status**: 🔒 Locked (Phase 1A specs + DR-015..018) + 🌱 DR-013/014 still Proposed
 **Phase**: 1 — Supabase Database Foundation
 **Project**: GTGT (in-place upgrade)
-**Companion to**: Bible v3.13 + Schema Overview v1.9 + Handover v1.5 + DECISION_RECORDS v1.3
+**Companion to**: Bible v3.14 + Schema Overview v1.10 + Handover v1.6 + DECISION_RECORDS v1.4
 
 ---
 
@@ -264,6 +264,31 @@ The following are **explicitly NOT** part of Phase 1:
 25. `20260508_041_add_gin_indexes_arrays.sql`
 26. `20260508_042_add_btree_indexes_lookups.sql`
 
+### Phase 1A.2 — Sitemap Design Quality Gates 🆕 v1.3 (DR-015, DR-016, DR-017)
+
+**Goal**: Add page_master columns supporting Bible §4.13 (Market Reconciliation) + §4.14 (Page Viability) + §4.5 (Content Brief).
+
+**Migrations** (independent of DR-013/014 lock — can apply now):
+
+27. `20260510_007_add_content_brief.sql` (DR-017)
+    - `ALTER TABLE seo_website_page_master ADD COLUMN content_brief text NULL`
+    - REQUIRED for collapsed pages, RECOMMENDED otherwise
+    - No constraint at DB level (validation in app/Notion layer)
+
+28. `20260510_008_add_sitemap_design_columns.sql` (DR-015 + DR-016)
+    - `ADD COLUMN marketplace_proposal_status text NULL` with CHECK constraint:
+      `('direct_match' | 'repackaged' | 'forced_fit_with_caveat' | 'rejected')`
+    - `ADD COLUMN reconciliation_notes text NULL`
+    - `ADD COLUMN viability_assessment jsonb NULL`
+    - Partial index on `marketplace_proposal_status WHERE NOT NULL`
+    - GIN index on `viability_assessment WHERE NOT NULL`
+
+**Properties**:
+- Additive (no breaking changes)
+- All NULL-able (backwards compatible)
+- Idempotent (`IF NOT EXISTS`)
+- Independent of DR-013/014 (can apply before edge vocabulary lock decision)
+
 ---
 
 ## 🎯 Success Criteria
@@ -284,11 +309,13 @@ Phase 1 is complete when:
 
 ## 📚 References
 
-- **Bible v3.13** (current): `EYWA_PROTOCOL_v3_13.md`
-- **Schema Overview v1.9** (current): `Schema_Overview_EYWA_v1_9.md`
-- **Handover v1.5** (current): `EYWA_HANDOVER.md` (Section 6 — Phase 1 Status)
-- **Decision Records v1.3** (current): `DECISION_RECORDS.md` (DR-001..DR-014)
+- **Bible v3.14** (current): `EYWA_PROTOCOL_v3_14.md`
+- **Schema Overview v1.10** (current): `Schema_Overview_EYWA_v1_10.md`
+- **Handover v1.6** (current): `EYWA_HANDOVER.md` (Section 6 — Phase 1 Status)
+- **Decision Records v1.4** (current): `DECISION_RECORDS.md` (DR-001..DR-018)
+- Bible v3.13 (archived): `archive/EYWA_PROTOCOL_v3_13.md`
 - Bible v3.12 (archived): for historical reference only
+- Schema v1.9 (archived): `archive/Schema_Overview_EYWA_v1_9.md`
 - Schema v1.8 (archived): for historical reference only
 
 ---
@@ -301,8 +328,9 @@ These items emerged from real EGP work (Naphannop S.) and are now in Proposed st
 
 - 🌱 **DR-013 — Edge Vocabulary v3.5 Expansion**: Proposes adding `causes/caused_by` + `contraindicates` edges (10 → 12 vocabulary). 
   - Status: Proposed (review until 2026-05-20)
-  - Blocking: NO for current Phase 1A; YES for future Phase 1E + Bible v3.14
+  - Blocking: NO for current Phase 1A; YES for future Phase 1E + Bible v3.15+
   - Critical path: Cross-brand canvass by 2026-05-13
+  - Note: Bible v3.14 was issued for DR-015..018 (sitemap design layer) — DR-013/014 will trigger v3.15 if locked
 
 - 🌱 **DR-014 — Concept Entity Subtype Lock**: Proposes controlled vocabulary `framework` + `axis` for `entity_subtype` on concept entities.
   - Status: Proposed (paired with DR-013)
@@ -340,4 +368,15 @@ These items will become DR-022+ when decided:
 
 ---
 
-**End of Phase 1 Decisions Summary v1.2**
+## 🆕 v1.3 Changelog (2026-05-10)
+
+- 🔄 References updated: Bible v3.13 → v3.14, Schema v1.9 → v1.10, Handover v1.5 → v1.6, DR v1.3 → v1.4
+- ➕ Added Phase 1A.2 sub-phase — Sitemap Design Quality Gates
+- ➕ Added migration 007: `20260510_007_add_content_brief.sql` (DR-017)
+- ➕ Added migration 008: `20260510_008_add_sitemap_design_columns.sql` (DR-015 + DR-016)
+- 🔒 DR-015..DR-018 locked (operator approval 2026-05-10) — independent of DR-013/014 governance
+- 📝 Note: 4 new DRs (015-018) emerged from VTH BioDent field testing — sitemap design layer refinements, not edge vocabulary changes
+
+---
+
+**End of Phase 1 Decisions Summary v1.3**

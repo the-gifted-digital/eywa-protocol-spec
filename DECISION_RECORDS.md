@@ -2,8 +2,8 @@
 
 > **Append-only architectural decision log.** Each record explains WHY a decision was made — not just WHAT.
 
-**Document Version:** 1.3  
-**Last Updated:** 2026-05-09  
+**Document Version:** 1.4  
+**Last Updated:** 2026-05-10  
 **Format:** Reverse chronological (newest first)
 
 ---
@@ -31,6 +31,312 @@
 ---
 
 ## Decisions Log
+
+### [DR-018] — Page Content Length Standards (2026-05-10) 🆕
+
+**Status:** Locked (operator approval 2026-05-10)  
+**Bible Reference:** Part 9.8 (NEW Section — Page Content Length Standards)  
+**Schema Reference:** v1.10 — no schema change (process standard)  
+**Companion DRs:** DR-016 (consumes these min thresholds for thin-page detection)
+
+**Context:**
+
+Bible v3.13 contained scattered word count references but no comprehensive standards table:
+- Line 4685: `word_count_minimum: 1500` (one context-specific mention)
+- Line 10887: `ความยาว 40-50 คำ` (Speakable section guidance)
+- No Layer-by-Layer table, no rationale, no exception clauses
+
+Real impact at VTH BioDent: AI/operator designing sitemap and assessing thin-page risk had no concrete benchmarks. Pillar pages risk being under-built (1,500 vs needed 4,000+ words); service pages risk over-engineering (2,500 vs target 1,500). DR-016 thin-page detection has nothing to reference.
+
+**Decision:**
+
+Add comprehensive Page Content Length Standards table to Bible Part 9.8 covering all 7 Layers + 5 documented exception clauses for valid non-SEO purposes (legal, contact, intent-capture, glossary, programmatic).
+
+Standards (key targets, full table in Bible §9.8):
+
+| Layer | Type | Min | Target | Max |
+|-------|------|-----|--------|-----|
+| L1 | Home | 500 | 1,000 | 1,500 |
+| L2 | Money/Service | 800 | 1,500 | 2,500 |
+| L3 | Center/Hub | 1,500 | 2,500 | 4,000 |
+| L4 | Concern Pillar | 2,500 | 4,000 | 6,000 |
+| L5 | Knowledge | 2,000 | 3,500 | 5,000 |
+| L6 | Local | 600 | 1,200 | 2,000 |
+| L7 | Case Study | 1,500 | 2,500 | 4,000 |
+
+Multilingual adjustment: Thai/Chinese -20% (denser per character).
+
+**Rationale:**
+
+- Concrete benchmarks unblock DR-016 (viability assessment needs numbers)
+- Layer-specific (Home ≠ Pillar; intent and value-of-length curve differ)
+- Industry-grounded (Backlinko, Ahrefs, HubSpot 2020-2024 studies)
+- Exception clauses preserve flexibility — 5 documented patterns for valid thin pages
+- Pillar exception explicitly forbidden (L4/L5 must be exhaustive — SEO authority)
+- Annual review cadence (algorithm landscape shifts)
+
+**Consequences:**
+
+- ✅ DR-016 has concrete thresholds to enforce
+- ✅ Editorial review (Bible Part 23.4 Stage 2) gets clear pass/fail criteria
+- ✅ Cross-brand consistency (every brand uses same standards)
+- ⚠️ Numbers may need adjustment (per-vertical refinement future)
+- ⚠️ Risk: writers focus on count not quality — mitigated by editorial review
+- 🚧 Follow-up: yearly review at Schema Review Board cadence
+
+**Implementation:**
+
+- Bible Part 9.8 (NEW): full standards table + 5 exception clauses + industry rationale
+- Schema v1.10: no DDL change required for DR-018 itself — standards are spec-level reference; runtime enforcement via `viability_assessment` (DR-016) audit trail and editorial review (Bible Part 23.4)
+- Editorial workflow: Stage 2 review uses targets as benchmarks
+- Brand application: per-brand may add vertical-specific refinements via DR
+
+**References:**
+
+- DR-016 (Thin Page Detection) — primary consumer of these thresholds
+- DR-017 (Content Brief) — brief shapes coverage to hit these standards
+- Bible Part 6 (Content Standard) — quality companion
+- Bible Part 23.4 (Editorial Review) — validation phase
+- Industry: Backlinko ranking factor studies, Ahrefs content depth research, HubSpot pillar page methodology, Google Helpful Content Update
+
+---
+
+### [DR-017] — Page Content Brief Field (2026-05-10) 🆕
+
+**Status:** Locked (operator approval 2026-05-10)  
+**Bible Reference:** Part 5 §5.1 — page_master spec update  
+**Schema Reference:** v1.10 §5.1 — adds `content_brief text` column  
+**Phase 1 Reference:** New migration `007_add_content_brief.sql`
+
+**Context:**
+
+Two related problems from VTH BioDent field test:
+
+1. **Lost context after page collapse (DR-016 outcome):** When sitemap design collapses children into parent (e.g., 3.1.1-3 → merged into 3.1), the conceptual structure that informed the design is lost. Content writer (weeks/months later, possibly different person/AI) sees only the parent name with no hint of original coverage plan.
+
+2. **Even non-collapsed pages benefit from upfront briefs:** Sitemap design captures the WHY of a page existing. By content creation phase, original framing forgotten, strategic positioning unclear, internal link planning hints missing.
+
+Currently no structured place to store "what this page should cover."
+
+**Decision:**
+
+Add column `content_brief text NULL` to `seo_website_page_master`:
+- **REQUIRED** for collapsed pages (parent absorbs children's outlines)
+- **RECOMMENDED** for all standalone pages (operator best practice)
+- Free-text format: 2-5 sentences or bullet list capturing planned coverage, key topics, internal link targets, distinctive angle
+- Programmatic Type C pages: reference template (no free-text)
+
+**Rationale:**
+
+- Text format > jsonb (easier to read/write, AI/Notion render natively, free-form > structured)
+- Optional but recommended (backwards compatible, doesn't block existing workflows)
+- Required only when needed (collapsed pages — can't lose context)
+- Same column instead of separate table (1:1 relationship, no JOIN cost)
+- Phase 1A inclusion (cheap addition ~30 min effort, critical pairing with DR-016)
+
+**Consequences:**
+
+- ✅ Context preserved across time, writers, AI sessions
+- ✅ Required for collapsed pages → no lost outlines
+- ✅ Onboarding aid for new writers
+- ✅ AI uses brief when generating content (better outputs)
+- ✅ Audit trail of editorial intent
+- ⚠️ Adds ~5 min per page during sitemap design
+- ⚠️ Risk: writer ignores brief (mitigation: editorial review checks alignment)
+
+**Implementation:**
+
+- Schema v1.10 §5.1: ADD column `content_brief text NULL`
+- Phase 1A migration `007_add_content_brief.sql` (independent of DR-013/014)
+- Bible Part 4 Phase 4.5 (NEW step): Content Brief Drafting in sitemap design workflow
+- Notion: add property "Content Brief" (long text, bidirectional sync)
+- WordPress: add ACF field `content_brief` (textarea) in eywa-acf-fields plugin
+
+**References:**
+
+- DR-011 (EUG) — quality gate pattern
+- DR-016 (Thin Page Detection) — primary consumer
+- DR-018 (Word Count Standards) — brief shapes coverage to hit standards
+- Bible Part 5 (Database Schema) — table this column joins
+- Bible Part 23.4 (Editorial Review) — validation phase
+
+---
+
+### [DR-016] — Thin Page Risk Detection (Sitemap Quality Gate) (2026-05-10) 🆕
+
+**Status:** Locked (operator approval 2026-05-10)  
+**Bible Reference:** Part 4.14 (NEW Section — Page Viability Assessment)  
+**Schema Reference:** v1.10 §5.1 — adds optional `viability_assessment jsonb` column  
+**Companion DRs:** DR-017 (preserves collapsed page context), DR-018 (provides word count thresholds)
+
+**Context:**
+
+Current EGP + sitemap design produces hierarchical structures where children pages can end up as thin content. VTH BioDent example:
+
+```
+3.1 Mouth BioMapping
+├── 3.1.1 หลักการ (~300 words predicted)
+├── 3.1.2 วิธีตรวจ (~400 words)
+└── 3.1.3 ใครเหมาะ (~250 words)
+```
+
+Each child individually too narrow to support standalone page → SEO penalty risk. Better outcome: collapse children into parent, create rich 2,500-word page covering all sub-topics.
+
+Bible v3.13 had no comprehensive thin-page risk framework. No criteria, no decision matrix, no exceptions.
+
+**Decision:**
+
+Add **"Page Viability Assessment"** quality gate in sitemap design (new Phase 4.5, between Phase 4 Page-Level Tagging and Phase 5 Connection Audit).
+
+**4 Criteria per page:**
+1. Predicted Content Volume (vs DR-018 Layer minimum)
+2. Search Volume (≥ 100/mo Thai, ≥ 50/mo English niche)
+3. Topic Distinctness (< 30% overlap with parent)
+4. User Intent Distinctness (different intent type or sub-intent)
+
+**Decision Matrix:**
+- All 4 PASS → Standalone
+- 1-2 WARN → Standalone with watch flag
+- 3-4 WARN or 1 FAIL → Human review
+- 2+ FAIL → COLLAPSE into parent (preserve content_brief per DR-017)
+
+**Exception Clauses (5 patterns where thin pages are valid):**
+1. Legal/Required pages (privacy, terms — 300-1,000 words)
+2. Contact/Location pages (300-800, schema compensates)
+3. Intent-capture pages (500-1,000, commercial intent + CTA)
+4. Disambiguation/Glossary hubs (200-600, heavy cross-linking)
+5. Programmatic pages Type C (600-1,200 per template)
+
+**Pillars NEVER allowed thin** (L4/L5 — SEO authority pages have no exception).
+
+**Rationale:**
+
+- Word count proxy for "did we have enough valuable to share?" (industry-validated)
+- 4 criteria orthogonal — different dimensions of viability
+- Exception framework prevents tyranny — 5 valid non-SEO patterns documented
+- Pre-lock quality gate (catch before publish, not after)
+- Pairs with EUG (DR-011) — both quality gates pre-finalize
+
+**Consequences:**
+
+- ✅ Prevents thin-page SEO penalties before publish
+- ✅ Forces deliberate page existence justification
+- ✅ Acknowledges valid non-SEO reasons (5 exceptions)
+- ✅ Audit trail (assessment stored optionally)
+- ⚠️ Adds ~10 min per page during sitemap design
+- ⚠️ Requires DataForSEO query for criterion 2
+
+**Implementation:**
+
+- Bible Part 4.14 (NEW): full assessment framework + decision matrix + exceptions
+- Bible Part 4 Phase 4.5: viability assessment as quality gate before sitemap lock
+- Schema v1.10 §5.1: optional column `viability_assessment jsonb` (audit trail)
+- Handover §7: workflow step added between EGP and sitemap lock
+
+**References:**
+
+- DR-011 (EUG) — pre-lock quality gate pattern
+- DR-017 (Content Brief) — preserves context when pages collapse
+- DR-018 (Word Count Standards) — provides Layer minimums (Criterion 1)
+- Bible Part 3.5 (Cannibalization Shield) — related concern
+- Bible Part 4.5 (Page Type Matrix) — Type C programmatic exception
+- Industry: Google Helpful Content Update (Aug 2022, ongoing)
+
+---
+
+### [DR-015] — Brand Scope Market Reconciliation Pattern (2026-05-10) 🆕
+
+**Status:** Locked (operator approval 2026-05-10)  
+**Bible Reference:** Part 4.13 (NEW Section — Market Reality Reconciliation)  
+**Schema Reference:** v1.10 §5.1 — adds `marketplace_proposal_status text` column  
+**Phase 1 Reference:** New migration `008_add_marketplace_reconciliation.sql`
+
+**Context:**
+
+EYWA's strict `brand_scope` discipline (DR-001 + DR-010) successfully prevents brand drift, but real-world testing on VTH BioDent revealed an over-correction:
+
+> AI สร้าง sitemap ที่ไม่มีบริการทันตกรรมพื้นฐาน (อุดฟัน/ขูดหินปูน/ถอนฟัน) เพราะ brand concept ของ VTH BioDent คือ "premium integrative dental + biological mapping". Strict brand_scope ตัดบริการเหล่านี้ออก — แต่ในชีวิตจริง dental clinic ขาดไม่ได้.
+
+Protection too strict — blocks services that:
+1. Are real-world necessities for the clinic to function
+2. Have legitimate search demand (real Thai search volume)
+3. Could fit brand concept WITH repackaging (e.g., "Comprehensive Dental Wellness Center" instead of "General Dentistry")
+
+AI is "too obedient" — protects brand integrity at cost of business reality.
+
+**Decision:**
+
+Adopt **"Market Reality Reconciliation"** — OPTIONAL second pass that runs AFTER strict EGP completes.
+
+**3-Step Process:**
+1. Strict EGP runs as normal (current behavior)
+2. Reconciliation pass: AI explores vertical-standard services NOT in current brand_scope, scores each:
+   - **Necessity Score (1-5):** how essential for vertical to function
+   - **Brand-Fit:** Direct / Repackageable / Forced (reject)
+   - **SEO Opportunity:** search volume + intent + competition
+3. Output to operator review (NOT auto-applied):
+   - Status: `proposed` → operator approves/rejects/defers
+   - Approved items get `accepted_repackaged` with new positioning name
+
+**When to run:**
+- Healthcare brands: MANDATORY (clinical reality)
+- Wellness brands: RECOMMENDED
+- Media brands: OPTIONAL
+
+**Rationale:**
+
+- Pattern matches DR-012 philosophy: strict default + governed exceptions
+- Discussion list (not auto-add) → forces conscious brand decisions
+- Repackaging requires human creativity (naming, positioning)
+- 3-axis scoring lets different verticals optimize differently
+- Audit trail per service decision
+
+**Consequences:**
+
+- ✅ Healthcare brands unblocked — can offer general dentistry under "Wellness Center"
+- ✅ AI more useful (proposes, doesn't just block)
+- ✅ Brand discipline preserved (operator approval required)
+- ✅ Cross-brand applicable (every healthcare brand faces this)
+- ⚠️ Adds ~15 min per brand reconciliation pass
+- ⚠️ Operator must judge repackaging wisely (could over-extend brand)
+
+**Implementation:**
+
+- Bible Part 4.13 (NEW): Market Reconciliation Phase + 3-criteria scoring + decision tree
+- Schema v1.10 §5.1: ADD column `marketplace_proposal_status` with CHECK constraint (`in_scope` / `proposed` / `accepted_repackaged` / `rejected` / `deferred`)
+- Schema v1.10 §5.1: ADD column `reconciliation_notes text` (operator's repackaging notes)
+- Phase 1A migration `008_add_marketplace_reconciliation.sql`
+- Handover §7: Reconciliation phase in per-brand workflow checklist
+
+**Test Cases (VTH BioDent):**
+
+```yaml
+general_dentistry:
+  blocked: ["อุดฟัน", "ขูดหินปูน", "ถอนฟัน"]
+  necessity: 5/5, fit: REPACKAGEABLE, seo: HIGH (~22K-33K/mo)
+  decision: ACCEPT — "Comprehensive Dental Wellness Center"
+
+cosmetic_dentistry:
+  blocked: ["ฟอกสีฟัน", "วีเนียร์"]
+  necessity: 3/5, fit: REPACKAGEABLE, seo: VERY HIGH (~33K/mo)
+  decision: ACCEPT — "Aesthetic Smile Refinement"
+
+emergency_dental:
+  blocked: ["ปวดฟันกะทันหัน"]
+  necessity: 4/5, fit: PARTIAL, seo: MEDIUM
+  decision: DEFER — discuss positioning
+```
+
+**References:**
+
+- DR-001 (Multi-Brand Federation) — established brand_scope[]
+- DR-010 (Brand Scope Architecture) — locked brand_slug
+- DR-012 (Edge Vocabulary Evolution) — pattern for governed expansion
+- DR-016 (Thin Page Detection) — viability check follows reconciliation
+- Bible Part 2.6 (EGP) — strict process this complements
+- Bible Part 14 (Vertical Profiles) — vertical reality definitions
+
+---
 
 ### [DR-014] — Concept Entity Subtype Lock (framework + axis) (2026-05-09) 🆕
 

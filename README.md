@@ -4,11 +4,11 @@
 
 | 📖 Bible | 📊 Schema | 🏗️ Phase | ⚖️ License |
 |----------|-----------|-----------|-------------|
-| **v3.13** | **v1.9** | **1 — Foundation** | Proprietary |
+| **v3.14** | **v1.10** | **1 — Foundation** | Proprietary |
 
 <!-- Badges (render on GitHub.com): -->
-[![Bible](https://img.shields.io/badge/Bible-v3.13-blue?style=flat-square)](./EYWA_PROTOCOL_v3_13.md)
-[![Schema](https://img.shields.io/badge/Schema-v1.9-green?style=flat-square)](./Schema_Overview_EYWA_v1_9.md)
+[![Bible](https://img.shields.io/badge/Bible-v3.14-blue?style=flat-square)](./EYWA_PROTOCOL_v3_14.md)
+[![Schema](https://img.shields.io/badge/Schema-v1.10-green?style=flat-square)](./Schema_Overview_EYWA_v1_10.md)
 [![Phase](https://img.shields.io/badge/Phase-1%20Foundation-orange?style=flat-square)](./PHASE_1_DECISIONS.md)
 [![License](https://img.shields.io/badge/License-Proprietary-red?style=flat-square)]()
 
@@ -33,20 +33,50 @@ EYWA™ is a registered trademark of **The Gifted Digital Marketing Co., Ltd.** 
 
 | Document | Purpose | Lines | Status |
 |----------|---------|-------|--------|
-| `PROJECT_MEMORY.md` | Project context for AI sessions + onboarding | ~880 | 🧠 Memory |
-| `EYWA_PROTOCOL_v3_13.md` | The Bible — full specification | ~25,460 | 🔒 Active |
-| `Schema_Overview_EYWA_v1_9.md` | Database schema companion | ~3,985 | 🔒 Active |
-| `EYWA_HANDOVER.md` | Operating manual for Claude/AI | ~1,780 | 🔒 Active (v1.5) |
-| `DECISION_RECORDS.md` | Architecture decision log | ~1,525 | 🔒 Active (v1.3) |
-| `PHASE_1_DECISIONS.md` | Phase 1 quick reference | ~310 | 🔒 Active |
-| `EYWA_PROTOCOL_v3_12.md` | Bible (previous version) | ~24,800 | 📦 Archived |
-| `Schema_Overview_EYWA_v1_8.md` | Schema (previous version) | ~3,400 | 📦 Archived |
-| `EYWA_PROTOCOL_v3_11.md` | Bible (older version) | ~24,260 | 📦 Archived |
-| `Schema_Overview_EYWA_v1_7.md` | Schema (older version) | ~2,750 | 📦 Archived |
+| `PROJECT_MEMORY.md` | Project context for AI sessions + onboarding | ~880 | 🧠 Memory (local-only, gitignored) |
+| `EYWA_PROTOCOL_v3_14.md` | The Bible — full specification | ~26,000 | 🔒 Active |
+| `Schema_Overview_EYWA_v1_10.md` | Database schema companion | ~2,600 | 🔒 Active |
+| `EYWA_HANDOVER.md` | Operating manual for Claude/AI | ~1,800 | 🔒 Active (v1.6) |
+| `DECISION_RECORDS.md` | Architecture decision log | ~2,000 | 🔒 Active (v1.4) |
+| `PHASE_1_DECISIONS.md` | Phase 1 quick reference | ~370 | 🔒 Active (v1.3) |
+| `archive/EYWA_PROTOCOL_v3_13.md` | Bible (previous version) | ~25,460 | 📦 Archived |
+| `archive/Schema_Overview_EYWA_v1_9.md` | Schema (previous version) | ~3,985 | 📦 Archived |
+| `archive/EYWA_PROTOCOL_v3_12.md` | Bible (older version) | ~24,800 | 📦 Archived |
+| `archive/Schema_Overview_EYWA_v1_8.md` | Schema (older version) | ~3,400 | 📦 Archived |
 
 ---
 
-## 🌱 Governance Update — DR-013 + DR-014 Proposed (2026-05-09)
+## 🆕 Latest Update — v3.14 / v1.10 (2026-05-10)
+
+**Sitemap Design Quality Gates — 4 new DRs from VTH BioDent field testing**
+
+Real-world feedback from VTH BioDent (Naphannop S.) surfaced 4 process gaps in the sitemap design layer (Phase E). All 4 DRs locked together — independent of DR-013/014 edge vocabulary governance (still under review).
+
+- ✅ **DR-015** — Brand Scope Market Reconciliation Pattern (Bible §4.13)
+- ✅ **DR-016** — Page Viability Assessment / Thin Page Detection (Bible §4.14)
+- ✅ **DR-017** — Page Content Brief Field (Schema column + Bible §4.5)
+- ✅ **DR-018** — Page Content Length Standards (Bible §9.8)
+
+**Bible v3.14 changes (additive):**
+- Section 4.13 — Market Reality Reconciliation Pattern (3-axis scoring: Necessity / Brand-Fit / SEO Opportunity)
+- Section 4.14 — Page Viability Assessment (4-criteria gate + 5 exception clauses)
+- Section 9.8 — Page Content Length Standards (14 page types × Min/Target/Max words; multilingual -20%)
+
+**Schema v1.10 changes (additive — page_master only):**
+- `content_brief text NULL` (DR-017)
+- `marketplace_proposal_status text NULL` with CHECK constraint (DR-015)
+- `reconciliation_notes text NULL` (DR-015)
+- `viability_assessment jsonb NULL` (DR-016)
+
+**New migrations (Phase 1A.2):**
+- `007_add_content_brief.sql`
+- `008_add_sitemap_design_columns.sql`
+
+> **Scope note:** v3.14/v1.10 is sitemap design layer refinement. Edge vocabulary remains 10 LOCKED (DR-013/014 governance review continues independently — see below).
+
+---
+
+## 🌱 Governance Update — DR-013 + DR-014 Still Proposed (2026-05-09)
 
 **Field-tested feedback from VTH BioDent EGP work** — first test of DR-012 (Edge Vocabulary Evolution Policy) governance.
 
@@ -55,15 +85,15 @@ EYWA™ is a registered trademark of **The Gifted Digital Marketing Co., Ltd.** 
 
 **Critical path:** Cross-brand verification by 2026-05-13 → Schema Review Board 2026-05-15 → Lock or Reject decision 2026-05-20
 
-**If LOCKED:** Bible v3.14 + Schema v1.10 + 5 SQL migrations (Phase 1E)  
+**If LOCKED:** Bible v3.15 + Schema v1.11 + 5 SQL migrations (Phase 1E)  
 **If REJECTED:** Workaround pattern (related_to + notes with brand_scope)
 
-> **Note:** Bible v3.13 + Schema v1.9 remain canonical. Stream B (DR-013/014) targets future v3.14/v1.10 only after governance review.
+> **Note:** v3.14/v1.10 (DR-015..018) was issued independently for sitemap design. DR-013/014 (edge vocabulary) targets future v3.15/v1.11 only after governance review.
 
 
 ---
 
-## 🆕 Latest Update — v3.13 (2026-05-08)
+## 🛡️ Previous Update — v3.13 (2026-05-08)
 
 **Entity Uniqueness Guard + Edge Evolution Policy + brands Two-Column Compliance**
 
@@ -182,8 +212,9 @@ See `PHASE_1_DECISIONS.md` for full Phase 1 summary.
 3. Read **Bible Part 11** (implementation roadmap)
 4. Read **Bible Section 18.9** (Two-Column Identity Pattern) — for any database work
 5. Read **Bible Section 2.6.6.1** (Entity Uniqueness Guard) — before entity creation flows 🆕 v3.13
-6. Read **Schema v1.9 Appendix F** (Helper Functions) — for SQL development
-7. Read **Schema v1.9 Appendix G** (EUG Implementation) — for entity governance 🆕 v1.9
+6. Read **Bible Sections 4.13, 4.14, 9.8** (Sitemap Design Quality Gates) — before sitemap work 🆕 v3.14
+7. Read **Schema v1.10 Appendix F** (Helper Functions) — for SQL development
+8. Read **Schema v1.10 Appendix G** (EUG Implementation) — for entity governance 🆕 v1.9
 
 ### For Designers
 
@@ -211,19 +242,21 @@ See `PHASE_1_DECISIONS.md` for full Phase 1 summary.
 **Status:** 🟡 Documentation locked, migrations pending
 
 **Scope:**
-- ✅ Schema upgrade (Bible v3.13 / Schema v1.9)
+- ✅ Schema upgrade (Bible v3.14 / Schema v1.10)
 - ✅ Two-Column Identity Pattern adoption (now includes brands table)
 - ✅ Two-Tier Multilingual Strategy
 - ✅ brand_slug standardization
 - ✅ Entity Uniqueness Guard (EUG) v1.0 design 🆕 v3.13
 - ✅ Edge Vocabulary Evolution Policy 🆕 v3.13
-- ⏳ Migration files (27 SQL files planned across Phases 1A-1D)
+- ✅ Sitemap Design Quality Gates (DR-015..018) 🆕 v3.14
+- ⏳ Migration files (29 SQL files planned across Phases 1A-1D + 1A.2)
 - ⏳ Helper functions (`generate_ulid()`, fingerprint generators, triggers, EUG functions)
 
-**Migration Plan (27 files):** 🔄 v3.13/v1.9
+**Migration Plan (29 files):** 🔄 v3.14/v1.10
 
-- Phase 1A: Foundation (6 migrations) — non-breaking column additions + helpers + **EUG** 🆕
-- Phase 1B: New Tables (~14 migrations) — create v1.9 tables (incl. brands Two-Column compliance)
+- Phase 1A: Foundation (6 migrations) — non-breaking column additions + helpers + **EUG** 🆕 v3.13
+- Phase 1A.2: Sitemap Design Quality Gates (2 migrations) 🆕 v3.14 — content_brief + 3 reconciliation/viability columns
+- Phase 1B: New Tables (~14 migrations) — create v1.9+ tables (incl. brands Two-Column compliance)
 - Phase 1C: Triggers & Constraints (4 migrations)
 - Phase 1D: Indexes & Performance (3 migrations)
 
@@ -236,6 +269,8 @@ See `PHASE_1_DECISIONS.md` for full Phase 1 summary.
 004_alter_existing_tables_multilingual.sql  # Add jsonb columns for Tier 1 multilingual
 005_alter_existing_tables_brand_scope.sql  # Standardize brand_scope across tables
 006_create_entity_uniqueness_guard.sql    # EUG v1.0 (4 functions + indexes + trigger) 🆕 v3.13
+007_add_content_brief.sql                  # Content brief column (DR-017) 🆕 v3.14
+008_add_sitemap_design_columns.sql         # Reconciliation + viability columns (DR-015 + DR-016) 🆕 v3.14
 ```
 
 See `EYWA_HANDOVER.md` Section 6 + `PHASE_1_DECISIONS.md` for details.
@@ -264,9 +299,13 @@ See `EYWA_HANDOVER.md` Section 6 + `PHASE_1_DECISIONS.md` for details.
 | **DR-010** | **Brand Scope Architecture** | 🔒 **Locked** |
 | **DR-011** | **Entity Uniqueness Guard (Two-Wave)** | 🔒 **Locked (NEW v3.13)** |
 | **DR-012** | **Edge Vocabulary Evolution Policy** | 🔒 **Locked (NEW v3.13)** |
-| **DR-013** | **Edge Vocabulary v3.5 Expansion (causes + contraindicates)** | 🌱 **Proposed (NEW v1.3 — review until 2026-05-20)** |
-| **DR-014** | **Concept Entity Subtype Lock (framework + axis)** | 🌱 **Proposed (NEW v1.3 — review until 2026-05-20)** |
-| DR-015..026 | Various (WordPress hosting, Supabase tier, migration repo, etc.) | ⏳ Placeholder |
+| **DR-013** | **Edge Vocabulary v3.5 Expansion (causes + contraindicates)** | 🌱 **Proposed (review until 2026-05-20)** |
+| **DR-014** | **Concept Entity Subtype Lock (framework + axis)** | 🌱 **Proposed (review until 2026-05-20)** |
+| **DR-015** | **Brand Scope Market Reconciliation Pattern** | 🔒 **Locked (NEW v1.4)** |
+| **DR-016** | **Page Viability Assessment / Thin Page Detection** | 🔒 **Locked (NEW v1.4)** |
+| **DR-017** | **Page Content Brief Field** | 🔒 **Locked (NEW v1.4)** |
+| **DR-018** | **Page Content Length Standards** | 🔒 **Locked (NEW v1.4)** |
+| DR-019..026 | Various (WordPress hosting, Supabase tier, migration repo, Notion sync scope, branch testing, etc.) | ⏳ Placeholder |
 
 See `DECISION_RECORDS.md` for full rationale.
 
@@ -274,7 +313,7 @@ See `DECISION_RECORDS.md` for full rationale.
 
 ## 📐 Schema Overview
 
-The EYWA database schema (v1.9) consists of **28 tables organized into 9 groups**:
+The EYWA database schema (v1.10) consists of **28 tables organized into 9 groups**:
 
 1. **Group 1 — Core Identity** (brands, seo_authors, seo_brand_doctors, seo_brand_branches)
 2. **Group 2 — Knowledge Graph** (seo_entity_graph, seo_entity_relationships, seo_topic_cluster_master)
@@ -301,7 +340,8 @@ The EYWA database schema (v1.9) consists of **28 tables organized into 9 groups*
 ## 📜 Version History
 
 **Bible:**
-- **v3.13 (2026-05-08)** — Entity Uniqueness Guard + Edge Evolution Policy 🛡️🔄 *(current)*
+- **v3.14 (2026-05-10)** — Sitemap Design Quality Gates (DR-015..018) 🗺️🛡️ *(current)*
+- v3.13 (2026-05-08) — Entity Uniqueness Guard + Edge Evolution Policy 🛡️🔄
 - v3.12 (2026-05-08) — Two-Column Identity + Phase 1 Foundation 🆔🏗️
 - v3.11 (2026-05-07) — Two-Phase Hierarchy Sync Pattern 🌳
 - v3.10.1 (2026-05-07) — Structural Cleanup 🧹
@@ -310,17 +350,19 @@ The EYWA database schema (v1.9) consists of **28 tables organized into 9 groups*
 - v3.8 (2026-05-07) — Elementor Pro Integration 🎨
 - v3.7 (2026-05-07) — Multi-Brand Federation Pattern 🌐
 - v3.6 (2026-05-07) — Universal Scoring Framework 📊
-- *(see Bible changelog for full v1.0 → v3.13 history)*
+- *(see Bible changelog for full v1.0 → v3.14 history)*
 
 **Schema:**
-- **v1.9 (2026-05-08)** — EUG Implementation + brands Two-Column Compliance 🛡️🆔 *(current)*
+- **v1.10 (2026-05-10)** — page_master sitemap design columns (DR-015..017) 🗺️ *(current)*
+- v1.9 (2026-05-08) — EUG Implementation + brands Two-Column Compliance 🛡️🆔
 - v1.8 (2026-05-08) — Two-Column Identity + Multilingual v2 🆔🌐
 - v1.7 (2026-05-07) — Two-Phase Hierarchy Sync Pattern 🌳
 - v1.6 (2026-05-07) — Sync with Bible v3.9 (Multilingual) 🌐
-- *(see Schema changelog for full v1.0 → v1.9 history)*
+- *(see Schema changelog for full v1.0 → v1.10 history)*
 
 **Handover:**
-- **v1.5 (2026-05-09)** — DR-013 + DR-014 Proposed status added 🌱 *(current)*
+- **v1.6 (2026-05-10)** — Phase E sitemap quality gates + session_2026_05_10 entry 🗺️ *(current)*
+- v1.5 (2026-05-09) — DR-013 + DR-014 Proposed status added 🌱
 - v1.4 (2026-05-08) — EUG integration + Phase 1A migration update
 - v1.3 (2026-05-08) — Phase 1 Status section added
 - v1.2 (2026-05-07) — Per-brand repo folder structure
@@ -328,14 +370,15 @@ The EYWA database schema (v1.9) consists of **28 tables organized into 9 groups*
 - v1.0 (2026-05-07) — Initial release
 
 **Decision Records:**
-- **v1.3 (2026-05-09)** — DR-013 (Edge v3.5 Expansion) + DR-014 (Concept Subtype Lock) Proposed 🌱 *(current)*
+- **v1.4 (2026-05-10)** — DR-015..018 (Market Reconciliation + Viability + Brief + Length Standards) 🔒 *(current)*
+- v1.3 (2026-05-09) — DR-013 (Edge v3.5 Expansion) + DR-014 (Concept Subtype Lock) Proposed 🌱
 - v1.2 (2026-05-08) — DR-011 (EUG) + DR-012 (Edge Evolution) added
 - v1.1 (2026-05-08) — DR-007 through DR-010 added
 - v1.0 (2026-05-07) — Initial release with DR-001 through DR-006
 
 **Future (pending DR-013/014 governance review 2026-05-15):**
-- 🔮 Bible v3.14 — Edge vocabulary 10 → 12 + typed edge_note + concept subtype lock
-- 🔮 Schema v1.10 — edge_evidence_citation + medical_reviewer_signoff fields + Phase 1E migrations
+- 🔮 Bible v3.15 — Edge vocabulary 10 → 12 + typed edge_note + concept subtype lock
+- 🔮 Schema v1.11 — edge_evidence_citation + medical_reviewer_signoff fields + Phase 1E migrations
 - ⚠️ Build only triggers AFTER DR-013/014 lock (not before)
 
 ---
