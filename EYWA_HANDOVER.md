@@ -5,7 +5,7 @@
 
 **Document Version:** 1.6  
 **Last Updated:** 2026-05-10  
-**Companion to:** EYWA Bible v3.14 + Schema Overview v1.10 + DECISION_RECORDS v1.4  
+**Companion to:** EYWA Bible v3.14 + Schema Overview v1.10 + DECISION_RECORDS v1.5  
 **Created by:** The Gifted Digital Marketing Co., Ltd.
 
 ---
@@ -1288,6 +1288,47 @@ session_2026_05_10:  # 🆕 NEW v1.6
   source: "Operator approval 2026-05-10 (single session, all 4 DRs approved together)"
   
   status: "Bible/Schema/Handover/DR all v1.10/v3.14/v1.6/v1.4 synced. Migrations 007/008 ready for Phase 1A."
+
+session_2026_05_10_part_2:  # 🆕 NEW v1.6 (continued — same calendar day)
+  duration: ~1.5 hours
+  trigger: "BIO DADDY infographic 2026-05-09 → operator request 2026-05-10 → multi-source verification (12+ industry sources) of Google FAQ rich results full deprecation"
+  parallel_workstream: "Independent of Stream A/B (DR-013/014) and DR-015..018 sitemap layer"
+  
+  problem_surfaced:
+    - "Google announcement 2026-05-07: FAQ rich results FULL kill (incl. gov/health) effective June 2026"
+    - "March 2026 Core Update already deprecated 7 schemas Bible v3.14 doesn't list as forbidden"
+    - "EYWA conflates SERP-purpose vs AI-citation-purpose schemas across Part 6/9/25/26"
+    - "Existing FAQ rich result KPI plans now obsolete (will be 0 after June 2026)"
+  
+  outcomes:
+    - DR-019 (Schema Strategy for Post-Rich-Results Era) — Proposed
+    - DECISION_RECORDS v1.4 → v1.5
+    - EYWA_HANDOVER v1.6 (this update — pre-flight + session log)
+    - PHASE_1_DECISIONS v1.3 → v1.4 (added DR-019 to Open Items)
+    - README updated (Governance section + DR table + Future versions)
+  
+  scope: "Schema emission layer (Bible Part 26 + Part 9 + Part 20) — independent of edge vocabulary work"
+  source: "Operator approval Option B 2026-05-10 — apply as Proposed (4-week review until 2026-06-07)"
+  
+  governance_milestone: "Second use of Proposed-status pattern (DR-013/014 was first)"
+  
+  pending_actions:
+    review_window:
+      - Review until 2026-06-07
+      - Final lock targeted 1 week after Google June 2026 effective date
+      - Watch for last-minute Google behaviour changes (Rich Results Test removal timing)
+    
+    if_locked_2026_06_07:
+      - Bible v3.15 — Part 26 restructure + Part 9 Featured Snippet section + Part 20 KPI replacement
+      - eywa-schema-pipeline plugin update — forbidden schema list enforcement
+      - eywa-acf-fields plugin update — remove deprecated schema field groups
+      - genesis_checklist.yaml — schema validation rules
+      - Audit existing 14 brand sites for 7 deprecated schemas
+    
+    if_rejected:
+      - Document workaround pattern (selective per-page emission via existing schema_markup_planned jsonb)
+  
+  status: "Proposed — review window active until 2026-06-07. No DDL change. No Phase 1A blocker."
 ```
 
 ---
@@ -1466,7 +1507,7 @@ session_kickoff_checklist:
     ☐ Read latest Bible version (v3.14 as of 2026-05-10)
     ☐ Read latest Schema version (v1.10 as of 2026-05-10)
     ☐ Read brand-config.json
-    ☐ Read DECISION_RECORDS.md (v1.4, DR-001..DR-018 — DR-013/014 Proposed; DR-015..DR-018 Locked)
+    ☐ Read DECISION_RECORDS.md (v1.5, DR-001..DR-019 — DR-013/014/019 Proposed; DR-015..DR-018 Locked)
     ☐ Read brand-concept.md (if exists)
   
   infrastructure_verification:
@@ -1495,6 +1536,12 @@ session_kickoff_checklist:
     ☐ Page Viability Assessment performed for every page? (Bible §4.14)
     ☐ Content Brief filled for collapsed pages? (Bible §4.5, DR-017)
     ☐ Word count targets reviewed against §9.8 standards?
+  
+  schema_emission_awareness:  # 🆕 v1.6 (DR-019 Proposed — soft guidance until lock 2026-06-07)
+    ☐ Avoid emitting 7 deprecated schemas? (CourseInfo, ClaimReview, EstimatedSalary, LearningVideo, SpecialAnnouncement, VehicleListing, PracticeProblem)
+    ☐ FAQPage / HowTo emit OK but expect ZERO SERP rich result post-June 2026? (AI citation only)
+    ☐ Featured Snippet pattern applied? (H2/H3 question + 40-60 word direct answer — DR-019 Decision 2)
+    ☐ AggregateRating compliant? (min 5 verifiable reviews + crawler-accessible source)
 ```
 
 ---

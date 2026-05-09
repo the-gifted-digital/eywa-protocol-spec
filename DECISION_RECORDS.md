@@ -2,7 +2,7 @@
 
 > **Append-only architectural decision log.** Each record explains WHY a decision was made — not just WHAT.
 
-**Document Version:** 1.4  
+**Document Version:** 1.5  
 **Last Updated:** 2026-05-10  
 **Format:** Reverse chronological (newest first)
 
@@ -31,6 +31,100 @@
 ---
 
 ## Decisions Log
+
+### [DR-019] — Schema Strategy for Post-Rich-Results Era (2026-05-10) 🌱
+
+**Status:** Proposed (review until 2026-06-07 — final lock targeted after Google June 2026 effective date)
+**Bible Reference:** Part 26 (Schema Pipeline) — major refactor pending lock; Part 9 (Templates) — new Featured Snippet section pending lock; Part 20 (KPIs) — metric replacement pending lock
+**Schema Reference:** v1.10 — **no DDL change** (decision is spec-level + plugin-level)
+**Phase 1 Reference:** Updates `eywa-schema-pipeline` plugin emission logic (no migration)
+**Companion DRs:** DR-001 (Federation — schemas inherit brand_scope), DR-011 (EUG — entity-schema discipline)
+**Trigger event:** Google announcement 2026-05-07 — FAQ rich results full deprecation effective June 2026 (incl. gov/health carve-out)
+
+**Context:**
+
+Multi-source verification (12+ industry sources, 2026-05-10) confirms a 3-year deprecation arc completing in June 2026:
+
+```yaml
+deprecation_timeline:
+  2023-08: "FAQ rich results restricted to gov/health (HowTo desktop-only)"
+  2023-09: "HowTo rich results FULLY removed"
+  2026-03: "7 schemas deprecated (CourseInfo, ClaimReview, EstimatedSalary, LearningVideo, SpecialAnnouncement, VehicleListing, PracticeProblem)"
+  2026-03: "AggregateRating scrutiny tightened — min 5 verifiable reviews + crawler-accessible"
+  2026-05-07: "FAQ rich results full kill announced (incl. gov/health carve-out)"
+  2026-06: "Effective: FAQ search appearance + Rich Results Test support removed"
+
+empirical_pivot_evidence:
+  faqpage_ai_citation_rate: "67% for relevant queries"
+  faqpage_in_ai_overviews: "3.2x more likely vs prose-only"
+  active_consumers: [ChatGPT, Claude, Perplexity, Gemini, Google AI Overviews]
+  schema_role_shift: "SERP-rendering signal → AI-extraction signal"
+```
+
+EYWA Bible v3.14 currently embeds FAQPage and HowTo across Part 6, 9, 25, 26 + L6 schema mapping. The compliance header declares "Google March 2026 Core Update aligned" but predates the 2026-05-07 announcement. Without architectural separation between SERP-purpose and AI-purpose schemas, KPIs and emission logic conflate two different value streams.
+
+**Decision (4 sub-decisions to lock together):**
+
+1. **Two-Purpose Schema Taxonomy** — Classify all emitted schemas into:
+   - `serp_rich_result` (active SERP renderers): Product, Review, Organization, MedicalBusiness, LocalBusiness, Article, NewsArticle, BlogPosting, MedicalScholarlyArticle, BreadcrumbList, VideoObject, Person, Recipe (non-EYWA), Event (non-EYWA)
+   - `ai_citation` (AI-only — emit but expect no SERP rich result): FAQPage, HowTo, MedicalCondition, MedicalProcedure, MedicalTherapy, Drug, DefinedTerm, QAPage, SpeakableSpecification
+   - `forbidden` (BLOCK emission): CourseInfo, ClaimReview, EstimatedSalary, LearningVideo, SpecialAnnouncement, VehicleListing, PracticeProblem
+
+2. **Featured Snippet Capture Pattern** (Bible Part 9 NEW sub-section) — H2/H3 = literal user question; first paragraph after H2/H3 = direct 40-60 word answer; supporting list/table below; co-emit `SpeakableSpecification`. Becomes the primary SERP-capture mechanism for question-intent queries (replacing FAQ rich result niche).
+
+3. **KPI Replacement** (Bible Part 20):
+   - DROP: `faq_rich_result_impressions`, `howto_rich_result_impressions`
+   - ADD: `ai_citation_rate` (per platform: chatgpt/claude/perplexity/gemini/ai_overviews), `featured_snippet_capture_rate`, `zero_click_vs_click_ratio`
+   - RETAIN: `product_review_rich_result_impressions`, `organization_knowledge_panel_presence`, `breadcrumb_rich_result_appearance`, `video_thumbnail_rich_result`
+
+4. **AggregateRating Tightening** — `eywa-schema-pipeline` plugin enforces min 5 reviews + crawler-accessible source pre-emission; non-compliant pages emit individual `Review` schemas without `AggregateRating` wrapper.
+
+**Rationale:**
+
+- **Why split FAQPage/HowTo from forbidden 7?** Google explicitly says they'll continue using FAQPage/HowTo for understanding pages (just no SERP rendering). The 7 forbidden schemas have processing entirely removed. AI consumption (67% citation rate) makes continued emission high-value.
+- **Why no DDL change?** Existing `schema_org_type` (text) + `schema_markup_planned` (jsonb) suffice. A `schema_emission_purpose` enum was considered but rejected — purpose is derivable from type via lookup table (no need to denormalise).
+- **Why Featured Snippet now (was implicit)?** With FAQ rich results gone, Position 0 becomes the highest-value SERP capture for Q&A intent. Bible mentions Featured Snippets in passing (Part 20 KPI ~line 14416) but lacks template-level pattern enforcement.
+- **Why 4-week review (until 2026-06-07)?** Google's June 2026 effective date may bring last-minute behavioural changes. Lock 1 week post-effective lets us observe actual Rich Results Test removal + page treatment behaviour.
+- **Why independent of DR-013/014?** DR-013/014 = entity_relationships edge vocabulary layer. DR-019 = schema.org JSON-LD emission layer. Different files, different governance scope.
+
+**Consequences:**
+
+- ✅ Eliminates wasted bytes from 7 deprecated schemas (cleaner crawl budget)
+- ✅ Operator/AI mental model split: "this schema = AI" vs "this schema = SERP"
+- ✅ Featured Snippet capture becomes measurable, not hope-based
+- ✅ AggregateRating compliance prevents future Google penalty
+- ✅ KPI metrics align with reality (no more tracking dead features)
+- ⚠️ Bible Part 26 needs significant restructure (~3 hours), Part 9 new sub-section (~2 hours), eywa-schema-pipeline plugin update (~4 hours dev)
+- ⚠️ Existing pages with deprecated 7 schemas need cleanup audit (operator-driven, not auto-strip)
+- ⚠️ Temporary inconsistency between operators following old pattern vs new (during review window)
+- 🚧 Follow-up: audit 14 brand sites for 7 deprecated schemas in production
+- 🚧 Follow-up: update `eywa-acf-fields` + `genesis_checklist.yaml` schema validation
+- 🚧 Follow-up: consider DR-020 (AI Citation Tracking & Optimization Cycle — operationalize `ai_citation_rate` ETL)
+
+**Open Questions for Review (must answer before lock):**
+
+1. Plugin enforcement timing: warn-only first 2 weeks then hard-block, OR hard-block immediately? *(Recommend: warn-only 2 weeks)*
+2. Existing pages cleanup priority: blocking bug / opportunistic / batch? *(Recommend: opportunistic — most brands don't use the 7 anyway)*
+3. Featured Snippet pattern enforcement: WARN or BLOCK in editorial review? *(Recommend: WARN v1, BLOCK for L4/L5 only after 6 months measurement)*
+4. AI citation tracking ETL: block this DR until pipeline exists, or accept lag? *(Recommend: accept lag — DR specifies metric, ETL is separate Phase 3 task)*
+5. Add `QAPage` schema for single-question Knowledge L5 pages? *(Recommend: YES)*
+6. SpeakableSpecification rollout: all pages or only Featured-Snippet-targeted? *(Recommend: only pages following Decision 2 pattern)*
+
+**References:**
+
+- Bible Part 26 (current Schema Pipeline — to be restructured post-lock)
+- Bible Part 9 (Template Anatomy — to gain Featured Snippet section post-lock)
+- Bible Part 20 (KPI Framework — to update metrics post-lock)
+- Bible Part 23.4 (Editorial Review — to gain Featured Snippet check post-lock)
+- DR-001 (Federation Pattern) — schemas inherit brand_scope[]
+- DR-011 (EUG) — entity-schema linking discipline
+- External: [Google Search Central blog 2023-08 (HowTo + FAQ original announcement)](https://developers.google.com/search/blog/2023/08/howto-faq-changes)
+- External: Google announcement 2026-05-07 (FAQ rich results full deprecation, effective June 2026)
+- External: Google March 2026 Core Update — 7 schema deprecations
+- Multi-source verification 2026-05-10: Search Engine Land, Schema App, ALM Corp, Frase.io, WebFX, Engagecoders, Stanventures, Wildnet, faqjsonld.com, Leapd, Stackmatix, Over The Top SEO (12+ sources confirmed convergent narrative)
+- Trigger: BIO DADDY infographic 2026-05-09 → operator request 2026-05-10 → multi-source verification → DR-019 draft
+
+---
 
 ### [DR-018] — Page Content Length Standards (2026-05-10) 🆕
 
@@ -1785,6 +1879,27 @@ decision_record_governance:
 ---
 
 ## Changelog
+
+### v1.5 (2026-05-10) — DR-019 Proposed (Schema Strategy Post-Rich-Results) 🌱
+
+Triggered by Google announcement 2026-05-07 (FAQ rich results full deprecation effective June 2026, incl. gov/health carve-out) + multi-source verification (12+ industry sources confirm schema role shift from SERP-rendering to AI-extraction).
+
+- ➕ **DR-019 (NEW, Proposed):** Schema Strategy for Post-Rich-Results Era. 4 sub-decisions to lock together: (1) Two-Purpose Taxonomy (serp/ai/forbidden), (2) Featured Snippet capture pattern, (3) KPI replacement (drop FAQ rich result impressions, add ai_citation_rate), (4) AggregateRating tightening (min 5 verifiable reviews).
+- 📝 **Review cycle:** 4 weeks (until 2026-06-07) — final lock targeted **after** Google June 2026 effective date for behavioural confirmation.
+- 📝 **No DDL change** — spec-level + plugin-level only (`eywa-schema-pipeline` enforces forbidden list).
+- 📝 **Independent of DR-013/014** — different governance scope (schema emission layer vs entity edge vocabulary layer).
+
+### v1.4 (2026-05-10) — DR-015..018 Locked (Sitemap Design Quality Gates) 🗺️🔒
+
+Field-tested feedback from VTH BioDent surfaced 4 process gaps in the sitemap design layer (Phase E). All 4 DRs locked together, independent of DR-013/014 governance.
+
+- ➕ **DR-015 (NEW, Locked):** Brand Scope Market Reconciliation Pattern — 3-axis scoring (Necessity / Brand-Fit / SEO Opportunity) for healthcare brands. Adds `marketplace_proposal_status` + `reconciliation_notes` to page_master.
+- ➕ **DR-016 (NEW, Locked):** Page Viability Assessment / Thin Page Detection — 4-criteria gate + 5 exception clauses + HARD RULE (L4/L5 pillars never thin). Adds `viability_assessment` jsonb to page_master.
+- ➕ **DR-017 (NEW, Locked):** Page Content Brief Field — REQUIRED for collapsed pages, RECOMMENDED otherwise. Adds `content_brief` text to page_master.
+- ➕ **DR-018 (NEW, Locked):** Page Content Length Standards — 14 page types × Min/Target/Max word count, multilingual -20%. Spec-level only, no DDL.
+- 🔄 Bible v3.13 → v3.14 (Sections 4.13, 4.14, 9.8 + §4.1 Phase 4.5 added)
+- 🔄 Schema v1.9 → v1.10 (4 new page_master columns)
+- 🔄 New migrations: 007_add_content_brief.sql, 008_add_sitemap_design_columns.sql
 
 ### v1.3 (2026-05-09) — DR-013 + DR-014 Proposed (Field-Tested Feedback) 🌱
 

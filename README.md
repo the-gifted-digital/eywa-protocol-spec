@@ -76,6 +76,32 @@ Real-world feedback from VTH BioDent (Naphannop S.) surfaced 4 process gaps in t
 
 ---
 
+## 🌱 Governance Update — DR-019 Proposed (2026-05-10)
+
+**Trigger:** Google announcement 2026-05-07 — FAQ rich results full deprecation effective June 2026 (incl. gov/health carve-out). Multi-source verification (12+ industry sources) confirms schema role shift from SERP-rendering to AI-extraction signal.
+
+- 🌱 **DR-019 (Proposed):** Schema Strategy for Post-Rich-Results Era — review until **2026-06-07**
+
+**4 sub-decisions to lock together:**
+1. **Two-Purpose Schema Taxonomy** — split into `serp_rich_result` / `ai_citation` / `forbidden`
+2. **Featured Snippet Capture Pattern** — H2/H3 = question, 40-60 word direct answer (Bible Part 9 NEW section)
+3. **KPI Replacement** — drop `faq_rich_result_impressions`, add `ai_citation_rate` + `featured_snippet_capture_rate` (Bible Part 20)
+4. **AggregateRating Tightening** — min 5 verifiable reviews + crawler-accessible source
+
+**Forbidden schemas (BLOCK emission):** `CourseInfo`, `ClaimReview`, `EstimatedSalary`, `LearningVideo`, `SpecialAnnouncement`, `VehicleListing`, `PracticeProblem` (Google Mar 2026 deprecations)
+
+**AI-citation schemas (emit but no SERP expectation):** `FAQPage`, `HowTo`, `MedicalCondition`, `MedicalProcedure`, `MedicalTherapy`, `Drug`, `DefinedTerm`, `QAPage`, `SpeakableSpecification`
+
+**No DDL change** — spec-level + plugin-level only (`eywa-schema-pipeline` enforces forbidden list).
+
+**If LOCKED 2026-06-07:** Bible v3.15 (Part 26 restructure, Part 9 new section, Part 20 KPI update) + plugin updates  
+**If REJECTED:** Workaround pattern (selective emission per page via existing `schema_markup_planned` jsonb)
+
+> **Note:** DR-019 is independent of DR-013/014 governance — different scope (schema emission layer vs entity edge vocabulary layer). Targets Bible v3.15 if locked.
+
+
+---
+
 ## 🌱 Governance Update — DR-013 + DR-014 Still Proposed (2026-05-09)
 
 **Field-tested feedback from VTH BioDent EGP work** — first test of DR-012 (Edge Vocabulary Evolution Policy) governance.
@@ -305,7 +331,8 @@ See `EYWA_HANDOVER.md` Section 6 + `PHASE_1_DECISIONS.md` for details.
 | **DR-016** | **Page Viability Assessment / Thin Page Detection** | 🔒 **Locked (NEW v1.4)** |
 | **DR-017** | **Page Content Brief Field** | 🔒 **Locked (NEW v1.4)** |
 | **DR-018** | **Page Content Length Standards** | 🔒 **Locked (NEW v1.4)** |
-| DR-019..026 | Various (WordPress hosting, Supabase tier, migration repo, Notion sync scope, branch testing, etc.) | ⏳ Placeholder |
+| **DR-019** | **Schema Strategy for Post-Rich-Results Era (FAQ/HowTo/AggregateRating)** | 🌱 **Proposed (NEW v1.5 — review until 2026-06-07)** |
+| DR-020..026 | Various (WordPress hosting, Supabase tier, migration repo, Notion sync scope, branch testing, etc.) | ⏳ Placeholder |
 
 See `DECISION_RECORDS.md` for full rationale.
 
@@ -370,16 +397,21 @@ The EYWA database schema (v1.10) consists of **28 tables organized into 9 groups
 - v1.0 (2026-05-07) — Initial release
 
 **Decision Records:**
-- **v1.4 (2026-05-10)** — DR-015..018 (Market Reconciliation + Viability + Brief + Length Standards) 🔒 *(current)*
+- **v1.5 (2026-05-10)** — DR-019 (Schema Strategy Post-Rich-Results) Proposed 🌱 *(current)*
+- v1.4 (2026-05-10) — DR-015..018 (Market Reconciliation + Viability + Brief + Length Standards) 🔒
 - v1.3 (2026-05-09) — DR-013 (Edge v3.5 Expansion) + DR-014 (Concept Subtype Lock) Proposed 🌱
 - v1.2 (2026-05-08) — DR-011 (EUG) + DR-012 (Edge Evolution) added
 - v1.1 (2026-05-08) — DR-007 through DR-010 added
 - v1.0 (2026-05-07) — Initial release with DR-001 through DR-006
 
-**Future (pending DR-013/014 governance review 2026-05-15):**
-- 🔮 Bible v3.15 — Edge vocabulary 10 → 12 + typed edge_note + concept subtype lock
-- 🔮 Schema v1.11 — edge_evidence_citation + medical_reviewer_signoff fields + Phase 1E migrations
-- ⚠️ Build only triggers AFTER DR-013/014 lock (not before)
+**Future (pending governance reviews):**
+- 🔮 **Bible v3.15** (combined trigger):
+  - DR-013/014 lock → Edge vocabulary 10 → 12 + typed edge_note + concept subtype lock
+  - DR-019 lock → Part 26 restructure (3-purpose schema taxonomy) + Part 9 Featured Snippet pattern + Part 20 KPI replacement
+- 🔮 **Schema v1.11** (DR-013/014 only, no DDL from DR-019):
+  - edge_evidence_citation + medical_reviewer_signoff fields + Phase 1E migrations
+- ⚠️ DR-013/014 review 2026-05-15 (lock or reject)
+- ⚠️ DR-019 review 2026-06-07 (lock 1 week after Google June 2026 effective date for behavioural confirmation)
 
 ---
 

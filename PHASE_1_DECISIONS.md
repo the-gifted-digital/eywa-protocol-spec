@@ -1,11 +1,11 @@
 # EYWA™ Protocol — Phase 1 Decisions Summary
 
-**Document Version**: 1.3
+**Document Version**: 1.4
 **Date**: 2026-05-10
-**Status**: 🔒 Locked (Phase 1A specs + DR-015..018) + 🌱 DR-013/014 still Proposed
+**Status**: 🔒 Locked (Phase 1A specs + DR-015..018) + 🌱 DR-013/014 + DR-019 Proposed
 **Phase**: 1 — Supabase Database Foundation
 **Project**: GTGT (in-place upgrade)
-**Companion to**: Bible v3.14 + Schema Overview v1.10 + Handover v1.6 + DECISION_RECORDS v1.4
+**Companion to**: Bible v3.14 + Schema Overview v1.10 + Handover v1.6 + DECISION_RECORDS v1.5
 
 ---
 
@@ -336,6 +336,15 @@ These items emerged from real EGP work (Naphannop S.) and are now in Proposed st
   - Status: Proposed (paired with DR-013)
   - Blocking: NO
 
+- 🌱 **DR-019 — Schema Strategy for Post-Rich-Results Era**: Triggered by Google FAQ rich results full deprecation (announced 2026-05-07, effective June 2026).
+  - Status: Proposed (review until 2026-06-07)
+  - Blocking: NO for Phase 1A migrations (no DDL change required)
+  - Blocking_phase_1A.2: NO (independent of DR-015..018 lock)
+  - Targets Bible v3.15 if locked (Part 26 restructure + Part 9 Featured Snippet + Part 20 KPIs)
+  - 4 sub-decisions: Two-Purpose Taxonomy / Featured Snippet pattern / KPI replacement / AggregateRating tightening
+  - Forbidden schemas to BLOCK in `eywa-schema-pipeline`: CourseInfo, ClaimReview, EstimatedSalary, LearningVideo, SpecialAnnouncement, VehicleListing, PracticeProblem
+  - Independent of DR-013/014 (different governance scope — emission layer vs edge vocabulary)
+
 ### Phase 1 Operational Items (renumbered from v1.1)
 
 These items will become DR-022+ when decided:
@@ -379,4 +388,14 @@ These items will become DR-022+ when decided:
 
 ---
 
-**End of Phase 1 Decisions Summary v1.3**
+## 🆕 v1.4 Changelog (2026-05-10)
+
+- 🔄 Reference updated: DR v1.4 → v1.5 (DR-019 Proposed)
+- 🌱 Added DR-019 to Active Open Items section (Proposed, review until 2026-06-07)
+- 📝 No DDL change from DR-019 — spec-level + plugin-level only (`eywa-schema-pipeline` enforces forbidden schema list)
+- 📝 DR-019 independent of DR-013/014 — different governance scope (schema emission layer vs entity edge vocabulary layer)
+- 📝 Trigger: Google FAQ rich results full deprecation announcement 2026-05-07 (effective June 2026)
+
+---
+
+**End of Phase 1 Decisions Summary v1.4**
