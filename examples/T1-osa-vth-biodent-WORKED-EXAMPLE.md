@@ -231,20 +231,28 @@ citations_used:
 
 ## 2. ข้อมูลสำคัญเกี่ยวกับโรคหยุดหายใจขณะหลับ
 
-| **ข้อมูล** | **รายละเอียด** |
-| --- | --- |
-| ชื่อโรค (TH) | โรคหยุดหายใจขณะหลับชนิดอุดกั้น |
-| ชื่อโรค (EN) | Obstructive Sleep Apnea (OSA) |
-| รหัส ICD-10-CM | G47.33 |
-| รหัส ICD-11 | 7A41 |
+**โรคหยุดหายใจขณะหลับชนิดอุดกั้น** | Obstructive Sleep Apnea (OSA)
+
+| | |
+|---|---|
+| 👤 **ใครเสี่ยง?** | ชาย 30-60 ปี, BMI ≥ 25, คอสั้น, ขากรรไกรล่างเล็ก/ถอยหลัง (retrognathia) |
+| 🔍 **รู้ได้อย่างไร?** | Polysomnography (PSG) หรือ Home Sleep Test (HST) — เสริมด้วย CBCT airway analysis ที่ VTH |
+| 💊 **รักษาได้ไหม?** | ได้ — Oral Appliance, CPAP, ผ่าตัด หรือปรับพฤติกรรม (เลือกตามระดับความรุนแรง) |
+| ✅ **ตรวจสอบโดย** | ทพ. ดร. อมรพงษ์ วชิรมน — DDS, DBA, PhD, LLD, ABDSM Certified |
+
+<details>
+<summary>▶ ข้อมูลทางเทคนิค (สำหรับผู้สนใจเชิงลึก)</summary>
+
+| | |
+|---|---|
+| ICD-10-CM | G47.33 |
+| ICD-11 | 7A41 |
 | SNOMED CT | 78275009 |
 | MeSH | D020181 |
 | ความชุกในไทย | 4.8% ในผู้ใหญ่ 30-60 ปี, 11.4% ในผู้สูงอายุ ≥60 ปี (Thai Sleep Society, 2019) |
-| กลุ่มเสี่ยงหลัก | ชาย 30-60 ปี, BMI ≥ 25, คอสั้น, ขากรรไกรล่างเล็ก/ถอยหลัง |
-| ตรวจวินิจฉัยด้วย | Polysomnography (PSG) หรือ Home Sleep Test (HST) |
-| รักษาได้ด้วย | CPAP, Oral Appliance, ผ่าตัด, ปรับพฤติกรรม |
 | Specialty ที่เกี่ยวข้อง | Dental Sleep Medicine, Sleep Medicine, ENT, Pulmonology |
-| ตรวจสอบโดย | ทพ. ดร. อมรพงษ์ วชิรมน — DDS, DBA, PhD, LLD, ABDSM |
+
+</details>
 
 ---
 

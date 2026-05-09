@@ -107,13 +107,131 @@ B01_hero_summary:
   example_source: VTH Mouth BioMapping line 9, sample sleep apnea SECTION 1
 
 B02_quick_facts_table:
-  purpose: "Entity Signal + Citable Data Cluster"
-  structure: |
-    Table with 6-12 rows — key facts about the entity
-    Required rows: TH name, EN name, ICD/SNOMED codes, prevalence, who reviews
-  schema_emit: feeds entity Article schema with structured key-value pairs
-  required_in: T1, T2 (medical), T3, T4
-  example_source: sample sleep apnea SECTION 2
+  purpose: "Entity Signal + Citable Data Cluster + Reader Hook"
+  
+  ui_pattern: "5-essentials always visible + technical depth under toggle (v1.2 🆕)"
+  
+  rationale: |
+    Reader-centric framing — 5 essentials answer "What's in it for me?" questions:
+    1. Disease name → "ใช่หน้าที่ฉันหา?"
+    2. Risk groups → "ฉันเสี่ยงไหม?" ⭐ highest hook
+    3. Diagnostic methods → "รู้ได้ยังไงว่าเป็น?"
+    4. Treatment options → "รักษาได้ไหม?"
+    5. Reviewer → "เชื่อได้ไหม?" (visual EEAT)
+    
+    Technical codes (ICD-10/11, SNOMED, MeSH) collapsed under toggle —
+    audience ทั่วไป (99%+ of traffic) ไม่รู้จัก codes. Power users
+    (researcher/clinician) คลิก expand เพื่อดู.
+    
+    Google indexes collapsed <details> content fully (since 2019) —
+    ZERO SEO penalty for hiding under toggle.
+  
+  structure_v1_2:
+    essentials_always_visible:  # 5 rows, no toggle
+      - title_row: "**{Disease/Topic Name (TH)}** | {English Term + Acronym}"
+      - row_1: "👤 **ใครเสี่ยง?** | {risk groups / demographic}"
+      - row_2: "🔍 **รู้ได้อย่างไร?** | {primary diagnostic methods}"
+      - row_3: "💊 **รักษาได้ไหม?** | {primary treatments}"
+      - row_4: "✅ **ตรวจสอบโดย** | {reviewer name + credentials}"
+    
+    toggle_label: "▶ ข้อมูลทางเทคนิค (สำหรับผู้สนใจเชิงลึก)"
+    toggle_default_state: collapsed
+    
+    collapsed_under_toggle:  # render inside <details>
+      - ICD-10-CM, ICD-11, SNOMED CT, MeSH codes
+      - prevalence (TH-specific)
+      - related medical specialties
+      - any other technical/clinical metadata
+  
+  per_template_variations:  # Quick Facts content varies by template type
+    T1_medical_condition:
+      essentials: [disease_name, risk_groups, diagnostic_methods, treatment_options, reviewer]
+      collapsed: [icd_codes, snomed, mesh, prevalence, specialty]
+    
+    T2_medical_procedure:
+      essentials: [procedure_name, who_for, duration, recovery_time, reviewer]
+      collapsed: [cpt_code, anesthesia_type, contraindications]
+    
+    T2a_aesthetic:
+      essentials: [procedure_name, treatment_area, downtime, results_timeline, performed_by]
+      collapsed: [maintenance_schedule, contraindications, FDA_status]
+    
+    T2b_dental:
+      essentials: [procedure_name, who_for, visits_required, materials_brands, reviewer]
+      collapsed: [ada_code, warranty_terms, anesthesia]
+    
+    T3_diagnostic:
+      essentials: [test_name, what_it_detects, sample_type, accuracy, reviewer]
+      collapsed: [loinc_code, duration, contraindications]
+    
+    T4_medical_device:
+      essentials: [device_name, indications, available_at_branches, reviewer]
+      collapsed: [model_number, manufacturer, fda_ce_approval, technical_specs]
+    
+    T6_concept:
+      optional: true  # Quick Facts may be skipped for non-YMYL concepts
+      essentials_if_present: [concept_name, field_discipline, related_concepts]
+    
+    T6a_guide:
+      essentials: [topic, audience_for, estimated_reading_time, sections_covered, reviewer]
+    
+    T7_comparison:
+      essentials: [options_compared, decision_factors, recommended_for]
+      reviewer_required: true
+    
+    T8_case_study:
+      uses_different_block: "B31 patient_profile (NOT Quick Facts)"
+      info_box_replaces_quick_facts: [age, gender, presenting_complaint, doctor]
+    
+    T9_author_profile:
+      uses_different_block: "B34 photo_credentials_header (NOT Quick Facts)"
+      no_quick_facts: true
+    
+    T10_branch:
+      uses_different_block: "B42 address_hours_block (NOT Quick Facts)"
+      no_quick_facts: true
+    
+    T11_institutional:
+      no_quick_facts: true  # Home/About/Contact don't need
+    
+    T12_hub:
+      essentials: [topic_covered, articles_in_hub, last_updated]
+    
+    T13_pricing:
+      uses_different_block: "B79 pricing_table_grid (IS the page content)"
+      no_quick_facts: true
+    
+    T14_trending:
+      essentials: [topic, date_published, update_type, source, reviewer]
+    
+    T15_quiz:
+      essentials: [quiz_purpose, time_required, what_you_learn, reviewer]
+    
+    T17_care_instructions:
+      essentials: [procedure_referenced, recovery_phase, total_recovery_time, reviewer]
+    
+    T18_programmatic_local:
+      uses_different_block: "B41 branch_hero (location-specific)"
+      no_quick_facts: true (Section 2 = address/hours/doctor instead)
+    
+    T19_promotion:
+      essentials: [offer_name, valid_through, price, eligibility]
+      no_reviewer: true  # operational
+  
+  schema_emit: |
+    Both essential rows AND toggle rows feed schema (Google indexes both):
+    - ICD/SNOMED codes (in toggle) → MedicalCondition.code[]
+    - Risk groups → MedicalRiskFactor mentions
+    - Treatment options → MedicalTherapy array
+    - Reviewer → reviewedBy property
+  
+  required_in: T1, T2/T2a-e, T3, T4
+  recommended_in: [T6a, T7, T12, T14, T15, T17]
+  not_used_in: [T8 (uses patient_profile), T9 (uses credentials), T10 (uses address), T11 (skip), T13 (uses pricing), T18 (uses branch_hero), T19 (uses offer details)]
+  
+  example_sources:
+    - "/examples/T1-osa-vth-biodent-WORKED-EXAMPLE.md §2 (v1.2 5+toggle pattern)"
+    - "Original sample sleep apnea (12-row legacy format pre-v1.2)"
 
 B03_at_a_glance_summary:
   purpose: "TL;DR for impatient readers + AI summary feed"

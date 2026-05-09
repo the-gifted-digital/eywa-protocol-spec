@@ -153,20 +153,28 @@ citations_used:
 
 ## SECTION 2: ข้อมูลสำคัญเกี่ยวกับ{topic}
 
-| **ข้อมูล** | **รายละเอียด** |
-| --- | --- |
-| ชื่อโรค (TH) | {Thai disease name} |
-| ชื่อโรค (EN) | {English Term + Acronym if applicable} |
-| รหัส ICD-10-CM | {code} |
-| รหัส ICD-11 | {code} |
+**{Disease/Topic Name TH}** | {English Term + Acronym}
+
+| | |
+|---|---|
+| 👤 **ใครเสี่ยง?** | {risk groups / demographic — primary risk factors readers self-identify with} |
+| 🔍 **รู้ได้อย่างไร?** | {primary diagnostic methods — what test/exam confirms diagnosis} |
+| 💊 **รักษาได้ไหม?** | {primary treatments — answer "yes/no" + list options} |
+| ✅ **ตรวจสอบโดย** | {medical_reviewer name + credentials — e.g., ทพ. ดร. ___ — DDS, ABDSM} |
+
+<details>
+<summary>▶ ข้อมูลทางเทคนิค (สำหรับผู้สนใจเชิงลึก)</summary>
+
+| | |
+|---|---|
+| ICD-10-CM | {code} |
+| ICD-11 | {code} |
 | SNOMED CT | {code} |
 | MeSH | {code} |
 | ความชุก (TH) | {prevalence figure} |
-| กลุ่มเสี่ยงหลัก | {demographic} |
-| วินิจฉัยด้วย | {primary diagnostic methods} |
-| รักษาด้วย | {primary treatments} |
-| Specialty | {medical specialties involved} |
-| ตรวจสอบโดย | {medical_reviewer name + credentials} |
+| Specialty ที่เกี่ยวข้อง | {medical specialties involved} |
+
+</details>
 
 ---
 
