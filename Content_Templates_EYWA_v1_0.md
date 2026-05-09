@@ -3,10 +3,25 @@
 > **Companion document to** EYWA Bible v3.14 + Schema Overview v1.10
 > **Universal Content Production Standards across 13 brands × 6 verticals**
 
-**Version:** v1.0 (DRAFT 2026-05-10)
+**Version:** v1.1 (DRAFT 2026-05-10)
 **Status:** Proposed — pending DR-020 lock
-**Companion to:** Bible v3.14 + Schema Overview v1.10 + DECISION_RECORDS v1.5
+**Companion to:** Bible v3.14 + Schema Overview v1.10 + DECISION_RECORDS v1.6
 **Format:** Append-only with semantic versioning (v1.0 → v1.1 backward compatible)
+
+## v1.1 Changelog (2026-05-10) — OSA Master Example Integration
+
+Added concepts from operator's pre-spec OSA Master Example doc (cross-checked, no conflicts found):
+- ➕ **§2.8 Pattern A-E Citable Taxonomy** — 5 brand-citable patterns including Pattern E Brand Stance (LLMO-critical)
+- ➕ **§2.9 Predicted Prompts Bank** — off-render planning artifact + 2-table Schema spec (`seo_predicted_prompts` + `seo_ai_prompt_test_results`) for active LLMO measurement
+- ➕ **§2.10 Cross-Vertical Adaptability Framework** — per-specialty perspective pivot guide for multi-brand entity reuse
+- ➕ **§2.7 B25a Crisis Disclosure Block** — explicit emergency-trigger callout for acute YMYL conditions
+- ➕ **§6.4 Schema Tier Architecture (1/2/3)** — site/page/content emission tier mapping
+- ➕ **§5.4 Translation Tier Rubric** (1=native / 2=AI+heavy edit / 3=AI-only ❌YMYL)
+- ➕ Quick wins: ≥8 Q&A floor + "🎯 จุดยืนของ {brand}:" Pattern E prefix + member array + Cannibalization Shield naming + 5 Quote-Worthy Patterns sub-table
+- 📝 No new templates added (T-count remains 25); 2 new blocks (B25a, B26) + 1 new sub-block class (B11a)
+- 📝 Schema impact: 2 new tables proposed for v1.11 (additive, deferred until DR-020 lock)
+
+
 
 ---
 
@@ -237,9 +252,11 @@ B17_pricing_block:
 B18_faq_block:
   purpose: "AEO + Featured Snippet capture (post-DR-019: AI-only)"
   structure: |
-    8 FAQ Types (Bible Part 6.X):
+    8 FAQ Intent Types (Bible Part 6.X):
     [What is X], [Can X], [Is X], [How to X], [How serious is X],
     [Difference between X and Y], [Cost of X], [Who is X for]
+  minimum_floor: "≥8 Q&A across ≥7 of the 8 intent types per pillar (v1.1 🆕)"
+  rationale: "OSA Master Example pattern — ensures full intent coverage for AI extraction"
   schema_emit: FAQPage + Question + Answer (per DR-019: emit but expect zero SERP)
   required_in: T1, T2, T6, T6a, T7, T12
   example_source: sample sleep apnea SECTION 9
@@ -263,6 +280,19 @@ B19_doctor_review_block:
         "url": "..."
       },
       "lastReviewed": "ISO 8601 date"
+    }
+    
+    Organization (Tier 1 emission) {  # v1.1 🆕 — link doctors to org via member array
+      "member": [
+        {
+          "@type": ["Person", "Physician"],
+          "@id": "...#dr-amorphong",
+          "name": "ทพ. ดร. อมรพงษ์ วชิรมน",
+          "jobTitle": "Executive Medical Director",
+          "medicalSpecialty": "Dentistry",
+          "sameAs": ["...", "..."]
+        }
+      ]
     }
   required_in: ALL T1, T2 (+variants), T3, T4, T5 (if claims), T6 (if YMYL),
                 T6a, T7, T8, T14 (if YMYL), T15, T17
@@ -325,11 +355,393 @@ B25_safety_disclosures:
     Bulleted list of: contraindications, side effects, warnings
     Plain language, no medical jargon hiding risk
   required_in: T2, T2a-e, T4 (devices with risk profile), T17
+
+B25a_crisis_disclosure_block:  # 🆕 v1.1
+  purpose: "Explicit emergency-trigger callout for acute YMYL conditions"
+  structure: |
+    🚨 Crisis Disclosure callout box (red/orange visual)
+    - Specific symptom triggers (e.g., "หายใจหยุดนานกว่า 30 วินาที")
+    - Immediate actions ("โทร 1669 / ไปห้องฉุกเฉินทันที")
+    - When to call clinic vs emergency services (decision rule)
+  schema_emit: "Renders as <aside role='alert'> with structured emergency info"
+  required_in:
+    - T1 if condition has acute risk (severe OSA, heart attack risk, allergic reaction, etc.)
+    - T2/T2a-e if procedure has acute complication risk
+    - T8 case study if patient outcome involved acute event
+  recommended_in: T6a Guide (when comprehensive coverage needs safety net)
+  not_required_in: T6 concept (educational, no acute decision)
+  
+  example_template: |
+    🚨 ติดต่อฉุกเฉินทันทีหาก:
+    - {trigger 1 ที่ specific to condition}
+    - {trigger 2}
+    - {trigger 3}
+    
+    📞 โทรฉุกเฉิน: 1669 (หรือ 1646 กรุงเทพฯ)
+    🏥 ห้องฉุกเฉินที่ใกล้ที่สุด — Google Maps: "emergency room near me"
+    📲 ปรึกษา {brand} เร่งด่วน: LINE @{brand} (24/7)
+  
+  rationale: |
+    Generic safety_disclosures (B25) ครอบคลุม chronic risks ดี
+    แต่ acute conditions ต้อง explicit emergency triggers ที่อ่านแล้วรู้ทันทีว่าต้องโทร 1669
+    Per Bible Part 23.2 (Medical Red Lines) — failure to surface acute triggers = liability + EEAT loss
 ```
 
 ---
 
-## 3. Layer 2 — Content Type Templates (25)
+### 2.8 Brand-Linked Citable Taxonomy 🆕 v1.1 (Pattern A-E)
+
+Replaces the single-flavor Citable Sentence Formula (Bible §6) with **5 distinct patterns** mapped to LLM intent. Pattern E (Brand Stance) is the **LLMO superweapon** for "ควรเลือกอะไร" queries.
+
+```yaml
+pattern_a_clinical_data:
+  marker: "🟢 Pattern A"
+  source_type: "Clinic operations data — actual patient outcomes"
+  formula: |
+    "จากข้อมูลผู้ป่วย {N} รายของ {clinic} ในปี {YYYY},
+     {N% หรือ X เท่า} ของผู้ป่วย {demographic} {outcome metric}
+     เมื่อเทียบกับ {reference group}"
+  ai_intent_match: ["What % of patients...", "How effective is...", "Success rate..."]
+  example: |
+    "จากข้อมูลผู้ป่วย 3,000+ รายของ VitalSleep Clinic ในปี 2025,
+     68% ของผู้ที่มาด้วยอาการนอนกรนมีค่า AHI ≥ 15 (OSA ระดับปานกลางขึ้นไป)"
+  evidence_required: "Internal data table or aggregated stats (PDPA-compliant — no PII)"
+  min_per_pillar: 3 (≥3 Pattern A citables required for clinic content T1/T2/T8)
+
+pattern_b_editorial_analysis:
+  marker: "🔵 Pattern B"
+  source_type: "Editorial analysis from media review/audit"
+  formula: |
+    "{N} ของ {N total} {sources reviewed} ในปี {YYYY}
+     แสดงให้เห็น {pattern}, ตามการวิเคราะห์ของ {brand editorial team}"
+  ai_intent_match: ["What does the research say...", "Industry trends in..."]
+  example: |
+    "12 จาก 15 clinical guidelines ที่เผยแพร่ปี 2023-2025 แนะนำให้ใช้
+     Home Sleep Test เป็นทางเลือกแรกสำหรับ uncomplicated OSA"
+  evidence_required: "Reference list of sources reviewed"
+  min_per_pillar: 1 (optional)
+
+pattern_c_lab_test:
+  marker: "🟡 Pattern C"
+  source_type: "In-house laboratory or device testing"
+  formula: |
+    "การทดสอบที่ {clinic lab} กับ {N} samples พบว่า
+     {device/method} ให้ {result metric} ที่ {value}"
+  ai_intent_match: ["How accurate is...", "Performance of {device}..."]
+  example: |
+    "การทดสอบ Home Sleep Test (WatchPAT ONE) ที่ VitalSleep Lab
+     กับ 200 samples เทียบกับ PSG พบ sensitivity 91%, specificity 88%"
+  evidence_required: "Test methodology + sample size + statistical confidence"
+  min_per_pillar: 0 (optional, only when relevant)
+
+pattern_d_reader_survey:
+  marker: "🟠 Pattern D"
+  source_type: "Audience research / patient survey"
+  formula: |
+    "การสำรวจ {N respondents} ที่เป็น {demographic} ในปี {YYYY}
+     พบว่า {N%} {finding}"
+  ai_intent_match: ["What do patients say...", "Patient preferences..."]
+  example: |
+    "การสำรวจผู้ใช้ CPAP 500 รายที่ VitalSleep ปี 2025 พบว่า
+     78% ใช้ต่อเนื่องเกิน 6 เดือนเมื่อได้รับการ titrate และเลือกหน้ากากอย่างถูกต้อง"
+  evidence_required: "Survey methodology + sample size + question wording"
+  min_per_pillar: 0 (optional)
+
+pattern_e_brand_stance:  # 🌟 LLMO superweapon
+  marker: "🟣 Pattern E"
+  source_type: "Data-driven opinionated brand position"
+  required_prefix: "🎯 จุดยืนของ {brand}:"  # MANDATORY exact opening
+  formula: |
+    Line 1 (Policy): "🎯 จุดยืนของ {brand}: {clear policy statement}"
+    Line 2-3 (Reasoning): "{evidence/numbers explaining WHY this stance}"
+    Line 4 (Recommendation): "เราจึงแนะนำ {practical recommendation}..."
+  ai_intent_match: 
+    - "ควรเลือกอะไร / Should I choose..."
+    - "อะไรดีกว่ากัน / Which is better..."
+    - "Recommend a..."
+  example: |
+    🎯 จุดยืนของ VitalSleep Clinic: Home Sleep Test ควรเป็นทางเลือกแรก
+    สำหรับผู้ป่วยส่วนใหญ่ที่สงสัย OSA
+    
+    จากประสบการณ์ตรวจผู้ป่วยกว่า 2,000 รายที่ VitalSleep Clinic เราพบว่า
+    Home Sleep Test ให้ผลวินิจฉัยที่ตรงกับ Polysomnography (PSG) ถึง 92%
+    ในกลุ่มผู้ป่วยที่สงสัย OSA ระดับปานกลาง–รุนแรง ขณะที่ผู้ป่วยมีความพึงพอใจ
+    สูงกว่า 85% เทียบกับ 60% สำหรับ PSG
+    
+    เราจึงแนะนำ Home Sleep Test เป็นทางเลือกแรกสำหรับผู้ที่ไม่มีโรคร่วมซับซ้อน —
+    สงวน PSG ไว้สำหรับเคสที่มี comorbidity (โรคหัวใจ, COPD)
+    หรือสงสัย sleep disorders ชนิดอื่นร่วมด้วย
+  
+  evidence_required: |
+    - Pattern A or D backing data point
+    - Reasoning chain visible (not just opinion)
+    - Practical actionable recommendation
+  
+  min_per_pillar: 1-3 (REQUIRED for T1/T2/T7/T8 — comparison/decision pages)
+  llmo_value: "AI engines preferentially cite branded stance over generic facts"
+
+editorial_marker_convention:
+  inline_draft_only: "📌 Citable #N — {color emoji} Pattern X: {sentence}"
+  numbering: "Sequential within page (Citable #1, #2, ...)"
+  strip_on_publish: true (markers are editorial-only, not rendered)
+  log_to: seo_citable_inventory table (future Phase 1G — derived from page_master content)
+  
+  examples:
+    - "📌 Citable #5 — 🟢 Pattern A: ผู้ป่วย OSA ที่ใช้ CPAP ลด AHI 80%..."
+    - "📌 Citable #12 — 🟣 Pattern E: 🎯 จุดยืนของ VitalSleep: HST ควรเป็นทางเลือกแรก..."
+```
+
+**Per-template Pattern requirements:**
+
+| Template | Pattern A min | Pattern E min | B-D | Total citables (typical) |
+|----------|---------------|---------------|-----|--------------------------|
+| T1 Medical Condition | 3 | 1 | optional | 8-15 |
+| T2 / T2a-e Procedure | 3 | 1 | optional | 8-15 |
+| T3 Diagnostic | 2 | 1 | optional | 5-10 |
+| T6 Concept | 1 | 0 | optional | 3-5 |
+| T6a Guide | 5 | 2 | optional | 12-20 |
+| T7 Comparison | 2 | **2-3** ⭐ | optional | 8-15 |
+| T8 Case Study | 3 | 1 | optional | 5-10 |
+| T11 Institutional | 0 | 0 | 0 | 0-3 |
+
+### 2.9 Predicted Prompts Bank 🆕 v1.1
+
+**The off-render planning artifact** — questions we predict users will ask AI engines about this page's topic. Lives in seo_predicted_prompts table, NOT rendered on the page.
+
+```yaml
+B26_predicted_prompts_bank:
+  purpose: "Plan + track AI engine queries this page should answer"
+  position: "Off-render planning section in editorial brief; persists in DB"
+  
+  intent_taxonomy_8:  # ครบ 8 intents per pillar
+    - definitional:    "{topic} คืออะไร?" / "What is {topic}?"
+    - informational:   "{topic} ทำงานยังไง?" / "How does {topic} work?"
+    - comparison:      "{A} vs {B}" / "{A} หรือ {B} ดีกว่ากัน?"
+    - decision:        "ฉันควรเลือก {X} ไหม?" / "Should I get {X}?"
+    - troubleshooting: "ทำไม {symptom}?" / "Why am I {experiencing X}?"
+    - how_to:          "วิธี {action}?" / "How to {action}?"
+    - voice:           "Hey Google, {short query}"
+    - voice_local:     "{service} ใกล้ฉัน" / "{service} near me"
+    - transactional:   "ค่ารักษา {X} เท่าไหร่?" / "Cost of {X}"
+    - navigational:    "{brand} {service}" / "Book {brand} consultation"
+  
+  per_intent_minimum: 2 prompts per intent type (16+ total per pillar)
+  per_pillar_minimum: 15-30 prompts total
+  
+  prompt_attributes:
+    - prompt_text (with TH+EN variations)
+    - prompt_intent (one of 8 above)
+    - prompt_priority (critical / high / medium / low)
+    - expected_answer_section (which page section answers this)
+    - expected_citables (which Citable #N should surface)
+    - competitors_likely_to_surface (predicted competitor mentions)
+  
+  format_in_editorial_brief: |
+    | # | Prompt (TH) | Prompt (EN) | Intent | Priority | Answer Section | Expected Citables |
+    |---|-------------|-------------|--------|----------|----------------|-------------------|
+    | 1 | OSA คืออะไร? | What is OSA? | definitional | critical | §3 | C1, C3 |
+    | 2 | OSA รุนแรงแค่ไหน? | How serious is OSA? | informational | high | §8 | C5, C6 |
+    ...
+  
+  schema_persistence:
+    table: seo_predicted_prompts (proposed Schema v1.11)
+    deferred_until: DR-020 lock (2026-06-07)
+  
+  use_cases:
+    1. content_designer_qa: "Did we cover all predicted prompts in the page?"
+    2. coverage_matrix_audit: "Which prompts have unclear answer sections?"
+    3. ai_testing_input: "API stack reads this table to test against AI engines"
+    4. content_revision_signal: "If AI tests show poor recall → revise content"
+
+ai_testing_pipeline:  # 🆕 v1.1 (future — pending stack build)
+  description: "Active LLMO measurement loop closing DR-019 ai_citation_rate KPI"
+  
+  step_1_planning:
+    actor: "Content designer at sitemap design phase"
+    action: "Fill seo_predicted_prompts for each page (15-30 prompts)"
+    output: "Per-page prompt bank in DB"
+  
+  step_2_content_creation:
+    actor: "Content writer (human + AI)"
+    action: "Use predicted prompts as content QA — does the page answer them clearly?"
+    output: "Content addresses all predicted prompts via citables"
+  
+  step_3_publish:
+    action: "Page goes live"
+  
+  step_4_automated_testing:  # future — pending stack build
+    actor: "n8n workflow (weekly cron)"
+    action: |
+      For each active prompt in seo_predicted_prompts:
+        - Call ChatGPT API / Claude API / Perplexity API / Gemini API
+        - Send prompt as user query
+        - Capture response_text + cited URLs + competitors mentioned
+        - Score: brand_recall (0-100), fact_accuracy (0-100), citables_picked_up
+        - Log to seo_ai_prompt_test_results
+    output: "Per-prompt test results across 4-5 AI platforms per week"
+  
+  step_5_analysis:
+    actor: "Operator dashboard (Notion/Supabase view)"
+    action: |
+      Query: pages with brand_recall_score < 50 → flag for revision
+      Query: prompts where competitors_cited dominates → competitive gap
+      Query: citables never picked up by AI → reword for AI-friendliness
+    output: "Content revision queue prioritized by LLMO impact"
+  
+  step_6_iterate:
+    action: "Revise content → reset test → measure improvement"
+```
+
+#### Schema Spec — 2 New Tables (deferred to v1.11)
+
+```sql
+-- 🆕 Table 1: planning artifact (created at content design time)
+CREATE TABLE seo_predicted_prompts (
+  id uuid PRIMARY KEY,
+  fingerprint text UNIQUE NOT NULL,           -- pp_{ULID16}
+  fingerprint_display_name text NOT NULL,     -- {fp_last_6}::{intent}::{lang}::{slug}
+  page_id uuid NOT NULL REFERENCES seo_website_page_master(id),
+  brand_slug text NOT NULL REFERENCES brands(brand_slug),
+  
+  -- The prompt
+  prompt_text text NOT NULL,
+  prompt_language text NOT NULL,              -- ISO 639-1
+  prompt_intent text NOT NULL,                -- 10 enum values (per intent_taxonomy_8 + transactional + navigational)
+  prompt_priority text NOT NULL,              -- critical / high / medium / low
+  prompt_category text,                       -- e.g., 'product_recommendation', 'safety', 'pricing'
+  
+  -- Expected behavior
+  expected_answer_section text,               -- which page section should answer
+  expected_citables text[],                   -- Citable #N references
+  competitors_likely_to_surface text[],
+  
+  -- Lifecycle
+  active boolean DEFAULT true,
+  created_at timestamptz DEFAULT now(),
+  updated_at timestamptz DEFAULT now()
+);
+
+CREATE INDEX idx_pp_page (page_id);
+CREATE INDEX idx_pp_brand (brand_slug);
+CREATE INDEX idx_pp_intent_priority (prompt_intent, prompt_priority) WHERE active = true;
+
+-- 🆕 Table 2: execution log (filled by API testing stack)
+CREATE TABLE seo_ai_prompt_test_results (
+  id uuid PRIMARY KEY,
+  fingerprint text UNIQUE NOT NULL,           -- ptr_{ULID16}
+  predicted_prompt_id uuid REFERENCES seo_predicted_prompts(id),
+  page_id uuid NOT NULL REFERENCES seo_website_page_master(id),  -- denormalized
+  
+  -- Test execution
+  ai_platform text NOT NULL,                  -- chatgpt/claude/perplexity/gemini/ai_overviews/voice_google
+  ai_model_version text,
+  test_executed_at timestamptz NOT NULL,
+  prompt_used text NOT NULL,
+  
+  -- Result
+  response_text text,
+  cited_us boolean,
+  citation_position integer,
+  citation_url text,
+  competitors_cited text[],
+  response_tone text,                          -- positive/neutral/negative
+  
+  -- Quality scoring
+  brand_recall_score integer,                  -- 0-100
+  fact_accuracy_score integer,                 -- 0-100
+  citables_picked_up text[],
+  
+  -- Action
+  action_taken text,                           -- none / content_revision_planned / revised
+  notes text,
+  
+  created_at timestamptz DEFAULT now()
+);
+
+CREATE INDEX idx_ptr_predicted (predicted_prompt_id);
+CREATE INDEX idx_ptr_page_platform (page_id, ai_platform);
+CREATE INDEX idx_ptr_low_recall (page_id) WHERE brand_recall_score < 50;
+CREATE INDEX idx_ptr_test_date (test_executed_at DESC);
+```
+
+### 2.10 Cross-Vertical Adaptability Framework 🆕 v1.1
+
+Same medical entity (e.g., "Obstructive Sleep Apnea") gets approached differently across specialties. EYWA's federation enables shared entity but customized perspective.
+
+```yaml
+adaptation_principle:
+  what_stays_universal:
+    - Schema base (MedicalCondition + Article + FAQPage)
+    - Citation references (same authoritative sources)
+    - Quick Facts table (ICD codes, prevalence, definitions)
+    - FAQ block (8 standard intent types)
+    - Comparison Table structure (criteria stay same, values may differ)
+  
+  what_customizes_per_specialty:
+    - Perspective Layer voice (clinical_insight + brand_stance content)
+    - Pattern A clinical data (each clinic has own numbers)
+    - Pattern E brand stance (each clinic's recommendation differs)
+    - Treatment focus (which treatment leads — depends on specialty)
+    - Predicted Prompts (intent priorities differ by specialty)
+    - Internal links (to specialty-specific sub-pages)
+
+per_specialty_perspective_guide:
+  
+  sleep_medicine_clinic:
+    treatment_focus_lead: "CPAP therapy as gold standard"
+    secondary_treatments: ["Oral Appliance (mild-moderate)", "Lifestyle changes"]
+    pattern_e_typical_stance: "Home Sleep Test as first line for most patients"
+    pattern_a_data_emphasis: "AHI reduction with CPAP, adherence rates"
+    differentiator: "Comprehensive sleep specialist (Polysomnography expertise)"
+    example_brand: VitalSleep Clinic
+  
+  dental_sleep_clinic:  # VTH BioDent territory
+    treatment_focus_lead: "Oral Appliance Therapy (custom MAD/MAS)"
+    secondary_treatments: ["CPAP coordination", "Myofunctional therapy", "Surgical referral"]
+    pattern_e_typical_stance: "Oral appliance as first-line for mild-moderate OSA + CPAP-intolerant patients"
+    pattern_a_data_emphasis: "Oral appliance adherence, AHI reduction, dental side effects management"
+    differentiator: "Dental sleep medicine expertise + airway-aware orthodontics"
+    example_brand: VTH BioDent
+  
+  ent_clinic:
+    treatment_focus_lead: "Surgical evaluation (UPPP, MMA, hypoglossal nerve stimulation)"
+    secondary_treatments: ["CPAP optimization", "Oral appliance referral"]
+    pattern_e_typical_stance: "Anatomical evaluation first — surgical option for selected anatomy"
+    pattern_a_data_emphasis: "Surgical success rates by anatomy type"
+    differentiator: "Surgical airway expertise + endoscopic evaluation"
+  
+  pulmonology_clinic:
+    treatment_focus_lead: "CPAP titration + comorbidity management"
+    secondary_treatments: ["BiPAP for complex cases", "Oxygen therapy if needed"]
+    pattern_e_typical_stance: "OSA management within broader respiratory health context"
+    pattern_a_data_emphasis: "Outcomes in COPD-OSA overlap, cardiovascular impact"
+    differentiator: "Pulmonary expertise + complex comorbidity management"
+  
+  cardiology_clinic:
+    treatment_focus_lead: "OSA screening as cardiovascular risk modifier"
+    secondary_treatments: ["Refer to sleep clinic for treatment"]
+    pattern_e_typical_stance: "Untreated OSA = uncontrolled CV risk — screen all hypertensive/AFib patients"
+    pattern_a_data_emphasis: "OSA-CV outcome data, CPAP impact on BP/AFib"
+    differentiator: "Cardiovascular outcomes lens + risk stratification"
+
+reuse_workflow:
+  step_1_identify_shared_entity: "OSA — exists once in seo_entity_graph (brand_scope=['*'])"
+  step_2_each_brand_creates_page: "Each brand creates own page_master row pointing to same primary_entity_fp"
+  step_3_keep_universal_blocks: "B02 quick_facts, B05 causes, B06 symptoms — same content"
+  step_4_customize_perspective: "B11 clinical_insight, B11a brand_stance — per-specialty voice"
+  step_5_customize_treatment: "B08 treatment_section — lead with specialty's primary"
+  step_6_specialty_specific_links: "B22 related_links — point to specialty's deeper pages"
+  step_7_predicted_prompts_priority: "Same intent types, different priority based on specialty intent"
+
+cross_brand_quality_check:
+  - same primary_entity_fp across brands? ✓
+  - same Tier 1 schema base? ✓
+  - DIFFERENT Pattern E stances? ✓ (each brand has own opinion)
+  - DIFFERENT Pattern A data? ✓ (each clinic has own numbers)
+  - cluster_id may differ (e.g., 'sleep-apnea-airway' for VTH vs 'sleep-disordered-breathing' for VitalSleep)
+```
+
+
 
 ### 3.1 Core Universal Templates (12)
 
@@ -1085,6 +1497,129 @@ tracking:
   page_master.template_id: "future column — locks which template was used"
 ```
 
+### 4.5 Cross-Cutting Editorial Standards 🆕 v1.1
+
+These standards apply across ALL templates regardless of customization.
+
+#### 4.5.1 Quote-Worthy Sentence Patterns (5 forms)
+
+Citables (Pattern A-E from §2.8) must take one of these 5 sentence forms:
+
+```yaml
+form_1_self_contained_factual:
+  description: "15-30 words; complete fact without context dependency"
+  example: |
+    "ผู้ป่วย OSA ที่ใช้ CPAP สม่ำเสมอ (≥4 ชั่วโมง/คืน) ลด AHI ได้มากกว่า 80%
+     และลดความเสี่ยง CV event 5 ปีลง 34% (AASM, 2022)"
+  use_case: "Featured Snippet capture + AI quote-friendliness"
+
+form_2_numbered_structured_comparison:
+  description: "Side-by-side X vs Y format with clear winner rationale"
+  example: |
+    "Home Sleep Test: 89-94% accurate, ฿5,000-8,000, ทำที่บ้าน 1 คืน |
+     PSG: 100% gold standard, ฿15,000-25,000, ต้องไป lab 1 คืน"
+  use_case: "Comparison page (T7) + decision intent prompts"
+
+form_3_expert_qualification_with_reasoning:
+  description: "Expert opinion + WHY (not just opinion alone)"
+  example: |
+    "ผู้ที่มี BMI ≥ 30 ควรพิจารณา CPAP เป็นทางเลือกแรก เพราะ
+     ไขมันรอบลำคอกดทับทางเดินหายใจ — Oral Appliance อาจไม่เพียงพอ
+     แม้ระดับ AHI จะอยู่ในเกณฑ์ที่ Oral Appliance รักษาได้"
+  use_case: "Pattern E Brand Stance + clinical_insight blocks"
+
+form_4_myth_busting_with_evidence:
+  description: "Common misconception + correction + supporting data"
+  example: |
+    "ความเข้าใจผิด: 'คนผอมไม่เป็น OSA'
+     จริง: 15% ของผู้ป่วย OSA มี BMI ปกติ (VitalSleep Clinical Data, 2025) —
+     สาเหตุมักจากโครงสร้างขากรรไกรเล็ก ลิ้นไก่ยาว หรือทางเดินหายใจแคบ"
+  use_case: "clinical_insight + comprehensive guides"
+
+form_5_protocol_procedure:
+  description: "Step-by-step procedure with timing/dosing specifics"
+  example: |
+    "การ titrate CPAP: คืนที่ 1-3 เริ่มที่ 6 cmH2O,
+     คืนที่ 4-7 ปรับขึ้นทีละ 1 ตามค่า AHI residual,
+     เป้าหมาย AHI < 5 ครั้ง/ชม. ที่ pressure ที่ผู้ป่วยทนได้"
+  use_case: "T2/T17 process_steps + aftercare blocks"
+```
+
+**Per-template form requirements:**
+
+| Template | Form 1 | Form 2 | Form 3 | Form 4 | Form 5 |
+|----------|--------|--------|--------|--------|--------|
+| T1 | ≥3 | optional | ≥1 | ≥1 | optional |
+| T2 / variants | ≥3 | optional | ≥1 | optional | ≥1 |
+| T6 | ≥2 | optional | optional | optional | optional |
+| T6a Guide | ≥5 | ≥1 | ≥2 | ≥1 | ≥2 |
+| T7 Comparison | ≥2 | **≥2 (core)** | ≥1 | optional | optional |
+| T8 Case Study | ≥2 | optional | ≥1 | optional | ≥1 |
+
+#### 4.5.2 Translation Tier Rubric
+
+For multilingual content (Bible Multilingual Strategy):
+
+```yaml
+tier_1_native_speaker:
+  description: "Translated by native speaker fluent in source AND target"
+  reviewer: "Same medical_reviewer or independent native-speaker doctor"
+  acceptable_for: "ALL content including Medical YMYL"
+  cost: "Highest"
+  
+tier_2_ai_plus_heavy_human_edit:
+  description: "AI translation (GPT/Claude) + ≥30% human revision by qualified editor"
+  reviewer: "Required medical reviewer signoff for YMYL"
+  acceptable_for: "Medical YMYL with strict review; non-YMYL freely"
+  cost: "Medium"
+  
+tier_3_ai_only:
+  description: "AI translation with light proofreading only"
+  reviewer: "Optional"
+  acceptable_for: "Non-YMYL only (institutional pages, FAQs, basic info)"
+  forbidden_for: "Medical YMYL content (T1, T2, T2a-e, T3, T4, T6a, T7, T8, T17)"
+  cost: "Lowest"
+  enforcement: "DB CHECK: medical YMYL templates require translation_tier IN ('tier_1', 'tier_2')"
+
+tier_storage:
+  column: page_master.translation_tier (text — proposed v1.11)
+  default: "tier_1" if not specified
+```
+
+#### 4.5.3 Cannibalization Shield (Naming + Principle)
+
+Operator-coined term for content separation between sibling pages — formalized here:
+
+```yaml
+cannibalization_shield_principle:
+  rule: |
+    "Each page covers ONE primary intent layer:
+     - L1 brand/team
+     - L2 service/procedure (commercial)
+     - L4 condition/concern (informational)
+     - L5 educational concept
+     - L7 patient case
+     
+     Content that crosses layers → link out, don't duplicate"
+  
+  example_dental_implant:
+    L4_condition_page: "ฟันหายต้องทำยังไง?" (informational, link to procedure)
+    L2_procedure_page: "รากเทียม" (full procedure description, pricing, steps)
+    L5_concept_page: "Implantology คืออะไร?" (educational background)
+    L7_case_page: "Case Smile Makeover ด้วยรากเทียม" (specific patient outcome)
+    
+    HARD RULE: L4 page MUST NOT contain full procedure description (link to L2 instead)
+              L2 page MUST NOT contain full educational background (link to L5 instead)
+              L5 page MUST NOT contain pricing or specific cases (link to L2 / L7 instead)
+  
+  qa_check_per_template:
+    T1 (L4): "Does this page describe TREATMENT in full? If yes → BLOCK. Link to T2 instead."
+    T2 (L2): "Does this page describe ETIOLOGY in full? If yes → BLOCK. Link to T1 instead."
+    T6 (L5): "Does this page list PRICES or CASES? If yes → BLOCK. Link to T2/T8 instead."
+  
+  cross_reference: "Bible §4.13 Market Reconciliation + DR-016 Page Viability §4.14"
+```
+
 ---
 
 ## 5. EEAT Requirement Matrix (LOCKED)
@@ -1264,6 +1799,79 @@ post_publish_audit:
   schedule: "Monthly automated audit"
   tool: "Google Rich Results Test API + custom validator"
   alert: "Pages drifting from spec flagged in seo_governance_audit table"
+```
+
+### 6.4 Schema Tier Architecture (1/2/3) 🆕 v1.1
+
+Tells WordPress devs WHERE each schema renders. DR-019's Two-Purpose Taxonomy (serp/ai/forbidden) is **WHAT to emit**; this section is **WHERE to emit it**.
+
+```yaml
+tier_1_site_level:
+  scope: "Renders on EVERY page (header.php injection)"
+  rendering_method: "PHP template — eywa-core plugin"
+  schemas:
+    - Organization (with member array — v1.1 🆕)
+    - WebSite
+    - SearchAction (sitelinks search box)
+  acf_dependency: false
+  changes_per_page: false
+  
+tier_2_page_level:
+  scope: "Renders per-page (template-specific)"
+  rendering_method: "ACF field group → JSON-LD generator"
+  schemas_by_template:
+    T1: MedicalCondition + MedicalWebPage
+    T2: MedicalProcedure + MedicalWebPage
+    T2a: MedicalProcedure (cosmetic)
+    T2b: MedicalProcedure (DentalProcedure)
+    T2e: MedicalTest
+    T3: MedicalProcedure (diagnostic subtype)
+    T4: MedicalDevice
+    T5: Service + MedicalProcedure
+    T7: Article (comparison)
+    T8: MedicalScholarlyArticle
+    T9: Person + Physician
+    T10: MedicalBusiness + LocalBusiness
+    T18: MedicalBusiness (location-specific)
+  acf_dependency: true
+  changes_per_page: true
+
+tier_3_content_level:
+  scope: "Renders per content block within body"
+  rendering_method: "Block-level injection (ACF or Gutenberg block)"
+  schemas:
+    - FAQPage (from B18 faq_block)
+    - SpeakableSpecification (from B01 hero_summary)
+    - BreadcrumbList (auto from sitemap_node_id)
+    - HowTo + HowToStep (from B13 process_steps — DR-019 AI-only)
+    - VideoObject (if video block present)
+    - ImageObject (per image, optional)
+  acf_dependency: partial (some auto, some ACF)
+  changes_per_block: true
+
+graph_pattern_recommended:
+  description: "Combine ALL tiers into single @graph in <head>"
+  benefit: "Single JSON-LD parse, cross-reference via @id, easier validation"
+  example: |
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {"@type": "Organization", "@id": "...#org", ...},          // Tier 1
+        {"@type": "WebSite", "@id": "...#website", ...},           // Tier 1
+        {"@type": "WebPage", "@id": "...#webpage", ...},           // Tier 2
+        {"@type": "MedicalCondition", "@id": "...#osa", ...},      // Tier 2
+        {"@type": "FAQPage", "@id": "...#faq", ...},               // Tier 3
+        {"@type": "BreadcrumbList", "@id": "...#breadcrumbs", ...}// Tier 3
+      ]
+    }
+    </script>
+
+implementation_notes:
+  - All tiers must render server-side (no JS injection)
+  - Schema markup goes in <head>, not <body>
+  - @id values use absolute URLs with stable fragments
+  - eywa-schema-pipeline plugin enforces @graph pattern + @id consistency
 ```
 
 ---

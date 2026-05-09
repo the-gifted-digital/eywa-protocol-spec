@@ -39,7 +39,7 @@ EYWA™ is a registered trademark of **The Gifted Digital Marketing Co., Ltd.** 
 | `EYWA_HANDOVER.md` | Operating manual for Claude/AI | ~1,850 | 🔒 Active (v1.6) |
 | `DECISION_RECORDS.md` | Architecture decision log | ~2,250 | 🔒 Active (v1.6) |
 | `PHASE_1_DECISIONS.md` | Phase 1 quick reference | ~390 | 🔒 Active (v1.4) |
-| `Content_Templates_EYWA_v1_0.md` | Universal Content Templates (DR-020 companion) | ~1,460 | 🌱 DRAFT — pending DR-020 lock 2026-06-07 |
+| `Content_Templates_EYWA_v1_0.md` | Universal Content Templates (DR-020 companion, v1.1 internal) | ~1,950 | 🌱 DRAFT — pending DR-020 lock 2026-06-07 |
 | `archive/EYWA_PROTOCOL_v3_13.md` | Bible (previous version) | ~25,460 | 📦 Archived |
 | `archive/Schema_Overview_EYWA_v1_9.md` | Schema (previous version) | ~3,985 | 📦 Archived |
 | `archive/EYWA_PROTOCOL_v3_12.md` | Bible (older version) | ~24,800 | 📦 Archived |

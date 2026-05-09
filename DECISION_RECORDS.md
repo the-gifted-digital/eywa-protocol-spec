@@ -2001,7 +2001,21 @@ decision_record_governance:
 Triggered by VTH BioDent /mouth-biomapping/ EEAT audit (visual EEAT good, structured EEAT broken — 6 failures) + Deezy sitemap gap analysis (13 page types, no template framework). Operator field test confirmed need for universal content composition standard across 13 brands × 6 verticals.
 
 - ➕ **DR-020 (NEW, Proposed):** Universal Content Template Standard — 4 sub-decisions: (1) Companion file architecture, (2) 3-layer composition (~25 blocks → 25 templates → customization hooks), (3) EEAT requirement matrix locked per template, (4) Schema enforcement beyond visual.
-- 📁 **New companion file:** `Content_Templates_EYWA_v1_0.md` (placed at repo root with DRAFT status in frontmatter, 1,456 lines, 25 templates) — formal Bible cross-reference upon DR-020 approval.
+- 📁 **New companion file:** `Content_Templates_EYWA_v1_0.md` (placed at repo root with DRAFT status in frontmatter, **v1.1 as of 2026-05-10** — bumped from v1.0 same day after operator OSA Master Example integration; 25 templates, ~26 blocks incl. B25a Crisis Disclosure + B26 Predicted Prompts Bank) — formal Bible cross-reference upon DR-020 approval.
+
+- 🆕 **v1.1 additions** (operator-driven from pre-spec OSA Master Example doc):
+  - §2.8 Pattern A-E Citable Taxonomy (5 brand-citable patterns including Pattern E Brand Stance — LLMO superweapon)
+  - §2.9 Predicted Prompts Bank (off-render planning artifact + 2-table Schema spec for active LLMO measurement)
+  - §2.10 Cross-Vertical Adaptability Framework (per-specialty perspective pivot guide)
+  - §2.7 B25a Crisis Disclosure Block (acute YMYL emergency triggers)
+  - §6.4 Schema Tier Architecture (1/2/3 — site/page/content emission tiers)
+  - §4.5 Cross-Cutting Editorial Standards (Quote-Worthy Patterns + Translation Tier Rubric + Cannibalization Shield principle)
+  - Quick wins: ≥8 Q&A floor, "🎯 จุดยืนของ {brand}:" Pattern E prefix, Organization member array
+
+- 🔮 **Schema v1.11 deferred additions** (proposed, will lock with DR-020):
+  - `seo_predicted_prompts` table (planning artifact)
+  - `seo_ai_prompt_test_results` table (API testing execution log)
+  - `page_master.translation_tier` column (text — for §4.5.2 enforcement)
 - 📝 **Review cycle:** 4 weeks (until 2026-06-07) — paired with DR-019 lock cycle.
 - 📝 **No DDL change for v1.0** — existing page_master columns suffice. Future template_id + template_version columns deferred to v1.1.
 - 📝 **EEAT phase 2 hard-block targeted 2026-09-01** — prerequisite: ≥80% brand doctor onboarding to seo_authors.
