@@ -3,9 +3,9 @@
 > **For Claude (and any AI assistant) working on a new brand within the EYWA portfolio.**  
 > **Read this file first, every new project, every new session.**
 
-**Document Version:** 1.3  
-**Last Updated:** 2026-05-08  
-**Companion to:** EYWA Bible v3.12 + Schema Overview v1.8  
+**Document Version:** 1.5  
+**Last Updated:** 2026-05-09  
+**Companion to:** EYWA Bible v3.13 + Schema Overview v1.9 + DECISION_RECORDS v1.3  
 **Created by:** The Gifted Digital Marketing Co., Ltd.
 
 ---
@@ -121,6 +121,8 @@ Before creating ANY new entity, citation, or cluster:
 - ❌ Duplicating citations across brands
 - ✅ Search FIRST, every time
 
+> 🆕 **v1.4 Note — Entity Uniqueness Guard (EUG):** Per Bible v3.13 Section 2.6.6.1, EUG v1.0 enforces "Search Before Create" at the database level via 4 SQL functions. After Phase 1A migration `006_create_entity_uniqueness_guard.sql` deploys, n8n entity creation flows must call `eug_preflight_check()` before INSERT. This catches typos, format variations, and synonym duplicates automatically. See DR-011 for full rationale.
+
 ### 2.4 Cross-Brand Decision Awareness
 
 Always ask:
@@ -152,7 +154,7 @@ Always ask:
 1. **Single source** — never have 2 places where same fact lives without sync
 2. **Canonical first** — sandbox → GitHub → project knowledge
 3. **Changelog discipline** — every spec change = version bump + entry
-4. **Mention version** — always specify "Bible v3.12 Part 4..." not just "Part 4..."
+4. **Mention version** — always specify "Bible v3.13 Part 4..." not just "Part 4..."
 
 ---
 
@@ -193,28 +195,23 @@ Every EYWA brand uses the **same 8-section sitemap** (Bible Part 4.2): Home, Our
 
 ## 📊 Section 5 — Planning File Schema (NEW in v1.1)
 
-> **Why this section exists:** EYWA workflow แยก **planning** กับ **implementation** ชัดเจน. Planning ทำใน markdown files (.md) — fast iteration, human-readable, GitHub-friendly. Implementation ทำใน Supabase + Notion (production system). Section นี้กำหนด schema มาตรฐานสำหรับ planning files
+> **Why this section exists:** EYWA workflow แยก **planning** กับ **implementation** ชัดเจน. Planning ทำใน markdown files (.md) — fast iteration, human-readable, GitHub-friendly. Implementation ทำใน Supabase + Notion (production system).
 
-### 5.1 Planning vs Implementation — Mental Model
+### 5.1 Planning vs Implementation
 
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│  PLANNING PHASE (Markdown files)                                      │
-│  Speed: Fast iteration, low friction                                  │
-│  Format: .md tables with minimal columns (focused on decisions)       │
-│  Location: GitHub eywa-{brand}/content-plan/                          │
-│  Iterations: Many (operator + Claude refining together)               │
-│  Output: Approved plan ready for implementation                       │
-├─────────────────────────────────────────────────────────────────────┤
-│                              ↓ ETL ↓                                  │
-├─────────────────────────────────────────────────────────────────────┤
-│  IMPLEMENTATION PHASE (Supabase + Notion)                             │
-│  Speed: Deliberate, validated                                         │
-│  Format: Full database schema with all columns + indexes              │
-│  Location: Supabase project + Notion workspace                        │
-│  Iterations: Less frequent (production data)                          │
-│  Output: Operational federation system                                │
-└─────────────────────────────────────────────────────────────────────┘
+```yaml
+planning_phase:
+  location: eywa-{brand}/content-plan/*.md
+  format: Markdown tables
+  edited_by: AI assistant + brand team
+  iterations: many (markdown is fast)
+  refs: text-based (slug, sitemap_node_id)
+
+implementation_phase:
+  location: Supabase + Notion + WordPress
+  format: Database rows + Notion pages
+  edited_by: editorial team via Notion UI
+  refs: notion_id (after Two-Phase Sync backfill)
 ```
 
 ### 5.2 Planning Files — Required Set
@@ -297,6 +294,8 @@ required_planning_files:
 | `Notes` | Optional | Additional context, planned relationships, etc. |
 
 > **Important:** `Parent (text)` column uses entity slug — NOT notion_id. Notion ID does not exist yet at planning phase. This is **intentional** — see Bible Part 18.8 (Two-Phase Hierarchy Sync Pattern).
+
+> 🆕 **v1.4 Reminder — EUG impacts entity creation:** When entities are loaded into Supabase via Phase 1 sync (post-EUG migration), `eug_preflight_check()` runs automatically. If `Aliases` column is well-populated at planning phase, Layer 3a (alias collision check) catches synonym duplicates. **Editorial discipline:** populate aliases for all 8 languages where known.
 
 ### 5.4 Schema — Clusters Planning File
 
@@ -398,6 +397,8 @@ required_planning_files:
 - `requires_assessment`
 - `evidenced_by`
 - `related_to` (bidirectional default)
+
+> 🆕 **v1.4 Reminder — Edge Vocabulary is LOCKED:** Per Bible v3.13 Section 2.7.5 (Edge Vocabulary Evolution Policy) and DR-012, the 10-edge vocabulary is locked. New edges require formal DR with 4 criteria met (real cases ≥3, cross-brand, schema.org mapping, orthogonality). Use `related_to` + `Notes` for edge cases. See parking lot in DR-012 for future edge candidates.
 
 ### 5.7 Schema — Content Priorities Planning File (Optional)
 
@@ -516,7 +517,10 @@ eywa-{brand-slug}/                       Example: eywa-vth-biodent/
 │   ├── README.md                       # Index of docs/
 │   ├── brand-concept.md                # Brand identity, voice, positioning, USP
 │   ├── decision-records.md             # Brand-specific DRs (link global for shared)
-│   └── changelog.md                    # Brand version history
+│   ├── changelog.md                    # Brand version history
+│   └── signature-programs/             # Brand flagship programs (NEW v1.2)
+│       ├── README.md                   # Folder index + flagship designation rules
+│       └── {program-slug}.md           # Per-program full spec
 │
 ├── content-plan/                       # 🌳 PLANNING PHASE (markdown — Section 5 schemas)
 │   ├── README.md                       # Index + file purpose
@@ -551,93 +555,101 @@ eywa-{brand-slug}/                       Example: eywa-vth-biodent/
 │   ├── acf-overrides/                  # Brand-specific ACF JSON (if any)
 │   └── ENV.md                          # Environment variable names (NO secrets!)
 │
-├── multilingual/                       # 🌐 i18n (only if multi-language brand)
-│   ├── README.md
-│   ├── translation-status.md           # Per-page translation status tracker
-│   └── glossary.md                     # Brand-specific terminology per language
-│
-└── reports/                            # 📊 Periodic measurement reports
+└── reports/                            # 📊 Optional — analysis outputs
     ├── README.md
-    ├── kpi-baseline.md                 # Day 1 measurement baseline
-    ├── monthly/                        # Monthly health reports
-    └── quarterly/                      # Quarterly cluster reviews
+    ├── monthly-kpi/                    # KPI snapshots per month
+    └── audit-snapshots/                # Quality audit results over time
 ```
 
 #### 5.10.2 Folder Purpose Quick Reference
 
-| Folder | When to use | Sync target | Authority |
-|--------|-------------|-------------|-----------|
-| `docs/` | Brand identity, decisions | Manual reference | Brand team |
-| `content-plan/` | EGP output, sitemap, planning | → Supabase + Notion (via n8n) | EYWA spec authority |
-| `content-drafts/` | Page content before publish | → Notion (manual or n8n) | Editorial team |
-| `theme/` | Visual customization | → WordPress (manual deploy) | Designer |
-| `deployment/` | Infrastructure config | → n8n / WP / Notion (operational) | DevOps |
-| `multilingual/` | i18n tracking | → WPML + Supabase | Translation team |
-| `reports/` | KPI measurement | Read-only output | Analytics |
+| Folder | Purpose | When Edited | Required? |
+|--------|---------|-------------|-----------|
+| Root | Brand identity, federation config | Project init + major changes | ✅ Required |
+| `docs/` | Human-authored brand documentation | Frequently | ✅ Required |
+| `docs/signature-programs/` | Flagship program specs (e.g., MBM for VTH BioDent) | When new program defined | Optional but recommended |
+| `content-plan/` | Markdown planning files (Phase 1 input) | Active during EGP execution | ✅ Required |
+| `content-drafts/` | Page draft markdown (pre-Notion) | Active during content production | Recommended |
+| `theme/` | Brand-specific Elementor + CSS overrides | When designer iterates | Required for live brands |
+| `deployment/` | Infra config metadata (NO secrets) | When infra changes | ✅ Required |
+| `reports/` | KPI + audit outputs over time | Monthly | Optional |
 
 #### 5.10.3 Required vs Optional Folders
 
 ```yaml
-required_for_every_brand:
-  - README.md                    # Always
-  - brand-config.json            # Always
-  - .gitignore                   # Always
-  - docs/                        # Always (at minimum brand-concept.md)
-  - content-plan/                # Always (core EYWA workflow)
-  - theme/                       # Always (even if minimal — branding required)
-  - deployment/                  # Always (Notion config required)
+required_for_all_brands:
+  - Root (README.md, brand-config.json, .gitignore)
+  - docs/
+  - content-plan/
+  - deployment/
 
-optional_per_brand:
-  - content-drafts/              # If using markdown-first drafting
-  - multilingual/                # Only if active_languages > 1
-  - reports/                     # Generated as KPIs accumulate (Day 30+)
+required_for_active_brands:
+  - content-drafts/
+  - theme/
+
+optional_but_recommended:
+  - docs/signature-programs/ (if brand has flagship)
+  - reports/
+
+never_in_per_brand_repo:
+  - Bible files (live in eywa-protocol-spec)
+  - Schema_Overview (lives in eywa-protocol-spec)
+  - Shared plugin code (lives in eywa-{plugin} repos)
+  - Database secrets / API keys
+  - Patient PII data
 ```
 
 #### 5.10.4 Naming Conventions
 
 ```yaml
-file_naming:
-  - kebab-case for markdown: brand-concept.md, internal-linking-plan.md
-  - snake_case for JSON: brand-config.json (exception: hyphen ok for top-level)
-  - PascalCase NEVER (avoid Windows case-insensitive issues)
-  - lowercase for folder names: content-plan/ NOT Content-Plan/
-
 folder_naming:
-  - All lowercase
-  - Hyphen-separated (kebab-case) for multi-word
-  - No underscores in folder names
-  - No spaces (ever)
+  case: kebab-case (lowercase + hyphens)
+  format: lowercase-words-separated-by-hyphens
+  good_examples:
+    - content-plan/
+    - signature-programs/
+    - acf-overrides/
+  bad_examples:
+    - ContentPlan/      ❌ PascalCase
+    - content_plan/      ❌ snake_case
+    - Content Plan/      ❌ spaces
+    - contentplan/        ❌ no separator
 
-slug_pattern:
-  - Brand slug: kebab-case (vth-biodent, the-brand, vital-sleep)
-  - Repo name: eywa-{brand-slug}
-  - Folder names match slug pattern
+file_naming:
+  case: kebab-case
+  format: descriptive-name.md
+  good_examples:
+    - mouth-biomapping.md
+    - tmj-and-bruxism-relief.md
+  bad_examples:
+    - MouthBioMapping.md     ❌ PascalCase
+    - tmj_bruxism.md          ❌ snake_case (use kebab)
+    - prog1.md                ❌ not descriptive
 ```
 
-#### 5.10.5 README Requirements Per Folder
+#### 5.10.5 README Requirements per Folder
 
-ทุก folder (ยกเว้น root + brand-assets/) ต้องมี `README.md` อธิบาย:
+ทุก folder ต้องมี README.md ขึ้นต้นด้วย:
 
 ```markdown
-# {Folder Name}
+# {Folder Name} — {Brand Name}
 
-> One-line purpose
+> **Purpose:** {one-line description}  
+> **Edited by:** {who maintains this folder}  
+> **Lifecycle:** {when files are created vs deleted}
 
-## Files in this folder
-| File | Purpose |
-|------|---------|
-| ... | ... |
+## Files in This Folder
 
-## When to update
-- Trigger 1
-- Trigger 2
+| File | Purpose | Schema Ref |
+|------|---------|-----------|
+| ... | ... | ... |
 
-## Cross-references
-- See Bible Part X.Y
-- See Handover Section Z
+## Cross-References
+
+- {link to relevant Bible/Schema sections}
 ```
 
-ทำไม? เพราะ Claude (และคนใหม่) ที่เข้ามา repo ครั้งแรก ต้อง orient ตัวเองได้ทันที.
+เพราะ Claude (และคนใหม่) ที่เข้ามา repo ครั้งแรก ต้อง orient ตัวเองได้ทันที.
 
 #### 5.10.6 Where Sitemap & Entities Files Live
 
@@ -751,6 +763,8 @@ instead:
 | Hierarchy encoding | Handover §5.9 |
 | Two-Phase Sync pattern | Bible Part 18.8 |
 | Entity Genesis Protocol | Bible Part 2.6 |
+| Entity Uniqueness Guard 🆕 | Bible Part 2.6.6.1 |
+| Edge Vocabulary Evolution 🆕 | Bible Part 2.7.5 |
 | Sitemap methodology | Bible Part 4.1 |
 | Federation pattern | Bible Section 10.7 |
 | Brand-config.json schema | Handover §1.3 |
@@ -761,14 +775,14 @@ instead:
 
 ## 🏗️ Section 6 — Phase 1 Status (Supabase Database Foundation)
 
-> **Added v1.3 (2026-05-08)** — Active phase tracking for Phase 1 work. This section documents what is locked, what is pending, and the migration plan for the Supabase database upgrade.
+> **Updated v1.4 (2026-05-08)** — Active phase tracking for Phase 1 work, now including EUG migration. This section documents what is locked, what is pending, and the migration plan for the Supabase database upgrade.
 
 ### 6.1 Phase 1 Scope
 
 ```yaml
 phase_1_supabase_foundation:
   
-  goal: "Upgrade GTGT Supabase project schema to align with Bible v3.12 / Schema v1.8"
+  goal: "Upgrade GTGT Supabase project schema to align with Bible v3.13 / Schema v1.9"
   
   in_scope:
     - Schema upgrade (ALTER existing tables, CREATE new tables)
@@ -778,6 +792,8 @@ phase_1_supabase_foundation:
     - Two-Column Identity Pattern application
     - Multilingual jsonb columns (Tier 1) + translation_group_id (Tier 2)
     - brand_slug standardization
+    - Entity Uniqueness Guard (EUG) v1.0 — 4 SQL functions + UNIQUE constraint + trigram index 🆕 v1.4
+    - brands table Two-Column Identity compliance (fingerprint + brand_slug + display) 🆕 v1.4
   
   out_of_scope:
     - Data migration (existing entity/page data may be discarded)
@@ -787,9 +803,10 @@ phase_1_supabase_foundation:
     - EEAT scoring implementation (Phase 3+)
     - AI citation tracking (Phase 3+)
     - Performance dashboards (Phase 4+)
+    - EUG v2.0 (Wave 2 — vector similarity) — Phase 2 roadmap
 ```
 
-### 6.2 Locked Decisions (DR-007 through DR-010)
+### 6.2 Locked Decisions (DR-007 through DR-012)
 
 | DR | Title | Status | Source |
 |----|-------|--------|--------|
@@ -797,6 +814,8 @@ phase_1_supabase_foundation:
 | **DR-008** | Two-Column Identity Pattern | 🔒 Locked | DECISION_RECORDS.md + Bible §18.9 |
 | **DR-009** | Multilingual Strategy v2 (Two-Tier) | 🔒 Locked | DECISION_RECORDS.md + Schema Appendix E |
 | **DR-010** | Brand Scope Architecture | 🔒 Locked | DECISION_RECORDS.md |
+| **DR-011** 🆕 | Entity Uniqueness Guard (Two-Wave) | 🔒 Locked | DECISION_RECORDS.md + Bible §2.6.6.1 + Schema Appendix G |
+| **DR-012** 🆕 | Edge Vocabulary Evolution Policy | 🔒 Locked | DECISION_RECORDS.md + Bible §2.7.5 |
 
 **Key Patterns Locked:**
 
@@ -811,9 +830,10 @@ display_name_format:
   separator: "::"
   example_entity: "n3mf::condition::sleep-apnea::g47.3"
   example_page: "mfqr::pillar::airway-optimization::th::vth-biodent"
+  example_brand: "m4pfq::vth-biodent::VTH BioDent"  # NEW v1.4
 
 multilingual:
-  tier_1_concept: 
+  tier_1_concept:
     pattern: "1 row + jsonb translations"
     columns: [canonical_names, aliases, descriptions]
     tables: [ent, clus, brnd, auth, doc, brch, cite]
@@ -854,9 +874,9 @@ table_codes:
   tg:   translation_group_id  # namespace, not a table
 ```
 
-### 6.3 Migration Plan — 26 Files
+### 6.3 Migration Plan — 27 Files (was 26 in v1.3)
 
-**Phase 1A: Foundation (5 migrations) — Non-Breaking**
+**Phase 1A: Foundation (6 migrations) — Non-Breaking** 🔄 v1.4
 
 ```yaml
 20260508_001_create_ulid_function.sql:
@@ -873,135 +893,223 @@ table_codes:
     - generate_cluster_display_name(...)
     - generate_author_display_name(...)
     - generate_doctor_display_name(...)
-    - generate_branch_display_name(...)
-    - generate_citation_display_name(...)
 
-20260508_003_add_two_column_identity_to_existing.sql:
-  purpose: "Add fingerprint + fingerprint_display_name columns to existing tables"
-  affected_tables: [brands, seo_entity_graph, seo_website_page_master]
-  pattern: ADD COLUMN IF NOT EXISTS (nullable initially)
+20260508_003_alter_existing_tables_two_column.sql:
+  purpose: "Add fingerprint + fingerprint_display_name columns to existing 13 tables"
+  approach: ALTER TABLE ... ADD COLUMN IF NOT EXISTS
 
-20260508_004_add_multilingual_columns.sql:
-  purpose: "Add jsonb columns for Tier 1 multilingual"
-  affected_tables: [seo_entity_graph, brands]
-  columns_added:
-    - canonical_names jsonb DEFAULT '{}'::jsonb
-    - aliases jsonb DEFAULT '{}'::jsonb
-    - descriptions jsonb DEFAULT '{}'::jsonb
-    - brand_display_names jsonb DEFAULT '{}'::jsonb (entity_graph only)
+20260508_004_alter_existing_tables_multilingual.sql:
+  purpose: "Add jsonb columns for Tier 1 multilingual + translation_group_id for Tier 2"
+  approach: Additive — preserves existing data
 
-20260508_005_add_brand_slug_to_brands.sql:
-  purpose: "Standardize brand identification via brand_slug"
-  changes:
-    - ADD COLUMN brand_slug text UNIQUE
-    - Backfill from brand_name (kebab-case)
-    - Set NOT NULL after backfill
+20260508_005_alter_existing_tables_brand_scope.sql:
+  purpose: "Standardize brand_scope[] across tables; rename brand_id → brand_slug where needed"
+  approach: Additive + backfill
+
+20260508_006_create_entity_uniqueness_guard.sql:  # 🆕 NEW v1.4
+  purpose: "Entity Uniqueness Guard (EUG) v1.0 — prevent duplicate entity creation"
+  bible_ref: "Section 2.6.6.1 + 2.6.6.2"
+  schema_ref: "v1.9 Appendix G"
+  decision_ref: "DR-011"
+  
+  functions:
+    - normalize_entity_slug(text) RETURNS text
+    - check_alias_collision(text, jsonb, text[]) RETURNS table
+    - find_similar_entities(text, real, text[], integer) RETURNS table
+    - eug_preflight_check(text, jsonb, text[]) RETURNS table  # combined convenience function
+  
+  computed_columns:
+    - brand_scope_primary text GENERATED ALWAYS AS (...)  # for unique constraint
+  
+  constraints:
+    - UNIQUE (entity_slug, brand_scope_primary) ON seo_entity_graph
+  
+  triggers:
+    - trg_normalize_entity_slug BEFORE INSERT/UPDATE OF entity_slug
+  
+  indexes:
+    - idx_entity_slug_trgm GIN(entity_slug gin_trgm_ops)
+    - idx_entity_canonical_names_gin GIN(canonical_names jsonb_path_ops)
+    - idx_entity_aliases_gin GIN(aliases jsonb_path_ops)
+    - idx_entity_slug_brand_scope (entity_slug, brand_scope_primary)
+  
+  prerequisites:
+    - pg_trgm extension active (already in Required Extensions)
+    - Phase 1A files 001-005 applied first
+  
+  estimated_runtime: "5-10 minutes"
+  rollback: "DROP FUNCTION ... CASCADE; DROP CONSTRAINT ...; DROP INDEX ...;"
+  breaking_changes: "None — fully additive"
 ```
 
 **Phase 1B: New Tables (~14 migrations)**
 
 ```yaml
-20260508_010_create_seo_topic_cluster_master.sql
-20260508_011_create_seo_authors.sql
-20260508_012_create_seo_brand_doctors.sql
-20260508_013_create_seo_brand_branches.sql
-20260508_014_create_seo_citations.sql
-20260508_015_create_seo_page_citations.sql
-20260508_016_create_seo_editorial_reviews.sql
-20260508_017_create_seo_ai_citation_tracking.sql
-20260508_018_create_seo_brand_authority_scores.sql
-20260508_019_create_seo_cluster_health_scores.sql
-20260508_020_create_seo_entity_authority_scores.sql
-20260508_021_create_seo_eeat_scores.sql
-20260508_022_create_seo_governance_audit.sql
-20260508_023_create_seo_kpi_baseline.sql
+goal: "Create v1.9 tables (extension tables, scoring tables, audit tables)"
+approach: CREATE TABLE IF NOT EXISTS
+
+migrations:
+  20260508_010_alter_brands_two_column_identity.sql:  # ENHANCED v1.4
+    purpose: "Bring brands table into Two-Column Identity compliance per DR-008 + DR-010"
+    bible_ref: "Section 18.9"
+    schema_ref: "v1.9 §3.1"
+    
+    alterations:
+      - ADD COLUMN fingerprint text  # backfilled with brnd_{ULID16}
+      - ADD COLUMN fingerprint_display_name text
+      - ADD COLUMN brand_slug text  # backfilled from brand_name normalization
+    
+    triggers_added:
+      - trg_set_fingerprint_brand
+      - trg_prevent_fingerprint_change (for brands)
+      - trg_refresh_display_name_brand
+    
+    constraints_added:
+      - UNIQUE (fingerprint)
+      - UNIQUE (brand_slug)
+      - CHECK valid_brand_slug (kebab-case validation)
+    
+    constraints_removed:
+      - PRIMARY KEY (brand_name)  # replaced by id UUID PK
+    
+    backfill_required: yes
+    estimated_runtime: "2-5 minutes (15 brands × backfill)"
+    breaking_changes: "FK references to brands.brand_name break — must migrate to brands.fingerprint"
+    migration_strategy: "Update FK references in subsequent Phase 1B migrations"
+  
+  # ... 13 more Phase 1B migrations for new tables
+  20260508_011_create_seo_topic_cluster_master.sql
+  20260508_012_create_seo_authors.sql
+  20260508_013_create_seo_brand_doctors.sql
+  20260508_014_create_seo_brand_branches.sql
+  20260508_015_create_seo_citations.sql
+  20260508_016_create_seo_page_citations.sql
+  20260508_017_create_seo_editorial_reviews.sql
+  20260508_018_create_seo_entity_relationships.sql
+  20260508_019_create_seo_entity_embeddings.sql
+  20260508_020_create_seo_ai_citation_tracking.sql
+  20260508_021_create_seo_authority_scores.sql
+  20260508_022_create_seo_governance_audit.sql
+  20260508_023_create_seo_kpi_baseline.sql
 ```
 
 **Phase 1C: Triggers & Constraints (4 migrations)**
 
 ```yaml
-20260508_030_add_fingerprint_triggers_existing.sql:
-  purpose: "Auto-gen + immutability + display refresh for existing tables"
+goal: "Add triggers and constraints for data integrity"
+approach: CREATE TRIGGER + ADD CONSTRAINT
 
-20260508_031_add_fingerprint_triggers_new.sql:
-  purpose: "Same pattern for newly-created tables"
-
-20260508_032_add_immutability_constraints.sql:
-  purpose: "trg_prevent_fingerprint_change() on every table"
-
-20260508_033_add_fk_constraints.sql:
-  purpose: "Cross-table FK references using fingerprint"
+migrations:
+  20260508_030_add_fingerprint_triggers_existing.sql  # for v1.7-era tables
+  20260508_031_add_fingerprint_triggers_new.sql       # for v1.9 new tables
+  20260508_032_add_immutability_constraints.sql        # prevent fingerprint changes
+  20260508_033_add_fk_constraints.sql                   # FK relationships
 ```
 
 **Phase 1D: Indexes & Performance (3 migrations)**
 
 ```yaml
-20260508_040_add_gin_indexes_jsonb.sql:
-  purpose: "GIN indexes on canonical_names, aliases, descriptions"
+goal: "Performance optimization"
+approach: CREATE INDEX
 
-20260508_041_add_gin_indexes_arrays.sql:
-  purpose: "GIN indexes on brand_scope[], related_fps[], related_entities_fps[]"
-
-20260508_042_add_btree_indexes_lookups.sql:
-  purpose: "B-tree indexes on brand_slug, page_language, translation_group_id, sync columns"
+migrations:
+  20260508_040_add_gin_indexes_jsonb.sql      # GIN for jsonb columns
+  20260508_041_add_gin_indexes_arrays.sql      # GIN for text[] columns
+  20260508_042_add_btree_indexes_lookups.sql   # B-tree for common lookups
 ```
 
-### 6.4 Pre-Phase-1 Audit Results (GTGT)
+### 6.4 Phase 1 Success Criteria
 
-**Production State (audited 2026-05-07):**
+Phase 1 is complete when:
 
-```yaml
-gtgt_supabase_state:
-  project_id: lffcbeszjqzioobqfdav
-  region: ap-northeast-1
-  postgres_version: 17.6.1
-  
-  tables_existing: 13
-  tables_in_v1_8_target: 30
-  tables_to_create: ~17
-  
-  rls_enabled: false (Phase 2 concern)
-  
-  data_volumes:
-    brands: 15 rows (all in single Notion workspace VT Intelligence Space)
-    seo_entity_graph: 466 rows (287 VTH BioDent + 179 VitalSleep)
-    seo_website_page_master: 1,376 rows (all VitalSleep, all Planned)
-    seo_x_ads_keywords_contextual_master: 12,526 rows (active n8n feed)
-    seo_x_ads_keywords_monthly_market_snapshot: 12,156 rows
-    seo_x_ads_keyword_serp_competitors: 8,589 rows
-    logs_2026: 89,960 rows (5K-7K/day from 5 brands)
-    logs_2025: 0 rows
-  
-  active_n8n_workflows: 6
-  workflow_dependencies: HIGH on keyword table fingerprint format
-  
-  existing_migrations: 30 (2026-03-10 to 2026-03-23)
-  preserved_as: historical baseline (no rollback)
-```
+- [ ] All v1.9 tables exist in GTGT
+- [ ] Two-column identity pattern applied to all relevant tables (incl. brands 🆕)
+- [ ] ULID generation function tested and working
+- [ ] Multilingual jsonb columns ready for data
+- [ ] Triggers prevent fingerprint mutation
+- [ ] **Entity Uniqueness Guard (EUG) v1.0 active** 🆕
+  - [ ] 4 SQL functions deployed (normalize, check_alias, find_similar, preflight)
+  - [ ] UNIQUE constraint on (entity_slug, brand_scope_primary)
+  - [ ] Trigram index on entity_slug
+  - [ ] Normalize trigger active on INSERT/UPDATE
+- [ ] Existing n8n workflows still functional
+- [ ] All migrations versioned in git (eywa-supabase-migrations repo)
+- [ ] Migration runbook documented
+- [ ] Rollback strategy defined
 
 ### 6.5 Open Items (Pending Decisions)
 
 ```yaml
-pending_decisions:
+# 🆕 v1.5 (2026-05-09) — Field-tested feedback from VTH BioDent EGP work
+DR-013_edge_vocabulary_v3_5_expansion:
+  status: "Proposed (review until 2026-05-20)"
+  priority: HIGH
+  blocking: false (current Bible v3.13 still functional)
+  blocking_phase_1A: false
+  blocking_future_bible_v3_14: yes
   
-  DR-020_migration_repo:
-    question: "Separate eywa-supabase-migrations repo, or subfolder in eywa-protocol-spec?"
-    blocking: false
-    blocking_phase_1A: false
-    can_decide_during: Phase 1A execution
+  proposes:
+    - Add 2 new edges: causes/caused_by + contraindicates (10 → 12)
+    - Add typed edge_note sub-vocabulary (formalize ad-hoc notes)
+    - Add edge_evidence_citation field (mandatory for strength≥2)
+    - Add medical_reviewer_signoff_at field (mandatory for strength=3)
   
-  DR-021_notion_sync_scope:
-    question: "Which v1.8 tables sync to Notion? Which are Supabase-only?"
-    blocking: false
-    blocking_phase_1A: false
-    blocking_phase_1B: partial (affects table design choices)
-    can_decide_during: between Phase 1B and Phase 1C
+  governance_status_per_DR_012:
+    C1_real_cases: "⏳ In Collection (VTH BioDent has multiple, need final 3+)"
+    C2_cross_brand: "⏳ PENDING (canvass 14 brands by 2026-05-13)"
+    C3_schema_org: "✅ Documented (causeOf, riskFactor, contraindication)"
+    C4_orthogonal: "✅ Architect verified"
   
-  DR-022_branch_testing_protocol:
-    question: "Test migrations on Supabase development branch before main?"
-    blocking: false
-    recommended: yes (low cost, high safety)
-    can_decide_during: before first migration applied
+  schema_review_board: "2026-05-15 (Lock or Reject decision)"
+  source: "Stream B work order (Naphannop S., VTH BioDent)"
+  
+  if_locked_2026_05_20:
+    triggers: "Build Bible v3.14 + Schema v1.10 + 5 SQL migrations + plugin updates"
+    estimated_effort: "58-64 hours (Architect + Tech Lead)"
+  
+  if_rejected:
+    workaround: "VTH BioDent uses related_to + notes with brand_scope=['vth-biodent']"
+    consequence: "Reduced schema markup specificity, no functional break"
+
+DR-014_concept_entity_subtype_lock:
+  status: "Proposed (review until 2026-05-20)"
+  priority: MEDIUM
+  blocking: false
+  companion_to: DR-013
+  
+  proposes:
+    - Lock entity_subtype controlled vocabulary for concept type:
+      - 'framework' (overarching methodology, e.g., VTH BioDent's MBM)
+      - 'axis' (causal dimension, e.g., gut-brain axis)
+      - 'general' (default fallback)
+  
+  governance_status_per_DR_012:
+    C1_real_cases: "⏳ In Collection (VTH BioDent has 2 examples)"
+    C2_cross_brand: "⏳ Pending canvass"
+    C3_schema_org: "✅ Documented (additionalType emission)"
+    C4_orthogonal: "✅ Architect verified"
+  
+  schema_review_board: "2026-05-15 (paired with DR-013)"
+
+# Existing pending items (preserved from v1.4)
+DR-022_branch_testing_protocol:  # was DR-022 in v1.4 (placeholder still applies)
+  question: "Test migrations on Supabase development branch before main?"
+  blocking: false
+  recommended: yes (low cost, high safety)
+  can_decide_during: before first migration applied
+
+DR-024_migration_repo:  # renumbered from DR-022 in v1.5
+  question: "Separate eywa-supabase-migrations repo vs subfolder in eywa-protocol-spec?"
+  blocking: false
+  blocking_phase_1A: false
+  can_decide_during: Phase 1A execution
+
+DR-025_notion_sync_scope:  # renumbered from DR-023 in v1.5
+  question: "Which v1.9 tables sync to Notion? Which are Supabase-only?"
+  blocking: false
+  blocking_phase_1A: false
+  blocking_phase_1B: partial (affects table design choices)
+  can_decide_during: between Phase 1B and Phase 1C
 ```
 
 ### 6.6 Resume Instructions for Next Session
@@ -1012,10 +1120,13 @@ When resuming Phase 1 work, follow this checklist:
 session_resume_checklist:
   
   step_1_read_priority:
-    - DECISION_RECORDS.md (DR-007 through DR-010)
+    - DECISION_RECORDS.md (DR-007 through DR-014)  # 🔄 v1.5 (was DR-007..012)
     - Bible Section 18.9 (Two-Column Identity Pattern)
-    - Schema_Overview Appendix B, E, F
-    - PHASE_1_DECISIONS.md (this session's summary)
+    - Bible Section 2.6.6.1 (Entity Uniqueness Guard)
+    - Bible Section 2.6.6.2 (EUG v2.0 Roadmap)
+    - Bible Section 2.7.5 (Edge Vocabulary Evolution Policy — DR-012 governance)
+    - Schema_Overview Appendix B, E, F, G
+    - PHASE_1_DECISIONS.md (Phase 1 quick reference)
   
   step_2_verify_audit_state:
     - Run `Supabase:list_tables` on lffcbeszjqzioobqfdav
@@ -1029,7 +1140,7 @@ session_resume_checklist:
   
   step_4_choose_starting_action:
     options:
-      A: "Start writing Phase 1A migrations (5 SQL files)"
+      A: "Start writing Phase 1A migrations (6 SQL files including EUG)"  # 🔄 v1.4
       B: "Export existing 30 migrations to git as historical baseline"
       C: "Set up eywa-supabase-migrations repo structure"
       D: "Create Supabase development branch for testing"
@@ -1039,6 +1150,7 @@ session_resume_checklist:
     - Existing 25K+ keyword rows MUST NOT break
     - 6 active n8n workflows MUST continue functioning
     - Operator commits to git themselves (Claude doesn't push)
+    - EUG migration is additive, no breaking changes  # 🆕 v1.4
 ```
 
 ### 6.7 Session History (Phase 1 Tracking)
@@ -1064,15 +1176,94 @@ session_2026_05_08:
     - In-Place GTGT Upgrade (DR-007) confirmed
     - Bible v3.12 (Section 18.9 added)
     - Schema v1.8 (Appendices B/E/F)
-    - Handover v1.3 (this Section 6)
+    - Handover v1.3 (Section 6 added)
     - Phase 1 migration plan (26 files outlined)
   
   status: "Documentation phase complete. Next: write migrations."
+
+session_2026_05_08_part_2:  # 🆕 NEW v1.4
+  duration: ~2 hours
+  trigger: "Expert review feedback + ontology drift concern from operator"
+  outcomes:
+    - Entity Uniqueness Guard (EUG) v1.0 designed (DR-011)
+    - Edge Vocabulary Evolution Policy (DR-012)
+    - Bible v3.13 — Sections 2.6.6.1, 2.6.6.2, 2.7.5
+    - Schema v1.9 — Appendix G + brands Two-Column compliance + entity_fingerprint legacy clarification
+    - DECISION_RECORDS v1.2 — DR-011 + DR-012
+    - Handover v1.4 — Phase 1A migration count: 5 → 6 (added EUG)
+    - README v3.13 / v1.9 refresh
+  
+  fixes_applied:
+    - Bible header v3.11 → v3.13 (was incorrect)
+    - Schema 4.1 entity_fingerprint legacy clarified
+    - Schema 3.1 brands table fingerprint compliance
+  
+  outputs:
+    - 5 patch documents created → applied to full files
+    - 0 breaking changes introduced
+    - 100% backward compatible
+  
+  status: "Phase 1A documentation complete + EUG ready for migration writing"
+
+session_2026_05_09:  # 🆕 NEW v1.5
+  duration: ~2 hours
+  trigger: "VTH BioDent Phase D EGP work (Naphannop S.) surfaced edge vocabulary gap"
+  parallel_workstream: "Stream B work order arrived after Stream A (DR-011/012) locked"
+  
+  collision_detected:
+    - "DR-011 number collision (Stream A=EUG, Stream B=Edge Expansion)"
+    - "Bible version collision (both wanted v3.13)"
+    - "Schema version collision (both wanted v1.9)"
+  
+  resolution_strategy: "Hybrid Merge"
+    - "Stream A locked DRs preserved (DR-011 + DR-012)"
+    - "Stream B renumbered → DR-013 + DR-014"
+    - "Stream B retargeted → Bible v3.14 + Schema v1.10 (future)"
+    - "Apply DR-012 governance to Stream B (4 criteria + 2-week review)"
+    - "DR-013 + DR-014 set to Proposed status (NOT locked)"
+  
+  outcomes:
+    - DR-013 (Edge Vocabulary v3.5 Expansion) — Proposed
+    - DR-014 (Concept Entity Subtype Lock) — Proposed
+    - DECISION_RECORDS v1.2 → v1.3
+    - EYWA_HANDOVER v1.4 → v1.5
+    - README updated (Decision Records Status table)
+  
+  governance_milestone: "DR-012 (Edge Evolution Policy) tested for first time"
+  
+  pending_actions:
+    week_1_to_2026_05_13:
+      - Architect canvasses 14 other brands for C2 cross-brand evidence
+      - Schema Review Board scheduled for 2026-05-15
+    
+    schema_review_board_2026_05_15:
+      - Decision: LOCK or REJECT or REVISE
+      - If LOCK → trigger Bible v3.14 + Schema v1.10 build (Stream B's 60h scope)
+      - If REJECT → document workaround, communicate to Naphannop
+    
+    if_locked_phase_1E:
+      - 5 SQL migrations (Phase 1E)
+      - eywa-schema-pipeline plugin updates
+      - eywa-acf-fields field group updates
+      - relationships.md template updates
+      - genesis_checklist.yaml validation rules
+      - Bible v3.14 build (multi-section update)
+      - Schema v1.10 build (new fields + Appendix updates)
+  
+  status: "Governance phase active — DR-013/014 awaiting evidence verification"
+  
+  files_delivered_session:
+    - DECISION_RECORDS.md v1.3 (DR-013 + DR-014 Proposed)
+    - EYWA_HANDOVER.md v1.5 (this update)
+    - README.md updated (Decision Records Status table)
+  
+  files_NOT_changed_yet:
+    - Bible v3.13 (stays canonical until DR-013/014 lock)
+    - Schema v1.9 (stays canonical until DR-013/014 lock)
+    - Phase 1A migrations 001-006 (unchanged)
 ```
 
-
 ---
-
 
 
 ## 🛠️ Section 7 — Workflow Phases for New Brand
@@ -1119,6 +1310,8 @@ PHASE G: Deployment                ← Schema + publish
 4. Relationship wiring (10-edge vocabulary)
 5. Validation (4 health checks)
 
+> 🆕 **v1.4 Note — EUG enforces Step 3:** Once Phase 1A migration `006_create_entity_uniqueness_guard.sql` deploys, Step 3 ("Search before create") becomes algorithmically enforced. n8n entity creation flow calls `eug_preflight_check()` before INSERT. See Bible Section 2.6.6.1 for operator decision matrix when collision detected.
+
 **Output Files (per Section 5 schemas):**
 - `clusters.md` — cluster index (6 columns)
 - `entities.md` (or `entities/{cluster}.md`) — 12 columns per entity
@@ -1157,9 +1350,9 @@ Stop and escalate to operator if:
 
 **Knowledge graph:**
 - About to create entity that "feels familiar" without searching first
-- Entity_fingerprint conflicts
+- Entity_fingerprint conflicts (or `eug_preflight_check()` returns BLOCK 🆕)
 - brand_scope decision impacts other brand's pages
-- Edge doesn't fit standard 10 edges
+- Edge doesn't fit standard 10 edges (use `related_to` + notes — see DR-012 🆕)
 
 **Content quality:**
 - Citation tier <3 used as primary evidence
@@ -1185,7 +1378,7 @@ Stop and escalate to operator if:
 
 ### 8.2 Quality Gates Per Deliverable
 
-**Entity:** searched? brand_scope correct? fingerprint unique? type valid? linked to cluster?
+**Entity:** searched? brand_scope correct? fingerprint unique? type valid? linked to cluster? **EUG preflight passed?** 🆕
 
 **Cluster:** anchor entity? ≥5 entities? L5 pillar planned? naming format? domain mapped?
 
@@ -1236,11 +1429,11 @@ Document context, options, choice, rationale, consequences, references in DR-NNN
 session_kickoff_checklist:
   
   context_verification:
-    ☐ Read EYWA_HANDOVER.md (this file)
-    ☐ Read latest Bible version
-    ☐ Read latest Schema version
+    ☐ Read EYWA_HANDOVER.md (this file — v1.5)
+    ☐ Read latest Bible version (v3.13 as of 2026-05-08)
+    ☐ Read latest Schema version (v1.9 as of 2026-05-08)
     ☐ Read brand-config.json
-    ☐ Read DECISION_RECORDS.md (if exists)
+    ☐ Read DECISION_RECORDS.md (v1.3, DR-001..DR-014 — DR-013/014 Proposed)
     ☐ Read brand-concept.md (if exists)
   
   infrastructure_verification:
@@ -1258,6 +1451,11 @@ session_kickoff_checklist:
     ☐ Recent updates in seo_entity_graph
     ☐ Universal entities relevant
     ☐ Cross-brand impact noted
+  
+  governance_verification:  # 🆕 v1.4
+    ☐ EUG preflight available? (post-Phase 1A check)
+    ☐ Edge vocabulary unchanged from 10 locked edges?
+    ☐ brands table Two-Column compliance applied? (post-Phase 1B check)
 ```
 
 ---
@@ -1266,7 +1464,7 @@ session_kickoff_checklist:
 
 A brand is **bootstrap complete** when:
 
-**Knowledge graph:** all entities created/adopted, clusters validated, edges wired, brand_scope correct.
+**Knowledge graph:** all entities created/adopted, clusters validated, edges wired, brand_scope correct, **EUG preflight clean** 🆕.
 
 **Sitemap:** 8 sections decided, every page has Layer+Tier+Funnel+Type, hierarchy consistent, linking plan complete, health audit passed.
 
@@ -1297,8 +1495,11 @@ A brand is **bootstrap complete** when:
 ```yaml
 knowledge_graph:
   Entity Genesis Protocol:    Part 2.6
+  Entity Uniqueness Guard:    Part 2.6.6.1 🆕 v1.4
+  EUG v2.0 Roadmap:           Part 2.6.6.2 🆕 v1.4
   Entity Polymorphism:        Part 2.5
   Edge Vocabulary (10 edges): Part 2.7
+  Edge Evolution Policy:      Part 2.7.5 🆕 v1.4
 
 sitemap:
   8-Section Universal:        Part 4.2
@@ -1345,9 +1546,19 @@ wordpress:
   Schema Pipeline:            Part 26
 
 sync_patterns:
-  Two-Phase Hierarchy Sync:   Part 18.8 (NEW in v3.11)
+  Two-Phase Hierarchy Sync:   Part 18.8
+  Two-Column Identity:        Part 18.9
   Multi-Workspace Sync:       Section 18.7
   Notion ↔ Supabase Mapping:  Section 18.5
+
+schema_appendices:
+  Required Extensions:        Schema Appendix A
+  Fingerprint Patterns:       Schema Appendix B
+  Naming Conventions:         Schema Appendix C
+  Bible Cross-Reference:      Schema Appendix D
+  Multilingual Strategy:      Schema Appendix E
+  Helper Functions:           Schema Appendix F
+  EUG Implementation:         Schema Appendix G 🆕 v1.4
 ```
 
 ---
@@ -1357,7 +1568,7 @@ sync_patterns:
 ```
 ✅ Read this file every session
 ✅ Reference Bible + Schema for technical decisions
-✅ Search before create (entities, citations, clusters)
+✅ Search before create (entities, citations, clusters) — EUG enforces this 🆕
 ✅ Document decisions (DECISION_RECORDS.md)
 ✅ Push to GitHub (canonical source)
 ✅ Think federation, not silo
@@ -1365,6 +1576,7 @@ sync_patterns:
 ✅ Quality gates before any deliverable
 ✅ Escalate when uncertain
 ✅ Use planning schema (Section 5) — text-based parents
+✅ Populate aliases jsonb at entity creation (helps EUG Layer 3a) 🆕
 
 🚫 Never edit Bible from brand context
 🚫 Never assume entity doesn't exist without searching
@@ -1372,6 +1584,7 @@ sync_patterns:
 🚫 Never skip citation tier validation
 🚫 Never proceed with spec ambiguity unresolved
 🚫 Never use notion_id in markdown planning files
+🚫 Never add new edges without DR + 4 criteria met (DR-012) 🆕
 ```
 
 **Ready to work?** Start with Section 10 (Pre-Flight Checklist), then proceed to the appropriate phase based on brand state.
@@ -1381,6 +1594,143 @@ sync_patterns:
 ---
 
 ## 📜 Changelog
+
+### v1.5 (2026-05-09) — DR-013 + DR-014 Proposed (Field-Tested Feedback) 🌱
+
+Companion update to DECISION_RECORDS v1.3. Documents Stream B work order arrival (Naphannop S., VTH BioDent) — first test of DR-012 (Edge Vocabulary Evolution Policy) governance.
+
+**Headline Changes:**
+
+- 🔄 **Section 6.5 — Open Items** updated:
+  - Added DR-013 (Edge Vocabulary v3.5 Expansion) — Status: Proposed
+  - Added DR-014 (Concept Entity Subtype Lock) — Status: Proposed
+  - Renumbered remaining placeholders (DR-020/021/022 → DR-022/024/025)
+  - Documented governance status per DR-012 4-criteria
+  - Documented critical path: C2 (cross-brand) verification by 2026-05-13
+
+- 🔄 **Section 6.6 — Resume Instructions** updated:
+  - Added DR-013/014 to required reading
+
+- 🔄 **Section 6.7 — Session History** updated:
+  - Added session_2026_05_09 entry documenting Stream B collision + Hybrid Merge resolution
+  - Lists files delivered + files preserved unchanged
+
+- 🔄 **Section 10 — Pre-Flight Checklist** updated:
+  - Added DR-013/014 to context verification
+
+- 🔗 **Reference updates throughout:**
+  - "DR-007..012" → "DR-007..014"
+  - DECISION_RECORDS v1.2 → v1.3 references
+
+- 🎯 **Why this matters:**
+  - DR-012 governance ทำงานจริง (Stream B is first proposed addition under policy)
+  - Bible v3.13 + Schema v1.9 stay canonical (Stream B = future v3.14/v1.10)
+  - Field-tested feedback documented officially (not lost in chat history)
+  - Schema Review Board has structured documents to review 2026-05-15
+
+- ✅ **Backward compatible:**
+  - All v1.5 changes are content additions
+  - No new requirements for current Phase 1A work
+  - 5 files from v1.4 still valid + uploadable
+
+### v1.4 (2026-05-08) — EUG Integration + Phase 1A Migration Update 🛡️📦
+
+Companion update to Bible v3.13 + Schema v1.9 + DECISION_RECORDS v1.2. Integrates Entity Uniqueness Guard into Phase 1A migration plan + updates references to new versions.
+
+**Headline Changes:**
+
+- 🔄 **Section 6.1 — Phase 1 In-Scope** updated:
+  - Added: "Entity Uniqueness Guard (EUG) v1.0 — 4 SQL functions + UNIQUE constraint + trigram index"
+  - Added: "brands table Two-Column Identity compliance"
+
+- 🔄 **Section 6.2 — Locked Decisions** updated:
+  - Added: DR-011 (Entity Uniqueness Guard — Two-Wave)
+  - Added: DR-012 (Edge Vocabulary Evolution Policy)
+  - Total locked decisions: DR-007 through DR-012 (was DR-007 through DR-010)
+  - Added `example_brand: "m4pfq::vth-biodent::VTH BioDent"` to display name examples
+
+- 🔄 **Section 6.3 — Migration Plan** updated:
+  - Phase 1A: 5 → **6 migrations** (added `006_create_entity_uniqueness_guard.sql`)
+  - Phase 1B: brands table migration enhanced with Two-Column Identity addition
+  - Total Phase 1 migrations: 26 → **27 files**
+
+- 🔄 **Section 6.4 — Success Criteria** updated:
+  - Added EUG v1.0 active checklist (4 functions, constraints, indexes, triggers)
+  - Added Two-Column compliance for brands
+
+- 🔄 **Section 6.5 — Open Items** renumbered:
+  - DR-018 → DR-020 (migration repo)
+  - DR-019 → DR-021 (Notion sync scope)
+  - DR-020 → DR-022 (branch testing)
+
+- 🔄 **Section 6.6 — Resume Instructions** updated:
+  - Added Bible §2.6.6.1 + §2.6.6.2 + §2.7.5 to required reading
+  - Updated DR range (DR-007..010 → DR-007..012)
+  - Added Schema Appendix G to required reading
+  - Phase 1A migration count: 5 → 6 SQL files
+
+- 🔄 **Section 6.7 — Session History** updated:
+  - Added session_2026_05_08_part_2 entry documenting EUG work
+  - Lists all 5 patch documents created
+  - Confirms 0 breaking changes
+
+- 🔄 **Section 7.4 — Phase C** updated:
+  - Added EUG enforcement note for Step 3 (Search Before Create)
+
+- 🔄 **Section 8.1 — STOP Signs** updated:
+  - Added EUG preflight BLOCK as stop signal
+  - Added DR-012 reference for edge vocabulary
+
+- 🔄 **Section 8.2 — Quality Gates** updated:
+  - Added "EUG preflight passed?" to Entity gate
+
+- 🔄 **Section 10 — Pre-Flight Checklist** updated:
+  - Added governance_verification block (EUG, edge vocab, brands compliance)
+  - Updated version refs to Bible v3.13 + Schema v1.9 + DR v1.2
+
+- 🔄 **Section 11 — Success Criteria** updated:
+  - Added "EUG preflight clean" to knowledge graph criteria
+
+- 🔄 **Quick Reference** updated:
+  - Added Bible Part 2.6.6.1 (EUG)
+  - Added Bible Part 2.6.6.2 (EUG v2.0)
+  - Added Bible Part 2.7.5 (Edge Evolution)
+  - Added Bible Part 18.9 (Two-Column Identity)
+  - Added Schema Appendix G
+
+- 🔄 **Final Notes** updated:
+  - Added EUG-related ✅ and 🚫 items
+  - Added DR-012 reference
+
+- 🔗 **Reference updates throughout:**
+  - All "Bible v3.12" references → "Bible v3.13"
+  - All "Schema v1.8" references → "Schema v1.9"
+  - "Schema_Overview Appendix E, F" → "Schema_Overview Appendix E, F, G"
+
+- 🎯 **Why this matters:**
+  - Phase 1A now ships ontology drift prevention (EUG) before scale problem emerges
+  - brands table joins all other tables in Two-Column Identity Pattern
+  - Migration count increases minimally (+1 file in Phase 1A)
+  - Estimated additional Phase 1A work: 1-2 hours
+  - Zero impact on Phase 1B/1C/1D timelines
+
+- ✅ **Backward compatible:**
+  - All HANDOVER changes are content additions, not behavior changes
+  - Existing teams reading v1.3 will not be confused by v1.4 (additive only)
+  - Phase 1A migrations 001-005 unchanged from v1.3 plan
+
+### v1.3 (2026-05-08) — Phase 1 Status Section 🏗️
+
+- ➕ **Section 6 (NEW):** Phase 1 Status (Supabase Database Foundation)
+  - 6.1: Phase 1 Scope (in/out)
+  - 6.2: Locked Decisions (DR-007..010)
+  - 6.3: Migration Plan (26 files)
+  - 6.4: Success Criteria
+  - 6.5: Open Items (pending decisions)
+  - 6.6: Resume Instructions
+  - 6.7: Session History
+- 🔗 References Bible v3.12 + Schema v1.8 + PHASE_1_DECISIONS.md
+- 🎯 Active phase tracking for ongoing Phase 1 work
 
 ### v1.2 (2026-05-07) — Per-Brand Repo Folder Structure 📁
 

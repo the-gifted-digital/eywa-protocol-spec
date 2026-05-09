@@ -2,8 +2,8 @@
 
 > **Append-only architectural decision log.** Each record explains WHY a decision was made — not just WHAT.
 
-**Document Version:** 1.1  
-**Last Updated:** 2026-05-08  
+**Document Version:** 1.3  
+**Last Updated:** 2026-05-09  
 **Format:** Reverse chronological (newest first)
 
 ---
@@ -31,6 +31,788 @@
 ---
 
 ## Decisions Log
+
+### [DR-014] — Concept Entity Subtype Lock (framework + axis) (2026-05-09) 🆕
+
+**Status:** Proposed (review until 2026-05-20, locks via Schema Review Board 2026-05-15)  
+**Bible Reference:** Future v3.14 §2.6 (entity_subtype controlled vocabulary)  
+**Schema Reference:** Future v1.10 §4.1 (CHECK constraint on entity_subtype for concept type)  
+**Companion DR:** DR-013 (Edge Vocabulary v3.5 Expansion)
+
+**Context:**
+
+Per Stream B work order (2026-05-09) — field-tested feedback from VTH BioDent EGP work surfaced gap:
+
+When entities of `entity_type='concept'` represent **integrative methodologies or causal dimensions** (e.g., VTH BioDent's "Mouth Bio Mapping" framework, "neuroimmune axis" concepts), existing `entity_subtype` field has no controlled vocabulary. This leads to:
+
+- Inconsistent labeling (`'methodology'` vs `'paradigm'` vs `'system'` for same concept)
+- Schema markup ambiguity (no `additionalType` value to emit)
+- Cluster organization confusion (when should subtype matter?)
+
+**Proposed Decision:**
+
+Lock 2 controlled vocabulary values for `concept` entity_subtype:
+
+```yaml
+proposed_subtype_values:
+  
+  framework:
+    description: "Overarching methodology / paradigm that organizes other concepts"
+    examples:
+      - VTH BioDent: "pncl-medicine" (Personalized Neural-Cognitive Lifestyle Medicine)
+      - Healthcare general: "integrative-medicine", "functional-medicine"
+    schema_org_emission: 'additionalType="ClinicalFramework"'
+    cluster_role: "Often parent_of multiple axes/clusters"
+  
+  axis:
+    description: "Causal/relational dimension across systems (e.g., 'gut-brain axis')"
+    examples:
+      - VTH BioDent: "bjgml-axis" (Bio-Joint-Gut-Mouth-Lung axis)
+      - Healthcare general: "gut-brain-axis", "hpa-axis"
+    schema_org_emission: 'additionalType="BiologicalAxis"'
+    cluster_role: "part_of frameworks, contains member entities"
+
+  general (default fallback):
+    description: "Concept that is neither framework nor axis"
+    use_when: "Concept is a single idea/principle, not organizing structure"
+    backward_compat: "Existing concept entities default here on migration"
+```
+
+**Required Verification (per DR-012 governance):**
+
+| Criterion | Status | Notes |
+|-----------|--------|-------|
+| C1: ≥3 real cases | ⏳ Collection | VTH BioDent has 2 examples; need 1+ more |
+| C2: Cross-brand applicability | ⏳ Pending canvass | Other brands may have implicit frameworks |
+| C3: Schema.org mapping | ✅ Documented | additionalType="ClinicalFramework"/"BiologicalAxis" |
+| C4: Orthogonal | ✅ Architect verified | No existing entity_subtype value covers this |
+
+**Rationale:**
+
+✅ **Improves schema markup precision:**
+- Without lock: concept entities emit generic `schema:DefinedTerm`
+- With lock: framework concepts emit `additionalType="ClinicalFramework"` (richer for AI engines)
+
+✅ **Improves cluster organization:**
+- Framework concepts naturally become parent_of axes
+- Axes naturally contain member entities via `part_of` edge
+- Tree structure becomes self-documenting
+
+✅ **Brand IP protection:**
+- VTH BioDent's "Mouth Bio Mapping" framework gets proper schema markup as branded methodology
+- Differentiates from generic concepts in AI search results
+
+⚠️ **Backward compatibility considerations:**
+- Existing concept entities have `entity_subtype` either NULL or arbitrary text
+- Migration approach: allow NULL (don't force categorization)
+- Only NEW concept entities at framework/axis level required to declare subtype
+
+**Alternatives Rejected:**
+
+- **A. No controlled vocabulary:** ❌ Inconsistent labeling, no schema markup benefit
+- **B. Free-text entity_subtype:** ❌ Loses governance, fragments ontology
+- **C. New entity_type values (e.g., 'framework' as type):** ❌ Breaks 15-type master list (Bible Part 2.5)
+
+**Implementation Plan (if Locked 2026-05-20):**
+
+```yaml
+phase_1B_addition:
+  migration_file: "20260520_053_add_concept_subtype_check_constraint.sql"
+  
+  ddl_change:
+    table: seo_entity_graph
+    constraint: |
+      CHECK (
+        entity_type != 'concept' 
+        OR entity_subtype IS NULL 
+        OR entity_subtype IN ('framework', 'axis', 'general')
+      )
+  
+  backward_compat: "Allows NULL — does not force migration of existing concept entities"
+  estimated_runtime: "< 1 minute"
+  rollback: "DROP CONSTRAINT chk_concept_subtype"
+```
+
+**Consequences:**
+
+✅ **Positive:**
+- Schema markup richer for branded frameworks
+- Cluster hierarchies become explicit
+- Editorial team has clear "which subtype?" guidance for concept entities
+- Backward compatible (NULL allowed)
+
+⚠️ **Trade-offs:**
+- DR-013 dependency: contraindicates/causes edges work better with framework/axis labeling
+- Editorial training needed: "When should I declare framework vs axis vs general?"
+
+**References:**
+- Stream B work order (2026-05-09)
+- DR-013 (companion — Edge Vocabulary v3.5 Expansion)
+- DR-012 (governance: 4 criteria + 2-week review)
+- Bible v3.13 §2.5 (Entity Polymorphism — 15 entity_types)
+- Bible v3.13 §2.6 (Entity Genesis Protocol — subtype population)
+- Schema v1.9 §4.1 (entity_graph entity_subtype field)
+
+---
+
+### [DR-013] — Edge Vocabulary v3.5 Expansion (causes + contraindicates) (2026-05-09) 🆕
+
+**Status:** Proposed (review until 2026-05-20, locks via Schema Review Board 2026-05-15)  
+**Bible Reference:** Future v3.14 §2.7.2 (vocabulary expansion 10→12 edges) + §2.7.6 (typed edge_note sub-vocabulary)  
+**Schema Reference:** Future v1.10 §4.5 (seo_entity_relationships CHECK constraint expansion + new fields)  
+**Companion DR:** DR-014 (Concept Entity Subtype Lock)  
+
+**Context:**
+
+Per Stream B work order (2026-05-09) — field-tested feedback from VTH BioDent EGP work surfaced 2 vocabulary gaps:
+
+**Gap 1 — Etiological relationships (causes):**
+At Phase D (sitemap + content) work for VTH BioDent, encountered need to express "X causes Y" (e.g., "bruxism causes TMJ disorder"). Existing edges insufficient:
+- `treats` = wrong direction (therapeutic, not etiological)
+- `symptom_of` = wrong abstraction (manifestation marker, not origin)
+- `related_to + notes` = loses directional + mechanistic signal + schema:causeOf SEO benefit
+
+**Gap 2 — Safety conflicts (contraindicates):**
+Procedure entities (e.g., "dental implant surgery") need to declare drug/condition contraindications. Existing edges insufficient:
+- `alternative_to` = preference choice, not safety hard block
+- `related_to + notes` = loses schema:contraindication SEO + queryable safety semantics
+
+**Proposed Decision:**
+
+Add 2 new edges to vocabulary (10 → 12 edges):
+
+```yaml
+new_edge_11_causes_caused_by:
+  paired: yes (directional)
+  edge_type_values: ['causes', 'caused_by']
+  schema_org_mapping:
+    causes: "schema:causeOf"
+    caused_by: "schema:riskFactor (semantic inverse)"
+  semantics: "Etiological — entity X creates/contributes-to condition Y"
+  bible_section_for_full_spec: "v3.14 §2.7.2"
+
+new_edge_12_contraindicates:
+  paired: no (symmetric, undirected)
+  edge_type_values: ['contraindicates']
+  schema_org_mapping:
+    contraindicates: "schema:contraindication"
+  semantics: "Safety — entity X must not be combined with entity Y"
+  bible_section_for_full_spec: "v3.14 §2.7.2"
+  governance_addition: 
+    - "edge_evidence_citation MANDATORY for strength≥2"
+    - "medical_reviewer_signoff_at MANDATORY for strength=3 (absolute)"
+```
+
+**Typed edge_note Sub-Vocabulary (NEW concept per work order):**
+
+Currently `edge_note` is free-text (ad-hoc). Stream B proposes formalizing per-edge-type controlled values:
+
+```yaml
+edge_note_typed_examples:
+  
+  causes:
+    direct: "X is direct mechanistic cause"
+    contributing: "X is one of multiple causes"
+    developmental: "X causes Y over time/development"
+    hypothesized: "Causal link proposed but not proven (strength=1 mandatory)"
+  
+  contraindicates:
+    absolute: "Must never combine (strength=3, requires medical signoff)"
+    relative-controllable: "Can combine with monitoring (strength=2)"
+    relative-temporal: "Time-based contraindication (e.g., post-surgery window)"
+    interferes-outcome: "Reduces efficacy without safety risk"
+  
+  related_to:
+    comorbidity: "Frequently co-occur (deferred co_occurs_with edge candidate)"
+    bidirectional-influence: "Mutual reinforcement"
+    historical-association: "Documented but mechanism unclear"
+  
+  requires_assessment:
+    diagnostic-gold-standard: "Primary diagnostic test"
+    diagnostic-supportive: "Supporting test"
+    pre-procedure-required: "Mandatory before procedure"
+
+governance_for_edge_note:
+  - "Adding new edge_note value = Category 2 change (lighter than new edge)"
+  - "Schema pipeline emits different schema.org based on edge_note (e.g., diagnostic-gold-standard → primaryDiagnosis)"
+```
+
+**Required Verification (per DR-012 governance):**
+
+| Criterion | Status | Notes |
+|-----------|--------|-------|
+| **C1: ≥3 real cases** | ⏳ In Collection | VTH BioDent has multiple cases; collected in Notion governance database |
+| **C2: Cross-brand applicability (≥2 brands)** | ⏳ **PENDING** | Architect canvasses 14 other brands by 2026-05-13. Critical blocker. |
+| **C3: Schema.org mapping** | ✅ Documented | causeOf, riskFactor, contraindication all in schema.org |
+| **C4: Orthogonal to existing 10** | ✅ Architect verified | causes ≠ treats; contraindicates ≠ alternative_to. Awaits board signoff. |
+
+**Critical Path:**
+- C2 (cross-brand) is the **primary risk**. If only VTH BioDent has cases → DR-013 should reject + use brand_scope workaround
+- Notion governance database tracks evidence collection structurally
+
+**Rationale:**
+
+✅ **Field-tested origin (not speculative):**
+- Stream B emerged from real VTH BioDent EGP work, not hypothetical scenarios
+- Naphannop (VTH BioDent founder) identified gap during actual entity creation
+
+✅ **Schema.org alignment strengthens AI citation:**
+- `schema:causeOf` and `schema:contraindication` are well-established medical schema properties
+- Google Health Knowledge Panel + AI engines weight these heavily for medical content
+- Without these edges, JSON-LD emission misses high-value markup
+
+✅ **Patient safety semantics (contraindicates):**
+- Healthcare brands NEED ability to express "do not combine"
+- Workaround via `alternative_to + notes` loses critical safety signal
+- DR-008 Two-Column Identity already established medical-grade governance posture
+
+✅ **Brand IP differentiation (when paired with DR-014):**
+- Framework + axis concepts can have explicit causal chains
+- VTH BioDent's "Mouth Bio Mapping" methodology gets richer schema markup
+
+✅ **Governance test case for DR-012:**
+- DR-013 is the FIRST proposed addition under DR-012's 4-criteria + 2-week review process
+- Outcome (Lock or Reject) sets precedent for future edge proposals
+- Either decision validates that DR-012 governance works
+
+**Alternatives Rejected:**
+
+- **A. Use `related_to + notes` as catch-all:**
+  - ❌ Loses schema:causeOf / schema:contraindication SEO benefit
+  - ❌ Loses queryable semantics (can't filter "all causal chains for X" or "all contraindications for procedure Y")
+  - ❌ Loses governance enforcement (edge_evidence_citation mandatory for safety-critical edges)
+  - ⚠️ Acceptable as workaround if DR-013 rejected (single-brand pattern)
+
+- **B. JSONB-only storage (no edge_type expansion):**
+  - ❌ Schema generation pipeline can't emit proper JSON-LD
+  - ❌ Loses CHECK constraint enforcement
+  - ❌ Cross-brand inconsistency
+
+- **C. Brand-specific edge extensions:**
+  - ❌ Fragments ontology across brands (against DR-001 Federation Pattern)
+  - ❌ Cross-brand schema markup becomes inconsistent
+  - ❌ Editorial team confused which edges apply when
+
+**Consequences (if Locked):**
+
+✅ **Positive:**
+- Vocabulary 10 → 12 edges
+- Schema markup richer for healthcare brands
+- Patient safety queries possible (find all contraindications for procedure X)
+- Causal chain visualization in knowledge graph
+- Brand IP (frameworks) gets proper schema:additionalType emission
+
+⚠️ **Operational requirements:**
+- 5 SQL migrations (Phase 1E)
+- eywa-schema-pipeline plugin updates (~16-20h dev)
+- eywa-acf-fields field group updates (~3h)
+- relationships.md template updates
+- genesis_checklist.yaml validation rules
+- n8n classifier updates (test 6 active workflows)
+- Notion select options sync
+
+⚠️ **Schema Review Board approval required:**
+- Category 3 (Major) change per Bible §15.2
+- Medical reviewer signoff required for contraindicates strength=3 cases
+
+⚠️ **Effort estimate:** ~58-64 hours total (Architect + Tech Lead) per Stream B work order
+
+**Consequences (if Rejected):**
+
+⚠️ **Workaround pattern:**
+- VTH BioDent uses `related_to + notes` with `brand_scope=['vth-biodent']`
+- Schema pipeline custom Layer 3 handler emits `schema:relatedCondition` (less specific than causeOf)
+- For contraindicates: use `alternative_to + notes='safety-critical'` with custom schema additionalType
+- Reduced SEO benefit but functional
+
+✅ **Positive of rejection:**
+- DR-012 governance proven to work (catches single-brand premature additions)
+- VTH BioDent unblocked within hours
+- Future cross-brand cases can re-trigger DR-013 with stronger evidence
+
+**Implementation Plan (if Locked 2026-05-20):**
+
+Per Stream B work order — Phase 1E migrations:
+
+```yaml
+phase_1E_migrations:
+  20260520_050_extend_edge_type_check_constraint.sql:
+    action: "ALTER seo_entity_relationships CHECK constraint to 16 enum values"
+    breaking: no (additive)
+  
+  20260520_051_add_edge_evidence_citation_field.sql:
+    action: "ADD edge_evidence_citation text NULL FK to seo_citations"
+    breaking: no (additive)
+  
+  20260520_052_add_medical_reviewer_signoff_fields.sql:
+    action: "ADD medical_reviewer_signoff_at timestamptz + medical_reviewer_fp text"
+    breaking: no (additive)
+  
+  20260520_053_add_concept_subtype_check_constraint.sql:
+    action: "ADD CHECK constraint for entity_subtype on concept type"
+    breaking: no (companion to DR-014, NULL-allowed)
+  
+  20260520_054_add_edge_validation_triggers.sql:
+    action: "Trigger functions for evidence + signoff enforcement"
+    breaking: no
+```
+
+**Bible v3.14 Updates Planned:**
+
+```yaml
+bible_v3_14_sections_to_update:
+  
+  section_2_7_2:
+    change: "Master vocabulary 10 → 12 edges"
+    callout: "v3.5 expansion rationale → see DR-013"
+    callout: "deferred co_occurs_with → see DR-013 future amendment"
+  
+  section_2_7_3:
+    change: "Storage Pattern CHECK constraint 14 → 16 enum values"
+  
+  section_2_7_4:
+    change: "Decision flow precedence — causes/contraindicates inserted at correct positions"
+  
+  section_2_7_5_now_2_7_5_extended:
+    add_rules:
+      - "causes edge requires evidence_citation if strength≥2"
+      - "contraindicates edge requires evidence_citation if strength≥2"
+      - "contraindicates strength=3 requires medical reviewer signoff"
+  
+  section_2_7_6_NEW:
+    title: "Edge Note Typed Sub-Vocabulary"
+    content: "Per-edge allowed edge_note values + schema.org emission rules"
+  
+  section_2_6:
+    add: "entity_subtype controlled vocabulary for concept type (per DR-014)"
+  
+  section_2_6_2:
+    update: "Step 4 — Procedures with safety concerns must have ≥1 contraindicates edge"
+  
+  section_27_3_1:
+    update: "edge_strength formula — typed edge_note multiplier"
+```
+
+**Schema v1.10 Updates Planned:**
+
+```yaml
+schema_v1_10_changes:
+  
+  section_4_5_seo_entity_relationships:
+    add_fields:
+      - edge_evidence_citation text NULL (FK to seo_citations.fingerprint)
+      - medical_reviewer_signoff_at timestamptz NULL
+      - medical_reviewer_fp text NULL (FK to seo_authors.fingerprint)
+    expand_check_constraint: 16 enum values
+  
+  section_4_2_seo_entity_graph:
+    add_check_constraint: "Concept entity_subtype IN (NULL, 'framework', 'axis', 'general')"
+  
+  appendix_F_helper_functions:
+    add_functions:
+      - fn_validate_edge_evidence_requirement()
+      - fn_validate_medical_signoff_for_contraindication()
+      - fn_emit_schema_org_per_edge_note()
+```
+
+**References:**
+- Stream B work order (2026-05-09 — "EYWA v3.4 → v3.5 Documentation Update Checklist")
+- DR-014 (companion — Concept Entity Subtype Lock)
+- DR-012 (governance — 4 criteria + 2-week review)
+- DR-008 (Two-Column Identity Pattern — preserved during v3.5)
+- DR-001 (Federation Pattern — cross-brand impact)
+- Bible v3.13 §2.7 (current 10-edge vocabulary)
+- Schema v1.9 §4.5 (seo_entity_relationships)
+- Naphannop S. (VTH BioDent founder, original proposer)
+
+**Audit Trail:**
+
+```yaml
+proposal_history:
+  
+  2026_05_09_AM:
+    event: "VTH BioDent Phase D EGP work surfaced gap"
+    actor: Naphannop S.
+    outcome: "Stream B work order drafted"
+  
+  2026_05_09_PM:
+    event: "Cross-checked with Stream A (DR-011 + DR-012 just locked)"
+    discovery: "DR number collision + version collision"
+    resolution: "Rename Stream B → DR-013/014, target v3.14/v1.10"
+  
+  2026_05_09_late:
+    event: "DR-013 + DR-014 set to Proposed status"
+    artifact_created:
+      - DECISION_RECORDS.md v1.3
+      - EYWA_HANDOVER.md v1.5
+    next_action: "Architect canvasses 14 brands for C2 cross-brand evidence by 2026-05-13"
+```
+
+---
+
+## Decisions Log
+
+### [DR-012] — Edge Vocabulary Evolution Policy (2026-05-08)
+
+**Status:** Locked  
+**Bible Reference:** Section 2.7.5 (Edge Vocabulary Evolution Policy)  
+**Schema Reference:** v1.9 §4.5 (seo_entity_relationships CHECK constraint)
+
+**Context:**
+
+The 10-edge vocabulary defined in Bible Part 2.7.2 was intentionally minimal for healthcare + wellness Phase 1:
+
+```yaml
+locked_edges_10:
+  hierarchical: [parent_of, child_of, subtype_of, part_of, contains]
+  clinical: [treats, treated_by, symptom_of, requires_assessment]
+  utility: [uses, used_by, alternative_to, evidenced_by, related_to]
+```
+
+Expert review (2026-05-08) raised concern about edge vocabulary potentially being insufficient as EYWA expands to verticals like education, finance, B2B SaaS, or AI systems. The catch-all `related_to` becomes overloaded, semantic distinctions blur, and ad-hoc edge additions risk ontology fragmentation.
+
+Without governance policy, additions become reactive ("we need this edge for THIS use case") and lose architectural coherence.
+
+**Decision:**
+
+Adopt **Edge Vocabulary Evolution Policy** with formal addition workflow.
+
+**Lock Status:**
+
+The 10 existing edges are LOCKED. No new edges may be added without satisfying ALL 4 criteria below + completing the formal addition workflow.
+
+**4 Criteria for Adding an Edge (ALL must be met):**
+
+1. **Real Use Case Proven**
+   - ≥3 real entity pairs encountered where existing 10 edges fit poorly
+   - Cases must come from actual EGP execution (not hypothetical)
+   - Documented in DECISION_RECORDS pending section
+
+2. **Cross-Brand Applicability**
+   - New edge usable across ≥2 brands (not single-brand specific)
+   - Brand-specific needs handled via `brand_scope[]` on existing edges
+
+3. **Schema.org Mapping Exists**
+   - Edge maps to documented schema.org property OR generates measurable SEO benefit
+   - Required for Bible Part 26 (Schema Generation Pipeline) integration
+
+4. **Orthogonal to Existing 10**
+   - Captures distinct semantics not expressible by combining existing edges
+   - Test: Can the relationship be expressed by `existing_edge + qualifier`? If yes, don't add.
+
+**Addition Workflow:**
+
+```yaml
+edge_addition_steps:
+  step_1_collect_evidence:
+    duration: "1-3 months production usage"
+    artifact: "Pending edges log with ≥3 real cases documented"
+  
+  step_2_propose_via_dr:
+    template: "## [DR-XXX] — Add Edge: '{edge_name}' (YYYY-MM-DD)"
+    required_sections:
+      - Evidence (3+ cases)
+      - Cross-brand applicability proof
+      - schema.org mapping spec
+      - Rationale why existing edges insufficient
+  
+  step_3_review_period:
+    duration: "2 weeks"
+    reviewers:
+      - 1 strategy lead (ontology consistency)
+      - 1 engineering lead (implementation impact)
+      - 1 editorial lead (content workflow impact)
+  
+  step_4_acceptance_or_rejection:
+    if_approved:
+      - DR status: Locked
+      - Update Bible Part 2.7.2 with new edge
+      - Update Schema seo_entity_relationships CHECK constraint
+      - Update n8n edge classification logic
+      - Update WordPress ACF eywa_relationships fields
+    if_rejected:
+      - Document rejection rationale in DR
+      - Use existing edges with notes column for special cases
+```
+
+**Parking Lot — Future Edges Under Consideration:**
+
+Documented but NOT activated. Will be added if all 4 criteria are met.
+
+```yaml
+parking_lot_edges:
+  
+  measures:
+    description: "Diagnostic relationship — entity X measures property Y"
+    example: "hrv_test measures autonomic_recovery"
+    schema_org_candidate: "diagnoses or hasMeasurement"
+    blocked_by: "Need 3+ cross-brand cases (currently 1: VTH BioDent)"
+  
+  predicts_risk_of:
+    description: "Predictive — biomarker → future condition"
+    example: "elevated_hs_crp predicts_risk_of cardiovascular_disease"
+    schema_org_candidate: "relatedCondition + RiskFactor extension"
+    blocked_by: "Need 3+ real cases + schema.org mapping research"
+  
+  contraindicated_with:
+    description: "Treatment/drug interaction conflicts"
+    example: "warfarin contraindicated_with vitamin_k_supplements"
+    blocked_by: "Currently uses 'alternative_to' + notes (sufficient)"
+  
+  prerequisite_for:
+    description: "Sequential dependency — procedure A before procedure B"
+    example: "cbct_scan prerequisite_for dental_implant_surgery"
+    blocked_by: "Currently uses 'requires_assessment' (close enough)"
+```
+
+**Anti-Patterns (Edge Additions to REJECT):**
+
+```yaml
+do_not_add_edge_when:
+  
+  pattern_1_brand_specific:
+    bad: "'mbm_module_of' (VTH BioDent specific)"
+    fix: "Use 'part_of' edge with brand_scope=['vth-biodent']"
+  
+  pattern_2_temporary_campaign:
+    bad: "'q4_2026_promotion_for'"
+    fix: "Use 'related_to' with notes column, time-bound"
+  
+  pattern_3_existing_edge_sufficient:
+    bad: "'cures' (similar to 'treats')"
+    fix: "Use 'treats' — distinguish severity in entity properties"
+  
+  pattern_4_too_specific:
+    bad: "'is_secondary_outcome_marker_for'"
+    fix: "Use 'evidenced_by' with citation tier in notes"
+  
+  pattern_5_one_off_use_case:
+    bad: "'sponsors' (single brand uses)"
+    fix: "Out of scope for ontology — store in business_relationships table if needed"
+```
+
+**Edge Removal Policy:**
+
+```yaml
+edge_deprecation_workflow:
+  if_unused_12_months:
+    1: Document zero-usage in audit log
+    2: Propose deprecation via DR
+    3: Mark as deprecated in Bible (do not remove immediately)
+    4: 12-month grace period — no new usage, existing data preserved
+    5: Migration to alternative edge type
+    6: Final removal in next major version
+
+current_status: "All 10 edges actively used as of v3.13"
+```
+
+**Rationale:**
+
+✅ **Prevents ontology drift before it manifests:**
+- Without policy: edges added ad-hoc → vocabulary balloons → schema markup fragments
+- With policy: deliberate evolution → vocabulary stays minimal + meaningful
+
+✅ **Aligns with EYWA philosophy:**
+- "Discipline > convenience" — same principle as VTH BioDent founder's note
+- Mirrors Section 2.6.6.1 EUG (algorithmic enforcement of human discipline)
+
+✅ **Preserves catch-all utility:**
+- `related_to` edge intentionally exists for relationships that don't warrant new edges
+- Combined with `notes` column, handles 95% of edge cases without vocabulary expansion
+
+✅ **Documented future path:**
+- Parking lot edges signal awareness of likely future needs
+- Vertical-specific brands (education, finance) can plan for future additions
+- Operator retains optionality without committing prematurely
+
+**Alternatives Rejected:**
+
+- **A. Add edges proactively (anticipatory):** ❌ Pre-mature optimization; YAGNI principle
+- **B. No policy — add as needed informally:** ❌ Predictably leads to drift over time
+- **C. Lock vocabulary forever:** ❌ Too rigid; some verticals genuinely need additions
+- **D. Per-brand edge vocabularies:** ❌ Fragments cross-brand knowledge graph; against federation principle
+
+**Consequences:**
+
+✅ **Positive:**
+- Edge vocabulary stays minimal + intentional
+- Cross-brand schema markup remains consistent
+- New edges, when added, have proven justification
+- Editorial team has clear "use what edge?" guidance via existing 10
+- Future verticals (education, finance, AI) get clear path to add domain-specific edges if truly needed
+
+⚠️ **Trade-offs:**
+- Operator must use `related_to + notes` for edge cases instead of creating new edges
+- 2-week review period adds friction (but appropriate given irreversibility)
+- ≥3 cases requirement may delay edge additions even when need is clear
+
+⚠️ **Process discipline required:**
+- Pending edges log must be maintained (DECISION_RECORDS pending section)
+- Quarterly review of catch-all `related_to` usage to identify potential new edges
+- Annual review of parking lot edges (re-evaluate criteria)
+
+**References:**
+- Bible Part 2.7.2 (Edge Vocabulary — 10 edges)
+- Bible Section 2.7.5 (Edge Evolution Policy — full spec)
+- Schema v1.9 §4.5 (seo_entity_relationships CHECK constraint)
+- Bible Part 26.4 (Schema Generation Pipeline — edge → JSON-LD)
+- DR-001 (Multi-Brand Federation — cross-brand consistency principle)
+- Expert review feedback (2026-05-08) — identified edge vocabulary as future risk
+
+---
+
+### [DR-011] — Entity Uniqueness Guard (EUG) Two-Wave Approach (2026-05-08)
+
+**Status:** Locked  
+**Bible Reference:** Section 2.6.6.1 (EUG v1.0) + Section 2.6.6.2 (EUG v2.0 Roadmap)  
+**Schema Reference:** v1.9 Appendix G
+
+**Context:**
+
+Bible Part 2.6.6 establishes "Search Before Create" as a discipline for entity creation, but it relies on **human judgment** to detect duplicates. Real-world scenarios that this misses:
+
+- **Typos:** Operator creates `tmj-therapyy` (95% similar to existing `tmj-therapy`)
+- **Format variations:** `TMJ_Therapy`, `tmj_therapy`, `TMJ-therapy` all create separate rows
+- **Synonyms:** `temporomandibular-joint-therapy` and `tmj-therapy` are the same concept
+- **Plurals:** `tmj-disorder` vs `tmj-disorders` — accidentally split
+- **Cross-language:** Thai `การรักษาขากรรไกร` collision with English `tmj-therapy` not detected
+
+At 15 brands today, manual discipline + Bible Part 2.6.6 search is sufficient. At 30+ brands and 5,000+ entities (target scale), human discipline alone fails. Expert review (2026-05-08) confirmed "Ontology Drift" as the #1 future risk and called this the "single most important governance addition needed."
+
+The operator (เพื่อน) explicitly raised the example: *"สมมุตว่าในระบบเรามี entity tmj therapy แล้วมันอาจจะมี Temporomandibular joint therapy มาเพิ่มหรือป่าว ซึ่งมันคือเรื่องเดียวกัน อาจจะต้องสร้างระบบป้องกันตรงนี้ขึ้นมา"*
+
+**Decision:**
+
+Adopt **Entity Uniqueness Guard (EUG)** as a 2-wave deployment:
+
+**Wave 1 (Phase 1A — DEPLOY NOW):**
+
+3-layer enforcement using Pure SQL + pg_trgm (already required):
+
+1. **Layer 1 — Database UNIQUE constraint:**
+   - `UNIQUE (entity_slug, brand_scope_primary)` on `seo_entity_graph`
+   - Hard block at INSERT/UPDATE — PostgreSQL native enforcement
+   
+2. **Layer 2 — Slug normalization function:**
+   - `normalize_entity_slug(text)` returns canonical kebab-case
+   - BEFORE INSERT/UPDATE trigger auto-applies
+   - Catches: case variations, underscores, whitespace, special characters
+
+3. **Layer 3a — Alias collision check:**
+   - `check_alias_collision(slug, aliases, brand_scope)` function
+   - Searches existing `canonical_names jsonb` + `aliases jsonb` for matches
+   - Application-level pre-flight call before INSERT
+
+4. **Layer 3b — Trigram similarity warning:**
+   - `find_similar_entities(slug, threshold, brand_scope, limit)` function
+   - Uses `pg_trgm` extension (already required for keywords)
+   - Threshold semantics: ≥0.90 BLOCK, 0.75-0.89 WARN, 0.60-0.74 INFO
+
+**Coverage:** ~85% of duplicate scenarios at $0 marginal cost (no new dependencies).
+
+**Wave 2 (Phase 2+ — ROADMAP):**
+
+Add Layer 4 vector similarity check leveraging existing pgvector + `seo_entity_embeddings` infrastructure:
+
+- Embed candidate entity description (OpenAI text-embedding-3-small, ~$0.0001/check)
+- Cosine similarity search against existing entity embeddings
+- Catches deep semantic synonyms + cross-language equivalents
+- Coverage extends to ~99%
+
+**Wave 2 Activation Criteria:**
+- pgvector extension live
+- Embedding pipeline (n8n + OpenAI) running
+- 100+ entities with embeddings populated
+- Cost monitoring proven < $5/month
+
+**Rationale:**
+
+✅ **Two-wave defers complexity until value proven:**
+- Wave 1 deployable Phase 1A (now) — uses pg_trgm already required
+- Wave 2 deferred to Phase 2 — uses pgvector when infrastructure ready
+- Avoids over-engineering when 85% solution catches majority of cases
+
+✅ **Smart leveraging of existing infrastructure:**
+- pg_trgm: already required for `seo_x_ads_keywords_contextual_master` fuzzy search
+- pgvector: already planned for `seo_entity_embeddings` (Schema Group 7)
+- No NEW dependencies required for either wave
+
+✅ **Aligned with operator's expressed need:**
+- Operator's TMJ therapy / Temporomandibular joint therapy scenario solved by Layer 3a (alias collision) — works because aliases jsonb stores synonyms
+- Wave 1 ships discipline-enforcement before drift becomes systemic problem
+
+✅ **Architectural philosophy fit:**
+- "The biggest risk is internal drift — discipline > convenience" (founder principle)
+- Algorithmic enforcement scales beyond human attention bandwidth
+- Aligns with "measurement-first" discipline pattern from VTH BioDent flagship
+
+**Alternatives Rejected:**
+
+- **A. Entity Registry Service (microservice):** ❌ Over-engineering for current scale; Bible Part 19 already provides quality framework
+- **B. Embeddings-only (no string layers):** ❌ Higher cost, requires API for every check, doesn't catch typos as well as trigram
+- **C. Manual review queue:** ❌ Adds bureaucracy + bottleneck; AI-assisted operator workflow already handles edge cases via Layer 3 warnings
+- **D. Defer entirely until problem manifests:** ❌ Reactive fixes harder than preventive; ontology cleanup at 1000+ entities exponentially more expensive
+
+**Consequences:**
+
+✅ **Positive:**
+- 85% of duplicate scenarios caught automatically
+- Zero new infrastructure dependencies for Wave 1
+- Zero ongoing cost for Wave 1
+- Clear roadmap to 99% coverage in Wave 2
+- Aligns with existing schema (uses canonical_names + aliases jsonb already in Schema v1.8)
+- Self-documenting: pre-flight function returns structured collision details
+- Migration is additive (no breaking changes)
+
+⚠️ **Trade-offs:**
+- Layer 3a/3b add 10-100ms to entity creation (acceptable for non-high-frequency ops)
+- Operator must understand decision matrix when collision detected (4 options: adopt/alias/specify/reject)
+- ~15% of edge cases (deep semantic synonyms without alias overlap) not caught until Wave 2
+- Editorial discipline still required for alias population at entity creation (multilingual coverage)
+
+⚠️ **Operational requirements:**
+- n8n workflows must be updated to call `eug_preflight_check()` before INSERT
+- Notion automation must validate slugs before sync
+- Editorial team must populate `aliases` jsonb at entity creation (not just canonical_names)
+- Phase 1A migration adds 1 SQL file: `06-entity-uniqueness-guard.sql`
+
+**Implementation Plan:**
+
+```yaml
+phase_1a_eug_v1_deployment:
+  ☐ Step 1: Verify pg_trgm extension active (CREATE EXTENSION IF NOT EXISTS)
+  ☐ Step 2: Deploy 4 SQL functions (normalize, check_alias, find_similar, preflight)
+  ☐ Step 3: Deploy 4 indexes (slug_trgm, canonical_names_gin, aliases_gin, slug_brand_scope)
+  ☐ Step 4: Deploy brand_scope_primary computed column + UNIQUE constraint
+  ☐ Step 5: Deploy normalize trigger
+  ☐ Step 6: Optional backfill (normalize existing slugs)
+  ☐ Step 7: Update n8n entity creation flow to call preflight
+  ☐ Step 8: Update editorial guidance: populate aliases at create time
+
+phase_2_eug_v2_activation_criteria:
+  ☐ pgvector extension active in production
+  ☐ seo_entity_embeddings table live with embedding pipeline
+  ☐ 100+ entities with embeddings populated
+  ☐ Embedding API cost monitoring proven < $5/month
+  ☐ Vector similarity query performance < 100ms baseline
+  
+estimated_total_dev_time: "Wave 1: 1-2 hours; Wave 2: 4-8 hours"
+breaking_changes: "None"
+rollback_capability: "Full — drop functions, constraints, triggers, indexes"
+```
+
+**References:**
+- Bible Section 2.6.6 (Search Before Create — predecessor discipline)
+- Bible Section 2.6.6.1 (EUG v1.0 specification)
+- Bible Section 2.6.6.2 (EUG v2.0 roadmap)
+- Schema v1.9 Appendix G (full implementation)
+- DR-008 (Two-Column Identity Pattern — uses fingerprint, not slug, for relations)
+- DR-009 (Multilingual Strategy — aliases jsonb structure leveraged by Layer 3a)
+- DR-010 (Brand Scope Architecture — used by Layer 1 UNIQUE constraint)
+- Bible Part 19.3 Dimension 5 (Uniqueness — formalizes what was aspirational)
+- Expert review feedback (2026-05-08) — identified ontology drift as #1 risk
+
+---
 
 ### [DR-010] — Brand Scope Architecture (2026-05-08)
 
@@ -202,76 +984,45 @@ Existing fingerprint patterns use composite of business fields:
 
 This works for **immutable** fields (keyword text never changes) but breaks for **mutable** fields (entity slug renames, page slug restructures, ICD-10 corrections by AI/expert review).
 
-When a slug changes:
-- All `parent_fp` references break
-- All `related_fps[]` references break
-- n8n sync loses match between Notion + Supabase
-- Cross-table joins fail silently
-
-Operator (เพื่อน) reported **real cases**: ICD-10 codes corrected after AI initial assignment, entity names refined after research, page slugs restructured during sitemap reorganization.
-
 **Decision:**  
-Adopt **Two-Column Identity Pattern** for all tables (except `seo_x_ads_keywords_contextual_master` which keeps existing format):
+Every table (except `seo_x_ads_keywords_contextual_master`) gets TWO identity columns:
 
-**Column 1 — `fingerprint text UNIQUE NOT NULL`:**
-- **Purpose:** Machine identity, used for FK/joins/relations
-- **Mutability:** IMMUTABLE (enforced by trigger)
-- **Format:** `{tablecode}_{ULID16}` — e.g., `ent_01HZP5K2XQR7N3MF`
-- **Generation:** Auto-generated by `generate_ulid()` PostgreSQL function on INSERT
-- **Properties:**
-  - 16 chars after prefix (Crockford Base32, time-encoded)
-  - Lexicographically sortable by creation time
-  - 80-bit entropy (collision-safe forever)
-  - ~19 chars total (compact)
+| Column | Type | Mutability | Purpose |
+|--------|------|------------|---------|
+| `fingerprint` | text UNIQUE NOT NULL | IMMUTABLE | Machine identity, used for FK/joins |
+| `fingerprint_display_name` | text NOT NULL | MUTABLE | Human label, debug aid |
 
-**Column 2 — `fingerprint_display_name text NOT NULL`:**
-- **Purpose:** Human-readable label for debugging, admin UI, eyeball validation
-- **Mutability:** MUTABLE (auto-refreshed by trigger when source data changes)
-- **Format:** `{fp_last_6}::{type}::{slug_or_name}::{key_data}`
-  - First segment = last 6 chars of fingerprint (cross-check)
+**Format:**
+- `fingerprint`: `{tablecode}_{ULID16}` (Pattern B)
+  - Example: `ent_01HZP5K2XQR7N3MF`
+  - 16 characters of ULID (time-sortable, 80-bit entropy)
+  - Compact yet collision-safe
+- `fingerprint_display_name`: `{fp_last_6}::{type}::{slug}::{key_data}`
+  - Example: `n3mf::condition::sleep-apnea::g47.3`
+  - First 6 chars = last 6 of fingerprint (cross-check)
   - `::` (double colon) separator
-  - Per-table composition (entity uses ICD-10, page uses language+brand, etc.)
-- **Examples:**
-  - `N3MF::condition::sleep-apnea::G47.3`
-  - `MFQR::pillar::airway-optimization::th::vth-biodent`
-  - `ZX5N::vth-biodent::VTH BioDent`
+  - Auto-refreshed when source data changes
 
-**Exception — Keyword Table:**
-`seo_x_ads_keywords_contextual_master` keeps existing format `{brand}::{market}::{language}::{keyword}` because:
-- Keyword text is **immutable** (search terms don't change after entry)
-- 12,526 rows in production with active n8n flows depending on this format
-- Self-documenting (keyword visible in fingerprint enables debug)
-- No display column needed — fingerprint already serves both purposes
+**Exception:** `seo_x_ads_keywords_contextual_master` keeps existing fingerprint format `{brand_slug}::{market}::{language}::{keyword}` because it's already self-documenting and immutable.
 
-**Table Codes (3-4 letters, mnemonic):**
-| Code | Table | Code | Table |
-|------|-------|------|-------|
-| `ent` | seo_entity_graph | `auth` | seo_authors |
-| `page` | seo_website_page_master | `doc` | seo_brand_doctors |
-| `clus` | seo_topic_cluster_master | `brch` | seo_brand_branches |
-| `kw` | (existing keywords, no migration) | `cite` | seo_citations |
-| `brnd` | brands | `tg` | (translation_group namespace) |
-
-**Rationale:**  
-- **Stability**: ULID never changes → relations never break
-- **Readability**: display_name reflects current data → debug-friendly
-- **Cross-check**: last-6 of fingerprint embedded in display creates double validation
-- **Industry standard**: ULID is widely supported, time-sortable, future-proof
-- **Pure SQL**: No PostgreSQL extensions needed (Postgres 17 compatible)
-- **Compact**: 19 chars vs UUID's 36 chars
-- **Mutability boundaries clear**: machine column locked, human column refreshable
+**Rationale:**
+- ✅ Stable machine identity prevents broken relations on rename
+- ✅ Human-readable label enables debugging and data validation
+- ✅ Last-6-of-fingerprint in display creates double cross-check
+- ✅ ULID provides time-ordering benefit for free
+- ✅ ICD-10 corrections by AI don't cascade-break references
+- ✅ Two-Phase Hierarchy Sync (DR-006) more robust
 
 **Consequences:**
-- ✅ Slug renames don't break any references
-- ✅ Entity merges/redirects are clean (just change row, fingerprint stays)
-- ✅ Two-Phase Hierarchy Sync (DR-006) more robust
-- ✅ Debug detection: fingerprint vs display mismatch = data integrity issue
-- ⚠️ Schema migration: add 2 columns to existing 12+ tables
-- ⚠️ Triggers needed: auto-generate, prevent mutation, refresh display
-- ⚠️ n8n workflows: must populate both columns on INSERT (or rely on triggers)
-- ⚠️ Notion sync: send `fingerprint_display_name` to Notion as formula text
+- ✅ All tables follow consistent pattern
+- ✅ FK columns use `fingerprint` (not slug)
+- ✅ Debug surface area expanded (display name visible in queries)
+- ⚠️ Migration: backfill existing rows with new fingerprint format
+- ⚠️ Trigger overhead must be measured (ULID generation + display refresh)
+- ⚠️ Cross-system updates (Notion ↔ Supabase) reference `fingerprint` consistently
 
 **Implementation Order:**
+
 1. Create `generate_ulid()` function
 2. Create `generate_*_display_name()` functions per table
 3. ALTER existing tables: add columns (NULLable initially)
@@ -371,52 +1122,52 @@ Hierarchical data (entities with parents, sitemap pages with parent pages, neste
 ที่ planning phase (markdown files), เรายังไม่มี Notion ID เลย — ต้องใช้ text references. แต่ที่ implementation phase, Notion ต้อง native relations เพื่อ render hierarchy บน UI.
 
 **Decision:**  
-Implement **Two-Phase Hierarchy Sync Pattern**:
-- **Phase 1 (Flat Load):** Sync entities/pages/clusters เข้า Supabase + Notion ด้วย text-based parent references — ไม่มี relations ตอนนี้
-- **Phase 2 (Backfill):** หลังทุก row มี notion_id แล้ว, backfill `parent_notion_id` ใน Supabase และ set `parent_relation` property บน Notion
+Two-Phase Sync Pattern — separate columns สำหรับ planning state vs operational state:
 
-**Required Schema Fields (v1.7):**
-- `parent_notion_id` (text) — Phase 2 target
-- `sync_state` (text) — tracks: flat_loaded / notion_synced / relations_backfilled / live
+**Phase 1 (Planning):** Markdown files use text-based parent references
+```yaml
+parent_entity_fp: "entity:tmj-disorder"
+sync_state: "draft"  # markdown only, not yet in Notion
+```
 
-**Applies to All Hierarchical Tables:**
-- seo_entity_graph
-- seo_topic_cluster_master
-- seo_website_page_master
-- Future tables with parent relationships
+**Phase 2 (Operational):** After Notion sync, both columns coexist:
+```yaml
+parent_entity_fp: "entity:tmj-disorder"  # preserved for queries
+parent_notion_id: "abc-123-def"           # native Notion relation
+sync_state: "synced"                       # both representations valid
+```
+
+**Schema additions:**
+- `parent_notion_id text` — populated after Notion creates parent
+- `sync_state text` — values: 'draft', 'syncing', 'synced', 'orphaned'
+- `last_sync_at timestamptz` — when last successfully synced
+- n8n flow B (resolver) — periodically maps text refs → notion_ids
 
 **Rationale:**  
-- ✅ Markdown planning ใช้ human-readable text refs (slug, sitemap_node_id)
-- ✅ Editors ใน Notion เห็น tree UI (native relations)
-- ✅ Pattern industry-standard (PostgreSQL deferred constraints + Notion API workflows)
-- ✅ Failure recovery built-in (sync_state ทำให้ resume ได้)
-- ✅ Idempotent (UPSERT-based, safe to retry)
+- ✅ Planning works without Notion (offline, version-controlled markdown)
+- ✅ Operational queries can use either text or notion_id reference
+- ✅ Sync failures don't block content creation
+- ✅ Markdown remains source of truth for structure
+- ✅ Notion native relations work for UI rendering
 
-**Alternatives Considered:**
-- **Skip text parent, only use Notion relations:** ❌ ไม่สามารถวางแผนใน markdown ได้
-- **Use UUID everywhere (markdown too):** ❌ Lose human readability, manual relation management hell
-- **Skip Notion, use Supabase only:** ❌ Lose editorial UI benefits (tree view, expand/collapse)
-
-**Consequences:**  
-- ✅ Operators get planning flexibility (markdown) AND visual hierarchy (Notion)
-- ✅ Same pattern reusable across all hierarchical tables
-- ⚠️ n8n flows must implement 4-flow architecture (load, sync, backfill, ongoing)
-- ⚠️ sync_state lifecycle requires monitoring/alerting
-- ⚠️ Reconciliation jobs needed to detect drift
+**Consequences:**
+- ✅ Hierarchy works in both planning and operational phases
+- ✅ Resilient to Notion outages
+- ⚠️ Two columns to maintain (sync flow handles)
+- ⚠️ Sync state must be monitored (orphans can accumulate)
 
 **References:**
-- Bible Part 18.8 — Two-Phase Hierarchy Sync Pattern (full pattern doc)
-- Schema_Overview v1.7 — adds parent_notion_id + sync_state to 3 tables
-- EYWA_HANDOVER v1.1 Section 5.8 — explains for brand teams
-- Industry: PostgreSQL deferred constraint loading pattern
-- Industry: Notion API hierarchical data sync best practices
+- Bible Part 18.8 — Two-Phase Hierarchy Sync Pattern
+- Schema v1.7 — `parent_notion_id` + `sync_state` fields added
+- DR-008 (Two-Column Identity) — strengthens this pattern
 
 ---
 
 ### [DR-005] — GitHub Distribution Strategy (2026-05-07)
 
-**Status:** Locked  
-**Bible Reference:** N/A (operational decision)
+**Status:** Accepted  
+**Bible Reference:** Section 10.7  
+**Schema Reference:** N/A
 
 **Context:**  
 EYWA Protocol ecosystem ต้อง distribute code, specs, per-brand content ในรูปแบบที่:
@@ -556,6 +1307,7 @@ canonical_names jsonb DEFAULT '{}'
 - Bible Part 28.3 — Multilingual Entity Strategy
 - Schema_Overview v1.6 Section 4.1 — `canonical_names` field spec
 - Wikidata: multilingual label pattern
+- DR-009 (Multilingual Strategy v2) — extends this DR with Two-Tier pattern
 
 ---
 
@@ -672,18 +1424,22 @@ EYWA system needs to support managing 5-20 healthcare/wellness brands. Architect
 
 Decisions to be documented as they emerge:
 
-- [ ] **DR-011:** WordPress hosting strategy (per-brand or shared?)
-- [ ] **DR-012:** Supabase project tier + scaling strategy
-- [ ] **DR-013:** n8n hosting strategy (self-hosted vs cloud)
-- [ ] **DR-014:** Translation provider selection (Claude vs GPT-4 vs DeepL)
-- [ ] **DR-015:** Editorial review workflow tooling
-- [ ] **DR-016:** CDN strategy (Cloudflare, BunnyCDN, etc.)
-- [ ] **DR-017:** Image optimization pipeline
-- [ ] **DR-018:** Analytics stack (GA4 + custom + ?)
-- [ ] **DR-019:** Backup + disaster recovery strategy
-- [ ] **DR-020:** Migration repo strategy (separate vs subfolder)
-- [ ] **DR-021:** Notion database sync scope (which tables sync)
-- [ ] **DR-022:** Branch testing protocol for migrations
+- [ ] **DR-015:** WordPress hosting strategy (per-brand or shared?) *(was DR-013 in v1.2)*
+- [ ] **DR-016:** Supabase project tier + scaling strategy *(was DR-014 in v1.2)*
+- [ ] **DR-017:** n8n hosting strategy (self-hosted vs cloud) *(was DR-015 in v1.2)*
+- [ ] **DR-018:** Translation provider selection (Claude vs GPT-4 vs DeepL) *(was DR-016)*
+- [ ] **DR-019:** Editorial review workflow tooling *(was DR-017)*
+- [ ] **DR-020:** CDN strategy (Cloudflare, BunnyCDN, etc.) *(was DR-018)*
+- [ ] **DR-021:** Image optimization pipeline *(was DR-019)*
+- [ ] **DR-022:** Analytics stack (GA4 + custom + ?) *(was DR-020)*
+- [ ] **DR-023:** Backup + disaster recovery strategy *(was DR-021)*
+- [ ] **DR-024:** Migration repo strategy (separate vs subfolder) *(was DR-022)*
+- [ ] **DR-025:** Notion database sync scope (which tables sync) *(was DR-023)*
+- [ ] **DR-026:** Branch testing protocol for migrations *(was DR-024)*
+
+> **Note on renumbering (v1.3):** DR-013 (Edge Vocabulary v3.5 Expansion) and DR-014 (Concept Entity Subtype Lock) became Proposed decisions in v1.3 (field-tested feedback from VTH BioDent). Future placeholders shifted from DR-013..DR-024 to DR-015..DR-026 to preserve numbering continuity. Future placeholders preserve their previous topic context.
+
+> **Note on renumbering (v1.2 — historical):** DR-011 (Entity Uniqueness Guard) and DR-012 (Edge Vocabulary Evolution Policy) became LOCKED decisions in v1.2. Placeholders shifted from DR-011..DR-022 to DR-013..DR-024 at that time.
 
 ---
 
@@ -719,6 +1475,46 @@ decision_record_governance:
     - When superseded: mark old DR + reference new DR
     - When implemented: update Status to "Locked"
 ```
+
+---
+
+## Changelog
+
+### v1.3 (2026-05-09) — DR-013 + DR-014 Proposed (Field-Tested Feedback) 🌱
+
+Companion to ongoing VTH BioDent EGP work. **Tests DR-012 governance for first time** — DR-013 is the inaugural proposed addition under DR-012's 4-criteria + 2-week review process.
+
+- ➕ **DR-013 (NEW, Proposed):** Edge Vocabulary v3.5 Expansion — proposes adding `causes/caused_by` + `contraindicates` edges (10 → 12 vocabulary). Source: Stream B work order from VTH BioDent field work.
+- ➕ **DR-014 (NEW, Proposed):** Concept Entity Subtype Lock — proposes controlled vocabulary `framework` + `axis` for `entity_subtype` on `entity_type='concept'`.
+- 🔄 **Future placeholder renumbering:** DR-013..DR-024 → DR-015..DR-026 (preserves topic continuity).
+- 🎯 **Status:** BOTH DRs Proposed (NOT Locked). Schema Review Board target: 2026-05-15. Lock target: 2026-05-20 (if all 4 DR-012 criteria met).
+- ⚠️ **Critical path:** C2 (cross-brand applicability) requires canvass of 14 other brands by 2026-05-13. If only VTH BioDent has cases → DR-013 should reject + use brand_scope workaround.
+- 📦 **Future Bible v3.14 + Schema v1.10:** Build only triggers AFTER DR-013/014 lock. v3.13/v1.9 remain canonical until then.
+- 🔗 References: Bible v3.13 §2.7.5 (DR-012 governance), Schema v1.9 §4.5 (current edge constraint), Stream B work order.
+
+### v1.2 (2026-05-08) — EUG + Edge Evolution Policy Added 🛡️🔄
+
+- ➕ **DR-011 (NEW):** Entity Uniqueness Guard (Two-Wave) — algorithmic enforcement of "Search Before Create" discipline
+- ➕ **DR-012 (NEW):** Edge Vocabulary Evolution Policy — formal addition workflow + parking lot + anti-patterns
+- 🔄 Renumbered placeholder DRs: old DR-011..DR-022 → DR-013..DR-024 (preserves topic context)
+- 🔗 Cross-references to Bible v3.13 (Sections 2.6.6.1, 2.6.6.2, 2.7.5)
+- 🔗 Cross-references to Schema v1.9 (Appendix G — EUG Implementation)
+
+### v1.1 (2026-05-08) — Phase 1 Foundation DRs
+
+- ➕ **DR-007:** In-Place GTGT Schema Upgrade (operational strategy)
+- ➕ **DR-008:** Two-Column Identity Pattern (immutable fingerprint + mutable display)
+- ➕ **DR-009:** Multilingual Strategy v2 (Two-Tier Pattern — concept vs content)
+- ➕ **DR-010:** Brand Scope Architecture (canonical brand_slug)
+
+### v1.0 (2026-05-07) — Initial Release
+
+- ➕ DR-001: Multi-Brand Federation Pattern
+- ➕ DR-002: Elementor Pro + Hello Theme Stack
+- ➕ DR-003: Single Entity, Multilingual Labels Pattern
+- ➕ DR-004: URL Structure (Subdirectory + Thai Default)
+- ➕ DR-005: GitHub Distribution Strategy
+- ➕ DR-006: Two-Phase Hierarchy Sync Pattern
 
 ---
 

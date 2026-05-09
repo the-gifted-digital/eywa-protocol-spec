@@ -1,11 +1,11 @@
 # EYWA™ Protocol — Phase 1 Decisions Summary
 
-**Document Version**: 1.1
-**Date**: 2026-05-08
-**Status**: 🔒 Locked
+**Document Version**: 1.2
+**Date**: 2026-05-09
+**Status**: 🔒 Locked (Phase 1A specs) + 🌱 DR-013/014 Proposed (future v3.14/v1.10)
 **Phase**: 1 — Supabase Database Foundation
 **Project**: GTGT (in-place upgrade)
-**Companion to**: Bible v3.12 + Schema Overview v1.8 + Handover v1.3
+**Companion to**: Bible v3.13 + Schema Overview v1.9 + Handover v1.5 + DECISION_RECORDS v1.3
 
 ---
 
@@ -284,21 +284,45 @@ Phase 1 is complete when:
 
 ## 📚 References
 
-- Bible v3.12: `EYWA_PROTOCOL_v3_12.md`
-- Schema Overview v1.8: `Schema_Overview_EYWA_v1_8.md`
-- Handover v1.3: `EYWA_HANDOVER.md` (Section 6 — Phase 1 Status)
-- Handover v1.2: `EYWA_HANDOVER.md`
-- Decision Records: `DECISION_RECORDS.md` (DR-001 to DR-010)
+- **Bible v3.13** (current): `EYWA_PROTOCOL_v3_13.md`
+- **Schema Overview v1.9** (current): `Schema_Overview_EYWA_v1_9.md`
+- **Handover v1.5** (current): `EYWA_HANDOVER.md` (Section 6 — Phase 1 Status)
+- **Decision Records v1.3** (current): `DECISION_RECORDS.md` (DR-001..DR-014)
+- Bible v3.12 (archived): for historical reference only
+- Schema v1.8 (archived): for historical reference only
 
 ---
 
 ## 🔄 Open Items (Not Decided Yet)
 
-These items will become DR-020+ when decided:
+### Active (DR-013 + DR-014) — Field-Tested Feedback from VTH BioDent 🌱
 
-- [ ] **DR-020 — Migration repo strategy**: separate `eywa-supabase-migrations` repo vs subfolder in `eywa-protocol-spec`?
-- [ ] **DR-021 — Notion sync scope**: Which v1.8 tables sync to Notion, which are Supabase-only?
+These items emerged from real EGP work (Naphannop S.) and are now in Proposed status, testing DR-012 governance for first time:
+
+- 🌱 **DR-013 — Edge Vocabulary v3.5 Expansion**: Proposes adding `causes/caused_by` + `contraindicates` edges (10 → 12 vocabulary). 
+  - Status: Proposed (review until 2026-05-20)
+  - Blocking: NO for current Phase 1A; YES for future Phase 1E + Bible v3.14
+  - Critical path: Cross-brand canvass by 2026-05-13
+
+- 🌱 **DR-014 — Concept Entity Subtype Lock**: Proposes controlled vocabulary `framework` + `axis` for `entity_subtype` on concept entities.
+  - Status: Proposed (paired with DR-013)
+  - Blocking: NO
+
+### Phase 1 Operational Items (renumbered from v1.1)
+
+These items will become DR-022+ when decided:
+
 - [ ] **DR-022 — Branch testing protocol**: Test migrations on Supabase development branch before main?
+  - Recommended: yes (low cost, high safety)
+  - Can decide during: before first migration applied
+  
+- [ ] **DR-024 — Migration repo strategy**: separate `eywa-supabase-migrations` repo vs subfolder in `eywa-protocol-spec`?
+  - Can decide during: Phase 1A execution
+  
+- [ ] **DR-025 — Notion sync scope**: Which v1.9 tables sync to Notion, which are Supabase-only?
+  - Affects Phase 1B table design
+  - Can decide during: between Phase 1B and Phase 1C
+
 - [ ] **Existing migrations export**: Export 30 GTGT migrations to git as historical baseline (operational task, not architectural)
 - [ ] **Cluster multilingual variant**: Tier 1 (jsonb) confirmed for cluster_master, but reserve Tier 2 option if cluster pages need separate language URLs in future
 
@@ -306,4 +330,14 @@ These items will become DR-020+ when decided:
 
 ---
 
-**End of Phase 1 Decisions Summary v1.1**
+## 🆕 v1.2 Changelog (2026-05-09)
+
+- 🔄 References updated: Bible v3.12 → v3.13, Schema v1.8 → v1.9, Handover v1.3 → v1.5, DR v1.1 → v1.3
+- ➕ Added DR-013 (Edge Vocabulary v3.5 Expansion) — Proposed status
+- ➕ Added DR-014 (Concept Entity Subtype Lock) — Proposed status
+- 🔄 Renumbered placeholders: DR-020→DR-022, DR-021→DR-024, DR-022→DR-025
+- 📝 Note: DR-013/014 are first proposed additions under DR-012 (Edge Vocabulary Evolution Policy) governance
+
+---
+
+**End of Phase 1 Decisions Summary v1.2**

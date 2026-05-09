@@ -1,0 +1,25270 @@
+# 📖 คัมภีร์ EYWA™ PROTOCOL
+## The Universal Knowledge Graph SEO Specification for the AI Era
+
+**Version:** 3.13  
+**Last Updated:** 2026-05-08  
+**Trademark:** EYWA™ (Class 35+42, DIP Thailand, filed 2026-04-20)  
+**Created by:** The Gifted Digital Marketing Co., Ltd.  
+**Scope:** Universal standard สำหรับการบริหารจัดการ SEO + Knowledge Graph แบบ multi-vertical, multi-brand, multi-specialty, multi-lingual, multi-location, **AI-future-ready** ในยุค AI Search (2026+) — ครอบคลุม healthcare verticals (clinic ทุก specialty, hospital, dental, sleep medicine, aesthetic, wellness, healthcare media) extensible to other regulated YMYL niches  
+**Implementation Stack:** Notion (planning) + Supabase (knowledge graph source of truth) + n8n (sync/automation) + WordPress + WPML + RankMath Pro  
+**Compliance:** ISO 25964, SKOS (W3C), Schema.org, DAMA-DMBOK, Semantic SEO 2026, **WCAG 2.1 Level AA**, GEO+AEO+SEO+LLMO + Google March 2026 Core Update aligned + PDPA-aware + AI Agent Era ready  
+**Service Suite:** EYWA™ Audit · Graph · Stack · Vital · Forge · Score · Atlas
+
+---
+
+---
+
+# 🌿 Foreword — The EYWA™ Vision
+
+In the AI era, your brand is no longer measured by how many pages it has — or how many keywords it ranks for.
+
+It is measured by **how connected its knowledge is**.
+
+EYWA™ PROTOCOL is built on a single conviction:
+
+> **"A website is not a collection of pages. It is a Knowledge Graph rendered as HTML."**
+
+Like a forest where every tree, root, and creature is connected through neural fibers carrying memory and meaning, your brand's digital ecosystem must form a **living network** — every entity, every page, every keyword, every author, every citation, woven together into a structure that AI can read, understand, and cite.
+
+This is the คัมภีร์ EYWA™ PROTOCOL — the universal specification for that network.
+
+---
+
+## The Three Beliefs
+
+Everything in this document descends from three convictions:
+
+### 1. A website is a Knowledge Graph rendered as HTML
+
+Not a collection of pages. Not a sitemap. A graph. Every page exists because of relationships — to entities, to clusters, to authors, to sources, to other pages. When you treat your website as a graph rather than a folder, AI sees the difference.
+
+### 2. SEO in the AI era is not about ranking. It is about being cited
+
+When ChatGPT, Claude, Perplexity, and Gemini answer questions, they cite sources. The question is no longer *"what position does my page rank?"* — it is *"do AI engines speak my brand's name when answering my customer's question?"*
+
+### 3. Your brand does not live in silos. Every entity connects
+
+A medical concept doesn't belong to one brand. A doctor doesn't serve one clinic. A keyword doesn't target one page. The future of search is **multi-brand neural networks** — entities reused, knowledge amplified, authority compounded across an entire portfolio.
+
+---
+
+## The Three Pillars
+
+EYWA™ PROTOCOL is structured around three pillars, each backed by international standards and engineering rigor:
+
+### 🌳 Pillar 1 — Knowledge Graph Foundation
+
+**The roots.** Entity-first architecture rather than keyword-first. Ontology and taxonomy as separate layers. Hub-and-spoke topic clusters with 5-tier schema markup. Compliant with **ISO 25964** (thesaurus standard), **SKOS** (W3C semantic vocabulary), and **Schema.org** (search engine semantics).
+
+### 🧬 Pillar 2 — AI Citation Engineering
+
+**The leaves.** Perspective Layer — expert voice, brand stance, myth-busting, patient journey. Citable Sentence Formula: `[Fact] + [Number] + [Source] + [Year]`. 7 FAQ Types mapped to funnel stages. LLM Citation tracking across ChatGPT, Claude, Perplexity, Gemini. Engineered for **GEO + AEO + LLMO**.
+
+### 🌐 Pillar 3 — Multi-Brand Neural Network
+
+**The forest.** brand_scope sharing pattern (universal / multi-brand / brand-specific). Cross-brand entity reuse for medical concepts, procedures, doctors. Centralized knowledge graph serving multiple brands in a portfolio. n8n automation gluing Notion + Supabase + WordPress into one synchronized organism.
+
+---
+
+## How EYWA™ Comes to Life — The 7-Service Suite
+
+The protocol is delivered to brands through seven services, each focused on a phase of the lifecycle:
+
+| Service | Phase | Function |
+|---------|-------|----------|
+| 🔍 **EYWA™ Audit** | Discover | Diagnose your brand's AI readiness in 30 days |
+| 🕸️ **EYWA™ Graph** | Design | Build the entity foundation your brand owns |
+| 🏗️ **EYWA™ Stack** | Build | Deploy the full system — schema, content, automation |
+| 🫀 **EYWA™ Vital** | Operate | Monitor knowledge graph health, AI citations, governance |
+| ⚒️ **EYWA™ Forge** | Operate | Produce citable content at scale using EYWA standards |
+| 📊 **EYWA™ Score** | Measure | The industry's first composite metric for AI-era SEO health |
+| 🌐 **EYWA™ Atlas** | Scale | Orchestrate multi-brand portfolios as one neural network |
+
+This Bible is the **canonical specification** that all seven services implement. Read it once and you understand the entire methodology — the philosophy, the architecture, the schema, the content standards, the operations, the future.
+
+---
+
+## Universal Scope
+
+EYWA™ PROTOCOL is **niche-universal** — designed primarily for **healthcare verticals** where E-E-A-T, citation authority, and structured medical knowledge matter most:
+
+- Single-specialty clinics (dermatology, ophthalmology, etc.)
+- Multi-specialty / poly-clinics
+- Dental clinics
+- Sleep medicine centers
+- Aesthetic / cosmetic clinics
+- Wellness & anti-aging
+- Hospitals (multi-specialty)
+- Healthcare media & informational platforms
+
+The methodology is extensible to other regulated **YMYL** niches (legal, financial services, education) with vertical adaptation. Every standard cited here — ISO 25964, SKOS, Schema.org, DAMA-DMBOK — is industry-agnostic.
+
+---
+
+## How to Read This Bible
+
+This document is **dense by design**. It is the specification, not the marketing brochure.
+
+| Reading | Best Path |
+|---------|-----------|
+| **First-time reader** | Changelog → Foreword → Parts 1–4 sequentially |
+| **Architect / Strategist** | Parts 1–4 (philosophy + framework) → Part 24 (future) |
+| **Engineer / Implementer** | Parts 5, 8, 16–18 (schema + WordPress + 4-tool sync) |
+| **Editorial / Content Lead** | Parts 6, 9, 13, 14, 23 (content + LLMO + verticals + medical excellence) |
+| **Operations / QA Lead** | Parts 11, 15, 19, 20, 23 (roadmap + governance + quality + KPIs + medical excellence) |
+| **AI / Data Lead** | Parts 13, 21 (LLMO + AI Operations + Embedding) |
+| **Multi-Brand Manager** | Parts 10, 14, 16 (multi-brand + verticals + 4-tool) |
+
+For practitioners: jump to whichever Part is most relevant to your current phase. Cross-references are extensive — follow them.
+
+---
+
+## A Note on Convention
+
+Throughout this Bible:
+
+- **EYWA™** with the trademark symbol on first mention per section, then **EYWA** thereafter
+- **EYWA™ PROTOCOL** when referring to the methodology as a whole
+- **Service names** (Audit, Graph, Stack, Vital, Forge, Score, Atlas) are descriptors — capitalized, no ™ (protected by the EYWA mark)
+- All technical terms (entity, cluster, layer, tier, funnel) are defined in the Foundation Parts
+- Citation format: `[Standard reference]` for international standards; `(Part X.Y)` for cross-references
+
+---
+
+## Trademark & Attribution
+
+> **EYWA™** is a registered service mark filed at the Department of Intellectual Property (DIP) Thailand, Class 35+42, application date 2026-04-20.
+> **The Gifted Digital Marketing Co., Ltd.** is the originator and licensor of EYWA™ PROTOCOL.
+> All EYWA™ service names (Audit, Graph, Stack, Vital, Forge, Score, Atlas) are descriptors used under the EYWA mark.
+> This Bible is the canonical specification — confidential — for licensed implementation only.
+
+---
+
+
+
+## 📜 Changelog
+
+### v3.13 (2026-05-08) — Entity Uniqueness Guard + Edge Vocabulary Evolution Policy 🛡️🔄
+
+Major governance refinement based on expert review feedback. Addresses **Ontology Drift** as the #1 future risk identified in production audit. Companion to Schema v1.9 + DECISION_RECORDS v1.2.
+
+**Headline Changes:**
+
+- ➕ **Section 2.6.6.1 — Entity Uniqueness Guard (EUG) v1.0** (NEW, ~380 lines):
+  - 3-layer architecture: UNIQUE constraint + slug normalization + alias collision + trigram similarity
+  - Algorithmic enforcement of "Search Before Create" discipline (formerly Section 2.6.6 manual)
+  - Real-world scenarios (typos, format variations, synonyms, plurals, cross-language)
+  - Operator decision matrix (4 options when collision detected)
+  - Two-Wave deployment strategy (Wave 1 now, Wave 2 future)
+  - Coverage: ~85% of duplicate scenarios at $0 marginal cost
+
+- ➕ **Section 2.6.6.2 — EUG v2.0 Roadmap (Wave 2)** (NEW, ~80 lines):
+  - Layer 4 vector similarity using existing pgvector + seo_entity_embeddings
+  - Activation criteria (pgvector live, embeddings populated, cost monitoring)
+  - Cost analysis (~$0.015/month at 1000 entities)
+  - No new tables required — leverages existing infrastructure
+  - Coverage extends to ~99% with Wave 2 active
+
+- ➕ **Section 2.7.10 — Edge Vocabulary Evolution Policy** (NEW, ~120 lines):
+  - 10 edges LOCKED — no new edges without satisfying 4 criteria
+  - Formal addition workflow (DR proposal + 2-week review + acceptance/rejection)
+  - Parking lot edges (measures, predicts_risk_of, contraindicated_with, prerequisite_for)
+  - Anti-patterns (5 patterns to REJECT)
+  - Edge deprecation policy (12-month grace period)
+  - Catch-all `related_to` pattern documented
+
+- 🎯 **Why this matters:**
+  - **Ontology Drift Prevention** — at scale (30+ brands, 5,000+ entities), human discipline alone fails
+  - **Algorithmic Enforcement** — EUG runs at database level, not relying on memory or attention
+  - **Vocabulary Stability** — Edge evolution policy prevents ad-hoc additions that fragment ontology
+  - **Architectural Consistency** — Mirrors VTH BioDent founder's "discipline > convenience" principle
+
+- 🔗 **Related Decision Records (NEW):**
+  - DR-011: Entity Uniqueness Guard (Two-Wave approach)
+  - DR-012: Edge Vocabulary Evolution Policy
+
+- 🔗 **Schema_Overview v1.9 changes:**
+  - Appendix G (NEW) — Full EUG SQL implementation (~450 lines)
+  - Section 3.1 (UPDATED) — brands table Two-Column Identity compliance
+  - Section 4.1 (UPDATED) — entity_fingerprint legacy clarification
+  - Section 4.5 (UPDATED) — valid_edge_type CHECK constraint added
+
+- 📦 **Phase 1A Migration Plan Update:**
+  - Phase 1A: 5 → **6 migrations** (added `006_create_entity_uniqueness_guard.sql`)
+  - Total Phase 1: 26 → **27 SQL files**
+  - Estimated additional dev time: 1-2 hours
+  - Zero breaking changes
+
+- ✅ **Backward compatible:**
+  - All EUG additions are additive (new functions, new constraints, new triggers)
+  - Edge vocabulary unchanged (just locked + governance added)
+  - No FK references break
+  - Existing entities continue working — only new INSERTs go through EUG
+
+- 🐛 **Bug fixes:**
+  - Header version 3.11 → 3.13 (was incorrect)
+  - Schema v1.9 4.1 entity_fingerprint marked as LEGACY explicitly
+  - brands table now follows Two-Column Identity pattern (was missing)
+
+### v3.12 (2026-05-08) — Two-Column Identity + Phase 1 Foundation 🆔🏗️
+
+Major operational refinement for Supabase Database Foundation work (Phase 1). Introduces production-tested patterns based on GTGT audit + operator feedback.
+
+**Headline Changes:**
+
+- ➕ **Section 18.9 — Two-Column Identity Pattern** (NEW, ~480 lines):
+  - Documents canonical pattern for stable machine ID + mutable human label across all tables
+  - `fingerprint text UNIQUE` (immutable, machine ID): `{tablecode}_{ULID16}` format
+  - `fingerprint_display_name text` (mutable, human label): `{fp_last_6}::{type}::{slug}::{key_data}` format
+  - Auto-generated by `generate_ulid()` PostgreSQL function (pure SQL, no extensions)
+  - Per-table display formula composition rules
+  - Cross-check pattern (last-6-of-fingerprint embedded in display)
+  - Trigger specifications (insert auto-gen, immutability enforcement, display refresh)
+  - Migration pattern from existing slug-based fingerprints
+  - Real-world debug scenarios
+  - Exception handling for `seo_x_ads_keywords_contextual_master` (keeps existing format)
+
+- 🎯 **Why this matters:**
+  - Slug renames don't break references (relations use immutable fingerprint)
+  - ICD-10 corrections by AI/expert review don't cascade-break
+  - Page slug restructures during sitemap reorganization safe
+  - Two-Phase Hierarchy Sync (Section 18.8) more robust
+  - Debug detection via fingerprint vs display mismatch
+
+- 🔗 **Related Decision Records (NEW):**
+  - DR-007: In-Place GTGT Schema Upgrade (operational strategy)
+  - DR-008: Two-Column Identity Pattern (this section)
+  - DR-009: Multilingual Strategy v2 (Two-Tier Pattern)
+  - DR-010: Brand Scope Architecture (canonical brand_slug)
+
+- 🔗 **Schema_Overview v1.8 changes:**
+  - Appendix B (Fingerprint Patterns) — completely rewritten for v1.8
+  - Appendix E (Multilingual Strategy) — NEW, documents Two-Tier pattern
+  - Appendix F (Helper Functions Reference) — NEW, ULID generator + display generators + triggers
+  - All 9 group sections updated with two-column identity columns
+
+- 📦 **Phase 1 Migration Plan** (referenced):
+  - Phase 1A: Foundation (5 migrations) — add columns, helper functions
+  - Phase 1B: New Tables (~14 migrations) — create v1.8 tables
+  - Phase 1C: Triggers + Constraints (4 migrations)
+  - Phase 1D: Indexes + Performance (3 migrations)
+
+- 🧹 **Documentation hygiene:**
+  - TOC (สารบัญ) regenerated to reflect actual Part 1-28 structure (was outdated since v3.0-3.3 era)
+  - Section 18.7 location annotated (intentional Appendix B placement per v3.10.1)
+  - Part 22 / Appendix C numbering gaps re-documented in TOC for clarity
+  - Cross-references between Bible v3.12 + Schema v1.8 + Handover v1.3 + DECISION_RECORDS verified
+
+### v3.11 (2026-05-07) — Two-Phase Hierarchy Sync Pattern 🌳
+
+Added new operational pattern for hierarchy management across Supabase + Notion:
+
+- ➕ **Section 18.8 — Two-Phase Hierarchy Sync Pattern** (NEW, ~440 lines):
+  - Documents canonical pattern for syncing hierarchical data between Supabase (text refs) and Notion (native relations)
+  - Phase 1: Flat load with text-based parent references
+  - Phase 2: Backfill notion_id-based native relations
+  - Enables Notion tree UI rendering for editorial team
+  - Required schema fields: `parent_notion_id` + `sync_state` (added in Schema v1.7)
+  - 4 n8n flow specifications (load, sync, backfill, ongoing)
+  - Notion database template (properties + rollups)
+  - Quality gates per phase
+  - Failure recovery procedures
+  - Universal pattern — applies to seo_entity_graph, seo_topic_cluster_master, seo_website_page_master, and all future hierarchical tables
+
+- 🎯 **Why this matters:**
+  - Markdown planning files use human-readable text refs ("entity:tmj-disorder", "5.2.1")
+  - Notion needs UUID relations for tree UI
+  - Two-Phase pattern bridges these requirements without manual intervention
+  - Operators get planning flexibility AND visual hierarchy in Notion
+
+- 🔗 **Related changes:**
+  - Schema_Overview v1.7 adds `parent_notion_id` + `sync_state` to 3 tables
+  - DECISION_RECORDS DR-006 documents pattern selection rationale
+
+### v3.10.1 (2026-05-07) — Structural Cleanup 🧹
+
+Documentation hygiene — fix Part numbering and ordering issues from earlier inserts:
+- 🔄 **Reordered Parts** to correct chronological sequence
+- 🔄 **Repositioned Part 28** (Multilingual Strategy) — was misplaced between Parts 18 and 19; now correctly after Part 27
+- 🔄 **Repositioned Appendices A + B** — were misplaced before Parts 19-27; now after Part 28
+- ✅ **Final order:** Parts 1, 2, 3, ..., 21, 23, 24, 25, 26, 27, 28, Appendix A, B, D
+- 📜 **Documented intentional numbering gaps:**
+  - Part 22: previously merged into Part 24 in earlier release; numbering preserved for backward-compatible cross-references
+  - Appendix C: previously consolidated into Appendix B in earlier release; letter preserved for backward-compatible cross-references
+- 🎯 No content changes — pure structural cleanup
+- 🎯 All cross-references between sections remain valid
+
+### v3.10 (2026-05-07) — 2-Tier Schema Strategy Documentation 📐
+
+Documentation clarification — centralize 2-tier schema pattern explanation:
+
+- ➕ **Section 7.5.0**: Strategy Overview — Why 2-Tier Schema Pattern (NEW, ~280 lines)
+  - Explicit explanation ของ Tier 1 (Brand Identity) vs Tier 2 (Content)
+  - Why 2 tiers (vs single tier) with anti-patterns
+  - @graph + @id linking pattern with example
+  - Implementation tools per tier (WPCode for T1, Schema Pipeline for T2)
+  - Decision Matrix สำหรับ Tier 1 brand schema setup:
+    * Organization type selection
+    * License (hasCredential) requirements
+    * Multiple branches handling
+    * Doctors (member) inclusion
+    * Parent organization decision (federation brands)
+    * Multilingual brand schema (1 schema, multiple alternateName)
+  - Reading path for new implementers (8 steps)
+  - Common mistakes to avoid (5 anti-patterns)
+- 🎯 Centralized entry point — implementers อ่าน 1 section ก่อน dive into details
+- 🎯 No functional changes — pure documentation improvement
+- 🔗 Cross-references existing Sections 7.5.1-7.5.8, 8.6, Part 26, Part 28.7
+
+### v3.9 (2026-05-07) — Multilingual Strategy 🌐
+
+ทำให้ multilingual เป็น first-class architectural concern (ไม่ใช่ afterthought):
+
+- ➕ **Part 28**: Multilingual Strategy (15 sections, ~1,100 lines)
+  - 28.1 Language roadmap (TH + EN immediate, 6 more phased)
+  - 28.2 URL structure (subdirectory + Thai default — locked)
+  - 28.3 Entity multilingual pattern (single entity + jsonb labels)
+  - 28.4 Translation workflow (AI-draft + human review)
+  - 28.5 WPML configuration for EYWA CPTs
+  - 28.6 hreflang strategy (auto-gen + validation)
+  - 28.7 Schema markup multilingual (inLanguage, sameAs, workTranslation)
+  - 28.8 Citation language handling
+  - 28.9 EYWA Scoring per-language (extends Part 27)
+  - 28.10 Elementor + WPML templates (single template, dynamic content)
+  - 28.11 DataForSEO multi-locale tracking
+  - 28.12 AI/LLMO multilingual considerations
+  - 28.13 Cross-brand + multilingual interaction
+  - 28.14 Implementation phasing + cost estimates
+  - 28.15 Cross-references
+- 🎯 8 languages designed in architecture (TH/EN now, ZH/JA/KO/AR/FR/ES later)
+- 🎯 Universal entity pattern preserved (1 entity, multilingual jsonb labels)
+- 🎯 Cost estimate: ~$1,000-1,250 initial + $150-300/month per brand for TH+EN
+- 🎯 RTL support designed (Arabic) — automatic via WPML + Hello theme
+
+### v3.8 (2026-05-07) — Elementor Pro Integration 🎨
+
+ปรับ frontend stack ให้ตรงกับ reality — Elementor Pro + Hello Elementor theme:
+
+- ➕ **Section 25.11**: Elementor Pro Integration Pattern (10 subsections)
+  - Stack rationale (Hello + Elementor Pro + ACF Pro + RankMath Pro)
+  - Plugin architecture revised: 5 → 4 EYWA plugins (no Gutenberg blocks)
+  - Theme Builder templates spec (12 single + 8 archive + 6 loop items + global)
+  - Dynamic Tags mapping (ACF → Elementor widgets)
+  - Loop Builder patterns (related entities, citations, cross-brand refs)
+  - Schema Pipeline compatibility (independent of Elementor render)
+  - Template distribution via GitHub (JSON exports)
+  - Brand customization layer (Site Settings, custom CSS, overrides)
+  - Required Elementor Pro features checklist
+  - Performance considerations
+- 🔄 **Section 25.8**: Template Hierarchy rewritten — Elementor Theme Builder structure (no PHP files)
+- 🔄 **Part 9**: Prefixed with Elementor stack note
+- 🔄 **Section 8.8**: Related Section Logic now references Loop Builder implementation
+- 🔄 **Plugin architecture**: 5 plugins → 4 plugins
+  - Removed: eywa-related-blocks (Loop Builder replaces it)
+  - Removed: eywa-templates-php (Theme Builder replaces it)
+  - Kept: eywa-core, eywa-cpt-activation, eywa-acf-fields, eywa-schema-pipeline
+- ➕ **NEW GitHub repo:** eywa-elementor-templates (Theme Builder JSON exports)
+- 🎯 Designer-friendly stack: 80% of design work in Elementor UI, zero PHP for layouts
+
+### v3.7 (2026-05-07) — Multi-Brand Federation Pattern 🌐
+
+ทำให้ Bible สะท้อน operational reality ของ EYWA — federation pattern ที่ backend shared, frontend independent. นี่คือ competitive moat สำหรับ portfolio operators (medical groups, wellness conglomerates, agencies):
+
+- ➕ **Section 10.7**: Operational Multi-Brand Federation Pattern — backend shared, frontend independent, with brand_scope filtering convention
+  - Federation rationale (vs full separation, vs full merger)
+  - Resource sharing strategy (citations, generic entities universal-scoped)
+  - Multi-team Notion workspace topology
+  - brand_scope SQL pattern with GIN index
+  - Executive visibility & resource allocation dashboards
+  - Brand onboarding workflow (~7-10 days vs 4-8 weeks traditional)
+  - Federation as competitive moat positioning
+- ➕ **Section 4.12**: Cross-Brand External Link Tracking — native lifecycle tracking ของ inter-brand referrals
+  - Use case pattern (VTH → VitalSleep referral)
+  - cross_brand_references jsonb data model
+  - n8n resolver flow (every 6 hours)
+  - Editor experience (Notion + WP)
+  - Operator dashboard for portfolio coordination
+  - Performance considerations
+- ➕ **Section 18.7**: Multi-Workspace Sync Strategy — operational pattern สำหรับหลาย Notion workspaces sync เข้า 1 Supabase
+  - Workspace topology (per-team + operator)
+  - Sync architecture diagram
+  - Per-team flow patterns (real-time webhook + reconciliation)
+  - Conflict resolution rules (4 scenarios)
+  - brand_scope validation via n8n flow config (no DB table needed — team management lives in Notion + flow env vars)
+  - Universal resource curation workflow
+  - Operator workspace aggregation patterns
+  - New workspace onboarding workflow
+- 🎯 Bible v3.7 = "Federation pattern" architecturally documented — lean implementation (no team registry overhead)
+
+### v3.6 (2026-05-07) — Universal Scoring Framework 📊
+
+เพิ่ม deterministic scoring system สำหรับ entire EYWA stack:
+
+- ➕ **Part 27**: EYWA Scoring Framework (1,100+ lines)
+  - 7 entity-level scores (authority, freshness, completeness)
+  - 2 edge-level scores (strength, evidence)
+  - 3 page-level scores (E-E-A-T, content quality, freshness)
+  - 2 cluster-level scores (health, topical authority)
+  - 1 citation-level score (authority weight)
+  - 2 brand-level scores (authority, AI citation readiness)
+  - All 15 KPIs with explicit formulas (Part 20)
+  - DataForSEO field mapping (Section 27.11)
+- 🔄 **Honest framing**: "EYWA Scoring Framework v1.0" — not "international standard"
+- 🔄 References tier-A standards: Cochrane GRADE, Google E-E-A-T, PageRank algorithm, WCAG, schema.org
+- 🔄 References tier-B industry consensus (Searchmetrics, Backlinko, DataForSEO methodology)
+- 🔄 Honest about tier-C synthesis (specific weights = educated guesses)
+- ✅ All formulas deployable as PostgreSQL functions
+- ✅ All scores have factor breakdowns (transparent + auditable)
+- ✅ Formula versioning system (v1.0 baseline, iterable)
+- ✅ Compute frequency map (real-time / nightly / weekly)
+- ✅ Test cases per formula
+- 🎯 Mission: enable cross-brand comparison + auditability + iteration
+
+### v3.5 (2026-05-07) — Documentation Cleanup Pass ✨
+
+Final cleanup pass — make Bible feel fresh & ready-to-use:
+- 🧹 Stripped all inline version markers from headers + content (🆕 v3.4 / 🔄 v1.1 / restored from v1.1 / etc.)
+- 🧹 Replaced "Superseded" block in Part 8.5 with clean cross-reference note
+- 🧹 Cleaned URL pattern table annotations
+- 🧹 Replaced "Deprecated" prefix with cleaner "Legacy field" wording
+- 📜 All version history preserved in changelog (this section is the single source of truth)
+- 🎯 Bible v3.5 = production-ready specification document
+
+### v3.4.2 (2026-05-07) — Accessibility Standards (WCAG AA) ♿
+
+เพิ่ม mandatory accessibility framework เป็น dual-benefit standard (a11y + SEO):
+
+- ➕ **Part 9.7**: Accessibility Standards (WCAG AA) — 30 criteria across 4 WCAG principles + EYWA-specific implementation mappings + SEO co-benefits + validation workflow
+- 🔄 Cross-references: Part 6 (Content Standard), Part 9.1 (Layout), Part 23.4 (Editorial Review Stage 3 a11y check), Part 25.5 (ACF alt_text mandatory)
+- 🎯 Triple benefit:
+  - Real impact ต่อ patient access (low vision, motor, hearing impaired users)
+  - SEO ranking signal (semantic HTML + alt text + Core Web Vitals)
+  - Legal protection (Thailand PWDA + future ADA-ready)
+- 🔮 Selective AAA upgrade for elderly/pediatric/emergency content
+
+### v3.4.1 (2026-05-07) — Biomarker Hosting Clarification 📝
+
+Documentation patch — ปิดช่องว่างเดียวที่หลงเหลือใน v3.4:
+- 🔄 **Appendix A.1**: เพิ่ม explicit hosting pattern สำหรับ `biomarker` entity_type (no CPT — host on `post` L6 / inline `lab_test`)
+- 🎯 รองรับ future v3.5 upgrade path ถ้า brand biomarker-heavy เข้ามา
+
+### v3.4 (2026-05-07) — Universal Framework Codification 🌿
+
+ปิดงาน "universal framework" ที่ในเวอร์ชันก่อนหน้ายังกระจายอยู่ — รวม 4 รากฐานเข้าด้วยกัน เพื่อให้ทุก brand ใช้ kit เดียวกันแบบ deterministic + bootstrap ใน 1 วัน:
+
+- ➕ **Part 2.6**: Entity Genesis Protocol (5-step methodology — Brand Profile → Domain → Cluster → Entity → Relationship)
+- ➕ **Part 2.7**: Relationship Edge Vocabulary (10 controlled edges + storage schema + per-edge spec + cross-system mapping)
+- ➕ **Part 25**: WordPress Universal Kit (8 core CPTs + 6 optional + 8 taxonomies + 7 ACF groups + activation flag logic + Day 1 Bootstrap workflow)
+- ➕ **Part 26**: Schema Generation Pipeline (3-Layer architecture: CPT mapping → Edge graph → Manual override + caching + validation)
+- 🔄 **Part 5.4**: `entity_type` reconciled to 15-type master list (was inconsistent across DDL/Schema_Overview/Appendix A)
+- 🔄 **Part 5.4**: Added `seo_entity_relationships` junction table (replaces generic `related_entities_fps[]`)
+- 🔄 **Part 4.11.2**: URL pattern table extended with 6 new CPT URLs (procedure/treatment/program/signature_system/drug/lab_test)
+- 🔄 **Part 8.5**: Marked superseded by Part 25 (preserved as historical reference)
+- 🔄 **Part 8.8.2**: Related Section priority orders extended for 5 new page types
+- 🔄 **Appendix A.1**: Entity Type Quick Selector reconciled to 15 types
+- ✅ Backward compatible: zero schema breaking changes (junction table additive, old fields kept as fallback)
+- 🎯 Mission: ลด onboarding time จาก 2-4 สัปดาห์ → 6-8 ชม. (Day 1 Bootstrap)
+
+### v3.3 (2026-05-06) — Implementation Restoration 🔧
+
+ฟื้นฟู actionable implementation content จาก v1.1 ที่ถูกตัดออกในระหว่างการ refactor v1.1 → v3.2 (architecture-first phase) — เพื่อปิดช่องว่างระหว่าง "specification" กับ "ready-to-build":
+
+- ➕ **Section 4.11**: URL Structure Rules (CMS-agnostic do/don't rules — max 2 levels, kebab-case, no brand prefix)
+- ➕ **Section 7.5.8**: Multi-format Content Schemas (VideoObject + ImageObject + **PodcastEpisode** + DigitalDocument)
+- ➕ **Section 7.6**: Cluster Lifecycle States (state diagram + state definitions)
+- ➕ **Section 7.7**: Cluster Creation Rules (5 mandatory pre-creation checks)
+- 🔄 **Section 7.8**: Review Cycles — renumbered from 7.6 (content unchanged)
+- ➕ **Section 8.1**: Plugin Stack Recommendations (Recommended + Avoid list — Bricks/GP, Pods/ACF, RankMath/Yoast)
+- ➕ **Section 8.6**: WPCode Site-wide Schema Setup (8-step install + WPCode vs Page Builder vs functions.php comparison)
+- ➕ **Section 8.7**: ACF Field Groups Reference (per-CPT structure with 6 tabs: Core / Relationships / E-E-A-T / Schema / FAQ / LLMO Citables)
+- ➕ **Section 8.8**: Related Section Logic (per-page-type priority order + fallback chain)
+- ➕ **Appendix D**: WordPress Code Reference Library (`generate_schema()`, `get_related_content()`, ACF programmatic specs)
+- ✅ Backward compatible: zero schema changes, zero n8n flow changes, zero Notion DB changes
+- 🎯 Mission: Architecture เป็น foundation, v3.3 ทำให้ implementation ใช้ได้จริง — Day 1 actionable
+
+### v3.2 (2026-05-05) — Day 1 Unified Database Spec 📊
+- 📊 **Major restructure of Part 5** to align with `Schema_Overview EYWA v1.0`:
+  - Restructured into **9 logical groups** (was mix of categories E/F + extensions)
+  - **28 total tables** (was 24-25 with overlapping categories)
+  - Day 1 unified spec mindset — no "deployed/pending" markers, treats system as complete spec
+  - Each group: WHY + table list + brief description + cross-reference to Schema_Overview
+  - Representative DDL examples (brands, entity_graph, page_master) — full DDL in Schema_Overview
+- 🆕 **New Section 5.7** — Group 5: Performance Fact Tables (rolling + yearly partition pattern)
+- 🆕 **New Section 5.8** — Group 6: Backlinks & Off-Page (aggregate + individual records)
+- ✏️ **New Section 5.14** — Cross-Reference to Schema_Overview v1.0 (usage patterns + section mapping)
+- 📊 **Companion document established:** `Schema_Overview EYWA v1.0` is now the reference document for full DDL + column descriptions for all 28 tables
+- ✏️ **Section 5.13** retained — Future Note: FHIR Integration (preserved from v3.1)
+- 🔧 Removed Section 5.14 (Authority & Evidence Schema Additions) — content merged into Group 1 + 2 + 3 unified spec
+
+### v3.1 (2026-05-05) — Lean Elite Medical Excellence Tier 🩺
+- 🆕 **Part 23: Medical Content Excellence** (~31KB lean tier — references external standards rather than duplicating)
+  - 23.1 Citation Tier System (6-tier evidence hierarchy + GRADE + Schema.org MedicalEvidenceLevel)
+  - 23.2 Medical Disclaimers & Red Lines (legal protection + AI trust)
+  - 23.3 Authority Validation Standards (license + accreditation + advisory board)
+  - 23.4 Multi-Stage Editorial Review (5-stage workflow + SLA)
+  - 23.5 Core Web Vitals Targets per Layer (Google direct ranking signal)
+  - 23.6 Accessibility Essentials (WCAG 2.2 AA — checklist)
+  - 🔮 Future notes: International SEO (hreflang), Crisis Management, Specialized Content Types
+- ➕ **Part 5 extension (Section 5.14):** Authority & Evidence Schema Additions
+  - ALTER seo_citations: evidence_tier, schema_evidence_level, citation_freshness_status, conflict_of_interest_disclosed, open_access
+  - ALTER seo_authors_reviewers: tmc_license_number, license verification fields, specialty_board_certs, external_profiles, advisory_board_role
+  - ALTER brands: accreditations (JCI, HA), medical_advisory_board_url
+  - NEW table: seo_editorial_reviews (5-stage workflow tracking)
+- ➕ **Part 6 extension (Section 6.X):** Pattern F — Evidence-Level Citable Sentence
+- ➕ **Part 13 extension (Section 13.X):** Brand SERP & Knowledge Panel Setup (Wikidata Q-number, Schema.org sameAs)
+- 🔧 **Renumbering:** Part 22 (Future Roadmap) moved to Part 24 (last position) — Part 23 takes the previous Part 22 slot for medical excellence
+- 📊 **Total Parts:** 22 → 23 (plus Future Roadmap renumbered)
+- 📊 **Total tables:** 24 → 25 (added seo_editorial_reviews)
+- 📊 **Citation patterns:** A-E → A-F (added Pattern F: Evidence-Level)
+
+### v3.0 (2026-05-04) — Major Reorganization (Option C) 🔧
+- 🔧 **Full Part renumbering** — clean abstraction-to-concrete reading flow
+- 🔧 **Renumbering map:**
+  - Part 1.5 (Neural Authority Architecture) → **Part 3**
+  - Part 1.6 (Sitemap Architecture Design) → **Part 4**
+  - Part 3 (Database Schema) → **Part 5**
+  - Part 4 (Content Standard) → **Part 6**
+  - Part 5 (Taxonomy Governance) → **Part 7**
+  - Part 6 (WordPress Implementation) → **Part 8**
+  - Part 7 (Content Page Template Anatomy) → **Part 9**
+  - Part 8 (Multi-Brand & Multi-Vertical Strategy) → **Part 10**
+  - Part 9 (Implementation Roadmap) → **Part 11**
+  - Part 10 (References & Sources) → **Part 12**
+  - Part 11 (LLMO Execution Playbook) → **Part 13**
+  - Part 12 (Vertical Profiles) → **Part 14**
+  - Part 13 (Schema Change Governance) → **Part 15**
+  - Part 14 (4-Tool Loose-Coupled Implementation) → **Part 16**
+  - Part 15 (n8n Flow Library) → **Part 17**
+  - Part 16 (Notion Database Specifications) → **Part 18**
+- 🔧 **Physical reorder:** Old Part 2 (Conceptual Architecture) moved physically up to position 2 (was between old Part 1.6 and old Part 3)
+- 🔧 **All cross-references auto-updated:**
+  - All `# PART X:` headers
+  - All `## X.Y` and `### X.Y.Z` sub-section headers
+  - All "Part X" and "Part X.Y" body text references
+  - All bullet item sub-section references in changelog/TOC
+- ✅ **Numbering conflict resolved** — no more dual-meaning of "1.5"/"1.6"
+- ✅ **Reading flow:** Foundation (1-2) → Framework (3-4) → Schema (5-7) → Build (8-10) → Strategy (11) → Roadmap (12) → References (13) → LLMO Playbook (14) → Specialized (15-18)
+
+### v2.8 (2026-05-04) — Sitemap Architecture Design 🆕
+- ➕ **Part 4: Sitemap Architecture Design** (10 sub-sections, ~50KB)
+  - 4.1 Design Methodology (5-phase top-down workflow)
+  - 4.2 Standard 8 Sections (Gold Ideology — Home/Uniqueness/Services/Tech/Concern/Knowledge/Cases/Contact)
+  - 4.3 Section ↔ Layer Mapping Matrix (with cannibalization shield rules)
+  - 4.4 Numbered Hierarchy Convention ({S}.{C}.{D}.{L} format)
+  - 4.5 Page Type Matrix (4 Types: A/B/C/D — branch relationships)
+  - 4.6 Multi-Vertical Variations (8 healthcare formats + media + other)
+  - 4.7 Specialty Center Pattern (mandatory for multi_specialty + hospital, 7 SEO benefits documented)
+  - 4.8 Greenfield Design Workflow (5-day sprint playbook)
+  - 4.9 Migration: Existing Site → Standard (4-stage playbook)
+  - 4.10 Sitemap Health Metrics (4 core metrics + dashboard)
+- ➕ **Healthcare Formats expanded to 8** (from 4):
+  - single_specialty | multi_specialty | dental | physiotherapy
+  - sleep_medicine | aesthetic | wellness_antiaging | hospital
+- ➕ **Specialty Center URL pattern** documented with full SEO + Schema.org reasoning
+- ➕ **sitemap_node_id** field added to seo_website_page_master (hierarchical addressing)
+- ➕ **page_branch_relationship** field formalized (4 Types A/B/C/D matrix)
+- ➕ **vertical_family + healthcare_format** columns added to brands
+
+### v2.7 (2026-05-04) — Neural Authority Architecture + Industry Verification 🆕
+- ➕ **Part 3: Neural Authority Architecture** — 3-Dimensional Page Definition (Layer + Tier + Funnel) + 7-Layer Knowledge Model
+- ➕ **7-Layer naming** (Industry-first + Medical specialization):
+  - L1 Authority Pages — Medical Brand & Practitioner Trust
+  - L2 Money Pages — Clinical Services & Treatment Programs
+  - L3 Product Pages — Medical Devices & Diagnostic Technology
+  - L4 Concern Pillars — Patient Symptoms & Conditions
+  - L5 Knowledge Hub — Clinical Education & Reference
+  - L6 Protocol Pages — Treatment Pathways & How-To
+  - L7 Evidence Pages — Clinical Case Studies & Patient Stories
+- ➕ **Industry-Verified Rules** — corrected based on 2026 expert consensus search:
+  - 🔴 **Click Depth FIXED:** Tier-based (A≤3, B≤4, C≤5, D≤6) — NOT strict-3
+  - 🔴 **Anchor Distribution FIXED:** Split internal vs external (external exact ≤10%, NOT 35%)
+  - 🔴 **Pillar-Cluster Ratio FIXED:** 8-25 supporting (NOT 12-30) — aligned with HubSpot/Whitehat consensus
+- ➕ **Funnel Stage extended:** added `retention` (4-stage) — healthcare/SaaS standard
+- ➕ **Schema-First Principle** formalized (soft enforcement via REVIEW flag, not DB constraint)
+- ➕ **Cannibalization Shield** formalized (L4 Concern vs L5 Knowledge intent locking)
+- ➕ **Layer-Schema Mapping table** (Layer → required Schema.org types)
+- ➕ **Two-Layer Architecture documentation** — Notion (planning master) ↔ Supabase (mirror) + 3-tier categorization (Planning/Intelligence/Performance)
+- ➕ **Schema spec v0.2 reference** — 21 tables total (12 Tier 1 + 4 Tier 2 + 5 Tier 3)
+- 🎯 Mission: Foundation that's universally recognized + medically specialized + industry-verified
+
+### v2.6 (2026-05-01) — Operational Backfill 🆕
+- ➕ **5.6 Review Cycles** — Monthly/Quarterly/Yearly cluster governance schedule
+- ➕ **Part 9.1-7.3** — Page Template Anatomy (Layout / Reading Flow 4 Rules / CTA Strategy 3+2)
+- ➕ **8.5 Doctor Cross-Brand Pattern** — practical example with brand_specific_roles
+- ➕ **8.6 Citation Cross-Brand Pattern** — write-once-cite-many across brands
+- ➕ **11.1 LLMO นิยาม** — definition + how it differs from SEO
+- ➕ **11.2 LLMO 8 Principles** — the 8 commandments
+- ➕ **11.3 Content Creation Playbook** — step-by-step pre-content checklist
+- ➕ **11.4 Content Scorecard** — pre-publish self-audit checklist (≥90% rule)
+- ➕ **11.5 AI Citation Monthly Report Template** — ready-to-use template
+- ➕ **11.8 LLMO Quick Wins** — Day 1 + Day 2 action items
+- ➕ **11.9 Team Roles & Responsibilities** — RACI for LLMO operations
+- ➕ **11.10 Red Flags** — Content/Technical/Strategic do-NOT list
+- ➕ **11.11b LLMO Success Metrics Tables** — restored full table format
+- ➕ **11.12 LLMO 3 เสาหลัก** — mental model summary
+- 🎯 Mission: คัมภีร์ที่เป็นคัมภีร์จริง — single source of truth ครบทุกมิติ (architecture + operations)
+- ✅ Backward compatible: ไม่มีการเปลี่ยนแปลง schema/flows/DBs
+
+### v2.5 (2026-05-01) — Brand Entity Foundation Update 🆕
+- ➕ **Part 7.5: Schema Tier Architecture** — แยก schema เป็น 3 tier ชัดเจน (Site/Page/Content) + @graph pattern recommendation
+- ➕ **Part 13.19: Brand Entity Building Playbook** — 3-tier brand strategy + Thai healthcare directory checklist (15 directories) + Wikipedia/Wikidata + Media interview placement + sameAs network
+- ➕ **Part 13.20: Perspective Layer Formalization** — 4 patterns required (α Clinical Insight + β Brand Stance + γ Myth-busting + δ Patient Journey)
+- ➕ **Citable Pattern E: Brand Stance** — เพิ่มจาก A/B/C/D เดิม (data-driven opinion สำหรับ LLMO)
+- 🔄 Section 4.2: Brand-linked Citable Formulas — 4 → 5 patterns
+- 🔄 Master Example v2.0 (Notion) — fully aligned with v2.5
+- ✅ Backward compatible: ไม่มีการเปลี่ยนแปลง database schema, n8n flows, Notion DBs
+- 🎯 Mission: Foundation ที่แกร่ง ลูกรัก Google ลูกรัก AI ตั้งแต่ Day 1
+
+### v2.4 (2026-05-01) — LLMO Complete + AI Future-Ready
+- ➕ **Category F: LLMO/AI Operations (5 new tables)** — total 34 tables
+  - `seo_predicted_prompts` (prompt prediction bank)
+  - `seo_ai_response_analysis` (per-citation deep analysis + ranking signals)
+  - `seo_ai_platforms` (extensible AI platform registry — chatgpt, perplexity, claude, gemini, grok, copilot, deepseek, qwen, mistral, meta_ai, google_ai_overview, ...)
+  - `seo_ai_agent_visits` (AI browsing agent crawl tracking — Layer 5 prep)
+  - `seo_voice_search_queries` (voice/chatbot conversational AI)
+- ➕ Section 1.8: AI Era Preparation (Layer 4-5 expansion)
+- ➕ Part 13 sections 11.13-11.18:
+  - 13.13 Prompt Prediction Methodology
+  - 13.14 Platform-Specific Playbooks (5 platforms detailed)
+  - 13.15 Co-Citation Strategy
+  - 13.16 Quote-Worthy Content Patterns
+  - 13.17 AI Agent Era Preparation
+  - 13.18 Voice & Conversational Search Optimization
+- ➕ n8n Flows D4-D8, F3-F4 (7 new LLMO flows)
+- ➕ 3 new Notion DBs: AI Prompt Bank, AI Platform Health, AI Agent Visits Log
+- 🔄 Appendix B: 29 → **34 tables**
+
+### v2.3 (2026-05-01) — Loose-Coupled Architecture + Local SEO
+- 🔄 **MAJOR:** Rewrite Part 16 — replaced "tight WP+Supabase plugin" with **4-tool loose-coupled architecture** (Notion + Supabase + n8n + WordPress)
+- ➕ Category E: Local SEO tables (5 tables — built all, use 3 first)
+  - `seo_locations` (multi-branch + GBP integration)
+  - `seo_reviews` (multi-platform reviews + PDPA-safe response workflow)
+  - `seo_directory_listings` (NAP citations, distinct from academic citations)
+  - `seo_gbp_posts` (GBP Posts management — Phase 2)
+  - `seo_local_rankings` (Local Pack tracking — Phase 2)
+- ➕ Part 17 (NEW): n8n Flow Library (15+ flows specs)
+- ➕ Part 18 (NEW): Notion Database Specifications (collaborative tables)
+- ➕ PDPA-aware review response workflow
+- 🔄 Appendix B: 24 → **29 tables**
+- 🔄 Section 1.6: Updated Implementation Stack to 4-tool architecture
+
+### v2.2 (2026-05-01) — Multilingual Architecture + Implementation Stack
+- ➕ Section 1.6: Implementation Stack (WordPress + WPML + RankMath Pro + Supabase)
+- ➕ Section 1.7: Multilingual Architecture Principles
+- ➕ Translation pattern: junction tables (replaces `_local` fields)
+- ➕ 4 new tables for i18n:
+  - `seo_languages` (language registry)
+  - `seo_entity_translations`
+  - `seo_cluster_translations`
+  - `seo_authors_translations`
+- 🔄 `brands`: added `default_language`, `supported_languages[]`
+- 🔄 `seo_website_page_master`: added WP integration fields + multilingual fields
+- 🔄 Removed `_local` fields from core entity/cluster/author tables (migrated to translation tables)
+- ➕ Part 16 (NEW): WordPress + Supabase Implementation Guide
+  - WP↔Supabase sync architecture
+  - Plugin requirements
+  - Edge Functions usage
+  - WPML integration patterns
+  - RLS (Row-Level Security) setup
+- 🔄 Appendix B: 24 tables total (was 20)
+- 🔄 Appendix B.7: updated migration order
+
+### v2.1 (2026-05-01) — Multi-Specialty Support + Everywhere SEO
+- ➕ Added `medical_specialties[]` to `brands` (multi-specialty per clinic)
+- ➕ Added `seo_brand_mentions` table (Everywhere SEO / cross-platform tracking)
+- ➕ Section 1.5: Google March 2026 Core Update Alignment
+- 🔄 Part 14.2: Dental Clinic → **Dental & Oral Health macro-profile** with 7 sub-specialty notes (general, ortho, OMS, maxillofacial, craniofacial, dental sleep medicine, endo/perio/pedo)
+- 🔄 Part 1.4: Expanded vertical examples to show interdisciplinary specialties
+- ➕ Appendix B: Complete Table & Schema Master List (20 tables)
+
+### v2.0 (2026-04-30) — Multi-Vertical Universal Architecture
+- 🔄 **MAJOR:** Restructure database จาก vertical-specific → universal core + extension pattern
+- ➕ Entity polymorphism via `entity_type` controlled vocabulary
+- ➕ 9 type-specific extension tables (ingredient, product, procedure, condition, drug, anatomy, organization, lab_test, device)
+- ➕ Multi-vertical sharing patterns (เพิ่มจาก multi-brand เดิม)
+- ➕ Part 14: Vertical Profiles (6 profiles: dental, aesthetic, dermatology, hospital, skincare-media, wellness-media)
+- ➕ Cross-vertical cluster sharing rules
+- ➕ Universal credential types สำหรับ authors_reviewers
+- ➕ Universal citation source types
+- ➕ Schema Change Governance process
+- 🔄 ปรับ Brand-linked Citable formulas เป็น 4 รูปแบบ (clinical / editorial-analytical / comparative / survey)
+- 🔄 Perspective Layer templates ขยายให้รองรับ media voice
+- 🔄 Page Template Anatomy: เพิ่ม 5 templates ใหม่ (ingredient, product, comparison, listicle, drug monograph)
+
+### v1.1 (2026-04-20) — LLMO Integration
+- LLMO Guide v1.0 integration
+- Part 13: LLMO Execution Playbook
+
+### v1.0 (2026-04-20) — Initial Super Standard
+- 8-table architecture (dental-focused)
+- ISO 25964 + SKOS compliance
+
+---
+
+## 📚 สารบัญ
+
+- [Part 1: Core Philosophy & Standards](#part-1-core-philosophy--standards)
+- [Part 2: Conceptual Architecture](#part-2-conceptual-architecture)
+- [Part 3: Neural Authority Architecture](#part-3-neural-authority-architecture)
+- [Part 4: Sitemap Architecture Design](#part-4-sitemap-architecture-design)
+- [Part 5: Database Schema Architecture](#part-5-database-schema-architecture)
+- [Part 6: Content Standard (AEO + GEO + SEO + LLMO)](#part-6-content-standard)
+- [Part 7: Taxonomy Governance Rules (SKOS)](#part-7-taxonomy-governance-rules-skos)
+- [Part 8: WordPress Implementation](#part-8-wordpress-implementation)
+- [Part 9: Content Page Template Anatomy](#part-9-content-page-template-anatomy)
+- [Part 10: Multi-Brand & Multi-Vertical Strategy](#part-10-multi-brand--multi-vertical-strategy)
+- [Part 11: Implementation Roadmap](#part-11-implementation-roadmap)
+- [Part 12: References & Sources](#part-12-references--sources)
+- [Part 13: LLMO Execution Playbook](#part-13-llmo-execution-playbook)
+- [Part 14: Vertical Profiles](#part-14-vertical-profiles)
+- [Part 15: Schema Change Governance](#part-15-schema-change-governance)
+- [Part 16: 4-Tool Loose-Coupled Implementation](#part-16-4-tool-loose-coupled-implementation)
+- [Part 17: n8n Flow Library](#part-17-n8n-flow-library)
+- [Part 18: Notion Database Specifications](#part-18-notion-database-specifications) —: 18.8 Two-Phase Sync, **18.9 Two-Column Identity (NEW v3.12)**
+- [Part 19: Data Quality Framework](#part-19-data-quality-framework)
+- [Part 20: Measurement & KPI Framework](#part-20-measurement--kpi-framework)
+- [Part 21: AI Operations & Embedding Strategy](#part-21-ai-operations--embedding-strategy)
+- [Part 23: Medical Content Excellence](#part-23-medical-content-excellence) *(Part 22 — see numbering note in v3.10.1 changelog)*
+- [Part 24: Future Roadmap & Beyond](#part-24-future-roadmap--beyond)
+- [Part 25: WordPress Universal Kit](#part-25-wordpress-universal-kit)
+- [Part 26: Schema Generation Pipeline](#part-26-schema-generation-pipeline)
+- [Part 27: EYWA Scoring Framework](#part-27-eywa-scoring-framework)
+- [Part 28: Multilingual Strategy](#part-28-multilingual-strategy)
+- [Appendix A: Quick Reference Cards](#appendix-a-quick-reference-cards)
+- [Appendix B: Complete Table & Schema Master List](#appendix-b-complete-table--schema-master-list) *(includes Section 18.7 Multi-Workspace Sync)*
+- [Appendix D: WordPress Code Reference Library](#appendix-d-wordpress-code-reference-library) *(Appendix C — see numbering note in v3.10.1 changelog)*
+
+---
+
+# PART 1: Core Philosophy & Standards
+
+## 1.1 หลักคิดหลัก
+
+> **"เว็บไซต์ไม่ใช่กลุ่มของหน้า — แต่เป็น Knowledge Graph ที่ถูก render เป็น HTML"**
+>
+> **"และ Knowledge Graph ของเรา ไม่ใช่ silo ตาม vertical — แต่เป็น universal health graph ที่ entity เชื่อมโยงกันได้ข้าม domain"**
+
+### 4 หลักคิดพื้นฐาน
+
+1. **Strings → Things (Entities)**
+   Google และ AI ไม่ match keyword อีกแล้ว — เข้าใจผ่าน entity + relationship
+
+2. **Hub-and-Spoke Topic Cluster**
+   Pillar → Cluster → Supporting = Topical Authority ที่ Google reward
+
+3. **AEO + GEO + SEO Integration**
+   ไม่ใช่แค่ rank บน Google — ต้องถูก AI (ChatGPT, Perplexity, Claude, Gemini) **อ้างอิง**
+
+4. **Universal Multi-Vertical Architecture**
+   1 entity = 1 record, แชร์ข้าม vertical ได้ → cost reduction, cross-vertical authority, AI reasoning
+
+---
+
+## 1.2 International Standards ที่ Compliance
+
+| Standard | Version | หน้าที่ | Status |
+|----------|---------|---------|--------|
+| **ISO 25964** | Part 1 (2011) + Part 2 (2013) | Thesaurus structure + interoperability | ✅ Current |
+| **SKOS (W3C)** | 2009 | Simple Knowledge Organization System | ✅ Current |
+| **Schema.org** | 27.0+ | Structured data vocabulary | ✅ Current |
+| **RDF/OWL** | OWL 2 (2012) | Semantic web framework | ✅ Current |
+| **ANSI/NISO Z39.19** | 2005 | Controlled vocabulary governance | ✅ Current |
+| **Google Schema Guidelines** | 2026 | Search rich result requirements | ✅ Current |
+| **HL7 FHIR** (optional) | R5 | Healthcare data interoperability | 🟡 Future |
+| **SNOMED CT** | International Edition | Clinical terminology | ✅ Current |
+| **MeSH** | 2026 | Medical Subject Headings (PubMed) | ✅ Current |
+
+### ❌ Obsolete (ไม่ใช้)
+- ISO 2788 (1986)
+- ISO 5964 (1985)
+
+---
+
+## 1.3 SEO 2026 Layer Model
+
+```
+┌─────────────────────────────────────────────────────┐
+│  Layer 5: AI Agent Access (MCP) — Future            │
+├─────────────────────────────────────────────────────┤
+│  Layer 4: Vector/Embedding (pgvector)               │
+├─────────────────────────────────────────────────────┤
+│  Layer 3: GEO (Generative Engine Optimization)      │  🔴 Critical 2026
+│    • llms.txt • Citable content • E-E-A-T entity    │
+├─────────────────────────────────────────────────────┤
+│  Layer 2: Semantic SEO (Entities + Schema)          │  ✅ Foundation
+│    • Knowledge Graph • Topic Clusters • Schema.org  │
+├─────────────────────────────────────────────────────┤
+│  Layer 1: Traditional SEO (Content + Links)         │  ✅ Baseline
+│    • Quality content • Internal linking • Keywords  │
+└─────────────────────────────────────────────────────┘
+```
+
+**Super Standard v2.0 = Layer 1+2+3** (Layer 4-5 = future-ready structure)
+
+---
+
+## 1.4 Multi-Vertical Universal Approach
+
+### หลักการ
+1 Knowledge Graph เดียวรองรับทุก vertical ใน health/wellness domain — ไม่แยก graph per vertical
+
+### Verticals ที่ support
+| Vertical | Type | Example brand | Sub-specialties typical |
+|---|---|---|---|
+| Dental & Oral Health clinic | Clinical service | Brand B | General dentistry, Orthodontics, Oral Surgery, Maxillofacial Surgery, Craniofacial Surgery, Dental Sleep Medicine, Endo/Perio/Pedo, Prosthodontics |
+| Aesthetic/Plastic Surgery clinic | Clinical service | (future client) | Facial surgery, Body contouring, Injectables, Non-surgical aesthetic |
+| Dermatology clinic | Clinical service | (future client) | Medical derm, Pediatric derm, Cosmetic derm, Mohs surgery |
+| ENT / Sleep clinic | Clinical service | (future client) | Sleep medicine, Snoring/OSA, Allergy, Voice |
+| General/specialty hospital | Clinical service | (future client) | Multi-specialty integrated |
+| Skincare media | Affiliate + AdSense + sponsorship | [skincare media brand] | — |
+| Wellness/longevity media | Affiliate + AdSense + sponsorship | [wellness media brand] | — |
+
+### Cross-Disciplinary Specialties
+
+ความจริงที่ต้องยอมรับ: บาง specialty **ข้าม vertical** — entity เดียวกันใช้ในหลายวงการ:
+
+| Specialty | Crosses | ผลกับ entity sharing |
+|---|---|---|
+| **Maxillofacial Surgery** | Dental + Plastic Surgery | procedures + anatomy entities ใช้ร่วม |
+| **Craniofacial Surgery** | Dental + Plastic + ENT (+ neuro บางครั้ง) | conditions (cleft palate) ใช้ร่วม |
+| **Dental Sleep Medicine** | Dental + Sleep Medicine + ENT + Pulmonology | OSA, CPAP, oral appliance ใช้ร่วม |
+| **Aesthetic Dermatology** | Dermatology + Aesthetic clinic | injectables, lasers ใช้ร่วม |
+| **Cosmetic Dentistry** | Dental + Aesthetic | bleaching, veneer crossover |
+
+→ **กลไกรองรับ:** field `applicable_verticals[]` ใน entity + cluster ทำให้ entity เดียวลิงก์หลาย vertical ได้
+
+### ประโยชน์
+- **Cost reduction:** entity เดียวใช้หลาย brand/vertical
+- **Cross-vertical authority:** AI/Google เห็น the brand ecosystem มี knowledge graph เชื่อมโยงข้าม domain
+- **Consistency:** ข้อมูลเดียวกัน อัปเดตที่เดียว
+- **Onboarding ใหม่เร็ว:** เปิด vertical ใหม่ใช้ entity เดิม 60-80% ได้ทันที
+
+### ตัวอย่าง entity ที่ share ข้าม vertical
+| Entity | ใช้ใน vertical |
+|---|---|
+| **Tretinoin** (drug) | dermatology clinic, skincare media, aesthetic clinic |
+| **Acne (L70)** (condition) | skincare media, dermatology clinic, pediatric clinic |
+| **Hyaluronic Acid** (ingredient) | skincare media, aesthetic clinic, hospital wound care |
+| **Sleep Apnea (G47.33)** (condition) | dental sleep medicine, ENT, pulmonology, sleep clinic |
+| **Cleft Palate (Q35-Q37)** (condition) | craniofacial surgery, dental, plastic surgery, ENT |
+| **Dr. ABC** (person) | clinic ที่ทำงาน + media ที่เป็น reviewer |
+
+---
+
+## 1.5 Google March 2026 Core Update Alignment
+
+### 5 หลักการจาก Update + การรองรับใน Stack v2.1
+
+| Update Principle | Stack v2.1 Coverage | Mechanism |
+|---|---|---|
+| **1. Topical Authority for Small Publishers** (boost up to 30%) | ✅ Full | Hub-and-spoke clusters + entity_graph + cluster_master + max-3-level depth |
+| **2. AI + Human (no pure AI content)** | ✅ Full | Perspective Layer (Part 6.3) + reviewer requirements + freshness governance |
+| **3. E-E-A-T Experience-First** | ✅ Full | `seo_authors_reviewers` + Brand-linked Citables (4 patterns) + reviewer chain |
+| **4. AI Overview Citation** (zero-click defense) | ✅ Full | LLMO Playbook (Part 13) + Citable Sentences + llms.txt + Schema markup |
+| **5. Everywhere SEO** (cross-platform brand mentions) | ✅ via `seo_brand_mentions` table | Track Reddit/TikTok/YouTube/forum/news mentions |
+
+### หลักคิดสำหรับ 2026+
+
+> **"Brand ที่ AI ไม่พูดถึง = Brand ที่หายไป"**
+> AI Overview เกิดขึ้นที่ Top of SERP — Brand ที่อ้างอิงไม่ได้ถูกแทนที่ด้วยคู่แข่งที่ AI เลือก
+> Stack v2.1 design มาเพื่อให้แบรนด์ของเรา **(1) ถูก AI เห็น (2) ถูก AI เลือก (3) ถูก AI อ้างอิง**
+
+### ส่งผลต่อ KPI
+
+```
+KPI 2026+ (เปลี่ยนจาก traditional SEO):
+
+OLD                          NEW
+- Position 1-3 ranking   →   AI Citation rate (≥40%)
+- Organic CTR            →   AI Source-cited rate
+- Backlinks count        →   Brand mentions across platforms
+- Domain Authority       →   Topical Authority + Entity coverage
+- Featured Snippet       →   AI Overview cited position
+```
+
+→ ต้อง track ใน `seo_llm_citations` + `seo_brand_mentions` + AI Citation Audit (Part 13.5)
+
+---
+
+## 1.6 Implementation Stack
+
+### 4-Tool Loose-Coupled Architecture
+
+```
+┌──────────────────────────────────────────────────────────┐
+│                  USER FACING (Browser)                   │
+│  • Subdirectory pattern: /{lang}/...                     │
+│  • Default: th (Thai), Future: /en/, /zh/, /ja/         │
+└──────────────────────┬───────────────────────────────────┘
+                       │ HTTP
+┌──────────────────────▼───────────────────────────────────┐
+│  WORDPRESS LAYER (Publishing CMS — "Mouth")              │
+│  Role: render audience-facing pages                      │
+│  • WordPress core                                         │
+│  • WPML — multilingual content management                │
+│  • RankMath Pro — SEO foundation + schema base           │
+│  • ACF Pro — fields populated by n8n from Supabase      │
+│  • Standard plugins (caching, security, ...)             │
+│                                                           │
+│  ❌ NO custom KG-Bridge plugin needed (loose coupling)   │
+└──────────────────────┬───────────────────────────────────┘
+                       │ REST API (read/write)
+┌──────────────────────▼───────────────────────────────────┐
+│  n8n (Sync + Automation — "Glue")                        │
+│  Role: orchestrate data flow between systems             │
+│  • Self-hosted Docker                                     │
+│  • Notion ↔ Supabase (two-way sync per table)           │
+│  • External APIs → Supabase (PubMed, GBP, social)        │
+│  • Supabase → WordPress (publish data)                   │
+│  • Scheduled jobs (audits, freshness checks)             │
+│                                                           │
+│  Flows: see Part 17 — n8n Flow Library                   │
+└──────────────────────┬───────────────────────────────────┘
+                       │
+       ┌───────────────┴────────────────┐
+       │                                │
+┌──────▼─────────────────┐    ┌─────────▼────────────────┐
+│  NOTION (Team UI)      │    │  SUPABASE (Brain)        │
+│  Role: humans work     │    │  Role: source of truth   │
+│  • Editorial calendar  │    │  • PostgreSQL 15+        │
+│  • Cluster proposals   │    │  • 29 tables (v2.3)      │
+│  • Citation library    │    │  • Auth + RLS by brand   │
+│  • Author profiles     │    │  • Storage (images)      │
+│  • Schema governance   │    │  • Edge Functions        │
+│  • Dashboards (read)   │    │  • pgvector ready        │
+│                        │    │                          │
+│  Multi-account possible│    │  Single instance         │
+└────────────────────────┘    └──────────────────────────┘
+```
+
+### Roles by Tool — Crystal Clear
+
+| Tool | Role | Who uses |
+|---|---|---|
+| **Notion** | Team workspace + content planning + governance | Marketing team, SEO, writers, reviewers, stakeholders |
+| **Supabase** | Source of truth + analytics + audit | System (read/write via n8n + Edge Functions) |
+| **n8n** | Automation glue + sync orchestration | Background (no manual interaction) |
+| **WordPress** | Publishing endpoint + audience-facing | Editors (publish), readers (consume) |
+
+### Why this stack (v2.3 reasoning)
+
+| Concern | Solution | Why this tool |
+|---|---|---|
+| Team workflow continuity | Notion (existing) | ทีมการตลาดใช้อยู่แล้ว ไม่บังคับเปลี่ยน |
+| Content management | WordPress + WPML | Editorial team familiarity + multilingual best |
+| SEO automation | RankMath Pro | Sitemap, schema base, hreflang, redirects |
+| Knowledge graph | Supabase | PostgreSQL flexibility + scale + future-ready |
+| Cross-system glue | n8n | Low-code, self-host, full control |
+| Multi-brand isolation | Supabase RLS by brand_id | Built-in security |
+| AI integration | Supabase Edge Functions + pgvector | Layer 4-5 ready |
+
+### Why NOT tight coupling (lessons from v2.2 → v2.3)
+
+v2.2 proposed custom WordPress plugin to sync directly with Supabase:
+- ❌ 3-6 months dev work + ~150-300K initial cost
+- ❌ Forces team to use WordPress for KG management (vs Notion they prefer)
+- ❌ Vendor lock-in (plugin tied to specific WP version)
+- ❌ Sync logic = single point of failure
+
+v2.3 loose coupling via n8n:
+- ✅ 1-2 weeks setup using existing n8n
+- ✅ Team uses Notion (their natural workspace)
+- ✅ CMS-agnostic — can swap WordPress for any CMS later
+- ✅ n8n flows visible/debuggable/modifiable without code
+
+### Cost estimate (v2.3 stack — implementation phase 1)
+
+| Item | Cost | Notes |
+|---|---|---|
+| WordPress hosting (Cloudways/Kinsta) | $30-100/month | |
+| WPML license | ~$200/year | Multilingual Agency tier |
+| RankMath Pro | ~$70/year | |
+| ACF Pro | ~$50/year | |
+| Supabase Free tier | $0 | First 6 months OK |
+| Supabase Pro (later) | $25/month | When data scales |
+| n8n (self-host VPS) | ~$5-10/month | DigitalOcean/Hetzner |
+| Notion Team | ~$8/user/month | Existing |
+| **Total Phase 1** | **~$50-150/month** | First 6 months |
+
+→ vs v2.2 estimate ที่ต้องใช้ ~150-300K dev cost + monthly maintenance
+
+### Multi-account Notion considerations
+
+ถ้ามี Notion มากกว่า 1 account (เช่น "Operations" + "Knowledge"):
+- n8n ต้องตั้ง credential แยก per account
+- Suggested split:
+  - **Notion "Operations"** (team-wide) — daily tracking, editorial calendar, content production
+  - **Notion "Knowledge"** (more controlled access) — cluster master, schema governance, citation library
+- Both sync to **single Supabase project** (KG remains unified)
+
+---
+
+## 1.7 Multilingual Architecture Principles
+
+### Core Principle
+> **"Entity is universal. Content is multilingual."**
+
+Entity (Niacinamide, Acne, Tretinoin) เป็น **ภาษาไม่ขึ้น** — มี ID เดียวข้ามภาษา
+สิ่งที่เปลี่ยนตามภาษา = display name, description, content article wrapping
+
+### 5 Rules ที่ห้ามผิด
+
+**Rule 1: One Entity ID across all languages**
+```
+Niacinamide entity_id = "abc-123-..."
+  ├── Thai display: "ไนอะซินาไมด์"
+  ├── English display: "Niacinamide"
+  ├── Chinese display: "烟酰胺"
+  └── Japanese display: "ナイアシンアミド"
+```
+ทุก translation อ้างอิง entity_id เดียวกัน
+
+**Rule 2: Translation pattern = Junction Table (not JSONB)**
+- ✅ ใช้ `seo_entity_translations` (entity_id + language_code composite PK)
+- ❌ ห้าม store ทุกภาษาใน JSONB (query/index ลำบาก, scale ไม่ดี)
+
+**Rule 3: Schema markup `@id` stays stable across languages**
+```json
+// Thai page schema
+{ "@id": "https://yourhealthnotion.com/skincare/niacinamide#entity",
+  "name": "ไนอะซินาไมด์",
+  "alternateName": ["Niacinamide","Vitamin B3","Nicotinamide"],
+  "inLanguage": "th-TH" }
+
+// English page schema (same @id!)
+{ "@id": "https://yourhealthnotion.com/skincare/niacinamide#entity",
+  "name": "Niacinamide",
+  "alternateName": ["ไนอะซินาไมด์","Vitamin B3"],
+  "inLanguage": "en-US" }
+```
+→ AI/Google เห็นว่าเป็น entity เดียวกันแม้ในเพจคนละภาษา
+
+**Rule 4: hreflang auto-generated by WPML, validated by RankMath**
+- ตั้งค่า WPML ให้ generate hreflang
+- Validate ผ่าน RankMath SEO analyzer
+- Sitemap รวม `<xhtml:link rel="alternate" hreflang="..."/>` ครบ
+
+**Rule 5: Citations อ้างอิงต้นฉบับเสมอ**
+- Paper ภาษาอังกฤษ → ทุก language version ของบทความอ้างอิง paper อังกฤษเดียวกัน
+- เก็บ `source_language` ใน `seo_citations`
+- เก็บ `available_translations JSONB` ถ้ามี Thai abstract
+
+### Translation Quality Tiers
+
+```
+Tier 1 — Native author writes from scratch (highest quality, slowest)
+Tier 2 — Native editor heavily edits AI translation
+Tier 3 — Light editor pass on AI translation
+Tier 4 — AI translation only (ห้ามใช้ — Google penalizes)
+```
+
+ทุก page ต้อง track tier ใน `translation_quality_tier`
+
+### Day 1 Setup (Thai-only) — แต่เตรียมโครงสร้าง
+
+แม้เริ่มเขียน Thai เท่านั้น ต้อง:
+- ✅ ตั้ง URL structure ใช้ subdirectory (Thai เป็น default ที่ root)
+- ✅ Schema มี `"inLanguage": "th-TH"` ทุกที่
+- ✅ Entity table มี `seo_entity_translations` row สำหรับ language_code='th'
+- ✅ Page table มี language_code='th' + hreflang_group_id (เตรียมไว้กับภาษาอนาคต)
+- ✅ llms.txt ที่ root เป็น Thai
+- ⏳ ภาษาอื่น = empty translations table (จะ populate phase ต่อไป)
+
+ทำแบบนี้ → พอเปิดภาษาที่ 2 แค่ "ใส่ data" ไม่ต้อง migrate schema
+
+---
+
+## 1.8 AI Era Preparation
+
+### Beyond LLMO: Layer 4-5 Activation
+
+```
+┌─────────────────────────────────────────────────────┐
+│  Layer 5: AI Agent Access (MCP) — 2026+ Reality    │
+│  • ChatGPT Operator (browsing agent)                │
+│  • Anthropic Computer Use                            │
+│  • Gemini autonomous browsing                        │
+│  • Future: MCP-aware sites                           │
+├─────────────────────────────────────────────────────┤
+│  Layer 4: Vector/Embedding (pgvector)               │
+│  • Semantic search across entity graph               │
+│  • Similar entity discovery                          │
+│  • Content recommendation engine                     │
+└─────────────────────────────────────────────────────┘
+```
+
+### What "AI Future-Ready" means in v2.4
+
+**1. Multi-platform AI tracking (not just 4)**
+ไม่ hardcode platform names — use `seo_ai_platforms` registry to add platforms when they emerge
+
+```
+Tier 1 platforms tracked Day 1:
+- ChatGPT (OpenAI)
+- Perplexity
+- Claude (Anthropic)
+- Gemini (Google)
+- Google AI Overview (separate from Gemini chat)
+
+Tier 2 platforms (pre-configured, activate when needed):
+- Grok (X/Twitter)
+- Copilot (Microsoft)
+- Meta AI (Facebook ecosystem)
+
+Tier 3 platforms (Asian/regional markets):
+- DeepSeek, Qwen (China — important for multi-language expansion)
+- Mistral (EU)
+
+Tier 4 (future placeholder):
+- Voice: Siri, Google Assistant, Alexa
+- Chat: LINE OA AI, WhatsApp Bot AI
+```
+
+**2. AI Agent visit tracking (Layer 5)**
+เมื่อ AI agent (ไม่ใช่ user) visit เว็บเรา — ต้องรู้และ optimize ให้ agent เข้าใจดี
+
+Detection methods:
+- User-Agent string analysis
+- Behavior pattern (rapid systematic crawl, no scroll variance)
+- Declared via robots.txt + bot directives
+- IP address patterns (Cloudflare bot intelligence)
+
+→ Track ใน `seo_ai_agent_visits` (Section 3.11.4)
+
+**3. Voice & Conversational Search Optimization**
+2026+ Search modality split:
+- **Text search:** ลดลง (Google search down 5-10% YoY)
+- **AI chat search:** เพิ่มขึ้น 200%+ YoY
+- **Voice search:** stable, growing in mobile-first markets (Thailand)
+- **Multimodal search:** image + voice + text combined (rising)
+
+→ Track ใน `seo_voice_search_queries` (Section 3.11.5)
+
+**4. Prompt-first content design**
+เปลี่ยน mindset จาก "เขียนสำหรับ keyword" → "เขียนสำหรับ prompt"
+
+```
+Old workflow (keyword-first):
+  Keyword "Niacinamide ใช้ยังไง"
+  → เขียนบทความที่ rank ดี
+  → SEO traffic from Google
+
+New workflow (prompt-first):
+  Predicted prompts (multi-variation):
+    - "Niacinamide คืออะไร ใช้ยังไง"
+    - "Niacinamide กับ Vitamin C ใช้คู่กันได้ไหม"
+    - "ฉันแพ้ง่าย ใช้ niacinamide ได้มั้ย"
+    - "What's the difference between niacinamide and vitamin B3"
+    - (English voice query) "Hey Siri, find me niacinamide products near"
+  → เขียนเนื้อหาที่ตอบทุก prompt
+  → Citation in AI Overview, ChatGPT, Perplexity
+```
+
+→ Track ใน `seo_predicted_prompts` (Section 3.11.1)
+
+### Why "Build Now, Activate Later"
+
+**Schema migration cost > schema overhead cost**
+
+```
+Cost comparison:
+
+Add 1 table later (when needed):
+  - 1-2 weeks dev work
+  - Migration scripts
+  - Code refactor (n8n flows, WP queries)
+  - Risk of bugs during migration
+  - Team disruption
+  Total: ~$5K-15K + time
+
+Add 1 table now (used in 6-12 months):
+  - 2-4 hours initial design
+  - Empty table cost: ~0 storage, 0 query overhead
+  - Already integrated with overall schema
+  Total: ~$200-500
+```
+
+→ ผมแนะนำ aggressive future-proofing สำหรับ stack ที่จะใช้ 5-10 ปี
+
+### Day 1 LLMO Foundation (พอเปิดเว็บ)
+
+แม้ยังไม่มี content แต่มี:
+- ✅ AI platforms registry seeded (5+ platforms)
+- ✅ llms.txt at root (Thai)
+- ✅ Schema markup ready (Article + Entity + Brand)
+- ✅ AI Agent detection enabled (CloudFlare bot management or similar)
+- ✅ Predicted prompts table ready (populated as content planned)
+
+### Phase rollout for LLMO features
+
+```
+Phase 1 (Month 1-3): Foundation only
+  - llms.txt published
+  - Schema markup baseline
+  - AI Citation Audit weekly (Flow D1)
+  - Citable Sentences in every pillar
+
+Phase 2 (Month 3-6): Activation
+  - Prompt Prediction workflow live
+  - Per-citation deep analysis (Flow D5)
+  - Co-citation tracking (Flow D6)
+  - Platform-specific playbooks applied
+
+Phase 3 (Month 6-12): Scale
+  - Voice search query logging
+  - AI Agent visit tracking
+  - Cross-platform optimization
+  - Auto-update llms.txt (Flow F1)
+
+Phase 4 (Year 2+): Frontier
+  - MCP integration (when standard)
+  - AI agent transactional flows
+  - Generative search experience optimization
+```
+
+---
+
+# PART 2: Conceptual Architecture
+
+> *🌳 The roots of EYWA — where ontology meets taxonomy, and meaning takes structural form.*
+
+## 2.1 Ontology vs Taxonomy — Two-Layer Model
+
+```
+┌──────────────────────────────────────────────────────┐
+│  ONTOLOGY LAYER (Meaning)                            │
+│  "สิ่ง" คืออะไร มี relationship ยังไง                   │
+│  → seo_entity_graph (universal core)                 │
+│  → seo_entity_* extensions (type-specific)           │
+│  → seo_cluster_master (topical classification)       │
+│  ใช้สำหรับ: Schema markup, knowledge graph, AI reason│
+├──────────────────────────────────────────────────────┤
+│  TAXONOMY LAYER (Organization)                       │
+│  "หน้า" อยู่ไหน กลุ่มไหน navigate ยังไง                 │
+│  → seo_website_page_master                           │
+│  → sitemap_section (per brand/vertical)              │
+│  ใช้สำหรับ: URL structure, navigation, Related       │
+└──────────────────────────────────────────────────────┘
+```
+
+---
+
+## 2.2 Knowledge Graph Structure (Universal)
+
+```
+brand (multi-vertical)
+  └── seo_cluster_master (SKOS controlled vocabulary)
+       ├── Cross-vertical clusters (acne, ingredient-actives, ...)
+       ├── Vertical-specific clusters (dental-implant, ...)
+       ├── Content format clusters (clinical-guides, glossary)
+       └── Audience clusters (athlete, senior, women...)
+
+entity_graph (universal core)
+  └── entity (entity_type = 'ingredient' | 'condition' | ...)
+       ├── topic_cluster_id → cluster_master
+       ├── parent_entity_fp (hierarchy)
+       ├── related_entities_fps[]
+       ├── schema_org_type (polymorphic)
+       ├── wikidata_id / wikipedia_url
+       ├── icd_10/11, snomed_ct, mesh_id, umls_cui
+       └── extension table (1:1 by entity_type)
+            ├── seo_entity_ingredient
+            ├── seo_entity_product
+            ├── seo_entity_procedure
+            ├── seo_entity_condition
+            ├── seo_entity_drug
+            ├── seo_entity_anatomy
+            ├── seo_entity_organization
+            ├── seo_entity_lab_test
+            └── seo_entity_device
+
+page_master
+  └── page
+       ├── primary_entity_fp → entity_graph
+       ├── related_entities_fps[]
+       ├── topical_cluster_id → cluster_master
+       ├── content_format_id → cluster_master
+       ├── reviewed_by_fp → authors_reviewers
+       └── cited_sources_fps[] → citations
+```
+
+---
+
+## 2.3 Topic Cluster Architecture (Hub-Spoke)
+
+```
+         [PILLAR HUB]
+         (e.g., Niacinamide)
+              │
+     ┌────────┼────────┐
+     │        │        │
+ [SPOKE]  [SPOKE]  [SPOKE]
+ 5% vs   Niac+Vit-C  Best
+ 10%     myth       products
+     │        │        │
+  ┌──┴──┐  ┌──┴──┐  ┌──┴──┐
+ SUB   SUB  SUB   SUB   SUB ...
+```
+
+### Link Flow Rules
+- **Every spoke** → links to Pillar (upward)
+- **Pillar** → links to all spokes (downward)
+- **Sibling spokes** → cross-link (sideways)
+- **Cross-cluster links** → entity-to-entity เมื่อมี semantic relation
+- **Max depth:** 3 levels (pillar → cluster → supporting)
+
+---
+
+## 2.4 Multi-Brand & Multi-Vertical Sharing Pattern
+
+```
+┌──────────────────────────────────────────────────┐
+│  UNIVERSAL (shared across all brands+verticals)  │
+│  brand_scope = ['*']                             │
+│  applicable_verticals = ['*']                    │
+│  ├─ Medical concepts (Photoaging, Inflammation)  │
+│  ├─ Drugs (Tretinoin, Doxycycline)               │
+│  ├─ ICD-10/11, SNOMED-CT codes                   │
+│  ├─ PubMed/CIR/SCCS citations                    │
+│  └─ Universal clusters                           │
+├──────────────────────────────────────────────────┤
+│  CROSS-VERTICAL (specific verticals share)       │
+│  applicable_verticals = ['dermatology','skincare'│
+│                          'aesthetic']            │
+│  ├─ Common conditions (Acne, Melasma)            │
+│  ├─ Shared procedures (Chemical Peel)            │
+│  └─ Cross-domain clusters                        │
+├──────────────────────────────────────────────────┤
+│  MULTI-BRAND, SINGLE VERTICAL                    │
+│  brand_scope = ['brand-a', 'brand-b']            │
+│  applicable_verticals = ['dental']               │
+│  ├─ Doctors (multi-clinic)                       │
+│  └─ Vertical-specific shared clusters            │
+├──────────────────────────────────────────────────┤
+│  BRAND-SPECIFIC                                  │
+│  brand_scope = ['specific-brand']                │
+│  ├─ Brand signature systems                      │
+│  ├─ Commercial (pricing, promo)                  │
+│  ├─ Location/Branch info                         │
+│  └─ Brand positioning                            │
+└──────────────────────────────────────────────────┘
+```
+
+---
+
+## 2.5 Entity Polymorphism Pattern
+
+### หลักการ
+Entity ทุกตัวอยู่ในตาราง `seo_entity_graph` (core) — แต่ลักษณะข้อมูลแตกต่างกันตาม `entity_type`
+
+3 strategies การจัดเก็บ:
+
+### Strategy 1: Core fields (ทุก entity มีเหมือนกัน)
+ใช้ field ใน `seo_entity_graph` ตรง ๆ
+- name, description, schema_org_type, wikidata_id, icd_10_code (ถ้ามี)
+
+### Strategy 2: Extension table (1:1 FK by entity_type)
+สำหรับ field ที่ entity ในกลุ่มเดียวกันใช้บ่อย และต้อง query/index
+- `seo_entity_ingredient` มี: cas_number, comedogenic_rating, ...
+- `seo_entity_procedure` มี: cpt_code, recovery_time_typical_days, ...
+
+### Strategy 3: JSONB type_properties
+สำหรับ field ที่หายาก ใช้น้อย ไม่ต้อง index
+```json
+{
+  "regulatory_notes_thailand": "...",
+  "common_brand_claims": ["anti-aging", "brightening"],
+  "stability_concerns": "oxidizes when exposed to light"
+}
+```
+
+### Decision Tree: ใช้ strategy ไหน?
+
+```
+ต้อง query/filter/JOIN field นี้ไหม?
+├── YES → ใช้ความถี่บ่อยไหม?
+│         ├── ทุก entity → Core (Strategy 1)
+│         └── เฉพาะ entity_type หนึ่ง → Extension table (Strategy 2)
+└── NO  → JSONB type_properties (Strategy 3)
+```
+
+### ตัวอย่างการใช้
+
+**Niacinamide (entity_type = 'ingredient')**
+- Core: name="Niacinamide", schema_org_type="DefinedTerm", wikidata_id="Q422983"
+- Extension (`seo_entity_ingredient`): inci_name, cas_number=98-92-0, comedogenic_rating=0
+- JSONB: { "trending_year": 2023, "common_misconception": "ไม่ควรใช้กับ vitamin C" }
+
+**All-on-4 (entity_type = 'procedure')**
+- Core: name="All-on-4 Dental Implant", schema_org_type="MedicalProcedure"
+- Extension (`seo_entity_procedure`): cpt_code, duration_typical_min=180, invasiveness_level="invasive"
+- JSONB: { "patient_satisfaction_rate_brandB": 0.94 }
+
+
+#### Add: Section 2.6 — Future: Semantic Web Integration 🔮 v3.0
+
+> **Quick reference:** Full plan in Part 24.2
+
+```yaml
+current_implementation:
+  - Knowledge Graph: PostgreSQL relations + arrays
+  - Entity relationships: FK + related_entities_fps array
+  - Schema.org JSON-LD output (Tier 1/2/3)
+  - Sufficient for: AI citation, content discovery, internal linking
+
+future_consideration: RDF/SPARQL/OWL
+  what_it_adds:
+    - Formal triple representation
+    - Semantic queries (SPARQL)
+    - Reasoning/inference rules
+    - Cross-organization knowledge sharing
+  
+  when_to_activate:
+    - Multi-org knowledge graph required
+    - Government/research data exchange
+    - Or: PostgreSQL + JSON-LD insufficient for new use case
+  
+  schema_provisions_today:
+    - entity_graph already uses URIs (schema:URI compatible)
+    - Schema.org types align with potential RDF mapping
+    - No redesign needed when activated
+
+→ See Part 24.2 for full activation plan + decision criteria
+```
+
+---
+
+## 2.6 Entity Genesis Protocol (EGP)
+
+> **Why this section:** Bible Part 4.1 กำหนด 5-Phase Sitemap Methodology — แต่ไม่มีคู่ขนานสำหรับ "วิธีสร้าง entities ของแบรนด์ใหม่". ทำให้ทีมที่เริ่ม brand ใหม่ต้องเดาเอาเองว่าจะแบ่ง domain/cluster ยังไง และเกิด **inconsistent entity proliferation** ระหว่างแบรนด์. EGP คือ deterministic methodology ที่อุดช่องว่างนี้
+
+### 2.6.1 Why Entity Genesis Needs Its Own Protocol
+
+```
+ปัญหาเดิม (ก่อนมี EGP):
+  Brand A: 6 domains, 24 clusters, 410 entities
+  Brand B: 11 domains, 18 clusters, 180 entities
+  Brand C: 4 domains, 38 clusters, 290 entities
+  
+  → ทุก brand ออกแบบเอง — ไม่มี standard
+  → cluster reuse cross-brand ทำไม่ได้
+  → schema mapping ไม่ consistent
+  → onboarding brand ใหม่ใช้เวลา 2-4 สัปดาห์
+
+หลังมี EGP:
+  ทุก brand ใช้ 5-step protocol เดียวกัน
+  → output: domain list + cluster list + entity list ที่ predictable
+  → cluster reuse cross-brand เป็นไปได้
+  → schema mapping deterministic
+  → onboarding brand ใหม่: 2-3 วัน
+```
+
+### 2.6.2 The 5-Step Universal Flow
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  Step 0: Brand Profile           [INPUT — Required]              │
+│  ─────────────────────────────────────────────────────           │
+│  Read from `brands` table (Part 5.3):                            │
+│    ├── vertical_family            (clinic/media/hospital/...)    │
+│    ├── healthcare_format          (single/multi/hospital)        │
+│    ├── medical_specialties[]      (list of specialty terms)      │
+│    ├── signature_offerings[]      (branded systems if any)       │
+│    ├── has_treatment_pathways     (boolean — derived)            │
+│    ├── target_audiences[]                                        │
+│    └── primary_language                                          │
+│                                                                   │
+│  Validation gate:                                                │
+│    ✓ vertical_family ∈ Part 1.4 supported list                   │
+│    ✓ medical_specialties[] ⊆ Part 14 vertical profiles           │
+└─────────────────────────────────────────────────────────────────┘
+                                ↓
+┌─────────────────────────────────────────────────────────────────┐
+│  Step 1: Domain Mapping          [3-9 domains per brand]         │
+│  ─────────────────────────────────────────────────────           │
+│  Apply 3 universal domain types (always include "Cross-cutting"):│
+│                                                                   │
+│  Type 1: Anatomical/Specialty Domain                             │
+│    → ตามอวัยวะหรือ specialty area                                  │
+│    → 1 domain ต่อ "ระบบหลักที่ brand รักษา"                         │
+│    → ตัวอย่าง: TMJ & Jaw, Airway & Breathing, Skin Pigmentation   │
+│                                                                   │
+│  Type 2: Methodological Domain (Optional)                        │
+│    → 1 domain ต่อ branded methodology ที่ครอบคลุมกว้าง               │
+│    → activate เมื่อ signature_offerings ≥ 1                        │
+│    → ตัวอย่าง: VTH Signature Systems, the brand Editorial Methods │
+│                                                                   │
+│  Type 3: Cross-Cutting Domain (Mandatory — เสมอ)                 │
+│    → 1 domain คงที่ — รวม Anatomy, Specialty, shared concepts     │
+│    → ไม่อยู่ใน specific area เฉพาะ                                  │
+│    → ตัวอย่าง: cross-cutting (anatomy, specialties, drugs)        │
+│                                                                   │
+│  Validation gate:                                                │
+│    ✓ ≥3 domains, ≤9 domains                                      │
+│    ✓ Domains ห้ามทับซ้อนเชิง concept                                │
+│    ✓ Cross-cutting domain มีเสมอ                                  │
+│    ✓ Methodological domain → ก่อน activate ต้องมี signature       │
+└─────────────────────────────────────────────────────────────────┘
+                                ↓
+┌─────────────────────────────────────────────────────────────────┐
+│  Step 2: Cluster Identification   [3-5 clusters per domain]      │
+│  ─────────────────────────────────────────────────────           │
+│  สำหรับแต่ละ domain — identify clusters ตาม 4 mandatory rules:    │
+│                                                                   │
+│  Rule 2.1 (Anchor):                                              │
+│    ทุก cluster ต้องมี 1 anchor concept                             │
+│    → มัก = primary condition หรือ patient concern                  │
+│    → ตัวอย่าง: cluster "tmj-orofacial-pain" anchor = TMJ Disorder │
+│                                                                   │
+│  Rule 2.2 (Critical Mass):                                       │
+│    ทุก cluster ต้องมี ≥5 entities                                  │
+│    → ถ้า <5 → รวมเข้า cluster อื่นใน domain เดียวกัน                 │
+│    → กฎนี้ enforce โดย Part 7.7 Cluster Creation Rules           │
+│                                                                   │
+│  Rule 2.3 (Pillar):                                              │
+│    ทุก cluster ต้องมี ≥1 L5 pillar guide ใน sitemap                │
+│    → ถ้าไม่มี → cluster ยังไม่พร้อมเป็น "active"                     │
+│    → state = pending_review (ดู Part 7.6)                         │
+│                                                                   │
+│  Rule 2.4 (Naming):                                              │
+│    Cluster ID format: {kebab-case-noun-phrase}                   │
+│    → unique cross-brand (universal namespace)                    │
+│    → reusable: brand B can adopt brand A's cluster                │
+│    → ตัวอย่าง: "tmj-orofacial-pain" ใช้ได้ทั้ง VTH + dental clinic │
+│                  อื่นๆ                                            │
+│                                                                   │
+│  Cross-Reference:                                                │
+│    Cluster registration → Part 7.7 (5 mandatory checks)          │
+│    Cluster lifecycle → Part 7.6 (states)                         │
+│    Cross-brand sharing → Part 7.4                                │
+└─────────────────────────────────────────────────────────────────┘
+                                ↓
+┌─────────────────────────────────────────────────────────────────┐
+│  Step 3: Entity Genesis           [Apply Genesis Checklist]      │
+│  ─────────────────────────────────────────────────────           │
+│  สำหรับแต่ละ cluster ใช้ Genesis Checklist (15 entity types):      │
+│                                                                   │
+│  ── Tier 1: Mandatory Core (≥1 of these per cluster) ──         │
+│   ☑ condition       — โรค/ภาวะที่ cluster พูดถึง                    │
+│      AND/OR                                                       │
+│   ☑ procedure       — หัตถการที่เกี่ยวข้อง                            │
+│      AND/OR                                                       │
+│   ☑ treatment       — การรักษาเชิงพฤติกรรม/ระยะยาว                  │
+│                                                                   │
+│  ── Tier 2: Optional (เพิ่มถ้ามี) ──                               │
+│   ☐ symptom         — อาการที่นำพาผู้ป่วยมา                         │
+│   ☐ device          — อุปกรณ์ที่ใช้ในหัตถการ                          │
+│   ☐ drug            — ยาที่ใช้                                     │
+│   ☐ ingredient      — active ingredient (skincare/wellness)      │
+│   ☐ lab_test        — การตรวจที่เกี่ยวข้อง                           │
+│   ☐ biomarker       — biomarker ที่วัด (e.g., hs-CRP, IL-6)       │
+│   ☐ concept         — แนวคิด/กลไก/ความเชื่อมโยง                       │
+│   ☐ product         — commercial product / branded system        │
+│   ☐ anatomy         — ส่วนของร่างกายที่เกี่ยวข้อง                      │
+│                                                                   │
+│  ── Tier 3: Cross-Cutting (auto-attach via brand_scope) ──       │
+│   • specialty       — สาขาเชี่ยวชาญที่รักษา (อยู่ใน cross-cutting   │
+│                        domain)                                    │
+│   • person          — แพทย์ที่ specialized — link via reviewedBy │
+│   • organization    — clinic/branch — link via providedBy        │
+│                                                                   │
+│  Validation gate per entity:                                      │
+│    ✓ entity_fingerprint unique format: 'entity:{slug}'           │
+│    ✓ entity_type ∈ Master List (15 types)                        │
+│    ✓ topic_cluster_id assigned                                   │
+│    ✓ schema_org_type ตาม mapping table (Part 26.3)               │
+│    ✓ brand_scope[] = ['*'] หรือ specific brand                    │
+└─────────────────────────────────────────────────────────────────┘
+                                ↓
+┌─────────────────────────────────────────────────────────────────┐
+│  Step 4: Relationship Wiring     [Apply Edge Vocabulary]         │
+│  ─────────────────────────────────────────────────────           │
+│  สำหรับแต่ละ entity — wire relationships ตาม 10 controlled edges:  │
+│  (ดู Part 2.7 Relationship Edge Vocabulary สำหรับ full reference) │
+│                                                                   │
+│  Mandatory edges (ทุก entity):                                    │
+│   • parent_of/child_of  → hierarchy (ถ้ามี)                       │
+│   • topic_cluster       → กลุ่ม (already from Step 3)             │
+│                                                                   │
+│  Conditional edges (ตาม entity_type):                             │
+│   • Procedure → uses (Device/Drug)                               │
+│   • Procedure → treats (Condition)                               │
+│   • Procedure → alternative_to (Procedure peer)                  │
+│   • Symptom → symptom_of (Condition)                             │
+│   • Treatment → requires_assessment (Procedure)                  │
+│   • Service → part_of (Program)                                  │
+│   • Procedure → evidenced_by (Case Study)                        │
+│   • Concept → subtype_of (Concept parent)                        │
+│   • Any → related_to (cross-cluster generic)                     │
+│                                                                   │
+│  Validation gate:                                                │
+│    ✓ ทุก entity มี ≥1 relationship edge (no orphans)              │
+│    ✓ Edge type ∈ controlled vocabulary (10 types)                │
+│    ✓ Bi-directional edges sync (treats ↔ treated_by)             │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### 2.6.3 Domain Type Specifications (Detailed)
+
+#### Type 1 — Anatomical/Specialty Domain
+
+```yaml
+purpose: "Group clusters ที่อยู่ในระบบ/อวัยวะ/specialty เดียวกัน"
+
+count_per_brand: 2-7
+
+selection_logic:
+  rule: "1 domain per major body system / specialty ที่ brand รักษา"
+  examples:
+    dental_clinic:
+      - "TMJ & Jaw"
+      - "Airway & Breathing"
+      - "Oral Health"
+      - "Restorative & Aesthetic"
+    
+    skincare_media:
+      - "Skin Concerns"
+      - "Skincare Routines"
+      - "Ingredients & Chemistry"
+    
+    sleep_clinic:
+      - "Sleep Disorders"
+      - "Airway & Breathing"
+      - "Sleep Optimization"
+
+constraint_anti_overlap:
+  ห้าม: "Domain ทับซ้อนเชิง concept"
+  example_bad: "Skin Concerns" + "Skin Conditions"
+               (= same concept, different naming)
+  example_good: "Skin Concerns" (consumer-side) +
+                "Cross-cutting" (clinical anatomy/biomarkers)
+```
+
+#### Type 2 — Methodological Domain (Conditional)
+
+```yaml
+activation_flag: "signature_offerings.length ≥ 1"
+
+count_per_brand: 0-1 typically (rare cases: 2)
+
+selection_logic:
+  rule: "1 domain ต่อ broad branded methodology ที่ครอบคลุม
+         หลาย service/treatment/program"
+  
+  example_yes:
+    VTH BioDent:
+      domain_name: "Signature Systems"
+      contains_clusters:
+        - vth-signature  (MBM, EmSmile, P1-P4 programs)
+  
+  example_no:
+    SmileScape "Lifetime Foundation":
+      reasoning: "เป็น tagline/philosophy ไม่ใช่ branded system
+                  ที่มี protocol → ไม่ activate Methodological Domain"
+
+constraint:
+  ต้องมี: ≥1 cluster ที่จัดเข้า domain นี้ ≥5 entities
+  ถ้าไม่ครบ: deactivate domain → fold เข้า cross-cutting
+```
+
+#### Type 3 — Cross-Cutting Domain (Mandatory)
+
+```yaml
+purpose: "Catchall สำหรับ entities ที่ไม่ผูก specific domain"
+
+count_per_brand: 1 (เสมอ)
+
+contains_typically:
+  - Anatomy entities (TMJ, Tongue, Skin Layers, Hyoid)
+  - Specialty entities (Periodontics, Maxillofacial Surgery)
+  - Drug entities ที่ใช้ข้าม cluster (Hyaluronic Acid, Botox)
+  - Shared concepts (Biofilm, Inflammation, Microbiome)
+  - Person entities (doctors)
+  - Organization entities (branches, partner labs)
+
+naming: "cross-cutting" (locked)
+
+note: "ห้ามมี condition/procedure ใน cross-cutting —
+       ต้องอยู่ใน specific cluster ของ Type 1 หรือ Type 2"
+```
+
+### 2.6.4 Cluster Identification — 4-Check Validation
+
+ก่อน promote cluster เป็น `state='active'` ต้องผ่าน 4 checks (extends Part 7.7):
+
+```yaml
+check_1_anchor:
+  question: "Cluster นี้มี anchor concept ชัดไหม?"
+  test: "บอก cluster ในประโยคเดียว แล้วประโยคนั้นมี condition/concern
+         เป็น keyword หลักไหม?"
+  pass_example:
+    cluster: tmj-orofacial-pain
+    anchor: "TMJ Disorder (M26.609) — โรคข้อต่อขากรรไกร
+            ที่ทำให้ปวด เคี้ยวลำบาก"
+  fail_example:
+    cluster: dental-stuff
+    why_fail: "ไม่มี anchor — ขอบเขตคลุมเครือ"
+
+check_2_critical_mass:
+  question: "Cluster นี้มี ≥5 entities ที่ผ่าน Step 3 Genesis Checklist?"
+  test: "นับ entities หลัง Step 3"
+  remediation: "ถ้า <5 → รวมเข้า cluster อื่นใน domain เดียวกัน
+                 หรือ ขยาย scope จนครบ"
+
+check_3_pillar_alignment:
+  question: "Cluster นี้มี ≥1 L5 pillar guide ใน sitemap?"
+  test: "Search sitemap section 6 (Knowledge) — มี pillar ที่
+         topic_cluster_id ตรงไหม?"
+  remediation: "ถ้าไม่มี → set state='pending_review' จนกว่า
+                pillar จะถูก commission"
+
+check_4_naming_uniqueness:
+  question: "Cluster ID เป็น kebab-case-noun-phrase และ unique
+             ใน global namespace?"
+  test_unique: "Search seo_topic_cluster_master.fingerprint"
+  test_format: "regex: ^[a-z0-9]+(-[a-z0-9]+)*$"
+  cross_brand_note: "ถ้าซ้ำ — อาจ reuse จาก brand อื่น
+                     (positive signal: ดู Part 7.4)"
+```
+
+### 2.6.5 Genesis Checklist Walk-through (Worked Example)
+
+ตัวอย่าง: Cluster `bruxism-clenching` ใน VTH BioDent
+
+```
+Step 3 Genesis Checklist Run:
+─────────────────────────────────────────────────────────────────
+
+☑ Tier 1 (Mandatory):
+  condition entities found:
+    - Sleep Bruxism (G47.63)
+    - Awake Bruxism (F45.8)
+    - Stress-Related Bruxism
+  procedure entities found:
+    - Bruxism Assessment & Driver Screening
+  treatment entities found:
+    - Night Guard & Splint Therapy
+    - Bite Rehabilitation
+    - Muscle & Posture-Based Recovery
+    - Neuromodulation for Sleep Bruxism
+    
+  Tier 1 status: ✓ pass (มี condition + procedure + treatment ครบ)
+
+☑ Tier 2 (Optional — found):
+  symptom entities found:
+    - (none — bruxism เป็น behavior ไม่ใช่ symptom ของอะไร)
+  device entities: (linked from cross-cluster)
+  concept entities found:
+    - Bruxism-Sleep Apnea Overlap
+
+☑ Tier 3 (Cross-Cutting auto-attached):
+  • specialty: oral-maxillofacial-surgery (already in cross-cutting)
+  • person: ทพ. อมรพงษ์ (linked via reviewedBy)
+  • organization: VTH BioDent (auto-link)
+
+Total entities in cluster: 11
+Critical mass check: 11 ≥ 5  ✓
+Pillar check: 6.1.14 "Bruxism — Complete Guide"  ✓
+Anchor check: Sleep Bruxism (clear)  ✓
+Naming check: bruxism-clenching (kebab-case, unique)  ✓
+
+Cluster state: ACTIVE  ✓
+─────────────────────────────────────────────────────────────────
+```
+
+### 2.6.6 Brand-Specific vs Universal Entities
+
+```yaml
+decision_tree:
+  question_1: "Entity นี้เป็น branded methodology/product ของ brand ไหน?"
+  
+  if_yes:
+    brand_scope: ['{brand_id}']      # single-brand
+    examples:
+      - "EmSmile®" → brand_scope=['vth_biodent']
+      - "Mouth Bio Mapping®" → brand_scope=['vth_biodent']
+  
+  if_no:
+    question_2: "Entity นี้ universal medical concept ที่ใช้ได้ทั่วไป?"
+    
+    if_yes_universal:
+      brand_scope: ['*']
+      examples:
+        - "TMJ Disorder" → brand_scope=['*']
+        - "Hyaluronic Acid" → brand_scope=['*']
+        - "Periodontal Disease" → brand_scope=['*']
+    
+    if_no_specific:
+      brand_scope: ['{brand_a}', '{brand_b}']  # multi-brand shared
+      examples:
+        - "GBT Airflow" → brand_scope ของ brands ที่ adopt
+                          (clinic_a, clinic_b)
+
+cross_brand_reuse_rule:
+  when_starting_new_brand:
+    1. Search seo_entity_graph WHERE entity_slug = '{candidate}'
+    2. ถ้ามี brand_scope=['*'] หรือ contain '{your_brand}'
+       → reuse, ไม่ต้องสร้างใหม่
+    3. ถ้ามีแต่ brand_scope ของ brand อื่น
+       → สร้างใหม่ด้วย entity_fingerprint='entity:{slug}-{your_brand}'
+       OR adopt by adding your brand to brand_scope[]
+  
+  benefits:
+    - cluster_master เพิ่ม brand ใหม่อัตโนมัติ
+    - schema knowledge graph cross-brand แข็งแรง
+    - editorial reuse content sections (sameAs)
+```
+
+### 2.6.6.1 Entity Uniqueness Guard (EUG) v1.0 🆕 v3.13
+
+> **Why this section exists:** Section 2.6.6 ("Search Before Create" discipline) ต้องการ human judgment ในการ detect duplicates. ที่ scale 15 brands × 500-2000 entities นี่ยังจัดการได้, แต่ที่ 30+ brands × 5,000+ entities — discipline ของมนุษย์ล้มเหลว. EUG เปลี่ยน Section 2.6.6 จาก "guideline" ให้เป็น **algorithmic enforcement** ที่ทำงานที่ระดับ database
+
+**Real-world scenarios EUG catches:**
+
+```yaml
+typo_protection:
+  scenario: "Operator creates 'tmj-therapyy' (95% similar to existing 'tmj-therapy')"
+  detection: "Layer 3b (trigram similarity) — BLOCK_likely_typo"
+  
+format_normalization:
+  scenario: "TMJ_Therapy / tmj_therapy / TMJ-therapy → all become 'tmj-therapy'"
+  detection: "Layer 2 (auto-normalize on INSERT)"
+  
+synonym_collision:
+  scenario: "'temporomandibular-joint-therapy' attempts INSERT"
+  context: "Existing 'tmj-therapy' has aliases: {en: ['TMJ therapy', 'temporomandibular joint therapy']}"
+  detection: "Layer 3a (alias collision check) — BLOCK"
+  
+plural_variations:
+  scenario: "'tmj-disorders' vs existing 'tmj-disorder'"
+  detection: "Layer 3b (similarity 0.92) — BLOCK_likely_typo"
+  
+cross_language_match:
+  scenario: "'การรักษาขากรรไกร' attempts INSERT, existing 'tmj-therapy' has Thai canonical"
+  detection: "Layer 3a (canonical_names search) — BLOCK"
+```
+
+**Architecture — Three Layers:**
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│ LAYER 1 — DATABASE UNIQUE CONSTRAINT                        │
+│ Hard block at INSERT/UPDATE — PostgreSQL native             │
+│ UNIQUE (entity_slug, brand_scope_primary)                   │
+└─────────────────────────────────────────────────────────────┘
+                          ↓
+┌─────────────────────────────────────────────────────────────┐
+│ LAYER 2 — SLUG NORMALIZATION                                │
+│ BEFORE INSERT/UPDATE trigger auto-applies                   │
+│ normalize_entity_slug(text) — kebab-case canonical          │
+└─────────────────────────────────────────────────────────────┘
+                          ↓
+┌─────────────────────────────────────────────────────────────┐
+│ LAYER 3a — ALIAS COLLISION CHECK                            │
+│ Application-level pre-flight (jsonb scan)                   │
+│ check_alias_collision(slug, aliases, brand_scope)           │
+└─────────────────────────────────────────────────────────────┘
+                          ↓
+┌─────────────────────────────────────────────────────────────┐
+│ LAYER 3b — TRIGRAM SIMILARITY WARNING                       │
+│ pg_trgm extension (already required)                        │
+│ find_similar_entities(slug, threshold, brand_scope)         │
+│ Thresholds: ≥0.90 BLOCK / 0.75 WARN / 0.60 INFO             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+**Decision Matrix (when collision detected):**
+
+```yaml
+operator_choices:
+  
+  option_A_adopt_existing:
+    when: "Existing entity matches intent perfectly"
+    action: "Use existing fingerprint, skip create"
+    common: "~60% of cases"
+  
+  option_B_add_alias:
+    when: "Existing entity covers concept but uses different terminology"
+    action: "UPDATE existing.aliases jsonb to include new term"
+    common: "~25% of cases"
+  
+  option_C_specify_brand:
+    when: "Entity exists universally but brand needs marketing variation"
+    action: "Use existing fingerprint, set brand_display_names jsonb"
+    common: "~10% of cases"
+  
+  option_D_force_create:
+    when: "Genuinely distinct concept (verified — not similar)"
+    action: "Override warning with documentation"
+    common: "~5% of cases (warnings, not blocks)"
+```
+
+**Operator Workflow:**
+
+```yaml
+when_creating_new_entity:
+  step_1_call_preflight:
+    sql: "SELECT * FROM eug_preflight_check('candidate-slug', '{}'::jsonb, ARRAY['vth-biodent']);"
+    result: "decision='CLEAN' or 'BLOCK' or 'WARN' + details jsonb"
+  
+  step_2_handle_decision:
+    if_CLEAN: "Proceed with INSERT"
+    if_BLOCK: "Review collision details → choose option A/B/C from decision matrix"
+    if_WARN: "Review similar entities → confirm distinct or adopt existing"
+    if_INFO: "Likely fine, proceed but verify aliases populated correctly"
+  
+  step_3_after_insert:
+    populate: "Multilingual aliases at create time (helps future EUG checks)"
+    verify: "fingerprint generated, display_name refreshed"
+```
+
+**Rationale — Why Two-Wave Design:**
+
+```yaml
+wave_1_now_phase_1A:
+  cost: "$0 (uses existing pg_trgm)"
+  coverage: "~85% of duplicate scenarios"
+  dependencies: "None new — pg_trgm already required for keyword fuzzy search"
+  deployment_time: "1-2 hours"
+  
+wave_2_future_phase_2:
+  cost: "~$0.015/month at 1000 entities"
+  coverage_addition: "+14% (deep semantic synonyms, cross-language)"
+  dependencies: "pgvector + seo_entity_embeddings (already planned)"
+  triggers: "Activated when embedding pipeline live + 100+ entities embedded"
+```
+
+**Implementation Spec:** Schema v1.9 Appendix G has full SQL implementation (4 functions, indexes, constraints, triggers, deployment plan).
+
+**See Also:**
+- Section 2.6.6.2 — EUG v2.0 Roadmap (Wave 2)
+- Schema v1.9 Appendix G — Full SQL Implementation
+- DECISION_RECORDS DR-011 — Decision rationale
+- Bible Part 19.3 — Data Quality Dimension 5 (Uniqueness)
+
+---
+
+### 2.6.6.2 EUG v2.0 Roadmap — Wave 2 (Vector Similarity) 🆕 v3.13
+
+> **Status:** Roadmap — activation criteria pending. NOT live in Phase 1A.
+
+EUG v1.0 (Wave 1) catches ~85% of duplicate scenarios using string-based methods. The remaining 15% are deep semantic synonyms that share no string overlap:
+
+```yaml
+examples_v1_misses:
+  
+  semantic_synonym_no_string_overlap:
+    candidate: "stress-induced-jaw-clenching"
+    existing: "bruxism" (with aliases: ["teeth grinding", "การกัดฟัน"])
+    miss_reason: "No string similarity, no alias overlap"
+  
+  cross_language_no_alias:
+    candidate: "睡眠呼吸中止症"  (Chinese for sleep apnea)
+    existing: "sleep-apnea" (English aliases only)
+    miss_reason: "No Chinese alias populated yet"
+  
+  conceptual_overlap_no_terminology:
+    candidate: "airway-collapse-during-sleep"
+    existing: "obstructive-sleep-apnea"
+    miss_reason: "Same concept, completely different terminology"
+```
+
+**Wave 2 Solution — Layer 4 Vector Similarity:**
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│ LAYER 4 — VECTOR SEMANTIC SIMILARITY                        │
+│                                                              │
+│ 1. Embed candidate description (OpenAI text-embedding-3)    │
+│ 2. Cosine similarity search vs seo_entity_embeddings         │
+│ 3. Threshold-based decision:                                 │
+│    - Cosine ≥ 0.92 → BLOCK_semantic_duplicate                │
+│    - Cosine 0.85-0.92 → WARN_likely_synonym                  │
+│    - Cosine 0.75-0.85 → INFO_related_concept                 │
+└─────────────────────────────────────────────────────────────┘
+```
+
+**Activation Criteria:**
+
+```yaml
+must_be_true_before_v2_activates:
+  
+  ☐ pgvector extension live in production
+  ☐ seo_entity_embeddings table populated (Schema Group 7)
+  ☐ Embedding pipeline (n8n + OpenAI) running stable
+  ☐ ≥100 entities have embeddings populated (warm baseline)
+  ☐ API cost monitoring proven < $5/month at current scale
+  ☐ Query performance < 100ms baseline (HNSW index tuned)
+  
+phase_2_timeline:
+  earliest: "Q3 2026"
+  blocker: "Embedding pipeline depends on Phase 2 AI Operations work"
+  decision_point: "After Phase 1 complete + 1000+ entities live"
+```
+
+**Cost Analysis:**
+
+```yaml
+v2_cost_model:
+  
+  embedding_call: "OpenAI text-embedding-3-small"
+  cost_per_call: "$0.00002 (1000 tokens)"
+  expected_size_per_entity: "150-300 tokens"
+  cost_per_check: "~$0.000015 (1.5 millicents)"
+  
+  scale_projections:
+    50_new_entities_per_month: "$0.00075/month"
+    500_new_entities_per_month: "$0.0075/month"
+    5000_new_entities_per_month: "$0.075/month"
+  
+  conclusion: "Negligible cost even at aggressive scale"
+```
+
+**No New Tables Required:**
+
+EUG v2.0 reuses existing infrastructure:
+
+```yaml
+existing_table_leveraged:
+  table: "seo_entity_embeddings (Schema Group 7)"
+  source_type: "'entity' (already supported)"
+  no_schema_changes: "Only new SQL function eug_preflight_check_v2()"
+  
+new_function_signature:
+  name: "eug_preflight_check_v2"
+  parameters:
+    - p_candidate_slug text
+    - p_candidate_aliases jsonb DEFAULT '{}'
+    - p_brand_scope text[] DEFAULT ARRAY['*']
+    - p_use_vector_similarity boolean DEFAULT true     # NEW v2
+    - p_vector_threshold real DEFAULT 0.85              # NEW v2
+    - p_candidate_description text DEFAULT NULL         # NEW v2 (for embedding)
+  returns: "Same TABLE schema as v1, with additional rows for L4 results"
+```
+
+**Coverage Improvement:**
+
+```yaml
+combined_v1_plus_v2_coverage:
+  layer_1_unique_constraint: "100% (hard block on exact duplicates)"
+  layer_2_normalize: "100% format consistency"
+  layer_3a_alias: "~70% synonym detection"
+  layer_3b_similarity: "~85% typo/plural detection"
+  layer_4_vector: "~99% semantic synonym detection (cumulative)"
+  
+  total_combined: "~99% duplicate prevention"
+```
+
+**Decision Rationale (DR-011):**
+
+EUG v2.0 deferred until Wave 1 proven valuable + embedding infrastructure ready. This prevents:
+- Premature optimization (Wave 1 catches 85%, may be sufficient)
+- API cost lock-in before scale justifies it
+- Coupling EUG to embedding pipeline reliability
+
+**See Also:**
+- Section 2.6.6.1 — EUG v1.0 (Wave 1) full spec
+- Schema v1.9 Appendix G.8 — v2 schema provisions
+- DECISION_RECORDS DR-011 — Two-Wave decision rationale
+
+---
+
+### 2.6.7 Output Artifact ของ EGP
+
+หลังรัน 5 steps จบ — ทุก brand ต้องได้ artifact ดังนี้:
+
+```yaml
+brand_entity_genesis_output:
+  brand_id: "{brand_slug}"
+  generated_at: "{timestamp}"
+  
+  domains:                      # 3-9 items
+    - domain_id
+      domain_type: anatomical | methodological | cross-cutting
+      domain_name
+      cluster_count
+  
+  clusters:                     # 15-30 items typically
+    - cluster_id
+      cluster_name
+      domain_id (FK)
+      anchor_entity_fingerprint
+      entity_count
+      pillar_url
+      state: active | pending_review
+  
+  entities:                     # 80-300+ items
+    - entity_fingerprint
+      entity_type             # ∈ 15 types
+      entity_slug
+      topic_cluster_id (FK)
+      schema_org_type
+      brand_scope[]
+      
+  relationships:                # 200-1000+ items
+    - from_entity_fingerprint
+      edge_type               # ∈ 10 edge types
+      to_entity_fingerprint
+      bidirectional: bool
+
+usage_downstream:
+  → Sitemap generation (Part 4.1 Phase 2 input)
+  → CPT activation flag derivation (Part 25.4)
+  → Schema knowledge graph build (Part 26)
+  → Notion workspace bootstrap (Part 18.6)
+```
+
+### 2.6.8 When to Re-run EGP
+
+```yaml
+triggers_full_rerun:
+  - Brand pivot (vertical change)
+  - Major service line addition (3+ new clusters needed)
+  - M&A — brand ใหม่ที่ adopt EYWA framework
+  - Annual review (ไม่ rerun — ใช้ Part 7.8 Review Cycle แทน)
+
+triggers_partial_rerun:
+  - เพิ่ม cluster 1-2 ใหม่:
+      → ทำเฉพาะ Step 2-4 ในขอบเขต cluster ใหม่
+      → ไม่กระทบ existing clusters
+  
+  - Brand เปิด specialty ใหม่:
+      → re-run Step 1 (Domain Mapping) ตรวจว่าต้องเพิ่ม
+         anatomical domain ใหม่ไหม
+      → ถ้าต้อง — re-run Step 2-4 สำหรับ cluster ของ specialty ใหม่
+  
+  - Brand ออก signature ใหม่:
+      → activate Methodological Domain (ถ้ายังไม่ active)
+      → run Step 2-4 สำหรับ signature cluster
+```
+
+### 2.6.9 Cross-References
+
+| Topic | See Also |
+|-------|----------|
+| 5-Phase Sitemap Methodology (parallel process) | Part 4.1 |
+| Cluster Creation 5 Mandatory Checks | Part 7.7 |
+| Cluster Lifecycle States | Part 7.6 |
+| Cross-Vertical Cluster Sharing | Part 7.4 |
+| Entity Polymorphism (storage strategy) | Part 2.5 |
+| Vertical Profiles (Step 0 inputs) | Part 14 |
+| Relationship Edge Vocabulary | Part 2.7 |
+| Schema mapping (Step 3 output → schema_org_type) | Part 26.3 |
+| Notion workspace bootstrap | Part 18.6 |
+
+---
+
+## 2.7 Relationship Edge Vocabulary
+
+> **Why this section:** Bible Part 2.5 (Polymorphism) อธิบายว่า entities เก็บข้อมูลยังไง — แต่ไม่ได้กำหนดว่า entities **เชื่อมกัน** ยังไง. ปัจจุบัน `seo_entity_graph` มีแค่ `parent_entity_fp` + `related_entities_fps[]` (generic array) — ทำให้ **ไม่สามารถ query เช่น "what does X treat?"** ได้ และ Schema knowledge graph แสดงเป็น generic `about` ทั้งหมด. Part 2.7 อุดช่องนี้ด้วย controlled edge vocabulary 10 ตัว
+
+### 2.7.1 Why Edge Typing Matters
+
+```
+ปัญหาของ generic relationships:
+
+  Before (untyped):
+    seo_entity_graph.related_entities_fps[] = [
+      'entity:tmj_pain',
+      'entity:btl_combined_unit',
+      'entity:corticosteroid_injection',
+      'entity:p1_tmj_program'
+    ]
+    
+    Query: "What does HA Injection treat?"
+    → ตอบไม่ได้ — ทุกอย่างปนกันใน array เดียว
+    
+    Schema output:
+      {"@type": "MedicalProcedure",
+       "about": [{...}, {...}, {...}, {...}]}
+    → ทุก relationship กลายเป็น "about" หมด
+
+  After (typed):
+    Edges:
+      HA Injection → treats        → TMJ Pain
+      HA Injection → uses          → BTL Combined Unit
+      HA Injection → alternative_to → Corticosteroid Injection
+      HA Injection → part_of       → P1 TMJ Program
+    
+    Query: "What does HA Injection treat?"
+    → SELECT to_fp WHERE from='ha-injection' AND edge='treats'
+    → returns: [tmj_pain]
+    
+    Schema output:
+      {"@type": "MedicalProcedure",
+       "indication": [{...TMJ Disorder...}],
+       "usesDevice": [{...BTL...}],
+       "isPartOf": {...P1 Program...}}
+    → ทุก edge map ตรง schema.org property ที่ถูกต้อง
+```
+
+→ Edge typing = **เปลี่ยน knowledge graph จาก "list of nodes" เป็น "directed labeled graph"**
+
+### 2.7.2 The 10 Edges (Master Vocabulary)
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  Locked Edge Vocabulary v3.4 — ห้ามเพิ่มใหม่นอกรายการนี้             │
+│  ถ้าจำเป็นจริง → RFC + Schema Review Board (Part 15.3)            │
+├─────────────────────────────────────────────────────────────────┤
+│  #   Edge Name           Type             Direction               │
+├─────────────────────────────────────────────────────────────────┤
+│  1   parent_of           Hierarchical     paired (parent↔child)   │
+│  2   subtype_of          Semantic         directional             │
+│  3   treats              Clinical         paired (treats↔treated_by)│
+│  4   symptom_of          Clinical         directional             │
+│  5   uses                Compositional    paired (uses↔used_by)   │
+│  6   alternative_to      Peer             undirected (symmetric)  │
+│  7   part_of             Compositional    paired (part_of↔contains)│
+│  8   requires_assessment Clinical         directional             │
+│  9   evidenced_by        Documentary      directional             │
+│  10  related_to          Generic          undirected (symmetric)  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### 2.7.3 Storage Pattern (Database)
+
+#### Recommended: Dedicated Junction Table
+
+```sql
+-- New table introduced v3.4 — replaces generic related_entities_fps[]
+CREATE TABLE seo_entity_relationships (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  
+  -- Edge endpoints
+  from_entity_fp text NOT NULL 
+    REFERENCES seo_entity_graph(entity_fingerprint) ON DELETE CASCADE,
+  to_entity_fp text NOT NULL 
+    REFERENCES seo_entity_graph(entity_fingerprint) ON DELETE CASCADE,
+  
+  -- Edge type (controlled vocabulary — 10 values + inverses)
+  edge_type text NOT NULL 
+    CHECK (edge_type IN (
+      'parent_of', 'child_of',           -- pair 1
+      'subtype_of',                       -- 2
+      'treats', 'treated_by',             -- pair 3
+      'symptom_of',                       -- 4
+      'uses', 'used_by',                  -- pair 5
+      'alternative_to',                   -- 6 (undirected)
+      'part_of', 'contains',              -- pair 7
+      'requires_assessment',              -- 8
+      'evidenced_by',                     -- 9
+      'related_to'                        -- 10 (undirected)
+    )),
+  
+  -- Edge metadata (optional)
+  edge_strength numeric DEFAULT 1.0,     -- 0-1, สำหรับ ranking
+  edge_note text,                         -- "off-label", "comorbidity" detail
+  bidirectional_synced boolean DEFAULT false,
+  
+  -- Brand scoping (edge อาจ apply เฉพาะบาง brand)
+  brand_scope text[] DEFAULT '{*}',
+  
+  -- Lifecycle
+  created_at timestamptz DEFAULT now(),
+  updated_at timestamptz DEFAULT now(),
+  
+  -- Prevent duplicate edges
+  UNIQUE (from_entity_fp, edge_type, to_entity_fp)
+);
+
+CREATE INDEX idx_edge_from ON seo_entity_relationships(from_entity_fp);
+CREATE INDEX idx_edge_to ON seo_entity_relationships(to_entity_fp);
+CREATE INDEX idx_edge_type ON seo_entity_relationships(edge_type);
+CREATE INDEX idx_edge_brand_scope 
+  ON seo_entity_relationships USING GIN(brand_scope);
+```
+
+#### Migration from Existing Schema
+
+```sql
+-- Step 1: New table created (above)
+
+-- Step 2: Migrate parent_entity_fp → typed edges
+INSERT INTO seo_entity_relationships (from_entity_fp, edge_type, to_entity_fp)
+SELECT entity_fingerprint, 'child_of', parent_entity_fp
+FROM seo_entity_graph
+WHERE parent_entity_fp IS NOT NULL;
+
+-- Step 3: Migrate related_entities_fps[] → 'related_to' (default type)
+-- Editorial team จะ re-classify เป็น typed edges ภายหลัง
+INSERT INTO seo_entity_relationships (from_entity_fp, edge_type, to_entity_fp)
+SELECT 
+  entity_fingerprint, 'related_to', unnest(related_entities_fps)
+FROM seo_entity_graph
+WHERE related_entities_fps IS NOT NULL;
+
+-- Step 4: Deprecate old fields (keep for 1 release as fallback)
+-- ALTER TABLE seo_entity_graph 
+--   ALTER COLUMN parent_entity_fp SET DEFAULT NULL;
+-- ALTER TABLE seo_entity_graph 
+--   ALTER COLUMN related_entities_fps SET DEFAULT '{}';
+```
+
+### 2.7.4 Per-Edge Detailed Specifications
+
+#### Edge 1 — `parent_of` / `child_of` (Hierarchical Pair)
+
+```yaml
+edge_pair: parent_of <→> child_of
+direction: paired (auto-sync inverse)
+cardinality: 
+  parent_of: 1 entity → N children
+  child_of: 1 entity → 1 parent (single inheritance)
+
+from_to_constraints:
+  ✓ Same entity_type (no cross-type hierarchy)
+  ✓ ห้าม cyclic (X→child_of→Y→child_of→X invalid)
+
+schema_org_mapping:
+  primary: (no direct schema.org property for hierarchy)
+  emit_via: schema:isPartOf (for non-organization types)
+  
+  for_organization_types:
+    parent_of → schema:subOrganization
+    child_of  → schema:parentOrganization
+
+use_cases:
+  procedure_hierarchy:
+    HA Injection (3.4.1.3.1)
+      child_of → TMJ Injection Therapy (3.4.1.3)
+  
+  organization_hierarchy:
+    King Square Branch
+      child_of → VTH BioDent (parent brand)
+
+anti_patterns:
+  ❌ HA Injection → parent_of → BTL Combined Unit
+     (cross-type: procedure ≠ device)
+  ❌ X → parent_of → Y → parent_of → X
+     (cyclic — DB constraint will reject)
+```
+
+#### Edge 2 — `subtype_of` (Semantic Hierarchy)
+
+```yaml
+edge: subtype_of
+direction: directional (no inverse — different from parent_of)
+cardinality: 1 entity → N subtype parents (multiple inheritance ok)
+
+from_to_constraints:
+  ✓ from = Concept | Condition | Treatment
+  ✓ to = same entity_type as from
+  ✓ Different from parent_of: subtype_of = "is-a" relationship 
+                                parent_of  = "part-of" relationship
+
+schema_org_mapping:
+  primary: schema:additionalType (URL of parent type)
+
+use_cases:
+  concept_taxonomy:
+    Awake Bruxism → subtype_of → Bruxism
+    Sleep Bruxism → subtype_of → Bruxism
+    Stress-Related Bruxism → subtype_of → Bruxism
+  
+  condition_taxonomy:
+    Gingivitis → subtype_of → Periodontal Disease
+    Periodontitis → subtype_of → Periodontal Disease
+
+key_difference_vs_parent_of:
+  parent_of:   X is COMPOSED OF parts (X has children)
+  subtype_of:  X IS A KIND OF Y (X inherits from Y)
+  
+  example:
+    "TMJ Injection Therapy" parent_of "HA Injection"
+      → therapeutic category contains specific procedure
+    "Sleep Bruxism" subtype_of "Bruxism"
+      → specific type of broader category
+```
+
+#### Edge 3 — `treats` / `treated_by` (Clinical Pair)
+
+```yaml
+edge_pair: treats <→> treated_by
+direction: paired (auto-sync inverse)
+cardinality: N:N
+
+from_to_constraints:
+  treats:
+    ✓ from = Procedure | Treatment | Drug | Device
+    ✓ to   = Condition ONLY
+    
+    rationale: "Schema.org alignment + AI knowledge graph standards.
+                Symptoms reach via chain: Symptom → symptom_of → Condition
+                ← treated_by ← Procedure"
+
+schema_org_mapping:
+  primary: schema:indication (for Drug, Procedure)
+  alt: schema:relevantSpecialty
+  
+  emitted_pattern:
+    {
+      "@type": "MedicalProcedure",
+      "@id": "{procedure_url}",
+      "indication": {
+        "@id": "{condition_url}",
+        "@type": "MedicalCondition",
+        "name": "{condition_name}"
+      }
+    }
+
+use_cases:
+  procedure_treats_condition:
+    HA Injection → treats → TMJ Disorder
+    Night Guard → treats → Bruxism
+    Maxillary Expansion → treats → Sleep Apnea
+  
+  drug_treats_condition:
+    Botulinum Toxin → treats → Sleep Bruxism (off-label)
+    Hyaluronic Acid → treats → TMJ Disorder
+
+note_on_indication_vs_off_label:
+  → ใช้ edge_note field จาก seo_entity_relationships
+    เพื่อ flag "off-label" vs "FDA-approved indication"
+  → กระทบ schema output:
+    on-label  → "indication": "FDA-approved"
+    off-label → "additionalProperty": "off-label use"
+```
+
+#### Edge 4 — `symptom_of` (Directional)
+
+```yaml
+edge: symptom_of
+direction: directional (no native inverse — symptoms don't "have" conditions)
+cardinality: N symptoms → 1+ conditions
+
+from_to_constraints:
+  ✓ from = Symptom (entity_type='symptom')
+  ✓ to   = Condition (entity_type='condition')
+
+schema_org_mapping:
+  primary: schema:signOrSymptom (emitted on Condition page, inverse direction)
+  
+  emitted_pattern_on_condition_page:
+    {
+      "@type": "MedicalCondition",
+      "@id": "{condition_url}",
+      "signOrSymptom": [
+        {"@id": "{symptom_1_url}", "@type": "MedicalSignOrSymptom"},
+        {"@id": "{symptom_2_url}"}
+      ]
+    }
+
+use_cases:
+  TMJ Pain → symptom_of → TMJ Disorder
+  Snoring → symptom_of → OSA (Obstructive Sleep Apnea)
+  Bleeding Gums → symptom_of → Periodontal Disease
+
+multi_condition:
+  Bleeding Gums → symptom_of → [Gingivitis, Periodontal Disease]
+  Bad Breath → symptom_of → [Periodontal Disease, Oral Dysbiosis, GERD]
+
+editorial_note:
+  เมื่อ symptom เป็น primary search term (high search volume) แต่ user
+  ไม่รู้จัก condition — symptom page ทำหน้าที่ "gateway" นำผู้อ่านไปสู่
+  condition page. Schema markup ช่วยให้ AI/Google เข้าใจความสัมพันธ์
+```
+
+#### Edge 5 — `uses` / `used_by` (Compositional Pair)
+
+```yaml
+edge_pair: uses <→> used_by
+direction: paired (auto-sync inverse)
+cardinality: N:N
+
+from_to_constraints:
+  uses:
+    ✓ from = Procedure | Treatment
+    ✓ to   = Device | Drug | Lab_test (for diagnostic procedures)
+
+schema_org_mapping:
+  for_device:
+    primary: schema:usesDevice
+  for_drug:
+    primary: schema:drug (when on MedicalProcedure)
+  for_lab_test:
+    primary: schema:study
+  
+  emitted_pattern:
+    {
+      "@type": "MedicalProcedure",
+      "usesDevice": {
+        "@type": "MedicalDevice",
+        "@id": "{device_url}",
+        "name": "BTL Combined Unit"
+      },
+      "drug": {
+        "@type": "Drug",
+        "@id": "{drug_url}",
+        "name": "Hyaluronic Acid"
+      }
+    }
+
+use_cases:
+  procedure_uses_device:
+    HA Injection → uses → BTL Combined Unit (ultrasound guidance)
+    Sleep Study → uses → WatchPAT ONE
+  
+  procedure_uses_drug:
+    HA Injection → uses → Hyaluronic Acid
+    Botox Therapy → uses → Botulinum Toxin
+  
+  procedure_uses_lab_test:
+    Inflammation Panel Procedure → uses → hs-CRP test, IL-6 test
+```
+
+#### Edge 6 — `alternative_to` (Peer, Undirected)
+
+```yaml
+edge: alternative_to
+direction: undirected (symmetric — A alternative_to B = B alternative_to A)
+cardinality: 
+  recommended: 3-5 per entity
+  soft_warn: ≥6 (editor sees warning)
+  hard_limit: 8 (cannot save beyond this)
+
+from_to_constraints:
+  ✓ Same entity_type only (procedure↔procedure, treatment↔treatment)
+  ✓ from.topic_cluster_id ควรเหมือนกับ to.topic_cluster_id
+
+schema_org_mapping:
+  primary: (no direct schema.org property)
+  emit_as: ItemList "Alternative Treatments"
+  
+  preferred_pattern_via_ItemList:
+    {
+      "@type": "ItemList",
+      "@id": "{page_url}#alternatives",
+      "name": "Alternative Treatments",
+      "itemListElement": [
+        {"@type": "ListItem", "position": 1, "item": {...}},
+        {"@type": "ListItem", "position": 2, "item": {...}}
+      ]
+    }
+
+use_cases:
+  TMJ injection alternatives (within cluster):
+    HA Injection 
+      ↔ alternative_to ↔ Corticosteroid Injection
+      ↔ alternative_to ↔ Viscosupplementation
+      ↔ alternative_to ↔ Botox Therapy (off-label TMJ)
+
+cardinality_rationale:
+  ≤5 = sweet spot สำหรับ UI (sidebar 4 + tab grid 4-6)
+  >8 = ไม่ใช่ "alternatives" แล้ว — เป็น category → ใช้ parent_of/contains แทน
+
+bidirectional_storage:
+  เพราะ undirected — เก็บ 2 rows สำหรับ 1 edge:
+    INSERT VALUES (A, 'alternative_to', B);
+    INSERT VALUES (B, 'alternative_to', A);
+  → ใช้ trigger เพื่อ auto-sync inverse
+```
+
+#### Edge 7 — `part_of` / `contains` (Compositional Pair)
+
+```yaml
+edge_pair: part_of <→> contains
+direction: paired (auto-sync inverse)
+cardinality: 
+  part_of:   1 entity → N parents
+  contains:  1 entity → N children
+
+from_to_constraints:
+  typical_uses:
+    ✓ from = Procedure | Treatment, to = Program (3.4.x → 3.4)
+    ✓ from = Service, to = Signature_System
+    ✓ from = Concept, to = Concept
+
+key_distinction_from_parent_of:
+  parent_of:  hierarchical taxonomy (TMJ Injection > HA Injection)
+              same entity_type
+  part_of:    composition / treatment pathway
+              cross entity_type allowed (Procedure → Program)
+
+schema_org_mapping:
+  primary: schema:isPartOf <→> schema:hasPart
+  
+  emitted_pattern:
+    {
+      "@type": "MedicalProcedure",
+      "@id": "{ha_injection_url}",
+      "isPartOf": {
+        "@type": "MedicalTherapy",
+        "@id": "{p1_program_url}",
+        "name": "P1 TMJ & Bruxism Relief Program"
+      }
+    }
+
+use_cases:
+  service_in_program:
+    HA Injection → part_of → P1 TMJ Program
+    Night Guard Therapy → part_of → P1 TMJ Program
+  
+  service_in_signature_system:
+    Microbiome Testing → part_of → Mouth Bio Mapping®
+    CBCT Scan → part_of → Mouth Bio Mapping®
+```
+
+#### Edge 8 — `requires_assessment` (Directional)
+
+```yaml
+edge: requires_assessment
+direction: directional (treatment requires diagnostic, not vice versa)
+cardinality: 1 treatment → N required assessments
+
+from_to_constraints:
+  ✓ from = Treatment | Program | Procedure (advanced)
+  ✓ to   = Procedure (diagnostic class) | Lab_test
+  ✓ to.entity_subtype = 'diagnostic' หรือ to.entity_type='lab_test'
+
+schema_org_mapping:
+  primary: schema:preparation (custom extension)
+  alt: schema:study
+  
+  custom_emission:
+    {
+      "@type": "MedicalTherapy",
+      "@id": "{program_url}",
+      "preparation": {
+        "@type": "MedicalProcedure",
+        "@id": "{mbm_url}",
+        "name": "Mouth Bio Mapping",
+        "additionalProperty": {
+          "@type": "PropertyValue",
+          "name": "requirementType",
+          "value": "mandatory_pre_treatment_assessment"
+        }
+      }
+    }
+
+use_cases:
+  signature_system_requires:
+    EmSmile® → requires_assessment → Mouth Bio Mapping
+    EmSmile® → requires_assessment → 3D Cephalometric Analysis
+  
+  program_requires:
+    P1 TMJ Program → requires_assessment → 3D TMJ Analysis
+    P2 Sleep Program → requires_assessment → Sleep Study (PSG)
+    P4 Inflammation Program → requires_assessment → Inflammation Panel
+```
+
+#### Edge 9 — `evidenced_by` (Documentary)
+
+```yaml
+edge: evidenced_by
+direction: directional (entity has evidence, evidence supports entity)
+cardinality: 1 entity → N case studies
+
+from_to_constraints:
+  ✓ from = Procedure | Treatment | Program | Device | Drug
+  ✓ to   = Case_study (entity_type='case_study')
+
+schema_org_mapping:
+  primary: schema:citation (when evidence is published case)
+  alt: schema:study
+  
+  emitted_pattern:
+    {
+      "@type": "MedicalProcedure",
+      "@id": "{ha_injection_url}",
+      "citation": [
+        {
+          "@type": "MedicalCaseReport",
+          "@id": "{case_url}",
+          "name": "TMJ Recovery — Non-Surgical Case",
+          "datePublished": "2025-08-15"
+        }
+      ]
+    }
+
+use_cases:
+  procedure_evidence:
+    HA Injection → evidenced_by → "TMJ เรื้อรัง — Non-Surgical Recovery"
+    UV Photofunctionalization → evidenced_by → "UV Implant Case 1"
+  
+  signature_evidence:
+    EmSmile® → evidenced_by → 
+      ["EmSmile Full Protocol Before/After",
+       "EmSmile Executive Transformation"]
+
+cross_reference_with_citations:
+  Edge นี้ different จาก Part 5.4 seo_page_citations:
+  → seo_page_citations: page → external citation (PubMed paper, guideline)
+  → evidenced_by edge:  entity → internal case study (own brand evidence)
+  
+  ทั้งคู่ contribute สู่ E-E-A-T แต่คนละ source type
+```
+
+#### Edge 10 — `related_to` (Generic, Undirected)
+
+```yaml
+edge: related_to
+direction: undirected (symmetric)
+cardinality: N:N (no limit แต่ recommend ≤10)
+
+from_to_constraints:
+  ✓ Any entity_type → Any entity_type
+  ✓ Use ONLY when no specific edge fits
+
+schema_org_mapping:
+  primary: schema:about | schema:mainEntity (loose semantic link)
+
+use_cases:
+  cross_cluster_semantic_link:
+    Bruxism (cluster: bruxism-clenching)
+      ↔ related_to ↔ OSA (cluster: sleep-apnea-airway)
+    Reasoning: "Sleep bruxism overlaps OSA — but not exactly
+                comorbidity, not parent/child"
+  
+  concept_to_concept_loose:
+    Oral Microbiome ↔ related_to ↔ Gut Microbiome
+
+usage_rule:
+  ⚠ ใช้ related_to ใน "fallback case" เท่านั้น —
+     ถ้า specific edge เหมาะกว่า → ใช้ specific edge
+  
+  decision_flow:
+    Question: "Edge ระหว่าง A → B เป็นแบบไหน?"
+    
+    1. Same entity_type + composition? → parent_of/child_of
+    2. Type hierarchy (is-a)? → subtype_of
+    3. Procedure/Treatment treats Condition? → treats
+    4. Symptom of Condition? → symptom_of
+    5. Procedure uses Device/Drug? → uses
+    6. Same-type peer alternative? → alternative_to
+    7. Component of larger system? → part_of
+    8. Pre-requisite assessment? → requires_assessment
+    9. Evidence support? → evidenced_by
+    10. None of above → related_to (last resort)
+
+editorial_metadata:
+  เมื่อใช้ related_to — ใส่ edge_note บอกธรรมชาติของความสัมพันธ์:
+    edge_note: "comorbidity"
+    edge_note: "shared mechanism"
+    edge_note: "common patient overlap"
+```
+
+### 2.7.5 Cross-Edge Validation Rules
+
+```yaml
+rule_1_no_self_loops:
+  constraint: from_entity_fp ≠ to_entity_fp
+  enforcement: DB CHECK constraint
+
+rule_2_no_duplicate_edges:
+  constraint: UNIQUE (from, edge_type, to)
+  enforcement: DB UNIQUE constraint
+
+rule_3_paired_edge_sync:
+  paired_edges: 
+    - parent_of <→> child_of
+    - treats <→> treated_by
+    - uses <→> used_by
+    - part_of <→> contains
+  enforcement: DB trigger (auto-insert inverse)
+
+rule_4_undirected_edge_sync:
+  undirected_edges:
+    - alternative_to (symmetric)
+    - related_to (symmetric)
+  enforcement: DB trigger (auto-insert reverse)
+
+rule_5_type_constraints:
+  enforcement: 
+    Application-level (PHP/n8n) + Notion property validation
+
+rule_6_cycle_detection:
+  applicable_to: parent_of, subtype_of, part_of (hierarchical edges)
+  enforcement: 
+    Application-level recursive check before INSERT
+    Cron job: nightly cycle detection scan
+
+rule_7_cardinality_limits:
+  alternative_to: ≤6 warn, ≤8 hard
+  related_to: ≤10 warn, ≤20 hard
+```
+
+### 2.7.6 How Edges Power Other Systems
+
+```
+┌────────────────────────────────────────────────────────────────┐
+│  Single Source of Truth — Edges drive 4 systems                 │
+└────────────────────────────────────────────────────────────────┘
+
+Edge: HA Injection → treats → TMJ Disorder
+                            │
+        ┌───────────────────┼───────────────────┬──────────────┐
+        ↓                   ↓                   ↓              ↓
+  ┌──────────┐      ┌─────────────┐    ┌──────────────┐  ┌──────────┐
+  │ Schema   │      │ Related     │    │ Sitemap XML  │  │ AI       │
+  │ Markup   │      │ Block (UI)  │    │ Internal Link│  │ Knowledge│
+  └──────────┘      └─────────────┘    └──────────────┘  └──────────┘
+
+→ ตั้งค่า edge ที่เดียว = 4 ระบบทำงานพร้อมกัน
+→ ไม่มี data drift ระหว่าง schema/UI/sitemap/AI
+```
+
+#### Direct Mapping Reference
+
+| Edge Type | Schema.org | Related Block (Part 8.8) | Sitemap XML |
+|-----------|------------|--------------------------|-------------|
+| parent_of | (custom) | Sidebar siblings | `<link rel="up">` |
+| child_of | (custom) | (parent reference) | `<link rel="up">` |
+| subtype_of | additionalType | Tab "Related Concepts" | `<link rel="related">` |
+| treats | indication / relevantSpecialty | Tab "ปัญหาที่เกี่ยวข้อง" | `<link rel="related">` |
+| treated_by | (inverse on Condition page) | Tab "การรักษา" | `<link rel="related">` |
+| symptom_of | signOrSymptom (inverse) | Sidebar (when on symptom page) | `<link rel="up">` |
+| uses | usesDevice / drug | Section "เทคโนโลยีที่ใช้" | `<link rel="related">` |
+| used_by | (inverse) | Section "ใช้กับหัตถการ" | `<link rel="related">` |
+| alternative_to | ItemList (custom) | Tab "ทางเลือกอื่น" | `<link rel="related">` |
+| part_of | isPartOf | Badge "ส่วนหนึ่งของ {Program}" | `<link rel="up">` |
+| contains | hasPart | Section "บริการในโปรแกรม" | `<link rel="section">` |
+| requires_assessment | preparation (custom) | Section "การตรวจก่อนรักษา" | `<link rel="related">` |
+| evidenced_by | citation | Tab "เคสจริง" | `<link rel="related">` |
+| related_to | about | Tab "หัวข้ออื่น" (low priority) | `<link rel="related">` |
+
+### 2.7.7 Worked Example: Complete Edge Set for HA Injection (TMJ)
+
+```yaml
+entity:
+  fingerprint: entity:ha_injection_tmj
+  type: procedure
+  cluster: tmj-orofacial-pain
+  brand_scope: ['*']  # universal procedure
+
+edges:
+  hierarchy:
+    - (entity:ha_injection_tmj) → child_of →
+      (entity:tmj_injection_therapy)
+  
+  clinical:
+    - (entity:ha_injection_tmj) → treats →
+      (entity:tmj_disorder)           # condition
+  
+  composition:
+    - (entity:ha_injection_tmj) → uses →
+      (entity:hyaluronic_acid)        # drug
+    - (entity:ha_injection_tmj) → uses →
+      (entity:btl_combined_unit)      # device (ultrasound guidance)
+  
+  pathway:
+    - (entity:ha_injection_tmj) → part_of →
+      (entity:p1_tmj_bruxism)         # VTH P1 program
+  
+  alternatives:
+    - (entity:ha_injection_tmj) ↔ alternative_to ↔
+      (entity:corticosteroid_injection_tmj)
+    - (entity:ha_injection_tmj) ↔ alternative_to ↔
+      (entity:viscosupplementation_tmj)
+    - (entity:ha_injection_tmj) ↔ alternative_to ↔
+      (entity:botox_tmj)
+  
+  evidence:
+    - (entity:ha_injection_tmj) → evidenced_by →
+      (entity:case_tmj_recovery_1)
+  
+  cross_cluster:
+    - (entity:ha_injection_tmj) ↔ related_to ↔
+      (entity:bruxism_osa_overlap)
+      edge_note: "shared muscle relaxation mechanism"
+
+total_edges: 11
+schema_output_size: ~2.8KB (knowledge graph rich enough for AI)
+```
+
+### 2.7.8 Edge Editor Workflow (Notion + WordPress)
+
+```yaml
+notion_workflow:
+  source_of_truth: Notion DB "Entity Relationships"
+  fields:
+    - From Entity (relation → Entities DB)
+    - Edge Type (select: 10 controlled values)
+    - To Entity (relation → Entities DB)
+    - Edge Note (text — optional)
+    - Edge Strength (number 0-1)
+    - Brand Scope (multi-select)
+  
+  validation_in_notion:
+    - Edge Type select limited to 10 values
+    - From/To Entity must be different
+    - Auto-suggest paired/inverse edge after save
+
+n8n_sync:
+  trigger: Notion edge created/updated
+  flow:
+    1. Validate edge type ∈ 10 vocabulary
+    2. Validate from/to entity_type compatibility
+    3. INSERT INTO seo_entity_relationships
+    4. Trigger paired edge auto-insert (if applicable)
+    5. Update WordPress ACF relationship fields (downstream)
+    6. Emit schema cache invalidation
+
+wordpress_acf_layer:
+  ACF fields ที่ผูก edges ดูที่ Part 25.5:
+    - eywa_relationships group
+    - มี field per edge type:
+      ├── treats[] (Relationship → condition CPT)
+      ├── alternative_to[] (Relationship → procedure CPT)
+      ├── part_of (Post Object → program CPT)
+      └── ... (ครบ 10 edges)
+  
+  ACF → Schema generation:
+    Read ACF → emit JSON-LD via Layer 2 pipeline (Part 26.4)
+```
+
+### 2.7.9 Cross-References
+
+| Topic | See Also |
+|-------|----------|
+| Entity Genesis Protocol (where edges are wired) | Part 2.6 (Step 4) |
+| Entity polymorphism (storage strategy) | Part 2.5 |
+| Cluster governance (cross-cluster edge implications) | Part 7.4, 7.6, 7.7 |
+| Related Section Logic (UI rendering) | Part 8.8 |
+| Schema generation (edge → JSON-LD) | Part 26.4 |
+| Schema Tier Architecture (@graph pattern) | Part 7.5 |
+| ACF relationship fields (WP layer) | Part 25.5 |
+| Multi-brand edge scoping | Part 10.2, 10.6 |
+| Sitemap XML generation | Part 4.1 |
+
+---
+
+### 2.7.10 Edge Vocabulary Evolution Policy 🆕 v3.13
+
+> **Why this section exists:** Section 2.7.2 defines 10 edges that cover ~95% of healthcare/wellness relationships. As EYWA expands to other verticals (education, finance, B2B SaaS, AI systems), the vocabulary may need additions. **Without governance policy, additions become reactive and risk ontology fragmentation.** This section formalizes when/how to add edges.
+
+#### Lock Status
+
+The 10 existing edges (Section 2.7.2) are **LOCKED**. No new edges may be added without:
+
+1. Satisfying ALL 4 criteria below
+2. Completing the formal addition workflow
+3. Recording decision in DECISION_RECORDS as a locked DR
+
+#### 4 Criteria for Adding an Edge
+
+ALL four must be met:
+
+```yaml
+criterion_1_real_use_case_proven:
+  threshold: "≥3 real entity pairs encountered where existing 10 edges fit poorly"
+  source: "Cases must come from actual EGP execution (not hypothetical)"
+  documentation: "Logged in DECISION_RECORDS pending section"
+  
+criterion_2_cross_brand_applicability:
+  threshold: "Usable across ≥2 brands (not single-brand specific)"
+  rationale: "Brand-specific needs handled via brand_scope[] on existing edges"
+  
+criterion_3_schema_org_mapping_exists:
+  threshold: "Maps to documented schema.org property OR generates measurable SEO benefit"
+  rationale: "Required for Bible Part 26 (Schema Generation Pipeline) integration"
+  
+criterion_4_orthogonal_to_existing:
+  threshold: "Captures distinct semantics not expressible by combining existing edges"
+  test: "Can the relationship be expressed by 'existing_edge + qualifier'? If yes, don't add."
+```
+
+#### Addition Workflow
+
+```yaml
+step_1_collect_evidence:
+  duration: "1-3 months production usage"
+  artifact: "Pending edges log with ≥3 real cases documented"
+  who: "Editorial team + Claude/AI flag candidates during EGP runs"
+
+step_2_propose_via_dr:
+  template: "## [DR-XXX] — Add Edge: '{edge_name}' (YYYY-MM-DD)"
+  required_sections:
+    - Evidence (3+ cases with brand_scope)
+    - Cross-brand applicability proof
+    - schema.org mapping spec (or SEO benefit measurement)
+    - Rationale why existing edges insufficient
+  status_when_proposed: "Proposed"
+
+step_3_review_period:
+  duration: "2 weeks"
+  reviewers:
+    - 1 strategy lead (ontology consistency)
+    - 1 engineering lead (implementation impact)
+    - 1 editorial lead (content workflow impact)
+  
+step_4_acceptance_or_rejection:
+  if_approved:
+    - DR status: Locked
+    - Update Bible Part 2.7.2 with new edge
+    - Update Schema seo_entity_relationships CHECK constraint
+    - Update n8n edge classification logic
+    - Update WordPress ACF eywa_relationships fields
+    - Migration timeline: 4-6 weeks for full deployment
+  if_rejected:
+    - Document rejection rationale in DR
+    - Use existing edges with notes column for special cases
+```
+
+#### Parking Lot — Future Edges Under Consideration
+
+Documented but NOT activated. Will be added if all 4 criteria are met.
+
+```yaml
+parking_lot_edges:
+  
+  measures:
+    description: "Diagnostic relationship — entity X measures property Y"
+    example: "hrv_test measures autonomic_recovery"
+    schema_org_candidate: "diagnoses or hasMeasurement"
+    blocked_by: "Need 3+ cross-brand cases (currently 1: VTH BioDent)"
+  
+  predicts_risk_of:
+    description: "Predictive — biomarker → future condition"
+    example: "elevated_hs_crp predicts_risk_of cardiovascular_disease"
+    schema_org_candidate: "relatedCondition + RiskFactor extension"
+    blocked_by: "Need 3+ real cases + schema.org mapping research"
+  
+  contraindicated_with:
+    description: "Treatment/drug interaction conflicts"
+    example: "warfarin contraindicated_with vitamin_k_supplements"
+    blocked_by: "Currently uses 'alternative_to' + notes (sufficient)"
+  
+  prerequisite_for:
+    description: "Sequential dependency — procedure A before procedure B"
+    example: "cbct_scan prerequisite_for dental_implant_surgery"
+    blocked_by: "Currently uses 'requires_assessment' (close enough)"
+```
+
+#### Anti-Patterns (Edge Additions to REJECT)
+
+```yaml
+do_not_add_edge_when:
+  
+  pattern_1_brand_specific:
+    bad: "'mbm_module_of' (VTH BioDent specific)"
+    fix: "Use 'part_of' edge with brand_scope=['vth-biodent']"
+  
+  pattern_2_temporary_campaign:
+    bad: "'q4_2026_promotion_for'"
+    fix: "Use 'related_to' with notes column, time-bound"
+  
+  pattern_3_existing_edge_sufficient:
+    bad: "'cures' (similar to 'treats')"
+    fix: "Use 'treats' — distinguish severity in entity properties"
+  
+  pattern_4_too_specific:
+    bad: "'is_secondary_outcome_marker_for'"
+    fix: "Use 'evidenced_by' with citation tier in notes"
+  
+  pattern_5_one_off_use_case:
+    bad: "'sponsors' (single brand uses)"
+    fix: "Out of scope for ontology — store in business_relationships table if needed"
+```
+
+#### Edge Removal Policy
+
+```yaml
+edge_deprecation_workflow:
+  
+  trigger: "Edge unused for 12 months across all brands"
+  
+  steps:
+    1: Document zero-usage in audit log
+    2: Propose deprecation via DR
+    3: Mark as deprecated in Bible (do not remove immediately)
+    4: 12-month grace period — no new usage, existing data preserved
+    5: Migration to alternative edge type required
+    6: Final removal in next major version
+
+current_status: "All 10 edges actively used as of v3.13"
+```
+
+#### Catch-All Pattern
+
+`related_to` edge intentionally exists for relationships that don't warrant new edges. Combined with `notes` column, handles 95% of edge cases without vocabulary expansion:
+
+```yaml
+related_to_use_pattern:
+  example_1:
+    from: "tmj-disorder"
+    to: "stress-management"
+    edge_type: "related_to"
+    notes: "Stress is bidirectional aggravating factor, not direct treatment"
+  
+  example_2:
+    from: "sleep-apnea"
+    to: "type-2-diabetes"
+    edge_type: "related_to"
+    notes: "Comorbidity association — both metabolic syndrome components"
+  
+  example_3:
+    from: "tmj-injection"
+    to: "physical-therapy"
+    edge_type: "related_to"
+    notes: "Often combined in treatment plan — sequential or parallel"
+```
+
+#### Cross-References
+
+| Topic | See Also |
+|-------|----------|
+| Edge Vocabulary (10 edges) | Section 2.7.2 |
+| EUG v1.0 (entity uniqueness) | Section 2.6.6.1 |
+| Schema Generation (edge → JSON-LD) | Part 26.4 |
+| seo_entity_relationships table | Schema v1.9 §4.5 |
+| Decision rationale | DECISION_RECORDS DR-012 |
+
+---
+
+# PART 3: Neural Authority Architecture
+
+> **Why this section exists:** Part 3 เป็น **canonical framework** สำหรับการ "definition" ของทุกหน้าในระบบ — ทุกหน้าต้องมี 3 มิติ (Layer + Tier + Funnel) ครบถึงจะถือว่า "structurally complete"
+>
+> **Origin:** เดิมทีเป็น operational framework ที่ใช้กันภายใน — v2.7 promote ขึ้นเป็น Part หลักของคัมภีร์ พร้อม industry verification (เทียบกับ HubSpot, Whitehat, Brafton, Ahrefs consensus 2026)
+
+---
+
+## 3.1 Core Principle — 3-Dimensional Page Definition
+
+> **Rule:** A page without ALL THREE dimensions defined is considered **structurally incomplete** และไม่ควร publish จนกว่าจะกรอกครบ
+
+```
+Every page must answer 3 questions:
+
+1. WHAT TYPE OF CONTENT?  → LAYER (1-7)
+   = Knowledge depth + content nature
+   = Authority/Money/Product/Concern/Knowledge/Protocol/Evidence
+
+2. HOW IMPORTANT?         → TIER (A/B/C/D)
+   = Authority weight + revenue contribution
+   = Industry term: "Money Page" / "Pillar" / "Supporting"
+
+3. WHERE IN JOURNEY?      → FUNNEL STAGE (Top/Mid/Bottom/Retention)
+   = User intent at this point
+   = Industry term: "TOFU/MOFU/BOFU + Retention"
+```
+
+### Validation Rule (DB-enforced soft, code-enforced hard)
+
+```sql
+-- Soft enforcement (warning only) — Q8 decision
+structurally_complete BOOLEAN GENERATED ALWAYS AS (
+  layer IS NOT NULL 
+  AND node_tier IS NOT NULL 
+  AND funnel_stage IS NOT NULL
+) STORED;
+
+-- AI confidence threshold (System Instruction Section XII)
+IF confidence_score > 0.3 THEN flag_as REVIEW;
+```
+
+---
+
+## 3.2 Dimension 1 — 7-Layer Knowledge Model
+
+> **Naming Philosophy v2.7:** Industry-recognizable terms (universal SEO) + Medical specialization (healthcare expertise)
+>
+> **Format:** `Layer N — {Industry Term} ({Medical Specialization})`
+
+### Layer Definitions
+
+```
+┌────────────────────────────────────────────────────────────────────────┐
+│ LAYER 1 — Authority Pages (Medical Brand & Practitioner Trust)         │
+│ ─────────────────────────────────────────────────────────────────────  │
+│ Industry: Trust Pages / Author Pages / About                           │
+│ Medical:  Brand identity, Doctor profiles, Credentials, Awards         │
+│                                                                        │
+│ Examples:                                                              │
+│   /about                                                               │
+│   /our-doctors                                                         │
+│   /dr-{slug}                                                           │
+│   /accreditations                                                      │
+│   /awards                                                              │
+│                                                                        │
+│ Schema:   Person, Physician, MedicalOrganization, MedicalClinic        │
+│ E-E-A-T:  HIGHEST — direct authority signal                            │
+└────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────────────────┐
+│ LAYER 2 — Money Pages (Clinical Services & Treatment Programs)         │
+│ ─────────────────────────────────────────────────────────────────────  │
+│ Industry: Money Pages / Service Pages / Commercial                     │
+│ Medical:  Services, Treatment programs, Specialty centers              │
+│                                                                        │
+│ Examples:                                                              │
+│   /services/{slug}                                                     │
+│   /treatments/{slug}                                                   │
+│   /programs/{slug}                                                     │
+│   /specialty-center/{slug}                                             │
+│                                                                        │
+│ Schema:   Service, MedicalProcedure, MedicalTherapy                    │
+│ E-E-A-T:  High (commercial intent + must show medical review)          │
+└────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────────────────┐
+│ LAYER 3 — Product Pages (Medical Devices & Diagnostic Technology)      │
+│ ─────────────────────────────────────────────────────────────────────  │
+│ Industry: Product Pages / Tech Pages                                   │
+│ Medical:  Devices (CPAP, WatchPAT, lasers), Diagnostic tools           │
+│                                                                        │
+│ Examples:                                                              │
+│   /technology/{device-slug}                                            │
+│   /equipment/{slug}                                                    │
+│   /devices/{slug}                                                      │
+│                                                                        │
+│ Schema:   MedicalDevice, DiagnosticProcedure, MedicalTest              │
+│ E-E-A-T:  Medium (informational + must connect to L6 Protocol)         │
+└────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────────────────┐
+│ LAYER 4 — Concern Pillars (Patient Symptoms & Conditions)              │
+│ ─────────────────────────────────────────────────────────────────────  │
+│ Industry: Pain-Point / Problem-Aware Content                           │
+│ Medical:  Patient-perspective conditions, symptoms                     │
+│                                                                        │
+│ Examples:                                                              │
+│   /by-concern/snoring                                                  │
+│   /by-concern/melasma                                                  │
+│   /symptom/{slug}                                                      │
+│                                                                        │
+│ Schema:   MedicalCondition, Symptom                                    │
+│ E-E-A-T:  HIGH (medical YMYL — must have doctor review)                │
+│ ⚠️ Cannibalization Shield: L4 ≠ L5 (different intent)                  │
+└────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────────────────┐
+│ LAYER 5 — Knowledge Hub (Clinical Education & Reference)               │
+│ ─────────────────────────────────────────────────────────────────────  │
+│ Industry: Knowledge Base / Wiki / Educational Content                  │
+│ Medical:  Clinical-perspective education, reference material           │
+│                                                                        │
+│ Examples:                                                              │
+│   /knowledge/{slug}                                                    │
+│   /clinical-guide/{slug}                                               │
+│   /medical-glossary/{term}                                             │
+│                                                                        │
+│ Schema:   Article, MedicalScholarlyArticle                             │
+│ E-E-A-T:  HIGHEST (academic-style citations + heavy referencing)       │
+│ ⚠️ Forbidden Schema: MedicalCondition (that's L4's territory)          │
+└────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────────────────┐
+│ LAYER 6 — Protocol Pages (Treatment Pathways & How-To)                 │
+│ ─────────────────────────────────────────────────────────────────────  │
+│ Industry: How-To / Process Content                                     │
+│ Medical:  Treatment workflows, post-care, clinical protocols           │
+│                                                                        │
+│ Examples:                                                              │
+│   /protocols/cpap-titration-guide                                      │
+│   /how-to/post-laser-care                                              │
+│   /aftercare/{procedure}                                               │
+│                                                                        │
+│ Schema:   MedicalTherapy, TreatmentPlan, HowTo                         │
+│ E-E-A-T:  HIGH (must specify clinical context)                         │
+└────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────────────────┐
+│ LAYER 7 — Evidence Pages (Clinical Case Studies & Patient Stories)     │
+│ ─────────────────────────────────────────────────────────────────────  │
+│ Industry: Case Studies / Testimonials / Social Proof                   │
+│ Medical:  Patient stories, case reports, treatment outcomes            │
+│                                                                        │
+│ Examples:                                                              │
+│   /case-studies/{id}                                                   │
+│   /patient-stories/{id}                                                │
+│   /testimonials                                                        │
+│                                                                        │
+│ Schema:   MedicalStudy, CaseReport, Review                             │
+│ E-E-A-T:  HIGH (proof) — must include PDPA-safe pseudonyms             │
+│ ⚠️ Must link back to L2 (Service) or L6 (Protocol)                     │
+└────────────────────────────────────────────────────────────────────────┘
+```
+
+### Layer Connection Rules (Cannibalization Shield + Authority Flow)
+
+```yaml
+cannibalization_shield:
+  - Layer 4 (Concern) describes patient PROBLEMS
+  - Layer 5 (Knowledge) provides clinical UNDERSTANDING
+  - Layer 6 (Protocol) provides solution SEQUENCING
+  - DO NOT allow keyword overlap between L4/L5/L6
+  - If overlap detected → flag as REVIEW (Q8 soft enforce)
+
+authority_flow_rules:
+  - Layer 3 (Tech) MUST connect to Layer 6 (Protocol)
+  - Layer 7 (Evidence) MUST link back to Layer 2 (Money) or Layer 6 (Protocol)
+  - Authority gravity: D → C → B → A (always upward)
+  - PageRank damping factor: 0.85 per hop = 15% authority loss per click
+```
+
+### Industry Mapping Reference
+
+| Our Layer | Universal SEO Term | Schema.org Type | E-E-A-T Signal |
+|-----------|-------------------|-----------------|----------------|
+| L1 Authority | Trust/Author Pages | Person, Physician, MedicalOrganization | **Highest** |
+| L2 Money | Money/Service Pages | Service, MedicalProcedure, MedicalTherapy | High (commercial) |
+| L3 Product | Product/Tech Pages | MedicalDevice, DiagnosticProcedure | Medium |
+| L4 Concern | Pain-Point Content | MedicalCondition, Symptom | High (medical) |
+| L5 Knowledge | Knowledge Base | Article, MedicalScholarlyArticle | **Highest** |
+| L6 Protocol | How-To Content | MedicalTherapy, TreatmentPlan, HowTo | High |
+| L7 Evidence | Case Studies | MedicalStudy, CaseReport, Review | High (proof) |
+
+→ ทีม onboarding ใหม่จาก consumer SEO อ่านปุ๊บเข้าใจ + เห็น healthcare specialization
+
+---
+
+## 3.3 Dimension 2 — Tier System (Authority Weight)
+
+> **Industry equivalent:** "Priority Silo" + "Money Page Architecture"
+
+```
+Tier A — Core Revenue Hub          (5-10% ของทั้งเว็บ)
+  ├─ Industry: Highest-priority money pages
+  ├─ Examples: Home, Specialty Center หลัก, Top-revenue treatment
+  ├─ Inbound: ≥ 15-30 internal links
+  ├─ Depth: ≤ 3 clicks (strict)
+  └─ ⚠️ ห้ามแต่งตั้ง Tier A โดย AI — Strategy Lead approval only
+
+Tier B — Strategic Cluster Hub     (15-25%)
+  ├─ Industry: Pillar pages
+  ├─ Examples: Layer 4 Concern Pillars (e.g., /by-concern/sleep-apnea)
+  ├─ Inbound: ≥ 8-15 links
+  └─ Depth: ≤ 4 clicks
+
+Tier C — Service / Money Page      (40-50%)
+  ├─ Industry: Commercial pages
+  ├─ Examples: Layer 2 services, Layer 3 technology, Layer 6 protocols
+  ├─ Inbound: ≥ 5-10 links
+  └─ Depth: ≤ 5 clicks
+
+Tier D — Supporting / Feeder Node  (20-30%)
+  ├─ Industry: Long-tail content, knowledge cluster
+  ├─ Examples: Layer 5 articles, Layer 7 case studies
+  ├─ Inbound: ≥ 2-5 links
+  └─ Depth: ≤ 6 clicks (acceptable)
+```
+
+### Authority Flow (verified by PageRank math)
+
+```
+   Tier A
+     ↑
+   Tier B ← receives from C+D, distributes to A
+     ↑
+   Tier C ← receives from D, distributes to B
+     ↑
+   Tier D → feeds upward only
+
+PageRank damping: 0.85 per hop
+  Page at depth 1 receives X
+  Page at depth 5 receives X × 0.85^5 = ~44% of X
+→ This math confirms WHY money pages must be shallow
+```
+
+---
+
+## 3.4 Dimension 3 — Funnel Stage (User Journey)
+
+> **Q7 confirmed:** 4-stage with Retention (healthcare/SaaS standard)
+
+```
+Top (Awareness)         — patient discovers problem
+  ├─ Layer fit: L4 Concern Pillar, L5 Knowledge
+  ├─ Intent: informational
+  └─ ⚠️ Must NOT hard-sell
+
+Mid (Evaluation)        — comparing solutions
+  ├─ Layer fit: L3 Product, L5 Knowledge (comparison), L6 Protocol
+  ├─ Intent: commercial, comparison
+  └─ Content: comparison tables, decision frameworks
+
+Bottom (Conversion)     — ready to book/buy
+  ├─ Layer fit: L2 Money pages
+  ├─ Intent: transactional
+  └─ Required: clear CTA, Pricing, Booking form
+
+Retention (Aftercare)   — post-treatment, follow-up, loyalty
+  ├─ Layer fit: L6 Protocol (aftercare), L7 Evidence
+  ├─ Intent: support, reinforcement
+  └─ Required: Must link back to L2 or L6
+```
+
+### Industry verification
+
+```
+3-stage (Top/Mid/Bottom) = mainstream consumer/B2C standard
+4-stage (+Retention)     = healthcare, SaaS, B2B standard
+                          ← We use this (medical YMYL = retention critical)
+```
+
+---
+
+## 3.5 Industry-Verified Rules
+
+### 🔴 Click Depth — Tier-Based (CORRECTED)
+
+> **Previous version had "strict ≤3" rule** — verified outdated. 2026 industry consensus = "most important pages within 3 clicks" (proportional, NOT absolute)
+
+```yaml
+tier_based_depth:
+  tier_a_money:        ≤ 3 clicks    # strict (UX critical)
+  tier_b_pillar:       ≤ 4 clicks
+  tier_c_service:      ≤ 5 clicks
+  tier_d_supporting:   ≤ 6 clicks    # acceptable
+
+override_warning:
+  - "Money page (Service/Treatment) at depth 5+ = REVIEW required"
+
+notion_field: crawl_depth_warning (formula auto-generates flag)
+```
+
+### 🔴 Anchor Distribution — Split Internal vs External (CORRECTED)
+
+> **Previous version "exact ≤ 35%" was DANGEROUS for external** — verified 2026 standard is 5-10% (Penguin algorithm threshold)
+>
+> **Internal links:** Google confirmed NO over-optimization penalty — but still diversify for AI/Google context
+
+```yaml
+external_backlinks:
+  branded:        35-50%    # safest, dominant
+  naked_url:      15-25%
+  generic:        10-20%
+  partial_match:  10-20%
+  exact_match:    5-10%     # ⚠️ NEVER exceed (Penguin)
+  semantic:       5-10%
+
+internal_links:
+  # No penalty risk, but diversify for AI context
+  per_page_1000_1500_words:
+    - 1 exact match (early placement)
+    - 2 partial match
+    - 1 branded
+    - 1 semantic variation
+  exact_match_overall_cap: ≤ 30%   # soft cap for diversity
+```
+
+### 🔴 Pillar-Cluster Ratio — 8-25 (CORRECTED from 12-30)
+
+> **Industry consensus 2026:**
+> - HubSpot: 6-10 minimum, 8-10 ideal
+> - Whitehat: 8-12 typical successful
+> - Brafton: minimum 5-8, comprehensive 15-25
+> - Linkbot: 8-15 cluster pages
+
+```yaml
+pillar_cluster_ratio:
+  minimum_viable:  8 supporting articles per pillar
+  typical:         12-15 supporting (medical conditions)
+  comprehensive:   20-25 supporting (broad pillars like "Sleep Disorders")
+  maximum:         25 (above = strategic justification required)
+
+per_supporting_page:
+  internal_links_total:    5-10
+  links_to_pillar:         1-2  # mandatory
+  cross_cluster_links:     2-3
+
+enforcement:
+  method: Supabase view + Notion dashboard (Q9 confirmed)
+  table: seo_topic_cluster_master.cluster_health_status
+  values: 'healthy' | 'undersized' | 'oversized'
+```
+
+### ✅ Schema-First Principle (Soft Enforcement)
+
+```yaml
+rule: "Before approving page structure, determine appropriate schema type"
+enforcement: Soft (Q8 confirmed)
+mechanism:
+  - Validation warning if schema_type doesn't match Layer expectation
+  - Flag as REVIEW (not blocked)
+  - Reference: seo_layer_schema_mapping table
+
+layer_schema_examples:
+  L1: [Person, Physician, MedicalOrganization]
+  L2: [Service, MedicalProcedure, MedicalTherapy]
+  L3: [MedicalDevice, DiagnosticProcedure, MedicalTest]
+  L4: [MedicalCondition, Symptom]                   # NOT Article
+  L5: [Article, MedicalScholarlyArticle]            # NOT MedicalCondition
+  L6: [MedicalTherapy, TreatmentPlan, HowTo]
+  L7: [MedicalStudy, CaseReport, Review]
+
+note: "If schema cannot be determined, page structure is NOT ready"
+```
+
+---
+
+## 3.6 AI Operational Limits
+
+```yaml
+AI_may:
+  - Classify Layer (1-7) — auto-suggest with confidence_score
+  - Suggest Tier (B/C/D)
+  - Assign Funnel Stage
+  - Suggest Link Role
+  - Detect orphan risk
+  - Detect cannibalization risk
+  - Suggest internal link mapping
+
+AI_must_NOT:
+  - Promote pages to Tier A automatically (Strategy Lead only)
+  - Redesign core business structure
+  - Create excessive cross-brand links
+  - Overwrite authority weights
+  - Ignore structural imbalance
+
+confidence_threshold:
+  - If confidence_score > 0.3 → flag as REVIEW (manual check required)
+  - If confidence_score < 0.3 → safe to auto-apply (still log)
+```
+
+---
+
+## 3.7 Output Format (when AI analyzes a page)
+
+```yaml
+page_analysis_required_fields:
+  - primary_layer: integer (1-7)
+  - layer_name: string (e.g., "Authority Pages")
+  - suggested_tier: string (A/B/C/D)
+  - funnel_stage: string (top/mid/bottom/retention)
+  - suggested_link_role: string (Structural/Authority/Contextual/Conversion)
+  - authority_flow_direction: string (upward/downward/balanced)
+  - cannibalization_risk: string (low/medium/high) + with_pages: list
+  - schema_type: string (must match Layer mapping)
+  - confidence_score: float (0-1)
+  - structurally_complete: boolean
+  - flag: optional 'REVIEW' if confidence > 0.3
+```
+
+---
+
+## 3.8 Primary Objective (mission statement)
+
+```
+The goal is NOT content volume.
+
+The goal IS:
+  ├─ Authority concentration (Tier A/B receive proper inbound)
+  ├─ Semantic depth (Layer-coherent topical coverage)
+  ├─ Clean internal link architecture (no orphans, clear gravity)
+  ├─ Cannibalization prevention (intent locking between L4/L5/L6)
+  ├─ Medical E-E-A-T reinforcement (L1 Authority + L7 Evidence)
+  └─ Scalable multi-domain structure (cross-brand intelligence)
+
+Every architectural decision must prioritize:
+  STRUCTURAL INTEGRITY > SPEED
+```
+
+---
+
+## 3.9 Reference: Database Schema Spec v0.2
+
+> **Companion document:** สำหรับ technical details ของ database schema (column-by-column, types, constraints, FKs) ดูที่ `Schema_Overview_v0.2.md`
+
+### Schema spec covers (12 Tier 1 mirror tables)
+
+```
+Tier 1 — Planning & Control (Notion ↔ Supabase mirror):
+  Existing 4:
+    1. brands                                    (15 rows)
+    2. seo_entity_graph                         (400-500 rows (typical mid-size))
+    3. seo_website_page_master                (1,000-1,500 rows (typical mid-size)) — adds: layer, branch_id, computed
+    4. seo_x_ads_keywords_contextual_master  (10,000-15,000 rows (typical)) — adds: classification fields
+  
+  NEW 7:
+    5. seo_branches                          ⭐ Day 1 (Local SEO foundation)
+    6. seo_topic_cluster_master              ⭐ governance + ratio enforcement
+    7. seo_authors_reviewers                 ⭐ E-E-A-T + Schema.org Physician
+    8. seo_doctor_assignments  (junction)    ⭐ cross-brand + cross-branch
+    9. seo_citations                         ⭐ Pattern A-E + external
+   10. seo_page_citations    (junction)      ⭐ write-once-cite-many
+   11. seo_page_templates                    ⭐ programmatic Type C
+  
+  Reference 1:
+   12. seo_layer_schema_mapping              ⭐ Layer → Schema.org validation
+```
+
+### All Q1-Q10 Decisions (locked in v0.2)
+
+```yaml
+schema_decisions:
+  Q1_brands_PK:           Keep brand_name PK as-is (defer to Phase 2)
+  Q2_computed_fields:     Selective Mirror — 13 critical fields only
+  Q3_notion_db_order:     branches → authors → topic_cluster → doctor_assignments → citations → templates
+  Q4_junction_tables:     doctor_assignments = junction DB, page_citations = simple relation
+  Q5_layer_column:        Day 1 NULLABLE + AI auto-suggest + 30-day manual review
+
+framework_decisions:
+  Q6_depth_control:       Hybrid — strict 3 for Tier A/B/C money, flex 4-6 for Tier D supporting
+  Q7_funnel_retention:    YES — added 'retention' enum value
+  Q8_schema_first:        Soft enforce (validation warnings + REVIEW flag, not DB constraint)
+  Q9_pillar_cluster:      View-based monitoring (Supabase + Notion dashboard, not DB constraint)
+  Q10_layer_naming:       Industry-first + medical specialization
+```
+
+→ See `Schema_Overview_v0.2.md` for column-by-column DDL specs
+
+---
+
+# PART 4: Sitemap Architecture Design
+
+> **Why this Part exists:** Part 3 บอกว่า "แต่ละหน้า" ต้องมี Layer + Tier + Funnel ครบ. Part 4 บอกว่า **"ทั้งเว็บ"** ต้องจัดวางหน้ายังไงให้ — Layer flow ถูก, Authority concentrate ดี, ไม่ orphan, scale ได้
+>
+> **Operational Promise:** อ่าน Part 4 จบแล้วต้อง:
+> - ออกแบบ sitemap ของไซต์ใหม่ได้ในครั้งเดียว (greenfield)
+> - Audit ไซต์เดิมแล้วบอกได้ว่าหน้าไหนควรย้ายไปไหน
+> - ระบุได้ว่าหน้าใหม่ที่จะสร้างควรอยู่ section ไหน, layer ไหน, tier ไหน
+
+---
+
+## 4.1 Design Methodology — 5 Phases
+
+> **หลักคิด:** ออกแบบ sitemap ต้องเป็น **top-down** (จาก business intent → cluster → page) ไม่ใช่ bottom-up (เห็น keyword แล้วสร้างหน้า)
+
+### Phase 1 — Vertical & Format Assessment (Day 1)
+
+```yaml
+goal: "รู้ว่าเว็บนี้คืออะไร — กระทบ section ไหน skip/keep"
+inputs:
+  - brand business model
+  - service offerings (รายการบริการ)
+  - branch count (สาขามีกี่สาขา)
+  - doctor/practitioner count
+  - target audience
+
+outputs:
+  - vertical_family    (healthcare | media | other)
+  - healthcare_format  (single_specialty | multi_specialty | dental | ...)
+  - medical_specialty[] (Schema.org tags)
+  - branch_count       (0 | 1 | 2+)
+  - sections_required  (subset of 8 sections)
+
+decision_rule:
+  IF vertical_family = healthcare AND branch_count >= 2:
+    → Section 8 (Branches) MUST exist
+  IF healthcare_format IN ('multi_specialty', 'hospital'):
+    → Specialty Center layer MUST exist in Section 3
+  IF vertical_family = media:
+    → Skip Section 3 (Services), 4 (Technology), 8 (Branches)
+    → Section 6 (Knowledge) becomes DOMINANT
+```
+
+### Phase 2 — Cluster Identification (Day 1-2)
+
+```yaml
+goal: "วาง topical authority foundation ก่อนคิด URL"
+
+inputs:
+  - SERP analysis (top 3 competitors per main service)
+  - Keyword universe (Volume + KD จาก keyword master)
+  - Patient/customer pain points (interview, reviews)
+  - Existing content audit (ถ้ามี)
+
+outputs:
+  - 3-5 main pillar topics (Tier B candidates)
+  - 8-25 supporting topics per pillar (Tier C/D)
+  - Cluster ID conventions per specialty
+  
+constraint:
+  pillar_cluster_ratio: 8-25 supporting per pillar (industry-verified)
+  specialty_prefix_required: IF healthcare_format = multi_specialty
+    e.g., 'dental-implants', 'sleep-cpap', 'tmj-bruxism'
+```
+
+### Phase 3 — Section Breakdown (Day 2-3)
+
+```yaml
+goal: "Map clusters → 8 standard sections + Numbered Hierarchy"
+
+process:
+  1. Start with 8 standard sections (gold ideology)
+  2. Skip sections not applicable (per Phase 1)
+  3. Assign clusters from Phase 2 to appropriate sections:
+     - Service clusters → Section 3 (Services)
+     - Concern clusters → Section 5 (By Concern)
+     - Knowledge clusters → Section 6 (Knowledge)
+  4. Identify Specialty Center hubs (if multi_specialty)
+  5. Generate sitemap node ID format
+
+outputs:
+  - Section breakdown matrix
+  - Specialty Center hub list (if applicable)
+  - Numbered hierarchy assignments
+```
+
+### Phase 4 — Page-Level Tagging (Day 3-5)
+
+```yaml
+goal: "ทุกหน้าได้ Layer + Tier + Funnel + Page Type ครบ"
+
+per_page_required:
+  - layer:                   1-7
+  - node_tier:               A | B | C | D
+  - funnel_stage:            top | mid | bottom | retention
+  - page_branch_relationship: A (brand_wide) | B (branch_landing) | C (local_programmatic) | D (brand_wide_tagged)
+  - schema_org_type:         match Layer expectation
+  - cluster_id:              link to seo_topic_cluster_master
+  - sitemap_node_id:         hierarchical numbered ID
+
+validation:
+  IF NOT structurally_complete THEN flag REVIEW
+  IF schema_type NOT IN seo_layer_schema_mapping[layer].required THEN warn
+```
+
+### Phase 5 — Connection Audit (Day 5)
+
+```yaml
+goal: "ตรวจให้ Authority Flow ถูก, ไม่มี orphan, depth ถูก"
+
+audit_checklist:
+  - Every page has at least 1 inbound link (no orphans)
+  - Tier A pages within 3 clicks
+  - Tier B pages within 4 clicks
+  - Pillar-Cluster ratio: 8-25 supporting per pillar
+  - Cross-Layer rules:
+    - L3 (Tech) connects to L6 (Protocol)? ✓
+    - L7 (Evidence) links back to L2 or L6? ✓
+  - Cannibalization shield: L4 vs L5 keyword overlap? ✗
+  - Cluster health: pillar_count + supporting_count balanced?
+
+fix_priority:
+  HIGH:    orphan pages, missing pillar
+  MEDIUM:  depth violations, cluster imbalance
+  LOW:     internal link diversity
+```
+
+---
+
+## 4.2 Standard 8 Sections (Gold Ideology)
+
+> **Rule:** 8 sections เป็น **gold ideology standard** — ทุก vertical เริ่มจากนี่. ปรับได้ (skip/rename) แต่ต้องสอดคล้องกับ Layer mapping. Section ไหน skip ต้อง justify.
+
+### Section 1 — Home
+
+```
+URL pattern:    /
+Sitemap node:   1
+Primary Layer:  L1 (Authority)
+Tier:           A (Core Revenue Hub)
+Funnel:         Top (entry point)
+
+Purpose:
+  - Brand identity + value proposition
+  - Navigation hub to other sections
+  - Authority signal (E-E-A-T, accreditations, awards)
+  - Quick service overview
+  - Primary CTA
+
+Required content:
+  - Hero (USP statement)
+  - Service overview (link to Section 3)
+  - Trust signals (doctors, accreditations)
+  - Branches strip (if multi-branch)
+  - Knowledge teaser (link to Section 6)
+  - Primary CTA (book/contact)
+
+Schema markup:
+  - Organization / MedicalClinic / NewsMediaOrganization
+  - WebSite (with SearchAction)
+  - sameAs links
+  - subOrganization (if multi_specialty)
+
+Universal: ✅ ทุก vertical
+```
+
+### Section 2 — Our Uniqueness (Brand Differentiation)
+
+```
+URL pattern:    /about-us, /our-story, /why-us
+Sitemap node:   2.x
+Primary Layer:  L1 (Authority)
+Tier:           B (Strategic Hub)
+Funnel:         Mid (consideration phase)
+
+Purpose:
+  - Why choose us (vs competitors)
+  - Brand story + mission
+  - Founder/leadership
+  - Awards + accreditations
+  - Doctor team (link to /our-doctors)
+
+Sub-pages typical:
+  2.1 About Us              (brand story)
+  2.2 Our Doctors           (team)
+  2.2.x Dr. {slug}          (1 page per doctor — Type D)
+  2.3 Accreditations        (certifications)
+  2.4 Awards
+  2.5 Why Choose Us         (differentiators)
+
+Schema markup:
+  - AboutPage
+  - Person / Physician (per doctor)
+  - EducationalOccupationalCredential
+
+Universal: ✅ ทุก vertical (อาจ rename ใน media → "About Editorial Team")
+```
+
+### Section 3 — Services (Clinical Care / Money Pages)
+
+```
+URL pattern (single_specialty):     /services/{service-slug}
+URL pattern (multi_specialty):      /services/{specialty}/{service-slug}
+URL pattern (hospital):             /departments/{dept}/services/{service-slug}
+Sitemap node:   3.x.y.z
+Primary Layer:  L2 (Money) + L6 (Protocol) + L3 (Product)
+Tier:           A-C (revenue-driving)
+Funnel:         Mid → Bottom
+
+Purpose:
+  - Convert traffic into bookings/inquiries
+  - Demonstrate clinical capability
+  - Pricing/packages
+  - Doctor team for this service
+  - Technology/equipment used
+  - Patient cases proof
+  - Aftercare protocols
+
+Sub-pages typical (single_specialty):
+  3.1 Services Overview     (Hub — Tier B)
+  3.1.1 {service-slug}      (Tier C — Type A or C)
+  3.1.2 ...
+
+Sub-pages typical (multi_specialty — multi-specialty pattern):
+  3.1 Services Overview         (Hub — All specialties)
+  3.1.1 Dental                  (Specialty Center — Hub Tier B)
+  3.1.1.1 Implants              (service spoke — Tier C)
+  3.1.1.2 Orthodontics          (service spoke — Tier C)
+  3.1.2 Sleep Medicine          (Specialty Center — Hub Tier B)
+  3.1.2.1 Sleep Test            (service spoke)
+  3.1.2.2 CPAP                  (service spoke)
+  3.1.3 TMJ                     (Specialty Center — Hub Tier B)
+  3.1.4 Anti-Aging              (Specialty Center — Hub Tier B)
+
+Schema markup:
+  - Service (parent)
+  - MedicalProcedure / MedicalTherapy
+  - Offer / AggregateOffer (pricing)
+  - subOrganization (Specialty Centers in multi_specialty)
+
+Universal: ✅ healthcare, ❌ media skip
+```
+
+### Section 4 — Technology (Medical Devices & Equipment)
+
+```
+URL pattern:    /technology/{device-slug}
+Sitemap node:   4.x
+Primary Layer:  L3 (Product)
+Tier:           C-D
+Funnel:         Mid (evaluation)
+
+Purpose:
+  - Showcase clinical-grade equipment
+  - Authority signal (modern, validated tech)
+  - Connect to relevant Service (Section 3)
+  - Connect to Protocol (Section 6) for usage
+
+Sub-pages typical:
+  4.1 Technology Overview
+  4.1.1 WatchPAT One           (sleep diagnostic)
+  4.1.2 Picosecond Laser       (aesthetic)
+  4.1.3 Cone Beam CT           (dental imaging)
+  ...
+
+Schema markup:
+  - MedicalDevice
+  - DiagnosticProcedure
+  - MedicalTest
+
+Connection rule (Layer 3 mandatory):
+  Each Technology page MUST link to:
+  - At least 1 Service that uses it (Section 3)
+  - At least 1 Protocol that explains it (Section 6)
+
+Universal: ✅ healthcare with devices, ❌ media skip, ⚠️ wellness optional
+```
+
+### Section 5 — By Concern (Patient-Perspective Conditions)
+
+```
+URL pattern:    /by-concern/{concern-slug}
+                /symptoms/{symptom-slug}
+Sitemap node:   5.x.y
+Primary Layer:  L4 (Concern Pillars)
+Tier:           B (Strategic Pillar)
+Funnel:         Top (problem-aware)
+
+Purpose:
+  - Patient describes problem in their words ("ฉันนอนกรน")
+  - Symptom-based entry point
+  - Bridge: Symptom → Condition → Service
+  - Authority for medical condition keywords
+
+Sub-pages typical:
+  5.1 By Concern Overview
+  5.1.1 Snoring                (concern pillar)
+  5.1.2 Sleep Apnea            (concern pillar)
+  5.1.3 TMJ Pain
+  5.1.4 Melasma
+  ...
+
+Schema markup:
+  - MedicalCondition (primary)
+  - Symptom
+  - MedicalRiskFactor
+
+⚠️ Cannibalization Shield:
+  L4 (Concern) describes patient PROBLEMS — patient perspective
+  L5 (Knowledge) provides clinical UNDERSTANDING — medical perspective
+  DO NOT use Article schema in Section 5 (that's Section 6's territory)
+
+Universal: ✅ healthcare, ⚠️ media (use as Topic Pillar)
+```
+
+### Section 6 — Knowledge (Clinical Education)
+
+```
+URL pattern:    /knowledge/{article-slug}
+                /clinical-guide/{guide-slug}
+Sitemap node:   6.x.y
+Primary Layer:  L5 (Knowledge Hub)
+Tier:           B-D
+Funnel:         Top (informational)
+
+Purpose:
+  - Clinical-perspective education (NOT patient stories)
+  - Reference material
+  - E-E-A-T building (citations, doctor reviewers)
+  - AI Overview citation target
+  - Long-tail keyword capture
+
+Sub-pages typical:
+  6.1 Knowledge Hub Overview
+  6.1.1 What is OSA            (clinical definition — Tier B)
+  6.1.1.1 OSA pathophysiology  (deep dive — Tier C)
+  6.1.1.2 OSA diagnosis criteria
+  6.1.2 CPAP basics
+  ...
+
+Schema markup:
+  - Article (primary)
+  - MedicalScholarlyArticle (cited content)
+  - HowTo (if procedural — but prefer Section under L6)
+
+⚠️ Cannibalization Shield (vs Section 5):
+  Section 5 = "I have snoring problem" (patient view)
+  Section 6 = "What is sleep apnea pathophysiology" (medical view)
+  Different keyword targets, different intent
+
+Universal: ✅ DOMINANT in media, ✅ healthcare
+```
+
+### Section 7 — Case Studies (Evidence Pages)
+
+```
+URL pattern:    /case-studies/{case-id}
+                /patient-stories/{story-id}
+                /testimonials
+Sitemap node:   7.x
+Primary Layer:  L7 (Evidence Pages)
+Tier:           C-D
+Funnel:         Mid → Bottom (proof)
+
+Purpose:
+  - Social proof (real outcomes)
+  - PDPA-safe pseudonymization
+  - Connect to Service (Section 3) or Protocol (Section 6)
+  - Trust signal for conversion
+
+Sub-pages typical:
+  7.1 Case Studies Overview
+  7.1.1 OSA Case 001           (pseudonymized)
+  7.1.2 OSA Case 002
+  7.2 Testimonials
+  7.3 Before/After (aesthetic)
+
+Schema markup:
+  - MedicalStudy
+  - CaseReport
+  - Review (for testimonials)
+
+Connection rule (mandatory):
+  Each Case Study MUST link back to:
+  - L2 Money page (Service used) OR
+  - L6 Protocol page (Treatment pathway)
+
+Universal: ✅ healthcare (DOMINANT in aesthetic), ⚠️ media (reporter cases)
+```
+
+### Section 8 — Contact / Branches
+
+```
+URL pattern:    /contact, /branches, /branches/{branch-slug}
+Sitemap node:   8.x
+Primary Layer:  L1 (Authority — branch profile)
+Tier:           B-C
+Funnel:         Bottom (action)
+
+Purpose:
+  - Local SEO foundation
+  - Branch-level info (1 page per branch — Type B)
+  - Contact form
+  - Map embed
+  - Hours of operation
+  - Programmatic local pages parent (Type C)
+
+Sub-pages typical:
+  8.1 Contact Hub              (general)
+  8.2 Branches Overview        (list of all branches)
+  8.2.1 Branch Sukhumvit       (Type B Branch Landing)
+  8.2.2 Branch Silom
+  ...
+
+Schema markup:
+  - ContactPage (8.1)
+  - MedicalClinic / Hospital / DentalClinic (per branch)
+  - PostalAddress + GeoCoordinates
+  - OpeningHoursSpecification
+
+Universal: ✅ healthcare with branches, ⚠️ media (single contact)
+```
+
+---
+
+## 4.3 Section ↔ Layer Mapping Matrix
+
+> **Rule:** Section ใดควรมี Layer ใดเป็น primary, ใดเป็น secondary, ใดที่ห้ามมี (cannibalization shield)
+
+### Primary Mapping Table
+
+| Section | Primary Layer | Secondary Layer | Forbidden Layer | Notes |
+|---------|---------------|-----------------|-----------------|-------|
+| **1. Home** | L1 Authority | L2, L4 (teasers) | — | Aggregator; teases all sections |
+| **2. Our Uniqueness** | L1 Authority | — | L4, L5 | About + Doctors |
+| **3. Services** | L2 Money | L3 Product, L6 Protocol | L4, L5, L7 | Money pages cluster |
+| **4. Technology** | L3 Product | L6 Protocol (linked) | L4, L5, L7 | Devices/equipment |
+| **5. By Concern** | L4 Concern | L7 Evidence (linked) | **L5** ⚠️ | Patient-perspective |
+| **6. Knowledge** | L5 Knowledge | L6 Protocol | **L4** ⚠️ | Clinical-perspective |
+| **7. Case Studies** | L7 Evidence | — | L4, L5 | Outcomes/stories |
+| **8. Contact/Branches** | L1 Authority (branches) | — | L4, L5, L6, L7 | Local SEO |
+
+### Cannibalization Shield Rules (Section 5 vs Section 6)
+
+> **The single most important rule in this matrix** — มิฉะนั้น L4 และ L5 จะแย่ง keyword กันเอง
+
+```yaml
+section_5_by_concern:
+  perspective: PATIENT (subjective)
+  keyword_pattern: "ฉัน + อาการ" / "I have + symptom"
+  examples:
+    - "ฉันนอนกรนทุกคืน"
+    - "หน้าฉันมีฝ้า"
+    - "I have sleep apnea"
+  schema_required: MedicalCondition, Symptom
+  schema_forbidden: Article, HowTo
+  layer: L4 (Concern Pillars)
+
+section_6_knowledge:
+  perspective: CLINICAL (objective)
+  keyword_pattern: "{condition} + clinical attribute"
+  examples:
+    - "Sleep apnea pathophysiology"
+    - "Melasma etiology"
+    - "OSA diagnostic criteria"
+  schema_required: Article, MedicalScholarlyArticle
+  schema_forbidden: MedicalCondition (that's Section 5)
+  layer: L5 (Knowledge Hub)
+
+detection_rule:
+  IF page targets keyword from BOTH patient + clinical perspective:
+    flag CANNIBALIZATION_RISK
+    require: split into 2 pages (1 in Section 5, 1 in Section 6)
+```
+
+### Authority Flow Rules (Cross-Section)
+
+```yaml
+mandatory_connections:
+  - Section 4 (Tech/L3) → Section 3 (Service/L2)
+  - Section 4 (Tech/L3) → Section 6 (Protocol/L6) 
+  - Section 7 (Cases/L7) → Section 3 (Service/L2) OR Section 6 (Protocol/L6)
+  - Section 5 (Concern/L4) → Section 3 (Service/L2) [solution path]
+
+optional_connections:
+  - Section 6 (Knowledge) → Section 5 (Concern) [from clinical to patient view]
+  - Section 5 (Concern) → Section 6 (Knowledge) [from concern to deep info]
+
+forbidden_connections:
+  - Section 7 (Cases) standalone (must link upward)
+  - Section 4 (Tech) without Service connection (orphan tech page)
+```
+
+---
+
+## 4.4 Numbered Hierarchy Convention
+
+> **Purpose:** unique sitemap node ID per page เพื่อ — internal reference, link mapping, audit, programmatic generation
+
+### Format Specification
+
+```
+{section}.{cluster}.{detail}[.{leaf}]
+
+ตัวอย่าง:
+  3.1.2     = Section 3 (Services) > Cluster 1 (Sleep) > Detail 2 (CPAP)
+  3.1.1.1   = Section 3 > Cluster 1 (Dental) > Detail 1 (Implants) > Leaf 1 (All-on-4)
+  6.1.3     = Section 6 (Knowledge) > Cluster 1 (Sleep Apnea) > Detail 3 (Diagnosis)
+  8.2.1     = Section 8 (Branches) > Branches list > Branch 1 (Sukhumvit)
+```
+
+### Depth Levels
+
+| Depth | Format | Meaning | Tier mapping |
+|-------|--------|---------|--------------|
+| 0 | `{S}` | Section index page (e.g., `3` = /services/) | A or B |
+| 1 | `{S}.{C}` | Cluster hub (e.g., `3.1` = /services/dental/) | B (Pillar) |
+| 2 | `{S}.{C}.{D}` | Detail page (e.g., `3.1.2` = service detail) | C |
+| 3 | `{S}.{C}.{D}.{L}` | Leaf page (e.g., `3.1.2.1` = sub-variant) | D |
+
+### Multi-Specialty Notation (Multi-Specialty Pattern)
+
+```
+For multi_specialty + hospital, additional nesting:
+
+  3              = /services/                   (Section index)
+  3.1            = /services/dental/            (Specialty Center — Hub)
+  3.1.1          = /services/dental/implants    (Service spoke)
+  3.1.1.1        = /services/dental/implants/all-on-4  (Service variant)
+  3.2            = /services/sleep/             (Specialty Center)
+  3.2.1          = /services/sleep/sleep-test
+  3.3            = /services/tmj/               (Specialty Center)
+  3.4            = /services/anti-aging/        (Specialty Center)
+```
+
+### Database Field
+
+```sql
+-- seo_website_page_master
+sitemap_node_id  text  -- format '{section}.{cluster}.{detail}[.{leaf}]'
+                       -- unique per brand
+                       -- indexed for fast lookup
+```
+
+### Sitemap Node ID Validation Rules
+
+```yaml
+rules:
+  format: must match regex ^[1-8](\.\d+){0,3}$
+  uniqueness: unique within brand_id
+  hierarchy_consistency:
+    - parent must exist (3.1.2 requires 3.1 to exist)
+    - cannot skip levels (3.1.1.2 requires 3.1.1.1 OR exists at 3.1.1)
+  section_validity:
+    - first digit ∈ {1,...,8}
+    - if vertical=media: cannot use sections 3, 4, 8
+  depth_validity:
+    - max depth = 4 (= 3 dots)
+    - depth aligns with Tier (depth 1 = Tier A/B, depth 4 = Tier D)
+```
+
+---
+
+## 4.5 Page Type Matrix (4 Types — LOCKED)
+
+> **Status:** Locked from extensive discussion. Covers all branch-relationship cases.
+
+### The 4 Types
+
+| Type | Name | branch_id | branch_tags | URL pattern | Count formula |
+|------|------|-----------|-------------|-------------|---------------|
+| **A** | Brand-Wide | NULL | NULL | `/services/{slug}` | unique pages |
+| **B** | Branch Landing | specific | NULL | `/branches/{branch}` | = N branches |
+| **C** | Local Programmatic | specific | NULL | `/{service}-{branch}` | = N × M (template) |
+| **D** | Brand-Wide Tagged | NULL | array | `/our-doctors/{doctor}` | unique pages with multi-branch tags |
+
+### Type A — Brand-Wide
+
+```yaml
+description: "Single page, content same regardless of branch"
+
+examples:
+  - /services/sleep-apnea-treatment
+  - /services/dental-implants
+  - /knowledge/what-is-osa
+  - /by-concern/snoring
+
+database:
+  page_branch_relationship: 'brand_wide'
+  branch_id: NULL
+  branch_tags: NULL
+
+content_rule:
+  - Content describes service/topic universally
+  - Pricing/availability mentions: "available at all branches" or list
+
+typical_share: ~70% of pages
+applies_to_layers: 1, 2, 3, 4, 5, 6
+```
+
+### Type B — Branch Landing
+
+```yaml
+description: "1 page per branch, describes the branch itself"
+
+examples:
+  - /branches/sukhumvit
+  - /branches/silom
+  - /branches/asoke
+
+database:
+  page_branch_relationship: 'branch_landing'
+  branch_id: <specific branch UUID>
+  branch_tags: NULL
+
+content_rule:
+  - About THIS specific branch
+  - Map embed, address, hours
+  - Services available at this branch (filter)
+  - Doctors at this branch (filter)
+  - Reviews specific to branch
+  - Branch-specific contact form
+
+count_formula: = N branches
+applies_to_layers: 1 (Authority for branch as MedicalClinic entity)
+```
+
+### Type C — Local Programmatic
+
+```yaml
+description: "Service × Branch combinations, generated from template"
+
+examples:
+  - /sleep-apnea-treatment-sukhumvit
+  - /dental-implants-silom
+  - /cpap-titration-asoke
+
+database:
+  page_branch_relationship: 'local_programmatic'
+  branch_id: <specific branch UUID>
+  branch_tags: NULL
+  programmatic_eligible: true
+  programmatic_template_id: <template UUID>
+  programmatic_variables: {service_slug, branch_slug, doctor_list, ...}
+
+content_rule:
+  - Generated from template + variables
+  - Target keyword: "{service} {location}"
+  - Same skeleton as parent service, customized per branch
+  - Always consult: branch hours, doctors at branch, reviews
+
+count_formula: = N branches × M services (selective by keyword volume)
+generation_trigger: "Only generate if {service} {location} keyword has search volume >= threshold"
+applies_to_layers: 2, 3 (Service + Tech localized)
+```
+
+### Type D — Brand-Wide Tagged
+
+```yaml
+description: "1 page exists, but tagged with multiple branches"
+
+examples:
+  - /our-doctors/dr-sirichai      (works at sukhumvit + silom)
+  - /case-studies/osa-case-001    (case happened at silom)
+  - /authors/dr-jane              (writes for the brand)
+
+database:
+  page_branch_relationship: 'brand_wide_tagged'
+  branch_id: NULL
+  branch_tags: ['sukhumvit', 'silom']  ← array of branch slugs
+
+content_rule:
+  - 1 unified page (no duplication)
+  - Page content lists all relevant branches
+  - For doctor pages: list "available at branches: X, Y, Z"
+  - For case studies: tag as "occurred at branch: Z"
+  - Filter mechanism on branch landing pages uses branch_tags
+
+typical_share: ~10% of pages (mostly doctors + case studies)
+applies_to_layers: 1 (doctors), 7 (case studies)
+```
+
+### Decision Tree (สำหรับสร้างหน้าใหม่)
+
+```
+สร้างหน้าใหม่?
+  │
+  ├─ หน้านี้พูดถึง "ตัวสาขา" โดยตรง? (about this branch, contact, map)
+  │   └─ YES → Type B (Branch Landing)
+  │
+  ├─ หน้านี้ target keyword "บริการ + ทำเล"? (e.g., "CPAP สุขุมวิท")
+  │   └─ YES → Type C (Local Programmatic, generate from template)
+  │
+  ├─ หน้านี้คือ "คน" หรือ "เคส" ที่อาจอยู่หลายสาขา?
+  │   └─ YES → Type D (Brand-Wide Tagged, use branch_tags array)
+  │
+  └─ ไม่เข้าข้อใดเลย
+      └─ Type A (Brand-Wide, branch_id = NULL) [DEFAULT]
+```
+
+### Schema Constraint
+
+```sql
+-- seo_website_page_master
+page_branch_relationship text NOT NULL DEFAULT 'brand_wide'
+  CHECK (page_branch_relationship IN (
+    'brand_wide',           -- Type A
+    'branch_landing',       -- Type B
+    'local_programmatic',   -- Type C
+    'brand_wide_tagged'     -- Type D
+  ));
+
+-- Validation rule:
+CHECK (
+  (page_branch_relationship = 'brand_wide' AND branch_id IS NULL AND branch_tags IS NULL) OR
+  (page_branch_relationship = 'branch_landing' AND branch_id IS NOT NULL AND branch_tags IS NULL) OR
+  (page_branch_relationship = 'local_programmatic' AND branch_id IS NOT NULL AND branch_tags IS NULL) OR
+  (page_branch_relationship = 'brand_wide_tagged' AND branch_id IS NULL AND branch_tags IS NOT NULL)
+);
+```
+
+---
+
+## 4.6 Multi-Vertical Variations
+
+> **Rule:** ทุก vertical เริ่มจาก 8 sections (gold ideology). ต่างกันที่ — section ไหน skip, section ไหน DOMINANT, section ไหน split
+
+### Vertical Family Decision
+
+```yaml
+vertical_family (REQUIRED):
+  - healthcare:    use medical schema, has L4 Concern, has doctors, may have branches
+  - media:         use NewsMediaOrganization, L5 Knowledge DOMINANT, no branches
+  - other:         general business, configure per case
+
+healthcare_format (REQUIRED if vertical_family = healthcare):
+  - single_specialty:      catch-all for specialty clinics (IVF, Eye, ENT, etc.)
+  - multi_specialty:       สหคลินิก (poly-clinic — multi-specialty pattern)
+  - dental:                pure dental focus (DentalClinic schema)
+  - physiotherapy:         PT/rehab focus
+  - sleep_medicine:        sleep-specific (VitalSleep pattern)
+  - aesthetic:             cosmetic-focused (competitor pattern)
+  - wellness_antiaging:    prevention/longevity-focused
+  - hospital:              large institutional
+```
+
+### Section Activation Matrix per Format
+
+| Section | single_specialty | multi_specialty | dental | physiotherapy | sleep_medicine | aesthetic | wellness_antiaging | hospital | media | other |
+|---------|:----------------:|:---------------:|:------:|:-------------:|:--------------:|:---------:|:------------------:|:--------:|:-----:|:-----:|
+| 1. Home | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| 2. Our Uniqueness | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ Editorial | ⚠️ |
+| 3. Services | ✅ flat | ✅ **+SC layer** | ✅ flat | ✅ flat | ✅ flat | ✅ + Excellence | ✅ programs | ✅ **+SC layer** | ❌ | ⚠️ |
+| 4. Technology | ✅ | ✅ | ✅ | ⚠️ | ✅ | ✅ | ⚠️ | ✅ | ❌ | ⚠️ |
+| 5. By Concern | ✅ focused | ✅ multi-grouped | ✅ | ✅ | ✅ focused | ✅ aesthetic concerns | ✅ longevity concerns | ✅ broad | ⚠️ Topic | ⚠️ |
+| 6. Knowledge | ✅ | ✅ | ✅ | ✅ | ✅ | ⚠️ less | ✅ | ✅ | ✅ **DOMINANT** | ⚠️ |
+| 7. Case Studies | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ **DOMINANT** | ✅ | ✅ | ⚠️ Reporter | ⚠️ |
+| 8. Contact/Branches | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ⚠️ Single | ⚠️ |
+
+**Legend:**
+- ✅ = Required, standard
+- ⚠️ = Conditional / customized
+- ❌ = Skip
+- **+SC layer** = Specialty Center layer required (section 1.6.7)
+- **DOMINANT** = This section is the primary content driver
+
+### Format-Specific Patterns
+
+#### single_specialty (VitalSleep pattern)
+```yaml
+section_3_pattern: flat
+  /services/sleep-apnea-treatment
+  /services/cpap-titration
+  /services/sleep-test
+
+cluster_count: 1-3 main clusters (focused depth)
+content_emphasis: clinical depth on the one specialty
+schema_org: MedicalClinic + medicalSpecialty=['Sleep Medicine']
+```
+
+#### multi_specialty (multi-specialty pattern) ⭐
+```yaml
+section_3_pattern: Specialty Center layer required
+  /services/dental/         ← Specialty Center (Hub)
+  /services/dental/implants
+  /services/sleep/          ← Specialty Center
+  /services/sleep/cpap
+  /services/tmj/            ← Specialty Center
+  /services/anti-aging/     ← Specialty Center
+
+cluster_count: 1-3 per specialty × N specialties
+content_emphasis: balance across specialties
+schema_org: MedicalClinic + subOrganization=[Dental Center, Sleep Center, ...]
+cluster_id_prefix: REQUIRED (e.g., 'dental-implants', 'sleep-cpap')
+```
+
+#### dental
+```yaml
+section_3_pattern: flat (pure dental)
+  /services/teeth-whitening
+  /services/dental-implants
+  /services/orthodontics
+  /services/root-canal
+
+schema_org: DentalClinic (specific Schema.org type)
+content_emphasis: cosmetic + functional balance
+section_4_emphasis: dental imaging tech (CBCT, digital scanners)
+```
+
+#### physiotherapy
+```yaml
+section_3_pattern: organize by body part / condition
+  /services/back-pain
+  /services/shoulder-rehab
+  /services/sports-injury
+
+schema_org: MedicalBusiness (PhysicalTherapy specialty)
+content_emphasis: movement-focused, exercise videos
+section_4_emphasis: light (less device-heavy)
+funnel_emphasis: recovery-focused (retention important)
+```
+
+#### sleep_medicine (VitalSleep pattern)
+```yaml
+section_3_pattern: flat sleep services
+  /services/sleep-test
+  /services/cpap-titration
+  /services/oral-appliance
+
+schema_org: MedicalClinic + Sleep Medicine specialty
+funnel_emphasis: diagnostic-heavy (sleep test → CPAP path)
+```
+
+#### aesthetic (competitor pattern)
+```yaml
+section_3_pattern: flat OR optional pseudo-hub ("Excellence Focus")
+section_7_emphasis: DOMINANT (before/after cases)
+section_6_emphasis: less (content-light)
+content_emphasis: visual-heavy
+funnel_emphasis: conversion-heavy (consultation booking)
+schema_org: MedicalClinic + ['Cosmetic Surgery','Dermatology']
+```
+
+#### wellness_antiaging
+```yaml
+section_3_pattern: program-based
+  /programs/longevity
+  /programs/iv-therapy
+  /programs/hormone-optimization
+
+funnel_emphasis: retention DOMINANT (subscription/membership)
+content_emphasis: prevention-focused, lifestyle
+schema_org: MedicalClinic + Aesthetic/Anti-Aging specialty
+```
+
+#### hospital
+```yaml
+section_3_pattern: department-first then services
+  /departments/cardiology/
+  /departments/cardiology/services/{slug}
+  /departments/oncology/
+  /departments/oncology/services/{slug}
+
+schema_org: Hospital (specific Schema.org type)
+section_2_pattern: extended (multiple department leaders)
+section_8_pattern: complex (multiple branches OR single mega-campus)
+```
+
+#### media
+```yaml
+sections_skipped: [3, 4, 8]
+section_6_emphasis: DOMINANT (article hub)
+section_2_pattern: "About Editorial Team" + Authors
+schema_org: NewsMediaOrganization
+
+url_patterns:
+  /                              (home)
+  /about, /editorial-team        (Section 2)
+  /our-doctors/{slug}            (Section 2 — author profiles)
+  /topics/{topic-slug}           (Section 5 equivalent — Topic Pillars)
+  /articles/{slug}               (Section 6 — main content)
+  /case-studies/{slug}           (Section 7 — reporter cases)
+  /contact                       (Section 8 — minimal)
+```
+
+#### other
+```yaml
+sections_use: configurable
+default: skip Section 3, 4 unless applicable
+require_review: case-by-case
+```
+
+---
+
+## 4.7 Specialty Center Pattern (Multi-Specialty + Hospital)
+
+> **Mandatory for:** `multi_specialty`, `hospital`  
+> **Optional for:** `aesthetic` (competitor uses pseudo-hub "Excellence Focus")  
+> **Forbidden for:** other formats (would create unnecessary URL depth)
+
+### What is a Specialty Center?
+
+A **Specialty Center** is a dedicated hub page representing one specialty within a multi-specialty brand. It sits between the Services overview and individual service pages.
+
+```
+Without Specialty Center (FLAT — wrong for multi_specialty):
+  /services/dental-implants
+  /services/sleep-test
+  /services/tmj-treatment
+  /services/iv-therapy
+   ↓
+   Google sees scattered services
+   No specialty boundary
+   Cannibalization risk
+
+With Specialty Center (HUB-SPOKE — correct for multi_specialty):
+  /services/dental/                 ← Hub (Tier B Pillar) — Specialty Center
+  /services/dental/implants         ← Spoke (Tier C)
+  /services/dental/orthodontics     ← Spoke
+  /services/sleep/                  ← Hub
+  /services/sleep/sleep-test        ← Spoke
+  /services/sleep/cpap              ← Spoke
+  /services/tmj/                    ← Hub
+  /services/anti-aging/             ← Hub
+```
+
+### 7 SEO Benefits (Industry-Verified)
+
+#### 1️⃣ Topical Authority Signaling
+
+```
+Specialty Center = Tier B Pillar Page
+→ Google sees "this site has dedicated authority in this specialty"
+→ Hub ranks for broad specialty terms ("dental clinic", "sleep clinic")
+→ Spokes feed authority upward via internal linking
+
+Without hub: services compete with each other for broad terms
+With hub: clear topical authority cluster
+```
+
+**Industry source:** HubSpot pillar-cluster model + Google topical authority guidelines (verified 2026)
+
+#### 2️⃣ Schema.org subOrganization Structural Representation
+
+```json
+// Brand-level Home page
+{
+  "@type": "MedicalClinic",
+  "@id": "https://vth.com/#organization",
+  "name": "Brand A Clinic",
+  "medicalSpecialty": ["Dentistry", "Sleep Medicine", "TMJ Treatment", "Aesthetic Medicine"],
+  "subOrganization": [
+    {
+      "@type": "MedicalOrganization",
+      "@id": "https://vth.com/services/dental/#org",
+      "name": "Brand A Dental Center",
+      "medicalSpecialty": "Dentistry",
+      "url": "https://vth.com/services/dental/"
+    },
+    {
+      "@type": "MedicalOrganization",
+      "@id": "https://vth.com/services/sleep/#org",
+      "name": "Brand A Sleep Medicine Center",
+      "medicalSpecialty": "Sleep Medicine",
+      "url": "https://vth.com/services/sleep/"
+    }
+  ]
+}
+```
+
+Without Specialty Center: `medicalSpecialty` is just a flat array, no structural sub-organization.  
+With Specialty Center: each specialty becomes its own entity → Knowledge Graph builds clear specialty boundaries → AI Overview citation rate higher.
+
+#### 3️⃣ PageRank Flow Optimization
+
+```
+Authority gravity flows:
+  10 dental services × 3 inbound links = 30 link equity → flows to Dental Hub
+  Dental Hub (Tier B) → flows upward to Home (Tier A)
+
+Without hub: equity scatters across /services/ root
+With hub: equity concentrates at hub before flowing → measurable rank boost for hub
+
+Math (PageRank damping 0.85/hop):
+  Service at depth 3 receives X
+  Hub at depth 2 receives X × 1.176 (concentration effect)
+  Home at depth 1 receives concentrated authority signal
+```
+
+#### 4️⃣ Search Intent Mapping (3 Levels)
+
+```
+Broad intent:    "ทันตแพทย์ที่ไหนดี" / "best dental clinic"
+                 → /services/dental/ (Hub) ✅
+
+Mid intent:      "ฟันคุด vs จัดฟัน" / "dental implants vs bridges"
+                 → /services/dental/comparison ✅
+
+Specific intent: "ผ่าฟันคุดเจ็บไหม" / "wisdom tooth surgery cost"
+                 → /services/dental/wisdom-tooth-extraction ✅
+
+Without hub: broad intent has NO landing page → bounce → lost top-funnel traffic
+```
+
+#### 5️⃣ Cannibalization Prevention
+
+```
+Multi-specialty WITHOUT hub (cannibalization risk):
+  /services/dental-implants    targets "ฟันรากเทียม"
+  /services/all-on-4           targets "ฟันรากเทียม"  ⚠️ COLLISION
+  → Google confused, ranking split
+
+Multi-specialty WITH hub (intent locked):
+  /services/dental/            targets "ฟันรากเทียม" (broad — pillar)
+  /services/dental/implants    targets "ฟันรากเทียม Nobel" (specific)
+  /services/dental/all-on-4    targets "All-on-4 ทำที่ไหนดี" (different)
+  → Clear intent separation
+```
+
+#### 6️⃣ Local SEO Programmatic Foundation
+
+```
+Type C programmatic generation enabled:
+  /services/dental/ + /branches/sukhumvit/
+  → /dental-sukhumvit (Type C local programmatic)
+  → /sleep-sukhumvit
+  → /tmj-sukhumvit
+
+Without hub: programmatic templates have no clean root to inherit from
+With hub: template inherits from Specialty Center → faster propagation of changes
+```
+
+#### 7️⃣ Doctor + Specialty Filtering
+
+```
+Hub /services/dental/ shows:
+  - Only doctors with medical_specialty=['Dentistry'] (filter from doctor_assignments)
+  - All services within this specialty
+  - Cases from this specialty
+  - Branches that offer this specialty
+
+→ User journey clean
+→ Google sees expertise concentration per specialty
+```
+
+### Cost-Benefit Analysis
+
+```yaml
+costs:
+  - URL has +1 segment depth
+  - +1 hub page per specialty (typically 3-5 hubs per multi_specialty brand)
+  - Slightly more complex sitemap
+  - Hub pages need quality content (3,000+ words minimum)
+
+benefits:
+  - 7 SEO benefits stacked
+  - Better entity recognition (Knowledge Graph)
+  - Cannibalization prevented
+  - Programmatic local SEO enabled
+  - Clearer user navigation
+  - Better internal authority concentration
+
+verdict: HIGH benefit, LOW cost → strongly recommended for multi_specialty + hospital
+```
+
+### Implementation Requirements (multi_specialty)
+
+```yaml
+required_per_specialty:
+  hub_page:
+    url: /services/{specialty-slug}/
+    sitemap_node: 3.{N}
+    layer: 2 (Money — Hub)
+    tier: B (Strategic Pillar)
+    funnel: top-mid (entry to specialty)
+    schema:
+      - MedicalOrganization (subOrg of brand)
+      - medicalSpecialty (named)
+      - subOrganization → list of services
+    word_count_minimum: 1500
+    content_required:
+      - Specialty overview
+      - List of services in this specialty (with links)
+      - Doctors specializing in this area (filter)
+      - Technology used (Section 4 link)
+      - Common concerns (Section 5 link)
+      - Case studies count + featured (Section 7 link)
+
+  service_pages_under_hub:
+    url: /services/{specialty-slug}/{service-slug}
+    sitemap_node: 3.{N}.{M}
+    layer: 2 (Money — Spoke)
+    tier: C (Service)
+    funnel: mid-bottom
+    must_link_to: hub page (mandatory upward link)
+```
+
+### Aesthetic Optional Pattern
+
+```yaml
+aesthetic_format_decision:
+  option_a_flat: 
+    pattern: /services/{service-slug}
+    when: brand has < 8 services across categories
+  
+  option_b_excellence_focus:
+    pattern: /excellence/{focus}/services/{service-slug}
+    when: brand wants premium positioning (competitor pattern)
+    note: "Excellence Focus is pseudo-hub — same SEO benefits but different framing"
+    
+  recommendation: option_a (flat) unless premium positioning required
+```
+
+---
+
+## 4.8 Greenfield Design Workflow
+
+> **Use when:** Building a NEW site from scratch (no existing pages to migrate)
+
+### Day-by-Day Playbook (5-Day Sprint)
+
+#### Day 1 — Brand Profile + Vertical Decision
+
+```yaml
+morning:
+  - Define brand_business_model
+  - Identify branches count + locations
+  - List doctors/practitioners
+  - Survey services offered
+  
+afternoon:
+  - Set vertical_family
+  - Set healthcare_format (if healthcare)
+  - Set medical_specialty[] tags
+  - Decide: which of 8 sections needed
+  - Decide: Specialty Center required? (multi_specialty/hospital)
+
+deliverable:
+  - Brand profile sheet (filled in brands table)
+  - Section activation list (which of 8 sections)
+  - Specialty Center hub list (if applicable)
+```
+
+#### Day 2 — Cluster Identification
+
+```yaml
+morning:
+  - SERP analysis for top 3 main service keywords
+  - Identify 3-5 main pillar topics (Tier B candidates)
+  - Pull keyword universe from keyword master
+
+afternoon:
+  - For each pillar: identify 8-25 supporting topics
+  - Group by specialty (if multi_specialty)
+  - Assign cluster_id (with specialty prefix if multi)
+  - Validate pillar-cluster ratio (8-25 supporting/pillar)
+
+deliverable:
+  - Cluster map (pillar → supporting topics)
+  - cluster_id list (e.g., 'dental-implants', 'sleep-cpap')
+  - Pillar-cluster ratio audit (each cluster healthy?)
+```
+
+#### Day 3 — Section Mapping + Numbered Hierarchy
+
+```yaml
+morning:
+  - Map clusters → sections:
+    - Service clusters → Section 3
+    - Patient concern clusters → Section 5
+    - Knowledge clusters → Section 6
+    - Tech equipment list → Section 4
+  - Assign Specialty Centers (if applicable)
+
+afternoon:
+  - Generate sitemap_node_id for every page:
+    - Section index pages: {S}
+    - Cluster hubs: {S}.{C}
+    - Detail pages: {S}.{C}.{D}
+    - Leaf pages: {S}.{C}.{D}.{L}
+  - Validate hierarchy consistency (parents exist)
+
+deliverable:
+  - Full sitemap node list
+  - URL pattern per page
+  - Visualizer-ready sitemap diagram
+```
+
+#### Day 4 — Page-Level Tagging
+
+```yaml
+morning:
+  - For each page: assign Layer (1-7)
+  - For each page: assign Tier (A/B/C/D)
+  - For each page: assign Funnel (top/mid/bottom/retention)
+  - For each page: assign Page Type (A/B/C/D)
+  - For each page: pick schema_org_type (must match Layer)
+
+afternoon:
+  - Validate: structurally_complete = true for all
+  - Validate: schema_type matches seo_layer_schema_mapping
+  - Flag REVIEW where confidence < 0.7
+  - Branch tagging: which pages are Type A/B/C/D
+
+deliverable:
+  - Full page_master rows ready (Notion + Supabase mirror)
+  - Schema markup plan per page
+  - Type C programmatic eligibility list
+```
+
+#### Day 5 — Connection Audit + Sign-off
+
+```yaml
+morning:
+  - Generate internal link plan:
+    - Hub-Spoke (each cluster page → pillar)
+    - Cross-cluster (related clusters)
+    - L3 → L6 mandatory connections
+    - L7 → L2/L6 backlinks
+  - Validate Authority Flow (D→C→B→A)
+  - Audit click depth per Tier (A≤3, B≤4, C≤5, D≤6)
+
+afternoon:
+  - Orphan check (every page has ≥1 inbound)
+  - Cannibalization check (L4 vs L5 keyword overlap?)
+  - Cluster health check (8-25 supporting/pillar)
+  - Stakeholder review + sign-off
+  - Hand off to content team
+
+deliverable:
+  - Final sitemap design document
+  - Internal linking plan
+  - Audit report (orphans, depth violations, ratios)
+  - Approved baseline for implementation
+```
+
+### Greenfield Decision Checkpoints
+
+```yaml
+checkpoint_1_after_day_1:
+  question: "Are sections + format correct?"
+  go_no_go: ทุก section ที่จำเป็นถูกเปิด, format ถูกเลือก
+
+checkpoint_2_after_day_2:
+  question: "Pillar-cluster ratio healthy?"
+  go_no_go: ทุก pillar มี 8-25 supporting topics
+
+checkpoint_3_after_day_3:
+  question: "Numbered hierarchy consistent?"
+  go_no_go: ไม่มี node ที่ขาด parent
+
+checkpoint_4_after_day_4:
+  question: "All pages structurally complete?"
+  go_no_go: 100% pages have Layer + Tier + Funnel + Type ครบ
+
+checkpoint_5_after_day_5:
+  question: "No orphans, depth OK, no cannibalization?"
+  go_no_go: เปิด greenlight ให้สร้าง content
+```
+
+---
+
+## 4.9 Migration: Existing Site → Standard
+
+> **Use when:** Site has existing pages (1,000-1,500 pages typical (mid-size brand)) that need to fit into Part 4 framework
+
+### Migration Workflow
+
+#### Stage 1 — Audit (Discovery)
+
+```yaml
+inputs:
+  - Current sitemap (URL list)
+  - Current page_master rows
+  - Analytics data (traffic per URL)
+  - GSC data (rankings per URL)
+
+outputs:
+  - audit_report.csv with columns:
+    - current_url
+    - current_traffic
+    - current_rankings
+    - assigned_layer (proposed)
+    - assigned_tier (proposed)
+    - assigned_section (proposed)
+    - migration_action (keep/rename/redirect/merge/delete)
+```
+
+#### Stage 2 — Classification (Map to Standard)
+
+```yaml
+process:
+  for_each_existing_page:
+    - Determine which of 8 sections it belongs to
+    - Assign Layer (1-7) using AI classification (System Instruction Section XII)
+    - Assign Tier based on traffic + business value
+    - Assign Funnel from intent analysis
+    - Determine Page Type (A/B/C/D)
+    - Generate proposed sitemap_node_id
+
+handle_special_cases:
+  - duplicate_content: merge to canonical, 301 redirect duplicates
+  - thin_content: delete or expand
+  - orphan_pages: assign to cluster or delete
+  - cannibalization: split into Section 5 vs Section 6
+  - branch_landing_missing: create from template (Type B)
+```
+
+#### Stage 3 — Migration Plan
+
+```yaml
+priority_order:
+  P0_critical:
+    - Tier A money pages (must keep traffic)
+    - High-traffic pages (>1k/mo organic)
+    - Indexed pages with backlinks
+  
+  P1_important:
+    - Tier B pillars
+    - Branded pages (about, doctors)
+    - Service pages with conversions
+  
+  P2_optimize:
+    - Tier C/D supporting
+    - Old blog posts
+    - Programmatic candidates
+
+actions_per_priority:
+  P0: keep URL, only re-tag (Layer/Tier/Funnel) — NO URL change
+  P1: keep URL preferred, restructure only if necessary with 301
+  P2: free to restructure, batch 301 redirects
+```
+
+#### Stage 4 — Execution
+
+```yaml
+batched_migration:
+  week_1: P0 re-tagging (no URL changes)
+  week_2: P1 restructuring (with 301 plan)
+  week_3-4: P2 cleanup (deletions, programmatic generation)
+
+monitoring:
+  - GSC indexing status
+  - Ranking changes per migrated URL
+  - Traffic delta per section
+  - Crawl error spike (target: <5%)
+
+rollback_trigger:
+  - Traffic drop >20% on P0 pages
+  - GSC errors spike >10x baseline
+  - Indexing drop >15%
+```
+
+### Migration Audit Template
+
+```sql
+-- Run this to identify migration candidates
+SELECT 
+  page_fingerprint,
+  full_url,
+  layer,
+  node_tier,
+  sitemap_node_id,
+  authority_weight,
+  -- Traffic last 30 days
+  traffic_30d,
+  -- Action recommendation
+  CASE
+    WHEN layer IS NULL THEN 'CLASSIFY_REQUIRED'
+    WHEN sitemap_node_id IS NULL THEN 'ASSIGN_NODE_ID'
+    WHEN crawl_depth > tier_max_depth THEN 'RESTRUCTURE_DEPTH'
+    WHEN structurally_complete = false THEN 'COMPLETE_TAGGING'
+    ELSE 'OK'
+  END AS migration_action
+FROM seo_website_page_master
+WHERE brand_id = ?
+ORDER BY authority_weight DESC, traffic_30d DESC;
+```
+
+---
+
+## 4.10 Sitemap Health Metrics
+
+> **Purpose:** Quantitative health check ของ sitemap. รัน weekly/monthly เพื่อ catch regressions
+
+### 4 Core Metrics
+
+#### Metric 1 — Orphan Rate
+
+```yaml
+definition: % of pages with 0 inbound internal links
+formula: orphan_pages / total_pages × 100
+target: < 5%
+critical: > 15%
+
+query:
+  SELECT 
+    brand_id,
+    COUNT(*) FILTER (WHERE planned_inbound_count = 0) AS orphans,
+    COUNT(*) AS total,
+    ROUND(100.0 * COUNT(*) FILTER (WHERE planned_inbound_count = 0) / COUNT(*), 1) AS orphan_pct
+  FROM seo_website_page_master
+  WHERE lifecycle_state = 'active'
+  GROUP BY brand_id;
+
+action_on_violation:
+  - List orphan pages
+  - Assign to cluster (link from pillar)
+  - Or mark for deletion
+```
+
+#### Metric 2 — Depth Distribution
+
+```yaml
+definition: % of pages exceeding tier-based depth limit
+formula:
+  tier_a_violations: pages where tier='A' AND crawl_depth > 3
+  tier_b_violations: pages where tier='B' AND crawl_depth > 4
+  tier_c_violations: pages where tier='C' AND crawl_depth > 5
+  tier_d_violations: pages where tier='D' AND crawl_depth > 6
+
+target: 0% Tier A/B violations, < 5% Tier C/D violations
+critical: any Tier A violation, > 20% Tier C/D violations
+
+action_on_violation:
+  - Tier A: emergency restructuring (reduce depth)
+  - Tier B: re-link from higher-tier pages
+  - Tier C/D: review if justified (may be OK)
+```
+
+#### Metric 3 — Section Balance
+
+```yaml
+definition: distribution of pages across 8 sections
+formula:
+  for each section: pct = pages_in_section / total_pages × 100
+
+healthy_distribution_per_format:
+  single_specialty:
+    Section 3 (Services):    25-35%  
+    Section 5 (Concern):     15-25%
+    Section 6 (Knowledge):   25-35%
+    Section 7 (Cases):       10-15%
+    Other sections:          balance
+  
+  multi_specialty:
+    Section 3 (Services):    35-45%  (more services across specialties)
+    Section 5 (Concern):     15-20%
+    Section 6 (Knowledge):   20-30%
+    Section 7 (Cases):       10-15%
+  
+  media:
+    Section 6 (Knowledge):   70-85%  (DOMINANT)
+    Section 5 (Topics):      10-15%
+    Other:                   5-15%
+
+action_on_violation:
+  - Section >50% (over-represented): pause content production, audit cannibalization
+  - Section <5% (under-represented): production sprint to fill gap
+```
+
+#### Metric 4 — Cluster Completeness
+
+```yaml
+definition: % of clusters with healthy pillar-cluster ratio
+formula:
+  for each cluster_id:
+    pillar_count: pages with tier='B' in cluster
+    supporting_count: pages with tier IN ('C','D') in cluster
+    cluster_health: 
+      'healthy' if 8 <= supporting_count <= 25
+      'undersized' if supporting_count < 8
+      'oversized' if supporting_count > 25
+
+target: > 80% clusters healthy
+critical: > 30% clusters undersized OR oversized
+
+query:
+  SELECT
+    cluster_id,
+    COUNT(*) FILTER (WHERE node_tier = 'B') AS pillar_count,
+    COUNT(*) FILTER (WHERE node_tier IN ('C','D')) AS supporting_count,
+    CASE 
+      WHEN COUNT(*) FILTER (WHERE node_tier IN ('C','D')) BETWEEN 8 AND 25 THEN 'healthy'
+      WHEN COUNT(*) FILTER (WHERE node_tier IN ('C','D')) < 8 THEN 'undersized'
+      ELSE 'oversized'
+    END AS cluster_health
+  FROM seo_website_page_master
+  WHERE brand_id = ?
+  GROUP BY cluster_id;
+
+action_on_violation:
+  - undersized: production sprint to add 5-10 supporting articles
+  - oversized: split cluster into 2 sub-clusters with new pillars
+```
+
+### Health Dashboard (Aggregate Score)
+
+```yaml
+sitemap_health_score:
+  formula: (
+    (1 - orphan_rate/100) × 25 +
+    (1 - depth_violation_rate/100) × 25 +
+    section_balance_score × 25 +
+    cluster_completeness_pct × 25
+  ) / 100
+  
+  ranges:
+    excellent: 90-100
+    healthy:   75-89
+    needs_work: 60-74
+    critical:  < 60
+
+review_cadence:
+  weekly: orphan_rate, depth violations
+  monthly: section balance, cluster completeness
+  quarterly: full sitemap audit + restructuring plan
+```
+
+### Health Metrics Query Template
+
+```sql
+-- Master health query (run weekly)
+WITH metrics AS (
+  SELECT
+    brand_id,
+    COUNT(*) AS total_pages,
+    COUNT(*) FILTER (WHERE planned_inbound_count = 0) AS orphans,
+    COUNT(*) FILTER (WHERE 
+      (node_tier = 'A' AND crawl_depth > 3) OR
+      (node_tier = 'B' AND crawl_depth > 4) OR
+      (node_tier = 'C' AND crawl_depth > 5) OR
+      (node_tier = 'D' AND crawl_depth > 6)
+    ) AS depth_violations,
+    COUNT(DISTINCT cluster_id) AS total_clusters
+  FROM seo_website_page_master
+  WHERE lifecycle_state = 'active'
+  GROUP BY brand_id
+)
+SELECT 
+  brand_id,
+  total_pages,
+  ROUND(100.0 * orphans / total_pages, 1) AS orphan_pct,
+  ROUND(100.0 * depth_violations / total_pages, 1) AS depth_violation_pct,
+  total_clusters
+FROM metrics;
+```
+
+---
+
+## 🎯 Part 4 Summary
+
+```
+✅ Methodology      — 5-phase top-down design workflow
+✅ 8 Sections       — Gold ideology with vertical-specific activation
+✅ Section ↔ Layer  — Mapping matrix + cannibalization shield
+✅ Numbered IDs     — {S}.{C}.{D}.{L} hierarchical convention
+✅ Page Types       — 4 types (A/B/C/D) — branch relationship
+✅ Vertical Variations — 8 healthcare formats + media + other
+✅ Specialty Center — Mandatory for multi_specialty + hospital (7 SEO benefits)
+✅ Greenfield      — 5-day sprint workflow
+✅ Migration       — 4-stage existing-to-standard playbook
+✅ Health Metrics  — 4 core metrics + dashboard formula
+```
+
+→ Part 4 เป็น operational layer ที่ใช้ Part 3 framework + Schema spec v0.2 ในการออกแบบ sitemap จริง
+
+---
+
+## 4.11 URL Structure Rules
+
+> **Why this section:** Part 4.4 (Numbered Hierarchy) กำหนด **internal sitemap_node_id** (เช่น `3.1.2`) สำหรับ system tracking — แต่ **public-facing URL** มีกฎคนละชุด ที่ต้อง CMS-agnostic + AI-friendly + maintenance-friendly. กฎเหล่านี้เป็น mantra สั้นๆ ที่ developer ทุกคนต้องจำก่อน register CPT slug หรือสร้างหน้าใหม่
+
+### 4.11.1 Core URL Rules (5 ข้อ — บังคับ)
+
+```yaml
+rule_1_max_depth:
+  rule: "URL ลึกได้สูงสุด 2 ระดับ (CPT slug + post slug)"
+  examples:
+    ✅ /services/all-on-4
+    ✅ /by-concern/peri-implantitis
+    ✅ /knowledge/osseointegration
+    ❌ /services/dental/implants/all-on-4/full-arch  ← ลึกเกินไป
+  exception: "multi_specialty + hospital — อนุญาต 3 ระดับสำหรับ Specialty Center pattern"
+  note: "internal sitemap_node_id (Part 4.4) สามารถลึก 4 ระดับได้ — ไม่กระทบ URL public"
+
+rule_2_kebab_case:
+  rule: "ใช้ kebab-case (hyphen-separated lowercase) เท่านั้น"
+  examples:
+    ✅ /by-concern/peri-implantitis
+    ✅ /treatments/all-on-4
+    ❌ /By-Concern/Peri_Implantitis    ← uppercase + underscore
+    ❌ /by_concern/periImplantitis     ← underscore + camelCase
+  reason:
+    - "URL case-sensitive ในบาง server config → /About vs /about คนละหน้า"
+    - "Underscore ทำลาย readability + SEO signal"
+    - "Kebab-case คือ standard ใน WordPress + ทุก major CMS"
+
+rule_3_no_query_strings:
+  rule: "ห้ามใช้ ?id=123 หรือ ?cat=dental ใน canonical URL"
+  examples:
+    ✅ /treatments/dental-implant
+    ❌ /treatments?type=dental-implant
+    ❌ /article.php?id=42
+  exception: "tracking params (?utm_*) อนุญาตใน marketing links — แต่ canonical ห้ามมี"
+  reason:
+    - "Query strings = signal ของ dynamic page → AI/Google ให้น้ำหนักน้อย"
+    - "Cache + share ยาก"
+    - "Canonical confusion"
+
+rule_4_no_brand_prefix:
+  rule: "ห้ามใส่ชื่อแบรนด์ใน URL slug (มันอยู่ใน domain แล้ว)"
+  examples:
+    ✅ smilescape.com/treatments/all-on-4
+    ❌ smilescape.com/smilescape-all-on-4
+    ❌ smilescape.com/treatments/smilescape-implant
+  reason:
+    - "Brand redundancy = keyword stuffing signal"
+    - "URL ยาวขึ้นโดยไม่จำเป็น"
+    - "ถ้า rebrand ในอนาคต → URL หาย/ต้อง redirect ทั้งเว็บ"
+  exception_for_multi_brand:
+    - "ถ้าใช้ 1 domain หลาย brand (เช่น parent.com/brand-a/...) — brand เป็น path level ที่ 1 ได้ แต่ห้ามซ้ำใน slug ลึกกว่า"
+
+rule_5_descriptive_slugs:
+  rule: "Slug ต้อง descriptive — ไม่ใช่ ID หรือ abbreviation"
+  examples:
+    ✅ /treatments/all-on-4-dental-implant
+    ✅ /by-concern/peri-implantitis
+    ❌ /treatments/aod4              ← abbreviation
+    ❌ /treatments/123                ← numeric ID
+    ❌ /tx/imp                        ← cryptic abbreviation
+  reason:
+    - "AI อ่าน URL เป็น context cue (ชื่อ entity + topic)"
+    - "User เห็น URL ใน SERP → CTR สูงกว่า"
+    - "Internal linking anchor text ดูดีโดย default"
+```
+
+### 4.11.2 URL Pattern by CPT Type
+
+```
+┌────────────────────────────────────────────────────────────────┐
+│ CPT / Page Type             URL Pattern                          │
+├────────────────────────────────────────────────────────────────┤
+│ Home                        /                                    │
+│ About / Static              /about                               │
+│                             /our-doctors                         │
+│ Procedure        /procedures/{slug}                   │
+│ Treatment        /treatments/{slug}                   │
+│ Service (multi_specialty)   /services/{specialty}/{slug}         │
+│ Hospital department         /departments/{dept}/{slug}           │
+│ Technology                  /technology/{slug}                   │
+│ Concern (Layer 4)           /by-concern/{slug}                   │
+│ Knowledge (Layer 5)         /knowledge/{slug}                    │
+│ Case Study (Layer 7)        /case-studies/{slug}                 │
+│ Branch (Type B)             /branches/{branch-slug}              │
+│ Local Programmatic (Type C) /{service}-{branch}                  │
+│ Doctor Profile (Type D)     /our-doctors/{name-slug}             │
+│ Audience (Type D)           /for/{audience}/                     │
+│ Ingredient (skincare)       /ingredients/{slug}                  │
+│ Product (skincare/DTC)      /products/{slug}                     │
+│ Comparison page             /compare/{x}-vs-{y}                  │
+│ Program          /programs/{slug}                     │
+│ Signature System /{slug}/  (root: /mbm/, /emsmile/)   │
+│ Drug             /drugs/{slug}                        │
+│ Lab Test         /lab-tests/{slug}                    │
+└────────────────────────────────────────────────────────────────┘
+```
+
+### 4.11.3 Anti-Patterns (ห้ามทำเด็ดขาด)
+
+```yaml
+forbidden_patterns:
+  date_in_url:
+    pattern: /2026/05/article-name/
+    why_bad: "Content แก่เร็วผิด age signal — แม้ update แล้วก็ดูเก่า"
+    fix: "ใช้ /knowledge/article-name/ + dateModified schema"
+  
+  category_redundancy:
+    pattern: /blog/category/dental/article-name/
+    why_bad: "Path levels เกินจำเป็น → AI ไม่ชัดว่า main entity คืออะไร"
+    fix: "/knowledge/article-name/ — taxonomy อยู่ใน schema/breadcrumb"
+  
+  trailing_irrelevant_params:
+    pattern: /article-name?ref=newsletter&utm_source=...
+    why_bad: "Canonical confusion ถ้าไม่ตั้ง rel=canonical ถูก"
+    fix: "Set canonical = clean URL, accept utm_* แต่ strip ใน canonical tag"
+  
+  mixed_language_slug:
+    pattern: /knowledge/peri-implantitis-คืออะไร
+    why_bad: "Mixed Thai-English ใน URL ทำให้ encode ยาก + share เพี้ยน"
+    fix: "เลือก 1 language per URL — Thai version → /th/knowledge/... หรือ /knowledge/peri-implantitis แล้ว WPML จัดการ language switch"
+  
+  versioning_in_url:
+    pattern: /treatments/all-on-4-v2/
+    why_bad: "เมื่อ update ครั้งต่อไป — v3, v4 → URL เปลี่ยนทุกครั้ง = ทุก URL หาย"
+    fix: "Same URL + visible Change Log + dateModified update"
+```
+
+### 4.11.4 Migration Rules (เมื่อต้องเปลี่ยน URL)
+
+```yaml
+when_url_must_change:
+  scenarios:
+    - "Brand renames → /old-brand-page → /new-brand-page"
+    - "Service consolidation → /service-a + /service-b → /service-combined"
+    - "URL violates rules above (cleanup)"
+  
+  required_actions:
+    1_301_redirect:
+      from: old URL
+      to: new URL
+      type: 301 (permanent)
+      duration: ≥ 12 months minimum
+    
+    2_update_internal_links:
+      - update wp_posts content (search-replace)
+      - update menu items
+      - update widgets
+      - update ACF relationship fields
+    
+    3_update_canonical:
+      - new URL must declare itself canonical
+      - old URL (during 301 grace period) → 301 to new
+    
+    4_resubmit_sitemap:
+      - update XML sitemap
+      - GSC URL inspection on both old + new
+      - Wait for re-crawl confirmation
+    
+    5_monitor:
+      - 30 days: check 301 still works
+      - 60 days: check rankings transferred
+      - 90 days: confirm crawl budget reallocated
+
+forbidden_during_migration:
+  - "Don't 302 (temporary) — use 301 always"
+  - "Don't chain redirects (URL A → B → C) — direct A → C"
+  - "Don't skip 301 even if url change is minor (typo fix etc.)"
+```
+
+### 4.11.5 Validation Checklist (Pre-Publish)
+
+ก่อน publish หน้าใหม่ — เช็ค URL:
+
+```
+☐ Max 2 levels deep (3 if multi_specialty)
+☐ kebab-case throughout (no underscore, no camelCase, no uppercase)
+☐ No query strings ใน canonical
+☐ No brand name in slug
+☐ Descriptive slug (not abbreviation, not numeric ID)
+☐ No date in path
+☐ No category redundancy
+☐ No mixed-language slug
+☐ Length: ≤ 75 chars total (URL displayed in SERP fully)
+☐ Canonical tag matches public URL
+☐ rel="alternate" hreflang มีครบทุก language version
+☐ HTTPS (no HTTP fallback)
+```
+
+### 4.11.6 Cross-References
+
+| Topic | See Also |
+|-------|----------|
+| Internal sitemap node ID (different from URL) | Part 4.4 — Numbered Hierarchy Convention |
+| WordPress slug registration | Part 8.5 — Multi-Vertical CPT Registration |
+| URL pattern in plugin config | Part 8.1 — Plugin Stack Recommendations |
+| Multilingual URL (subdirectory pattern) | Part 1.7 — Multilingual Architecture |
+| hreflang setup | Part 1.7 + Part 16 |
+
+---
+
+---
+
+## 4.12 Cross-Brand External Link Tracking
+
+> **Why this section:** Sections 4.1-4.11 ครอบคลุม sitemap design ภายใน 1 brand — แต่ใน federation pattern (Part 10.7), brands ในเครือเดียวกันมัก link หากันเพื่อ refer ลูกค้า/คนไข้ไปยัง specialist site. EYWA tracks lifecycle ของ cross-brand external links แบบ native — ทำให้ editor เห็น status ของ target page (draft/published) แบบ real-time
+
+### 4.12.1 Use Case Pattern
+
+```yaml
+scenario:
+  brand_a: vth-biodent (general dental)
+  brand_b: vitalsleep (sleep medicine specialist)
+  
+  vth_article: "What is sleep apnea?"
+    contains_section: "How to test for sleep apnea"
+    wants_to_link_to: VitalSleep's comprehensive sleep test page
+  
+  challenge:
+    - VitalSleep's page may not exist yet (different team, different timeline)
+    - VTH author can't wait for VitalSleep team
+    - Manual coordination = error-prone, slow
+    - Broken links = bad UX + SEO hit
+  
+  eywa_solution:
+    - VTH author creates "anchor placeholder" with cross-brand reference
+    - System tracks target lifecycle automatically
+    - When target goes live → notify VTH → update link
+    - When target moves/deletes → alert + remediation
+```
+
+### 4.12.2 Data Model
+
+```sql
+-- Field added to seo_website_page_master
+-- (already documented in Schema_Overview v1.3 page_master)
+
+ALTER TABLE seo_website_page_master ADD COLUMN IF NOT EXISTS
+  cross_brand_references jsonb DEFAULT '[]';
+
+-- Structure of each reference:
+-- [
+--   {
+--     "ref_id": "ref_001",
+--     "target_brand_id": "vitalsleep",
+--     "target_page_concept": "comprehensive sleep test",
+--     "target_keywords": ["sleep test", "polysomnography", "PSG"],
+--     "target_url": null,                    -- populated when resolved
+--     "anchor_text": "อ่านเพิ่มเติมที่ VitalSleep",
+--     "anchor_position": "section_4_paragraph_3",
+--     "status": "pending",                   -- enum below
+--     "last_checked_at": "2026-05-07T10:00:00Z",
+--     "resolved_target_page_id": null,       -- FK to other brand's page when matched
+--     "broken_since": null,                  -- when link broke
+--     "notes": "refer for advanced diagnostics"
+--   }
+-- ]
+
+-- Status enum:
+-- 'pending'           : just created, not yet resolved
+-- 'draft_at_target'   : target page exists but unpublished
+-- 'live'              : target page live with URL
+-- 'broken'            : target page deleted/moved (was live before)
+-- 'manual_link'       : URL set manually (no resolution needed)
+```
+
+### 4.12.3 Resolution Flow (n8n Pattern)
+
+```yaml
+flow_name: cross_brand_link_resolver
+schedule: every 6 hours
+
+logic:
+  for each page in seo_website_page_master:
+    for each ref in cross_brand_references where status != 'manual_link':
+      
+      step_1_search_target:
+        SELECT id, url, status FROM seo_website_page_master
+        WHERE brand_id = ref.target_brand_id
+          AND (
+            title ILIKE '%' || ref.target_page_concept || '%'
+            OR keywords && ref.target_keywords
+          )
+        LIMIT 1
+      
+      step_2_classify_status:
+        IF target_found:
+          IF target.status = 'published' AND target.url IS NOT NULL:
+            → ref.status = 'live'
+            → ref.target_url = target.url
+            → ref.resolved_target_page_id = target.id
+            → ref.last_checked_at = now()
+            
+            IF ref.status was 'pending'/'draft_at_target' before:
+              → trigger notification: "Your reference is now live"
+          
+          ELSE IF target.status IN ('draft', 'review', 'ready'):
+            → ref.status = 'draft_at_target'
+            → ref.resolved_target_page_id = target.id
+            → no URL yet
+        
+        ELSE IF target NOT found:
+          IF ref.status was 'live' before:
+            → ref.status = 'broken'
+            → ref.broken_since = now()
+            → ALERT: target page disappeared
+      
+      step_3_url_validation_(if_status_live):
+        HTTP HEAD request to ref.target_url
+        IF 404 or 5xx:
+          → ref.status = 'broken'
+          → alert author
+        IF 301/302 (redirect):
+          → log redirect chain
+          → if redirects to same page: keep 'live'
+          → if redirects to different page: alert for review
+```
+
+### 4.12.4 Editor Experience (Notion + WP)
+
+```yaml
+in_notion_editor:
+  page editor sees cross_brand_references as relation field
+  status indicator visible per reference:
+    🟡 pending           — searching for target
+    🟠 draft_at_target   — target exists but not live, use anchor only
+    🟢 live              — target live, use full anchor + URL
+    🔴 broken            — needs attention
+    ⚪ manual_link       — manually set, no auto-resolution
+  
+  click status indicator → see:
+    - Target brand
+    - Target page (if resolved)
+    - Last checked
+    - Resolution history
+
+in_wordpress_editor:
+  ACF field group: cross_brand_references (repeater)
+  per-row visualization:
+    [target brand] [target concept] [status icon] [URL if live] [anchor]
+  
+  shortcode for inline use:
+    [eywa_cross_ref id="ref_001" fallback_text="more info"]
+    
+    renders:
+      IF status = 'live': <a href="...">anchor_text</a>
+      ELSE: <span>anchor_text</span> (no link, plain text)
+```
+
+### 4.12.5 Operator Dashboard View
+
+```yaml
+cross_brand_referral_dashboard:
+  
+  metrics:
+    total_pending_refs:
+      query: COUNT(*) WHERE status = 'pending'
+      meaning: not yet resolved (target may not exist)
+    
+    blocking_brand_pairs:
+      query: GROUP BY (source_brand, target_brand) WHERE status IN ('pending', 'draft_at_target')
+      meaning: which brand is bottleneck for which other brand
+      example: "VitalSleep blocking 12 references from VTH"
+    
+    referral_density:
+      query: COUNT cross-refs / COUNT pages per brand
+      meaning: how interconnected the portfolio is
+    
+    broken_links:
+      query: WHERE status = 'broken'
+      meaning: cleanup needed
+      sla: fix within 7 days
+
+  actionable_insights:
+    "VitalSleep has 12 pages waiting from VTH references
+     Move 1 writer from Team A to VitalSleep this sprint"
+    
+    "Brand C and Brand D have 0 cross-refs
+     Consider: are they truly independent or missing opportunities?"
+```
+
+### 4.12.6 Sitemap Visualization
+
+```yaml
+in_sitemap_view (for any brand):
+  pages with cross-brand outgoing links shown with → icon
+  hover shows: target brand + status
+  
+in_operator_dashboard:
+  full portfolio sitemap visualization
+  cross-brand edges drawn between brand sitemaps
+  edge color = status (green=live, yellow=pending, red=broken)
+  density = referral relationship strength
+```
+
+### 4.12.7 Performance Considerations
+
+```yaml
+when_n8n_flow_runs:
+  every_6_hours: resolve pending references
+  daily: validate live URLs (HEAD requests)
+  weekly: cleanup broken references older than 30 days
+
+scaling:
+  10 brands × 100 pages × avg 2 cross-refs = 2,000 references
+  resolver flow: ~5-10 minutes per run
+  HTTP validation: rate-limited to 1/sec to avoid hammering target sites
+  
+caching:
+  recently_checked refs (< 1 hour) skipped
+  status changes trigger cache invalidation
+```
+
+### 4.12.8 Cross-References
+
+| Topic | See Also |
+|-------|----------|
+| Federation pattern (why this exists) | Part 10.7 |
+| seo_website_page_master schema | Part 5 + Schema_Overview |
+| n8n flow library | Part 17 |
+| brand_scope field convention | Part 10.7.5 |
+| Notion editor experience | Part 18 |
+| ACF field groups (eywa_relationships) | Part 25.5 |
+
+---
+
+# PART 5: Database Schema Architecture
+
+> **The neural substrate of EYWA™ PROTOCOL** — 28 tables organized into 9 groups that together form the Knowledge Graph + operational analytics system that powers AI-era SEO for healthcare brands.
+>
+> 📊 **Companion Document:** ดู `Schema_Overview EYWA v1.8` สำหรับ full DDL + column descriptions ครบทุกตาราง  
+> Bible Part 5 เน้น **WHY และ Architecture** — Schema_Overview เน้น **WHAT — full schema + descriptions**
+
+> ⚠️ **v3.12 NOTICE — Two-Column Identity Pattern (Section 18.9):**
+> 
+> SQL examples in Part 5 use legacy fingerprint columns (`entity_fingerprint`, `page_fingerprint`, etc.) for historical context. Schema v1.8 introduces the **Two-Column Identity Pattern** where every table has:
+> - `fingerprint` (immutable machine ID, format `{tablecode}_{ULID16}`)
+> - `fingerprint_display_name` (mutable human label)
+> 
+> **For new implementations (Phase 1+):** Use the v1.8 pattern. See:
+> - **Section 18.9** — Full pattern specification + triggers + migration
+> - **Schema_Overview v1.8 Appendix B** — Per-table fingerprint formulas
+> - **Schema_Overview v1.8 Appendix F** — Helper functions (generate_ulid, etc.)
+> - **DECISION_RECORDS DR-008** — Decision rationale
+> 
+> **Legacy SQL in this Part is preserved** for backward compatibility documentation. Production tables follow v1.8.
+
+---
+
+## 5.1 Philosophy — Knowledge Graph as Code
+
+### Why a Database, Not Just Files
+
+```
+ของเก่า: WordPress + Yoast/RankMath + manual content management
+   → SEO knowledge อยู่ใน head ของ team
+   → ไม่ scale ข้าม brands
+   → ไม่ AI-readable
+   → ไม่ track-able
+
+EYWA™ ใหม่: Knowledge Graph in Postgres + Notion sync
+   → SEO knowledge เป็น structured data
+   → Scale ข้าม brands ได้ผ่าน brand_scope
+   → AI engines can query directly (RAG-ready)
+   → KPIs measurable + dashboard-able
+```
+
+### The 3-Tier Categorization Model
+
+```yaml
+Tier 1 — Critical Operational:
+  characteristic: ทีม touch ทุกวัน, ระบบ run ไม่ได้ถ้าหายไป
+  examples: brands, page_master, entity_graph, citations, daily_logs
+  governance: strict — schema changes require full review (Part 15)
+  count: 16 tables
+
+Tier 2 — Intelligence/Analytics:
+  characteristic: insight generation, weekly-touched
+  examples: market_snapshot, serp_competitors, ai_operations
+  governance: medium — schema changes review-able async
+  count: 10 tables
+
+Tier 3 — Audit/Reference:
+  characteristic: historical/governance, monthly-touched
+  examples: schema_changes
+  governance: low — append-only typically
+  count: 2 tables
+```
+
+### Notion ↔ Supabase Sync Architecture
+
+```
+              ┌─────────────────┐
+              │     NOTION      │  ← Humans plan + edit (Tier 1 collab)
+              │   (planning)    │
+              └────────┬────────┘
+                       │ n8n bidirectional sync
+                       ↓
+              ┌─────────────────┐
+              │    SUPABASE     │  ← Machines query + analyze (analytics)
+              │  (operational)  │
+              └────────┬────────┘
+                       │ ETL processes
+                       ↓
+              ┌─────────────────┐
+              │  WordPress +    │  ← Public renders (frontend)
+              │   RankMath      │
+              └─────────────────┘
+```
+
+**Sync direction codes:**
+- **N↔S:** Bidirectional (Notion humans edit, Supabase mirrors + computes)
+- **N→S:** Notion source, Supabase mirror only
+- **S only:** Supabase exclusive (high-volume, no Notion mirror)
+- **S→N:** Supabase generates, Notion reads only
+
+---
+
+## 5.2 Architecture Overview — 9 Groups
+
+```
+┌────────────────────────────────────────────────────────────────┐
+│              EYWA™ PROTOCOL DATA SYSTEM (28 tables)             │
+├────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  Group 1: Brand & Organization        (4 tables) — Tier 1       │
+│  Group 2: Knowledge Architecture      (4 tables) — Tier 1       │
+│  Group 3: Page System                 (2 tables) — Tier 1       │
+│  Group 4: Keyword & Search            (4 tables) — Tier 1       │
+│  Group 5: Performance Fact Tables     (2 tables) — Tier 1       │
+│  Group 6: Backlinks & Off-Page        (2 tables) — Tier 2       │
+│  Group 7: AI Operations & Embeddings  (4 tables) — Tier 1/2     │
+│  Group 8: Data Quality & Governance   (2 tables) — Tier 1/3     │
+│  Group 9: Entity Extensions           (4 tables) — Tier 2       │
+│                                                                 │
+└────────────────────────────────────────────────────────────────┘
+```
+
+### Required PostgreSQL Extensions
+
+```yaml
+Required:
+  uuid-ossp / pgcrypto:  UUID PKs (all tables)
+  pg_trgm:               Fuzzy text search (keywords, backlinks anchor)
+  vector (pgvector):     Vector similarity search (Group 7 — embeddings)
+
+Recommended:
+  postgis:               Geo queries (Group 1 branches, Group 5 local rankings)
+
+Optional:
+  pg_partman:            Yearly partition automation (Group 5)
+  pg_cron:               Scheduled archival jobs
+  pg_stat_statements:    Query performance monitoring
+```
+
+→ See `Schema_Overview v1.0 Appendix A` for installation order
+
+---
+
+## 5.3 Group 1 — Brand & Organization
+
+> **Bible Reference:** Part 1 (Core Philosophy), Part 10 (Multi-Brand Strategy), Part 14 (Vertical Profiles), Part 23.3 (Authority Validation)
+
+### Why This Group
+
+```
+ในระบบ multi-brand portfolio (เช่น The Gifted Digital ที่บริหาร 15+ brands):
+  - แต่ละ brand มี vertical_family + healthcare_format ต่างกัน
+  - แพทย์/ผู้เขียนหนึ่งคนอาจทำงานข้ามหลาย brand
+  - สาขาเป็น first-class entity (ไม่ใช่แค่ field ใน brand)
+  - Authority signals (license, accreditation) ต้อง verifiable
+
+→ ต้องมี 4 ตารางที่ทำงานร่วมกัน
+```
+
+### Tables in This Group
+
+```yaml
+1. brands
+   role: Master ของแบรนด์ — vertical, format, accreditations, Wikidata identity
+   sync: N↔S
+   
+2. seo_branches
+   role: สาขาทางกายภาพ — Local SEO, GBP, schema:LocalBusiness
+   sync: N↔S
+   
+3. seo_authors_reviewers
+   role: ทะเบียนแพทย์/ผู้เขียน — license verification, board cert, advisory board
+   sync: N↔S
+   
+4. seo_doctor_assignments
+   role: Junction (author × brand × branch) — รองรับการแชร์แพทย์ข้าม brand
+   sync: N↔S
+```
+
+### Representative DDL — `brands`
+
+```sql
+CREATE TABLE brands (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  brand_name text PRIMARY KEY,                    -- natural unique name
+  notion_id text UNIQUE,                          -- Notion sync
+  notion_workspace text,
+  notion_database_id text,
+  workspace_id text,
+  
+  -- Identity
+  company text,                                   -- legal entity
+  status text DEFAULT 'active',                   -- 'active'/'inactive'/'paused'/'archived'
+  brand_description text,                         -- for schema.org
+  brand_web_url text,                             -- canonical homepage
+  
+  -- Analytics integrations
+  gsc_property_url text,                          -- Google Search Console
+  ga4_property_id text,                           -- GA4
+  
+  -- Vertical classification (Bible Part 14)
+  vertical_family text,                           -- 'healthcare'/'media'/'wellness'/'mixed'
+  healthcare_format text,                         -- 'single_specialty'/'multi_specialty'/'dental'/'sleep_medicine'/...
+  medical_specialty text[],                       -- ['dermatology', 'sleep_medicine']
+  
+  -- Branch reference
+  primary_branch_id uuid,                         -- main branch (FK to seo_branches.id)
+  
+  -- Authority signals (Bible Part 23.3)
+  accreditations jsonb DEFAULT '[]',              -- [{name, accredited_at, expires_at, verification_url}]
+  medical_advisory_board_url text,                -- URL of advisory board page
+  
+  -- Brand SERP / Wikidata (Bible Part 13.X)
+  wikidata_id text,                               -- Q-number
+  wikidata_verified_at timestamptz,
+  knowledge_panel_status text,                    -- 'not_yet'/'pending_claim'/'claimed'/'verified'
+  
+  -- Lifecycle
+  created_at timestamptz DEFAULT now(),
+  updated_at timestamptz DEFAULT now(),
+  notion_synced_at timestamptz
+);
+
+CREATE UNIQUE INDEX idx_brands_notion_id ON brands(notion_id) WHERE notion_id IS NOT NULL;
+CREATE INDEX idx_brands_status ON brands(status) WHERE status = 'active';
+CREATE INDEX idx_brands_vertical ON brands(vertical_family, healthcare_format);
+```
+
+→ **Full schemas for `seo_branches`, `seo_authors_reviewers`, `seo_doctor_assignments`** : ดู `Schema_Overview v1.0 Section 3`
+
+---
+
+## 5.4 Group 2 — Knowledge Architecture
+
+> **Bible Reference:** Part 2 (Conceptual Architecture), Part 7 (SKOS Taxonomy), Part 23.1 (Citation Tiers)
+
+### Why This Group
+
+```
+ปรัชญาคัมภีร์ EYWA™:
+  "A website is a Knowledge Graph rendered as HTML"
+
+→ ต้องมี Knowledge Graph จริงใน Postgres
+→ ต้องมี cluster organization (hub-and-spoke)
+→ ต้องมี citation system แยกจาก content
+→ ต้องมี junction (page ↔ citation) สำหรับ E-E-A-T tracking
+```
+
+### Tables in This Group
+
+```yaml
+1. seo_entity_graph
+   role: Master ของทุก entity — concepts, conditions, drugs, ingredients, devices, procedures
+   key_features: 
+     - brand_scope[] → cross-brand entity sharing
+     - Wikidata Q-number, ICD-10, MeSH, SNOMED, CAS linkage
+     - applicable_verticals[] → vertical-specific filtering
+     - entity_lifecycle (Bible Part 7 SKOS governance)
+   sync: N↔S
+   
+2. seo_topic_cluster_master
+   role: Hub-and-spoke cluster definitions
+   key_constraints: pillar-cluster ratio 8-25 (Bible Part 3)
+   sync: N↔S
+   
+3. seo_citations
+   role: Master ของแหล่งอ้างอิง — peer-reviewed, guidelines, gov, textbook
+   key_features:
+     - evidence_tier 1-6 (Bible Part 23.1)
+     - schema_evidence_level (EvidenceLevelA/B/C)
+     - citation_freshness_status (auto-computed per tier)
+     - conflict_of_interest_disclosed
+   sync: N↔S
+   
+4. seo_page_citations
+   role: Junction (page ↔ citation) with pattern + context
+   sync: N↔S
+```
+
+### Representative DDL — `seo_entity_graph` (key fields)
+
+```sql
+CREATE TABLE seo_entity_graph (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  entity_fingerprint text UNIQUE,                 -- e.g., 'entity:niacinamide'
+  entity_name text,
+  entity_slug text,
+  entity_type text,                               -- 15 types: condition/symptom/procedure/treatment/device/concept/product/drug/ingredient/anatomy/specialty/lab_test/biomarker/person/organization
+  
+  -- Hierarchy (self-reference)
+  parent_entity_fp text,
+  
+  -- Cluster linkage
+  topic_cluster_id text,
+  topic_cluster_name text,
+  
+  -- Schema.org type
+  schema_org_type text,                           -- 'MedicalCondition'/'Drug'/'AnatomicalStructure'/...
+  
+  -- Multi-brand scope (Bible Part 10)
+  brand_scope text[],                             -- ['*'] = universal, ['brand_a'] = brand-specific
+  brand_scope_id text,
+  brand_scope_name text,
+  
+  -- Vertical filtering (Bible Part 14)
+  applicable_verticals text[],
+  
+  -- External knowledge graph linkage
+  wikipedia_url text,
+  wikidata_id text,                               -- Q-number
+  icd_10_code text,
+  mesh_id text,
+  snomed_id text,
+  cas_number text,                                -- CAS Registry (chemicals)
+  
+  -- AI-ready fields
+  ai_entity_summary text,                         -- 2-3 sentence summary for AI citation
+  entity_description_long text,
+  
+  -- Authority + lifecycle
+  entity_authority_score numeric,                 -- 0-100
+  entity_lifecycle text,                          -- 'active'/'deprecated'/'merged' (Bible Part 7)
+  programmatic_eligible boolean DEFAULT false,    -- Type C generation eligibility
+  
+  -- Graph relationships
+  related_entities_fps text[],                    -- bidirectional graph edges
+  competing_entities text,                        -- cannibalization signal
+  
+  -- Multi-language
+  hreflang_group text,
+  
+  -- Search volume rollup
+  search_volume_total integer,
+  
+  -- Sync
+  created_at timestamptz DEFAULT now(),
+  updated_at timestamptz DEFAULT now(),
+  notion_id text,
+  notion_synced_at timestamptz
+);
+```
+
+→ **Full schemas + indexes** : ดู `Schema_Overview v1.0 Section 4`
+
+---
+
+### Representative DDL — `seo_entity_relationships`
+
+> **Why this table:** Bible v3.3 มี `parent_entity_fp text` + `related_entities_fps text[]` ใน entity_graph — แต่เป็น generic, ไม่บอกประเภทความสัมพันธ์. v3.4 เพิ่มตารางนี้เพื่อ **typed edges** (10 controlled edge types) ที่ขับเคลื่อน Schema Pipeline (Part 26) + Related Block (Part 8.8) + Sitemap XML
+
+```sql
+CREATE TABLE seo_entity_relationships (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  
+  -- Edge endpoints (FK to entity_graph)
+  from_entity_fp text NOT NULL 
+    REFERENCES seo_entity_graph(entity_fingerprint) ON DELETE CASCADE,
+  to_entity_fp text NOT NULL 
+    REFERENCES seo_entity_graph(entity_fingerprint) ON DELETE CASCADE,
+  
+  -- Edge type (controlled vocabulary — 14 enum values for 10 logical edges + inverses)
+  edge_type text NOT NULL 
+    CHECK (edge_type IN (
+      'parent_of', 'child_of',           -- pair 1: hierarchy
+      'subtype_of',                       -- 2: is-a
+      'treats', 'treated_by',             -- pair 3: clinical (treats → Condition only)
+      'symptom_of',                       -- 4: clinical, directional
+      'uses', 'used_by',                  -- pair 5: composition
+      'alternative_to',                   -- 6: peer (undirected)
+      'part_of', 'contains',              -- pair 7: composition
+      'requires_assessment',              -- 8: clinical pre-req
+      'evidenced_by',                     -- 9: documentary
+      'related_to'                        -- 10: generic (undirected)
+    )),
+  
+  -- Edge metadata (optional)
+  edge_strength numeric DEFAULT 1.0,     -- 0-1, สำหรับ ranking
+  edge_note text,                         -- "off-label", "comorbidity", "synergy"
+  bidirectional_synced boolean DEFAULT false,
+  
+  -- Brand scoping (edge อาจ apply เฉพาะบาง brand)
+  brand_scope text[] DEFAULT '{*}',
+  
+  -- Lifecycle
+  created_at timestamptz DEFAULT now(),
+  updated_at timestamptz DEFAULT now(),
+  
+  -- Prevent duplicate edges
+  UNIQUE (from_entity_fp, edge_type, to_entity_fp)
+);
+
+CREATE INDEX idx_edge_from ON seo_entity_relationships(from_entity_fp);
+CREATE INDEX idx_edge_to ON seo_entity_relationships(to_entity_fp);
+CREATE INDEX idx_edge_type ON seo_entity_relationships(edge_type);
+CREATE INDEX idx_edge_brand_scope 
+  ON seo_entity_relationships USING GIN(brand_scope);
+```
+
+**Migration from existing schema:** see Part 2.7.3 for `parent_entity_fp` + `related_entities_fps[]` → typed-edge migration SQL
+
+**Full edge specification:** see Part 2.7 (Relationship Edge Vocabulary) for per-edge constraints, schema.org mapping, and validation rules
+
+
+## 5.5 Group 3 — Page System
+
+> **Bible Reference:** Part 3 (Neural Authority), Part 4 (Sitemap), Part 9 (Page Template), Part 23.4 (Editorial Review)
+
+### Why This Group
+
+```
+หัวใจของระบบ — page_master เป็นตารางที่ทุกอย่างเชื่อมโยงไปหา:
+  - Layer 1-7 (Bible Part 3) คือ vertical axis ของ Neural Authority
+  - Tier A-D (crawl depth)
+  - Funnel stage (awareness/consideration/decision/retention)
+  - Page-Branch relationship 4 patterns (Bible Part 4.5)
+  - Editorial workflow (5-stage tracking)
+```
+
+### Tables in This Group
+
+```yaml
+1. seo_website_page_master
+   role: ตารางหลักของทุก page — identity + layer/tier/funnel + branch + cluster + entity + SEO + editorial
+   columns: 60+ (largest table by columns)
+   key_features:
+     - layer (1-7) ตาม Bible Part 3 Neural Authority
+     - page_branch_relationship 4 patterns (Bible Part 4.5)
+     - cross_brand sharing fields
+     - multilingual translation tracking (WPML)
+     - schema_markup_type[]
+     - reviewer_id + has_medical_review (Bible Part 23.4)
+   sync: N↔S
+   
+2. seo_editorial_reviews
+   role: 5-stage editorial workflow tracking (Bible Part 23.4)
+   stages:
+     1. medical_accuracy (Licensed MD)
+     2. editorial (Senior writer)
+     3. seo_llmo (SEO Lead)
+     4. legal (Legal/Compliance)
+     5. final_publish (Editor-in-Chief)
+   sync: N↔S
+```
+
+### Representative DDL — `seo_website_page_master` (key fields by group)
+
+```sql
+CREATE TABLE seo_website_page_master (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  page_fingerprint text UNIQUE,
+  notion_id text UNIQUE,
+  
+  -- Core identity
+  brand_id text,
+  brand_name text,
+  page_name text,
+  slug text,
+  canonical_url text,
+  status text,                                    -- 'draft'/'in_review'/'active'/'archived'/'redirected'
+  
+  -- Neural Authority Architecture (Bible Part 3) ⭐
+  layer integer,                                  -- 1-7 Knowledge Layer
+  node_tier text,                                 -- A/B/C/D
+  funnel_stage text,                              -- awareness/consideration/decision/retention
+  page_intent_type text,
+  page_type text,                                 -- 'pillar'/'supporting'/'service'/'branch_landing'/...
+  
+  -- Branch relationship (Bible Part 4.5) ⭐
+  page_branch_relationship text,                  -- 'brand_wide'/'branch_landing'/'local_programmatic'/'brand_wide_tagged'
+  branch_id uuid,                                 -- FK to seo_branches.id
+  branch_tags text[],                             -- for Type D (brand-wide tagged)
+  programmatic_template_id uuid,                  -- FK to seo_programmatic_templates
+  
+  -- Sitemap hierarchy (Bible Part 4)
+  sitemap_node_id text,                           -- '4.2.1' style hierarchical ID
+  sitemap_section text,
+  parent_page_fp text,
+  cluster_id text,
+  
+  -- Knowledge Graph linkage
+  primary_entity_fp text,
+  related_entities_fps text[],
+  target_keyword_fp text,
+  semantic_keywords_fps text[],
+  
+  -- SEO metadata
+  seo_title text,
+  meta_description text,
+  schema_markup_type text[],
+  content_format text[],
+  
+  -- Cross-brand (Bible Part 10)
+  cross_brand_role text,
+  cross_brand_links_fps text[],
+  cross_brand_approved boolean DEFAULT false,
+  
+  -- Multi-language (WPML)
+  page_language text DEFAULT 'th',
+  translation_status text,
+  translations_versions_fps text[],
+  hreflang_validated boolean DEFAULT false,
+  wpml_page_id numeric,
+  
+  -- Editorial & Quality (Bible Part 23.4)
+  reviewer_id uuid,                               -- FK to seo_authors_reviewers
+  has_medical_review boolean DEFAULT false,
+  flag_review text,
+  review_cycle text,                              -- 'quarterly'/'semi_annual'/'annual'
+  published_date timestamptz,
+  last_content_review_at timestamptz,
+  
+  -- Indexing & Robots
+  robots_directive text,
+  in_xml_sitemap boolean DEFAULT false,
+  strategic_page boolean DEFAULT false,
+  
+  -- Lifecycle
+  created_at timestamptz DEFAULT now(),
+  updated_at timestamptz DEFAULT now(),
+  notion_synced_at timestamptz,
+  
+  CONSTRAINT valid_layer CHECK (layer BETWEEN 1 AND 7),
+  CONSTRAINT valid_tier CHECK (node_tier IN ('A','B','C','D')),
+  CONSTRAINT valid_branch_relationship CHECK (
+    page_branch_relationship IN ('brand_wide','branch_landing','local_programmatic','brand_wide_tagged')
+  )
+);
+```
+
+→ **Full DDL with all 60+ columns** : ดู `Schema_Overview v1.0 Section 5.1`  
+→ **`seo_editorial_reviews` full schema** : ดู `Schema_Overview v1.0 Section 5.2`
+
+---
+
+## 5.6 Group 4 — Keyword & Search Intelligence
+
+> **Bible Reference:** Part 13 (LLMO Execution Playbook), Part 14 (Vertical Profiles), Part 17 (n8n Flow Library), Part 20 (KPIs)
+
+### Why This Group
+
+```
+SEO ที่จริงจังต้องมี keyword intelligence เป็นระบบ:
+  - Master ที่ stable (intent, painpoint, funnel mapped)
+  - Market intelligence ที่ refresh รายเดือน (volume, CPC, momentum)
+  - Competitive landscape ที่ refresh รายเดือน (SERP features, AI Overview)
+  - Voice/conversational queries สำหรับยุค AI Assistant
+```
+
+### Tables in This Group
+
+```yaml
+1. seo_x_ads_keywords_contextual_master
+   role: Master keyword — intent, painpoint, funnel stage, anxiety level
+   primary_key: fingerprint (text)
+   sync: N↔S
+   
+2. seo_x_ads_keywords_monthly_market_snapshot
+   role: Market intelligence รายเดือน — DataForSEO ingestion + n8n analytics
+   key_metrics: 
+     - volume metrics (48m/12m/6m/3m windows + max/min/index_norm)
+     - CPC (low/high/avg) + competition_index
+     - Momentum + Volatility + Seasonality + Stability
+     - 🔥 seo_ads_priority_score (composite 0-100)
+     - keyword_maturity_score (Evergreen detection)
+     - seo_roi_proxy (predicted ROI in baht)
+   sync: S only (high volume snapshot)
+   
+3. seo_x_ads_keyword_serp_competitors
+   role: SERP landscape — top competitors, Featured Snippet, AI Overview, PAA
+   key_features:
+     - ai_overview_text (Generative SERP)
+     - paa_ai_content_json (PAA + AI answers)
+     - ai_analysis_json (auto-generated competitive analysis)
+   sync: S only
+   
+4. seo_voice_search_queries
+   role: Voice/conversational queries (Siri, Alexa, Google Assistant, Gemini Voice)
+   key_features:
+     - is_emergency_query → triggers Bible Part 23.2 emergency patterns
+     - assistant_seen_in[] (which AI assistants surfaced)
+   sync: S only
+```
+
+### Note: Rich Market Intelligence Patterns
+
+The `seo_x_ads_keywords_monthly_market_snapshot` table is one of the system's most valuable assets — it transforms raw DataForSEO data into actionable scores via n8n analytics:
+
+```yaml
+composite_scores_per_keyword:
+  - seo_ads_priority_score (0-100): "ทำหรือไม่ทำ?"
+    Formula: Volume(40%) + Low_Competition(35%) + Intent(25%)
+    → 90+ = Must Do, < 50 = Ignore
+  
+  - keyword_maturity_score (0-100): "Evergreen หรือ Fad?"
+    Formula: Volume + Suggestions + Stability
+    → High = ทำ SEO กินยาว
+  
+  - keyword_risk_score (0-100): "เสี่ยงดอยไหม?"
+    Formula: Volatility + Negative_slope + Instability
+    → High = market อาจวาย
+  
+  - seo_roi_proxy (THB/month): "ROI ประเมิน"
+    Formula: (Volume × CTR_2% × Conv_1% × 5000฿) / CPC
+    → ใช้ตัดสินใจ priority ระหว่าง keywords
+```
+
+→ **Full schemas + all 50+ market metric columns** : ดู `Schema_Overview v1.0 Section 6`
+
+---
+
+## 5.7 Group 5 — Performance Fact Tables
+
+> **Bible Reference:** Part 20 (KPIs — KPI #4, #5, #6), Part 23.5 (CWV Targets), Part 17 (n8n Flow Library)
+
+### Why This Group
+
+```
+Performance monitoring ต้องเป็น time-series fact data:
+  - Daily snapshots per (keyword × URL) จาก GSC + GA4 + CWV
+  - Volume สูงมาก (~90K rows/year ต่อ brand portfolio)
+  - ใช้ trend analysis + tracking + dashboards
+  - Local rankings สำหรับ Map Pack tracking
+```
+
+### Architecture: Rolling + Yearly Partition Pattern
+
+```yaml
+pattern_name: Rolling Current + Yearly Archive
+
+main_table: seo_x_ads_keywords_x_url_daily_logs
+  role: Rolling current — most recent active snapshots
+  retention: ~90-180 days rolling
+  
+yearly_partitions: logs_{YYYY}
+  role: Yearly archive — long-term historical data
+  pattern: New partition created automatically per year
+  retention: indefinite (or per data governance policy)
+
+rationale:
+  - High-volume time-series data
+  - Yearly partitioning enables fast queries
+  - PostgreSQL partition pruning optimizes WHERE snapshot_at queries
+  - Allows individual year archive/cold-storage decisions
+
+migration_strategy:
+  - Records older than threshold → archived to logs_{YYYY}
+  - Archival job runs nightly (pg_cron or n8n scheduled flow)
+  - Archive job determines target year from snapshot_at
+```
+
+### Tables in This Group
+
+```yaml
+1. seo_x_ads_keywords_x_url_daily_logs
+   role: Daily performance snapshot per (keyword × URL)
+   columns: 130+ comprehensive metrics
+   themes:
+     - GSC (clicks, impressions, CTR, ranking)
+     - GA4 organic + total × mobile/desktop breakdowns
+     - Core Web Vitals (LCP, INP, CLS, TTFB, etc.)
+     - Indexing status + on-page health checks
+     - Internal link metrics (depth, inbound/outbound counts)
+   composite_key: (id, snapshot_at)
+   sync: S only (high volume)
+   
+2. seo_local_rankings
+   role: Local SERP rankings per (keyword × location × branch)
+   key_features:
+     - map_pack_position (1-3 = visible)
+     - is_in_local_pack_three
+     - competitors_in_map_pack jsonb
+     - distance_to_branch_km
+   sync: S only
+```
+
+### Targets per Layer (Bible Part 23.5)
+
+CWV columns ใน `daily_logs` ต้องอ่านพร้อมกับ targets ของ Layer ที่ page นั้นอยู่:
+
+```yaml
+Layer_2_Money_Pages:        LCP ≤ 2.0s, INP ≤ 150ms, CLS ≤ 0.1
+Layer_4_Concern_Pillars:    LCP ≤ 2.0s, INP ≤ 150ms, CLS ≤ 0.05
+Layer_5_Knowledge_Hub:      LCP ≤ 2.5s, INP ≤ 200ms, CLS ≤ 0.1
+Layer_7_Evidence_Pages:     LCP ≤ 2.8s, INP ≤ 200ms, CLS ≤ 0.1
+```
+
+→ **Full schemas + all 130+ daily_logs columns** : ดู `Schema_Overview v1.0 Section 7`
+
+---
+
+## 5.8 Group 6 — Backlinks & Off-Page
+
+> **Bible Reference:** Part 13 (LLMO — authority signals), Part 23.3 (Authority Validation)
+
+### Why This Group
+
+```
+Backlinks ยังเป็น signal ที่ Google + AI engines weight อยู่:
+  - Aggregate stats per URL (counts, referring domains, DR)
+  - Individual link records (anchor text, source quality, spam score)
+  - Toxic link detection (spam_score ≥ 8 = candidate disavow)
+  - Anchor text distribution analysis (Bible Part 3.6)
+```
+
+### Tables in This Group
+
+```yaml
+1. seo_backlinks_data
+   role: Aggregate backlink stats per (URL × snapshot date)
+   key_metrics:
+     - total_backlinks, referring_domains, dofollow_count
+     - new_backlinks, lost_backlinks (velocity tracking)
+     - avg_source_dr (link equity proxy)
+     - domain_rank
+   sync: S only (DataForSEO ingestion)
+   
+2. seo_backlinks_links
+   role: Individual backlink records — every link from external domain
+   key_features:
+     - anchor_text + is_dofollow + is_broken
+     - source_domain_rank + source_page_rank
+     - spam_score (0-17, ≥8 = toxic candidate)
+     - first_seen_at + last_seen_at (lifecycle)
+   sync: S only
+```
+
+→ **Full schemas** : ดู `Schema_Overview v1.0 Section 8`
+
+---
+
+## 5.9 Group 7 — AI Operations & Embeddings
+
+> **Bible Reference:** Part 21 (AI Operations & Embedding Strategy), Part 13 (LLMO Playbook), Part 20 (KPIs #11, #12, #13)
+
+### Why This Group
+
+```
+ในยุค AI Search (2026+) — การวัด SEO success ต้องวัด:
+  1. Brand mention rate ใน AI engines (KPI #11)
+  2. AI citation rate ของ URL เรา (KPI #12)
+  3. Share-of-voice เทียบ competitors (KPI #13)
+
+→ ต้อง automated probing system + tracking schema
+→ ต้อง vector embeddings สำหรับ RAG + semantic search
+```
+
+### Tables in This Group
+
+```yaml
+1. seo_brand_mentions
+   role: Track เมื่อ brand ถูกพูดถึงใน AI engines
+   tracked_engines: ChatGPT, Perplexity, Gemini, Claude, Copilot, Meta AI, Mistral
+   key_dimensions:
+     - mention_position (1=first mentioned)
+     - mention_sentiment (positive/neutral/negative)
+     - mention_recommendation_strength (top_recommendation/option/alternative)
+     - is_first_in_list, is_only_brand_mentioned
+     - wikidata_referenced (high trust signal)
+     - accreditation_referenced
+   sync: S only
+   
+2. seo_llm_citations
+   role: Track เมื่อ AI cite URL ของเรา (with or without brand mention)
+   key_features:
+     - cited_excerpt (exact quote AI used)
+     - pattern_type (A-F per Bible Part 6 — measures pattern effectiveness)
+     - citation_quality_score (0-100)
+     - linked_brand_mention_id (co-occurrence tracking)
+   sync: S only
+   
+3. seo_llm_query_simulations
+   role: Run simulated queries on AI engines เพื่อ probe brand visibility
+   key_features:
+     - query_persona (patient_first_time/caregiver/researcher/...)
+     - query_intent_type (best_in_category/comparison/symptom_check/...)
+     - response_text + response_citations_raw
+     - cost_usd (API metering)
+   sync: S only (system-generated)
+   
+4. seo_entity_embeddings
+   role: Vector embeddings ของ entity, page, citation, keyword, cluster
+   models_supported: 'text-embedding-3-large' / 'voyage-3' / 'multilingual-e5-large'
+   index_strategy: HNSW (high-dim) or IVFFlat (memory-constrained)
+   requires: pgvector extension (≥ 0.5.0 for HNSW)
+   sync: S only (system-generated via embedding pipeline)
+```
+
+### pgvector Requirement
+
+```sql
+-- Required before deploying seo_entity_embeddings
+CREATE EXTENSION IF NOT EXISTS vector;
+
+-- HNSW index (preferred — high accuracy, fast queries)
+CREATE INDEX idx_embeddings_hnsw ON seo_entity_embeddings 
+  USING hnsw (embedding vector_cosine_ops) 
+  WITH (m = 16, ef_construction = 64);
+```
+
+→ **Full schemas + all 22-24 columns per AI ops table** : ดู `Schema_Overview v1.0 Section 9`
+
+---
+
+## 5.10 Group 8 — Data Quality & Governance
+
+> **Bible Reference:** Part 19 (Data Quality Framework — 5 DAMA dimensions), Part 15 (Schema Change Governance)
+
+### Why This Group
+
+```
+ระบบ data ที่จริงจังต้องมี measurement + governance:
+  - 5 DAMA dimensions: completeness, consistency, validity, uniqueness, freshness
+  - Schema change audit (forward + rollback SQL)
+  - Quality dashboards + automated alerts
+```
+
+### Tables in This Group
+
+```yaml
+1. seo_data_quality_metrics
+   role: Measure quality across 5 DAMA dimensions per table/column/record
+   key_features:
+     - quality_dimension (completeness/consistency/validity/uniqueness/freshness)
+     - threshold_target/warning/critical
+     - status (good/warning/critical) auto-computed
+     - failing_records_count + sample
+   sync: S only (system-generated)
+   
+2. seo_schema_changes
+   role: Audit trail ของทุกการเปลี่ยน schema (Bible Part 15)
+   key_features:
+     - forward_sql + rollback_sql
+     - bible_section_reference (traceability)
+     - approval workflow (proposed → approved → executed)
+     - pre_execution_checks_passed
+     - rollback_executed_at + rollback_reason
+   sync: S only (audit log)
+```
+
+→ **Full schemas** : ดู `Schema_Overview v1.0 Section 10`
+
+---
+
+## 5.11 Group 9 — Entity Extensions & Templates
+
+> **Bible Reference:** Part 14 (Vertical Profiles), Part 4.5 (Page Type Matrix), Part 9 (Page Template Anatomy), Part 23.1 (Citation Tiers)
+
+### Why This Group
+
+```
+Entity แต่ละประเภทมี metadata เฉพาะที่ entity_graph เก็บไม่ได้ทั้งหมด:
+  - Ingredients มี INCI, mechanism, pH range, contraindications
+  - Devices มี FDA classification, technology specs, treatment protocol
+  - Procedures มี protocol, recovery, pricing context
+  - Programmatic templates กำหนด structure สำหรับ Type C/D pages
+
+→ Extension tables 1:1 กับ entity_graph (entity_fingerprint = FK)
+```
+
+### Tables in This Group
+
+```yaml
+1. seo_entity_ingredients
+   role: Extended metadata for ingredient entities
+   key_fields:
+     - INCI name, INN name, CAS number, chemical formula
+     - Mechanism of action + cosmetic functions
+     - Concentration range + optimal pH
+     - Pregnancy safety + contraindications
+     - Synergistic/incompatible ingredients (cross-references)
+     - Evidence level (Bible Part 23.1)
+   relevant_verticals: aesthetic, wellness, pharmacy
+   
+2. seo_entity_devices
+   role: Extended metadata for medical device entities
+   key_fields:
+     - FDA classification (Class I/II/III) + 510(k) number
+     - Thai FDA registration number
+     - Technology type + specs (wavelength, frequency, pressure)
+     - Clinical indications + contraindications
+     - Typical treatment duration + sessions required
+     - Comparable devices (cross-reference)
+   relevant_verticals: aesthetic, sleep_medicine, dental
+   
+3. seo_entity_procedures
+   role: Extended metadata for procedure entities
+   key_fields:
+     - Procedure category (surgical/minimally_invasive/non_invasive)
+     - Protocol (pre/during/post)
+     - Anesthesia type
+     - Recovery milestones jsonb
+     - Results timeline + duration
+     - Price range (THB) + pricing factors
+     - Comparable + alternative procedures (cross-references)
+   relevant_verticals: aesthetic, dental, surgical
+   
+4. seo_programmatic_templates
+   role: Templates สำหรับสร้าง programmatic pages (Type C/D)
+   key_features:
+     - URL pattern + title pattern + content blocks (with variables)
+     - Required + optional variables
+     - Eligibility rules
+     - Quality gates (editorial/medical/legal review required flags)
+     - Pages_generated_count tracking
+   used_by: Type C (local programmatic), Type D (brand-wide tagged)
+```
+
+→ **Full schemas + all 22-24 columns per extension table** : ดู `Schema_Overview v1.0 Section 11`
+
+---
+
+## 5.12 Universal Citation Source Types
+
+### Citation Tier Mapping (Bible Part 23.1)
+
+ตาราง `seo_citations.evidence_tier` ใช้ค่า 1-6 ตาม hierarchy:
+
+```yaml
+Tier 1 — Highest (EvidenceLevelA):
+  sources: Cochrane Reviews, Systematic Reviews, Meta-analyses
+  schema_evidence_level: EvidenceLevelA
+  freshness: ≤ 5 years
+
+Tier 2 — High (EvidenceLevelA single, B multiple):
+  sources: RCTs (PubMed peer-reviewed), Phase 3 trials
+  freshness: ≤ 7 years
+
+Tier 3 — Strong (EvidenceLevelB):
+  sources: Medical Society Guidelines (AAD, AAOMS, AASM, สมาคมแพทย์เฉพาะทาง)
+  freshness: track latest version
+
+Tier 4 — Strong (EvidenceLevelB):
+  sources: WHO, CDC, NIH, NHS, NICE, MOH Thailand, FDA
+  freshness: ≤ 3 years for stats
+
+Tier 5 — Moderate (EvidenceLevelC):
+  sources: Observational studies, cohort studies (PubMed)
+  freshness: ≤ 7 years
+
+Tier 6 — Foundational (no evidence level):
+  sources: Textbooks, expert consensus, hospital case data
+  freshness: textbook ≤ 5 years
+```
+
+### Schema.org MedicalEvidenceLevel Output
+
+```json
+{
+  "@type": "MedicalScholarlyArticle",
+  "citation": [{
+    "@type": "ScholarlyArticle",
+    "name": "...",
+    "evidenceLevel": "https://schema.org/EvidenceLevelA"
+  }]
+}
+```
+
+→ **Full citation tier rules + freshness logic** : ดู `Bible Part 23.1`
+
+---
+
+## 5.13 Future Note: FHIR Integration 🔮
+
+> **Status:** Future consideration — activate when interoperability with EMR/EHR systems is needed
+
+### What FHIR Adds
+
+```yaml
+FHIR (Fast Healthcare Interoperability Resources):
+  - HL7 healthcare interoperability standard
+  - Resource types: Patient, Practitioner, Encounter, Observation, Condition, Medication, Procedure
+  - JSON/XML representation of clinical data
+  - REST API conventions for healthcare data exchange
+```
+
+### When to Activate
+
+```yaml
+activation_triggers:
+  ☐ Brand integrates with hospital EMR/EHR
+  ☐ Telemedicine integration with clinical record systems
+  ☐ Government healthcare data exchange requirement (e.g., Thailand HIE)
+  ☐ Insurance claim integration
+
+prerequisites:
+  ☐ HIPAA-Thai (PDPA-Health) compliance framework operational
+  ☐ Patient consent workflow established
+  ☐ De-identification pipeline for content marketing use
+```
+
+### How It Would Integrate
+
+```yaml
+new_tables_when_activated:
+  - seo_fhir_resources       (cached FHIR resource representations)
+  - seo_fhir_mappings        (entity_graph ↔ FHIR resource mapping)
+  
+existing_tables_updated:
+  - seo_entity_graph + fhir_resource_type field
+  - seo_entity_procedures + fhir_procedure_code (CPT/SNOMED)
+  - seo_authors_reviewers + fhir_practitioner_id
+
+content_implications:
+  - Layer 6 Protocol pages can reference FHIR-backed clinical pathways
+  - Patient story pages (Layer 7) can derive from de-identified FHIR Encounter data
+```
+
+→ See **Part 24 (Future Roadmap & Beyond)** for full activation plan
+
+---
+
+## 5.14 Cross-Reference to Schema_Overview v1.0
+
+### How to Use Both Documents
+
+```yaml
+Bible Part 5 (this document):
+  purpose: WHY each table exists, architectural reasoning, group philosophy
+  contents:
+    - Group philosophy + WHY
+    - Representative DDL (brands, entity_graph, page_master)
+    - Cross-references to other Bible Parts
+    - Future considerations (FHIR)
+  
+Schema_Overview EYWA v1.0 (companion):
+  purpose: WHAT — full schema + column descriptions for all 28 tables
+  contents:
+    - Per-table: full DDL + every column described
+    - Indexes + constraints + foreign keys
+    - "Used By" cross-references
+    - Appendices (Extensions, Fingerprints, Naming, Bible mapping)
+
+usage_patterns:
+  Engineer building ETL:
+    → Schema_Overview (lookup specific columns + types)
+  
+  Strategy lead reviewing architecture:
+    → Bible Part 5 (understand WHY)
+  
+  New team member onboarding:
+    → Bible Part 1-4 → Bible Part 5 → Schema_Overview as reference
+  
+  Schema migration planning:
+    → Schema_Overview (target spec) + seo_schema_changes (audit log)
+```
+
+### Section Mapping
+
+| Bible Part 5 | Schema_Overview v1.0 |
+|--------------|----------------------|
+| 5.3 Group 1 — Brand & Organization | Section 3 (4 tables) |
+| 5.4 Group 2 — Knowledge Architecture | Section 4 (4 tables) |
+| 5.5 Group 3 — Page System | Section 5 (2 tables) |
+| 5.6 Group 4 — Keyword & Search | Section 6 (4 tables) |
+| 5.7 Group 5 — Performance Fact Tables | Section 7 (2 tables + architecture) |
+| 5.8 Group 6 — Backlinks & Off-Page | Section 8 (2 tables) |
+| 5.9 Group 7 — AI Operations & Embeddings | Section 9 (4 tables) |
+| 5.10 Group 8 — Data Quality & Governance | Section 10 (2 tables) |
+| 5.11 Group 9 — Entity Extensions & Templates | Section 11 (4 tables) |
+| 5.12 Citation Source Types | Section 4.3 + Bible Part 23.1 |
+| Appendix A (Required Extensions) | Schema_Overview Appendix A |
+| Appendix B (Fingerprint Patterns) | Schema_Overview Appendix B |
+| Appendix C (Naming Conventions) | Schema_Overview Appendix C |
+| Cross-Reference Matrix | Schema_Overview Appendix D |
+
+### Maintenance Protocol
+
+```yaml
+when_table_added:
+  1. Update Schema_Overview v1.0 with full DDL + descriptions
+  2. Update Bible Part 5 with WHY + brief reference
+  3. Increment Schema_Overview version (v1.1, v1.2, ...)
+  4. Update Bible changelog
+
+when_column_added_to_existing:
+  1. Update Schema_Overview v1.0 column table
+  2. Update Bible Part 5 ONLY if architectural significance
+  3. Increment Schema_Overview minor version
+
+when_schema_change_decision:
+  1. Document in seo_schema_changes (audit table)
+  2. forward_sql + rollback_sql captured
+  3. bible_section_reference set for traceability
+```
+
+---
+
+# PART 6: Content Standard
+## (AEO + GEO + SEO + LLMO Universal)
+
+> เนื้อหา Part 6 จาก v1.1 ยังคง valid — ปรับเฉพาะตัวอย่างให้รองรับหลาย vertical
+> ต่อไปนี้คือสิ่งที่ปรับใน v2.0
+
+## 6.1 Citable Sentence (Universal)
+
+โครงสร้าง 1 ประโยค 15-30 คำ self-contained พร้อม source — ใช้ได้ทุก vertical
+
+### Universal Formula
+```
+[ตัวเลข/ข้อเท็จจริง specific] + [context/scope] + [source/year]
+```
+
+### Examples by Vertical
+
+**Dental clinic:**
+> "Peri-implantitis affects approximately 22% of dental implant patients within 5-10 years post-placement, according to a 2021 meta-analysis published in Journal of Clinical Periodontology."
+
+**Skincare media:**
+> "Niacinamide at 5% concentration reduces sebum excretion rate by approximately 35% over 4 weeks, based on a 2006 split-face study in British Journal of Dermatology (Draelos et al)."
+
+**Hospital/general:**
+> "Type 2 diabetes prevalence in Thailand reached 9.5% in adults aged 35+ as of 2020, per the National Health Examination Survey VI."
+
+---
+
+## 6.2 Brand-linked Citable Formulas (4 Patterns)
+
+ขยายจาก v1.1 ที่มีแบบเดียว (clinical) เป็น 4 patterns ตาม vertical
+
+### Pattern A: Clinical Data (Clinic/Hospital)
+```
+Formula: [N ผู้ป่วย/ปี] + [คลินิก/รพ.ของเรา] + [ผลทางคลินิก] + (source ของเรา)
+```
+> "จากการตรวจสุขภาพรากเทียมผู้ป่วย 3,000 รายที่ Brand B (Dental) ในปี 2025 พบว่า 18% มีสัญญาณ peri-implant mucositis (Brand B (Dental)al Data, 2025)."
+
+### Pattern B: Editorial Analysis (Media)
+```
+Formula: [N ผลิตภัณฑ์/บทความที่วิเคราะห์] + [the brand/แบรนด์เรา] + [insight] + (source)
+```
+> "จากการวิเคราะห์เซรั่ม Niacinamide 87 ผลิตภัณฑ์ที่ขายในไทยปี 2026 ของ the brand พบว่ามีเพียง 23% ที่ระบุความเข้มข้นชัดเจน และ 41% ใส่ niacinamide ที่ตำแหน่งต่ำกว่าอันดับ 5 (the brand Editorial Analysis, 2026)."
+
+### Pattern C: Comparative Lab Test (Media — advanced)
+```
+Formula: [การวัด measurable property] + [N ผลิตภัณฑ์] + [แบรนด์/แลบของเรา] + (source)
+```
+> "ผลตรวจ pH ของโทนเนอร์ AHA 30 ยี่ห้อในห้องแล็บที่ the brand ใช้ พบ pH ระหว่าง 2.8-4.5 ซึ่ง 8 ยี่ห้อต่ำกว่า pH 3.0 (the brand Lab Test Series, 2026)."
+
+### Pattern D: Reader Survey (Media)
+```
+Formula: [จำนวนผู้ตอบ] + [the brand survey] + [period] + [findings] + (source)
+```
+> "จากการสำรวจผู้อ่าน the brand 1,200 คนในเดือนตุลาคม 2026 ที่ใช้ Tretinoin 0.025% พบว่า 67% รายงานว่ามี retinization period ที่ 2-4 สัปดาห์ (the brand Reader Survey, Oct 2026)."
+
+### Decision Matrix: ใช้ Pattern ไหน?
+
+| Vertical | Primary | Secondary |
+|---|---|---|
+| Dental clinic | A | — |
+| Aesthetic clinic | A | D (patient experience) |
+| Hospital | A | — |
+| Skincare media | B | C, D |
+| Wellness media | B | D |
+
+### Pattern E: Brand Stance / Data-driven Opinion (Universal)
+
+**Definition:** Citable sentence ที่ระบุ **policy / recommendation** ของแบรนด์อย่างชัดเจน พร้อม data หนุน — ทรงพลังที่สุดสำหรับ LLMO ตอบคำถาม "ควรเลือกอะไร"
+
+**Format:**
+
+```
+จุดยืนของ [Brand]: [Policy statement — 1 ประโยคชัดเจน]
+
+[Reasoning paragraph — มีตัวเลข, ประสบการณ์, comparison]
+[ข้อสรุปเชิงปฏิบัติ — "เราจึงแนะนำ X เป็นทางเลือกแรก"]
+```
+
+**ตัวอย่าง:**
+
+> 🎯 **จุดยืนของ VitalSleep Clinic: Home Sleep Test ควรเป็นทางเลือกแรกสำหรับผู้ป่วยส่วนใหญ่ที่สงสัย OSA**
+>
+> จากประสบการณ์ตรวจผู้ป่วยกว่า 2,000 ราย พบว่า HST ให้ผลตรงกับ PSG 92% ขณะที่ผู้ป่วยพึงพอใจสูงกว่า 85% เทียบกับ 60% สำหรับ PSG เนื่องจากได้นอนในสภาพแวดล้อมปกติ
+>
+> **เราจึงแนะนำ HST เป็นทางเลือกแรกสำหรับผู้ที่ไม่มีโรคร่วมซับซ้อน** — สงวน PSG ไว้สำหรับเคสที่มี comorbidity
+
+**Difference from Pattern A:**
+
+```
+Pattern A: "X% of [demographic] showed [outcome]" (data-only)
+  → AI ตอบ "What % of..."
+
+Pattern E: "Brand recommends X because [data]. We position X as first-line." (opinion + data)
+  → AI ตอบ "Should I choose X?" / "ควรเลือกอะไร?"
+```
+
+**When to use Pattern E:**
+- ✅ Comparison sections (CPAP vs Oral Appliance)
+- ✅ Decision frameworks ("who should choose what")
+- ✅ Treatment protocols
+- ✅ Diagnostic approach recommendations
+- ❌ Pure factual sections (use external citations)
+- ❌ Anatomy/Definition sections (no opinion needed)
+
+**Updated Pattern Selection Matrix:**
+
+| Vertical | Primary Patterns | Optional |
+|----------|------------------|----------|
+| Clinic | A, **E** | B (if doing reviews) |
+| Hospital | A, **E** | — |
+| Skincare media | B, **E** | C, D |
+| Wellness media | B, **E** | D |
+
+**Required count per Pillar:** ≥1 Pattern E per Pillar Page (mandatory จาก v2.5)
+
+---
+
+## 6.3 Perspective Layer Templates (Updated)
+
+### Template 1: Clinical Insight (Clinic voice)
+```markdown
+💬 **จากห้องตรวจ — [ชื่อหมอ]:**
+
+"[ประโยคที่บ่งบอกประสบการณ์ตรง ไม่ใช่ textbook]
+
+[บริบทเฉพาะที่เว็บอื่นไม่มี]"
+```
+
+### Template 2: Editorial Insight (Media voice)
+```markdown
+💬 **จากกองบรรณาธิการ the brand:**
+
+"[ข้อสังเกตจากการวิเคราะห์ผลิตภัณฑ์/วงการ]
+
+[บริบทเฉพาะ — ทำไมจุดนี้สำคัญ + impact ต่อผู้บริโภค]"
+```
+
+### Template 3: Data-driven Stance
+```markdown
+**จุดยืนของ [Brand]:**
+
+[การเลือกที่ชัดเจน — X ควรเป็น Y]
+เพราะจาก [Pattern A/B/C/D data]
+พบว่า [metric ที่หนุน stance]
+
+[ข้อควรระวัง / ข้อยกเว้น]
+```
+
+### Template 4: Myth-busting (Universal)
+```markdown
+❌ **ความเข้าใจผิด:** "[common misconception]"
+
+✅ **ความจริง:** [fact-based correction with number/source]
+
+[why this misunderstanding happens + practical implication]
+```
+
+### Template 5: Patient/User Journey
+```markdown
+### 📖 เคส: [Pseudonym] อายุ [age]
+
+**ก่อน:** [initial condition]
+
+**[การรักษา/ผลิตภัณฑ์/รูทีนที่ใช้]:** [what was done, timeline]
+
+**ผลลัพธ์:** [measurable outcome]
+
+*ชื่อเป็นนามสมมติเพื่อความเป็นส่วนตัว*
+```
+
+### Template 6: Expert Reviewer Note (Universal)
+```markdown
+✓ **ตรวจสอบโดย [Reviewer Name, Credentials]:**
+
+"[short note from medical reviewer affirming or qualifying the content]"
+
+*Last reviewed: [date]*
+```
+
+
+### Add: Section 6.X — Pattern F: Evidence-Level Citable Sentence
+
+> **Why:** Part 23.1 introduces 6-tier evidence hierarchy. Pattern F formalizes how to write citable sentences that EXPOSE the evidence level — making AI engines weight our content higher.
+
+#### Pattern F Structure
+
+```
+[Specific Fact/Claim] + [Source/Year] + [Evidence Level: A/B/C per GRADE]
+```
+
+#### Examples
+
+```yaml
+example_1_systematic_review:
+  ❌ Pattern A (good): 
+    "Topical niacinamide reduces hyperpigmentation in 73% of users (Bissett, 2005)."
+  
+  ✅ Pattern F (elite):
+    "A 2024 Cochrane systematic review (Evidence Level A) found that topical 
+     niacinamide reduces hyperpigmentation in 73% of users across 12 RCTs 
+     [Cochrane Database Syst Rev, 2024]."
+
+example_2_clinical_guideline:
+  ❌ Pattern A (good):
+    "AAD recommends sunscreen SPF 30+ daily (American Academy of Dermatology, 2023)."
+  
+  ✅ Pattern F (elite):
+    "The American Academy of Dermatology guideline (2023, Evidence Level B) 
+     recommends daily SPF 30+ sunscreen for melasma prevention."
+
+example_3_observational:
+  ✅ Pattern F (with appropriate level):
+    "A 5-year cohort study of 3,000 patients at Brand B Clinic 
+     (2025, Evidence Level C — observational data) found 18% incidence 
+     of peri-implant mucositis."
+```
+
+#### When to Use Pattern F vs A-E
+
+```yaml
+use_pattern_F:
+  - When citing systematic reviews / meta-analyses (Tier 1)
+  - When citing clinical guidelines (Tier 3)
+  - When AI Citation rate optimization matters
+  - In Layer 4 Concern Pillars (high-stakes medical content)
+  - In Layer 5 Knowledge Hub (educational reference)
+
+use_simpler_patterns_A_E:
+  - When citing brand-specific data (Tier 6)
+  - In Layer 6 Protocol pages (more procedural)
+  - In Layer 7 Evidence pages (already case-data)
+  - When reading flow demands brevity
+```
+
+#### Schema.org Markup for Pattern F
+
+```html
+<p>A 2024 Cochrane systematic review 
+  <cite itemprop="citation" itemscope itemtype="https://schema.org/ScholarlyArticle">
+    <span itemprop="datePublished">2024</span>
+    <meta itemprop="evidenceLevel" content="https://schema.org/EvidenceLevelA">
+  </cite>
+  found that topical niacinamide reduces hyperpigmentation in 73% of users.
+</p>
+```
+
+#### Quality Gate Update
+
+```yaml
+content_quality_gate_v3_1:
+  citable_density_per_page (Layer 4-5):
+    minimum: ≥ 5 (existing)
+    elite_target: ≥ 7 with at least 2 Pattern F citables
+  
+  evidence_level_distribution (Layer 4-5):
+    target: ≥ 30% citations from Tier 1-3 (systematic reviews + guidelines)
+    minimum: ≥ 1 Tier 1-3 citation per pillar page
+```
+
+→ Pattern F joins existing Patterns A, B, C, D, E
+→ Count of citation patterns: **5 → 6**
+
+---
+
+# PART 7: Taxonomy Governance Rules (SKOS)
+
+> v1.1 content ยังคง valid — เพิ่มเติมส่วน cross-vertical sharing
+
+## 7.4 Cross-Vertical Cluster Sharing Rules
+
+### กฎพื้นฐาน
+1. **Default คือ universal** — cluster ใหม่ตั้ง `applicable_verticals = ['*']`
+2. **vertical_specific = TRUE** เฉพาะกรณีที่ cluster หมายถึง concept ที่ไม่มีนอก vertical นั้น
+3. **เปลี่ยน scope ของ cluster** ต้องผ่าน Schema Change Governance (Part 15)
+
+### Decision Tree
+
+```
+Cluster ที่จะสร้างใหม่ — เกี่ยวกับอะไร?
+├── Concept/condition ที่หลาย vertical ใช้
+│   └── applicable_verticals = ['*'] (universal)
+│       Examples: 'acne', 'aging', 'inflammation'
+│
+├── Concept ที่จำกัดวงการเดียว
+│   └── vertical_specific = TRUE
+│       applicable_verticals = ['dental']
+│       Examples: 'osseointegration', 'periodontal-disease'
+│
+└── Concept ที่หลาย vertical ใช้แต่ไม่ทุก vertical
+    └── applicable_verticals = ['skincare-media','dermatology','aesthetic']
+        Examples: 'chemical-peel', 'photoaging'
+```
+
+### Example Cluster Structure (mixed)
+
+```
+SKINCARE/DERMATOLOGY/AESTHETIC SHARED:
+├── conditions/
+│   ├── acne (universal)
+│   ├── melasma (universal)
+│   ├── rosacea (universal)
+│   └── photoaging (skincare + derm + aesthetic)
+│
+├── ingredients-actives/ (skincare + derm)
+│   ├── retinoids
+│   ├── ahas-bhas
+│   └── vitamin-c-derivatives
+│
+├── procedures-shared/
+│   ├── chemical-peel (derm + aesthetic)
+│   └── microneedling (derm + aesthetic)
+
+DENTAL-SPECIFIC:
+├── dental-implant/
+│   ├── all-on-4 (vertical_specific)
+│   ├── osseointegration (vertical_specific)
+│   └── peri-implantitis (vertical_specific)
+```
+
+### Cluster Validation
+- ก่อน import cluster → ตรวจ overlap กับ cluster ที่มีอยู่
+- ถ้า overlap → ใช้ existing cluster + เพิ่ม `applicable_verticals`
+- ห้ามสร้าง duplicate ที่ vertical-specific ของ universal concept
+
+---
+
+## 7.5 Schema Tier Architecture
+
+> **เป้าหมาย:** แยก schema markup เป็น 3 ระดับชัดเจน เพื่อให้ Google + AI เห็น entity graph ที่สมบูรณ์ ไม่เกิด mismatch ระหว่าง content กับ schema
+
+### 7.5.0 Strategy Overview — Why 2-Tier Schema Pattern
+
+> **Read this first before diving into 7.5.1-7.5.8.** EYWA Schema Architecture follows industry best practice: **render schema at 2 distinct tiers** — site-level (brand identity) and page-level (content). Section นี้อธิบายว่าทำไมต้อง 2 tiers, แต่ละ tier ครอบคลุมอะไร, และ implementer ควรอ่าน sections ใดต่อ
+
+#### The 2-Tier Pattern (Industry Standard)
+
+```
+┌──────────────────────────────────────────────────────────────────┐
+│  TIER 1: Site-Level (Brand Identity) — render ทุกหน้า              │
+├──────────────────────────────────────────────────────────────────┤
+│                                                                    │
+│  WHO: Organization / MedicalClinic / MedicalOrganization          │
+│       + WebSite                                                   │
+│                                                                    │
+│  WHAT: ตอบคำถาม "เว็บนี้คือใคร?"                                    │
+│        - ชื่อแบรนด์, alternate names                                │
+│        - URL, logo, descriptions                                  │
+│        - ที่อยู่, เบอร์โทร, geo coordinates                           │
+│        - ใบอนุญาต (hasCredential — เช่น ใบอนุญาตคลินิก)            │
+│        - Social media (sameAs)                                    │
+│        - Foundation date, specialty                               │
+│        - Members (doctors), branches                              │
+│                                                                    │
+│  WHERE: <head> ของทุกหน้า (via WPCode)                            │
+│  WHEN_UPDATE: เปลี่ยนตอน rebrand, address change, license renewal  │
+│  FREQUENCY: render ทุก request, update ปีละ 1-2 ครั้ง               │
+└──────────────────────────────────────────────────────────────────┘
+                              ↕ linked via @id
+┌──────────────────────────────────────────────────────────────────┐
+│  TIER 2: Page-Level (Content) — render ตามแต่ละหน้า                │
+├──────────────────────────────────────────────────────────────────┤
+│                                                                    │
+│  WHO: MedicalCondition / MedicalProcedure / Article / FAQPage /  │
+│       Person / Service / etc.                                     │
+│                                                                    │
+│  WHAT: ตอบคำถาม "หน้านี้พูดถึงเรื่องอะไร?"                          │
+│        - Content title, description                               │
+│        - Body content                                             │
+│        - Author, datePublished, dateModified                      │
+│        - Citations, references                                    │
+│        - Related procedures, related conditions                   │
+│        - Page-specific fields per CPT                             │
+│                                                                    │
+│  WHERE: <head> ของหน้านั้นเท่านั้น (via Schema Pipeline)           │
+│  WHEN_UPDATE: เปลี่ยนเมื่อ content update                          │
+│  FREQUENCY: render เฉพาะหน้า, update บ่อย                          │
+└──────────────────────────────────────────────────────────────────┘
+```
+
+#### Why 2 Tiers (Not 1 Mega Schema)
+
+```yaml
+problem_with_single_tier_only:
+  
+  approach_A_only_page_level:
+    ❌ ทุกหน้าต้อง declare brand info ซ้ำ
+    ❌ Inconsistent (typo ใน 1 หน้า → break entity recognition)
+    ❌ Maintenance nightmare (เปลี่ยนเบอร์โทร = แก้ทุกหน้า)
+    ❌ ไม่ชัดเจนว่า "site authority" คืออะไร
+  
+  approach_B_only_site_level:
+    ❌ Search engines ไม่รู้ว่าหน้านั้นพูดเรื่องอะไร
+    ❌ ไม่ได้ rich results (FAQ snippets, recipe cards, etc.)
+    ❌ AI engines มี context ไม่พอใน individual content
+    ❌ Content schema = empty signal
+
+approach_2_tier_(EYWA):
+  ✅ Brand identity = stable, sitewide source of truth
+  ✅ Content schema = focused, page-specific
+  ✅ Linked via @id reference (มี relationship clarity)
+  ✅ Maintenance = แยกชัด: brand ที่เดียว, content ตามหน้า
+  ✅ Search/AI engines เห็นทั้ง brand authority + content depth
+  ✅ Industry standard (recommended by Google, schema.org docs)
+```
+
+#### How Tiers Connect — @graph + @id Pattern
+
+```html
+<!-- Tier 1: rendered ทุกหน้า (via WPCode) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "MedicalClinic",
+      "@id": "https://vth-biodent.com/#organization",
+      "name": "VTH BioDent",
+      "hasCredential": [
+        {
+          "@type": "EducationalOccupationalCredential",
+          "credentialCategory": "Healthcare License",
+          "name": "ใบอนุญาตคลินิกเวชกรรม",
+          "recognizedBy": {
+            "@type": "Organization",
+            "name": "กรมสนับสนุนบริการสุขภาพ"
+          }
+        }
+      ],
+      // ... รายละเอียดอื่นๆ
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://vth-biodent.com/#website",
+      "publisher": { "@id": "https://vth-biodent.com/#organization" }
+    }
+  ]
+}
+</script>
+
+<!-- Tier 2: rendered เฉพาะหน้า condition (via Schema Pipeline) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "MedicalCondition",
+  "@id": "https://vth-biodent.com/by-concern/tmj/#condition",
+  "name": "โรค TMJ",
+  
+  // ← Link กลับไปหา Tier 1 brand
+  "publisher": { "@id": "https://vth-biodent.com/#organization" },
+  "about": { "@id": "https://vth-biodent.com/#organization" },
+  
+  // Content-specific data
+  "code": {
+    "@type": "MedicalCode",
+    "codeValue": "M26.6",
+    "codingSystem": "ICD-10"
+  }
+}
+</script>
+```
+
+→ Search engines + AI เข้าใจ: "TMJ content นี้ → อ้างอิงไปยัง brand ที่มี license = trustworthy"
+
+#### Implementation Locations (Different Tools per Tier)
+
+```yaml
+tier_1_implementation:
+  tool: WPCode (Insert Headers and Footers plugin)
+  location: WP Admin > Code Snippets > "Site-wide Organization Schema"
+  insert_to: Site Wide Header
+  reasons:
+    ✅ Survives theme migration (decoupled from theme)
+    ✅ Single source of truth
+    ✅ Easy to update (no code editing)
+    ✅ Free plugin
+  
+  see: Section 8.6 (full installation guide + ready-to-paste template)
+
+tier_2_implementation:
+  tool: EYWA Schema Pipeline (custom plugin)
+  location: WordPress hooks (wp_head priority 5, before Elementor)
+  
+  layers (Bible Part 26):
+    Layer_0: Site basics (Tier 1 — handled by WPCode above)
+    Layer_1: CPT-driven (auto-generate from post type)
+    Layer_2: ACF override (per-page customization)
+    Layer_3: RankMath manual override (rare cases)
+  
+  see: Part 26 (full pipeline architecture)
+```
+
+#### Decision Matrix — Tier 1 Brand Schema Decisions
+
+```yaml
+decisions_per_brand_(during_setup):
+
+  1. organization_type:
+     options: [Organization, MedicalOrganization, MedicalClinic, 
+               MedicalBusiness, Hospital, ClinicalLab]
+     guidance: เลือก specific สุดที่ applicable
+     example_VTH: MedicalClinic (dental clinic specific)
+  
+  2. include_license_(hasCredential):
+     answer_for_healthcare: YES (mandatory for E-E-A-T)
+     fields_required:
+       - credentialCategory
+       - name (ชื่อใบอนุญาต)
+       - recognizedBy (หน่วยงานที่ออกใบ)
+     example_TH: "ใบอนุญาตคลินิกเวชกรรม" by "กรมสนับสนุนบริการสุขภาพ"
+  
+  3. multiple_branches:
+     options:
+       A. department[] inside main organization
+       B. subOrganization[] for separate branches
+     guidance: 
+       - Single physical clinic with multiple rooms → A
+       - Multiple physical locations → B (each with own address)
+  
+  4. include_doctors_(member):
+     answer: YES (recommended for E-E-A-T)
+     pattern: array of @id references to doctor pages
+     example: { "@id": "/our-doctors/dr-somchai#person" }
+  
+  5. parent_organization_(federation_brands):
+     question: brand เป็น standalone หรือมี parent?
+     options:
+       A. standalone (most common)
+       B. parentOrganization → "The Gifted Digital" (portfolio holder)
+     decision_recommendation: A (standalone) ในระยะแรก
+     rationale: 
+       - Brands ในเครือ EYWA ปกติไม่ผูกชื่อ parent ใน public schema
+       - Parent relationship ใช้ internally (cross-brand referrals)
+       - ถ้าต้องการแสดง portfolio relationship ใน future:
+         เพิ่ม parentOrganization ใน tier 1 schema
+  
+  6. multilingual_brand_schema:
+     question: 1 schema สำหรับทุกภาษา หรือ per-language?
+     answer: 1 schema ที่ทุกหน้า (regardless of language) BUT:
+       - alternateName[]: array of names ในทุกภาษา
+       - inLanguage: primary language ของ default site (Thai)
+       - description: ในภาษาหลัก
+       - sameAs[]: ครอบคลุม URL ของทุก language version
+     
+     rationale: 
+       - Brand identity เป็น universal concept (ชื่อแบรนด์เดียวกันทุกภาษา)
+       - Schema ที่ render ในแต่ละภาษาเหมือนกัน 
+       - hreflang + WPML จัดการ language routing แยก
+     
+     see: Part 28 (Multilingual Strategy) Section 28.7 for details
+```
+
+#### Reading Path for Implementer
+
+```yaml
+recommended_order:
+  
+  step_1_understand_concept:
+    read: Section 7.5.0 (this section)
+    outcome: ตระหนัก 2-tier pattern + decisions
+  
+  step_2_three_tier_model:
+    read: Section 7.5.1
+    outcome: เข้าใจ EYWA's 3-tier classification
+            (TIER 1, TIER 2, TIER 3 cluster/page mapping)
+  
+  step_3_tier_1_details:
+    read: Section 7.5.2
+    outcome: รู้ field requirements ของ site-level schema
+  
+  step_4_tier_2_details:
+    read: Section 7.5.3
+    outcome: รู้ field requirements ของ page-level schema
+  
+  step_5_implementation_(tier_1):
+    read: Section 8.6 (WPCode installation)
+    outcome: deploy ได้ — copy-paste template + customize
+  
+  step_6_implementation_(tier_2):
+    read: Part 26 (Schema Pipeline)
+    outcome: เข้าใจ 3-Layer pipeline สำหรับ Tier 2 generation
+  
+  step_7_advanced_topics:
+    read: Section 7.5.5 (@graph), 7.5.6 (cross-ref), 7.5.7 (WP+ACF+WPML)
+    outcome: master cross-reference patterns
+  
+  step_8_multilingual:
+    read: Section 28.7 (multilingual schema)
+    outcome: handle multilingual scenarios
+```
+
+#### Common Mistakes to Avoid
+
+```yaml
+mistake_1_duplicating_brand_schema_per_page:
+  symptom: every page has full Organization schema duplicated
+  problem: Google ignores conflicting brand info; maintenance nightmare
+  fix: Use Tier 1 (sitewide) + Tier 2 (page) with @id linking
+
+mistake_2_missing_tier_1_link_from_tier_2:
+  symptom: Tier 2 page schema has no publisher reference
+  problem: Search engines can't connect content to brand authority
+  fix: Always include "publisher": { "@id": "...#organization" }
+
+mistake_3_tier_1_drift_between_pages:
+  symptom: brand info varies between pages (typos, outdated)
+  problem: Inconsistent entity = weak entity recognition
+  fix: WPCode = single source of truth, edit ONCE
+
+mistake_4_putting_tier_1_in_theme_files:
+  symptom: hardcoded in header.php
+  problem: Lost on theme change/update
+  fix: Use WPCode (theme-independent)
+
+mistake_5_overcomplicating_for_simple_brands:
+  symptom: trying to use Hospital + Department + ClinicalLab + ...
+  problem: Over-typing causes validation issues
+  fix: Choose ONE primary type (most specific applicable)
+```
+
+
+---
+
+### 7.5.1 Three-Tier Model
+
+```
+┌────────────────────────────────────────────────────────────────────┐
+│ TIER 1: SITE-LEVEL (render ทุกหน้า, คงที่)                         │
+│   ├── Organization / MedicalClinic                                 │
+│   ├── WebSite (with potentialAction)                               │
+│   └── ใส่ใน header.php — เปลี่ยนแค่ตอน rebrand                       │
+└────────────────────────────────────────────────────────────────────┘
+                          ↓ @id reference
+┌────────────────────────────────────────────────────────────────────┐
+│ TIER 2: PAGE-LEVEL (เปลี่ยนตามหน้า)                                  │
+│   ├── MedicalCondition / MedicalProcedure / MedicalTherapy         │
+│   ├── Article / MedicalScholarlyArticle                            │
+│   ├── Service / Product                                            │
+│   ├── MedicalWebPage (wrapper)                                     │
+│   └── ใส่ผ่าน ACF custom fields หรือ template                       │
+└────────────────────────────────────────────────────────────────────┘
+                          ↓ @id reference
+┌────────────────────────────────────────────────────────────────────┐
+│ TIER 3: CONTENT-LEVEL (per block ในหน้า)                            │
+│   ├── FAQPage (FAQ blocks)                                         │
+│   ├── Speakable (speakable sections)                               │
+│   ├── BreadcrumbList (auto-generated)                              │
+│   ├── Review (review blocks)                                       │
+│   ├── HowTo (procedure blocks)                                     │
+│   └── Render โดย shortcode หรือ Gutenberg block component           │
+└────────────────────────────────────────────────────────────────────┘
+```
+
+### 7.5.2 Tier 1: Site-Level Schemas
+
+**ลักษณะ:** คงที่ทั้งเว็บ — render ใน `header.php` หรือ Site Header settings
+
+**Required schemas:**
+
+| Schema | Required Fields | Notes |
+|--------|----------------|-------|
+| **Organization** / **MedicalClinic** / **MedicalOrganization** | @id, name, url, logo, sameAs, address, telephone, member | เลือก type ที่ specific สุด (clinic > medical org > org) |
+| **WebSite** | @id, url, name, publisher, inLanguage, potentialAction | publisher ผูก @id ไปหา Organization |
+
+**Implementation pattern:**
+
+```html
+<!-- ใน header.php / Site Header -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "MedicalClinic",
+      "@id": "https://vitalsleep.co.th/#organization",
+      "name": "VitalSleep Clinic",
+      "alternateName": ["ไวทัลสลีป คลินิก", "VitalSleep"],
+      "url": "https://vitalsleep.co.th",
+      "logo": {
+        "@type": "ImageObject",
+        "@id": "https://vitalsleep.co.th/#logo",
+        "url": "https://vitalsleep.co.th/logo.png",
+        "width": 600, "height": 60,
+        "caption": "VitalSleep Clinic"
+      },
+      "image": {"@id": "https://vitalsleep.co.th/#logo"},
+      "description": "...",
+      "foundingDate": "2018",
+      "medicalSpecialty": ["Sleep Medicine", "Pulmonology"],
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "...",
+        "addressLocality": "...",
+        "addressRegion": "กรุงเทพมหานคร",
+        "postalCode": "10110",
+        "addressCountry": "TH"
+      },
+      "geo": {"@type": "GeoCoordinates", "latitude": 13.7423, "longitude": 100.5577},
+      "telephone": "+66-2-xxx-xxxx",
+      "email": "info@vitalsleep.co.th",
+      "priceRange": "฿฿-฿฿฿",
+      "hasCredential": [
+        {
+          "@type": "EducationalOccupationalCredential",
+          "credentialCategory": "Healthcare License",
+          "name": "ใบอนุญาตคลินิกเวชกรรม",
+          "recognizedBy": {"@type": "Organization", "name": "กรมสนับสนุนบริการสุขภาพ"}
+        }
+      ],
+      "member": [
+        {
+          "@type": "Physician",
+          "@id": "https://vitalsleep.co.th/doctors/dr-sirichai#person",
+          "name": "นพ. ศิริชัย อยู่สุข",
+          "jobTitle": "แพทย์ผู้เชี่ยวชาญด้านการนอนหลับ",
+          "medicalSpecialty": ["Sleep Medicine", "Pulmonology"],
+          "sameAs": ["https://www.tmc.or.th/doctors/xxxxx", "https://www.linkedin.com/in/dr-sirichai"]
+        }
+      ],
+      "sameAs": [
+        "https://www.facebook.com/vitalsleep",
+        "https://line.me/ti/p/@vitalsleep",
+        "https://www.youtube.com/@vitalsleep",
+        "https://www.instagram.com/vitalsleep",
+        "https://g.co/kgs/xxxxx",
+        "https://hdmall.co.th/clinics/vitalsleep",
+        "https://www.pobpad.com/clinics/vitalsleep",
+        "https://morprom.com/vitalsleep",
+        "https://www.linkedin.com/company/vitalsleep",
+        "https://www.wikidata.org/wiki/Qxxxxx"
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://vitalsleep.co.th/#website",
+      "url": "https://vitalsleep.co.th",
+      "name": "VitalSleep Clinic",
+      "inLanguage": ["th-TH", "en-US"],
+      "publisher": {"@id": "https://vitalsleep.co.th/#organization"},
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://vitalsleep.co.th/search?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+  ]
+}
+</script>
+```
+
+**Key principles:**
+- ✅ `@id` ใช้ pattern `https://domain.com/#fragment` — fragment-based
+- ✅ Logo ใช้ `ImageObject` พร้อม `@id` เพื่อ reuse cross-schema
+- ✅ `member` array link ไปหา Physician schemas
+- ✅ `sameAs` ครอบคลุม social + directory + Google KG
+
+### 7.5.3 Tier 2: Page-Level Schemas
+
+**ลักษณะ:** เปลี่ยนตามแต่ละหน้า — เก็บใน ACF custom fields หรือ generate จาก template
+
+**Schema เลือกตาม page_type:**
+
+| Page Type | Primary Schema | Wrapper Schema | Required Cross-refs |
+|-----------|---------------|----------------|---------------------|
+| condition_pillar | MedicalCondition | MedicalWebPage | publisher → Org, reviewedBy → Physician |
+| treatment_pillar | MedicalTherapy / MedicalProcedure | MedicalWebPage | publisher, reviewedBy |
+| doctor_profile | Physician | ProfilePage | worksFor → Org |
+| service_page | MedicalProcedure / Service | WebPage | provider → Org |
+| article / blog | Article / MedicalScholarlyArticle | — | publisher, author |
+| location_page | MedicalClinic (specific branch) | WebPage | parentOrganization → main Org |
+| contact / about | — | WebPage / AboutPage | about → Org |
+
+### 7.5.4 Tier 3: Content-Level Schemas
+
+**ลักษณะ:** Render โดย shortcode หรือ Gutenberg block
+
+**Pattern:**
+
+```
+[faq_block id="osa-faq"]
+  → renders FAQ HTML + FAQPage Schema (inline JSON-LD)
+
+[speakable_block class="hero-summary"]
+  → renders content + Speakable Schema (inline JSON-LD)
+
+[breadcrumb]
+  → auto-generates BreadcrumbList from page hierarchy
+
+[clinical_insight doctor="dr-sirichai" data="..."]
+  → renders insight + Person + Quotation Schema
+```
+
+**Critical rule:** Tier 3 schemas ต้อง render **ใน body** ใกล้กับเนื้อหาที่อ้างถึง — ไม่ใช่ใน `<head>` เพราะ:
+- Google validate ว่า schema ตรงกับ visible content
+- ถ้า FAQ schema อยู่ใน head แต่ FAQ visible อยู่กลางหน้า อาจถือเป็น mismatch
+
+### 7.5.5 @graph Pattern (RECOMMENDED v2.5)
+
+**Approach 1: Separate `<script>` tags (เก่า)**
+- ❌ Google parse แต่ละ script แยก — ไม่เห็น relationships
+- ❌ @id cross-references ทำงาน แต่ effort สูงในการ maintain
+
+**Approach 2: Single @graph (RECOMMENDED v2.5)**
+
+```json
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {"@type": "MedicalClinic", "@id": "...#organization", ...},
+    {"@type": "WebSite", "@id": "...#website", "publisher": {"@id": "...#organization"}},
+    {"@type": "MedicalCondition", "@id": "...page#entity", ...},
+    {"@type": "MedicalWebPage", "@id": "...page#webpage",
+      "about": {"@id": "...page#entity"},
+      "publisher": {"@id": "...#organization"},
+      "reviewedBy": {"@id": "...doctors/X#person"}
+    }
+  ]
+}
+```
+
+**ข้อดี:**
+- ✅ Google parse 1 script เห็น entity graph ครบ
+- ✅ LLM extract relationships ได้ทันที (sameAs, publisher, about, reviewedBy)
+- ✅ Cross-references ผ่าน @id ทำงาน 100%
+- ✅ Easier to maintain (1 source of truth)
+- ✅ Performance ดีกว่า
+
+### 7.5.6 Cross-Reference Pattern via @id
+
+**Rule of thumb:** ทุก entity ต้อง link หากันผ่าน `@id`
+
+```
+MedicalCondition (OSA)
+     ↑ about
+MedicalWebPage (this page)
+     ├── publisher → MedicalClinic (VitalSleep)
+     ├── reviewedBy → Physician (Dr. Sirichai)
+     │                  └── worksFor → MedicalClinic
+     └── isPartOf → WebSite
+                       └── publisher → MedicalClinic
+```
+
+→ AI "เห็น" ว่า OSA content นี้มาจาก VitalSleep, review โดยหมอที่ทำงานที่ VitalSleep, อยู่ในเว็บที่ publish โดย VitalSleep — **ทุก link ชี้กลับไปที่แบรนด์**
+
+### 7.5.7 Implementation Guide (WP+ACF+WPML)
+
+```
+1. SETUP (one-time)
+   ├── Install WPML + ACF Pro + RankMath Pro
+   ├── Disable RankMath schema for types we control manually
+   └── Add custom theme function: render_schema_graph()
+
+2. SITE-LEVEL (Tier 1)
+   ├── Hardcode in header.php (logo, address, etc are stable)
+   ├── OR use ACF Options page if frequently updated
+   └── Render unconditionally in <head>
+
+3. PAGE-LEVEL (Tier 2)
+   ├── ACF field group: "SEO Schema"
+   │     ├── page_type (select: condition_pillar, treatment_pillar, ...)
+   │     ├── entity_id (text — Supabase entity_graph.id)
+   │     ├── entity_type (auto-populated from Supabase via Flow C2)
+   │     └── reviewer_id (relationship → Doctors CPT)
+   ├── Theme function: build schema based on page_type + entity
+   └── Pull entity data from Supabase via Flow C2 sync
+
+4. CONTENT-LEVEL (Tier 3)
+   ├── Custom Gutenberg blocks: faq_block, speakable_block, etc
+   ├── Each block renders its schema inline (in body, not head)
+   └── BreadcrumbList auto-generated from theme
+
+5. WPML INTEGRATION
+   ├── Translate ACF fields per language (ACF + WPML compatibility)
+   ├── Schema @id stable across languages (DON'T translate @id)
+   ├── inLanguage field reflects ICL_LANGUAGE_CODE
+   └── hreflang_group_id maps to WPML's trid
+```
+
+### 7.5.8 Multi-format Content Schemas
+
+> **LLMO insight:** AI รุ่นใหม่ (Perplexity, Gemini Advanced, ChatGPT with browsing) ให้น้ำหนักกับเว็บที่มี **multi-format content** เพราะ:
+> - Text alone = 1 modality
+> - Text + Video transcript + Image alt + PDF download = AI ดึงข้อมูลจากหลาย angle
+> - User intent หลากหลาย (some prefer video, some prefer reading, some prefer download)
+>
+> Multi-format schemas เป็น **Tier 3 content-level schemas** (ตาม 7.5.4) — render inline ใน body ใกล้กับ media element
+
+#### 7.5.8.1 VideoObject Schema
+
+**ใช้เมื่อ:** หน้าที่ embed YouTube/Vimeo, video tutorials, procedural demonstrations, before/after videos
+
+```json
+{
+  "@type": "VideoObject",
+  "@id": "https://brand.com/treatments/all-on-4#video-procedure",
+  "name": "ขั้นตอนการฝัง All-on-4 จริง — เคสผู้ป่วยจริง",
+  "description": "วิดีโอแสดงขั้นตอน Immediate Loading ของ All-on-4 ตั้งแต่ pre-op จนได้ฟันใน 1 วัน — รวม CBCT planning, surgical guide, prosthetic delivery (PDPA-safe, ผู้ป่วยให้ consent)",
+  "thumbnailUrl": "https://brand.com/images/all-on-4-video-thumb.jpg",
+  "uploadDate": "2026-03-01",
+  "duration": "PT5M30S",
+  "contentUrl": "https://youtube.com/watch?v=...",
+  "embedUrl": "https://www.youtube.com/embed/...",
+  "transcript": "ขั้นตอนที่ 1: CBCT scan...",
+  "publisher": { "@id": "https://brand.com/#organization" }
+}
+```
+
+**Critical fields:**
+- `transcript` — **สำคัญที่สุด** เพราะ AI อ่าน transcript เพื่อ extract content (ไม่สามารถดู video จริงได้)
+- `duration` — ISO 8601 format (e.g., `PT5M30S` = 5 นาที 30 วินาที)
+- `uploadDate` — freshness signal
+- `publisher → @id` — เชื่อมกลับ Organization (Tier 1)
+
+#### 7.5.8.2 ImageObject Schema (Infographics + Detailed Alt)
+
+**ใช้เมื่อ:** Infographics, comparison charts, before/after images, anatomical diagrams
+
+```json
+{
+  "@type": "ImageObject",
+  "@id": "https://brand.com/treatments/all-on-4#infographic-comparison",
+  "contentUrl": "https://brand.com/images/all-on-4-vs-all-on-6.png",
+  "url": "https://brand.com/images/all-on-4-vs-all-on-6.png",
+  "caption": "เปรียบเทียบ All-on-4 vs All-on-6 — จำนวน implant, indication, ระยะเวลารักษา, cost range",
+  "description": "Infographic เปรียบเทียบโครงสร้าง All-on-4 (4 implants tilted สำหรับ jaw atrophy moderate) vs All-on-6 (6 implants vertical สำหรับ severe atrophy หรือ heavy occlusion). แสดง surgical timeline 2-4 เดือน vs 4-6 เดือน, success rate 96% vs 97%, suitable patient profile, และ cost range 350,000-650,000 บาท vs 500,000-850,000 บาท",
+  "width": 1200,
+  "height": 800,
+  "creator": { "@id": "https://brand.com/#organization" },
+  "license": "https://brand.com/copyright"
+}
+```
+
+**Critical fields:**
+- `description` — เขียนยาว 100+ คำ พร้อม specific data (numbers, comparisons) เพื่อให้ AI ดึงเป็น citable sentence ได้
+- `caption` — visible text ใต้รูป (สั้น)
+- `creator → @id` — เชื่อมกลับ Organization
+
+**Alt text rule:** alt attribute ใน HTML img tag ก็ต้อง descriptive เช่นเดียวกัน — schema description = expanded version of alt
+
+#### 7.5.8.3 PodcastEpisode Schema
+
+**ใช้เมื่อ:** มี podcast episode (Spotify, Apple Podcasts, YouTube Music) เกี่ยวกับ topic ของหน้านี้
+
+```json
+{
+  "@type": "PodcastEpisode",
+  "@id": "https://brand.com/treatments/all-on-4#podcast-ep5",
+  "name": "ตอนที่ 5: คืนฟันทั้งปากด้วย All-on-4 ใน 1 วัน — ความจริงและขีดจำกัด",
+  "url": "https://open.spotify.com/episode/...",
+  "datePublished": "2026-04-15",
+  "duration": "PT42M18S",
+  "description": "หมอ [name] อธิบายเทคนิค All-on-4 — ตั้งแต่ patient selection, surgical planning ด้วย CBCT, immediate loading protocol, จน follow-up 5 ปี โดยใช้ข้อมูลจาก 500 เคสของคลินิก",
+  "transcript": "Host: วันนี้เราคุยกับ...",
+  "associatedMedia": {
+    "@type": "MediaObject",
+    "contentUrl": "https://podcast.brand.com/all-on-4-episode-5.mp3"
+  },
+  "partOfSeries": {
+    "@type": "PodcastSeries",
+    "name": "Brand Dental Podcast",
+    "@id": "https://brand.com/podcast#series"
+  },
+  "publisher": { "@id": "https://brand.com/#organization" }
+}
+```
+
+**Why podcast schema matters in 2026+:**
+- Spotify + Apple Podcasts มี dedicated discovery surface
+- AI assistants (Siri, Alexa, Google Assistant) ตอบ "podcast about X" → ถ้ามี schema จะถูกเลือก
+- Voice search "หา podcast เกี่ยวกับ All-on-4" — schema = direct answer
+- Thai podcast market โต > 200% YoY (2024-2026)
+
+**Critical:** `transcript` field ทำให้ AI extract สาระสำคัญได้ — podcast ที่ไม่มี transcript = AI invisible
+
+#### 7.5.8.4 DigitalDocument Schema (PDF Downloadables)
+
+**ใช้เมื่อ:** มี PDF guide, ebook, checklist, consent form ให้ download
+
+```json
+{
+  "@type": "DigitalDocument",
+  "@id": "https://brand.com/treatments/all-on-4#patient-guide-pdf",
+  "name": "คู่มือเตรียมตัวก่อนฝังรากฟันเทียม All-on-4",
+  "description": "คู่มือ 12 หน้าที่ผู้ป่วยควรอ่านก่อนวันผ่าตัด — ครอบคลุม pre-op preparation, สิ่งที่ต้องงดก่อนผ่าตัด, อาหารหลังผ่า 14 วัน, การดูแลในช่วง osseointegration",
+  "fileFormat": "application/pdf",
+  "url": "https://brand.com/downloads/all-on-4-patient-guide-2026.pdf",
+  "datePublished": "2026-01-15",
+  "inLanguage": "th",
+  "author": { "@id": "https://brand.com/#organization" },
+  "license": "https://brand.com/copyright"
+}
+```
+
+**Why PDF schema:**
+- PDF = trust signal (effort to produce)
+- AI agents บางตัวสามารถ download + parse PDF ได้
+- Brand-linked content ที่ user save ไว้อ่าน offline
+
+#### 7.5.8.5 Combining Multi-format ใน @graph Pattern
+
+ใส่ทั้งหมดใน single `@graph` (ตาม 7.5.5):
+
+```json
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "MedicalClinic", "@id": "...#organization", ... },
+    { "@type": "MedicalProcedure", "@id": "...page#entity", ... },
+    { "@type": "MedicalWebPage", "@id": "...page#webpage",
+      "about": { "@id": "...page#entity" },
+      "video": { "@id": "...page#video-procedure" },
+      "image": { "@id": "...page#infographic-comparison" },
+      "associatedMedia": [
+        { "@id": "...page#podcast-ep5" },
+        { "@id": "...page#patient-guide-pdf" }
+      ]
+    },
+    { "@type": "VideoObject", "@id": "...page#video-procedure", ... },
+    { "@type": "ImageObject", "@id": "...page#infographic-comparison", ... },
+    { "@type": "PodcastEpisode", "@id": "...page#podcast-ep5", ... },
+    { "@type": "DigitalDocument", "@id": "...page#patient-guide-pdf", ... }
+  ]
+}
+```
+
+→ Single script tag, single parse pass, AI เห็น relationship ครบ
+
+#### 7.5.8.6 Target per Pillar Page
+
+| Format | Minimum | Optimal | Notes |
+|--------|---------|---------|-------|
+| **VideoObject** | ≥ 1 (if applicable) | 1-2 | YouTube embed + transcript field |
+| **ImageObject** | ≥ 2 infographics | 3-4 | Detailed alt + description ≥ 100 words |
+| **PodcastEpisode** | optional | 1 (if has podcast) | With transcript |
+| **DigitalDocument** | optional | 1 PDF | Patient guide / checklist |
+
+**Pillar page ที่ครบ multi-format = AI Citation rate +20-40% เมื่อเทียบกับ text-only**
+
+#### 7.5.8.7 Cross-References
+
+| Topic | See Also |
+|-------|----------|
+| Tier 3 Content-Level architecture | 7.5.4 |
+| @graph pattern (single script) | 7.5.5 |
+| @id cross-referencing | 7.5.6 |
+| Content Scorecard "Multi-format (High)" | 13.4 |
+| Brand-linked Citables (use as VideoObject transcript content) | 6.2 |
+| WordPress implementation (Gutenberg blocks for media) | 8.6, 8.8 |
+
+---
+
+## 7.6 Cluster Lifecycle States
+
+> **Why this section:** Cluster ใน `seo_cluster_master` ไม่ใช่สิ่งคงที่ — มัน **เกิด, ใช้งาน, เสื่อม, รวมกัน** ตลอดเวลา. ต้องมี state machine ที่ชัดเจนเพื่อ governance + ป้องกัน orphan clusters + ป้องกัน duplicate clusters
+
+### 7.6.1 State Diagram
+
+```
+┌────────────────┐    promote      ┌────────────────┐
+│ pending_review │ ──────────────> │     active     │
+│  (newly created)│                 │  (in active use)│
+└────────────────┘                  └───────┬────────┘
+                                            │
+                                  deprecate │
+                                            ▼
+                                    ┌──────────────┐
+                                    │  deprecated  │
+                                    │ (don't add new)│
+                                    └──────┬───────┘
+                                           │
+                                     merge │
+                                           ▼
+                                    ┌──────────────┐
+                                    │    merged    │
+                                    │(→ active cluster)│
+                                    └──────────────┘
+```
+
+### 7.6.2 State Definitions
+
+| State | Meaning | Can Use? | UI Indicator |
+|-------|---------|----------|--------------|
+| `active` | Cluster อยู่ใน active rotation, สร้าง content ใหม่ได้ | ✅ Yes | 🟢 Green badge |
+| `pending_review` | Cluster ใหม่, รอ governance approval | ⚠️ Limited (draft only) | 🟡 Yellow badge |
+| `deprecated` | กำลังถูก retire — ห้าม assign content ใหม่, content เก่ายังใช้อยู่ได้ | ❌ No (warn user) | 🔴 Red badge |
+| `merged` | ถูกรวมกับ cluster อื่น — auto-redirect ไป target cluster | ❌ No (auto-handled) | ⚫ Gray badge |
+
+### 7.6.3 State Transitions (Allowed)
+
+```yaml
+allowed_transitions:
+  - pending_review → active      # ผ่าน governance approval (Part 7.7)
+  - pending_review → rejected    # governance ปฏิเสธ → ลบทิ้ง (ไม่เก็บใน graph)
+  - active → deprecated          # เลิกใช้ — แต่ content เดิมยังอยู่
+  - deprecated → active          # revive (rare, ต้องผ่าน approval)
+  - deprecated → merged          # รวมกับ cluster อื่น (final state)
+  - active → merged              # direct merge (skip deprecate, rare)
+
+forbidden_transitions:
+  - merged → *                   # merged = final, ห้าม revert
+  - active → pending_review      # ห้าม downgrade (ใช้ deprecate แทน)
+  - * → pending_review           # pending = entry state เท่านั้น
+```
+
+### 7.6.4 Lifecycle Triggers (When to Change State)
+
+```yaml
+pending_review → active:
+  trigger: "Governance approval (per Part 7.7)"
+  required_artifacts:
+    - 5 creation rules passed (Part 7.7.1)
+    - Approval logged in seo_schema_changes (Part 15)
+    - Notion comment by approver
+
+active → deprecated:
+  triggers:
+    - "Cluster ไม่มี content active ≥ 6 months"
+    - "Cluster overlap > 80% กับ cluster อื่น (duplicate)"
+    - "Topic ไม่ relevant กับ vertical อีกแล้ว (e.g., obsolete treatment)"
+    - "Cluster ขนาดเล็กกว่า min_threshold (5 entities) นาน ≥ 3 months"
+  process:
+    1. Flag in monthly review (Part 7.8)
+    2. Stakeholder discussion (1-2 weeks)
+    3. Update entity_lifecycle = 'deprecated'
+    4. Notion notification to content team
+    5. Plan migration of existing content (3-6 months grace)
+
+deprecated → merged:
+  trigger: "All content migrated to target cluster"
+  required:
+    - target cluster_id specified in seo_cluster_master.merged_into_id
+    - URL redirects 301 set up
+    - Internal links updated
+  finality: "merged = terminal state, no more changes"
+```
+
+### 7.6.5 Database Field Mapping
+
+```sql
+-- seo_cluster_master
+entity_lifecycle text  -- enum: 'active' | 'pending_review' | 'deprecated' | 'merged'
+merged_into_id uuid    -- FK self-reference, NOT NULL when state='merged'
+deprecated_at timestamptz  -- when entered 'deprecated' state
+merged_at timestamptz      -- when entered 'merged' state
+
+CONSTRAINT check_lifecycle_consistency CHECK (
+  (entity_lifecycle = 'merged' AND merged_into_id IS NOT NULL) OR
+  (entity_lifecycle != 'merged' AND merged_into_id IS NULL)
+);
+```
+
+### 7.6.6 Cross-References
+
+| Topic | See Also |
+|-------|----------|
+| 5 creation rules (gate before pending_review → active) | 7.7 |
+| Review cycles (ongoing audit) | 7.8 |
+| seo_cluster_master schema | Schema_Overview EYWA v1.0 |
+| Schema change logging | Part 15 — Schema Change Governance |
+
+---
+
+## 7.7 Cluster Creation Rules
+
+> **Why this section:** ก่อน insert cluster ใหม่เข้าสู่ระบบ ต้องผ่าน 5 mandatory checks — ไม่งั้นจะเกิด:
+> - Duplicate clusters (สับสน + dilute SEO signal)
+> - Orphan clusters (ไม่มี entities → ไร้ประโยชน์)
+> - Schema mismatch (no schema.org type → ใช้ใน Tier 2 schema ไม่ได้)
+> - Hierarchy chaos (ไม่มี parent → broken SKOS structure)
+
+### 7.7.1 The 5 Mandatory Checks
+
+```
+ก่อน INSERT INTO seo_cluster_master, ต้องผ่านทั้ง 5 ข้อ:
+
+╔══════════════════════════════════════════════════════════════╗
+║ Check 1: ไม่มี cluster เดิมที่ครอบคลุม topic นี้                  ║
+║                                                                ║
+║   SQL audit:                                                   ║
+║   SELECT cluster_id, pref_label, alt_labels[]                  ║
+║   FROM seo_cluster_master                                      ║
+║   WHERE pref_label ILIKE '%proposed_label%'                    ║
+║      OR proposed_label = ANY(alt_labels)                       ║
+║      OR cluster_id IN (related_cluster_ids of nearby clusters);║
+║                                                                ║
+║   ❌ ถ้าเจอ existing cluster → ใช้ cluster เดิม + เพิ่ม alt_label  ║
+║   ✅ ถ้าไม่เจอ → ผ่าน check 1                                    ║
+╚══════════════════════════════════════════════════════════════╝
+
+╔══════════════════════════════════════════════════════════════╗
+║ Check 2: มี entities ≥ 5 ตัวที่จะอยู่ใน cluster                  ║
+║                                                                ║
+║   เหตุผล: cluster ที่มี entity น้อยกว่า 5 = ไม่มี topical depth   ║
+║   ควรเป็น entity ของ parent cluster แทน                         ║
+║                                                                ║
+║   SQL audit:                                                   ║
+║   SELECT COUNT(*) FROM seo_entity_graph                        ║
+║   WHERE intended_cluster_id = 'proposed_cluster_id';           ║
+║                                                                ║
+║   ❌ < 5 → ใช้ parent cluster + tag entities                    ║
+║   ✅ ≥ 5 → ผ่าน check 2                                         ║
+║                                                                ║
+║   Exception: planned cluster (มี roadmap จะเพิ่ม entities ใน 3 mo)║
+║              → flag intended_cluster_id ใน entity_graph         ║
+╚══════════════════════════════════════════════════════════════╝
+
+╔══════════════════════════════════════════════════════════════╗
+║ Check 3: มี Schema.org type ที่ชัดเจน                           ║
+║                                                                ║
+║   ตัวอย่าง valid schema.org types per cluster type:             ║
+║   - Medical clusters: MedicalCondition, MedicalTherapy,         ║
+║                       MedicalProcedure, DiagnosticProcedure     ║
+║   - Skincare clusters: DefinedTerm, ChemicalSubstance           ║
+║   - Topic clusters (media): Thing (fallback) + about-link        ║
+║                                                                ║
+║   ❌ ถ้าไม่มี schema type ชัดเจน → cluster อาจ overlap หลาย type  ║
+║      → break ลงเป็น 2+ clusters ที่มี schema ชัด                  ║
+║   ✅ มี 1 schema type หลัก → ผ่าน check 3                         ║
+╚══════════════════════════════════════════════════════════════╝
+
+╔══════════════════════════════════════════════════════════════╗
+║ Check 4: มี parent cluster (ถ้าไม่ใช่ Level 1 pillar)             ║
+║                                                                ║
+║   SKOS rules (ISO 25964):                                      ║
+║   - Max 3 hierarchy levels (pillar → cluster → supporting)     ║
+║   - Every non-pillar cluster ต้องมี broader_id                  ║
+║   - No cycles (A → B → A ห้าม)                                  ║
+║                                                                ║
+║   SQL audit:                                                   ║
+║   IF proposed_level > 1: broader_id IS NOT NULL                ║
+║   AND broader hierarchy_path doesn't loop back                 ║
+║                                                                ║
+║   ❌ Level 2-3 cluster ไม่มี parent → broken SKOS                ║
+║   ✅ มี valid parent + no cycle → ผ่าน check 4                   ║
+╚══════════════════════════════════════════════════════════════╝
+
+╔══════════════════════════════════════════════════════════════╗
+║ Check 5: มี description ≥ 50 ตัวอักษร (en + native language)     ║
+║                                                                ║
+║   เหตุผล:                                                       ║
+║   - Description = AI extraction signal สำหรับ entity definition  ║
+║   - Multilingual = global accessibility                         ║
+║   - 50 chars = minimum for meaningful semantic content          ║
+║                                                                ║
+║   ตัวอย่าง:                                                      ║
+║   ❌ "Implant" (8 chars) → ผ่านไม่ได้                              ║
+║   ✅ "Dental implant — titanium fixture surgically integrated    ║
+║       into jawbone for tooth replacement." (102 chars) ✅        ║
+║                                                                ║
+║   ✅ ทั้ง en + th description ≥ 50 chars → ผ่าน check 5          ║
+╚══════════════════════════════════════════════════════════════╝
+```
+
+### 7.7.2 Approval Process (Per brand_scope)
+
+```yaml
+universal_cluster:
+  brand_scope: ["*"]
+  approver: "Central Governance Team"
+  required_signers: 2 (SEO Lead + Content Lead)
+  review_cycle: quarterly
+  multi_brand_impact_assessment: required
+  reason: "Universal cluster กระทบทุก brand → ต้อง consensus"
+
+multi_brand_cluster:
+  brand_scope: ["brand-a", "brand-b"]
+  approver: "All affected brand owners"
+  required_signers: 1 per affected brand
+  review_cycle: semi-annual
+  conflict_check: "ห้าม conflict กับ universal clusters"
+
+brand_specific_cluster:
+  brand_scope: ["specific-brand"]
+  approver: "Brand owner only"
+  required_signers: 1
+  review_cycle: monthly
+  conflict_check: "ห้ามทับ universal cluster ที่มีอยู่"
+```
+
+### 7.7.3 Workflow (Pre-Insert Gate)
+
+```
+Step 1: Content Lead proposes new cluster
+   ├── Notion form: pref_label, alt_labels, schema_type, parent_id, description
+   └── Status: 'proposed'
+
+Step 2: Automated 5-checks via n8n flow
+   ├── Run all 5 SQL audits
+   ├── If any fail → Notion comment with reason → return to step 1
+   └── If all pass → Status: 'pending_review'
+
+Step 3: Governance approval (per brand_scope rules above)
+   ├── Approvers review in Notion
+   ├── If approved → trigger insert
+   └── If rejected → log reason, return to step 1
+
+Step 4: n8n insert into seo_cluster_master
+   ├── INSERT with entity_lifecycle = 'pending_review'
+   ├── Logged in seo_schema_changes
+   └── Update Notion: 'active' (after 24h grace period)
+
+Step 5: Activation
+   ├── Update entity_lifecycle = 'active'
+   ├── Notify content team
+   └── Cluster พร้อม assign entities + create content
+```
+
+### 7.7.4 Common Rejection Reasons
+
+| Reason | Frequency | Fix |
+|--------|-----------|-----|
+| Existing cluster found via alt_labels | 35% | Use existing + add alt_label |
+| < 5 entities planned | 25% | Move to parent cluster |
+| No schema.org type | 15% | Refine scope or split cluster |
+| Missing parent (orphan) | 10% | Add broader_id |
+| Description too short | 10% | Expand to ≥ 50 chars |
+| Duplicate semantic meaning | 5% | Merge with existing |
+
+### 7.7.5 Cross-References
+
+| Topic | See Also |
+|-------|----------|
+| Cluster lifecycle states | 7.6 |
+| Review cycles (post-creation) | 7.8 |
+| SKOS standards (ISO 25964) | Part 1.2 — International Standards |
+| Approval process audit log | Part 15 — Schema Change Governance |
+| seo_cluster_master schema spec | Schema_Overview EYWA v1.0 |
+
+---
+
+## 7.8 Review Cycles — renumbered from 7.6 in v3.3
+
+> **Operational governance** — schedule สม่ำเสมอเพื่อรักษาคุณภาพ taxonomy + cluster master.
+> Works in conjunction with **7.6 Cluster Lifecycle States** (which states exist) + **7.7 Cluster Creation Rules** (gates before active state).
+
+### 7.8.1 Cadence by Frequency
+
+```
+Monthly (every month):
+  • Orphan cluster check (clusters with item count < min_threshold)
+  • Duplicate detection (semantic overlap audit)
+  • Status changes (active → deprecated if inactive ≥ 90 days)
+  • New cluster proposals review
+
+Quarterly (every 3 months):
+  • Hierarchy audit (parent/child consistency check)
+  • SKOS relationship review (related_cluster_ids validity)
+  • Schema.org type validation (verify all entity_type → schema_type mappings)
+  • Cross-vertical applicability re-evaluation
+  • Brand-scope changes (clusters becoming universal or vice versa)
+
+Yearly (annual):
+  • Full taxonomy review (top-down)
+  • Governance rules update (this document!)
+  • Cross-brand alignment summit
+  • Vertical profile refresh (Part 14)
+  • Compliance check (ICD-10/11, SNOMED CT version updates)
+```
+
+### 7.8.2 Responsibilities
+
+| Cadence | Owner | Tool |
+|---------|-------|------|
+| Monthly | SEO Lead | Notion DB views + Flow F2 (Freshness Auditor) |
+| Quarterly | SEO Lead + Content Lead | Manual review session + n8n reports |
+| Yearly | SEO Lead + Stakeholders | Strategic offsite |
+
+### 7.8.3 Outcomes Tracked
+
+```yaml
+review_cycle_log:
+  - cycle_type: monthly | quarterly | yearly
+  - cycle_date: YYYY-MM-DD
+  - reviewer_id: <author_id>
+  - findings:
+      - orphans_found: <count>
+      - duplicates_resolved: <count>
+      - clusters_deprecated: <count>
+      - schema_changes_proposed: <count>
+  - action_items: [<list>]
+  - next_review_date: <auto-calculated>
+```
+
+→ Track ใน Notion DB "SEO Clusters" + Schema Governance DB
+
+---
+
+# PART 8: WordPress Implementation
+
+> v1.1 base ยังใช้ได้ — เพิ่ม CPT registration สำหรับ entity types + restored implementation guides ใน v3.3 (Plugin Stack, WPCode Setup, ACF Field Groups, Related Section Logic)
+
+## 8.1 Plugin Stack Recommendations
+
+> **Why this section:** EYWA architecture เป็น CMS-agnostic ใน spirit — แต่ implementation จริงบน WordPress ต้อง choose plugin stack ที่ scale + maintain ได้. ก่อนทำ section 8.5-8.8 ต่อ — install plugins เหล่านี้ก่อน
+>
+> ⚠️ **Verify quarterly:** Plugin landscape เปลี่ยนเร็ว — review รายการนี้ทุก 3 เดือน, deprecate plugins ที่ปัญหา security/performance
+
+### 8.1.1 Recommended Stack (Tier 1 — Essential)
+
+| Category | Plugin | License | Purpose | Notes |
+|----------|--------|---------|---------|-------|
+| **Theme/Builder** | **Bricks Builder** OR **GeneratePress** | Paid (reasonable) | Fast, scalable, template-based | ทั้งคู่รองรับ 600+ pages ได้ดี |
+| **Custom Fields** | **ACF Pro** (preferred) OR **Pods** | ACF Pro = paid; Pods = free | CPT + custom fields binding | ACF Pro มี UI ดีกว่า + ecosystem ใหญ่กว่า |
+| **SEO Foundation** | **RankMath Pro** OR **Yoast Pro** | Paid | Sitemap, schema base, hreflang, redirects | RankMath มี features เยอะกว่าใน same price tier |
+| **Schema Custom** | **WPCode** (Insert Headers and Footers) | Free | Site-wide Organization Schema (Tier 1) | ดู Section 8.6 สำหรับ setup |
+| **Multilingual** | **WPML** | Paid (multilingual CMS tier) | Subdirectory pattern, translation management | จับคู่กับ ACF + RankMath ได้ดี |
+
+### 8.1.2 Tier 2 — Recommended (Operational)
+
+| Category | Plugin | License | Purpose |
+|----------|--------|---------|---------|
+| Caching | **WP Rocket** OR **LiteSpeed Cache** | Paid / Free | Page cache + CDN integration |
+| Image optimization | **ShortPixel** OR **Imagify** | Freemium | WebP conversion + lazy loading |
+| Security | **Wordfence** OR **Sucuri** | Freemium / Paid | Firewall + malware scanning |
+| Backup | **UpdraftPlus** OR **BlogVault** | Freemium / Paid | Daily off-site backup |
+| Database optimization | **WP-Optimize** | Free | Table cleanup + revision pruning |
+
+### 8.1.3 ❌ Avoid List (Too Heavy / Outdated for 600+ pages)
+
+| Plugin | Why Avoid | Alternative |
+|--------|-----------|-------------|
+| **Divi** | Slow, hard to scale beyond ~200 pages, shortcode bloat | Bricks Builder, GeneratePress |
+| **WPBakery** (formerly Visual Composer) | Legacy code, poor performance, shortcode lock-in | Bricks Builder, native Gutenberg |
+| **Elementor Free** | Limited features, slow with many pages | Elementor Pro (acceptable) or Bricks |
+| **Yoast Free** (alone) | Schema features behind Pro paywall | RankMath Pro (better feature/price ratio) |
+| **All in One SEO** (free tier) | Limited schema customization | RankMath Pro |
+| **Heavy "all-in-one" plugins** (e.g., Jetpack with all modules) | Performance penalty, feature bloat | Use targeted plugins per need |
+
+**Rule of thumb:** ถ้า plugin ทำให้ TTFB > 800ms หรือ admin panel โหลดช้า > 5 sec — review/replace
+
+### 8.1.4 Plugin Conflict Matrix (Known Issues)
+
+```yaml
+known_conflicts:
+  ACF + WPML:
+    issue: "ACF Repeater fields ต้อง config ให้ translate per language"
+    fix: "Enable 'Translate' on each field in ACF UI + WPML String Translation"
+  
+  WPML + RankMath:
+    issue: "Default canonical URL อาจ point ผิด language version"
+    fix: "Configure RankMath WPML integration in RankMath > General Settings"
+  
+  WP Rocket + Cloudflare APO:
+    issue: "Double caching causing stale content"
+    fix: "Disable WP Rocket page cache, use Cloudflare APO only OR vice versa"
+  
+  Multiple SEO plugins active:
+    issue: "Schema markup duplicate, sitemap conflict"
+    fix: "เลือก 1 plugin หลัก (RankMath OR Yoast) — disable others"
+```
+
+### 8.1.5 Verification Checklist (Before Building Site)
+
+```
+☐ WordPress core ≥ 6.4 installed
+☐ PHP ≥ 8.1 on hosting
+☐ MySQL ≥ 8.0 OR MariaDB ≥ 10.5
+☐ Memory limit ≥ 512MB
+☐ Theme/Builder installed (Bricks OR GeneratePress)
+☐ ACF Pro activated + license OK
+☐ RankMath Pro activated + license OK
+☐ WPML installed (if multilingual) + license OK
+☐ WPCode installed (free, for site-wide schema)
+☐ At least 1 caching plugin
+☐ HTTPS enabled (HTTP Strict Transport Security recommended)
+☐ Verified no plugin conflicts via Health Check plugin
+```
+
+### 8.1.6 Cross-References
+
+| Topic | See Also |
+|-------|----------|
+| URL slug rules (used during CPT registration) | Part 4.11 |
+| CPT Registration | Part 8.5 |
+| WPCode site-wide schema setup | Part 8.6 |
+| ACF field groups per CPT | Part 8.7 |
+| Related Section logic | Part 8.8 |
+| 4-tool implementation stack overview | Part 16 |
+
+---
+
+## 8.5 Multi-Vertical CPT Registration
+
+> **Note:** This section provides foundational CPT registration patterns. For the comprehensive WordPress Universal Kit with brand profile-driven auto-activation (8 core + 6 optional CPTs, 8 taxonomies, 7 ACF groups), see **Part 25**. The code below is preserved as a starter reference for understanding CPT-to-entity_type mapping.
+
+### CPT ตาม entity_type
+
+```php
+// Universal CPTs (ทุก vertical สร้าง)
+register_post_type('condition', [...]);     // entity_type='condition'
+register_post_type('drug', [...]);          // entity_type='drug'
+register_post_type('person', [...]);        // entity_type='person'
+register_post_type('organization', [...]);  // entity_type='organization'
+
+// Skincare/Wellness Media CPTs
+register_post_type('ingredient', [...]);    // entity_type='ingredient'
+register_post_type('product', [...]);       // entity_type='product'
+register_post_type('routine', [...]);       // HowTo schema
+
+// Clinic/Hospital CPTs
+register_post_type('procedure', [...]);     // entity_type='procedure'
+register_post_type('service', [...]);       // bundles of procedures
+register_post_type('lab_test', [...]);      // entity_type='lab_test'
+register_post_type('medical_device', [...]);
+```
+
+### CPT Schema Mapping
+
+```php
+$cpt_schema_map = [
+    'ingredient'      => 'DefinedTerm',     // or 'Drug' if applicable
+    'product'         => 'Product',
+    'procedure'       => 'MedicalProcedure',
+    'condition'       => 'MedicalCondition',
+    'drug'            => 'Drug',
+    'lab_test'        => 'MedicalTest',
+    'medical_device'  => 'MedicalDevice',
+    'person'          => 'Person',
+    'organization'    => ['MedicalClinic','Hospital','Brand'], // by sub-vertical
+    'routine'         => 'HowTo',
+];
+```
+
+### ACF/Pods Field Groups per CPT
+แต่ละ CPT bind กับ extension table ผ่าน ACF/Pods field group ที่ map field 1:1 กับ schema column.
+→ ดู Section 8.7 สำหรับ specific field group structure
+
+---
+
+## 8.6 WPCode Site-wide Schema Setup
+
+> **Why this section:** Tier 1 Schema (Organization / MedicalClinic / WebSite) ตาม Part 7.5.2 ต้อง render **ใน every page** ของเว็บ. Method ที่ used ในการ inject schema มีผลต่อ:
+> - Persistence เมื่อเปลี่ยน theme
+> - Maintainability เมื่อทีมเปลี่ยน developer
+> - Performance impact
+>
+> WPCode คือ method ที่แนะนำเพราะ **survive theme migration** + **easy to maintain** + **single source of truth**
+
+### 8.6.1 ทำไม WPCode (vs Alternatives)
+
+```
+┌──────────────────────┬─────────────────────────┬──────────────────┬─────────────┐
+│ Method               │ Persists on theme       │ Per-page         │ Maintenance  │
+│                      │ change?                 │ customization?   │              │
+├──────────────────────┼─────────────────────────┼──────────────────┼─────────────┤
+│ WPCode site-wide     │ ✅ Yes                  │ ❌ No (site only) │ 🟢 Easy      │
+│ Elementor widget     │ ❌ Lost on theme change │ ✅ Yes           │ 🟡 Medium   │
+│ Theme functions.php  │ ⚠️ Child theme dep      │ ✅ Yes (logic)   │ 🔴 Hard     │
+│ Schema plugin (Yoast)│ ⚠️ Plugin lock-in       │ ✅ Yes           │ 🟡 Medium   │
+└──────────────────────┴─────────────────────────┴──────────────────┴─────────────┘
+```
+
+**Rule:** Organization Schema (site-wide, stable) → **WPCode**  
+Content Schema (per-page, variable) → **Page template + ACF** (Section 8.7)
+
+### 8.6.2 Installation (8 Steps)
+
+```
+Step 1: Install plugin
+   WordPress Admin → Plugins → Add New
+   Search: "WPCode — Insert Headers and Footers and Code Snippets"
+   Author: WPCode (formerly "Insert Headers and Footers" by WPBeginner)
+   → Install + Activate (free version sufficient)
+
+Step 2: Create new snippet
+   WP Admin → Code Snippets (WPCode) → Add Snippet
+   → Click "Add Your Custom Code (New Snippet)"
+   → Click "Use Snippet" on blank template
+
+Step 3: Configure snippet
+   Title: "Site-wide Organization Schema (Tier 1)"
+   Code Type: "HTML Snippet"
+   Description: "Tier 1 schema per EYWA Section 7.5.2 — DO NOT EDIT WITHOUT REVIEW"
+
+Step 4: Paste schema (use @graph pattern from 7.5.5)
+   [Paste full JSON-LD wrapped in <script type="application/ld+json"> tag]
+   See Section 8.6.3 below for template
+
+Step 5: Set location
+   Location: "Site Wide Header"
+   (จะ inject ใน <head> ของ every page)
+
+Step 6: Save + Activate
+   Toggle "Active" → ON
+   Click "Save Snippet"
+
+Step 7: Verify rendering
+   Open homepage in browser → View Source (Ctrl+U or Cmd+Option+U)
+   Search (Ctrl+F): "MedicalClinic" หรือ "@graph"
+   → Should appear in <head> section
+
+Step 8: Validate schema
+   Tool 1: https://validator.schema.org/
+     → Paste page URL → Validate
+   Tool 2: https://search.google.com/test/rich-results
+     → Paste page URL → Test
+   → ทั้ง 2 tools ต้อง pass without errors
+   → Warnings เป็น OK ถ้าไม่ใช่ critical fields
+```
+
+### 8.6.3 Schema Template (Copy-Paste Ready)
+
+```html
+<!-- ========================================================== -->
+<!-- EYWA TIER 1: Site-wide Organization Schema                  -->
+<!-- Source: Part 7.5.2 + Section 8.6                            -->
+<!-- ⚠️ Update via WPCode only — DO NOT edit theme files         -->
+<!-- ========================================================== -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "MedicalClinic",
+      "@id": "https://YOUR-DOMAIN.com/#organization",
+      "name": "Your Clinic Name",
+      "alternateName": ["ชื่อภาษาไทย", "Alternative English Name"],
+      "url": "https://YOUR-DOMAIN.com",
+      "logo": {
+        "@type": "ImageObject",
+        "@id": "https://YOUR-DOMAIN.com/#logo",
+        "url": "https://YOUR-DOMAIN.com/wp-content/uploads/logo.png",
+        "width": 600,
+        "height": 60,
+        "caption": "Your Clinic Name"
+      },
+      "image": { "@id": "https://YOUR-DOMAIN.com/#logo" },
+      "description": "[Brand description, 150-200 chars]",
+      "foundingDate": "YYYY",
+      "medicalSpecialty": ["Specialty 1", "Specialty 2"],
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "...",
+        "addressLocality": "...",
+        "addressRegion": "กรุงเทพมหานคร",
+        "postalCode": "...",
+        "addressCountry": "TH"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 13.xxxxxxx,
+        "longitude": 100.xxxxxxx
+      },
+      "telephone": "+66-X-XXX-XXXX",
+      "email": "info@YOUR-DOMAIN.com",
+      "priceRange": "฿฿-฿฿฿",
+      "openingHoursSpecification": [
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"],
+          "opens": "09:00",
+          "closes": "20:00"
+        }
+      ],
+      "hasCredential": [
+        {
+          "@type": "EducationalOccupationalCredential",
+          "credentialCategory": "Healthcare License",
+          "name": "ใบอนุญาตคลินิกเวชกรรม",
+          "recognizedBy": {
+            "@type": "Organization",
+            "name": "กรมสนับสนุนบริการสุขภาพ"
+          }
+        }
+      ],
+      "member": [
+        { "@id": "https://YOUR-DOMAIN.com/our-doctors/dr-name#person" }
+      ],
+      "sameAs": [
+        "https://www.facebook.com/YourPage",
+        "https://www.instagram.com/YourHandle",
+        "https://www.youtube.com/@YourChannel",
+        "https://g.page/YourGBP",
+        "https://www.linkedin.com/company/YourCompany",
+        "https://www.wikidata.org/wiki/Q..."
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://YOUR-DOMAIN.com/#website",
+      "url": "https://YOUR-DOMAIN.com",
+      "name": "Your Clinic Name",
+      "publisher": { "@id": "https://YOUR-DOMAIN.com/#organization" },
+      "inLanguage": "th",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://YOUR-DOMAIN.com/?s={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+  ]
+}
+</script>
+```
+
+### 8.6.4 Update Workflow (When Brand Info Changes)
+
+```
+Trigger: Address change, new branch, new doctor added, sameAs update needed
+
+Step 1: Edit in WPCode UI
+   WP Admin → Code Snippets → Edit "Site-wide Organization Schema"
+   → Modify JSON-LD content
+   → Save
+
+Step 2: Validate
+   → Re-run validator.schema.org/
+   → Re-run rich-results test
+
+Step 3: Force re-crawl (optional but recommended)
+   → GSC URL Inspection → "Request Indexing" on homepage
+
+Step 4: Document change
+   → Add entry to seo_schema_changes table (Part 15)
+   → Notify team in Slack
+
+⚠️ Common mistakes:
+   ✗ Editing theme functions.php directly (WPCode = single source of truth)
+   ✗ Adding 2nd schema script in theme (causes conflict — Google parses confused)
+   ✗ Changing @id values (breaks all cross-references — DON'T)
+```
+
+### 8.6.5 Multi-brand Setup (1 WordPress, Multiple Brands)
+
+ถ้าใช้ Multisite หรือ multi-brand บน 1 WP install:
+
+```
+Option A (Multisite):
+  - Each subsite = 1 brand
+  - WPCode installed per subsite
+  - Each has its own Organization Schema
+
+Option B (Single site, multi-brand via subdirectory):
+  - 1 WPCode snippet with conditional logic via PHP shortcode
+  - OR 1 snippet per brand-section, location = "Page Specific"
+  - Use ACF Options page for brand-specific values
+```
+
+### 8.6.6 Cross-References
+
+| Topic | See Also |
+|-------|----------|
+| Tier 1 Schema architecture | Part 7.5.2 |
+| @graph pattern | Part 7.5.5 |
+| @id cross-referencing | Part 7.5.6 |
+| Plugin recommendations | Part 8.1 |
+| Schema change governance | Part 15 |
+
+---
+
+## 8.7 ACF Field Groups Reference
+
+> **Why this section:** Section 8.5 บอกว่า "CPT bind กับ extension table ผ่าน ACF" — แต่ไม่ได้บอกว่า field group structure เป็นอย่างไร. Section นี้ให้ **per-CPT field group spec** ที่ developer ใช้ register ได้ทันที + ทำให้ content team รู้ว่ามี field อะไรให้กรอกบ้าง
+
+### 8.7.1 Standard Field Group Pattern (6 Tabs)
+
+ทุก content CPT (treatment, condition, ingredient, ฯลฯ) ใช้ structure เดียวกัน — 6 tabs:
+
+```
+ACF Field Group: "{CPT Name} Fields"
+
+┌─────────────────────────────────────────────────────────┐
+│ Tab 1: Core Content                                      │
+│   - hero_summary (WYSIWYG)              ← Speakable      │
+│   - quick_facts (Repeater)               ← Citable bullets│
+│   - main_content (WYSIWYG)               ← Body          │
+│   - cta_section (WYSIWYG)                ← Final CTA     │
+├─────────────────────────────────────────────────────────┤
+│ Tab 2: Relationships                                     │
+│   - primary_entity (Post Object → entity CPT)           │
+│   - related_entities (Relationship, max 10)             │
+│   - manual_related_treatments (Relationship, max 4)     │
+│   - related_technologies (Relationship)                 │
+│   - citations (Repeater OR Relationship → citation CPT) │
+├─────────────────────────────────────────────────────────┤
+│ Tab 3: E-E-A-T                                          │
+│   - reviewed_by (Post Object → person CPT)              │
+│   - authored_by (Post Object → person CPT)              │
+│   - review_date (Date)                                  │
+│   - medical_reviewed (True/False)                       │
+│   - reviewer_note (Textarea)                            │
+├─────────────────────────────────────────────────────────┤
+│ Tab 4: Schema                                           │
+│   - schema_type (Select: MedicalCondition / Therapy /...) │
+│   - icd_10_code (Text)                                  │
+│   - icd_11_code (Text)                                  │
+│   - snomed_ct_id (Text)                                 │
+│   - wikidata_id (Text)                                  │
+│   - speakable_selectors (Text — CSS selectors)         │
+├─────────────────────────────────────────────────────────┤
+│ Tab 5: FAQ                                              │
+│   - faq_items (Repeater)                                │
+│      ├── question (Text)                                │
+│      ├── answer (Textarea, 40-60 words)                 │
+│      └── faq_type (Select: 7 types per Part 13.X)       │
+├─────────────────────────────────────────────────────────┤
+│ Tab 6: LLMO Citables                            │
+│   - brand_linked_citables (Repeater, min: 3)           │
+│      ├── statement (Textarea)                           │
+│      ├── metric (Text — e.g., "500 ราย")                │
+│      ├── time_period (Text — e.g., "ปี 2025")           │
+│      ├── source_citation (Text — e.g., "Brand Data 2025")│
+│      └── pattern_type (Select: A/B/C/D/E/F)             │
+│   - perspective_blocks (Repeater, min: 4)              │
+│      ├── perspective_type (Select: α/β/γ/δ)             │
+│      └── content (WYSIWYG, use template from Part 6.3)  │
+└─────────────────────────────────────────────────────────┘
+```
+
+### 8.7.2 Per-CPT Variations
+
+แต่ละ CPT มี **additional fields** เฉพาะตาม schema mapping ของตน:
+
+```yaml
+treatment_cpt:
+  base: 6 tabs above
+  additional:
+    Tab 7: Treatment Specifics
+      - duration_typical_min (Number)
+      - invasiveness_level (Select)
+      - recovery_time_days (Number)
+      - price_range_thb_min (Number)
+      - price_range_thb_max (Number)
+      - alternative_treatments (Relationship)
+
+ingredient_cpt:
+  base: 6 tabs above
+  additional:
+    Tab 7: Ingredient Specifics
+      - inci_name (Text)
+      - cas_number (Text)
+      - typical_concentration_min (Number)
+      - typical_concentration_max (Number)
+      - target_skin_concerns (Checkbox group)
+      - pregnancy_safe (True/False)
+      - synergistic_ingredients (Relationship)
+      - incompatible_ingredients (Relationship)
+
+condition_cpt:
+  base: 6 tabs above
+  additional:
+    Tab 7: Condition Specifics
+      - icd_10_codes (Repeater)
+      - prevalence_thailand (Text)
+      - typical_age_onset (Text)
+      - common_symptoms (Repeater)
+      - related_conditions (Relationship)
+
+product_cpt:
+  base: 6 tabs above
+  additional:
+    Tab 7: Product Specifics
+      - manufacturer (Post Object → organization CPT)
+      - retail_price_thb (Number)
+      - size_ml (Number)
+      - launch_year (Number)
+      - thai_fda_registration (Text)
+      - affiliate_links (Repeater)
+      - ingredient_list (Relationship → ingredient CPT)
+
+doctor_cpt (person):
+  base: 6 tabs above
+  additional:
+    Tab 7: Doctor Specifics
+      - credentials (Repeater)
+      - medical_license_number (Text)
+      - specialties (Checkbox group)
+      - works_at_branches (Relationship → branch CPT)
+      - publications (Repeater)
+      - languages_spoken (Checkbox)
+      - wikidata_id (Text)
+```
+
+### 8.7.3 Programmatic Registration (PHP)
+
+→ See Appendix D for full ACF field group registration code
+
+### 8.7.4 WPML Integration Notes
+
+```yaml
+field_translation_strategy:
+  always_translate:
+    - hero_summary
+    - main_content
+    - faq_items.question + answer
+    - brand_linked_citables.statement
+    - perspective_blocks.content
+    - reviewer_note
+  
+  never_translate:
+    - schema_type             # global value
+    - icd_10_code             # international standard
+    - wikidata_id             # global identifier
+    - speakable_selectors     # CSS selectors stable
+    - All Tab 2 (Relationships) — translate target post separately
+  
+  copy_from_default:
+    - review_date             # same date across languages
+    - medical_reviewed        # boolean status
+    - cas_number              # universal chemical ID
+```
+
+### 8.7.5 Performance Best Practices
+
+```yaml
+acf_performance:
+  use_post_object_over_relationship_when:
+    - Relationship is to single item (use Post Object)
+    - Save query overhead
+  
+  cache_acf_values:
+    - Use get_field() with caching layer
+    - Or use ACF's built-in object cache
+  
+  avoid:
+    - Repeater nested > 3 levels deep
+    - Relationship fields with > 50 possible options (use taxonomy instead)
+    - Fields populated dynamically on every page load (cache them)
+```
+
+### 8.7.6 Cross-References
+
+| Topic | See Also |
+|-------|----------|
+| CPT Registration (where ACF binds to) | Part 8.5 |
+| Schema field mapping | Part 7.5.3 (Tier 2) |
+| Brand-linked Citable Patterns | Part 6.2 |
+| Perspective Layer Templates | Part 6.3 |
+| Programmatic ACF registration code | Appendix D.3 |
+| Plugin requirements | Part 8.1 |
+
+---
+
+## 8.8 Related Section Logic
+
+> **Note:** Implementation pattern uses **Elementor Pro Loop Builder** (see Section 25.11). The 3-tier fallback logic (typed edges → cluster → manual) is implemented via Loop Builder query configuration. Loop Item templates (loop_related_entity, loop_procedure_card, etc.) provide visual designs for related cards. ACF relationship fields drive the queries.
+
+
+> **Why this section:** Part 9.2 (Reading Flow) บอกว่า "End Cluster with Tabs" + "Sticky Sidebar = Compact Related" — แต่ไม่ได้บอกว่า "Related" คำนวณยังไง. Section นี้ให้ algorithm + per-page-type priority ที่ developer implement ได้
+
+### 8.8.1 Algorithm Overview (3-Tier Fallback)
+
+```
+For each page, get_related_content() runs this chain:
+
+┌─────────────────────────────────────────────────────────┐
+│ Tier 1: Manual Override (highest priority)             │
+│   ↓                                                     │
+│   Check ACF field: manual_related_{type} (Relationship) │
+│   IF count >= 3 → return these (editorial control)      │
+│   ELSE → fall to Tier 2                                 │
+└─────────────────────────────────────────────────────────┘
+                       ↓
+┌─────────────────────────────────────────────────────────┐
+│ Tier 2: Same content_cluster (taxonomy match)           │
+│   ↓                                                     │
+│   Query: WP_Query with tax_query content_cluster=current│
+│   Order: menu_order, then date DESC                     │
+│   IF count >= limit → return                            │
+│   ELSE → fall to Tier 3                                 │
+└─────────────────────────────────────────────────────────┘
+                       ↓
+┌─────────────────────────────────────────────────────────┐
+│ Tier 3: Same semantic_topic (entity match)              │
+│   ↓                                                     │
+│   Query: WP_Query with tax_query semantic_topic=current │
+│   Pad results to fill remaining slots                   │
+│   Return combined Tier 2 + Tier 3                       │
+└─────────────────────────────────────────────────────────┘
+
+→ See Appendix D.2 for PHP pseudocode
+```
+
+### 8.8.2 Related Section Types (Per Page Type)
+
+แต่ละ page type มี Related categories ที่แตกต่างกัน + **priority order** ที่ต่างกัน:
+
+```yaml
+on_treatment_page:        # /treatments/{slug}
+  priority_order:
+    1. Related Treatments  # same cluster, different treatment (top — most relevant)
+    2. Related Concerns    # what concerns this treatment solves
+    3. Related Case Studies # outcomes for this treatment
+    4. Related Articles    # educational content
+  
+on_concern_page:          # /by-concern/{slug}
+  priority_order:
+    1. Related Treatments  # WHAT SOLVES THIS — top priority for concern pages!
+    2. Related Concerns    # similar/co-occurring issues
+    3. Related Case Studies # outcomes from people with this concern
+    4. Related Articles
+  reasoning: "Concern page = patient looking for solution → lead with treatments"
+
+on_technology_page:       # /technology/{slug}
+  priority_order:
+    1. Related Treatments  # what uses this tech
+    2. Related Technologies # alternatives / complementary
+    3. Related Case Studies
+    4. Related Articles
+
+on_article_page:          # /knowledge/{slug}
+  priority_order:
+    1. Related Articles    # similar topics
+    2. Related Concerns    # which problems this article informs
+    3. Related Treatments  # if procedural/decision content
+    4. Related Case Studies
+
+on_case_study_page:       # /case-studies/{slug}
+  priority_order:
+    1. Related Case Studies # similar cases
+    2. Related Treatments  # what was done in this case
+    3. Related Concerns    # what condition the case treats
+    4. Related Articles    # background reading
+
+on_ingredient_page:       # /ingredients/{slug} (skincare)
+  priority_order:
+    1. Related Ingredients # synergistic / similar
+    2. Related Products    # products containing this ingredient
+    3. Related Concerns    # skin issues this addresses
+    4. Related Articles
+
+on_product_page:          # /products/{slug} (skincare)
+  priority_order:
+    1. Comparison pages    # X vs Y
+    2. Related Products    # alternatives in same category
+    3. Related Ingredients # active ingredients in this product
+    4. Related Articles    # reviews / how-to
+
+# — New page types for Tier 2 + Tier 3 CPTs:
+
+on_program_page:          # /programs/{slug} — NEW v3.4
+  priority_order:
+    1. Constituent Services   # services that compose this program (via `contains` edge)
+    2. Required Assessments   # diagnostics needed before program (via `requires_assessment`)
+    3. Related Programs       # alternative programs same condition cluster
+    4. Related Case Studies   # outcomes from this program
+    5. Related Concerns       # what this program addresses
+  reasoning: "Program page = high-intent decision page → lead with what's inside"
+
+on_signature_system_page: # /{slug}/ root-level — NEW v3.4
+  priority_order:
+    1. Signature Phases       # 3-5 ordered phases (via `contains` edge)
+    2. Required Assessment    # mandatory diagnostic (via `requires_assessment`)
+    3. Related Case Studies   # transformation cases
+    4. Related Programs       # programs that incorporate this signature
+    5. Other Signature Systems # other branded systems by same brand
+  reasoning: "Signature = anchor methodology → showcase phases first"
+
+on_drug_page:             # /drugs/{slug} — NEW v3.4
+  priority_order:
+    1. Indications            # conditions this drug treats (via `treats` edge)
+    2. Procedures Using       # procedures that use this drug (via `used_by`)
+    3. Drug Interactions      # caution drugs (via `related_to` w/ note='interaction')
+    4. Active Ingredient      # link to ingredient page
+    5. Related Articles
+  reasoning: "Drug page = clinical reference → indication-first organization"
+
+on_lab_test_page:         # /lab-tests/{slug} — NEW v3.4
+  priority_order:
+    1. Measures Biomarkers    # what this test measures (via `related_to` w/ note='measures')
+    2. Indication Conditions  # when test is ordered (via `treats` reverse — diagnostic)
+    3. Programs Requiring     # programs needing this assessment (via `requires_assessment` reverse)
+    4. Related Lab Tests      # complementary panels
+    5. Related Articles       # how to interpret results
+  reasoning: "Lab test = diagnostic reference → measurement context first"
+
+on_ingredient_page:       # /ingredients/{slug} — extended v3.4
+  priority_order:
+    1. Synergistic Ingredients  # works well with (via `related_to` w/ note='synergy')
+    2. Products Containing      # commercial products with this ingredient (via `used_by`)
+    3. Target Concerns          # skin/health concerns this addresses (via `treats`)
+    4. Incompatible Ingredients # cautions (via `related_to` w/ note='incompatible')
+    5. Related Articles
+```
+
+### 8.8.3 Display Strategy (Per Part 9.2 Reading Flow)
+
+```yaml
+sidebar_compact_related:
+  shows: top 3-4 from priority #1 only
+  format: "text links only (no card images)"
+  position: sticky sidebar (desktop only)
+
+end_cluster_tabs:
+  shows: ALL related categories
+  format: tabbed interface
+  tab_order: follows priority_order above
+  items_per_tab: 4-6 items with thumbnail + excerpt
+
+mobile_layout:
+  sidebar_collapses: end_cluster_tabs only (no sidebar version)
+  format: horizontal swipeable cards
+  default_tab: priority #1
+```
+
+### 8.8.4 Cluster Filtering Rules
+
+```yaml
+filter_rules:
+  must_match:
+    - content_cluster = current page's content_cluster
+    - status = 'publish'
+    - language = current page's language (WPML)
+  
+  must_exclude:
+    - current page itself (post__not_in)
+    - draft / private / trash
+    - pages with noindex
+    - pages older than 24 months without recent freshness review
+  
+  preferred:
+    - reviewed_by_doctor = true (E-E-A-T boost)
+    - has freshness_status = 'fresh' or 'aging'
+    - has high traffic_30d
+```
+
+### 8.8.5 Schema Markup for Related (ItemList)
+
+แต่ละ Related section emit `ItemList` schema:
+
+```json
+{
+  "@type": "ItemList",
+  "@id": "https://brand.com/page#related-treatments",
+  "name": "Related Treatments",
+  "itemListOrder": "https://schema.org/ItemListOrderDescending",
+  "numberOfItems": 4,
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "url": "https://brand.com/treatments/all-on-6"
+    },
+    ...
+  ]
+}
+```
+
+→ AI ใช้ `ItemList` เพื่อ understand topical clustering
+
+### 8.8.6 Cross-References
+
+| Topic | See Also |
+|-------|----------|
+| Reading Flow Principles (Sticky Sidebar + End Cluster Tabs) | Part 9.2 |
+| Topic Cluster architecture (hub-spoke) | Part 2.3 |
+| WordPress taxonomy: content_cluster | Part 8.5 |
+| ACF manual override fields | Part 8.7 (Tab 2: Relationships) |
+| PHP code reference | Appendix D.2 |
+
+---
+
+# PART 9: Content Page Template Anatomy
+
+> **Stack note (v3.8):** Implementation uses **Elementor Pro Theme Builder** — designs ใน Section 9.1-9.7 are conceptual templates that Designer renders visually via Elementor (no PHP coding). See **Section 25.11** for Elementor Pro integration pattern. WCAG AA requirements (Section 9.7) apply to all Elementor-rendered output.
+
+> **เป้าหมาย:** Layout + reading flow + CTA strategy ที่ optimize ทั้ง UX และ SEO/LLMO พร้อมกัน
+
+## 9.1 Layout Structure
+
+### Desktop Pillar Page Layout
+
+```
+┌─────────────────────────────────────────────────┐
+│ STICKY HEADER (logo + nav + CTA button)         │
+├─────────────────────────────────────────────────┤
+│ BREADCRUMB (Home > Category > This page)        │
+├─────────────────────────────────────────────────┤
+│ HERO (Full width — title + subtitle + CTA)      │
+│        — class="hero-summary speakable-block"   │
+├─────────────────────────────────────────────────┤
+│ QUICK FACTS BAR (Full width, ICD code, etc)     │
+├─────────────────────────────────────────────────┤
+│                                                 │
+│  ┌─────────────────────────┐ ┌───────────────┐ │
+│  │ MAIN COLUMN (2/3)       │ │ SIDEBAR (1/3) │ │
+│  │ • What Is               │ │ • TOC (sticky)│ │
+│  │ • Causes / Risk Factors │ │ • Compact     │ │
+│  │ • Symptoms              │ │   Related     │ │
+│  │ • Diagnosis             │ │ • Mini CTA    │ │
+│  │ • Treatment             │ │   (sticky)    │ │
+│  │ • Comparison Table      │ │               │ │
+│  │ • Brand Stance Block    │ │               │ │
+│  │ • Clinical Insight      │ │               │ │
+│  │ • Patient Journey       │ │               │ │
+│  │ • Complications         │ │               │ │
+│  │ • Inline CTA (strategic)│ │               │ │
+│  │ • FAQ (8 types)         │ │               │ │
+│  │ • Doctor Review Block   │ │               │ │
+│  │ • References            │ │               │ │
+│  └─────────────────────────┘ └───────────────┘ │
+│                                                 │
+├─────────────────────────────────────────────────┤
+│ END RELATED CLUSTER (Full width, with tabs)     │
+│ [Treatments] [Cases] [Concerns] [Articles]      │
+├─────────────────────────────────────────────────┤
+│ FINAL CTA (Full width)                          │
+├─────────────────────────────────────────────────┤
+│ FOOTER                                          │
+└─────────────────────────────────────────────────┘
+```
+
+### Mobile Layout
+
+```
+- Sidebar collapses below main content
+- TOC becomes drawer (☰ button)
+- Bottom Sticky CTA Bar (always visible)
+- Compact Related → horizontal swipeable cards
+- FAQ → accordion (saves space)
+```
+
+### Why This Layout
+
+- **Hero Summary** = Speakable target + Featured Snippet candidate (must be first)
+- **Quick Facts Bar** = Knowledge Panel feeder + Citable cluster
+- **Main 2/3 column** = optimal reading width (60-75 chars per line)
+- **Sticky Sidebar** = passive navigation (TOC + mini CTA) without interrupting reading
+- **End Cluster Tabs** = explore-next without orphan risk
+- **Final CTA** = decision-stage conversion point
+
+## 9.2 Reading Flow Principles
+
+### Rule 1: Linear Main Content
+
+**ห้าม** interrupt main column ด้วย full-width Related blocks กลางหน้า
+
+**Why:**
+- ทำลาย reading flow → ลด dwell time (Google ranking signal)
+- เพิ่ม bounce rate
+- AI extraction ของ Citable Sentences ขาดบริบท
+
+**Exception:** Inline CTA สั้นๆ หลัง Treatment / Diagnosis section ได้ (1-2 บรรทัด)
+
+### Rule 2: Inline Contextual Links
+
+แทรก links ใน text แบบ natural:
+
+```markdown
+"ในเคสที่ต้องการความมั่นคงสูงขึ้น [All-on-6](url) อาจเป็นทางเลือก
+หรือถ้ากระดูกไม่พอ [Zygomatic Implant](url) ใช้กระดูกโหนกแก้ม..."
+```
+
+**Why:**
+- SEO: contextual anchor text (signal แรงสุด สำหรับ internal linking)
+- UX: natural reading — ไม่รู้สึกว่าโดนยัด link
+- CTR: สูงกว่า "Related box" หลายเท่า
+- LLMO: AI ใช้ anchor text เป็น cue ของ entity relationship
+
+### Rule 3: Sticky Sidebar = Passive Offer
+
+Sticky sidebar แสดง:
+- TOC with scrollspy (desktop)
+- Compact Related (3-4 items, text links only — ห้าม card ใหญ่)
+- Mini CTA (sticky)
+
+**ปรัชญา:** User เปิดถ้าต้องการ — ไม่ interrupt main flow
+
+### Rule 4: End Cluster with Tabs
+
+รวม Related ทั้งหมดที่ท้ายหน้า — แยกด้วย tabs:
+- `[Treatments]` `[Case Studies]` `[Concerns]` `[Articles]`
+- Filter โดย same cluster
+- User เลือกได้ว่าอยาก explore อะไรต่อ
+
+**Why:**
+- Passes topical authority via sideway links
+- Reduces orphan risk
+- Better than sprinkling Related boxes กลางหน้า
+
+## 9.3 CTA Strategy (3 Primary + 2 Sticky)
+
+### Placement Map
+
+```
+1. Hero CTA          → ผู้มั่นใจแล้วตั้งแต่ต้น (Brand-aware)
+2. Strategic Inline  → หลัง Treatment / Expertise section
+                       (trust building done, ready to ask)
+3. Final CTA         → หลัง FAQ
+                       (ทุกข้อสงสัยถูกตอบ, decision made)
+
+Sticky:
+4. Header nav CTA    → always visible (desktop)
+5. Mobile bottom bar → always visible (mobile)
+```
+
+### CTA Copy Hierarchy
+
+| Position | Tone | Example |
+|----------|------|---------|
+| Hero | Direct, confident | "นัดปรึกษาแพทย์ — ฟรี" |
+| Strategic Inline | Soft, contextual | "ไม่แน่ใจว่าเหมาะกับคุณไหม? คุยกับหมอก่อนได้" |
+| Final | Decision-supporting | "พร้อมเริ่มแล้ว? นัดปรึกษาออนไลน์ ใช้เวลา 15 นาที" |
+| Header sticky | Action-oriented | "นัดปรึกษา" |
+| Mobile bottom | Concise | "นัดปรึกษา ฟรี" |
+
+### Forbidden CTA Patterns
+
+- ❌ Hard-sell pop-up กลางหน้า (รบกวน reading flow)
+- ❌ Multiple competing CTAs in same section (paralysis)
+- ❌ Generic "Learn More" without target page
+- ❌ CTA ก่อน hero summary (user ยังไม่รู้ว่ามาเจออะไร)
+
+## 9.4 Mobile-First Considerations
+
+```yaml
+critical_mobile_optimizations:
+  - hero_summary: ≤4 lines on 375px viewport
+  - sticky_bottom_cta: full-width, contrasting color
+  - faq_accordion: ลด scroll fatigue
+  - inline_links: รักษาให้แตะง่าย (≥44px tap target)
+  - comparison_table: horizontal scroll OR card layout (responsive)
+  - speakable_blocks: aria-label ครบ (voice search)
+
+forbidden_mobile_patterns:
+  - hover-only interactions
+  - small fonts (<16px body)
+  - sidebar fixed positioning ที่ block content
+```
+
+## 9.5 Cross-vertical Layout Adaptations
+
+| Vertical | Layout Tweaks |
+|----------|---------------|
+| **Clinic** | Strong CTA emphasis + Doctor Review Block prominent |
+| **Hospital** | Service department breakdown + multiple location selector |
+| **Skincare Media** | Affiliate disclosure + product comparison emphasis |
+| **Wellness Media** | Newsletter signup + audio version (podcast) |
+| **Dental Clinic** | Visual gallery prominent + treatment financing options |
+
+## 9.6 NEW Templates
+
+### Template T6: Ingredient Detail Page
+
+**Use case:** หน้าส่วนผสมเดี่ยว (Niacinamide, Retinol, Hyaluronic Acid)
+
+```
+1. H1: [Ingredient name] คืออะไร? เจาะลึกประโยชน์ ส่วนผสม...
+2. Quick Facts box (Citable bullets)
+   - INCI name + อ่านว่า
+   - Function categories
+   - Comedogenic rating
+   - Pregnancy safe?
+3. คืออะไร — กลไกการทำงาน
+4. ประโยชน์ที่งานวิจัยรองรับ (Citable Sentences + sources)
+5. ความเข้มข้นที่เห็นผล + รายละเอียด
+6. ข้อควรระวัง + side effects
+7. ใช้คู่กับอะไรได้/ไม่ได้ (cross-link to other ingredient pages)
+8. ผลิตภัณฑ์แนะนำที่มีส่วนผสมนี้ (link to Product Detail Pages)
+9. FAQ (FAQPage schema — 7 types)
+10. References (citations)
+11. Reviewer note (medical reviewer)
+12. Last updated + freshness signal
+```
+
+**Schema:** DefinedTerm + WebPage + FAQPage + (Drug if applicable)
+
+### Template T7: Product Detail Page
+
+```
+1. H1: [Brand] [Product] รีวิว — ส่วนผสม ราคา ใช้ดีไหม
+2. Product hero (image, brand, price, size)
+3. Overall rating + summary verdict (Citable)
+4. Full ingredient list (linked to ingredient pages)
+5. Active ingredients deep-dive (3-5 key ones)
+6. Who's it for / Who should avoid
+7. How to use + tips
+8. Compared to similar products (link to comparison pages)
+9. Where to buy (affiliate links + disclosure)
+10. FAQ
+11. References
+12. Reviewer note
+```
+
+**Schema:** Product + Review + AggregateRating + (Offer for affiliate)
+
+### Template T8: Comparison Page (X vs Y)
+
+**Use case:** "CeraVe vs Cetaphil", "Niacinamide vs Retinol"
+
+```
+1. H1: [X] vs [Y] — ต่างกันยังไง เลือกตัวไหนดี?
+2. TL;DR table (Citable comparison)
+3. กลไกการทำงาน — ต่างกันยังไง
+4. Side-by-side ingredient/efficacy comparison
+5. ใครเหมาะกับ X / ใครเหมาะกับ Y
+6. ใช้คู่กันได้ไหม
+7. ราคา + คุ้มไหม
+8. คำตัดสินขั้นสุดท้ายของกองบรรณาธิการ
+9. FAQ
+10. References
+```
+
+**Schema:** ItemList + Article (with multiple Product entities cross-referenced via @id)
+
+### Template T9: Listicle/Roundup
+
+**Use case:** "10 เซรั่ม Niacinamide ที่ดีที่สุดปี 2026"
+
+```
+1. H1: [N] [Product type] ที่ดีที่สุดปี [year]
+2. How we picked (methodology — important for trust)
+3. Quick comparison table
+4. #1 ... #N (each item: image, summary, pros/cons, price, where to buy)
+5. ที่เกือบติดอันดับ
+6. ทำไม X ตัวอื่นไม่ติดอันดับ (transparency!)
+7. คนแบบไหนควรเลือกตัวไหน (decision flowchart)
+8. FAQ
+9. Methodology disclosure + last updated
+```
+
+**Schema:** ItemList + Product (each) + AggregateRating
+
+### Template T10: Drug Monograph
+
+**Use case:** Tretinoin, Doxycycline, Isotretinoin
+
+```
+1. H1: [Drug name] — กลไก ใช้รักษาอะไร ผลข้างเคียง
+2. Quick Facts (Rx/OTC, drug class, ATC code)
+3. กลไกการทำงาน (mechanism)
+4. ใช้รักษาภาวะอะไร (approved + off-label)
+5. ขนาดและวิธีใช้ (สำหรับ patient education only)
+6. ข้อห้ามใช้ + warnings
+7. ผลข้างเคียง (common, serious)
+8. ปฏิกิริยากับยาอื่น
+9. ใช้ระหว่างตั้งครรภ์/ให้นม
+10. FAQ
+11. References (peer-reviewed)
+12. Reviewer note (PHYSICIAN required)
+13. **Medical disclaimer (mandatory)**
+```
+
+**Schema:** Drug + WebPage + FAQPage
+
+⚠️ **Drug pages ต้อง medical reviewer review เสมอ** + medical disclaimer
+
+---
+
+## 9.7 Accessibility Standards (WCAG AA)
+
+> **Why this section:** Bible v3.4.1 ครอบคลุม content + SEO + AI ครบ — แต่ขาด **accessibility (a11y)**. WCAG AA เป็น **dual-benefit standard**: ช่วยผู้ใช้พิการเข้าถึงเนื้อหา + Google rewards accessible sites (ranking signal). สำหรับ medical content เป็น mandatory เชิงจริยธรรม + lawsuit-protect ใน international markets
+
+### 9.7.1 Why WCAG AA — SEO + UX + Legal Triple Benefit
+
+```
+┌──────────────────────────────────────────────────────────────────┐
+│  WCAG AA = Dual-Layer Win                                          │
+├──────────────────────────────────────────────────────────────────┤
+│                                                                    │
+│  Accessibility benefit:                                            │
+│  ✓ ผู้ใช้ที่มีปัญหาการมองเห็น (screen reader users)                    │
+│  ✓ ผู้ใช้สูงอายุ (low vision, motor difficulties)                     │
+│  ✓ ผู้ใช้ที่อยู่ในสภาพแวดล้อม noisy (caption support)                  │
+│  ✓ ผู้ใช้ keyboard-only (motor disability)                          │
+│  → real impact ต่อ patient access                                  │
+│                                                                    │
+│  SEO benefit:                                                      │
+│  ✓ Semantic HTML → Google เข้าใจ structure ดีขึ้น                   │
+│  ✓ Alt text → image SEO + AI knowledge graph                       │
+│  ✓ ARIA labels → richer content understanding                      │
+│  ✓ Heading hierarchy → topical signal strength                     │
+│  ✓ Color contrast → Core Web Vitals readability                    │
+│  ✓ Skip-link + focus management → CLS score (Core Web Vitals)      │
+│  → measurable ranking signal lift                                  │
+│                                                                    │
+│  Legal benefit:                                                    │
+│  ✓ Thailand PWDA (Persons with Disabilities Empowerment Act 2007)  │
+│  ✓ International expansion-ready (US ADA, EU EAA)                  │
+│  ✓ Medical content has elevated legal standards in many regions    │
+└──────────────────────────────────────────────────────────────────┘
+```
+
+### 9.7.2 WCAG AA Compliance Checklist (Mandatory for All EYWA Pages)
+
+EYWA targets **WCAG 2.1 Level AA** (industry standard for medical content). Below are 30 essential criteria organized by 4 WCAG principles:
+
+#### Principle 1 — Perceivable (information presentable to users in ways they can perceive)
+
+```yaml
+1.1.1_non-text_content:
+  rule: "ทุก image ต้องมี alt text"
+  EYWA_implementation:
+    - ACF field 'alt_text' = MANDATORY ใน image fields ทั้งหมด
+    - decorative images: alt="" (empty — screen reader skip)
+    - content images: alt="descriptive text" (not "image of X")
+    - infographic: alt="brief summary" + long description in caption
+  validation: 
+    Pre-publish check: 100% of <img> tags have alt attribute
+  
+1.4.3_contrast_minimum:
+  rule: "Color contrast ≥4.5:1 (normal text), ≥3:1 (large text 18pt+)"
+  EYWA_implementation:
+    - Body text (16px): ratio ≥4.5:1
+    - Large text (24px+): ratio ≥3:1
+    - Brand colors must be tested per use case
+  tools: 
+    - WebAIM Contrast Checker
+    - Axe DevTools (browser extension)
+  
+1.4.4_resize_text:
+  rule: "Text resizable up to 200% without loss of content"
+  EYWA_implementation:
+    - Use rem/em units (not px) for body text
+    - Test browser zoom 200% — no horizontal scroll, no overlap
+  
+1.4.10_reflow:
+  rule: "Content reflows at 320px width (mobile) without horizontal scroll"
+  EYWA_implementation:
+    - Bible Part 9.4 (Mobile-First Considerations) covers this
+    - Tables: use scrollable wrapper or stack-on-mobile pattern
+  
+1.4.11_non-text_contrast:
+  rule: "UI components + graphical objects ≥3:1 contrast"
+  EYWA_implementation:
+    - Form inputs: border ≥3:1 vs background
+    - Icons: ≥3:1 vs background (or use text label)
+    - Charts: don't rely on color alone
+  
+1.4.12_text_spacing:
+  rule: "User can override line-height/letter-spacing without breaking layout"
+  EYWA_implementation:
+    - Use line-height: 1.5+ for body
+    - Don't use !important on text spacing
+  
+1.2.2_captions_video:
+  rule: "Captions for prerecorded video"
+  EYWA_implementation:
+    - VideoObject schema (Part 7.5.8) includes 'transcript' field
+    - YouTube videos: ensure CC enabled
+    - Self-hosted: provide .vtt caption file
+```
+
+#### Principle 2 — Operable (UI components and navigation must be operable)
+
+```yaml
+2.1.1_keyboard:
+  rule: "All functionality available via keyboard"
+  EYWA_implementation:
+    - Mobile menu: keyboard-accessible (not hover-only)
+    - Tabs (related content): arrow key navigation
+    - Sticky CTA: Tab-reachable
+    - No mouse-only interactions
+  testing: Unplug mouse, navigate entire page with Tab/Enter/Space/Esc
+
+2.1.2_no_keyboard_trap:
+  rule: "User can navigate away from any element using keyboard"
+  EYWA_implementation:
+    - Modal dialogs: ESC closes, focus returns to trigger
+    - Date pickers: ESC closes, Tab works
+  
+2.4.1_bypass_blocks:
+  rule: "Skip-to-main-content link"
+  EYWA_implementation:
+    - First focusable element on page: <a href="#main">Skip to content</a>
+    - Visible on focus (sr-only by default, visible when tabbed)
+  
+2.4.2_page_titled:
+  rule: "Page has descriptive title"
+  EYWA_implementation:
+    - <title> = "Page Title | Brand Name" pattern
+    - RankMath manages this — verify per-page
+  
+2.4.3_focus_order:
+  rule: "Tab order matches logical reading order"
+  EYWA_implementation:
+    - Don't use positive tabindex (>0) — use 0 or -1 only
+    - Header → Main content → Sidebar → Footer (DOM order)
+  
+2.4.4_link_purpose:
+  rule: "Link purpose clear from link text alone"
+  EYWA_implementation:
+    - ❌ "Click here" / "Read more"
+    - ✓ "Read more about TMJ Disorder"
+    - ✓ "Book consultation"
+    - aria-label เพิ่มเติมถ้าจำเป็น
+  
+2.4.6_headings_labels:
+  rule: "Headings + labels descriptive"
+  EYWA_implementation:
+    - Bible Part 6 (Content Standard) — headings semantic + descriptive
+    - ARIA labels on form inputs that lack visible label
+  
+2.4.7_focus_visible:
+  rule: "Keyboard focus indicator visible"
+  EYWA_implementation:
+    - DON'T remove focus outline globally (CSS: *:focus { outline: none })
+    - DO use custom focus styles ที่ชัดเจน (≥3:1 contrast)
+  
+2.5.5_target_size:
+  rule: "Touch targets ≥44×44px (AAA — but EYWA adopts as AA+)"
+  EYWA_implementation:
+    - Buttons, links, form inputs: min 44px × 44px tap area
+    - Bible Part 9.4 mobile considerations align
+```
+
+#### Principle 3 — Understandable (information and operation must be understandable)
+
+```yaml
+3.1.1_language_of_page:
+  rule: "Page language declared in HTML"
+  EYWA_implementation:
+    - <html lang="th"> for Thai pages
+    - <html lang="en"> for English pages
+    - WPML auto-handles via hreflang
+  
+3.1.2_language_of_parts:
+  rule: "Inline language changes declared"
+  EYWA_implementation:
+    - Thai content with English medical terms:
+      <span lang="en">TMJ Disorder</span>
+    - Important for screen reader pronunciation
+  
+3.2.3_consistent_navigation:
+  rule: "Nav appears in same order across pages"
+  EYWA_implementation:
+    - Header nav identical on all pages
+    - Footer identical
+    - Breadcrumb pattern consistent
+  
+3.2.4_consistent_identification:
+  rule: "Same function = same identification"
+  EYWA_implementation:
+    - "Book Consultation" button uses same label everywhere
+    - Same icons + same meaning across site
+  
+3.3.1_error_identification:
+  rule: "Form errors identified clearly"
+  EYWA_implementation:
+    - Error message adjacent to field (not just summary)
+    - aria-invalid="true" on errored field
+    - aria-describedby pointing to error message
+  
+3.3.2_labels_or_instructions:
+  rule: "Form labels or instructions provided"
+  EYWA_implementation:
+    - Every <input> has <label>
+    - Required fields: visual indicator + aria-required="true"
+    - Helper text: aria-describedby reference
+  
+3.3.3_error_suggestion:
+  rule: "Error correction suggestions provided"
+  EYWA_implementation:
+    - "Email format invalid — example: name@example.com"
+    - Date errors: "Use format DD/MM/YYYY"
+    - Required: "This field is required"
+```
+
+#### Principle 4 — Robust (content must be robust enough for assistive tech)
+
+```yaml
+4.1.1_parsing:
+  rule: "Valid HTML (well-formed)"
+  EYWA_implementation:
+    - W3C Validator passes (no critical errors)
+    - WordPress + theme should output valid HTML by default
+  
+4.1.2_name_role_value:
+  rule: "Custom UI components have ARIA roles + state"
+  EYWA_implementation:
+    - Tabs: role="tablist", role="tab", role="tabpanel"
+    - Modals: role="dialog", aria-modal="true"
+    - Accordions: aria-expanded="true/false"
+    - Custom dropdowns: role="combobox", aria-expanded
+  
+4.1.3_status_messages:
+  rule: "Status updates announced to screen readers"
+  EYWA_implementation:
+    - Form submission success: aria-live="polite"
+    - Error alerts: aria-live="assertive" / role="alert"
+    - "Loading..." states: aria-busy="true"
+```
+
+### 9.7.3 EYWA-Specific Implementation Mappings
+
+#### Template-Level (Part 9.1 Layout)
+
+```html
+<!-- Required structure for ALL EYWA pages -->
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <title>{Page Title} | {Brand Name}</title>
+</head>
+<body>
+  <!-- Skip link (visible on focus) -->
+  <a href="#main-content" class="skip-link">ข้ามไปยังเนื้อหาหลัก</a>
+  
+  <!-- Sticky header -->
+  <header role="banner">
+    <nav aria-label="Main navigation">
+      <!-- nav links -->
+    </nav>
+  </header>
+  
+  <!-- Breadcrumb -->
+  <nav aria-label="Breadcrumb">
+    <ol>...</ol>
+  </nav>
+  
+  <!-- Main content landmark -->
+  <main id="main-content" role="main">
+    
+    <!-- Hero -->
+    <section aria-labelledby="hero-title">
+      <h1 id="hero-title">...</h1>
+    </section>
+    
+    <!-- Body content -->
+    <article>
+      <h2>...</h2>
+      <p>...</p>
+    </article>
+    
+    <!-- Sidebar -->
+    <aside aria-label="Related content">
+      <nav aria-label="Table of contents">...</nav>
+    </aside>
+    
+    <!-- Related cluster tabs -->
+    <section aria-labelledby="related-heading">
+      <h2 id="related-heading">เนื้อหาที่เกี่ยวข้อง</h2>
+      <div role="tablist">
+        <button role="tab" aria-selected="true" aria-controls="panel-1">
+          การรักษา
+        </button>
+        ...
+      </div>
+      <div role="tabpanel" id="panel-1">...</div>
+    </section>
+    
+  </main>
+  
+  <!-- Footer -->
+  <footer role="contentinfo">...</footer>
+  
+  <!-- Sticky CTA -->
+  <div role="complementary" aria-label="Quick actions">
+    <a href="#" class="cta-button">จองคิว</a>
+  </div>
+</body>
+</html>
+```
+
+#### ACF Field Additions (extends Part 25.5)
+
+```yaml
+# Extension to existing ACF Field Groups for accessibility
+
+eywa_classification (Group 1):
+  add_fields:
+    - language_code:
+        type: select
+        options: [th, en, zh, ja, ...]
+        default: 'th'
+        purpose: Sets <html lang> attribute
+
+# NEW: Per-image ACF field group (when image fields exist)
+image_a11y_meta:
+  applies_to: ทุก image field ใน ACF
+  fields:
+    - alt_text (required):
+        type: text
+        max_length: 125
+        placeholder: "Brief descriptive text (or leave empty for decorative)"
+        validation: |
+          - Required for content images
+          - "" (empty) acceptable for decorative
+          - DON'T include "image of" / "picture of"
+    - caption_long (optional):
+        type: textarea
+        purpose: For complex infographics — full description
+
+# Extension: form/CTA field accessibility
+cta_meta:
+  applies_to: CTA buttons + form blocks
+  fields:
+    - aria_label (optional):
+        type: text
+        purpose: Override visible text for screen reader if needed
+    - link_purpose (optional):
+        type: text
+        purpose: Disambiguation when context unclear (e.g., "Book TMJ consultation")
+```
+
+#### Editorial Review Addition (extends Part 23.4)
+
+```yaml
+# New checklist items for editorial review process
+
+stage_3_accessibility_check (NEW):
+  triggers: Pre-publish (after content review, before SEO check)
+  checklist:
+    □ All images have alt_text or marked decorative
+    □ Headings hierarchical (no skip H1→H3)
+    □ Color contrast verified (≥4.5:1 body / ≥3:1 large)
+    □ Links have descriptive text (no "click here")
+    □ Forms have labels on all inputs
+    □ Video has captions/transcript
+    □ Page tested with keyboard-only nav
+    □ Page tested with screen reader (NVDA / VoiceOver) — sample
+  
+  automation:
+    - axe-core linter in CI/CD
+    - WAVE accessibility scan (manual quarterly)
+    - Lighthouse accessibility score ≥90 (Core Web Vitals integration)
+```
+
+### 9.7.4 SEO Co-Benefits — How a11y Improves Rankings
+
+```yaml
+direct_SEO_benefits:
+  semantic_html:
+    impact: Google Search uses HTML5 landmarks (header/main/nav/article/aside) 
+            for content extraction
+    eywa_action: Templates use semantic landmarks (Section 9.7.3 above)
+  
+  alt_text:
+    impact: 
+      - Image search rankings improve
+      - Featured Snippets eligibility
+      - AI knowledge graph richer entity descriptions
+    eywa_action: Mandatory ACF alt_text field (validation)
+  
+  heading_hierarchy:
+    impact: Google understands content topic via h1→h2→h3 structure
+    eywa_action: Bible Part 6.2 already requires hierarchical headings
+  
+  contrast_readability:
+    impact: 
+      - Lower bounce rate (UX score)
+      - Core Web Vitals indirectly
+    eywa_action: Brand color system documented per template
+  
+  page_title_descriptive:
+    impact: CTR boost in SERP
+    eywa_action: RankMath manages, verify per-page
+  
+  link_purpose:
+    impact: Anchor text quality = ranking signal
+    eywa_action: Editorial guidelines (Part 6) align
+  
+  language_declarations:
+    impact: 
+      - Hreflang signal strength
+      - Language-specific search visibility
+    eywa_action: <html lang> + inline lang= for medical terms
+
+measurable_lift:
+  industry_benchmark: "Sites achieving WCAG AA report 5-12% organic 
+                       traffic lift within 90 days post-implementation"
+  source: WebAIM 2024 study + Google Web.dev case studies
+```
+
+### 9.7.5 Validation & Testing Workflow
+
+```yaml
+automation_layer:
+  pre_commit:
+    - HTML validator (W3C)
+    - axe-core linter (Lighthouse CI integration)
+  
+  on_publish:
+    - Lighthouse accessibility score (target ≥90)
+    - Pa11y CLI scan (full WCAG AA ruleset)
+    - WAVE API check (cross-validation)
+  
+  monthly_audit:
+    - Manual screen reader test (NVDA + VoiceOver — sample 5 pages per CPT)
+    - Keyboard-only navigation test
+    - Color contrast spot check (5 pages)
+
+continuous_monitoring:
+  Google_Search_Console:
+    - Core Web Vitals report
+    - Mobile usability report
+  
+  third_party:
+    - Siteimprove (enterprise — full a11y monitoring)
+    - axe Monitor (free tier available)
+
+success_metrics:
+  KPI_addition_to_Part_20:
+    - Lighthouse a11y score: target ≥90 (warning <80)
+    - WCAG AA violations per page: target <3
+    - Pa11y errors: target 0 (warnings allowed <5)
+    - Image alt_text coverage: target 100%
+    - Form label coverage: target 100%
+```
+
+### 9.7.6 Compliance Tier Map (When to Aim for AAA)
+
+```yaml
+EYWA_default: WCAG 2.1 Level AA (mandatory for all pages)
+
+upgrade_to_AAA_for:
+  - Pages targeting elderly patients (≥60 audience)
+  - Pediatric-related content (parents reading on behalf)
+  - Disability-specific content (e.g., assistive devices)
+  - Patient consent forms / legal documents
+  - Emergency information pages
+  
+AAA_additional_criteria:
+  - 1.4.6 Contrast Enhanced: 7:1 (instead of 4.5:1)
+  - 2.4.9 Link Purpose (Link Only): no context needed
+  - 3.1.5 Reading Level: lower secondary education
+  - 2.3.3 Animation from Interactions: pause/stop options
+
+DON'T_pursue_AAA_blanket:
+  rationale: AAA is restrictive — affects design freedom
+  EYWA_position: AA mandatory + AAA selective (above triggers)
+```
+
+### 9.7.7 Cross-References
+
+| Topic | See Also |
+|-------|----------|
+| Layout structure (semantic HTML foundation) | Part 9.1 |
+| Mobile-first considerations | Part 9.4 |
+| Content standard (heading hierarchy) | Part 6 |
+| ACF Field Groups (alt_text mandatory) | Part 25.5 |
+| Editorial review (Stage 3 a11y check) | Part 23.4 |
+| KPI framework (Lighthouse a11y score) | Part 20.3 |
+| Multi-format content (VideoObject transcript) | Part 7.5.8 |
+| Multilingual (lang declarations) | Part 10 (WPML) |
+| Future: ADA compliance (US expansion) | Part 24 (Future Roadmap) |
+
+---
+
+# PART 10: Multi-Brand & Multi-Vertical Strategy
+
+> *🌐 The forest of EYWA — where every brand connects through shared neural fibers.*
+
+## 10.1 Strategy Decision Matrix
+
+### Question 1: เปิด vertical ใหม่ — graph เดียว หรือแยก graph?
+
+```
+ปัจจัย                         | Single graph | Separate graph
+------------------------------|--------------|---------------
+มี entity overlap > 30%        | ✅ Single    | ❌
+ทีมเดียวบริหาร                  | ✅ Single    | ❌
+แบรนด์เดียวกัน (the brand)  | ✅ Single    | ❌
+แบรนด์ลูกค้าภายนอก แยกกฎหมาย   | ❌            | ✅ Separate
+Compliance/PDPA แยกชัด         | ❌            | ✅ Separate
+```
+
+**Default: Single graph** สำหรับ the brand ecosystem
+
+### Question 2: เปิด domain ใหม่ หรือใช้ domain เดิม?
+
+ดู Part 10.4 — Domain Strategy
+
+---
+
+## 10.2 Multi-Brand Sharing Pattern (refined)
+
+[เนื้อหาจาก v1.1 Section 2.4 ที่ refined ใน Section 2.4 v2.0]
+
+---
+
+## 10.3 Vertical Onboarding Playbook
+
+### Step-by-step เมื่อเพิ่ม vertical ใหม่ใน graph
+
+**Phase 1: Discovery (1-2 สัปดาห์)**
+1. Identify entity types ที่ vertical ใหม่ใช้
+2. Check overlap กับ entities ที่มีอยู่ใน graph
+3. List clusters ที่ต้องการ — หาที่ share ได้ vs ที่ต้องสร้างใหม่
+4. กำหนด vertical/sub_vertical ใน brands table
+5. เลือก credential types สำหรับ reviewer
+6. Identify citation source mix
+
+**Phase 2: Foundation Setup (2-4 สัปดาห์)**
+1. Add vertical/sub_vertical values to controlled lists
+2. Create new clusters in seo_cluster_master (if needed)
+3. Update existing cluster `applicable_verticals` (if shared)
+4. Set up CPT registration for vertical-specific types
+5. Create brand entity in `brands`
+6. Create page templates per vertical needs
+
+**Phase 3: Content Migration/Creation (ongoing)**
+1. Create Master Example pillar (1 fully-implemented page)
+2. Validate schema markup
+3. Audit Citable Sentences
+4. Run AI Citation Audit baseline
+5. Begin content production
+
+### Vertical Onboarding Checklist
+
+```markdown
+## New Vertical Onboarding: [vertical_name]
+
+### Configuration
+- [ ] Vertical added to brands.vertical controlled values
+- [ ] Sub-vertical added (if applicable)
+- [ ] knowledge_graph_namespace defined
+
+### Taxonomy
+- [ ] Cluster master populated (universal + vertical-specific)
+- [ ] Cross-vertical sharing reviewed
+- [ ] Cluster hierarchy validated (max 3 levels)
+
+### Entities
+- [ ] Entity types relevant identified
+- [ ] Extension tables required identified
+- [ ] Initial entity seed list created
+
+### Authors/Reviewers
+- [ ] Credential types defined
+- [ ] At least 1 reviewer onboarded with verified credentials
+
+### Citations
+- [ ] Source types relevant identified
+- [ ] Initial 20+ key citations imported
+
+### WordPress
+- [ ] CPTs registered
+- [ ] Schema mapping configured
+- [ ] ACF/Pods field groups created
+- [ ] Templates implemented
+
+### Content
+- [ ] 1 Master Example pillar published + audited
+- [ ] llms.txt updated for vertical
+- [ ] Sitemap configured
+
+### Monitoring
+- [ ] AI Citation Audit baseline established
+- [ ] GSC property added
+- [ ] GA4 view configured
+```
+
+---
+
+## 10.4 Domain Strategy
+
+```
+House of Brands (separate domains):
+✅ ใช้เมื่อ: client work, distinct business model, exit strategy
+❌ ไม่ใช้เมื่อ: solo founder, early-stage, single ecosystem
+
+Megasite (single domain, multiple sections):
+✅ ใช้เมื่อ: ecosystem strategy (the brand), authority sharing
+❌ ไม่ใช้เมื่อ: clients ที่ต้องการ identity แยก
+```
+
+### the brand Recommended:
+```
+yourhealthnotion.com (megasite)
+├── /skincare/        — เฟส 1
+├── /aesthetic/       — เฟส 2
+├── /wellness/        — เฟส 3
+├── /tools/           — calculators, ingredient checker
+└── /experts/         — author/reviewer profiles
+```
+
+## 10.5 Doctor Cross-Brand Pattern
+
+> **เป้าหมาย:** หมอคนเดียวทำงานหลายคลินิก/แบรนด์ — schema ต้อง represent ได้ถูกต้อง
+
+### Pattern
+
+```yaml
+# Single-brand doctor (most common)
+doctor:
+  person_id: doc_voraphat_xxx
+  name: "ทพ. วรภัทร จรางกุล"
+  brand_scope: ['brandB-clinic']  # works at Brand B only
+  role_at_brandB: "Founder, Lead Implantologist"
+
+# Multi-brand doctor
+doctor:
+  person_id: doc_somsak_xxx
+  name: "ทพ. สมศักดิ์"
+  brand_scope: ['vth-biodent', 'deezy-dental', 'tc-smile']
+  brand_specific_roles:
+    vth-biodent: "Medical Director"
+    deezy-dental: "Visiting Consultant"
+    tc-smile: "Advisory"
+  brand_specific_credentials:
+    # บางใบประกอบใช้กับ brand เฉพาะ
+```
+
+### Page reviewedBy Resolution
+
+```python
+# When rendering page on brand X:
+def get_reviewer_for_page(page_id, current_brand_id):
+    page = get_page(page_id)
+    reviewer = get_doctor(page.reviewed_by_id)
+    
+    # Filter: only show this reviewer if they work at current_brand
+    if current_brand_id not in reviewer.brand_scope:
+        # Fallback to brand's default reviewer for this entity_type
+        return get_brand_default_reviewer(current_brand_id, page.entity_type)
+    
+    # Use brand-specific role/title
+    role = reviewer.brand_specific_roles.get(current_brand_id, reviewer.default_role)
+    return {
+        "person": reviewer,
+        "role_displayed": role
+    }
+```
+
+### Schema.org Multi-Brand Output
+
+```json
+// Page on Brand B brand
+{
+  "@type": "Physician",
+  "@id": "https://brandB.co.th/doctors/dr-somsak#person",
+  "name": "ทพ. สมศักดิ์",
+  "jobTitle": "Medical Director",  // brand-specific role
+  "worksFor": {"@id": "https://brandB.co.th/#organization"}
+}
+
+// Same person, different page on TC Smile brand
+{
+  "@type": "Physician",
+  "@id": "https://tc-smile.co.th/doctors/dr-somsak#person",  // different @id per brand
+  "name": "ทพ. สมศักดิ์",
+  "jobTitle": "Advisory",  // different role
+  "worksFor": {"@id": "https://tc-smile.co.th/#organization"}
+}
+```
+
+**Why different @id per brand:** AI ระบุได้ว่าเป็น context ต่างกัน (role + employer ต่าง) แม้คนเดียว
+
+### Storage in Database
+
+```sql
+-- seo_authors_reviewers table
+CREATE TABLE seo_authors_reviewers (
+  id UUID PRIMARY KEY,
+  name TEXT,
+  brand_scope TEXT[] NOT NULL,  -- ['brandB-clinic'] or ['*'] for universal
+  brand_specific_roles JSONB,   -- {"brandB-clinic": "Director", ...}
+  default_role TEXT,
+  -- ... other fields
+);
+```
+
+## 10.6 Citation Cross-Brand Pattern
+
+> **เป้าหมาย:** External authoritative citations (PubMed, AASM, etc.) เขียนครั้งเดียว ใช้ได้หลายแบรนด์
+
+### Pattern
+
+```yaml
+citation:
+  citation_id: cite_lin_2022_xxx
+  doi: 10.11607/jomi.9436
+  title: "The Impact of Implantoplasty in Peri-implantitis"
+  authors: "Lin et al"
+  journal: "J Oral Maxillofac Implants"
+  year: 2022
+  evidence_level: "1A"  # Oxford CEBM
+  brand_scope: NULL     # universal — no brand constraint
+                        # external citations are always universal
+```
+
+### Used Across Multiple Brands
+
+```
+Citation: "Lin et al 2022"
+├─ Brand B /by-concern/peri-implantitis
+├─ Brand A /by-concern/peri-implantitis
+├─ TC Smile /knowledge/implantoplasty
+└─ Brand C /treatments/implant-maintenance
+
+→ Written once in seo_citations
+→ Cited 4 times via seo_page_citations junction table
+→ Updated once → propagates to all 4 pages
+```
+
+### Junction Table Design
+
+```sql
+-- seo_page_citations (junction)
+CREATE TABLE seo_page_citations (
+  page_id UUID REFERENCES seo_website_page_master(id),
+  citation_id UUID REFERENCES seo_citations(id),
+  citation_pattern TEXT,  -- external_authoritative, pattern_a, pattern_e, ...
+  used_in_section TEXT,    -- "section_4_risk_factors"
+  inline_quote TEXT,        -- the actual sentence used
+  PRIMARY KEY (page_id, citation_id)
+);
+```
+
+### Brand-linked vs Universal Citations
+
+| Type | brand_scope | Example |
+|------|-------------|---------|
+| **Universal** (external authoritative) | `NULL` or `['*']` | PubMed RCTs, AASM guidelines, WHO data |
+| **Brand-specific** (Pattern A) | `['brand-x']` | "VitalSleep Clinical Data 2025" |
+| **Pattern E (Brand Stance)** | `['brand-x']` | "จุดยืนของ VitalSleep: ..." |
+
+**Universal citations:** สามารถใช้ข้าม brand ได้  
+**Brand-specific citations:** จำกัดเฉพาะ brand นั้น (Pattern A/E)
+
+### Maintenance Workflow
+
+```
+Quarterly: Update citation if newer paper published
+  ↓
+Edit seo_citations.title / year / inline_quote_template
+  ↓
+Flow C2 propagates to all 4 pages using this citation
+  ↓
+WordPress regenerates JSON-LD with updated reference
+```
+
+→ ลดงาน maintenance หลายเท่า เมื่อ scale 5+ brands
+
+---
+
+---
+
+## 10.7 Operational Multi-Brand Federation Pattern
+
+> **Why this section:** Sections 10.1-10.6 อธิบาย *strategy* และ *sharing patterns* — แต่ไม่ได้กำหนด **operational model** ที่ EYWA ใช้จริงในการบริหารหลายแบรนด์. ระบบ EYWA ออกแบบบน **Federation Pattern** — backend เป็นตารางเดียวกันที่บริหารหลายแบรนด์, แต่ frontend แยกอิสระ. นี่คือ **competitive moat** ที่ตอบโจทย์ portfolio operators (medical groups, wellness conglomerates, healthcare media networks) ที่บริหาร 5-20 brands พร้อมกัน
+
+### 10.7.1 Federation Pattern — Backend Shared, Frontend Independent
+
+```
+┌──────────────────────────────────────────────────────────────────┐
+│  EYWA Federation Architecture                                      │
+├──────────────────────────────────────────────────────────────────┤
+│                                                                    │
+│  BACKEND TIER (shared infrastructure):                            │
+│                                                                    │
+│  💾 1 Supabase Project                                            │
+│     ├─ All tables shared across brands                            │
+│     ├─ brand_scope[] field on every relevant row                  │
+│     ├─ Universal entries: brand_scope = ['*']                     │
+│     ├─ Brand-specific: brand_scope = ['vth-biodent']              │
+│     └─ Multi-brand share: brand_scope = ['vth-biodent', 'brand-2']│
+│                                                                    │
+│  📝 N Notion Workspaces (per team)                                │
+│     ├─ Team A workspace → mirrors Supabase, filtered to brands A,B│
+│     ├─ Team B workspace → mirrors Supabase, filtered to brands C,D│
+│     ├─ Operator workspace → all brands, executive dashboards      │
+│     └─ All workspaces use IDENTICAL DB structure                  │
+│                                                                    │
+│  🔄 n8n (sync orchestration)                                     │
+│     ├─ Per-team flow: Notion ↔ Supabase (brand-filtered)         │
+│     ├─ Cross-team coordination flows                              │
+│     └─ Frontend deployment flows                                  │
+│                                                                    │
+├──────────────────────────────────────────────────────────────────┤
+│                                                                    │
+│  FRONTEND TIER (independent per brand):                           │
+│                                                                    │
+│  🌐 Brand A WordPress (vth-biodent.com)                          │
+│  🌐 Brand B WordPress (vitalsleep.com)                           │
+│  🌐 Brand C WordPress (skincare-brand.com)                       │
+│  🌐 ... up to N brands                                            │
+│                                                                    │
+│  Each WordPress:                                                  │
+│   ├─ Pulls only its brand's data via brand_scope filter          │
+│   ├─ Independent domain, theme, content                           │
+│   ├─ No cross-brand visibility (frontend isolation)               │
+│   └─ Uses shared plugin code (eywa-* plugins)                    │
+└──────────────────────────────────────────────────────────────────┘
+```
+
+### 10.7.2 Why Federation (Not Full Separation, Not Full Merger)
+
+```yaml
+problem_with_full_separation:
+  approach: 1 Supabase project per brand, 1 Notion workspace per brand
+  problems:
+    ❌ Schema upgrade requires N migrations (10 brands = 10 schema changes)
+    ❌ Citations researched repeatedly per brand (waste)
+    ❌ Generic entities (TMJ Disorder) duplicated across brands
+    ❌ No cross-brand executive visibility
+    ❌ Resource allocation impossible (cannot see workload)
+    ❌ Cross-brand referrals require external API integration
+
+problem_with_full_merger:
+  approach: 1 system serving all brands as single entity
+  problems:
+    ❌ Permission model nightmare
+    ❌ Brand isolation hard to enforce
+    ❌ Frontend coupling reduces brand autonomy
+    ❌ Onboarding new brand = system-wide change
+    ❌ Tight coupling = hard to evolve
+
+federation_solves_both:
+  ✅ Schema upgrade: once for all brands
+  ✅ Citations + entities sharable when relevant (brand_scope = ['*'])
+  ✅ Brand isolation enforced via brand_scope filter
+  ✅ Executive visibility WHEN NEEDED (operator role)
+  ✅ Resource allocation visible (cross-brand dashboards)
+  ✅ Cross-brand referrals = native feature
+  ✅ New brand onboarding = data, not architecture
+  ✅ Frontend autonomy preserved
+```
+
+### 10.7.3 Resource Sharing Strategy
+
+What CAN be shared across brands (Federation benefit):
+
+```yaml
+sharable_at_global_level (brand_scope = ['*']):
+  ✅ Citations:
+     - PubMed papers, WHO guidelines, AASM standards
+     - Researched once, cited from any brand's pages
+     - Updated once → propagates to all referring pages
+  
+  ✅ Generic entities:
+     - "TMJ Disorder", "Sleep Apnea" (medical concepts)
+     - Defined once with universal description
+     - Each brand customizes positioning via own pages
+  
+  ✅ Reference data:
+     - ICD-10 codes
+     - Schema.org type mappings
+     - Standardized taxonomy terms (sitemap_section, layer, tier)
+  
+  ✅ Authors/Reviewers:
+     - Doctor working at multiple clinics
+     - Defined once, linked to multiple brands
+
+sharable_at_subset_level (brand_scope = ['vth-biodent', 'vitalsleep']):
+  ✅ Specialized entities:
+     - "OSA Severity Index" (sleep + dental relevant)
+     - Used by both VTH and VitalSleep
+  
+  ✅ Cross-referral patterns:
+     - VTH page → external link to VitalSleep
+     - Tracked at backend, status visible in workflow
+
+brand_specific_only (brand_scope = ['vth-biodent']):
+  ❌ Brand identity: logos, colors, voice
+  ❌ Branded methodologies: "Mouth Bio Mapping" exclusive to VTH
+  ❌ Doctor employment relationships (where they primarily practice)
+  ❌ Branch locations
+  ❌ Brand-specific case studies
+  ❌ Brand-specific products/services
+```
+
+### 10.7.4 Multi-Team Notion Workspace Pattern
+
+```yaml
+workspace_topology:
+  
+  team_a_workspace (Notion account A):
+    members: [editor_1, writer_2, reviewer_3]
+    brand_assignment: ['vth-biodent', 'brand-x']
+    
+    databases (mirror Supabase):
+      - Entities (filtered: brand_scope contains assigned brands)
+      - Pages (filtered: same)
+      - Citations (filtered: brand_scope = ['*'] OR contains assigned)
+      - Relationships (filtered: same)
+    
+    visibility:
+      ✓ See own brands' content
+      ✓ See universal resources (citations, generic entities)
+      ✗ Cannot see other teams' brands
+  
+  team_b_workspace (Notion account B):
+    members: [editor_4, writer_5, reviewer_6]
+    brand_assignment: ['vitalsleep', 'brand-y']
+    [same structure, different filter]
+  
+  operator_workspace (your account):
+    members: [you (top operator)]
+    brand_assignment: ['*']  # all brands
+    
+    databases:
+      - All Notion DBs (no brand filter)
+      - Executive dashboards aggregating across brands
+      - Resource allocation views
+      - Cross-brand performance comparisons
+    
+    additional_features:
+      - Workload distribution visualization
+      - Brand health scoring (KPI rollup per brand)
+      - Cross-brand referral status tracking
+      - Team velocity metrics
+
+sync_implications:
+  Each Notion workspace runs its own n8n flow:
+    - Notion (team A) → Supabase: filtered to assigned brands
+    - Notion (team B) → Supabase: filtered to assigned brands
+    - Notion (operator) → Supabase: all brands
+  
+  All flows write to SAME Supabase tables — brand_scope keeps clean separation
+  Conflict resolution: operator changes win (executive override)
+```
+
+### 10.7.5 Brand Scope Filter — Implementation Pattern
+
+```sql
+-- Pattern: every read query filters by brand_scope
+-- Pattern: every write specifies target brand(s)
+
+-- Example: Editor querying entities for VTH
+SELECT * FROM seo_entity_graph
+WHERE brand_scope @> ARRAY['vth-biodent']
+   OR brand_scope @> ARRAY['*'];
+
+-- Example: Inserting universal citation (sharable)
+INSERT INTO seo_citations (...)
+VALUES (..., brand_scope := ARRAY['*']);
+
+-- Example: Inserting brand-specific entity
+INSERT INTO seo_entity_graph (...)
+VALUES (..., brand_scope := ARRAY['vth-biodent']);
+
+-- Example: Multi-brand entity (shared subset)
+INSERT INTO seo_entity_graph (...)
+VALUES (..., brand_scope := ARRAY['vth-biodent', 'vitalsleep']);
+
+-- Performance: GIN index on brand_scope
+CREATE INDEX idx_entity_brand_scope ON seo_entity_graph 
+USING GIN (brand_scope);
+```
+
+### 10.7.6 Cross-Brand Referral Tracking (Native Feature)
+
+> **Use case:** VTH BioDent has page mentioning sleep test. Author wants to refer readers to VitalSleep (sister brand specialist) for deeper info. EYWA tracks the cross-brand link lifecycle natively.
+
+```yaml
+data_model:
+  table: seo_website_page_master
+  fields_per_page:
+    - cross_brand_references: jsonb[] containing:
+      - target_brand_id: 'vitalsleep'
+      - target_page_concept: 'comprehensive sleep test'
+      - target_url: NULL | actual URL when published
+      - anchor_text: 'อ่านเพิ่มเติมที่ VitalSleep'
+      - status: 'pending' | 'draft_at_target' | 'live' | 'broken'
+      - last_checked_at: timestamptz
+    
+workflow:
+  
+  step_1_author_writes (VTH editor):
+    - Working on VTH article about sleep apnea
+    - Wants to refer to VitalSleep "Sleep Test" comprehensive page
+    - Adds cross_brand_reference record:
+      target_brand: 'vitalsleep'
+      target_page_concept: 'sleep test comprehensive'
+      anchor_text: 'การตรวจ sleep test แบบละเอียด'
+      status: 'pending' (target not yet identified)
+  
+  step_2_system_resolves (n8n):
+    - Daily flow scans cross_brand_references with status='pending'
+    - Searches seo_website_page_master where brand_id='vitalsleep'
+      AND title/keywords match target_page_concept
+    - If match found:
+      → Update status:
+        - 'draft_at_target' if target page exists but unpublished
+        - 'live' if target page published with URL
+      → Auto-populate target_url
+  
+  step_3_editor_sees (VTH editor view):
+    - Notion page editor sees status indicator:
+      🟡 'draft_at_target' → use anchor text only (no link yet)
+      🟢 'live' → can use full anchor + URL
+      🔴 'broken' → target page changed/deleted, fix needed
+  
+  step_4_alert (proactive notifications):
+    - When target page goes live → alert source brand author
+    - "Your reference to VitalSleep is now live — update your link"
+    - Author updates VTH page anchor → link
+
+operator_dashboard:
+  - View all pending cross-brand referrals (across all brands)
+  - Identify bottlenecks: "VitalSleep has 12 pages waiting"
+  - Resource allocation: "Move team to VitalSleep to unblock VTH"
+```
+
+### 10.7.7 Executive Visibility & Resource Allocation
+
+```yaml
+operator_dashboards (your view):
+  
+  brand_health_overview:
+    - 5-10 brands listed
+    - Each shows: content velocity, KPI rollup, EYWA scoring
+    - Color coding: green/yellow/red by health
+  
+  workload_distribution:
+    - Pages in production per brand
+    - Pages stuck per stage (draft, review, schema, publish)
+    - Identify bottlenecks: "Brand C stuck at editorial review"
+  
+  resource_allocation:
+    - Team velocity: "Team A done with VTH 90%, available"
+    - "Team B at 50% on VitalSleep, need help"
+    - Action: "Move 1 writer from Team A to help Team B"
+  
+  cross_brand_initiatives:
+    - Shared citation library growth
+    - Universal entity library expansion
+    - Cross-brand referral network density
+  
+  portfolio_kpis:
+    - Total organic traffic across brands
+    - Aggregate AI citation rate
+    - Combined backlink portfolio
+    - Cluster overlap analysis (where do brands compete vs complement)
+```
+
+### 10.7.8 Brand Onboarding — Federation Style
+
+```yaml
+new_brand_onboarding_workflow:
+  
+  step_1_business_setup (1 day):
+    - INSERT brands record in Supabase
+    - Define vertical_family, healthcare_format, signature_offerings
+    - Set cpt_activation_flags
+    - Assign team(s)
+  
+  step_2_notion_team_workspace (0.5 day):
+    - If new team: create Notion workspace
+    - Mirror DB structure from template
+    - Configure brand_scope filters
+    - Add team members
+  
+  step_3_content_genesis (3-5 days):
+    - Run EGP (Bible Part 2.6) on new brand
+    - Output: entities, clusters, relationships
+    - Tag with brand_scope = [new_brand_id]
+    - Re-use universal entities (brand_scope = ['*']) where applicable
+  
+  step_4_wordpress_deployment (1 day):
+    - Spin up new WP install (separate domain)
+    - Deploy eywa-* plugins (same code as other brands)
+    - Configure brand_id in plugin settings
+    - WP automatically pulls only new brand's data
+  
+  step_5_initial_content_sync (1 day):
+    - n8n flow: Notion → Supabase → WordPress
+    - First 50 pages generated
+    - Schema markup validated
+  
+  step_6_go_live (1 day):
+    - DNS, SSL, search console verification
+    - Initial monitoring setup
+    - Sitemap submission
+  
+  total: ~7-10 days from "we want this brand" → live website
+  vs traditional: 4-8 weeks for solo SEO setup
+  benefit: federation = faster onboarding because infrastructure pre-exists
+```
+
+### 10.7.9 Federation as Competitive Moat
+
+```yaml
+positioning_value:
+  
+  for_solo_brand_operators:
+    - "Tools that scale with you"
+    - Add 2nd brand = no rebuild
+    - Pre-built operational pattern
+  
+  for_portfolio_operators:
+    - "The only SEO system designed for brand portfolios"
+    - Cross-brand visibility built-in
+    - Resource sharing without compromising brand autonomy
+    - Operational efficiency through shared backend
+  
+  for_agencies_managing_clients:
+    - Manage 10+ client websites in 1 system
+    - Per-client team isolation
+    - Cross-client insights for agency operator
+    - White-label deployment per client domain
+  
+  competitive_landscape:
+    - Yoast/RankMath: single-site focus
+    - Enterprise SEO platforms: expensive + over-complex
+    - SEMrush/Ahrefs: analytics-focused, not content management
+    - EYWA: right-sized for portfolio operators (5-20 brands)
+```
+
+### 10.7.10 Cross-References
+
+| Topic | See Also |
+|-------|----------|
+| Brand entity sharing patterns | Part 10.2 |
+| Doctor cross-brand pattern | Part 10.5 |
+| Citation cross-brand pattern | Part 10.6 |
+| brand_scope field convention | Part 5 (DB Schema), Schema_Overview |
+| Notion DB structure (mirrored across teams) | Part 18 |
+| Multi-team Notion sync | Part 18.7 (added in v3.7) |
+| Cross-brand link tracking detail | Part 4.12 (added in v3.7) |
+| Federation operator dashboards | Part 20 (KPIs), Part 13 (LLMO) |
+| Brand profile activation flags | Part 25.6 |
+
+---
+
+# PART 11: Implementation Roadmap
+
+> v1.1 roadmap base ยังใช้ได้ — เพิ่ม v2.0 migration
+
+## 11.5 v2.0 Migration Roadmap (จาก v1.1)
+
+### Phase 0: Pre-migration audit (1 week)
+- Inventory current entities — categorize by future entity_type
+- List rare properties — decide extension vs JSONB
+- Identify entities ที่จะ share ข้าม vertical
+
+### Phase 1: Schema migration (2-3 weeks)
+- ALTER seo_entity_graph: add entity_type, applicable_verticals, type_properties
+- CREATE 9 extension tables
+- ALTER brands: add vertical, sub_vertical, business_model
+- ALTER seo_cluster_master: add applicable_verticals, vertical_specific
+- ALTER seo_authors_reviewers, seo_citations
+
+### Phase 2: Data migration (2-4 weeks)
+- Backfill entity_type for existing entities
+- Move ingredient/product/procedure-specific fields to extension tables
+- Update cluster_master entries with vertical scope
+
+### Phase 3: Application code update (2-4 weeks)
+- Update WordPress CPT logic
+- Update schema markup generators
+- Update ACF/Pods field bindings
+- Update internal linking algorithms
+
+### Phase 4: Validation (1-2 weeks)
+- Schema markup validation (Rich Results Test)
+- AI Citation Audit before/after comparison
+- Performance check
+- Index build
+
+### Phase 5: Rollout (1 week)
+- Update llms.txt across all brands
+- Notify Google via GSC
+- Monitor 30 days
+
+**Total estimated time: 9-15 weeks**
+
+
+### Add: Section 11.6 — MVP / Growth / Scale Tiered Scope
+
+> **Why:** กูรูชี้จุดสำคัญ — ทำใหญ่เกินจะพังใน 3-6 เดือน. แม้ว่า full architecture จะออกแบบไว้ใน Parts 1-22 ทั้งหมด แต่การ implement จริงควรเป็นแบบ **phased**
+
+#### 11.6.1 Three-Tier Scope Definition
+
+```yaml
+TIER 1 — MVP (Month 1-3) — "Foundation Only"
+  goal: "Get the system running with minimal complexity"
+  
+  scope_in:
+    schema_tables:
+      ✅ brands (existing)
+      ✅ seo_branches (NEW — basic fields)
+      ✅ seo_authors_reviewers (NEW — basic fields)
+      ✅ seo_topic_cluster_master (NEW — minimal)
+      ✅ seo_doctor_assignments (NEW — junction)
+      ✅ seo_website_page_master (extend with Tier 1 fields only)
+      ✅ seo_entity_graph (existing)
+      ✅ seo_x_ads_keywords (existing)
+    
+    fields_per_page:
+      Tier 1 critical only:
+        - page_fingerprint, brand_id, full_url
+        - layer (1-7), node_tier (A/B/C/D)
+        - funnel_stage, page_branch_relationship
+        - schema_org_type
+    
+    quality:
+      ✅ Part 19 Data Quality Framework (basic measurement)
+      ✅ Backfill 1,000-1,500 pages (typical mid-size) — Phase 1 only (Tier 1 fields)
+    
+    measurement:
+      ✅ Part 20 KPI Framework — Layer 1 (Content) + Layer 2 (SEO) only
+      ✅ 5 dashboards: Executive Overview + Content Quality only
+    
+    governance:
+      ✅ Part 15 — Schema Change Governance (basic)
+      ✅ Part 16 — 4-Tool Loose-Coupled (active)
+  
+  scope_out (deferred):
+    ❌ 9 extension tables (e.g., seo_entity_ingredients, seo_entity_devices)
+    ❌ Full polymorphism beyond core entity types
+    ❌ AI Operations / Embedding (Part 21)
+    ❌ Vector storage
+    ❌ KPIs Layer 3 (AI) and Layer 4 (KG) deep metrics
+    ❌ Operational Governance complex roles
+  
+  team_required:
+    - 1 SEO Lead
+    - 1 Content Lead
+    - 1 Data Steward (part-time)
+    - 1 Engineering (Notion/Supabase setup)
+  
+  success_metrics:
+    ☐ All 1,000-1,500 pages (typical mid-size) classified (layer, tier, funnel)
+    ☐ Data quality score > 75% on critical tables
+    ☐ Daily quality dashboard operational
+    ☐ Content publishing workflow with quality gate
+```
+
+```yaml
+TIER 2 — GROWTH (Month 3-9) — "Expand Capabilities"
+  goal: "Add operational depth + AI tracking"
+  
+  scope_added:
+    schema_extensions:
+      ✅ Activate 4-5 entity extension tables
+        (seo_entity_ingredients, seo_entity_devices first)
+      ✅ Add Tier 2 fields to page_master
+      ✅ Activate seo_citations + page_citations
+      ✅ Activate seo_llm_citations (basic tracking)
+    
+    quality:
+      ✅ Backfill Phase 2 (schema validation, cluster mapping)
+      ✅ All 5 quality dimensions measured
+      ✅ Automated alerts (Slack)
+    
+    measurement:
+      ✅ All 4 KPI Layers active
+      ✅ All 5 dashboards operational
+      ✅ Per-platform AI citation tracking (manual + Perplexity API)
+    
+    ai_operations:
+      ✅ Part 21 Layer A — basic embedding strategy
+      ✅ Part 21 Layer C — query simulation (200 queries/brand)
+      ⚠️ Part 21 Layer B — hybrid retrieval (optional)
+    
+    governance:
+      ✅ Part 15 + Operational Governance (Steward roles, SLA)
+  
+  team_added:
+    - 1 AI Operations Lead (or part-time engineer)
+    - 1 LLMO Compliance Officer (review queue)
+  
+  success_metrics:
+    ☐ Quality score > 85%
+    ☐ AI Citation Rate baseline established
+    ☐ All 9 extension tables strategy decided
+    ☐ Embedding pipeline operational
+```
+
+```yaml
+TIER 3 — SCALE (Month 9+) — "Full Architecture"
+  goal: "Activate full polymorphism + advanced features"
+  
+  scope_added:
+    schema_full:
+      ✅ All 9 extension tables active
+      ✅ Full polymorphism (entity_type-specific properties)
+      ✅ Cross-vertical entity sharing operational
+      ✅ All 24+ tables active
+    
+    quality:
+      ✅ Backfill Phase 3 complete
+      ✅ Quality score > 90% maintained
+    
+    advanced:
+      ✅ Part 21 Layer B — full hybrid retrieval + re-ranking
+      ✅ Trust scoring (early version)
+      ✅ Advanced AI tracking (multi-platform automated)
+      ✅ Programmatic SEO at scale (Type C templates)
+    
+    governance:
+      ✅ Full operational team
+      ✅ Quarterly audit cycles
+      ✅ Schema versioning mature
+  
+  team_added:
+    - Senior Data Engineer (full-time)
+    - Schema Governance Committee (cross-functional)
+    - QA Engineer (data quality)
+  
+  success_metrics:
+    ☐ Quality score > 90%
+    ☐ AI Citation Rate > 25%
+    ☐ Topical Authority dominant in 3+ clusters
+    ☐ Multi-brand operations smooth (15+ brands)
+```
+
+#### 11.6.2 Migration Path Between Tiers
+
+```
+MVP → Growth (Month 3 transition):
+  Trigger: MVP success metrics met
+  Action: Deploy Tier 2 fields + 1-2 extension tables
+  Risk mitigation: Feature flags for gradual rollout
+
+Growth → Scale (Month 9 transition):
+  Trigger: Growth KPIs healthy + need for cross-brand sharing
+  Action: Activate remaining extension tables
+  Risk mitigation: Migration in waves (1 entity type per sprint)
+```
+
+#### 11.6.3 Tier-Specific Risk Profile
+
+```yaml
+mvp_risks:
+  HIGH: Pages misclassified (wrong layer/tier)
+  MEDIUM: Data quality drift if no monitoring
+  MITIGATION: Quality dashboard from Day 1
+
+growth_risks:
+  HIGH: Embedding cost runaway (mitigate: cost tracking)
+  MEDIUM: AI tracking false positives (mitigate: manual QA)
+  MITIGATION: Start with 200-query sample, scale carefully
+
+scale_risks:
+  HIGH: Schema migration breaking existing data
+  MEDIUM: Cross-brand conflict (entity ownership)
+  MITIGATION: Versioned migrations, branch testing
+```
+
+---
+
+# PART 12: References & Sources
+
+[v1.1 reference list — augmented with skincare/cosmetic science]
+
+### Cosmetic Science Adds
+- IFSCC (International Federation of Societies of Cosmetic Chemists)
+- SCC (Society of Cosmetic Chemists)
+- CIR (Cosmetic Ingredient Review)
+- SCCS (EU Scientific Committee on Consumer Safety)
+- CosIng (EU Commission database)
+- Personal Care Products Council INCI Dictionary
+
+### Multi-vertical Standards
+- HL7 FHIR R5 (healthcare interoperability)
+- SNOMED CT International Edition
+- LOINC (Logical Observation Identifiers Names and Codes)
+- MeSH (Medical Subject Headings)
+- UMLS (Unified Medical Language System)
+
+---
+
+# PART 13: LLMO Execution Playbook
+
+> *🧬 The leaves of EYWA — where structured content becomes citable signal in the AI ecosystem.*
+
+> **Tactical companion to architecture** — สาระสำคัญในการ execute LLMO ตั้งแต่ Day 1
+>
+> Part 13.1-11.12 = foundational operational playbook  
+> Part 13.13-11.20 = advanced playbooks (v2.4+v2.5)
+
+## 13.1 LLMO คืออะไร — และต่างจาก SEO ยังไง
+
+### คำที่ใช้แทนกันได้ (โดยพื้นฐาน)
+
+```
+LLMO = Large Language Model Optimization
+GEO  = Generative Engine Optimization  
+AEO  = Answer Engine Optimization
+AIO  = AI Optimization
+```
+
+ทั้งหมดหมายถึงการทำให้ **AI engines** (ChatGPT, Perplexity, Claude, Gemini, Grok, Copilot, Google AI Overview) **อ้างอิง / แนะนำ / ดึงไปตอบ** เนื้อหาของเรา
+
+### ต่างจาก SEO ยังไง?
+
+| มิติ | SEO (เก่า) | LLMO (ใหม่) |
+|------|-----------|-------------|
+| **เป้าหมาย** | Rank #1 บน Google SERP | ถูก AI cite ในคำตอบ |
+| **Format** | Title/Meta/H1 keyword targeting | Self-contained citable sentences |
+| **Authority signal** | Backlinks + DA | Schema + sameAs + brand mentions + co-citations |
+| **Content depth** | 1500+ words | 3000+ words + multi-perspective |
+| **Update frequency** | Annual content refresh | Quarterly minimum (freshness signal) |
+| **Measurement** | SERP position + CTR | Citation rate + AIO inclusion |
+| **Structure** | Linear article | Q&A format + comparison tables + perspectives |
+
+**Critical insight:** SEO traffic ลดลง ~30% เมื่อ Google AI Overview เริ่มแสดงคำตอบโดยตรง — LLMO คือทางออกเพื่อให้แบรนด์ยังถูกพูดถึงในคำตอบนั้น
+
+## 13.2 หลักการ LLMO 8 ข้อ
+
+> **8 commandments** ที่ทุก content ต้องเช็กก่อน publish
+
+```
+1. เนื้อหาเป็น "แหล่งอ้างอิง" ได้
+   → FAQ format, step-by-step, data-rich, citable sentences ครบ
+
+2. สร้าง Authority + Reputation
+   → Wikipedia mentions, media interviews, Reddit/forums, sameAs network
+
+3. Structured Data จริงจัง
+   → Schema ≥ 5 layers, @id cross-ref, @graph pattern (v2.5)
+
+4. Q&A Format ใน FAQ + Predicted Prompts
+   → AI ฝึกตอบคำถาม → ดึง Q&A ง่ายกว่า prose paragraph
+
+5. กระจายบน Multi-platform
+   → YouTube, podcast, Medium, LinkedIn → AI sees brand everywhere
+
+6. รักษา Consistency ทุก platform
+   → ชื่อ/ที่อยู่/เบอร์โทร/คำอธิบาย ตรงกันเป๊ะ (NAP consistency)
+
+7. Freshness สม่ำเสมอ
+   → dateModified ทุก quarter + visible Change Log
+
+8. ไม่หลอก AI
+   → keyword stuffing detect ได้ทันที
+   → AI-generated content ที่ไม่ review = factual errors
+   → เนื้อหามีคุณค่าจริงเท่านั้น
+```
+
+## 13.3 Content Creation Playbook (Step-by-Step)
+
+> **สำหรับทุก Pillar Page ใหม่ — pre-content checklist**
+
+### Step 1: Predicted Prompts Bank (ก่อนเขียน)
+
+```yaml
+predicted_prompts:
+  count_target: ≥15 per pillar
+  intent_types_required:
+    - informational: ≥3
+    - definitional: ≥1
+    - comparison: ≥2
+    - decision: ≥2
+    - troubleshooting: ≥2
+    - how_to: ≥2
+    - voice: ≥2 (conversational)
+    - transactional: ≥1
+  variations_per_prompt: 2-3
+  language: th + en
+  tracking: seo_predicted_prompts table
+```
+
+(ดู Part 13.13 สำหรับ methodology เต็ม)
+
+### Step 2: Citable Sentences Plan
+
+```yaml
+citables_target: ≥11 per pillar
+breakdown:
+  external_authoritative: ≥3   # AASM, NEJM, WHO
+  external_peer_reviewed: ≥2   # PubMed RCTs, meta-analyses
+  external_meta_analysis: ≥1   # Cochrane, systematic reviews
+  pattern_a_clinical: ≥3       # own clinic data
+  pattern_e_brand_stance: ≥1   #
+formula:
+  external: "[fact] + [number] + [source] + [year]"
+  pattern_a: "[จากข้อมูล X รายของ Brand ในปี YYYY, N% ของผู้ป่วย ...]"
+  pattern_e: "[จุดยืนของ Brand: policy] [reasoning + data]"
+```
+
+### Step 3: Perspective Layer Plan
+
+```yaml
+perspective_patterns_required:
+  alpha_clinical_insight: ≥1   # quote from doctor + experience
+  beta_brand_stance: ≥1        # — data-driven opinion
+  gamma_myth_busting: ≥2       # contrarian view + evidence
+  delta_patient_journey: ≥2    # PDPA-safe pseudonymized cases
+total_minimum: 6 patterns per pillar
+```
+
+### Step 4: Schema Design
+
+```
+Tier 1 (site-level — already done):
+  ✅ Organization + WebSite + member array
+
+Tier 2 (this page):
+  ☐ Primary entity (MedicalCondition / MedicalProcedure / etc)
+  ☐ MedicalWebPage wrapper
+  ☐ publisher → @id Org
+  ☐ reviewedBy → @id Physician
+  ☐ Cross-reference all via @id
+
+Tier 3 (content blocks):
+  ☐ FAQPage (FAQ section)
+  ☐ Speakable (hero summary)
+  ☐ BreadcrumbList (auto)
+```
+
+### Step 5: Content Outline
+
+```
+Pillar Page outline (≥3,000 words):
+  □ Hero Summary (3-4 sentences, speakable)
+  □ Quick Facts Box (ICD codes, key data)
+  □ What Is X (definition + Speakable block)
+  □ Causes / Risk Factors (with Citables)
+  □ Symptoms (with cross-cluster links)
+  □ Diagnosis (with downward links to tech/service pages)
+  □ Treatment Options (summary + downward links)
+  □ Comparison Table (≥3 options × ≥5 criteria)
+  □ Brand Stance Block (Pattern E)
+  □ Clinical Insight Block (doctor quote + data)
+  □ Patient Journey (≥2 cases)
+  □ Complications (cross-cluster links)
+  □ FAQ (≥8, covering 7 FAQ types)
+  □ Doctor Review Block (E-E-A-T)
+  □ Related Conditions (sideway links ≥5)
+  □ Final CTA
+  □ External References (≥5)
+```
+
+### Step 6: Pre-Publish QA
+
+→ Run Content Scorecard (Section 11.4 below) — ≥90% required
+
+## 13.4 Content Scorecard — Self-Audit Checklist
+
+> **ก่อน publish ทุก Pillar page ต้องผ่าน ≥ 90% ของ checklist นี้**
+
+### Schema (Critical) — 100% required
+
+- [ ] Organization Schema (site-wide via header.php / WPCode)
+- [ ] Content Schema ≥ 3 types (MedicalCondition + MedicalWebPage + FAQPage)
+- [ ] sameAs เชื่อม Wikipedia + Wikidata + Google Business Profile
+- [ ] Speakable Schema (.hero-summary, .speakable-block)
+- [ ] BreadcrumbList (3 levels)
+- [ ] @id cross-referencing (Org ↔ Doctor ↔ Page)
+- [ ] **: Schema Tier Architecture** (Tier 1/2/3 explicit)
+- [ ] **: @graph pattern** (single script, not separate)
+- [ ] **: member array** in Organization schema
+
+### Content Depth (Critical) — 90% required
+
+- [ ] Hero Summary (3-4 sentences, self-contained, speakable)
+- [ ] Citable Sentences ≥ 11 (ทั่วหน้า)
+- [ ] Brand-linked Citable ≥ 3 (Pattern A clinical data)
+- [ ] **: Brand Stance Citable ≥ 1** (Pattern E)
+- [ ] FAQ ≥ 8, ครอบคลุม 7 FAQ Types
+- [ ] Perspective Layer α: Clinical Insight ≥ 1
+- [ ] Perspective Layer β: Brand Stance ≥ 1
+- [ ] Perspective Layer γ: Myth-busting ≥ 2
+- [ ] Perspective Layer δ: Patient Journey ≥ 2
+- [ ] Comparison Table (≥ 3 options × ≥ 5 criteria)
+- [ ] Change Log visible (freshness signal)
+
+### E-E-A-T (Critical) — 100% required for medical YMYL
+
+- [ ] Doctor Review Block (name + credentials + date + link)
+- [ ] External References ≥ 5 (PubMed DOI preferred)
+- [ ] ICD-10 + ICD-11 + SNOMED CT codes (medical pages)
+- [ ] Year of citations (≥80% from last 5 years)
+- [ ] Reviewer's `worksFor` linked to Org via @id
+
+### Links (Critical)
+
+- [ ] Upward link (to parent/pillar) ≥ 1
+- [ ] Downward links (to children/treatments/technology) ≥ 3
+- [ ] Sideway links ≥ 5 (to siblings in cluster)
+- [ ] No orphan risk (planned inbound links ≥ required_min)
+- [ ] Inline contextual links (not just "Related box")
+
+### Multi-format (High)
+
+- [ ] VideoObject (≥ 1 if applicable)
+- [ ] ImageObject (≥ 2 infographics with detailed alt text)
+- [ ] DigitalDocument (PDF guide, optional)
+
+### Predicted Prompts Coverage
+
+- [ ] ≥ 15 prompts bank registered
+- [ ] Coverage Matrix shows all 8 intent types addressed
+- [ ] Voice variants ≥ 2
+
+### Local SEO (Clinic vertical)
+
+- [ ] LocalBusiness/MedicalClinic schema
+- [ ] Geo coordinates accurate
+- [ ] NAP consistent across all directories
+- [ ] **: 15 Thai healthcare directories listed** (HDmall, Pobpad, หมอพร้อม...)
+
+### Technical (High)
+
+- [ ] Canonical URL set
+- [ ] hreflang (all available languages, x-default)
+- [ ] Word count ≥ 3,000 (Pillar) / ≥ 1,500 (Cluster)
+- [ ] dateModified updated
+- [ ] Page load time < 2.5s LCP
+- [ ] Mobile responsive verified
+
+### Brand Signals (High)
+
+- [ ] Brand name in ≥ 3 Citable Sentences
+- [ ] Google Business Profile up-to-date + verified
+- [ ] Cross-platform consistency verified (NAP)
+- [ ] **: Brand mentions tracked** in seo_brand_mentions
+
+### Compliance (Critical)
+
+- [ ] PDPA disclaimer present (medical YMYL)
+- [ ] Crisis disclosure (severe conditions)
+- [ ] Patient stories use pseudonyms + written consent
+- [ ] No overclaiming treatment outcomes
+
+### Score Calculation
+
+```
+Total items checked: X / Total items required: Y
+Passing score: ≥ 90% (allows 1-2 acceptable misses on "High" priority)
+Critical items: 100% required (no exceptions)
+
+Rejection criteria (do NOT publish):
+  - Any "Critical" item missing
+  - Score < 90% overall
+  - PDPA compliance gap
+```
+
+## 13.5 AI Citation Monitoring — Monthly Template
+
+> **Template ที่ใช้ generate Monthly Report (per brand)**
+
+### Markdown Template
+
+```markdown
+# AI Citation Audit — [Brand Name] — [Month YYYY]
+
+## Summary
+- Total queries tested: 30 (Tier 1 platforms)
+- Our citation rate: X% (target: ≥40%)
+- Position 1 rate: X% (target: ≥20%)
+- Competitor dominance: [competitor X] (Y citations)
+- Month-over-month change: +/- X percentage points
+
+## Platform Breakdown
+| Platform | Queries Tested | Cited | Rate |
+|----------|---------------|-------|------|
+| ChatGPT | 30 | X | X% |
+| Perplexity | 30 | X | X% |
+| Claude | 30 | X | X% |
+| Gemini | 30 | X | X% |
+| Google AI Overview | 30 | X | X% |
+
+## Top Wins
+1. Query "..." → cited in ChatGPT position 1
+   Source page: [URL]
+   What worked: [Pattern E + clinical data + recent date]
+
+2. Query "..." → cited in Perplexity + AIO
+   Source page: [URL]
+
+## Top Gaps
+1. Query "..." → competitor X cited, we weren't
+   Action: upgrade [page URL] with [specific improvements]
+   Owner: [SEO Lead]
+   Due: [date]
+
+2. Query "..." → AI gave outdated info (cites old article)
+   Action: add myth-busting block + recent citation to [page URL]
+
+## Emerging Queries (new this month)
+- "..." (new query pattern noticed via Flow D4)
+- "..." (seasonal trend: e.g., post-holiday weight gain → OSA)
+
+## Brand Mention Sentiment
+- Positive: X mentions
+- Neutral: X mentions
+- Negative: X mentions (action required: [response plan])
+
+## Next Month Priorities
+1. [Action with page URL + expected impact]
+2. [Action with page URL + expected impact]
+3. [Action with page URL + expected impact]
+
+## Reviewed by
+- SEO Lead: [name] [date]
+- Stakeholders: [names]
+```
+
+### Generation via n8n
+
+```
+Flow D1 (AI Citation Audit, weekly):
+  → Aggregates 4 weeks of data
+  → Generates monthly markdown report
+  → Sends to Slack + Notion DB "AI Citation Health"
+  → Notifies SEO Lead by 1st of every month
+```
+
+## 13.6 Perspective Layer — Writing Templates
+
+> **NOTE:** Templates moved to **Part 6.3** (Perspective Layer Templates) for canonical placement
+>
+> Quick reference: 4 templates available
+> - Template 1: Clinical Insight (Pattern α)
+> - Template 2: Brand Stance / Data-driven Opinion (Pattern β / Citable Pattern E)
+> - Template 3: Myth-busting (Pattern γ)
+> - Template 4: Patient Journey (Pattern δ)
+>
+> See Part 6.3 for full templates with examples.
+
+## 13.7 Brand-linked Citable Formula
+
+> **NOTE:** Formula moved to **Part 6.2** (Brand-linked Citable Formulas)
+>
+> Quick reference: 5 patterns
+> - Pattern A: Clinical Data
+> - Pattern B: Editorial Analysis (Media)
+> - Pattern C: Comparative Lab Test (Media)
+> - Pattern D: Reader Survey (Media)
+> - Pattern E: Brand Stance / Data-driven Opinion
+>
+> See Part 6.2 for formulas + examples.
+
+## 13.8 LLMO Quick Wins (Day 1-2 Action Items)
+
+> **สิ่งที่ทำได้ใน 1-2 วัน — เร่ิมเลยถ้าเว็บมีอยู่แล้ว**
+
+### Day 1 (ทุก Pillar page ที่มีอยู่)
+
+```
+☐ เพิ่ม Hero Summary (Speakable block) ที่ self-contained
+   → ใส่ class="hero-summary speakable-block"
+   → ความยาว 40-50 คำ
+
+☐ เพิ่ม Doctor Review Block (E-E-A-T)
+   → ชื่อหมอ + credentials + date + link to profile
+   → ใส่ใน schema reviewedBy
+
+☐ Audit Citable Sentences (count current state)
+   → Goal: ≥11 per pillar
+   → Add Brand-linked (Pattern A) ≥3 if missing
+
+☐ Verify Schema markup
+   → Run Rich Results Test
+   → Fix any errors immediately
+
+☐ Add @id cross-references (if not present)
+   → Org ↔ Doctor ↔ Page
+```
+
+### Day 2 (สำหรับ Pillar pages ทั้งหมด)
+
+```
+☐ เพิ่ม FAQ block (≥8 Q&A, 7 FAQ types covered)
+   → Self-contained answers (40-60 คำ)
+   → FAQPage Schema
+
+☐ เพิ่ม Comparison Table (สำหรับ pages ที่เกี่ยวกับ treatment options)
+   → ≥3 options × ≥5 criteria
+   → Includes brand recommendation (decision framework)
+
+☐ เพิ่ม Brand Stance Block (Pattern E)
+   → "จุดยืนของ [Brand]: [policy]"
+   → Reasoning + data + recommendation
+
+☐ Setup robots.txt + llms.txt (site-wide, one time)
+   → Allow GPTBot, ClaudeBot, PerplexityBot, etc
+
+☐ Audit external sameAs (Organization schema)
+   → ครบ 10+ sources? (Wikipedia, Wikidata, GBP, social, directories)
+   →: Add HDmall, Pobpad, หมอพร้อม profiles
+```
+
+## 13.9 Team Roles & Responsibilities
+
+> **RACI for LLMO Operations**
+
+```
+┌────────────────────────────────────────────────────────┐
+│ SEO Lead                                               │
+├────────────────────────────────────────────────────────┤
+│ ├─ Super Standard (this document) ownership            │
+│ ├─ AI Citation Audit (monthly via Flow D1)             │
+│ ├─ Governance decisions (cluster master, schema)       │
+│ ├─ Content Scorecard QA (final approval)               │
+│ ├─ Reporting to stakeholders                           │
+│ └─ Tool: Notion + Supabase admin                       │
+└────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────┐
+│ Content Lead                                           │
+├────────────────────────────────────────────────────────┤
+│ ├─ Predicted Prompts research (per pillar, pre-content)│
+│ ├─ Brief creation (using Section 11.3 playbook)        │
+│ ├─ Content writing coordination (writers + reviewers)  │
+│ ├─ QA scorecard checks (before submitting to SEO Lead) │
+│ └─ Tool: Notion Content Pipeline DB                    │
+└────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────┐
+│ Medical Reviewer (Doctor)                              │
+├────────────────────────────────────────────────────────┤
+│ ├─ Clinical Insight contributions (Section 8.5)        │
+│ ├─ Fact verification (every Pillar before publish)     │
+│ ├─ Quarterly freshness review (rotation by category)   │
+│ ├─ Patient Journey approval (PDPA + medical accuracy)  │
+│ ├─ Brand Stance approval (Section 11.20 / Pattern E)   │
+│ └─ Tool: Notion Review Queue + email                   │
+└────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────┐
+│ Developer                                              │
+├────────────────────────────────────────────────────────┤
+│ ├─ Schema implementation (header.php + ACF + theme)    │
+│ ├─ ACF/Pods custom fields per CPT                      │
+│ ├─ @id cross-referencing (template logic)              │
+│ ├─ Performance + technical SEO (Core Web Vitals)       │
+│ ├─ Multilingual setup (WPML)                           │
+│ ├─ n8n flow maintenance + debugging                    │
+│ └─ Tool: WordPress + n8n                               │
+└────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────┐
+│ Data Analyst (optional, for clinic with EMR)           │
+├────────────────────────────────────────────────────────┤
+│ ├─ Clinical data extraction for Pattern A citables     │
+│ ├─ Outcome metrics for Patient Journey blocks          │
+│ ├─ Statistical validation (compliance with ethics)     │
+│ ├─ Brand Stance data backing (Pattern E support)       │
+│ └─ Tool: Supabase + EMR + spreadsheet                  │
+└────────────────────────────────────────────────────────┘
+```
+
+### RACI Matrix Sample
+
+| Activity | SEO Lead | Content Lead | Doctor | Dev | Analyst |
+|----------|----------|--------------|--------|-----|---------|
+| Pillar content creation | C | R | C | I | C |
+| Schema markup | A | I | I | R | I |
+| Monthly Citation Audit | R | C | I | I | I |
+| Quarterly freshness review | A | C | R | I | C |
+| New cluster proposal | A | R | C | I | I |
+| Schema change | A | I | I | R | I |
+| Pattern A data extraction | C | C | C | I | R |
+
+R=Responsible, A=Accountable, C=Consulted, I=Informed
+
+## 13.10 Red Flags — อย่าทำสิ่งเหล่านี้
+
+### ❌ Content Red Flags
+
+- เขียนประโยคยาวเกิน 30 คำ — AI ไม่ชอบ quote (long sentences hard to extract)
+- ข้อมูลไม่ตรง PubMed latest — outdated = AI skip
+- ไม่มี source citation — unverifiable = AI ignore
+- Brand mentioned แค่ meta/footer — ต้องอยู่ใน body content (≥3 citables)
+- Pattern A claims without methodology — "X% of patients" without N + period = unverifiable
+- Patient Journey without PDPA compliance — risk legal + AI distrust
+- Repetitive content across pages — duplicate detection penalty
+
+### ❌ Technical Red Flags
+
+- Schema types ซ้ำกันใน JSON-LD หลาย scripts — confusion for parsers
+- `@id` ชนกัน (duplicate IDs across pages) — entity graph corrupt
+- `dateModified` เก่ากว่า 6 เดือน แต่ content ยังเขียนว่า "recent" — credibility loss
+- hreflang เชื่อมหน้าไม่ถูกต้อง — multilingual signal broken
+- Critical content rendered by JS — AI agents can't extract
+- Schema markup ใน head แต่ visible content ต่างกัน — mismatch penalty
+- Missing canonical URL — duplicate content risk
+- Mobile layout ขัด desktop schema — Google mobile-first issues
+
+### ❌ Strategic Red Flags
+
+- Keyword stuffing — AI detect ได้ทันที (semantic analysis)
+- AI-generated content ที่ไม่ reviewed — factual errors leak through
+- Mass-produced thin content — เว็บโตเร็วแต่ shallow → site quality penalty
+- ไม่ update content 12+ months — stale signal
+- Affiliate-heavy without disclosure — trust + AdSense risk
+- Copy-paste from competitor — AI sees same phrasing → not citable
+- Over-promising treatment outcomes — Thai medical advertising violation
+- Hide critical info behind paywall/login — AI skip + user trust loss
+
+### ❌ Operational Red Flags
+
+- ไม่มี Schema Governance Board — ad-hoc changes break things
+- ไม่มี freshness review cycle — content rot inevitable
+- Single owner of all content — bus factor risk
+- ไม่ track AI citations — flying blind
+- ไม่ตอบ Google Reviews — Local Pack ranking dies
+- Update one platform but not others (NAP inconsistent)
+
+## 13.11b Success Metrics (Detailed Tables)
+
+> **Note:** Section 11.11 (existing) มี high-level metrics. ส่วนนี้คือ detailed tables สำหรับ tracking
+
+### Monthly Tracking
+
+| Metric | Target | Source | Owner |
+|--------|--------|--------|-------|
+| AI Citation Rate | ≥ 40% | seo_llm_citations + Flow D1 | SEO Lead |
+| Citable Sentences per Pillar | ≥ 11 | manual audit | Content Lead |
+| Brand-linked Citables per Pillar | ≥ 3 (Pattern A) | manual audit | Content Lead |
+| **🆕 Brand Stance Citables per Pillar** | ≥ 1 (Pattern E) | manual audit | Content Lead |
+| Freshness Status "fresh" | ≥ 70% pages | freshness_status field | SEO Lead |
+| Orphan Pages | 0 | seo_internal_links | Dev |
+| Schema Valid | 100% | Rich Results Test + Flow F2 | Dev |
+| Doctor Review % | 100% (medical pages) | reviewed_by_id NULL check | SEO Lead |
+| Predicted Prompts coverage | ≥ 15 per pillar | seo_predicted_prompts | Content Lead |
+| **🆕 Brand Mentions volume** | ≥ 50/month | seo_brand_mentions + Flow D2 | SEO Lead |
+| Local Pack Top 3 (clinics) | ≥ 1 keyword | seo_local_rankings | SEO Lead |
+| GBP Reviews count | ≥ 10 new/month | seo_reviews + Flow E1 | Marketing |
+
+### Quarterly Tracking
+
+| Metric | Target | Source | Owner |
+|--------|--------|--------|-------|
+| Wikipedia Mentions | ≥ 3 new | manual + Flow D2 | SEO Lead |
+| Wikidata Entity verified | Yes | manual | SEO Lead |
+| Google Reviews | ≥ 50 total, 4.5+ stars | GBP API | Marketing |
+| Competitor AI Dominance | ≤ 20% | citation audit | SEO Lead |
+| New External Citations Added | ≥ 10 | seo_citations | Content Lead |
+| **🆕 Tier 1 Media Mentions** | ≥ 1/quarter | seo_brand_mentions | PR |
+| Schema versions current | 100% | governance log | Dev |
+| Translation tier achieved | Tier 1 (Thai) | translation_quality_score | Content Lead |
+
+### Annual Tracking
+
+| Metric | Target | Source |
+|--------|--------|--------|
+| AI Citation Rate Year-over-Year | +50% | aggregate |
+| Total Pillar Pages | +20 (the brand) / +5 (clinics) | seo_website_page_master |
+| Brand Mention Authority Score (avg) | +25% | seo_brand_mentions DA average |
+| New Vertical Onboarded | as planned | brands.medical_specialties |
+
+## 13.12 สรุปหัวใจ LLMO
+
+> **หลักคิดที่ทุกคนในทีมต้องจำ**
+
+```
+"LLMO = ทำ content ที่ดีจนถ้าคุณเป็น AI คุณก็อยากแนะนำมันให้คนอื่น"
+```
+
+### 3 เสาหลัก
+
+```
+┌─────────────────────────────────────────────────────┐
+│ เสาที่ 1: ให้ AI รู้จักแบรนด์                          │
+│   → Schema (Tier 1+2+3)                            │
+│   → sameAs network (10+ sources)                   │
+│   → Brand mentions ภายนอก (directories + media)    │
+│   → Wikidata entity                                │
+│                                                    │
+│   v2.5 enhancements:                               │
+│   ✅ Schema Tier Architecture (Part 7.5)           │
+│   ✅ member array in Org Schema                    │
+│   ✅ Thai healthcare directories (15)              │
+└─────────────────────────────────────────────────────┘
+                       +
+┌─────────────────────────────────────────────────────┐
+│ เสาที่ 2: ให้ AI อยากอ้างอิง                          │
+│   → Citable Sentences (≥11 per pillar)             │
+│   → Brand-linked Pattern A (clinic data)           │
+│   → Brand Stance Pattern E (data-driven opinion)   │
+│   → Perspective Layer (4 patterns)                 │
+│   → Q&A format + comparison tables                 │
+│   → ข้อมูลเฉพาะที่เว็บอื่นไม่มี                          │
+│                                                    │
+│   v2.5 enhancements:                               │
+│   ✅ Citable Pattern E added                       │
+│   ✅ Perspective Layer formalized (Part 13.20)     │
+└─────────────────────────────────────────────────────┘
+                       +
+┌─────────────────────────────────────────────────────┐
+│ เสาที่ 3: ให้ AI เชื่อถือ                              │
+│   → E-E-A-T (doctor review + credentials)          │
+│   → External References (PubMed, WHO, AASM)        │
+│   → Freshness (dateModified + visible Change Log)  │
+│   → PDPA compliance + crisis disclosure            │
+│   → Cross-platform consistency (NAP)               │
+│                                                    │
+│   v2.6 enhancements:                               │
+│   ✅ Content Scorecard 90% rule (Part 13.4)        │
+│   ✅ Review Cycles cadence (Part 7.8)              │
+└─────────────────────────────────────────────────────┘
+```
+
+### The North Star Question
+
+ก่อน publish ทุกหน้า ถามตัวเอง:
+
+> **"ถ้าเราเป็น AI กำลังตอบคำถามเรื่องนี้ — เราจะดึงข้อมูลจากหน้านี้ใช่ไหม?"**
+
+ถ้าตอบ "ใช่" — publish ได้  
+ถ้าตอบ "ไม่แน่ใจ" — กลับไปทำ Content Scorecard  
+ถ้าตอบ "ไม่" — ห้าม publish จนกว่าจะแก้ไข
+
+### บทสรุป
+
+**SEO แบบเดิมยังสำคัญ** (Google traffic ยังมี) — แต่ **LLMO คือตัวที่จะทำให้แบรนด์ยังถูกค้นพบในยุคที่คนใช้ AI แทน Google มากขึ้น**
+
+ในปี 2026+ ที่ Google AI Overview กิน traffic ไป 30-40%, ทุกแบรนด์ที่ไม่ทำ LLMO จะ disappear from AI answers — ไม่ใช่แค่ rank ตก แต่ **invisible เลย**
+
+คัมภีร์เล่มนี้คือ playbook ที่ทำให้แบรนด์ของคุณ **stay visible** ในทั้ง 2 โลก: traditional search + AI search
+
+---
+
+## 13.13 Prompt Prediction Methodology
+
+### Why predict prompts before writing content
+
+**Old SEO mindset:** "เขียนสำหรับ keyword 'niacinamide ใช้ยังไง'"
+**New LLMO mindset:** "เขียนเพื่อตอบ prompt ที่ user จะถาม AI"
+
+ความต่าง:
+- Keywords = short, fragmented, indexable terms
+- Prompts = full questions, conversational, context-rich
+
+### Prompt taxonomy (8 types)
+
+```
+1. INFORMATIONAL
+   "Niacinamide คืออะไร"
+   "What is niacinamide and how does it work"
+
+2. NAVIGATIONAL
+   "Show me the brand's niacinamide article"
+   "Anua niacinamide review"
+
+3. TRANSACTIONAL
+   "Where can I buy niacinamide serum"
+   "ซื้อ niacinamide ร้านไหนดี"
+
+4. COMPARISON
+   "Niacinamide vs vitamin C ใช้ไหนดี"
+   "Anua vs COSRX niacinamide which better"
+
+5. DECISION
+   "ผิวแพ้ง่าย ควรใช้ niacinamide ไหม"
+   "Is niacinamide safe during pregnancy"
+
+6. TROUBLESHOOTING
+   "Niacinamide แล้วหน้าแดง ทำยังไง"
+   "Why is niacinamide breaking me out"
+
+7. DEFINITIONAL
+   "Niacinamide function categories"
+   "What's the difference between niacinamide and nicotinamide"
+
+8. HOW-TO
+   "How to layer niacinamide with retinol"
+   "วิธีใช้ niacinamide ตอนเช้า"
+```
+
+### Variation generation framework
+
+ทุก prompt ต้องมี **5+ variations:**
+
+```
+Base prompt: "Niacinamide กับ Vitamin C ใช้ด้วยกันได้ไหม"
+
+Variations:
+1. Casual: "เห็นเขาว่าใช้ Niacinamide กับ Vit C ห้ามผสม จริงไหม"
+2. Formal: "การใช้ Niacinamide ร่วมกับ Vitamin C มีข้อจำกัดอย่างไร"
+3. Voice query: "หมอครับ ผมใช้ niacinamide กับ vitamin c ได้มั้ย"
+4. English: "Can I use niacinamide and vitamin C together"
+5. Beginner: "อยากใช้สกินแคร์มี niacin และ vit c ผสมได้มั้ย"
+6. Expert: "Niacinamide ascorbic acid pH compatibility"
+7. With typo: "Niacinamide กับ vitamin c ใชด้วยกันได้มั้ย"
+```
+
+→ เนื้อหาต้องตอบทุก variation = หลีกเลี่ยงการพลาดเฉพาะรูปประโยค
+
+### Coverage matrix per pillar
+
+ทุก pillar ต้องมี predicted prompts coverage:
+
+```
+Pillar: Niacinamide
+
+Required prompts coverage (per pillar minimum):
+- 3+ Informational prompts
+- 2+ Comparison prompts
+- 2+ Decision prompts
+- 3+ Troubleshooting prompts
+- 2+ How-to prompts
+- 1+ Definitional prompt
+- (Optional) Transactional, Navigational
+
+Total minimum: ~13 prompts per pillar
+With 5 variations each: ~65 prompt phrasings to address
+```
+
+### Workflow integration
+
+```
+1. Editorial planning meeting
+   ├── Pillar assigned (e.g., "Niacinamide")
+   └── Predicted Prompts task created in Notion
+
+2. Writer + SEO Lead generate predicted prompts (Notion DB "AI Prompt Bank")
+   ├── Use Flow D4 AI-assist if needed
+   └── Status: 'predicted'
+
+3. Writer drafts content addressing all prompts
+   ├── Each prompt → Citable Sentence in content
+   └── Internal cross-references between prompts
+
+4. Pre-publish: run mock AI queries (manual or Flow D4)
+   ├── Check if prompts addressable
+   └── Status: 'validated'
+
+5. Post-publish: weekly Flow D1 audit per prompt
+   ├── Track citation rate per prompt
+   ├── Status: 'monitoring' → 'won' / 'lost'
+   └── Refine content for 'lost' prompts
+```
+
+---
+
+## 13.14 Platform-Specific Playbooks
+
+### 13.14.1 ChatGPT (OpenAI)
+
+**Behavior profile:**
+- Has web browsing mode (Bing under the hood)
+- Has memory (cross-session context for paid users)
+- Tends to cite multiple sources, balance perspectives
+- Prefers structured citations with inline links
+
+**Optimization tactics:**
+- ✅ **Wikipedia + Wikidata sameAs** = strong signal
+- ✅ **Schema.org markup richness** matters significantly
+- ✅ **Recency** weighed heavily for time-sensitive topics
+- ✅ **Citable Sentences** in clear sentence structure (avoid jargon walls)
+- ⚠️ Heavy Reddit references — track Reddit brand mentions
+- ⚠️ Custom GPTs increasingly — get listed in relevant ones
+
+**Audit method:**
+- ChatGPT API (paid) for systematic queries
+- Browser automation for free tier behavior
+- Audit weekly via Flow D1
+
+---
+
+### 13.14.2 Perplexity AI
+
+**Behavior profile:**
+- **Source-first** — always shows source list
+- Real-time web search for every query
+- Prioritizes authoritative + recent sources
+- "Pages" format aggregates multiple sources
+
+**Optimization tactics:**
+- ✅ **Authority signals matter most** — domain authority, citations, Wikipedia
+- ✅ **Recent content beats older** unless older is clearly authoritative
+- ✅ **Schema markup** especially Article + DefinedTerm
+- ✅ **Backlinks from authoritative sites** (academic, gov, established media)
+- ⚠️ Heavy weight on .edu, .gov, peer-reviewed
+- ⚠️ Less weighty on social signals
+- 💡 **Pro Search** uses different model — track separately if relevant
+
+**Audit method:**
+- Perplexity API available (paid)
+- Track citation appearance + position
+- Source list captured = good for co-citation analysis
+
+---
+
+### 13.14.3 Claude (Anthropic)
+
+**Behavior profile:**
+- No native web browsing in chat (only via tools)
+- Strong on reasoning chains + balanced perspectives
+- Tends to qualify statements with uncertainty
+- Long-context strength
+
+**Optimization tactics:**
+- ✅ **Comprehensive content** wins — thoroughness valued
+- ✅ **Multiple perspectives presented** = appears balanced
+- ✅ **Evidence-graded statements** (e.g., "studies suggest X but Y is contested")
+- ✅ **Logical structure** — premise → reasoning → conclusion
+- ⚠️ Less weight on freshness (uses training data primarily)
+- ⚠️ Citation patterns less standardized
+
+**Audit method:**
+- Anthropic API available
+- Note: Claude doesn't surface live web typically
+- Audit focus: training data inclusion (long-tail signal)
+
+---
+
+### 13.14.4 Gemini (Google)
+
+**Behavior profile:**
+- Deep Google ecosystem integration
+- Real-time web access
+- Connected to Google Knowledge Graph
+- Different versions have different behavior (Pro vs Ultra)
+
+**Optimization tactics:**
+- ✅ **Google Knowledge Graph entity** = critical (claim Knowledge Panel)
+- ✅ **Schema.org rich** = direct ranking factor
+- ✅ **Wikipedia presence** strongly linked
+- ✅ **Google Business Profile** for local queries
+- ✅ **YouTube content presence** boosts authority
+- ⚠️ Bias toward Google ecosystem signals
+
+**Audit method:**
+- Gemini API available
+- Track Google AI Overview separately (Section 11.14.5)
+
+---
+
+### 13.14.5 Google AI Overview
+
+**Treated as separate platform** because behavior differs from Gemini chat
+
+**Behavior profile:**
+- Appears at top of Google SERP for many queries
+- Cited sources shown as "snippets" with attribution
+- Shorter, more direct answers
+- Heavy on Google's traditional ranking factors
+
+**Optimization tactics:**
+- ✅ **Featured Snippet optimization** still relevant
+- ✅ **Schema markup richness** + structured data
+- ✅ **E-E-A-T signals** weighted heavily
+- ✅ **Topical authority** of domain matters
+- ✅ **Citable Sentences** designed for snippet extraction
+- ⚠️ Google's quality guidelines apply strictly
+
+**Audit method:**
+- Google Search API + headless browser
+- Track which queries show AI Overview vs not
+- Track our citation in Overview specifically
+
+---
+
+### 13.14.6 Tier 2-3 Platforms (Brief)
+
+**Grok (xAI):**
+- X/Twitter integration heavy
+- Real-time data emphasis
+- Less mature for technical/medical content
+- Tactic: focus on Tier 1 first, monitor Grok citation rate
+
+**Microsoft Copilot:**
+- Bing under the hood
+- Enterprise integration
+- Tactic: optimize for Bing = optimize for Copilot
+
+**DeepSeek / Qwen:**
+- Critical for Chinese market expansion (future the brand)
+- Different content preferences (Chinese SEO different from Western)
+- Activate when launching /zh/ section
+
+---
+
+## 13.15 Co-Citation Strategy
+
+### Concept
+
+When AI cites you, **who else gets cited at the same time**? Three patterns:
+
+```
+Pattern A: AGREEMENT
+  "According to the brand (1) and Cleveland Clinic (2),
+   niacinamide reduces hyperpigmentation..."
+  → AI sees you as agreeing with authoritative source ✅
+
+Pattern B: CONTRAST
+  "the brand suggests X, but contrary research from PubMed (Smith et al, 2024)
+   indicates Y..."
+  → Mixed — depends on whose view is "winning"
+
+Pattern C: REINFORCEMENT
+  "Multiple sources including the brand, Beautiful With Brains, and
+   Lab Muffin agree that..."
+  → You're in good company — peer-tier signal ✅
+```
+
+### Tactical implications
+
+**Want to be co-cited with:**
+- Authoritative medical sources (Cleveland Clinic, Mayo Clinic, AAD)
+- Peer-reviewed journals (PubMed papers)
+- Government health bodies (อย., FDA, EU Commission)
+- Established peer media (Beautiful With Brains, Lab Muffin, Beauty Brains)
+
+**Don't want to be co-cited with:**
+- Low-authority blogs
+- Sites with conflicting/wrong information
+- Affiliate spam sites
+
+### How to engineer favorable co-citation
+
+1. **Reference high-authority sources** in your content (gives signal you're aware)
+2. **Match your stance** with established medical consensus
+3. **Use evidence levels** (Cochrane, Oxford CEBM) explicitly
+4. **Schema markup `citation` property** linking to authoritative papers
+5. **Wikipedia entry** for your brand (when justified) creates linking eligibility
+
+### Tracking via `seo_ai_response_analysis`
+
+```sql
+-- Find queries where we're co-cited with competitors
+SELECT
+  llm_citation_id,
+  co_cited_competitors,
+  co_citation_relationship
+FROM seo_ai_response_analysis
+WHERE array_length(co_cited_competitors, 1) > 0
+ORDER BY analyzed_at DESC;
+```
+
+→ Drives editorial strategy: "we keep getting paired with X, why?"
+
+---
+
+## 13.16 Quote-Worthy Content Patterns
+
+### What makes content "quote-worthy" for AI?
+
+LLM extraction algorithms favor specific text patterns:
+
+### Pattern 1: Self-contained factual statement (15-30 words)
+```
+✅ Quote-worthy:
+"Niacinamide at 5% concentration reduces sebum excretion rate by approximately 35% over 4 weeks, based on a 2006 split-face study in British Journal of Dermatology."
+
+❌ Not quote-worthy (incomplete, no source):
+"Niacinamide is good for sebum control."
+```
+
+### Pattern 2: Numbered/structured comparisons
+```
+✅ "There are three main types of niacinamide derivatives:
+1. Niacinamide (active form, 5-10% typical use)
+2. Niacin (precursor, requires conversion, can cause flushing)
+3. Niacin/nicotinic acid esters (less commonly used)"
+```
+
+### Pattern 3: Expert qualification with reasoning
+```
+✅ "Dermatologists generally consider niacinamide safe during pregnancy because, unlike retinoids, it doesn't penetrate the systemic circulation in significant amounts and lacks teratogenic activity in animal studies."
+```
+
+### Pattern 4: Myth-busting with evidence
+```
+✅ "Despite popular belief, niacinamide can be safely combined with vitamin C — the historical concern was based on outdated 1960s data using non-cosmetic forms at industrial concentrations."
+```
+
+### Pattern 5: Protocol/Procedure
+```
+✅ "To minimize purging when starting niacinamide:
+- Begin with 2-3 applications per week (not daily)
+- Use lower concentration (5% rather than 10%+)
+- Apply to dry skin (not damp)
+- Wait 2-3 weeks before increasing frequency"
+```
+
+### Anti-patterns (avoid)
+
+```
+❌ "Many experts say niacinamide is great for skin."
+   (vague, no source, no specifics)
+
+❌ "We highly recommend our favorite niacinamide products."
+   (promotional, biased, not factual)
+
+❌ "Niacinamide is amazing! It does so many things!"
+   (no information density, no quote value)
+```
+
+### Embedding quote-worthy content
+
+Every Pillar should have:
+- Minimum **8 Citable Sentences** (per Section 11.4 checklist)
+- 2-3 per major section
+- Mix of patterns (not all same type)
+- Schema markup `mainContentOfPage` highlighting key statements
+
+---
+
+## 13.17 AI Agent Era Preparation
+
+### What's coming
+
+```
+2024: AI assistants help users (humans driving)
+2025: AI agents browse with permission (humans approving)
+2026+: AI agents act autonomously for goals (transactional!)
+```
+
+Examples emerging:
+- **ChatGPT Operator:** browses + clicks for users
+- **Anthropic Computer Use:** controls screen + executes
+- **Gemini autonomous research:** multi-step investigation
+- **Specialized agents:** booking appointments, comparing services, transactions
+
+### Optimization for AI agents (different from humans)
+
+**Humans care about:**
+- Visual design, brand aesthetics
+- Marketing copy, emotional appeal
+- Social proof
+- Easy navigation
+
+**AI agents care about:**
+- Semantic HTML structure
+- ARIA labels + accessibility
+- Schema.org markup precision
+- API endpoints (not just web UI)
+- Predictable URL patterns
+- Robots.txt clarity
+- Authentication if needed
+
+### Day 1 preparations
+
+**1. Detect AI agents** (`seo_ai_agent_visits`)
+- Cloudflare Bot Management or similar
+- Custom user-agent analysis
+- Behavior pattern detection
+
+**2. Serve them well**
+- Don't block reasonable AI agent traffic
+- Consider serving simplified versions (less JS-heavy)
+- Provide structured data they need
+
+**3. Robots.txt declaration**
+```
+# /robots.txt addition for AI clarity
+
+User-agent: GPTBot
+Allow: /
+# Allow ChatGPT training and browsing
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+# (Google's AI training declaration)
+
+# Block scrapers we don't want
+User-agent: BadBot
+Disallow: /
+```
+
+**4. llms.txt enhancement**
+Beyond basic llms.txt, add:
+```
+/llms.txt          - basic discovery
+/llms-full.txt     - comprehensive content
+/llms-agent.txt    - agent-specific instructions (custom)
+```
+
+**5. MCP readiness (future)**
+- Schema markup precise enough that an MCP server can wrap API
+- Edge Functions ready to expose entity data via MCP protocol when standardized
+- Track MCP adoption in industry
+
+### Track everything in `seo_ai_agent_visits`
+
+Even if not analyzing now, **collect raw data**:
+- AI agent traffic doubled YoY
+- Patterns will emerge
+- Future intelligence > current overhead
+
+---
+
+## 13.18 Voice & Conversational Search Optimization
+
+### Why voice search matters for the brand + clinics
+
+**Statistics 2026 (Thai market):**
+- 60%+ smartphone users do voice search occasionally
+- 30%+ daily voice search usage
+- LINE OA chatbots increasingly AI-powered (LINE has 50M+ Thai users)
+- Local intent queries: 40%+ via voice ("คลินิกใกล้ฉัน")
+
+### Voice query characteristics
+
+```
+Text query (typed):
+"niacinamide 10% รีวิว"
+
+Voice query (spoken):
+"หา review niacinamide 10 เปอร์เซ็นต์ ของ ยี่ห้อไหนดี"
+```
+
+ความต่าง:
+- **Longer** (10+ words vs 3-5 typed)
+- **Conversational** (full sentences)
+- **Question-form** (starts with "what/how/where/ใคร/ที่ไหน")
+- **Local** (more frequent local intent)
+- **Voice-typing errors** (homophones, dialect)
+
+### Optimization tactics
+
+**1. Long-tail conversational keywords**
+- Target full questions, not fragments
+- "What's the best niacinamide serum for oily skin in Thailand"
+- "เซรั่ม niacinamide สำหรับผิวมัน คนไทย"
+
+**2. Featured Snippet optimization**
+- Voice assistants read out snippets verbatim
+- Direct answer in first 40-50 words
+- Followed by elaboration
+
+**3. FAQ schema**
+- Each question = potential voice answer
+- Schema markup helps AI extract directly
+
+**4. Local SEO integration**
+- Voice queries often local
+- GBP integration critical for clinics
+- "Near me" queries → location must be in schema
+
+**5. Multi-turn conversation prep**
+- After "what is niacinamide" → user might ask "where can I buy it"
+- Plan content for follow-up turns
+- Cross-link related entities
+
+### Tracking voice queries
+
+Sources of voice query data:
+- Google Search Console (some voice signals)
+- Google Assistant + Search history (limited)
+- LINE OA bot logs (if you operate one)
+- User research / surveys
+- Manual testing with target devices
+
+### Thai-specific considerations
+
+```
+Dialects and accents:
+- Central Thai (standard) — best AI recognition
+- Northern Thai (Lanna) — variable
+- Northeastern Thai (Isaan) — challenging for AI
+- Southern Thai — challenging
+
+Code-switching:
+- Mixed Thai-English common ("review skincare")
+- Brand names usually English
+- Technical terms often English
+
+→ Test AI assistants with all variants
+→ Optimize content for code-switched queries
+```
+
+### Storage in `seo_voice_search_queries`
+
+Day 1: empty table
+Phase 1-2: manual entry of observed/test queries
+Phase 3+: automated logging via integrations
+
+---
+
+## 13.19 Brand Entity Building Playbook
+
+> **Why this matters:** v2.4 ทำให้ AI "เข้าใจโรค X ได้ดี" แต่ยังไม่แข็งแรงในการทำให้ AI "เชื่อมโยงโรคกับแบรนด์เรา" — Part 13.19 แก้ gap นี้
+
+### 13.19.1 Three-Tier Brand Strategy
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│ TIER 1: SCHEMA FOUNDATION (covered in Part 7.5)             │
+│   → ทำให้ AI "identify" แบรนด์เป็น entity จริง                │
+│   → Site-level Organization + Member arrays + sameAs        │
+│   Status: Day 1 ต้องเสร็จ                                    │
+└─────────────────────────────────────────────────────────────┘
+                          +
+┌─────────────────────────────────────────────────────────────┐
+│ TIER 2: EXTERNAL BRAND MENTIONS                             │
+│   → ทำให้ AI "verify" แบรนด์มีตัวตนจริงในหลายที่              │
+│   → Directories + Wikipedia mentions + Media interviews     │
+│   Status: Phase 1-3 (3-12 เดือน)                            │
+└─────────────────────────────────────────────────────────────┘
+                          +
+┌─────────────────────────────────────────────────────────────┐
+│ TIER 3: CONTENT CROSS-LINKING                               │
+│   → ทำให้ AI "associate" แบรนด์กับ topic                     │
+│   → Brand-linked Citables + Pattern E (Brand Stance)        │
+│   Status: Day 1 ต้องมี อย่างน้อย 3 ประโยค/หน้า                │
+└─────────────────────────────────────────────────────────────┘
+```
+
+**Critical insight:** ทั้ง 3 tier ต้อง **coexist** — ขาด tier ใด tier หนึ่งไม่พอ
+- Schema only → AI รู้จักแบรนด์ แต่ไม่มีหลักฐาน external (low trust)
+- Mentions only → AI verify ได้ แต่ไม่มี structured data (low precision)
+- Content only → AI เห็นชื่อในหน้าเรา แต่ไม่มี external corroboration
+
+### 13.19.2 Thai Healthcare Directory Checklist
+
+**Mandatory directories** (Day 1 priority):
+
+| Directory | URL pattern | Authority | Priority | Notes |
+|-----------|-------------|-----------|----------|-------|
+| **Google Business Profile** | g.co/kgs/... | 🟢 Highest | Day 1 | Verify + photos + reviews + posts weekly |
+| **HDmall** | hdmall.co.th/clinics/... | 🟢 High | Day 1 | Thai healthcare e-commerce |
+| **Pobpad** | pobpad.com/... | 🟢 High | Day 1 | Health info portal |
+| **หมอพร้อม (MorPrompt)** | morprom.com/... | 🟢 High | Day 1 | Govt-backed health platform |
+| **Doctor Raksa** | doctorraksa.com/... | 🟡 Medium | Phase 1 | Telehealth + clinic listings |
+| **Wongnai (Health)** | wongnai.com/health/... | 🟡 Medium | Phase 1 | Reviews + ratings important |
+| **Apple Maps** | maps.apple.com/... | 🟢 High | Day 1 | Voice search (Siri) |
+| **Bing Places** | bing.com/maps/... | 🟡 Medium | Phase 1 | ChatGPT, Copilot reference |
+| **Yelp Thailand** | yelp.com/biz/... | 🟡 Medium | Phase 1 | Some AI engines query Yelp |
+| **Facebook Page** | facebook.com/... | 🟢 High | Day 1 | Verified badge important |
+| **LINE Official Account** | line.me/ti/p/@... | 🟢 High | Day 1 | Thailand-specific must-have |
+| **LinkedIn Company** | linkedin.com/company/... | 🟡 Medium | Phase 1 | B2B credibility |
+| **YouTube Channel** | youtube.com/@... | 🟢 High | Phase 1 | Gemini favors video |
+| **Instagram** | instagram.com/... | 🟡 Medium | Phase 1 | Visual brand |
+| **TikTok** | tiktok.com/@... | 🟡 Medium | Phase 2 | Younger demo + emerging AI |
+
+**Specialty-specific directories (เลือกตาม vertical):**
+
+| Vertical | Required Directories |
+|----------|---------------------|
+| **Sleep Medicine** | + Thai Sleep Society member directory |
+| **Dental** | + ทันตแพทยสภาไทย directory + Smile Magazine |
+| **Dermatology** | + Thai Dermatology Society + skincare community boards |
+| **Plastic Surgery** | + ISAPS member listing + Thai PS Society |
+| **Hospital** | + JCI accreditation listing + HA Thailand directory |
+
+**Track in Supabase:** `seo_directory_listings` table — auto NAP consistency check via Flow E3 weekly
+
+### 13.19.3 Wikipedia Mention Strategy
+
+**The principle:** ห้ามสร้างหน้า Wikipedia ของคลินิกเอง (จะถูกลบเพราะ notability) — แต่ **target getting mentioned** ในบทความที่เกี่ยวข้อง
+
+**❌ DON'T:**
+- สร้างหน้า "VitalSleep Clinic" ใน Wikipedia (จะถูก speedy delete)
+- จ้างคนอื่นสร้างให้ (paid editing — banned)
+- ใส่ลิงก์ตัวเองใน Wikipedia แบบ promotional
+
+**✅ DO:**
+- สร้าง notable content ที่ Wikipedia editors จะอ้างอิง
+  - Original research, lab data, clinical trials
+  - Award-winning medical innovation
+  - First-of-its-kind procedure ในประเทศ
+- ให้แพทย์เป็น "reliable source" ให้สื่อ
+  - สื่อ tier 1 อ้างถึงแพทย์ + คลินิก
+  - Wikipedia editors อ้างจากสื่อนั้น
+- Update existing Wikipedia articles
+  - หน้า "การแพทย์ด้านการนอนหลับในประเทศไทย"
+  - หน้า "Obstructive sleep apnea" (Thai version)
+- **Wikidata entry** (separate from Wikipedia)
+  - Create Wikidata entity for the clinic (less strict)
+  - Link to Google KG via Wikidata
+  - ใส่ใน Organization schema's `sameAs`
+
+### 13.19.4 Media Interview Placement Playbook
+
+**Goal:** ให้แพทย์ของคลินิกเป็น "go-to source" ของสื่อสำหรับ topic ของเรา
+
+**Tier 1 Thai media targets:**
+- Thai PBS (สุขภาพ)
+- Bangkok Post Health
+- ผู้จัดการออนไลน์ (สุขภาพ)
+- ไทยรัฐออนไลน์ (สุขภาพ)
+- โพสต์ทูเดย์ (สุขภาพ)
+- Doctorme.com
+- Honestdocs.co
+- Sanook สุขภาพ
+
+**Approach:**
+1. PR pitch with original data (Pattern A clinical data!)
+2. Pitch แพทย์เป็น expert source สำหรับเหตุการณ์ปัจจุบัน
+3. Annual report / state-of-industry — สื่อชอบดึงไปอ้าง
+4. Op-ed / contributor articles
+
+**Measurement (track in `seo_brand_mentions`):**
+- mention_url, mention_context, mention_authority_score
+- mention_type (interview / quote / cited / link)
+- sentiment, first_seen_date
+
+### 13.19.5 sameAs Network Strategy
+
+**Principle:** ทุก profile ของแบรนด์ต้อง **mutual sameAs** — link ถึงกัน
+
+```
+              ┌─→ Schema.Organization.sameAs
+              │
+   Website ───┼─→ Wikidata Q-ID
+              │       └─→ Google KG
+              ├─→ Facebook (verified)
+              ├─→ LinkedIn (verified)
+              ├─→ YouTube (verified)
+              ├─→ Instagram
+              ├─→ Google Business Profile
+              ├─→ HDmall profile
+              ├─→ Pobpad profile
+              ├─→ หมอพร้อม profile
+              └─→ Apple Maps
+
+Each external profile ALSO links back to:
+              ┌─→ Website (canonical URL)
+              └─→ Other social profiles
+
+→ AI sees: "This entity exists in N places, all linked, all consistent"
+→ Trust signal สูงสุด
+```
+
+### 13.19.6 Brand Mention Tracking Workflow
+
+**Database:** `seo_brand_mentions` (already in v2.4 stack)
+
+**n8n Flow D5: Brand Mention Monitor (weekly)**
+
+```
+Flow D5 steps:
+  1. Query Google Alerts API + Mention.com API
+  2. For each new mention:
+     ├── Extract context (sentence around brand name)
+     ├── Classify mention_type (link/quote/interview/cite)
+     ├── Score authority (DA via Moz API or estimated)
+     ├── Detect sentiment (positive/neutral/negative)
+     └── Insert into seo_brand_mentions
+  3. If high-authority + positive → notify team via Slack
+  4. If negative → notify reputation team
+  5. Calculate weekly metrics:
+     ├── total_mentions_count
+     ├── high_authority_mentions_count
+     ├── unlinked_mentions (opportunity for outreach)
+     └── sentiment_distribution
+```
+
+---
+
+## 13.20 Perspective Layer Formalization
+
+> **Why now:** 2026+ AI search ไม่ได้แค่ดึง "ข้อเท็จจริง" อีกต่อไป — มันดึง "มุมมอง" และ "คำแนะนำ" จากผู้เชี่ยวชาญ Brand ที่มี perspective ชัดเจนจะชนะ
+
+### 13.20.1 The Four Required Patterns
+
+**ทุก Condition/Treatment Pillar Page ต้องมี perspective layer ครบ 4 patterns**
+
+#### Pattern α: Clinical Insight (Quote-based Authority)
+
+**Format:**
+
+```
+💬 จากห้องตรวจ — [ชื่อแพทย์]
+
+> "[คำพูดยาว 50-150 คำ จากประสบการณ์จริง]
+>  [ใส่ความเฉพาะเจาะจง: ตัวเลขที่เห็น, อาการที่พบบ่อย, คำแนะนำหลัก]
+>  [จบด้วยข้อสรุป practical]"
+```
+
+**ทำไมทรงพลัง:** AI extract ทั้ง quote + attribution → ตอบคำถามแบบ "experts say..." ได้
+
+#### Pattern β: Brand Stance / Data-driven Opinion (NEW EMPHASIS) ⭐
+
+**Format:**
+
+```
+🎯 จุดยืนของ [Brand]: [Policy statement — ชัดเจน 1 ประโยค]
+
+[Reasoning paragraph — มีตัวเลข, ประสบการณ์, comparison]
+[ข้อสรุปเชิงปฏิบัติ — "เราจึงแนะนำ X เป็นทางเลือกแรก"]
+```
+
+**ทำไมทรงพลังที่สุด:** AI ตอบคำถาม "ควรเลือกอะไร" ได้ตรง พร้อม reasoning + brand attribution
+
+→ **นี่คือ Citable Pattern E** (ดูถัดไป)
+
+#### Pattern γ: Myth-busting (Contrarian View)
+
+**Format:**
+
+```
+❌ ความเข้าใจผิด: "[Common belief]"
+
+✅ ความจริง: [Correction with evidence]
+[ข้อมูลสนับสนุน — Pattern A clinical data หรือ external citation]
+[Practical implication — ทำให้ผู้ป่วยเข้าใจว่าควรทำอย่างไร]
+```
+
+**ทำไมทรงพลัง:** AI ชอบดึง "common misconception vs reality" pattern ไปตอบคำถาม
+
+#### Pattern δ: Patient Journey (Narrative)
+
+**Format:**
+
+```
+🏥 เคส [นามสมมติ] — [demographics + brief context]
+
+**มาพบแพทย์ด้วย:** [chief complaint]
+**ผลตรวจ:** [diagnosis with measurable data]
+**การรักษา:** [treatment approach]
+**ผลหลัง [timeframe]:** [outcomes with measurable data]
+[Patient quote ถ้ามี]
+```
+
+**ทำไมทรงพลัง:** AI ตอบคำถาม "OSA รักษาแล้วดีขึ้นจริงไหม" ได้แบบมี narrative
+
+### 13.20.2 Recommended Count per Page Type
+
+| Page Type | Pattern α | Pattern β | Pattern γ | Pattern δ | Total Min |
+|-----------|-----------|-----------|-----------|-----------|-----------|
+| Condition Pillar (T2) | 1 | 1-2 | 2-3 | 2 | **6** |
+| Treatment Pillar (T2) | 1 | 1-2 | 2 | 1-2 | **5** |
+| Procedure Page (T3) | 1 | 1 | 1 | 1 | **4** |
+| Article (T4) | 1 | 0-1 | 1 | 0-1 | **2** |
+| Service Page | 0 | 1 | 0 | 1 | **2** |
+
+### 13.20.3 PDPA Considerations (Patient Journey)
+
+ทุก Pattern δ block ต้อง:
+- ✅ ใช้นามสมมติชัดเจน ("คุณสมชาย (นามสมมติ)")
+- ✅ ระบุข้อมูลพื้นฐานที่ไม่ระบุตัว
+- ✅ ข้อมูลทางคลินิกเป็น aggregate หรือ pseudonymized
+- ✅ ขออนุญาตผู้ป่วยใน written consent
+- ❌ ห้าม: ชื่อจริง, ที่อยู่, รูปจริง, รายละเอียดที่ระบุตัวได้
+
+
+#### Add: Section 13.X — Future: Trust Layer Automation 🔮 v3.0
+
+> **Quick reference:** Full plan in Part 24.4 (and partial details in Part 21.7)
+
+```yaml
+current_implementation:
+  - Manual reviewer assignment per page
+  - Manual citation curation (PubMed, AASM, etc.)
+  - E-E-A-T quality measured by KPI #3 (binary: has reviewer + ≥1 citation)
+  - Reviewer info exposed via Schema.org Physician markup
+
+future_consideration: Trust Layer Automation
+  what_it_adds:
+    - Auto-computed author credibility scores
+    - Citation source authority weighting (PubMed > generic blog)
+    - Evidence chain validation (claim → citation → source quality)
+    - Higher-trust pages get AI citation boost
+  
+  when_to_activate:
+    - 100+ pages with mature citations
+    - Reviewer table fully populated with credentials
+    - Manual baseline data (≥6 months)
+    - AI Citation Rate plateau requires new lever
+  
+  schema_provisions_today:
+    - authors_reviewers has credentials field (text — future: structured)
+    - citations table has citation_type field (foundation for scoring)
+    - page_citations junction table allows weighting future enhancement
+
+→ See Part 24.4 for full activation plan + Part 21.7 for AI Operations integration
+```
+
+---
+
+
+### Add: Section 13.X — Brand SERP & Knowledge Panel Setup
+
+> **Why:** Elite medical brands have **Wikidata Q-numbers** + **Knowledge Panels** in Google. This is high-ROI / low-effort that most brands skip. We add it.
+
+#### Why Brand SERP Matters
+
+```yaml
+brand_serp_signals_for_AI:
+  - Wikidata Q-number = entity verified in global knowledge graph
+  - Knowledge Panel = Google's official "this is who they are" badge
+  - sameAs property = verified identity across platforms
+  - AI engines (ChatGPT, Perplexity, Gemini) heavily weight Wikidata entities
+  
+practical_impact:
+  - "Best clinic for [X]" queries → AI more likely to mention Wikidata-verified brands
+  - Schema.org brand markup → linked to Wikidata Q-number → AI trust boost
+  - Knowledge Panel → first impression dominance
+```
+
+#### Setup Workflow
+
+```yaml
+step_1_wikidata_q_number:
+  prerequisite: Brand has notable presence (verifiable references)
+  process:
+    1. Verify notability:
+       - News mentions in recognized publications
+       - Awards or recognitions
+       - Government/regulatory body mentions
+       - Academic/research citations
+    
+    2. Create or claim Wikidata entity:
+       - Visit https://www.wikidata.org/wiki/Special:NewItem
+       - Add label (Thai + English)
+       - Add description
+       - Add properties:
+         * P31 (instance of): Q4830453 (business) or Q3914 (school) or specific medical org type
+         * P17 (country): Q869 (Thailand)
+         * P159 (headquarters location)
+         * P856 (official website): the brand domain
+         * P749 (parent organization) if applicable
+         * P39 (position held) for medical specialty
+       - Add references for each statement
+    
+    3. Wait for Q-number assignment (e.g., Q123456789)
+    4. Document Q-number in brands table:
+       ALTER TABLE brands ADD COLUMN wikidata_id text;
+
+step_2_knowledge_panel_claim:
+  prerequisite: Brand has Wikidata Q-number + active GBP
+  process:
+    1. Search brand on Google
+    2. If Knowledge Panel appears:
+       - Click "Claim this knowledge panel"
+       - Verify identity via Google
+       - Once verified, can edit panel
+    3. If no Knowledge Panel:
+       - Strengthen entity signals (more citations, GBP optimization, news mentions)
+       - Can take 3-12 months to appear
+  
+step_3_schema_org_integration:
+  in_brand_website_homepage:
+    {
+      "@context": "https://schema.org",
+      "@type": "MedicalBusiness",
+      "name": "Brand Name",
+      "sameAs": [
+        "https://www.wikidata.org/wiki/Q123456789",
+        "https://en.wikipedia.org/wiki/Brand_Name",
+        "https://www.facebook.com/brandpage",
+        "https://www.linkedin.com/company/brand"
+      ],
+      "identifier": {
+        "@type": "PropertyValue",
+        "propertyID": "Wikidata",
+        "value": "Q123456789"
+      }
+    }
+```
+
+#### Database Field Addition
+
+```sql
+-- Add Wikidata identifier to brands table
+ALTER TABLE brands ADD COLUMN wikidata_id text;
+ALTER TABLE brands ADD COLUMN wikidata_verified_at timestamptz;
+ALTER TABLE brands ADD COLUMN knowledge_panel_status text;
+  -- 'not_yet' / 'pending_claim' / 'claimed' / 'verified'
+
+-- For doctors / authors
+ALTER TABLE seo_authors_reviewers ADD COLUMN wikidata_id text;
+  -- For notable physicians with Wikipedia/Wikidata entries
+```
+
+#### Maintenance Protocol
+
+```yaml
+quarterly:
+  - Verify Wikidata entity still exists (check for vandalism)
+  - Update statements if brand changed (new locations, new specialties)
+  - Add new references as they emerge
+  - Monitor sameAs URLs (catch broken links)
+
+annually:
+  - Comprehensive Knowledge Panel review
+  - Update brand description in Wikidata
+  - Add new awards/accreditations as P-properties
+```
+
+#### Success Metrics (added to KPI #11 Brand Mention Rate)
+
+```yaml
+brand_serp_health_metrics:
+  ☐ Wikidata Q-number assigned (binary)
+  ☐ Knowledge Panel visible in search (binary)
+  ☐ Knowledge Panel claimed/verified (binary)
+  ☐ Wikidata sameAs URLs all valid (% — track quarterly)
+  ☐ Wikidata statements with references (count + quality)
+  
+  rollup_to_KPI_11:
+    Brand Mention Rate target: ≥ 40% (existing)
+    Wikidata-verified brand bonus: typically +10-15% lift in mentions
+```
+
+> 📚 **External resources referenced:**
+> - Wikidata: https://www.wikidata.org/
+> - Google Knowledge Panel: https://support.google.com/business/answer/7039811
+> - Schema.org sameAs: https://schema.org/sameAs
+
+---
+
+# PART 14: Vertical Profiles
+
+## 14.1 Profile Template
+
+แต่ละ vertical มี profile spec บอกชัด:
+
+```yaml
+vertical: [name]
+sub_vertical: [optional]
+business_model: [array]
+typical_brand_voice: [description]
+
+entity_types_primary:
+  - [list]
+
+entity_types_secondary:
+  - [list]
+
+schema_org_primary_types:
+  - [list]
+
+citation_source_mix:
+  - [percentage breakdown]
+
+content_templates_typical:
+  - [list]
+
+cluster_master_top_level:
+  - [list]
+
+brand_linked_citable_pattern: [A|B|C|D]
+
+regulatory_considerations:
+  - [list]
+
+eeat_credential_required:
+  - [list]
+
+medical_disclaimer_required: [boolean]
+
+llms_txt_focus:
+  - [list]
+```
+
+---
+
+## 14.2 Profile: Dental & Oral Health (Macro-Profile)
+
+### 14.2.0 Macro Overview
+
+```yaml
+vertical: clinic
+sub_vertical: dental
+business_model: [service]
+typical_brand_voice: clinical-professional, patient-centered
+
+# Macro-profile covers 7 sub-specialties (Section 12.2.1-12.2.7)
+# Brands can have multiple via medical_specialties[]
+
+entity_types_primary:
+  - procedure
+  - condition
+  - person (doctors)
+  - organization (clinic)
+
+entity_types_secondary:
+  - device
+  - drug
+  - anatomy
+  - lab_test (imaging)
+
+schema_org_primary_types:
+  - MedicalProcedure
+  - MedicalCondition
+  - Dentist (organization, baseline)
+  - MedicalClinic (when surgical)
+  - Person
+
+citation_source_mix (general dental):
+  - 50% pubmed
+  - 20% clinical_practice_guideline (ADA, FDI, ทันตแพทยสภา)
+  - 15% clinical_trial_registry
+  - 10% medical_textbook
+  - 5% own clinical data
+
+content_templates_typical:
+  - Procedure detail page
+  - Condition page
+  - Doctor profile
+  - Service page
+  - Patient journey/case study
+
+regulatory_considerations (universal for all dental sub-specialties):
+  - ทันตแพทยสภา compliance
+  - ห้ามโฆษณาเกินจริง (พ.ร.บ.สถานพยาบาล)
+  - ห้ามรับประกันผล
+  - ต้องระบุชื่อทันตแพทย์ + เลขใบอนุญาต
+
+medical_disclaimer_required: true
+brand_linked_citable_pattern: A (clinical data)
+```
+
+### 14.2.1 Sub-Profile: General Dentistry
+
+```yaml
+medical_specialty: general-dentistry
+cluster_master_specific:
+  - preventive-care
+  - restorative-dentistry
+  - basic-extractions
+  - dental-cleanings
+
+eeat_credential_required:
+  - dentist (registered with ทันตแพทยสภา)
+
+scope_distinction:
+  - ครอบคลุม baseline dental services
+  - ทำหน้าที่เป็น "gateway" referrer ไป specialty อื่น
+```
+
+### 14.2.2 Sub-Profile: Orthodontics
+
+```yaml
+medical_specialty: orthodontics
+cluster_master_specific:
+  - orthodontics (vertical_specific)
+  - clear-aligners
+  - traditional-braces
+  - retainers
+
+schema_org_extension:
+  - Orthodontist (Person)
+
+eeat_credential_required:
+  - dentist + specialty board (ทันตแพทยสภา ทันตกรรมจัดฟัน)
+
+key_keywords_thai:
+  - "จัดฟัน", "Invisalign", "เหล็กดัด", "รีเทนเนอร์"
+```
+
+### 14.2.3 Sub-Profile: Oral Surgery (Basic)
+
+```yaml
+medical_specialty: oral-surgery
+cluster_master_specific:
+  - extractions-complex
+  - wisdom-teeth
+  - dental-implants (overlaps with prosth)
+  - bone-grafting
+
+eeat_credential_required:
+  - dentist + specialty board (ศัลยศาสตร์ช่องปาก)
+
+scope_distinction:
+  - basic OS — ในคลินิก
+  - complex cases referral ไป OMS hospital-based
+```
+
+### 14.2.4 Sub-Profile: Maxillofacial Surgery (OMS)
+
+```yaml
+medical_specialty: maxillofacial-surgery
+cluster_master_specific:
+  - orthognathic-surgery
+  - facial-trauma
+  - jaw-reconstruction
+  - tmj-surgery
+
+cross_vertical_overlap:
+  - aesthetic-clinic (jaw contouring, V-line surgery)
+  - plastic-surgery (facial trauma)
+
+schema_org_extension:
+  - PlasticSurgery (specialty)
+  - Surgeon (Person)
+
+entity_types_extra:
+  - procedure (highly invasive)
+  - device (surgical plates, screws)
+  - anatomy (deep facial structures)
+
+eeat_credential_required:
+  - dental degree + maxillofacial surgery specialty
+  - hospital privileges (sometimes required)
+
+key_keywords_thai:
+  - "ศัลยกรรมขากรรไกร", "ผ่าตัดขากรรไกร V-line",
+  - "ตัดขากรรไกร", "orthognathic surgery"
+
+regulatory_extra:
+  - กรณีทำในรพ. — ต้องอยู่ภายใต้ภาควิชาศัลยกรรมช่องปาก
+  - ต้อง informed consent หนา + before/after compliance
+```
+
+### 14.2.5 Sub-Profile: Craniofacial Surgery
+
+```yaml
+medical_specialty: craniofacial-surgery
+cluster_master_specific:
+  - cleft-lip-palate
+  - craniosynostosis
+  - syndromic-craniofacial (Crouzon, Apert, Treacher Collins)
+  - facial-asymmetry-reconstruction
+
+cross_vertical_overlap:
+  - plastic-surgery (heavy)
+  - ent-surgery (airway management)
+  - neurosurgery (some cranial cases)
+  - pediatric-medicine (most patients are children)
+
+schema_org_extension:
+  - Hospital (often hospital-based)
+  - PediatricClinic
+  - Surgeon
+
+entity_types_extra:
+  - condition (rare genetic syndromes — ICD-10 Q-codes heavy)
+  - lab_test (genetic testing)
+  - imaging_modality (3D CT, MRI)
+
+eeat_credential_required:
+  - maxillofacial surgery + craniofacial fellowship
+  - hospital affiliation required
+  - team-based: plastic surgeon + neurosurgeon + ENT + speech therapist
+
+regulatory_extra:
+  - Pediatric consent rules (parents)
+  - Multi-specialty team required disclosure
+  - Long-term follow-up commitments
+
+scope_note:
+  - มักทำใน academic hospital, not standalone clinic
+  - SEO content เน้น parent education + journey stories
+```
+
+### 14.2.6 Sub-Profile: Dental Sleep Medicine
+
+```yaml
+medical_specialty: dental-sleep-medicine
+cluster_master_specific:
+  - obstructive-sleep-apnea (universal — shared with sleep clinic, ENT, pulm)
+  - oral-appliance-therapy
+  - mandibular-advancement-devices
+  - cpap-vs-oral-appliance
+  - sleep-bruxism
+
+cross_vertical_overlap:
+  - sleep-medicine (heavy)
+  - ent-clinic (UPPP, palate surgery)
+  - pulmonology (CPAP titration)
+  - cardiology (OSA + cardiovascular risk)
+
+schema_org_extension:
+  - MedicalClinic
+  - MedicalSpecialty: Sleep Medicine
+  - Drug (limited — wakefulness drugs context)
+
+entity_types_extra:
+  - lab_test (polysomnography, home sleep test)
+  - device (oral appliances, CPAP comparison)
+  - condition (multiple — OSA, UARS, snoring)
+
+eeat_credential_required:
+  - dentist + AADSM diplomate (American Academy of Dental Sleep Medicine)
+  - หรือ Thai equivalent — currently emerging field
+  - Co-management with sleep physician (mandatory in many jurisdictions)
+
+key_keywords_thai:
+  - "นอนกรน", "หยุดหายใจขณะหลับ", "OSA",
+  - "เครื่องช่วยหายใจขณะหลับ CPAP",
+  - "อุปกรณ์ในช่องปากแก้นอนกรน"
+
+regulatory_extra:
+  - Diagnosis ของ OSA = sleep medicine physician (MD)
+  - Dentist treats — not diagnoses
+  - Co-management documentation required
+  - Cross-referral chain ต้องชัด
+
+scope_note:
+  - growing field, ยังเล็กในไทย
+  - opportunity สำหรับ first-mover content
+  - cross-link content กับ ENT/sleep clinic (cluster sharing valuable)
+```
+
+### 14.2.7 Sub-Profile: Endodontics, Periodontics, Pediatric Dentistry, Prosthodontics
+
+```yaml
+# ครอบคลุมแบบ brief — โครงสร้างคล้าย General Dentistry แต่ specialty-focused
+
+endodontics:
+  cluster_master_specific:
+    - root-canal-treatment, retreatment, apical-surgery
+  schema: Endodontist (Person)
+  keywords_thai: "รักษารากฟัน", "หินปูนใต้รากฟัน"
+
+periodontics:
+  cluster_master_specific:
+    - gum-disease, periodontal-surgery, dental-implant-perio (crosses to OS)
+  schema: Periodontist
+  keywords_thai: "โรคเหงือก", "ปริทันต์", "การผ่าตัดเหงือก"
+
+pediatric-dentistry:
+  cluster_master_specific:
+    - pediatric-dental-care, fluoride-treatment, pediatric-anxiety
+  schema: PediatricClinic + Dentist
+  keywords_thai: "ทันตกรรมเด็ก", "หมอฟันเด็ก"
+
+prosthodontics:
+  cluster_master_specific:
+    - dentures, crowns-bridges, dental-implant-prosthesis (crosses to OS)
+  schema: Prosthodontist
+  keywords_thai: "ฟันปลอม", "ครอบฟัน", "สะพานฟัน"
+```
+
+### 14.2.8 Brand Examples by Specialty Mix
+
+```yaml
+# Example brand configurations:
+
+Brand B (Dental) (multi-specialty):
+  vertical: clinic
+  sub_vertical: dental
+  medical_specialties:
+    - general-dentistry
+    - orthodontics
+    - oral-surgery
+    - prosthodontics
+  primary_specialty: dental-implant-prosthodontics
+
+OMS-only practice:
+  vertical: clinic
+  sub_vertical: dental
+  medical_specialties:
+    - oral-surgery
+    - maxillofacial-surgery
+    - dental-sleep-medicine
+  primary_specialty: maxillofacial-surgery
+
+Hospital-based Craniofacial Center:
+  vertical: hospital
+  sub_vertical: specialty-craniofacial
+  medical_specialties:
+    - craniofacial-surgery
+    - maxillofacial-surgery
+    - plastic-surgery
+    - pediatric-ent
+  primary_specialty: craniofacial-surgery
+```
+
+---
+
+## 14.3 Profile: Aesthetic / Plastic Surgery Clinic
+
+```yaml
+vertical: clinic
+sub_vertical: aesthetic
+business_model: [service, product (some)]
+typical_brand_voice: aspirational-professional, results-focused, ethical-balanced
+
+entity_types_primary:
+  - procedure
+  - condition (aesthetic concerns)
+  - person (surgeons, dermatologists)
+  - organization
+
+entity_types_secondary:
+  - device
+  - drug (BTX, fillers)
+  - product (post-op skincare)
+  - ingredient (active ingredients in injectables)
+
+schema_org_primary_types:
+  - MedicalProcedure
+  - MedicalClinic
+  - Person
+
+citation_source_mix:
+  - 40% pubmed
+  - 20% clinical_practice_guideline (ASPS, ISAPS)
+  - 15% manufacturer_data (Allergan, Galderma...)
+  - 15% own clinical data
+  - 10% medical_textbook
+
+content_templates_typical:
+  - Procedure detail page (heavy)
+  - Comparison page (procedure A vs B)
+  - Doctor profile
+  - Before/after gallery (with consent + ethics)
+  - Recovery guide
+
+cluster_master_top_level:
+  - facial-surgery (vertical_specific)
+  - body-contouring (vertical_specific)
+  - non-surgical (universal — shared with derm)
+  - injectables (universal)
+  - laser-treatments (universal — shared with derm)
+  - post-op-care (vertical_specific)
+
+brand_linked_citable_pattern: A (clinical) + D (patient experience)
+
+regulatory_considerations:
+  - แพทยสภา compliance
+  - ห้ามโฆษณาผลที่ "ปาฏิหาริย์"
+  - ห้ามใช้ภาพ before/after เกินจริง
+  - ต้องมี informed consent ก่อน feature เคส
+  - ระวัง ICD diagnosis bills if mixed with insurance
+
+eeat_credential_required:
+  - plastic_surgeon (board-certified)
+  - aesthetic_physician (specialty board)
+  - dermatologist
+
+medical_disclaimer_required: true
+
+llms_txt_focus:
+  - Surgeon expertise + board certifications
+  - Procedure mastery (signature techniques)
+  - Safety record
+  - Recovery support quality
+```
+
+---
+
+## 14.4 Profile: Dermatology Clinic
+
+```yaml
+vertical: clinic
+sub_vertical: dermatology
+business_model: [service, product (clinic-line skincare)]
+typical_brand_voice: science-based, accessible-clinical
+
+entity_types_primary:
+  - condition (skin diseases — heaviest)
+  - procedure (laser, peel, MN)
+  - drug (Rx topical/oral)
+  - person (dermatologists)
+
+entity_types_secondary:
+  - ingredient (in clinic-line products)
+  - product (clinic-line)
+  - lab_test (skin biopsy, patch test)
+  - device
+
+schema_org_primary_types:
+  - MedicalCondition
+  - MedicalProcedure
+  - Drug
+  - Physician
+
+citation_source_mix:
+  - 60% pubmed (heavy peer-review)
+  - 15% clinical_practice_guideline (AAD, สมาคมแพทย์ผิวหนัง)
+  - 10% cir_report (when discussing OTC ingredients)
+  - 10% own clinical data
+  - 5% other
+
+content_templates_typical:
+  - Condition page (heaviest content type)
+  - Procedure page
+  - Drug monograph (Rx-focused)
+  - Ingredient page (educational, links to consumer products)
+  - Doctor profile
+
+cluster_master_top_level:
+  - skin-conditions (universal — shared with skincare media)
+  - hair-disorders (vertical_specific)
+  - nail-disorders (vertical_specific)
+  - skin-cancers (vertical_specific)
+  - dermatologic-procedures (universal)
+  - dermatologic-drugs (universal)
+
+brand_linked_citable_pattern: A (clinical)
+
+regulatory_considerations:
+  - แพทยสภา + คณะกรรมการสมาคมแพทย์ผิวหนัง
+  - Rx drugs — must be doctor-prescribed
+  - ห้าม claim "รักษาหายขาด" สำหรับ chronic conditions
+  - HIPAA-equivalent (PDPA Thailand) for patient data
+
+eeat_credential_required:
+  - dermatologist (board certified ตจวิทยา)
+
+medical_disclaimer_required: true
+
+llms_txt_focus:
+  - Dermatologist credentials
+  - Conditions treated
+  - Evidence base for treatments
+  - Distinction between Rx and OTC
+```
+
+---
+
+## 14.5 Profile: Hospital (Multi-Specialty)
+
+```yaml
+vertical: hospital
+sub_vertical: general | specialty
+business_model: [service]
+typical_brand_voice: institutional-authoritative, comprehensive, trust-anchored
+
+entity_types_primary:
+  - condition (broad range)
+  - procedure (broad range)
+  - drug
+  - person (multi-specialty doctors)
+  - organization (departments)
+
+entity_types_secondary:
+  - lab_test (extensive)
+  - device (medical-grade)
+  - anatomy
+
+schema_org_primary_types:
+  - Hospital
+  - MedicalCondition
+  - MedicalProcedure
+  - Physician
+  - Department (custom)
+
+citation_source_mix:
+  - 65% pubmed
+  - 15% clinical_practice_guideline (multiple — by specialty)
+  - 10% medical_textbook
+  - 5% own data
+  - 5% regulatory
+
+content_templates_typical:
+  - Condition page
+  - Procedure page
+  - Department/specialty page
+  - Doctor profile
+  - Lab test info page
+  - Patient education
+  - Health screening packages
+
+cluster_master_top_level:
+  - by-body-system (cardiology, neurology, ...)
+  - by-specialty
+  - emergency-care
+  - preventive-care (universal)
+  - chronic-disease-management
+
+brand_linked_citable_pattern: A (clinical, large-N data)
+
+regulatory_considerations:
+  - JCI accreditation standards (if applicable)
+  - HA Thailand (Healthcare Accreditation Institute)
+  - แพทยสภา multi-specialty compliance
+  - PDPA strict compliance
+  - Clinical trial disclosure (if applicable)
+
+eeat_credential_required:
+  - Multiple specialties — each verified by board
+
+medical_disclaimer_required: true
+
+llms_txt_focus:
+  - Specialty depth
+  - Multi-specialty integration
+  - Accreditation/certification
+  - Research output (if academic)
+```
+
+---
+
+## 14.6 Profile: Skincare Media (the brand)
+
+```yaml
+vertical: media
+sub_vertical: skincare-media
+business_model: [media, affiliate, adsense, sponsorship]
+typical_brand_voice: independent-analytical, science-translator, consumer-advocate
+
+entity_types_primary:
+  - ingredient (heaviest)
+  - product
+  - condition (skin conditions)
+  - person (authors, expert reviewers)
+
+entity_types_secondary:
+  - drug (when discussing Rx skincare)
+  - organization (cosmetic brands)
+  - regulation (อย., FDA)
+
+schema_org_primary_types:
+  - DefinedTerm (ingredient)
+  - Product
+  - Article + Review
+  - HowTo (routines)
+  - FAQPage (heavy)
+  - MedicalCondition (when discussing skin disorders)
+
+citation_source_mix:
+  - 30% pubmed
+  - 25% cir_report + sccs_opinion
+  - 15% manufacturer_tds
+  - 10% jcs_journal + ifscc_paper
+  - 10% thai_fda_announcement
+  - 10% own editorial analysis (Pattern B/C/D)
+
+content_templates_typical:
+  - Ingredient detail page (T6)
+  - Product detail page (T7)
+  - Comparison page (T8)
+  - Listicle/roundup (T9)
+  - Routine/HowTo
+  - FAQ-style ("X ใช้กับ Y ได้ไหม")
+  - Concern-based guide ("สิวฮอร์โมนใช้อะไรดี")
+
+cluster_master_top_level:
+  - ingredients (top-level → actives, humectants, ...)
+  - product-types
+  - skin-concerns (shared with derm clinic)
+  - skin-types
+  - routines
+  - demographics (men, pregnant, ...)
+  - brands (registry)
+
+brand_linked_citable_pattern: B (editorial) + C (lab) + D (survey)
+
+regulatory_considerations:
+  - อย. cosmetic claim guidelines
+  - กฎหมายโฆษณาเครื่องสำอาง
+  - Affiliate disclosure (FTC-style)
+  - PDPA for reader surveys
+  - ห้าม claim รักษาโรค (conflict with drug law)
+  - ระวัง defamation เมื่อรีวิวลบ
+
+eeat_credential_required:
+  - dermatologist (medical reviewer)
+  - cosmetic_chemist (formulation reviewer)
+  - pharmacist (drug-cosmetic crossover)
+  - industry_journalist (editorial)
+
+medical_disclaimer_required: true (mild — not Rx-level)
+
+llms_txt_focus:
+  - Independence (no own product line)
+  - Editorial methodology
+  - Reviewer panel
+  - Database scope (when phase 2 launched)
+```
+
+---
+
+## 14.7 Profile: Wellness/Longevity Media (Future)
+
+```yaml
+vertical: media
+sub_vertical: wellness-media
+business_model: [media, affiliate, adsense, sponsorship, course]
+typical_brand_voice: science-curious, holistic-balanced, evidence-skeptical
+
+entity_types_primary:
+  - lifestyle_factor (sleep, exercise, diet, ...)
+  - ingredient (supplements, nutraceuticals)
+  - product (supplements, devices, wearables)
+  - condition (chronic — diabetes, CV, ...)
+
+entity_types_secondary:
+  - drug (longevity drugs — metformin, rapamycin)
+  - lab_test (longevity biomarkers)
+  - device (wearables, biometric)
+  - organism (microbiome)
+
+schema_org_primary_types:
+  - HowTo (protocols)
+  - Product (supplements)
+  - Article
+  - MedicalCondition
+
+citation_source_mix:
+  - 50% pubmed
+  - 20% clinical_trial_registry
+  - 15% systematic_review + meta_analysis
+  - 10% own editorial analysis
+  - 5% other
+
+content_templates_typical:
+  - Lifestyle protocol page
+  - Supplement detail page
+  - Lab biomarker explainer
+  - Comparison page (supplements, devices)
+  - Long-form deep dive (Pillar)
+  - "What the science says about X" myth-busting
+
+cluster_master_top_level:
+  - longevity (vertical_specific or shared)
+  - sleep
+  - nutrition
+  - exercise
+  - mental-health (or separate vertical)
+  - supplements
+  - biomarkers
+  - aging-mechanisms
+
+brand_linked_citable_pattern: B + D primarily
+
+regulatory_considerations:
+  - Supplements ≠ drugs — careful claims
+  - อย. supplement classification
+  - Affiliate disclosure
+  - Health claim regulations
+
+eeat_credential_required:
+  - phd_researcher (biology, gerontology)
+  - physician (preventive medicine, geriatrics)
+  - nutritionist (registered dietitian)
+  - exercise_physiologist
+
+medical_disclaimer_required: true
+
+llms_txt_focus:
+  - Evidence-quality grading
+  - Editorial independence
+  - Scientific accuracy
+```
+
+---
+
+# PART 15: Schema Change Governance
+
+## 15.1 Why Governance Matters
+
+ระบบ universal ที่มี 9 extension tables + JSONB overflow + multi-vertical sharing → **ถ้าไม่มี governance จะกลายเป็นความวุ่นวาย** ภายใน 6 เดือน
+
+ปัญหาที่จะเกิดขึ้นถ้าไม่มี governance:
+- Field ซ้ำกันใน extension table + JSONB
+- Entity types ที่เพิ่มเข้ามา ad-hoc → controlled vocab พังทลาย
+- Cluster sharing rules ไม่ consistent
+- Multi-vertical scope changes โดยไม่มีคนตามเช็ค
+
+## 15.2 Change Categories
+
+### Category 1: Minor (no review needed)
+- เพิ่มข้อมูลใน entity ที่มีอยู่แล้ว (e.g., add citation to existing entity)
+- แก้ typo, แก้ formatting
+- Update freshness_status
+
+### Category 2: Standard (1 reviewer approval)
+- สร้าง entity ใหม่ (ภายใต้ entity_type ที่มี)
+- เพิ่ม cluster ใหม่ (universal scope)
+- เพิ่ม citation source
+- เพิ่ม person/organization
+- เปลี่ยน applicable_verticals ของ cluster (เพิ่ม)
+
+### Category 3: Major (Schema Review Board)
+- เพิ่ม entity_type ใหม่
+- สร้าง extension table ใหม่
+- เพิ่ม field ใน core entity_graph
+- เปลี่ยน controlled vocabulary values
+- เปลี่ยน schema mapping ที่กระทบ markup
+- ลบ entity/cluster ที่มีอยู่
+- Migration ระหว่าง JSONB → extension table
+
+## 15.3 Schema Review Board
+
+### Composition
+- SEO Lead (chair)
+- Tech Lead (DB/dev)
+- Content Lead
+- Medical Reviewer (sample, for medical changes)
+
+### Cadence
+- Standing meeting: bi-weekly (30 min)
+- Async approvals via Notion: anytime for Category 2
+
+### Process
+```
+Proposal in Notion
+↓
+Discussion thread (3-5 days)
+↓
+Review meeting (if Major)
+↓
+Decision: Approved / Rejected / Revise
+↓
+Implementation by Tech Lead
+↓
+Migration script + rollback plan
+↓
+Validation
+↓
+Documentation update (this 📖)
+```
+
+### Required Fields in Proposal
+```markdown
+# Schema Change Proposal #[number]
+
+## Change Type
+[ ] Category 1 / 2 / 3
+
+## Description
+[what + why]
+
+## Affected
+- Tables: [list]
+- Existing data: [count + impact]
+- Code: [files/modules]
+- Schema markup: [yes/no + which types]
+
+## Migration Plan
+[steps]
+
+## Rollback Plan
+[steps]
+
+## Testing
+[how to validate]
+
+## Documentation Updates Required
+- [ ] คัมภีร์ section [X]
+- [ ] llms.txt
+- [ ] Other
+```
+
+## 15.4 Schema Change Log
+
+ทุก Major change ต้อง log ใน `seo_schema_changes` table:
+
+```sql
+seo_schema_changes (
+  id UUID PRIMARY KEY,
+  change_number SERIAL,
+  proposal_url TEXT,             -- Notion link
+  change_type TEXT,              -- 'add_field'|'add_table'|'rename'|...
+  description TEXT,
+  affected_tables TEXT[],
+  proposed_by_fp TEXT,
+  approved_by_fps TEXT[],
+  approved_at TIMESTAMPTZ,
+  implemented_at TIMESTAMPTZ,
+  migration_script_path TEXT,
+  rollback_script_path TEXT,
+  validation_status TEXT,        -- 'pending'|'passed'|'failed'
+  notes TEXT
+)
+```
+
+
+### Add: Section 15.X — Operational Governance Framework
+
+> **Why:** Part 15 covers WHAT changes can be made (governance). This addition covers WHO does what + WHEN (operational roles)
+
+#### 15.X.1 Roles & Responsibilities
+
+```yaml
+data_steward_role:
+  scope: Per brand or per vertical_family (depending on scale)
+  
+  responsibilities:
+    - Own data quality for assigned brand(s)
+    - Review/approve schema changes affecting brand
+    - Triage data quality alerts
+    - Manage backfill projects
+    - Sign off on quality gate before publish
+  
+  required_skills:
+    - SQL (read level minimum)
+    - Schema understanding
+    - Domain knowledge (medical specialty if healthcare brand)
+  
+  time_commitment:
+    MVP: 4-8 hours/week
+    Growth: 8-16 hours/week
+    Scale: Full-time
+
+schema_change_approver:
+  scope: All structural schema changes (DDL)
+  
+  responsibilities:
+    - Review schema change proposals
+    - Validate impact analysis
+    - Approve/reject migrations
+    - Coordinate cross-brand changes
+  
+  decision_authority:
+    minor_change (NULL-able add): Auto-approve via PR review
+    major_change (structural): Committee review
+
+llmo_compliance_officer:
+  scope: AI citation + content quality compliance
+  
+  responsibilities:
+    - Review LLMO compliance scans (weekly)
+    - Triage AI tracking alerts
+    - Validate citation patterns (A-E)
+    - Coordinate with editorial for fixes
+  
+  required_skills:
+    - SEO + AI tracking knowledge
+    - Editorial judgment
+    - Tools: Notion, n8n monitoring
+
+medical_content_reviewer:
+  scope: Healthcare content (Layer 4-7)
+  
+  responsibilities:
+    - Sign off on medical claims
+    - Validate citations to clinical sources
+    - E-E-A-T compliance
+  
+  required_credentials:
+    - Licensed medical professional (MD, DDS, etc.)
+    - Domain specialty matches content
+```
+
+#### 15.X.2 Service Level Agreements (SLAs)
+
+```yaml
+schema_change_sla:
+  request_to_review:
+    minor: 1 business day
+    major: 3 business days
+    critical: 4 hours
+
+  review_to_decision:
+    minor: 2 business days (auto if PR clean)
+    major: 5 business days (committee meeting)
+    critical: 1 business day (emergency review)
+
+  decision_to_implementation:
+    minor: 5 business days
+    major: 14 business days
+    critical: 24 hours (with rollback ready)
+
+data_quality_sla:
+  alert_to_acknowledgment: 1 hour (during business hours)
+  acknowledgment_to_triage: 4 business hours
+  triage_to_resolution:
+    P0_critical: 24 hours
+    P1_high: 3 business days
+    P2_medium: 14 business days
+    P3_low: 30 business days
+
+llmo_compliance_sla:
+  scan_to_alert: weekly (automated)
+  alert_to_review: 2 business days
+  review_to_fix: 7 business days
+```
+
+#### 15.X.3 Rollback Strategy
+
+```yaml
+schema_rollback:
+  approach: Forward + reverse migrations always paired
+  
+  every_migration_must_have:
+    - Forward SQL (apply changes)
+    - Reverse SQL (undo changes)
+    - Pre-migration snapshot (data backup)
+    - Test in branch before production
+  
+  rollback_triggers:
+    - Application errors > 5% post-migration
+    - Data corruption detected
+    - Performance regression > 50%
+    - Manual trigger by Schema Approver
+  
+  rollback_procedure:
+    1. Block new writes (read-only mode)
+    2. Execute reverse SQL
+    3. Restore from snapshot if reverse fails
+    4. Verify data integrity
+    5. Resume writes
+    6. Post-mortem within 48 hours
+
+content_rollback:
+  approach: WordPress revisions + Notion history
+  
+  recovery_options:
+    - WordPress: Revert to prior published version
+    - Notion: Page history (90 days)
+    - Supabase: Point-in-time recovery (backup retention)
+
+embedding_rollback:
+  approach: Versioned embeddings
+  
+  procedure:
+    - Mark new embeddings is_active = false
+    - Revert to previous embedding_version
+    - Re-validate retrieval results
+```
+
+#### 15.X.4 Versioning Policy
+
+```yaml
+schema_versioning:
+  format: semantic (major.minor.patch)
+  
+  rules:
+    major (X.0.0): Breaking changes (require migration plan)
+      - Drop tables/columns
+      - Change PK structure
+      - Fundamental architecture shift
+    
+    minor (0.X.0): Backward-compatible additions
+      - Add new tables
+      - Add nullable columns
+      - Add new indexes
+    
+    patch (0.0.X): Non-structural fixes
+      - Index optimization
+      - Constraint adjustments
+      - Comment/documentation updates
+  
+  current_version: 0.4 (as of v3.0)
+  next_planned: 0.5 (when Revenue Attribution activated — Part 24.5)
+
+document_versioning:
+  format: same semantic (matches major schema versions)
+  
+  current: คัมภีร์ v3.0
+  
+  when_to_increment:
+    major: Architectural overhaul
+    minor: New Part added
+    patch: Edits within existing Parts
+```
+
+#### 15.X.5 Change Request Workflow
+
+```yaml
+workflow:
+  1_request:
+    where: Notion DB "Schema Change Requests"
+    fields:
+      - title, requestor, brand_affected
+      - change_type (minor/major/critical)
+      - business_justification
+      - proposed_DDL
+      - rollback_plan
+      - estimated_impact (rows/tables affected)
+  
+  2_review:
+    by: Schema Change Approver
+    output: approve / request_changes / reject
+    sla: per 15.X.2
+  
+  3_implementation:
+    by: Engineering
+    artifacts:
+      - PR with forward + reverse migrations
+      - Test execution log
+      - Snapshot backup
+  
+  4_deploy:
+    process:
+      - Branch test → staging → production
+      - Monitor 24h post-deploy
+      - Update Schema_Overview document
+  
+  5_audit_trail:
+    where: Supabase migrations table + Notion log
+    retention: forever
+```
+
+---
+
+**END OF MAIN PARTS (1-13)**
+
+---
+
+# PART 16: 4-Tool Loose-Coupled Implementation
+
+## 16.1 Why Loose Coupling
+
+**v2.2 mistake:** Tight coupling via custom WordPress plugin = expensive, slow, vendor-locked, forces team workflow change
+
+**v2.3 fix:** Loose coupling via n8n = team uses tools they prefer, systems exchange data through automation glue
+
+### The 4 Tools
+
+```
+┌─────────────────────────────────────────────────┐
+│  NOTION  =  "Where humans work"                 │
+│  - Editorial planning, content production       │
+│  - Cluster master discussions                   │
+│  - Citation library curation                    │
+│  - Author/reviewer management                   │
+│  - Schema governance proposals                  │
+│  - Read-only dashboards (KPIs)                  │
+└─────────────────────────────────────────────────┘
+              ↕ (n8n two-way sync)
+┌─────────────────────────────────────────────────┐
+│  SUPABASE  =  "Where data lives"                │
+│  - All 29 tables (single source of truth)       │
+│  - Auth + RLS by brand_scope                    │
+│  - Storage (images, files)                      │
+│  - Edge Functions (AI integrations)             │
+│  - pgvector (Layer 4 ready)                     │
+│  - Realtime subscriptions (live dashboards)     │
+└─────────────────────────────────────────────────┘
+              ↕ (n8n one-way mostly: Supabase → WP)
+┌─────────────────────────────────────────────────┐
+│  WORDPRESS  =  "Where content gets published"   │
+│  - Article rendering + audience-facing          │
+│  - WPML multilingual                            │
+│  - RankMath schema (base)                       │
+│  - ACF Pro (fields filled by n8n)               │
+│  - SEO basics (sitemap, hreflang, redirects)    │
+└─────────────────────────────────────────────────┘
+
+         n8n  =  "Where systems talk"
+         Sync, automation, scheduling, glue
+```
+
+---
+
+## 16.2 Data Flow Patterns
+
+### Pattern A: Notion → Supabase (Editorial Operations)
+```
+Trigger: Notion property change (Status="Approved")
+    ↓
+n8n reads Notion data
+    ↓
+Validate (SKOS rules, schema constraints)
+    ↓
+Upsert Supabase
+    ↓
+Notify back to Notion (success/error comment)
+```
+
+### Pattern B: Supabase → Notion (Dashboard Updates)
+```
+Trigger: Supabase webhook OR n8n cron
+    ↓
+Aggregate data (SQL query or Edge Function)
+    ↓
+Update Notion database (read-only dashboard tables)
+    ↓
+Slack alert if threshold breached
+```
+
+### Pattern C: External API → Supabase (Data Ingestion)
+```
+Trigger: n8n cron (scheduled)
+    ↓
+Call external API (PubMed, GBP, Brand24, etc.)
+    ↓
+Parse + dedupe
+    ↓
+Upsert Supabase
+    ↓
+Push summary to Notion dashboard
+```
+
+### Pattern D: Supabase → WordPress (Content Sync)
+```
+Trigger: Supabase webhook (entity update)
+    ↓
+n8n filters by brand vertical
+    ↓
+HTTP POST to WordPress REST API
+    ↓
+Update ACF fields on related CPT
+    ↓
+WP regenerates schema markup on next page render
+```
+
+### Pattern E: WordPress → Supabase (Publishing Events)
+```
+Trigger: WP webhook (post_published)
+    ↓
+n8n captures post_id, language, ACF entity_id
+    ↓
+Upsert seo_website_page_master
+    ↓
+Update keyword_master with assignment
+    ↓
+Notify Notion: Article tracked
+```
+
+---
+
+## 16.3 Table Sync Mapping
+
+### Category α: Two-Way Sync (Notion ↔ Supabase) — 7 tables
+
+| Supabase Table | Notion DB Name | Sync Direction | Frequency |
+|---|---|---|---|
+| `brands` | "Brand Registry" | Two-way | On change |
+| `seo_cluster_master` | "SEO Clusters" | Two-way | On change |
+| `seo_authors_reviewers` | "Authors & Reviewers" | Two-way | On change |
+| `seo_citations` | "Citation Library" | Two-way (from Notion mostly) | On change |
+| `seo_keyword_master` | "Keywords" | Two-way | On change |
+| `seo_website_page_master` (status) | "Content Pipeline" | Two-way | On change |
+| `seo_schema_changes` | "Schema Governance" | Notion → Supabase | On change |
+
+### Category β: Read-Only in Notion (Supabase → Notion) — 4 dashboards
+
+| Supabase Source | Notion Dashboard | Frequency |
+|---|---|---|
+| `seo_llm_citations` (aggregated) | "AI Citation Health" | Daily |
+| `seo_brand_mentions` (aggregated) | "Brand Mention Monitor" | Daily |
+| `seo_internal_links` (analyzed) | "Link Coverage Report" | Weekly |
+| Cross-table KPI rollup | "Monthly SEO KPIs" | Monthly |
+
+### Category γ: Pure Supabase (No Notion mirror) — 18 tables
+
+System-managed: `seo_entity_graph` + 9 extension tables + `seo_languages` + 3 translation tables + `seo_locations`, `seo_reviews`, `seo_directory_listings`, `seo_gbp_posts`, `seo_local_rankings`
+
+---
+
+## 16.4 Notion Multi-Account Strategy
+
+```
+Notion "Operations" (broad team access):
+  - Editorial calendar, content pipeline
+  - Keywords, daily tracking
+  - Dashboards (read-only)
+
+Notion "Knowledge" (controlled access):
+  - Cluster master, schema governance
+  - Citation library
+  - Brand registry, audit logs
+
+Both → single Supabase project (KG unified)
+```
+
+### n8n Credentials per account
+
+```
+n8n Credentials needed:
+- notion-operations (token)
+- notion-knowledge (token)
+- supabase (service role)
+- gbp-api (Google Business Profile OAuth)
+- pubmed-api
+- brand24 / mention.com
+- openai / anthropic
+- wordpress (REST API)
+```
+
+---
+
+## 16.5 Setup Phases
+
+### Phase 0 (Week 1-2): Foundation
+- [ ] Spin up Supabase project (Free tier OK)
+- [ ] Create all 29 tables (build all, even if not used yet)
+- [ ] Set up Auth roles + RLS policies
+- [ ] Verify n8n Docker environment
+- [ ] Install required n8n nodes
+
+### Phase 1 (Week 3-4): Notion Setup
+- [ ] Create Notion databases (per Part 18 specs)
+- [ ] Configure properties matching Supabase schema
+- [ ] Set up team access controls
+- [ ] Build initial dashboard pages (read-only)
+
+### Phase 2 (Week 5-6): Sync flows (priority subset)
+- [ ] Flows A1-A4 (editorial sync)
+- [ ] Flow B1 (PubMed → Supabase)
+
+### Phase 3 (Week 7-8): WordPress Integration
+- [ ] WordPress + WPML + RankMath Pro install
+- [ ] Configure WPML for subdirectory pattern (Thai default)
+- [ ] Create CPTs (ingredient, product, procedure, condition, etc.)
+- [ ] ACF Pro field groups
+- [ ] Flows C1-C2 (Supabase ↔ WP)
+
+### Phase 4 (Week 9-10): Validation
+- [ ] Schema markup validation (Rich Results Test)
+- [ ] hreflang audit
+- [ ] First entity end-to-end test
+- [ ] AI Citation Audit baseline
+
+### Phase 5 (Month 3+): Local SEO + Advanced
+- [ ] When first clinic client onboarded:
+  - [ ] Populate seo_locations
+  - [ ] GBP API integration
+  - [ ] Flows E1-E3
+- [ ] LLMO automation (Flow D1, F1)
+- [ ] Brand Mention scraping (Flow D2)
+
+---
+
+## 16.6 Conflict Resolution
+
+### Field-level source-of-truth designation
+
+```
+NOTION-AUTHORITATIVE (Notion wins):
+- pref_label, definition (cluster_master)
+- bio, full_name (authors_reviewers)
+- title, body (citations)
+- target_keywords (keyword_master)
+
+SUPABASE-AUTHORITATIVE (Supabase wins):
+- usage_count, last_used_at
+- nap_match_score (auto-calculated)
+- gbp_review_count, gbp_avg_rating
+- created_at, updated_at, fingerprint
+
+CONFLICT LOG (manual review):
+- Sensitive medical content
+- Brand-linked citables
+- Schema markup overrides
+```
+
+### Conflict log → seo_schema_changes table
+
+When n8n detects conflict:
+- Log change_type='conflict'
+- Notify in Notion "Sync Issues" view
+- Pause sync until resolution
+
+---
+
+# PART 17: n8n Flow Library
+
+## 17.1 Flow Categorization
+
+```
+GROUP A: Editorial Operations Sync (4 flows)
+GROUP B: External Data Ingestion (3 flows)
+GROUP C: Publishing & Schema (3 flows)
+GROUP D: Analytics & Monitoring (3 flows)
+GROUP E: Local SEO Specific (4 flows)
+GROUP F: AI/LLMO Automation (2 flows)
+
+Total: 19 flows defined
+Initial implementation: ~7 flows (priority)
+```
+
+---
+
+## 17.2 GROUP A: Editorial Operations Sync
+
+### Flow A1: Brands Bi-directional Sync
+```
+Trigger: Notion DB "Brand Registry" change webhook
+    ↓
+Read changed row + property values
+    ↓
+IF created_in_notion: INSERT Supabase brands
+IF updated_in_notion: UPDATE Supabase brands
+    ↓
+Conflict check: if Supabase newer → log conflict
+    ↓
+Update Notion: last_synced_at timestamp
+```
+
+### Flow A2: Cluster Master Sync (with SKOS validation)
+```
+Trigger: Notion "SEO Clusters" status="Approved"
+    ↓
+Validate SKOS hierarchy (no cycles, max 3 levels)
+    ↓
+Validate applicable_verticals controlled values
+    ↓
+IF valid: Upsert Supabase seo_cluster_master
+ELSE: Comment back in Notion with error details
+    ↓
+Auto-create Thai translation row in seo_cluster_translations
+    ↓
+Notify SEO Lead in Slack
+```
+
+### Flow A3: Author/Reviewer Sync
+```
+Trigger: Notion "Authors & Reviewers" change
+    ↓
+Validate credential_types controlled vocab
+    ↓
+Validate license_number format (per country)
+    ↓
+Upsert Supabase seo_authors_reviewers
+    ↓
+Auto-create Thai translation
+```
+
+### Flow A4: Keyword Master Two-Way
+```
+Trigger A: Notion update (writer claims keyword)
+    → Update Supabase: assigned_to, status
+
+Trigger B: Supabase update (organic rank changed)
+    → Update Notion: current_rank, rank_change
+
+Schedule: hourly check for un-synced changes both directions
+```
+
+---
+
+## 17.3 GROUP B: External Data Ingestion
+
+### Flow B1: PubMed Citation Auto-Fetch
+```
+Trigger: Notion researcher adds row in "Citation Library" with PMID
+    ↓
+HTTP GET: https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi
+    ?db=pubmed&id={PMID}&retmode=xml
+    ↓
+Parse XML: title, authors, journal, year, abstract, DOI, MeSH terms
+    ↓
+Upsert Supabase seo_citations
+    ↓
+Update Notion row with auto-filled fields
+    ↓
+Suggest related entities based on MeSH terms
+```
+
+### Flow B2: CIR/SCCS Reports Watch
+```
+Cron: weekly Monday 9am
+    ↓
+Scrape CIR website (cir-safety.org) for new reports
+    ↓
+Scrape SCCS opinions (EU Commission portal)
+    ↓
+Match new reports to existing ingredient entities
+    ↓
+Upsert seo_citations
+    ↓
+Notion alert: new reports affecting tracked ingredients
+```
+
+### Flow B3: Wikidata Sync (entity enrichment)
+```
+Cron: monthly
+    ↓
+For each entity with wikidata_id:
+  └─ HTTP GET: Wikidata SPARQL endpoint
+  └─ Fetch latest properties
+  └─ Update entity if changed
+    ↓
+Notion alert: entities with significant changes
+```
+
+---
+
+## 17.4 GROUP C: Publishing & Schema
+
+### Flow C1: Supabase Entity → WordPress ACF
+```
+Trigger: Supabase webhook (entity update)
+    ↓
+Filter: applicable_verticals contains target brand vertical
+    ↓
+Query: get full entity + translations + extension data
+    ↓
+For each language with WP CPT mapped:
+  └─ HTTP POST WP REST API
+  └─ Update ACF fields with entity data
+  └─ Set translation_quality_tier
+    ↓
+WordPress regenerates schema markup
+```
+
+### Flow C2: WordPress Publish → Supabase Tracking
+```
+Trigger: WP webhook on publish
+    ↓
+Extract: post_id, post_type, language, primary_entity_id (ACF)
+    ↓
+Generate hreflang_group_id
+    ↓
+Upsert seo_website_page_master with WP integration fields
+    ↓
+Parse content for internal links → upsert seo_internal_links
+    ↓
+Update Notion "Content Pipeline" status = "Published"
+```
+
+### Flow C3: Cross-Language hreflang Validation
+```
+Cron: daily
+    ↓
+Query page_master pages with hreflang_group_id
+    ↓
+For each group:
+  └─ Verify all language versions exist
+  └─ Check WPML trid matches
+  └─ Validate hreflang tags via crawl
+    ↓
+Flag inconsistencies in Notion "Sync Issues"
+```
+
+---
+
+## 17.5 GROUP D: Analytics & Monitoring
+
+### Flow D1: AI Citation Audit (Weekly)
+```
+Cron: every Monday 9am
+    ↓
+Read top 30 keywords per brand
+    ↓
+For each keyword:
+  └─ Query ChatGPT API
+  └─ Query Perplexity API
+  └─ Query Claude API
+  └─ Query Gemini API
+  └─ NLP: detect brand mentions
+  └─ Insert seo_llm_citations records
+    ↓
+Aggregate: citation rate per platform per brand
+    ↓
+Push to Notion "AI Citation Health"
+    ↓
+Slack alert if rate dropped > 10%
+```
+
+### Flow D2: Brand Mention Aggregation
+```
+Cron: daily
+    ↓
+Query Brand24 / Mention.com / Reddit + TikTok scrapers
+    ↓
+Parse: source, sentiment, context, reach
+    ↓
+Match to brand entities
+    ↓
+Upsert seo_brand_mentions (dedupe)
+    ↓
+Aggregate weekly
+    ↓
+Update Notion dashboard
+    ↓
+Slack alert: negative mention with reach > 10K
+```
+
+### Flow D3: Monthly KPI Rollup
+```
+Cron: 1st of month, 6am
+    ↓
+SQL aggregations:
+  - Pages published count
+  - AI citation rate
+  - Average freshness_status
+  - Citation count growth
+  - Internal link coverage
+  - Brand mentions sentiment
+    ↓
+Generate monthly KPI report
+    ↓
+Push to Notion "Monthly SEO KPIs"
+    ↓
+Email summary to stakeholders
+```
+
+---
+
+## 17.6 GROUP E: Local SEO Specific
+
+### Flow E1: GBP Reviews Sync (every 6h)
+```
+Cron: every 6 hours
+    ↓
+Loop seo_locations WHERE gbp_place_id IS NOT NULL:
+  └─ GBP API GET /reviews
+  └─ For each review:
+     ├─ Dedupe by source_review_id
+     ├─ NLP: detect_topics, sentiment, mentioned_entities
+     ├─ Auto-flag pdpa_risk_flag if patient health info
+     ├─ Set response_priority
+     └─ Upsert seo_reviews
+  └─ Update seo_locations: gbp_review_count, gbp_avg_rating
+    ↓
+Notion alert: new reviews requiring response
+Slack alert: 1-star OR pdpa_risk_flag (urgent)
+```
+
+### Flow E2: GBP Post Publishing
+```
+Trigger: Notion "GBP Posts" status="Approved"
+    ↓
+Validate: photo, CTA, dates
+    ↓
+For each target location_id:
+  └─ GBP API POST /localPosts
+  └─ Update seo_gbp_posts
+    ↓
+Update Notion: status="Published"
+    ↓
+Schedule Flow E2b for 7 days later
+```
+
+### Flow E2b: GBP Post Metrics Sync
+```
+Cron: daily
+    ↓
+Loop seo_gbp_posts WHERE published AND last_metrics_sync < 1d ago
+    ↓
+GBP API GET /insights
+    ↓
+Update seo_gbp_posts: views_count, clicks_count
+    ↓
+Aggregate per campaign → Notion dashboard
+```
+
+### Flow E3: NAP Consistency Check (Weekly)
+```
+Cron: every Monday
+    ↓
+Loop seo_directory_listings:
+  └─ Fetch NAP from directory (API or scrape)
+  └─ Compare to canonical seo_locations
+  └─ Calculate match scores
+  └─ Update nap_match_score
+    ↓
+Flag inconsistencies (auto via generated column)
+    ↓
+Notion alert: directories with score < 0.95
+```
+
+### Flow E4: Local Rankings Tracker (Optional)
+```
+Cron: weekly
+    ↓
+For each tracked keyword × location:
+  └─ Call BrightLocal/Local Falcon API
+  └─ Get Local Pack position
+  └─ Insert seo_local_rankings
+    ↓
+Calculate position_change
+    ↓
+Notion dashboard: ranking heat map
+    ↓
+Alert: keywords dropped > 3 positions
+```
+
+---
+
+## 17.7 GROUP F: AI/LLMO Automation
+
+### Flow F1: Auto-Update llms.txt
+```
+Cron: weekly
+    ↓
+For each brand:
+  └─ Query: top 20 entities + top 20 pages by traffic
+  └─ Generate llms.txt content per language
+  └─ Update WordPress static file via WP REST API
+    ↓
+Notion log
+```
+
+### Flow F2: Freshness Auditor
+```
+Cron: monthly
+    ↓
+Find entities WHERE last_reviewed_at < NOW() - 6 months
+    ↓
+Check related citations for new evidence
+    ↓
+For each entity needing review:
+  └─ Create Notion task in "Freshness Queue"
+  └─ Assign to relevant reviewer
+    ↓
+Track in seo_schema_changes
+```
+
+### Flow F3: Platform Optimization Audit
+```
+Cron: monthly per platform tier
+    ↓
+For each AI platform in seo_ai_platforms (active, tier 1-2):
+  └─ Run platform-specific optimization audit:
+     ├─ ChatGPT: check Wikipedia presence, schema richness
+     ├─ Perplexity: check authority signals, recency
+     ├─ Claude: check evidence-graded statements, balance
+     ├─ Gemini: check Knowledge Graph entity, GBP integration
+     └─ Google AI Overview: check featured snippet eligibility
+    ↓
+Score each entity per platform (0-1)
+    ↓
+Identify weakest platforms per entity
+    ↓
+Create Notion tasks: "Optimize {entity} for {platform}"
+    ↓
+Update Notion "AI Platform Health" dashboard
+```
+
+### Flow F4: Cross-platform Citation Health
+```
+Cron: weekly
+    ↓
+Aggregate seo_llm_citations + seo_ai_response_analysis:
+  └─ Per platform:
+     ├─ Total queries tested
+     ├─ Citation rate
+     ├─ Average position
+     ├─ Citation context distribution
+     └─ Co-citation patterns
+  └─ Per brand
+  └─ Per entity
+    ↓
+Identify trends (week-over-week, month-over-month)
+    ↓
+Detect anomalies (sudden citation rate drops)
+    ↓
+Push to Notion "AI Platform Health"
+    ↓
+Slack alert: critical drops or wins
+```
+
+---
+
+## 17.7b GROUP D: Extended LLMO Flows
+
+> Extended Group D with LLMO-specific flows (D4-D8)
+
+### Flow D4: Prompt Prediction Generator
+```
+Trigger: New row in Notion "AI Prompt Bank" with target_entity
+    ↓
+n8n calls AI (GPT-4 / Claude):
+  └─ Input: entity data + cluster + target keyword
+  └─ Output: 10-15 predicted prompts with variations
+    ↓
+Validate: prompts cover all 8 intent types
+    ↓
+Insert into seo_predicted_prompts (status='predicted')
+    ↓
+Link back to Notion "AI Prompt Bank" with auto-fill
+    ↓
+Editor reviews + adjusts → status='validated'
+```
+
+### Flow D5: AI Response Deep Analysis
+```
+Trigger: After Flow D1 (AI Citation Audit) completes
+    ↓
+For each new seo_llm_citations record:
+  └─ Call NLP analyzer (GPT-4 / Claude):
+     ├─ Extract: citation_position, quote, length
+     ├─ Detect: citation_context (positive/neutral/comparison)
+     ├─ Identify: co_cited_competitors, co_cited_authoritative
+     ├─ Calculate: our_share_of_response
+     └─ Compute: response_factuality_score
+  └─ Snapshot: observed_ranking_signals from page state at time
+    ↓
+Insert into seo_ai_response_analysis
+    ↓
+Update seo_predicted_prompts: test_results + citation_rate_avg
+    ↓
+Notion alert: notable findings
+```
+
+### Flow D6: Co-citation Tracker
+```
+Cron: weekly
+    ↓
+Query seo_ai_response_analysis WHERE co_cited_competitors not empty
+    ↓
+Aggregate by:
+  - Most frequent co-cited competitor (per topic)
+  - Co-citation relationship distribution (agreement/contrast/reinforcement)
+  - Authority sources we appear with
+    ↓
+Push insights to Notion:
+  - "We're frequently co-cited with X, Y, Z"
+  - "On topic A, AI prefers Competitor B over us"
+  - "Authority signals: appearing with PubMed papers Z% of time"
+    ↓
+Strategy recommendations to SEO Lead
+```
+
+### Flow D7: AI Agent Visit Tracking
+```
+Triggers:
+  A. Cloudflare webhook (real-time agent detection)
+  B. Custom WP plugin (if implemented)
+  C. Web server log parser (cron)
+    ↓
+Identify AI agent vs human bot vs human user:
+  └─ Match user-agent to seo_ai_platforms.detection_user_agents
+  └─ Behavior pattern analysis
+  └─ IP intelligence (Cloudflare data)
+    ↓
+For confirmed AI agent visits:
+  └─ Insert seo_ai_agent_visits
+  └─ Link to potential triggering query (if traceable)
+  └─ Calculate detection_confidence
+    ↓
+Weekly aggregate → Notion "AI Agent Visits Log"
+    ↓
+Alert: spike in agent traffic from new platform
+```
+
+### Flow D8: Voice Search Query Logger
+```
+Multiple triggers:
+  A. LINE OA Bot webhook (if integrated)
+  B. WhatsApp Bot webhook (if integrated)
+  C. Manual Notion entry (user research)
+  D. Survey form submission
+    ↓
+Parse voice query data:
+  └─ Transcribed text (if voice)
+  └─ Detected language + dialect
+  └─ Intent classification
+  └─ Match to predicted_prompts (find similar)
+    ↓
+Insert seo_voice_search_queries
+    ↓
+If matched_predicted_prompt_id:
+  └─ Update prompt's actual_test_results
+    ↓
+Aggregate monthly → identify gap patterns
+```
+
+---
+
+## 17.8 Flow Implementation Priority
+
+```
+WEEK 1-2 (Foundation):
+✅ A1, A2, A3, A4 (editorial sync)
+
+WEEK 3-4 (Data ingestion):
+✅ B1 (PubMed)
+🟡 B2, B3 (defer)
+
+WEEK 5-6 (Publishing):
+✅ C1, C2 (WP integration)
+🟡 C3 (defer)
+
+WEEK 7-8 (Monitoring):
+✅ D1 (AI Citation Audit basic)
+🟡 D2, D3 (defer)
+
+MONTH 3-4 (LLMO Phase 2):
+✅ D4 (Prompt Prediction Generator)
+✅ D5 (AI Response Deep Analysis)
+✅ F1 (llms.txt auto-update)
+
+MONTH 4-6 (LLMO Phase 3):
+✅ D6 (Co-citation Tracker)
+✅ F3 (Platform Optimization Audit)
+✅ F4 (Cross-platform Citation Health)
+
+MONTH 6-12 (Advanced):
+✅ D7 (AI Agent Visit Tracking)
+✅ D8 (Voice Search Query Logger)
+✅ F2 (Freshness Auditor)
+
+PHASE 2 (first clinic client):
+✅ E1, E2, E2b, E3 (GBP integration)
+🟡 E4 (when budget for paid tool)
+```
+
+---
+
+# PART 18: Notion Database Specifications
+
+## 18.1 Notion DB List
+
+| Notion DB Name | Workspace | Maps to Supabase | Sync direction |
+|---|---|---|---|
+| Brand Registry | Knowledge | brands | Two-way |
+| SEO Clusters | Knowledge | seo_cluster_master | Two-way |
+| Authors & Reviewers | Knowledge | seo_authors_reviewers | Two-way |
+| Citation Library | Knowledge | seo_citations | Two-way |
+| Keywords | Operations | seo_keyword_master | Two-way |
+| Content Pipeline | Operations | seo_website_page_master (status) | Two-way |
+| Schema Governance | Knowledge | seo_schema_changes | Notion → Supabase |
+| AI Citation Health | Operations | (aggregated views) | Read-only |
+| Brand Mention Monitor | Operations | (aggregated views) | Read-only |
+| Link Coverage Report | Operations | (aggregated views) | Read-only |
+| Monthly SEO KPIs | Operations | (aggregated views) | Read-only |
+| GBP Posts | Operations | seo_gbp_posts | Two-way (Phase 2) |
+| Sync Issues | Knowledge | (conflict log) | Auto-populated |
+| **AI Prompt Bank** | Knowledge | seo_predicted_prompts | Two-way |
+| **AI Platform Health** | Operations | seo_ai_platforms + analytics | Read-only + config |
+| **AI Agent Visits Log** | Operations | seo_ai_agent_visits (aggregated) | Read-only |
+
+---
+
+## 18.1b LLMO-specific Notion DBs
+
+### AI Prompt Bank (Knowledge workspace)
+
+```yaml
+Database name: AI Prompt Bank
+Workspace: Knowledge
+Sync: Two-way to seo_predicted_prompts
+
+Properties:
+  - Prompt Text (Title)                       # → prompt_text_local (Thai default)
+  - English Version (Text)                    # → prompt_text
+  - Variations (Text — multiline)             # → prompt_variations JSONB
+  - Intent Type (Select):                     # → intent_type
+      options: [informational, navigational, transactional,
+                comparison, decision, troubleshooting,
+                definitional, how_to]
+  - Modality (Select):                        # → query_modality
+      options: [text, voice, multimodal, agent]
+  - Conversational Turn (Select):             # → conversational_turn
+      options: [initial, follow_up, clarification]
+  - Complexity (Select):                      # → query_complexity
+      options: [simple, moderate, complex, multi_part]
+  - Target Entity (Relation → Entities)       # → target_entity_fp
+  - Target Keyword (Relation → Keywords)      # → target_keyword_id
+  - Target Cluster (Relation → SEO Clusters)  # → target_cluster_id
+  - Expected Answer Summary (Text)
+  - Expected Difficulty (Select): [easy, medium, hard]
+  - Status (Select):                          # → status
+      options: [predicted, validated, monitoring, won, lost, archived]
+  - Priority (Select):                        # → priority
+      options: [critical, high, medium, low]
+  - Coverage Status (Select):                 # → coverage_status
+      options: [unaddressed, partial, covered, optimized]
+  - Citation Rate Avg (Number — auto)         # → citation_rate_avg
+  - Last Tested (Date)                        # → last_tested_at
+  - Test Results (Text — auto JSON)           # → test_results
+  - Languages (Multi-select): [th, en, zh, ja]
+  - Verticals (Multi-select)
+  - Created By (Relation → Authors)
+  - Validated By (Relation → Authors)
+
+Views:
+  - Active Prompts (filter: status not archived)
+  - Per Pillar (group by target_entity)
+  - Coverage Gaps (filter: coverage_status='unaddressed')
+  - Won Prompts (filter: status='won')
+  - Lost Prompts (filter: status='lost' — for refinement)
+  - By Modality (group by query_modality)
+  - High Priority (filter: priority='critical' OR 'high')
+```
+
+### AI Platform Health (Operations workspace)
+
+```yaml
+Database name: AI Platform Health
+Workspace: Operations
+Sync: Two-way (config) + Read-only (analytics)
+
+Type: Database (Gallery view default for visual at-a-glance)
+
+Properties (per platform record):
+  - Platform Name (Title)                     # → platform_name
+  - Display Name (Text)                       # → platform_display_name
+  - Company (Text)                            # → platform_company
+  - Tier (Select):                            # → importance_tier
+      options: [Tier 1 (Critical), Tier 2 (Active),
+                Tier 3 (Regional), Tier 4 (Voice/Agent)]
+  - Status (Select):                          # → status
+      options: [active, beta, planned, deprecated, discontinued]
+  - Tracking Enabled (Checkbox)               # → tracking_enabled
+  - Audit Frequency (Select):
+      options: [daily, weekly, monthly, on_demand]
+  - Capabilities (Multi-select):
+      options: [web_search, realtime_data, memory,
+                voice_input, image_input, browsing_agent,
+                code_execution, api_available]
+  - Citation Rate (Number — read only)        # last 30d aggregate
+  - Trend (Select — auto): [improving, stable, declining]
+  - Top Cited Entities (Relation, multi)      # auto-populated
+  - Issues Logged (Relation → Sync Issues)
+  - Last Audited (Date)
+  - Notes (Text)
+
+Views:
+  - Active Platforms (Tier 1-2)
+  - Health Dashboard (sorted by citation rate)
+  - Issues (filter: trend='declining')
+  - Planned Activations (status='planned')
+```
+
+### AI Agent Visits Log (Operations workspace)
+
+```yaml
+Database name: AI Agent Visits Log
+Workspace: Operations
+Sync: Read-only aggregated from seo_ai_agent_visits
+
+Properties (aggregate per platform per week):
+  - Period (Title — week/month range)
+  - Platform (Relation → AI Platform Health)
+  - Visit Count (Number)
+  - Unique Pages Visited (Number)
+  - Average Session Pages (Number)
+  - Led to Citation Count (Number)
+  - Citation Conversion Rate (Number — calculated)
+  - Trend (Select): [growing, stable, declining]
+  - Notable Patterns (Text)
+
+Views:
+  - Weekly Summary (default)
+  - By Platform (group)
+  - High-Conversion Platforms
+  - Trend Analysis
+```
+
+---
+
+## 18.2 Sample DB Spec: SEO Clusters
+
+```yaml
+Database name: SEO Clusters
+Workspace: Knowledge
+Sync: Two-way to seo_cluster_master
+
+Properties:
+  - Name (Title)                        # → pref_label
+  - Slug (Text)                         # auto-generated
+  - Cluster Type (Select):              # → cluster_type
+      options: [topical, content-format, audience]
+  - Hierarchy Level (Number)            # → hierarchy_level
+  - Broader (Relation → SEO Clusters)   # → broader_id
+  - Narrower (Relation → SEO Clusters)  # → narrower_ids
+  - Vertical Specific (Checkbox)        # → vertical_specific
+  - Applicable Verticals (Multi-select):  # → applicable_verticals
+      options: [*, dental, dermatology, aesthetic,
+                hospital, skincare-media, wellness-media]
+  - Status (Select):                    # → status
+      options: [draft, active, deprecated]
+  - Definition (Text)                   # → definition
+  - Scope Note (Text)                   # → scope_note
+  - Example (Text)                      # → example
+  - SKOS Concept ID (Text)              # → skos_concept_id
+  - Approved By (Relation → Authors)    # → approved_by_fp
+  - Last Synced (Date)                  # auto by n8n
+  - Sync Status (Select):               # auto-managed
+      options: [in-sync, pending, conflict, error]
+
+Views:
+  - Master List (all, by hierarchy_level)
+  - Pending Approval (status=draft)
+  - Tree View (group by broader_id)
+  - Per Vertical
+  - Sync Issues
+```
+
+---
+
+## 18.3 Sample DB Spec: Citation Library
+
+```yaml
+Database name: Citation Library
+Workspace: Knowledge
+Sync: Two-way to seo_citations
+
+Properties:
+  - Title (Title)                       # → title
+  - PMID (Text)                         # → pubmed_id
+                                        # triggers Flow B1 auto-fetch
+  - DOI (Text)
+  - Source Type (Select):               # → source_type
+      options: [pubmed, cochrane, cir_report, sccs_opinion,
+                cosing_db, ifscc, jcs_journal, ...]
+  - Authors (Multi-select or Text)
+  - Journal (Text)
+  - Publication Date (Date)
+  - URL (URL)
+  - Evidence Level (Select):
+      options: [level-1, level-2, level-3, level-4, level-5]
+  - Citation Purpose (Multi-select):
+      options: [efficacy, safety, mechanism, epidemiology, guideline]
+  - Applicable Verticals (Multi-select)
+  - Notes (Text)
+  - Abstract (Text)
+  - Verified By (Relation → Authors)
+  - Used In Pages (Relation → Content Pipeline)
+
+Views:
+  - All Citations
+  - Pending Verification
+  - By Source Type
+  - PubMed Queue (just added with PMID)
+  - Recent (30 days)
+```
+
+---
+
+## 18.4 Sample DB Spec: Content Pipeline
+
+```yaml
+Database name: Content Pipeline
+Workspace: Operations
+Type: Database (Kanban default)
+Sync: Two-way to seo_website_page_master (status)
+
+Properties:
+  - Title (Title)
+  - Status (Select):                    # → workflow_status
+      options:
+        - 💡 Idea
+        - 📝 Draft
+        - 👀 In Review
+        - ✏️ Revisions
+        - ✅ Approved
+        - 🚀 Published
+        - 🔄 Refresh Needed
+  - Page Type (Select):
+      options: [Pillar, Cluster, Comparison, Listicle,
+                Routine, Glossary, Drug Monograph]
+  - Primary Entity (Relation)
+  - Target Keywords (Multi-select)
+  - Topical Cluster (Relation → SEO Clusters)
+  - Author (Relation → Authors)
+  - Reviewer (Relation → Authors)
+  - Citations Used (Relation → Citation Library)
+  - Language (Select): [th, en, zh, ja]
+  - hreflang Group (Text)
+  - Translation Tier (Select): [1, 2, 3]
+  - WP Post ID (Number)                 # auto after publish
+  - WP URL (URL)                        # auto
+  - Word Count (Number)
+  - Citable Sentences Count (Number)
+  - Schema Validated (Checkbox)
+  - Last Reviewed (Date)
+  - Next Refresh Due (Date)
+
+Views:
+  - Kanban by Status (default)
+  - Calendar (publication date)
+  - This Week's Tasks (per author)
+  - Refresh Queue
+  - By Cluster
+  - By Language
+```
+
+---
+
+## 18.5 Notion ↔ Supabase Field Mapping Rules
+
+### Property type mapping
+
+```
+Notion type          → PostgreSQL type
+─────────────────────────────────────
+Title                → TEXT NOT NULL
+Text                 → TEXT
+Number               → NUMERIC or INT
+Select               → TEXT (controlled vocab)
+Multi-select         → TEXT[]
+Date                 → TIMESTAMPTZ
+Checkbox             → BOOLEAN
+URL                  → TEXT
+Email                → TEXT
+Phone                → TEXT
+Person               → UUID FK to authors_reviewers
+Files & media        → TEXT[] (Supabase Storage URLs)
+Relation             → UUID FK or UUID[]
+Rollup               → DERIVED (don't sync)
+Formula              → DERIVED (don't sync)
+Created time         → IGNORE (use Supabase created_at)
+Last edited time     → updated_at
+```
+
+### Naming convention
+
+- **Notion DB names:** Friendly ("SEO Clusters", "Citation Library")
+- **Notion property names:** Title Case ("Pref Label")
+- **Supabase table names:** snake_case prefixed `seo_`
+- **Supabase field names:** snake_case
+- **Mapping documented in n8n flow notes**
+
+### Validation in n8n
+
+Each sync flow:
+- Required fields populated
+- Controlled vocab values valid
+- FK references exist
+- No data type mismatches
+
+If validation fails → don't sync, comment in Notion with error
+
+---
+
+## 18.6 Bootstrap Notion Workspace
+
+### Initial templates to create
+
+1. **Knowledge workspace dashboard** — landing page, links to all DBs
+2. **Operations workspace dashboard** — content team daily view + KPI summary
+3. **Per-DB views configured** as in Section 16.2-16.4
+4. **Welcome doc** explaining sync model
+
+---
+
+---
+
+**Related Documents:**
+- v1.1 (legacy reference) — `คัมภีร์-SUPER-STANDARD-v1.1.md`
+- Master Examples by vertical:
+  - Dental (Peri-implantitis) — `MASTER-EXAMPLE-Peri-implantitis-Brand B.html`
+  - Skincare (Niacinamide) — `MASTER-EXAMPLE-Niacinamide-the brand.html` (TBD)
+- LLMO Guide v1.0 — referenced in Part 13
+- Vertical Profile Library — Part 14 (this document)
+- Schema Change Log — `seo_schema_changes` table
+
+---
+
+## 18.8 Two-Phase Hierarchy Sync Pattern
+
+> **Why this section exists:** Hierarchical data (entities with parents, sitemap pages with parent pages, nested clusters) ต้องอยู่ใน 2 ระบบที่มี ID system ต่างกัน — Supabase ใช้ text-based references (entity_fingerprint, sitemap_node_id), Notion ต้องใช้ native relations (UUID-based) สำหรับ tree UI rendering. Section นี้กำหนด **Two-Phase Sync Pattern** เป็นมาตรฐานสำหรับทุกตารางที่มี parent relationship และต้อง render บน Notion
+
+> 📌 **v3.12 Update:** Two-Phase Sync pairs with **Section 18.9 (Two-Column Identity Pattern)**. Stable `fingerprint` column makes parent references rename-safe, strengthening this pattern significantly. New implementations should use both patterns together.
+
+### 18.8.1 The Problem — Why Two-Phase Is Needed
+
+```yaml
+the_challenge:
+  
+  planning_phase_(markdown):
+    state: ทีมวางแผนใน .md files (GitHub)
+    references: text-based ("entity:tmj-disorder", "5.2.1")
+    notion_id: doesn't exist yet
+    
+    decision_problem:
+      "ตอน planning เรายังไม่มี Notion ID เลย"
+      "ใส่ relation ตอนนี้ไม่ได้ — เพราะ ID ยังไม่ generate"
+  
+  notion_ui_requirements:
+    requirement: tree view (parent ↔ children visible)
+    needs: native relation property (not text reference)
+    why: 
+      - Native relations enable expand/collapse
+      - Rollups (count children, fetch parent name)
+      - Filter by parent/children
+      - Linked database views
+    text_field_limitation:
+      "Text 'entity:tmj-disorder' ไม่ render เป็น tree"
+      "ต้องเป็น native relation ที่ link กับหน้าจริง"
+  
+  the_constraint:
+    "ตอนสร้างหน้า A ที่อ้างถึง B — แต่ B ยังไม่มี notion_id"
+    "ต้องการ resolve forward reference"
+
+solution_pattern:
+  name: "Two-Phase Sync"
+  origin: PostgreSQL deferred constraints + Notion API workflows
+  core_idea: "Load flat first, resolve references after"
+```
+
+### 18.8.2 The Pattern — 2 Phases Visualized
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│  PHASE 1: Flat Load (no relations yet, text refs only)                │
+└─────────────────────────────────────────────────────────────────────┘
+
+Markdown Plan File (in GitHub)
+┌────────────────────────────────────────────────────────────┐
+│ Entity Name | Slug         | Parent (text)                  │
+│ TMJ Disorder | tmj-disorder | —                              │
+│ TMJ Pain     | tmj-pain     | tmj-disorder                   │
+│ Jaw Lock     | jaw-lock     | tmj-disorder                   │
+└────────────────────────────────────────────────────────────┘
+                    ↓ Load to Supabase (flat)
+                    
+Supabase (after Phase 1)
+┌────────────────────────────────────────────────────────────────┐
+│ entity_fingerprint  | parent_entity_fp     | sync_state       │
+│ entity:tmj-disorder | NULL                 | 'flat_loaded'    │
+│ entity:tmj-pain     | entity:tmj-disorder  | 'flat_loaded'    │
+│ entity:jaw-lock     | entity:tmj-disorder  | 'flat_loaded'    │
+└────────────────────────────────────────────────────────────────┘
+                    ↓ n8n flow: Sync to Notion (flat)
+                    ↓ Set Notion property: parent_text = "entity:tmj-disorder"
+                    
+Notion (after Phase 1 sync)
+┌────────────────────────────────────────────────────────────────┐
+│ Notion Page    | parent_text          | parent_relation        │
+│ TMJ Disorder   | —                    | (empty)                │
+│ TMJ Pain       | entity:tmj-disorder  | (empty)                │
+│ Jaw Lock       | entity:tmj-disorder  | (empty)                │
+└────────────────────────────────────────────────────────────────┘
+                    ↓ Notion API responds with notion_id per page
+                    ↓ Sync notion_id back to Supabase
+
+Supabase (after notion_id sync)
+┌────────────────────────────────────────────────────────────────┐
+│ entity_fp           | parent_fp           | notion_id          │
+│ entity:tmj-disorder | NULL                | notion-A           │
+│ entity:tmj-pain     | entity:tmj-disorder | notion-B           │
+│ entity:jaw-lock     | entity:tmj-disorder | notion-C           │
+│ sync_state = 'notion_synced'                                   │
+└────────────────────────────────────────────────────────────────┘
+
+
+┌─────────────────────────────────────────────────────────────────────┐
+│  PHASE 2: Relation Backfill (resolve text → relations)               │
+└─────────────────────────────────────────────────────────────────────┘
+
+Backfill flow (n8n):
+For each row where sync_state = 'notion_synced':
+  1. Read parent_entity_fp (text)
+  2. Lookup parent's notion_id via entity_fingerprint match
+  3. UPDATE Supabase: parent_notion_id = parent's notion_id
+  4. UPDATE Notion: set parent_relation property = parent_notion_id
+  5. UPDATE Supabase: sync_state = 'relations_backfilled'
+
+Supabase (after Phase 2)
+┌──────────────────────────────────────────────────────────────────────┐
+│ entity_fp           | parent_fp           | notion_id | parent_notion_id │
+│ entity:tmj-disorder | NULL                | notion-A  | NULL             │
+│ entity:tmj-pain     | entity:tmj-disorder | notion-B  | notion-A ✓       │
+│ entity:jaw-lock     | entity:tmj-disorder | notion-C  | notion-A ✓       │
+│ sync_state = 'relations_backfilled'                                  │
+└──────────────────────────────────────────────────────────────────────┘
+
+Notion (after Phase 2 — TREE UI WORKS!)
+┌──────────────────────────────────────────────────────────────────────┐
+│ Notion Page    | parent_text          | parent_relation              │
+│ TMJ Disorder   | —                    | (empty)                      │
+│ TMJ Pain       | entity:tmj-disorder  | → TMJ Disorder ✅ (native)   │
+│ Jaw Lock       | entity:tmj-disorder  | → TMJ Disorder ✅ (native)   │
+└──────────────────────────────────────────────────────────────────────┘
+
+Notion UI now renders:
+└── TMJ Disorder
+    ├── TMJ Pain
+    └── Jaw Lock
+```
+
+### 18.8.3 Required Schema Fields (Universal Pattern)
+
+ทุกตารางที่มี hierarchy + ต้อง render บน Notion ต้องมี fields เหล่านี้ (Schema_Overview v1.7+):
+
+```yaml
+required_fields_per_hierarchical_table:
+  
+  text_reference_field:
+    field_name: parent_*_fp / parent_*_id (varies by table)
+    purpose: Phase 1 reference (planning-friendly)
+    examples:
+      - entity_graph: parent_entity_fp (text)
+      - cluster_master: parent_cluster_id (text)
+      - page_master: parent_page_fp (text)
+    
+  notion_id_field:
+    field_name: notion_id
+    purpose: Notion page UUID (filled after Phase 1 sync)
+    type: text (already exists in all tables)
+  
+  parent_notion_id_field:  # NEW in v1.7
+    field_name: parent_notion_id
+    purpose: Phase 2 backfill — Notion ID of parent
+    type: text
+    nullable: true
+    populated_by: backfill flow (n8n)
+    used_by: sync flow → Notion parent_relation property
+  
+  sync_state_field:  # NEW in v1.7
+    field_name: sync_state
+    purpose: Track Two-Phase Sync progress
+    type: text
+    default: 'flat_loaded'
+    valid_values:
+      - 'flat_loaded'         # Phase 1 done — text refs only
+      - 'notion_synced'       # In Notion, has notion_id
+      - 'relations_backfilled' # Phase 2 done — full hierarchy
+      - 'live'                # Ongoing bidirectional sync
+```
+
+### 18.8.4 Tables That Use This Pattern
+
+```yaml
+hierarchical_tables_in_eywa:
+  
+  seo_entity_graph:
+    parent_field: parent_entity_fp
+    notion_relation: parent_relation
+    use_case: Entity hierarchy (condition → symptom, procedure → subtype)
+    
+  seo_topic_cluster_master:
+    parent_field: parent_cluster_id (or broader_id for SKOS)
+    notion_relation: parent_cluster
+    use_case: Nested clusters (broader topic → narrower topic)
+    
+  seo_website_page_master:
+    parent_field: parent_page_fp
+    notion_relation: parent_page
+    use_case: Sitemap hierarchy (Section → Cluster → Detail → Leaf)
+  
+  future_tables:
+    rule: ทุกตารางใหม่ที่มี hierarchy → ใช้ pattern เดียวกัน
+    examples:
+      - seo_branches (if multi-location chains have parent locations)
+      - seo_signature_systems (if methodologies have sub-methodologies)
+```
+
+### 18.8.5 n8n Flow Architecture
+
+```yaml
+required_flows:
+  
+  flow_1_phase_1_load:
+    name: "Phase 1: Markdown → Supabase (Flat Load)"
+    trigger: Manual (operator action) or GitHub webhook
+    inputs:
+      - GitHub repo path: eywa-{brand}/content-plan/*.md
+    steps:
+      1. Read markdown file
+      2. Parse table rows
+      3. UPSERT to Supabase target table
+      4. Set sync_state = 'flat_loaded'
+      5. Validate: no orphan parents (all parents exist in batch or DB)
+    output: Supabase rows ready for sync
+    
+  flow_2_phase_1_sync:
+    name: "Phase 1 Sync: Supabase → Notion (Flat)"
+    trigger: Detect rows where notion_id IS NULL AND sync_state = 'flat_loaded'
+    steps:
+      1. Read Supabase row
+      2. Create Notion page with text properties (parent_text, etc.)
+      3. Receive notion_id from response
+      4. UPDATE Supabase: notion_id = X, sync_state = 'notion_synced'
+    rate_limiting: 
+      - Notion API: 3 req/sec
+      - Batch size: 50 rows per cycle
+    
+  flow_3_phase_2_backfill:
+    name: "Phase 2: Relation Backfill"
+    trigger: Detect rows where sync_state = 'notion_synced'
+    steps:
+      1. Read Supabase row with text parent reference
+      2. Lookup parent's notion_id (via entity_fingerprint match)
+      3. IF parent has notion_id:
+          a. UPDATE Notion: set parent_relation = parent_notion_id
+          b. UPDATE Supabase: parent_notion_id = X, sync_state = 'relations_backfilled'
+      4. ELSE: skip (parent not synced yet, retry next cycle)
+    
+  flow_4_ongoing_bidirectional:
+    name: "Live Sync (Notion ↔ Supabase)"
+    trigger: 
+      - Notion webhook on page change
+      - Supabase trigger on row change
+    steps: 
+      - Detect change source
+      - Apply to other system
+      - Validate brand_scope
+      - Update notion_synced_at + sync_state = 'live'
+```
+
+### 18.8.6 Notion Database Schema Template
+
+ทุก Notion database ที่ render hierarchy ต้องมี properties เหล่านี้:
+
+```yaml
+notion_database_properties_for_hierarchical_data:
+  
+  identifier_properties:
+    title: 
+      type: title (Notion required)
+      content: entity_name / cluster_name / page_name
+    
+    fingerprint:
+      type: text
+      content: entity_fingerprint / cluster_id / page_fingerprint
+      use: Sync key (matches Supabase)
+    
+    supabase_uuid:
+      type: text
+      content: Supabase row UUID
+      visibility: hidden (internal)
+  
+  hierarchy_properties:
+    parent_text:
+      type: text
+      content: Phase 1 text reference
+      examples: "entity:tmj-disorder", "5.2.1"
+      visibility: shown (helps debugging)
+    
+    parent_relation:
+      type: relation (to same database)
+      content: Phase 2 backfilled native relation
+      visibility: shown (this is the tree-rendering field)
+    
+    children:
+      type: relation (dual property of parent_relation)
+      content: Auto-populated by Notion
+      visibility: shown
+    
+  metadata_properties:
+    sync_state:
+      type: select
+      options: [flat_loaded, notion_synced, relations_backfilled, live]
+      visibility: shown (operator visibility)
+    
+    last_synced_at:
+      type: date
+      visibility: shown
+  
+  rollup_properties_(useful):
+    children_count:
+      type: rollup of children relation
+      function: count
+    
+    parent_path:
+      type: formula (or rollup)
+      content: Breadcrumb generation
+    
+    cluster_name:
+      type: rollup of cluster relation (if applicable)
+```
+
+### 18.8.7 Quality Gates & Validation
+
+```yaml
+phase_1_validation:
+  
+  before_sync_to_notion:
+    □ All rows have entity_fingerprint / cluster_id / page_fingerprint
+    □ All parent_*_fp references exist in same batch OR existing DB
+    □ No circular references (X.parent = Y, Y.parent = X)
+    □ brand_scope set correctly
+    □ sync_state = 'flat_loaded' for all new rows
+
+phase_2_validation:
+  
+  before_relation_backfill:
+    □ Row has notion_id (Phase 1 sync complete)
+    □ Parent row has notion_id (parent must be synced first)
+    □ Parent's brand_scope intersects current brand_scope
+    □ No orphan: parent reference resolves to existing row
+
+ongoing_sync_validation:
+  
+  on_change_detection:
+    □ Source system identified (Notion vs Supabase)
+    □ brand_scope unchanged or properly migrated
+    □ parent_relation in Notion matches parent_notion_id in Supabase
+    □ sync_state = 'live'
+```
+
+### 18.8.8 Failure Recovery
+
+```yaml
+common_failures:
+  
+  failure_1_partial_phase_1_sync:
+    scenario: Sync fails after 50 of 100 rows
+    state: 50 rows sync_state='notion_synced', 50 rows='flat_loaded'
+    recovery:
+      - Resume flow from sync_state='flat_loaded' rows
+      - No data loss (idempotent UPSERT)
+  
+  failure_2_orphan_parent:
+    scenario: Phase 2 row references parent that hasn't synced yet
+    state: Backfill skips this row
+    recovery:
+      - Wait for parent sync
+      - Retry on next backfill cycle
+      - Alert if persists > N retries (likely data error)
+  
+  failure_3_parent_deleted_in_notion:
+    scenario: Operator deletes parent page in Notion UI
+    state: Children's parent_relation breaks
+    recovery:
+      - Detect via reconciliation job (15-min cycle)
+      - Alert operator
+      - Options: restore parent OR re-parent children OR delete children
+      - NEVER auto-delete cascading
+  
+  failure_4_circular_reference:
+    scenario: A.parent = B, B.parent = A (data error)
+    detection: Validation in Phase 1 BEFORE sync
+    recovery:
+      - Block sync
+      - Alert operator with cycle path
+      - Operator must fix in source markdown
+```
+
+### 18.8.9 When NOT to Use This Pattern
+
+```yaml
+exceptions:
+  
+  flat_data_no_hierarchy:
+    examples: seo_citations, seo_keyword_master, seo_authors_reviewers
+    reason: No parent → no need for Two-Phase
+    pattern: Simple bidirectional sync
+  
+  many_to_many_relationships:
+    examples: seo_page_citations, seo_entity_relationships (typed edges)
+    reason: Junction tables, not hierarchical
+    pattern: Use multi-relation properties, sync after both sides exist
+  
+  ephemeral_data:
+    examples: temporary drafts, scratch lists
+    reason: Not worth the overhead
+    pattern: Use Notion only, don't sync
+```
+
+### 18.8.10 Cross-References
+
+| Topic | See Also |
+|-------|----------|
+| Schema fields (parent_notion_id, sync_state) | Schema_Overview v1.7 |
+| Federation pattern (multi-workspace) | Section 18.7 (in Appendix B) |
+| Notion ↔ Supabase field mapping | Section 18.5 |
+| n8n flow library | Part 17 |
+| Bootstrap Notion workspace | Section 18.6 |
+| Hierarchical entity types (15 types) | Part 2.5 |
+| Sitemap hierarchy (Numbered nodes) | Part 4.4 |
+| Cluster lifecycle | Part 7.6 |
+
+
+---
+
+## 18.9 Two-Column Identity Pattern
+
+> **Why this section exists:** Existing fingerprint patterns (e.g., `entity:sleep-apnea`, `page:vth-biodent:tmj-treatment`) work well for **immutable** fields but break for **mutable** fields. Real production scenarios demonstrate this:
+> - ICD-10 codes corrected after AI initial assignment
+> - Entity names refined after expert research
+> - Page slugs restructured during sitemap reorganization
+> 
+> When such a field changes, all downstream `parent_fp` and `related_fps[]` references break, n8n sync loses Notion ↔ Supabase matching, and cross-table joins fail silently.
+>
+> Section 18.9 establishes the **Two-Column Identity Pattern** — a stable machine ID + mutable human label — as the canonical solution. This pattern strengthens Two-Phase Hierarchy Sync (Section 18.8) and is mandatory for all new tables in Schema v1.8+.
+
+### 18.9.1 The Two Columns
+
+Every table (except `seo_x_ads_keywords_contextual_master` — see exception in 18.9.6) MUST have these two identity columns:
+
+```sql
+fingerprint              text UNIQUE NOT NULL  -- IMMUTABLE machine ID
+fingerprint_display_name text NOT NULL          -- MUTABLE human label
+```
+
+**Column 1: `fingerprint` (Machine Identity)**
+
+| Property | Specification |
+|----------|---------------|
+| **Mutability** | IMMUTABLE (enforced by trigger) |
+| **Format** | `{tablecode}_{ULID16}` |
+| **Generation** | Auto-generated on INSERT via `generate_ulid()` |
+| **Length** | ~19 characters (4-char prefix + underscore + 16-char ULID) |
+| **Sortability** | Lexicographically sortable by creation time (ULID property) |
+| **Entropy** | 80 bits (collision-safe forever) |
+| **Used For** | Foreign keys, parent references, cross-table joins, n8n sync matching |
+
+**Column 2: `fingerprint_display_name` (Human Label)**
+
+| Property | Specification |
+|----------|---------------|
+| **Mutability** | MUTABLE (auto-refreshed by trigger when source data changes) |
+| **Format** | `{fp_last_6}::{type_or_category}::{slug_or_name}::{key_data}` |
+| **First Segment** | Last 6 characters of `fingerprint` (cross-check) |
+| **Separator** | `::` (double colon) |
+| **Generation** | Auto-derived from data fields by per-table function |
+| **Used For** | Debug, admin UI, eyeball validation, Notion display |
+
+### 18.9.2 ULID Specification
+
+EYWA uses **ULID (Universally Unique Lexicographically Sortable Identifier)** as the basis for all fingerprints.
+
+**Why ULID over UUID:**
+
+| Factor | UUID v4 | ULID |
+|--------|---------|------|
+| **Length** | 36 chars (with dashes) | 26 chars (Crockford Base32) |
+| **Sortability** | Random (poor INSERT performance) | Time-encoded (excellent INSERT performance) |
+| **Readability** | Hex with dashes | Base32 (no I/L/O/U for clarity) |
+| **Time Information** | None | First 48 bits = millisecond timestamp |
+| **Generation** | UUID extension | Pure SQL function |
+
+**EYWA uses 16-char prefix of ULID** (not full 26 chars) to balance compactness with collision resistance:
+- 48-bit timestamp prefix preserved (sortability maintained)
+- 32 random bits in the 16-char window
+- Combined with table prefix → effectively unique per table
+
+**Example fingerprints:**
+
+```
+ent_01HZP5K2XQR7N3MF   (entity_graph)
+page_01HZP5K3YR8M4PFQ  (website_page_master)
+clus_01HZP5K4ZS9L5QGR  (topic_cluster_master)
+brnd_01HZP5K5AT0M6RHS  (brands)
+auth_01HZP5K6BU1N7SHT  (authors)
+doc_01HZP5K7CV2O8TIU   (brand_doctors)
+brch_01HZP5K8DW3P9UJV  (brand_branches)
+cite_01HZP5K9EX4Q0VKW  (citations)
+tg_01HZP5KAFY5R1WLX    (translation_group — namespace, not a table)
+```
+
+### 18.9.3 Display Name Composition
+
+Each table has its own display name formula that captures the most identifying business attributes.
+
+**Universal pattern:**
+```
+{fp_last_6}::{primary_type}::{primary_identifier}::{secondary_identifier}
+```
+
+**Per-table formulas:**
+
+```yaml
+seo_entity_graph:
+  formula: "{fp[-6:]}::{entity_type}::{entity_slug}::{icd_10_code}"
+  example: "n3mf::condition::sleep-apnea::g47.3"
+  refresh_triggers: [entity_type, entity_slug, icd_10_code]
+
+seo_website_page_master:
+  formula: "{fp[-6:]}::{page_type}::{slug}::{page_language}::{brand_slug}"
+  example: "mfqr::pillar::airway-optimization::th::vth-biodent"
+  refresh_triggers: [page_type, slug, page_language, brand_slug]
+
+seo_topic_cluster_master:
+  formula: "{fp[-6:]}::{clinical_axis}::{cluster_slug}"
+  example: "qgr5::airway::sleep-disordered-breathing"
+  refresh_triggers: [clinical_axis, cluster_slug]
+
+brands:
+  formula: "{fp[-6:]}::{brand_slug}::{brand_name}"
+  example: "rhs6::vth-biodent::vth biodent"
+  refresh_triggers: [brand_slug, brand_name]
+
+seo_authors:
+  formula: "{fp[-6:]}::{author_slug}::{full_name}"
+  example: "sht7::dr-noppadol::dr. noppadol rangsiyakul"
+  refresh_triggers: [author_slug, full_name]
+
+seo_brand_doctors:
+  formula: "{fp[-6:]}::{brand_slug}::{doctor_slug}"
+  example: "tiu8::vth-biodent::dr-noppadol"
+  refresh_triggers: [brand_slug, doctor_slug]
+
+seo_brand_branches:
+  formula: "{fp[-6:]}::{brand_slug}::{branch_slug}"
+  example: "ujv9::vth-biodent::sukhumvit-flagship"
+  refresh_triggers: [brand_slug, branch_slug]
+
+seo_citations:
+  formula: "{fp[-6:]}::{citation_type}::{citation_id}"
+  example: "vkw0::pmid::12345678"
+  refresh_triggers: [citation_type, citation_id]
+```
+
+### 18.9.4 The Cross-Check Pattern
+
+The first segment of `fingerprint_display_name` is the **last 6 characters of `fingerprint`**. This creates a deliberate redundancy that enables instant data integrity validation.
+
+**Validation query:**
+
+```sql
+-- Detect display names that don't match their fingerprint
+SELECT fingerprint, fingerprint_display_name
+FROM seo_entity_graph
+WHERE NOT fingerprint_display_name LIKE 
+  lower(substring(fingerprint from length(fingerprint) - 5)) || '::%';
+
+-- ↑ Should return 0 rows. If not:
+--   - Trigger refresh failed
+--   - Manual data manipulation occurred
+--   - Bug in display generator function
+```
+
+**Real-world debug scenarios this catches:**
+
+**Scenario A: Workflow puts data in wrong row**
+
+```
+Symptom:
+  fingerprint: kw_K7M3X9PQ
+  fingerprint_display_name: vitalsleep::th::th::ฟันคุด
+  But row data shows: keyword = "tmj รักษา"
+
+Cross-check fails:
+  Last 6 of fp = "k7m3x9pq" (lowercase)
+  Display starts with: "vitalsleep" 
+  → Mismatch detected immediately
+```
+
+**Scenario B: Orphaned parent reference after rename**
+
+```
+Symptom:
+  Page A (about TMJ) has parent_fp = "ent_01HZP5K2A"
+  
+JOIN to entity:
+  ent_01HZP5K2A.fingerprint_display_name = "k2xa::condition::sleep-apnea::g47.3"
+  
+But page is about TMJ, not sleep apnea
+  → Wrong parent caught visually
+```
+
+**Scenario C: Trigger failure detection**
+
+```
+Symptom:
+  Entity renamed from "sleep-apnea" to "obstructive-sleep-apnea"
+  fingerprint_display_name still shows: "k2xa::condition::sleep-apnea::g47.3"
+  
+Cross-check still passes (fp prefix matches), but display is stale
+  → Visible during admin review → trigger failure caught
+```
+
+### 18.9.5 Trigger Pattern (3 Triggers Per Table)
+
+Each table needs **three triggers** to enforce the Two-Column Identity Pattern:
+
+**Trigger 1: BEFORE INSERT — Auto-generate fingerprint**
+
+```sql
+CREATE OR REPLACE FUNCTION trg_set_fingerprint_entity()
+RETURNS TRIGGER AS $$
+BEGIN
+  -- Auto-generate fingerprint if not provided
+  IF NEW.fingerprint IS NULL THEN
+    NEW.fingerprint := generate_fingerprint_v2('ent');
+  END IF;
+  
+  -- Always derive display name from current data
+  NEW.fingerprint_display_name := generate_entity_display_name(
+    NEW.fingerprint,
+    NEW.entity_type,
+    NEW.entity_slug,
+    NEW.icd_10_code
+  );
+  
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER set_fp_before_insert_ent
+BEFORE INSERT ON seo_entity_graph
+FOR EACH ROW EXECUTE FUNCTION trg_set_fingerprint_entity();
+```
+
+**Trigger 2: BEFORE UPDATE — Prevent fingerprint mutation**
+
+```sql
+CREATE OR REPLACE FUNCTION trg_prevent_fingerprint_change()
+RETURNS TRIGGER AS $$
+BEGIN
+  IF OLD.fingerprint IS DISTINCT FROM NEW.fingerprint THEN
+    RAISE EXCEPTION 'Fingerprint is immutable: % cannot become %',
+      OLD.fingerprint, NEW.fingerprint;
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER prevent_fp_update_ent
+BEFORE UPDATE ON seo_entity_graph
+FOR EACH ROW EXECUTE FUNCTION trg_prevent_fingerprint_change();
+```
+
+**Trigger 3: BEFORE UPDATE OF source columns — Refresh display name**
+
+```sql
+CREATE OR REPLACE FUNCTION trg_refresh_display_name_entity()
+RETURNS TRIGGER AS $$
+BEGIN
+  NEW.fingerprint_display_name := generate_entity_display_name(
+    NEW.fingerprint,
+    NEW.entity_type,
+    NEW.entity_slug,
+    NEW.icd_10_code
+  );
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER refresh_display_name_ent
+BEFORE UPDATE OF entity_type, entity_slug, icd_10_code
+ON seo_entity_graph
+FOR EACH ROW EXECUTE FUNCTION trg_refresh_display_name_entity();
+```
+
+### 18.9.6 Exception: Keyword Table
+
+**`seo_x_ads_keywords_contextual_master`** is the only table that does NOT follow the Two-Column Identity Pattern.
+
+**Existing format kept:**
+```
+fingerprint = "{brand_slug}::{market}::{language}::{keyword}"
+```
+
+**Examples:**
+- `vth-biodent::th::th::tmj รักษา`
+- `vitalsleep-and-wellness::th::th::sleep apnea คือ`
+
+**Why this exception:**
+
+1. **Keyword text is immutable** — search terms don't change after entry (unlike entity names or page slugs)
+2. **Production scale** — 12,526 rows with 6 active n8n workflows depending on this format
+3. **Self-documenting** — keyword visible in fingerprint enables debug without display column
+4. **Composite uniqueness** — `(brand, market, language, keyword)` creates natural business key
+5. **Migration risk** — changing this would require coordinated n8n workflow updates
+
+**Note:** The keyword table also does NOT have `fingerprint_display_name` column. The fingerprint itself serves both purposes (machine ID + human label).
+
+### 18.9.7 Migration from Existing Patterns
+
+For tables migrating from old slug-based fingerprints to the new pattern:
+
+**Step 1: Add columns (nullable initially)**
+
+```sql
+ALTER TABLE seo_entity_graph
+  ADD COLUMN IF NOT EXISTS fingerprint text,
+  ADD COLUMN IF NOT EXISTS fingerprint_display_name text;
+```
+
+**Step 2: Backfill existing rows**
+
+```sql
+UPDATE seo_entity_graph
+SET fingerprint = generate_fingerprint_v2('ent')
+WHERE fingerprint IS NULL;
+
+UPDATE seo_entity_graph
+SET fingerprint_display_name = generate_entity_display_name(
+  fingerprint,
+  entity_type,
+  entity_slug,
+  icd_10_code
+)
+WHERE fingerprint_display_name IS NULL;
+```
+
+**Step 3: Add constraints**
+
+```sql
+ALTER TABLE seo_entity_graph
+  ALTER COLUMN fingerprint SET NOT NULL,
+  ALTER COLUMN fingerprint_display_name SET NOT NULL,
+  ADD CONSTRAINT seo_entity_graph_fingerprint_unique UNIQUE (fingerprint);
+```
+
+**Step 4: Add triggers**
+
+```sql
+CREATE TRIGGER set_fp_before_insert_ent ...
+CREATE TRIGGER prevent_fp_update_ent ...
+CREATE TRIGGER refresh_display_name_ent ...
+```
+
+**Step 5: Update relations (replace old fingerprint references)**
+
+```sql
+-- If old column was 'entity_fingerprint' and new is 'fingerprint':
+-- Keep both during transition for n8n compatibility
+-- Migrate parent_fp / related_fps[] references via mapping table
+```
+
+**Step 6: Update n8n workflows**
+
+```yaml
+old_workflow:
+  - INSERT INTO seo_entity_graph(entity_fingerprint, entity_name, ...)
+  - VALUES ('entity:sleep-apnea', 'Sleep Apnea', ...)
+
+new_workflow:
+  - INSERT INTO seo_entity_graph(entity_name, entity_type, entity_slug, ...)
+  - VALUES ('Sleep Apnea', 'condition', 'sleep-apnea', ...)
+  -- fingerprint + display_name auto-generated by trigger
+```
+
+### 18.9.8 Helper Function Catalog
+
+Required PostgreSQL functions (all pure SQL, no extensions):
+
+| Function | Purpose | Specification |
+|----------|---------|---------------|
+| `generate_ulid()` | ULID 16-char generator | Returns text, VOLATILE |
+| `generate_fingerprint_v2(p_tablecode text)` | Universal fingerprint | Returns `{tablecode}_{ulid}`, VOLATILE |
+| `generate_entity_display_name(...)` | Entity display formula | Returns text, IMMUTABLE |
+| `generate_page_display_name(...)` | Page display formula | Returns text, IMMUTABLE |
+| `generate_brand_display_name(...)` | Brand display formula | Returns text, IMMUTABLE |
+| `generate_cluster_display_name(...)` | Cluster display formula | Returns text, IMMUTABLE |
+| `generate_author_display_name(...)` | Author display formula | Returns text, IMMUTABLE |
+| `generate_doctor_display_name(...)` | Doctor display formula | Returns text, IMMUTABLE |
+| `generate_branch_display_name(...)` | Branch display formula | Returns text, IMMUTABLE |
+| `generate_citation_display_name(...)` | Citation display formula | Returns text, IMMUTABLE |
+| `trg_set_fingerprint_*()` | INSERT trigger | Per-table BEFORE INSERT |
+| `trg_prevent_fingerprint_change()` | UPDATE guard | Universal BEFORE UPDATE |
+| `trg_refresh_display_name_*()` | Display refresher | Per-table BEFORE UPDATE OF |
+
+Full implementation in **Schema_Overview v1.8 Appendix F**.
+
+### 18.9.9 Cross-References
+
+| Topic | Where |
+|-------|-------|
+| Two-Phase Hierarchy Sync | Section 18.8 |
+| Federation pattern | Part 10.7 |
+| Multilingual strategy | Part 28 |
+| Helper functions full spec | Schema_Overview v1.8 Appendix F |
+| Per-table formula details | Schema_Overview v1.8 Appendix B |
+| Decision rationale | DECISION_RECORDS.md DR-008 |
+| Phase 1 migration plan | EYWA_HANDOVER.md §6 |
+
+### 18.9.10 Operational Cadence
+
+```yaml
+when_to_use_fingerprint:
+  - All FK relationships (parent_fp, related_fps[])
+  - n8n sync matching (Notion ↔ Supabase)
+  - Cross-table joins
+  - URL paths (when stable identity needed)
+
+when_to_use_display_name:
+  - Admin UI rendering
+  - Notion property display (read-only formula)
+  - Debug queries
+  - Audit logs (human-readable)
+  - Export reports
+
+when_to_use_neither:
+  - User-facing content (use entity_name, page_name, etc. directly)
+  - SEO meta tags (use seo_title, meta_description)
+  - Schema.org markup (use canonical_names jsonb)
+```
+
+---
+
+# PART 19: Data Quality Framework
+
+> **Why this Part exists:** ระบบที่มี structure ดีไม่ได้แปลว่ามี data ดี. Part 19 เป็น **operational framework** สำหรับวัด+รักษา quality ของข้อมูลใน 21 tables ของเรา. ไม่มี Part นี้ = ทำ schema สวยแต่ data เน่า → optimize ไม่ได้
+>
+> **Standard:** ตาม DAMA-DMBOK + ISO/IEC 25012 (Data Quality Model) — universal
+
+---
+
+## 19.1 Why Data Quality Matters (Mission Statement)
+
+```
+Garbage In → Garbage Out
+
+ระบบ AI/LLMO + SEO automation ของเราพึ่งพาคุณภาพ data:
+  ├─ AI Citation rate ขึ้นกับ entity quality
+  ├─ Topical Authority ขึ้นกับ cluster completeness
+  ├─ Internal linking quality ขึ้นกับ page metadata
+  ├─ Schema markup output ขึ้นกับ field completeness
+  └─ Backfill 1,000-1,500 หน้า (typical mid-size)เดิม + scale หลายแบรนด์ → ต้องมี quality gate
+
+หาก data quality < 70% → ระบบ degrade silent (ไม่มี error แต่ผลลัพธ์แย่)
+```
+
+---
+
+## 19.2 Five Universal Quality Dimensions (DAMA Standard)
+
+> **Reference:** DAMA-DMBOK 2nd Edition (2017) + ISO/IEC 25012:2008
+
+### Dimension 1: **Completeness** — % ของข้อมูลที่ควรมีจริงๆ
+
+```yaml
+definition: "How thoroughly are required fields populated?"
+
+formula:
+  completeness_pct = (filled_required_fields / total_required_fields) × 100
+
+per_record_score:
+  ├─ Each table has REQUIRED fields list
+  ├─ NULL or empty string = missing
+  └─ score = filled / required
+
+per_table_score:
+  ├─ avg of per_record scores
+  └─ target: ≥ 90% for Tier 1 tables, ≥ 70% for Tier 2
+
+universal_examples:
+  - seo_website_page_master: layer, node_tier, funnel_stage, schema_org_type ต้อง NOT NULL
+  - brands: vertical_family, healthcare_format ต้อง NOT NULL
+  - seo_entity_graph: entity_type, schema_org_type ต้อง NOT NULL
+```
+
+### Dimension 2: **Consistency** — Cross-table integrity
+
+```yaml
+definition: "Do related records align without conflict?"
+
+types:
+  referential_integrity:
+    ├─ All FK references valid (no orphan FK)
+    ├─ Junction table records have valid both-side records
+    └─ check: Type B/C pages → branch_id exists in seo_branches
+  
+  business_rule_consistency:
+    ├─ Type A page → branch_id IS NULL ✓
+    ├─ Type C page → must have programmatic_template_id
+    ├─ Layer 4 page → schema_org_type IN MedicalCondition/Symptom
+    └─ check via CHECK constraint + validation triggers
+  
+  cross_record_consistency:
+    ├─ brand has 1 healthcare_format → all pages should align
+    └─ cluster has pillar tier=B → at least 1 page in cluster has tier=B
+
+target: > 95% (consistency violations are critical)
+```
+
+### Dimension 3: **Accuracy** — Data matches reality
+
+```yaml
+definition: "Does the data correctly represent the real world?"
+
+challenges:
+  ├─ AW (Authority Weight) computed in Notion vs Supabase mirror — ตรงกันไหม?
+  ├─ keyword search_volume vs latest GSC data — sync ไหม?
+  ├─ branch hours in DB vs real branch hours — current ไหม?
+  └─ doctor credentials in DB vs TMC/license — verified ไหม?
+
+verification_methods:
+  ├─ Spot-check sampling (random 5% manual review)
+  ├─ Source-of-truth comparison (Notion vs Supabase)
+  ├─ External validation (GSC, TMC, Wikipedia)
+  └─ User feedback loop (page report buttons)
+
+target: 
+  ├─ Tier 1 critical fields: > 95%
+  ├─ Tier 1 non-critical: > 80%
+  └─ Tier 2/3: > 70%
+```
+
+### Dimension 4: **Timeliness** — Data freshness
+
+```yaml
+definition: "Is data updated frequently enough to remain relevant?"
+
+age_thresholds_by_field_type:
+  realtime_required:        # always current
+    - stock_data, live_rankings
+    - threshold: < 1 hour stale
+  
+  daily_refresh:
+    - traffic_30d, kw_search_volume_latest
+    - threshold: < 24 hours stale
+  
+  weekly_refresh:
+    - keyword rankings, AI citation data
+    - threshold: < 7 days stale
+  
+  monthly_refresh:
+    - market snapshot, cluster_authority_score
+    - threshold: < 30 days stale
+  
+  quarterly_refresh:
+    - content review (medical YMYL)
+    - threshold: < 90 days stale
+  
+  annual_refresh:
+    - entity definitions, brand profile
+    - threshold: < 365 days stale
+
+freshness_score:
+  ├─ % of records updated within their threshold
+  └─ target: > 80% per table
+```
+
+### Dimension 5: **Uniqueness** — No unintended duplicates
+
+```yaml
+definition: "Each real-world entity is represented once"
+
+deduplication_rules:
+  url_uniqueness:
+    ├─ full_url (in seo_website_page_master) must be unique per brand
+    └─ check: SELECT full_url, COUNT(*) GROUP BY full_url HAVING COUNT > 1
+
+  entity_uniqueness:
+    ├─ entity_fingerprint must be globally unique
+    ├─ entity_name within same vertical should be unique (case-insensitive)
+    └─ aliases should not overlap across entities
+  
+  branch_uniqueness:
+    ├─ (brand_id, branch_slug) unique
+    └─ geo coordinates: 2+ branches at exact same lat/lng = suspect
+
+  doctor_uniqueness:
+    ├─ author_fingerprint globally unique
+    ├─ same person across brands = same author_id (cross-brand)
+    └─ License number cross-check (TMC)
+
+duplicate_detection_methods:
+  ├─ Exact match (SELECT...COUNT)
+  ├─ Fuzzy match (Levenshtein distance, normalized)
+  └─ Semantic match (embedding similarity > 0.95)
+
+target: < 1% duplicate rate per table
+```
+
+---
+
+## 19.3 Per-Table Quality Specifications
+
+### `seo_website_page_master` (Most Critical — 1,000-1,500 rows (typical mid-size))
+
+```yaml
+required_fields_for_completeness:
+  tier_1_critical:                        # MUST have
+    - page_fingerprint (PK)
+    - brand_id (FK)
+    - full_url
+    - layer (1-7)
+    - node_tier (A/B/C/D)
+    - funnel_stage
+    - page_branch_relationship (A/B/C/D)
+    - schema_org_type
+    - status (active/draft/archived)
+  
+  tier_1_high_priority:                   # SHOULD have
+    - cluster_id
+    - sitemap_node_id
+    - title (SEO)
+    - meta_description
+    - confidence_score
+  
+  tier_2_optional:                        # NICE to have
+    - schema_markup_type[]
+    - content_format[]
+    - content_summary
+
+consistency_rules:
+  rule_1_branch_relationship:
+    IF page_branch_relationship = 'brand_wide':
+      branch_id IS NULL
+      branch_tags IS NULL
+    IF page_branch_relationship = 'branch_landing':
+      branch_id IS NOT NULL
+      branch_tags IS NULL
+    IF page_branch_relationship = 'local_programmatic':
+      branch_id IS NOT NULL
+      programmatic_template_id IS NOT NULL
+    IF page_branch_relationship = 'brand_wide_tagged':
+      branch_id IS NULL
+      branch_tags IS NOT NULL AND array_length > 0
+
+  rule_2_schema_layer_match:
+    IF layer = 4: schema_org_type IN ('MedicalCondition', 'Symptom')
+    IF layer = 5: schema_org_type IN ('Article', 'MedicalScholarlyArticle')
+    IF layer = 6: schema_org_type IN ('MedicalTherapy', 'TreatmentPlan', 'HowTo')
+    [...] (per Layer-Schema Mapping)
+  
+  rule_3_depth_tier_match:
+    IF node_tier = 'A': crawl_depth ≤ 3
+    IF node_tier = 'B': crawl_depth ≤ 4
+    [...] (per Hybrid Depth)
+
+freshness_thresholds:
+  layer_4_concern_pillars: 90 days (medical YMYL — quarterly review)
+  layer_5_knowledge:       180 days (semi-annual review)
+  layer_2_money:           90 days (pricing/services change)
+  layer_7_evidence:        30 days (cases freshness signal)
+
+uniqueness_checks:
+  - full_url UNIQUE per brand_id
+  - page_fingerprint GLOBALLY UNIQUE
+  - title near-duplicate (Levenshtein < 5) → flag REVIEW
+
+quality_gate_for_publish:
+  ├─ structurally_complete = true
+  ├─ schema_type_validated = true
+  ├─ confidence_score ≥ 0.7
+  └─ at least 1 inbound link planned
+
+failure_threshold: < 90% completeness → block publish workflow
+```
+
+### `brands` (15 rows — small but critical)
+
+```yaml
+required_fields:
+  tier_1: [brand_name, vertical_family, schema_org_type, status]
+  tier_1_for_healthcare: [healthcare_format, medical_specialty[]]
+  tier_1_for_local_seo: [primary_branch_id (computed)]
+
+consistency_rules:
+  IF vertical_family = 'healthcare':
+    healthcare_format IS NOT NULL
+    medical_specialty IS NOT NULL AND array_length ≥ 1
+  IF vertical_family = 'media':
+    healthcare_format IS NULL
+    schema_org_type IN ('NewsMediaOrganization', 'Organization')
+
+target: 100% completeness (small table — manual review feasible)
+```
+
+### `seo_entity_graph` (400-500 rows (typical mid-size))
+
+```yaml
+required_fields:
+  - entity_fingerprint (PK)
+  - entity_name
+  - entity_type[]
+  - schema_org_type
+  - applicable_verticals[]
+
+consistency_rules:
+  IF entity_type contains 'condition':
+    schema_org_type = 'MedicalCondition'
+    icd_10_code OR icd_11_code IS NOT NULL  # at least one
+  IF entity_type contains 'procedure':
+    schema_org_type IN ('MedicalProcedure', 'MedicalTherapy')
+
+freshness:
+  entity_authority_score: 30 days
+  related_entities_fps: 90 days
+
+uniqueness:
+  - entity_fingerprint UNIQUE
+  - (entity_name, primary_vertical) near-duplicate detection
+```
+
+### `seo_x_ads_keywords_contextual_master` (10,000-15,000 rows (typical))
+
+```yaml
+required_fields:
+  - keyword_fingerprint (PK)
+  - keyword
+  - search_volume_latest
+  - keyword_difficulty_score
+  - keyword_geographic_intent
+
+freshness:
+  search_volume_latest: 30 days (refresh from DataForSEO)
+  keyword_difficulty_score: 30 days
+
+consistency:
+  IF keyword_geographic_intent = 'local':
+    location_modifier IS NOT NULL OR target_branch_id IS NOT NULL
+```
+
+### Other tables (summary)
+
+```yaml
+seo_branches:
+  required: [branch_fingerprint, brand_id, branch_name, address, geo_lat, geo_lng]
+  freshness: business_hours weekly, gbp_place_id monthly
+
+seo_authors_reviewers:
+  required: [author_fingerprint, author_name, schema_org_type, medical_specialty[]]
+  consistency: IF schema_org_type = 'Physician' → credentials NOT NULL
+  freshness: bio annual, photo_url annual
+
+seo_doctor_assignments:
+  required: [author_id, brand_id, role, assignment_status]
+  consistency: assignment_status in ('active','inactive','leave')
+  uniqueness: (author_id, brand_id, branch_id)
+
+seo_citations:
+  required: [citation_id, citation_type, title]
+  consistency: IF citation_type starts with 'external' → url IS NOT NULL
+  freshness: external citations expire after 5 years (medical sources)
+
+seo_topic_cluster_master:
+  required: [cluster_id, cluster_name, lifecycle_state]
+  consistency: IF parent_cluster_id NOT NULL → cluster_depth = parent + 1
+```
+
+---
+
+## 19.4 Quality Scoring Algorithm
+
+### Per-Record Quality Score (0-100)
+
+```python
+# Pseudocode for quality scoring
+def calculate_record_quality(record, table_spec):
+    completeness = filled_required_fields / total_required_fields
+    
+    consistency_score = 1.0
+    for rule in table_spec.consistency_rules:
+        if not rule.passes(record):
+            consistency_score -= rule.weight
+    
+    accuracy_score = (
+        verified_fields / total_verifiable_fields  # if we have verification
+        OR 1.0  # default when no verification available
+    )
+    
+    age_days = (now - record.last_updated).days
+    timeliness_score = max(0, 1 - (age_days / table_spec.freshness_threshold))
+    
+    uniqueness_score = 0.0 if has_duplicate else 1.0
+    
+    # Weighted average
+    overall = (
+        completeness  * 0.30 +
+        consistency_score * 0.25 +
+        accuracy_score    * 0.20 +
+        timeliness_score  * 0.15 +
+        uniqueness_score  * 0.10
+    ) * 100
+    
+    return overall
+```
+
+### Per-Table Aggregate Score
+
+```yaml
+table_quality_score:
+  formula: avg(record_scores)
+  
+  bands:
+    excellent: ≥ 90
+    healthy:   75-89
+    needs_work: 60-74
+    critical:  < 60
+
+  per_dimension_breakdown:
+    completeness_pct, consistency_pct, accuracy_pct, timeliness_pct, uniqueness_pct
+```
+
+### Database Schema for Quality Tracking
+
+```sql
+CREATE TABLE seo_data_quality_metrics (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  
+  measured_at timestamptz NOT NULL DEFAULT now(),
+  table_name text NOT NULL,                    -- e.g., 'seo_website_page_master'
+  brand_id uuid REFERENCES brands(id),         -- NULL = all brands
+  
+  -- Per-dimension scores
+  completeness_pct numeric(5,2),
+  consistency_pct numeric(5,2),
+  accuracy_pct numeric(5,2),
+  timeliness_pct numeric(5,2),
+  uniqueness_pct numeric(5,2),
+  
+  -- Aggregate
+  overall_score numeric(5,2),
+  health_band text,                            -- excellent/healthy/needs_work/critical
+  
+  -- Issue counts
+  total_records integer,
+  records_with_issues integer,
+  critical_issues integer,
+  
+  -- Detailed findings (JSONB)
+  issue_breakdown jsonb,                       -- {missing_layer: 12, schema_mismatch: 3, ...}
+  
+  measurement_method text,                     -- 'automated' | 'manual_audit' | 'sampled'
+  
+  CONSTRAINT valid_pct CHECK (completeness_pct BETWEEN 0 AND 100)
+);
+
+CREATE INDEX idx_quality_metrics_table_time 
+  ON seo_data_quality_metrics(table_name, measured_at DESC);
+```
+
+---
+
+## 19.5 Quality Dashboard Specification
+
+### Dashboard Overview
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  📊 DATA QUALITY HEALTH — All Tables — 2026-05-04           │
+├─────────────────────────────────────────────────────────────┤
+│  Overall Score: 87.3% [HEALTHY]                             │
+│                                                              │
+│  By Table:                                                   │
+│    seo_website_page_master  82.1% [HEALTHY]   ⚠️ 1,000-1,500 rows (typical mid-size) │
+│    brands                   98.7% [EXCELLENT] ✅  15 rows   │
+│    seo_entity_graph         91.5% [EXCELLENT] ✅ 400-500 rows (typical mid-size)   │
+│    seo_branches             —    NEW — pending data         │
+│    seo_topic_cluster_master —    NEW — pending data         │
+│  ...                                                         │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Per-Dimension Breakdown
+
+```sql
+-- View: data_quality_summary
+SELECT 
+  table_name,
+  ROUND(AVG(completeness_pct), 1) AS completeness,
+  ROUND(AVG(consistency_pct), 1) AS consistency,
+  ROUND(AVG(accuracy_pct), 1) AS accuracy,
+  ROUND(AVG(timeliness_pct), 1) AS timeliness,
+  ROUND(AVG(uniqueness_pct), 1) AS uniqueness,
+  ROUND(AVG(overall_score), 1) AS overall,
+  MAX(measured_at) AS last_measured
+FROM seo_data_quality_metrics
+WHERE measured_at > now() - interval '7 days'
+GROUP BY table_name
+ORDER BY overall ASC;  -- worst first
+```
+
+---
+
+## 19.6 Quality Alerts & Workflows
+
+### Alert Triggers
+
+```yaml
+alerts:
+  critical_alerts:
+    - overall_score < 60 → Slack #data-quality immediate
+    - completeness_pct drop > 10% in 24h → escalate
+    - consistency_pct < 95% → block deployment
+
+  warning_alerts:
+    - overall_score < 75 → email weekly digest
+    - timeliness_pct < 70 → Slack #data-quality (daily)
+    - new duplicates detected → review queue
+
+  info_alerts:
+    - quality improvement > 5% → celebrate in Slack
+    - quarterly trend report → Notion page
+```
+
+### Remediation Workflows
+
+```yaml
+workflow_completeness_fix:
+  trigger: completeness_pct < 90
+  steps:
+    1. Identify missing fields (SQL query)
+    2. Create batch task in Notion DB "Data Quality Tasks"
+    3. Assign to data steward (per brand)
+    4. SLA: < 5 business days for Tier 1, < 14 for Tier 2
+    5. Re-measure on completion
+
+workflow_consistency_fix:
+  trigger: any consistency_pct < 95
+  steps:
+    1. Identify violating records
+    2. Auto-fix where deterministic (e.g., set branch_tags = []
+       when page_branch_relationship = 'brand_wide')
+    3. Manual review queue for ambiguous cases
+    4. SLA: < 24 hours for critical violations
+
+workflow_freshness_refresh:
+  trigger: timeliness_pct < 80
+  steps:
+    1. List stale records by age
+    2. Trigger n8n flow per data type:
+       - keyword data → DataForSEO API call
+       - GSC rankings → GSC API call
+       - branch info → manual review queue
+    3. Schedule auto-refresh weekly
+```
+
+---
+
+## 19.7 Backfill Strategy for Existing Pages (Typical 1,000-1,500 Mid-Size)
+
+> **Practical reality:** ของเรามี existing pages typical 1,000-1,500 framework. ต้อง backfill ค่อยๆ — ไม่ใช่ทีเดียว
+
+### 3-Phase Backfill Plan
+
+#### Phase 1 — Critical Tier 1 fields (Week 1-2)
+
+```yaml
+priority: HIGHEST
+fields_to_backfill:
+  - layer (1-7) — AI classification + manual review
+  - node_tier (A/B/C/D) — based on traffic + business value
+  - funnel_stage — based on intent analysis
+  - page_branch_relationship — automated detection from URL pattern
+
+method:
+  1. AI auto-classify (System Instruction Section XII)
+  2. confidence_score < 0.7 → manual review
+  3. confidence_score ≥ 0.7 → auto-apply with audit log
+  4. Strategy Lead reviews Tier A promotions
+
+target: 100% Tier 1 completeness end of Week 2
+```
+
+#### Phase 2 — Schema validation + cluster mapping (Week 3-4)
+
+```yaml
+priority: HIGH
+fields_to_backfill:
+  - schema_org_type — match Layer expectation
+  - cluster_id — assign to existing or create new clusters
+  - sitemap_node_id — generate per hierarchy
+
+method:
+  1. Layer-Schema validation (per Part 5 mapping)
+  2. Cluster assignment via topical similarity
+  3. Sitemap hierarchy generation
+
+quality_gate: schema_type_validated = true for all pages
+```
+
+#### Phase 3 — Optional fields + freshness baseline (Week 5+)
+
+```yaml
+priority: MEDIUM
+fields_to_backfill:
+  - meta_description (where missing)
+  - content_summary (auto-generated from first paragraph)
+  - planned_inbound_count (rollup from cluster relations)
+
+method:
+  - Automated where possible (content extraction, rollup)
+  - Manual review for high-traffic pages
+```
+
+### Quality Gate Migration
+
+```yaml
+pre_v30_baseline:
+  - completeness_pct: ~40% (estimated, mostly missing layer/cluster)
+  - consistency_pct: ~70%
+  - timeliness_pct: ~50%
+  - overall_score: ~55% [NEEDS_WORK]
+
+target_after_phase_1:
+  - completeness_pct: 90%+
+  - overall_score: 75%+ [HEALTHY]
+
+target_after_phase_3:
+  - completeness_pct: 95%+
+  - overall_score: 88%+ [APPROACHING_EXCELLENT]
+```
+
+---
+
+## 19.8 Operational Cadence
+
+```yaml
+daily:
+  - Automated quality measurement (n8n flow)
+  - Alert triage (Slack)
+
+weekly:
+  - Quality dashboard review (data steward + SEO lead)
+  - Issue queue cleanup
+  - Refresh stale data (auto)
+
+monthly:
+  - Trend analysis
+  - Per-brand quality report
+  - Strategy adjustments
+
+quarterly:
+  - Deep audit (manual sampling)
+  - DAMA dimension weight tuning
+  - Backfill status review
+```
+
+---
+
+## 19.9 Summary
+
+```
+✅ 5 Universal Quality Dimensions (DAMA + ISO/IEC 25012)
+✅ Per-table specifications for all 21 tables
+✅ Quality scoring algorithm (weighted dimensions)
+✅ Database schema for quality tracking (seo_data_quality_metrics)
+✅ Dashboard + alert workflows
+✅ Backfill strategy for existing pages (1,000-1,500 typical)
+
+→ Result: structure ดีของเรา + data quality ดี = optimization ที่วัดผลได้จริง
+```
+
+→ See **Part 20** (Measurement & KPI Framework) for KPI dashboards that USE these quality metrics
+
+---
+
+# PART 20: Measurement & KPI Framework
+
+> **Why this Part exists:** "What gets measured gets managed." ระบบเรามี KPIs กระจายในหลาย Parts (Sitemap Health, AI Citation Template, Quality metrics) — Part 20 รวมเป็น **Master Measurement Framework** สำหรับ track + optimize ทุกชั้น
+>
+> **Foundation:** Industry-standard 4-Layer Measurement Stack (Content/SEO/AI/KG)
+
+---
+
+## 20.1 4-Layer Measurement Stack (Master Framework)
+
+```
+┌──────────────────────────────────────────────────────────────────┐
+│  Layer 4: Knowledge Graph Health                                 │
+│  ─────────────────────────────────                               │
+│  วัด: Entity coverage, Connectivity, Cluster, Sitemap health     │
+│  KPIs: 4                                                          │
+│  Source: seo_entity_graph, seo_topic_cluster_master, page_master │
+├──────────────────────────────────────────────────────────────────┤
+│  Layer 3: AI/LLMO Visibility                                     │
+│  ────────────────────────────                                     │
+│  วัด: Citation rate, Entity mentions, Answer inclusion           │
+│  KPIs: 4                                                          │
+│  Source: seo_llm_citations, seo_brand_mentions, manual tracking  │
+├──────────────────────────────────────────────────────────────────┤
+│  Layer 2: SEO Performance                                        │
+│  ───────────────────────                                          │
+│  วัด: Traffic, Rankings, Internal links, Topical authority       │
+│  KPIs: 4                                                          │
+│  Source: GA4, GSC, Ahrefs, internal crawl                        │
+├──────────────────────────────────────────────────────────────────┤
+│  Layer 1: Content Quality                                        │
+│  ───────────────────────                                          │
+│  วัด: Citable density, Freshness, E-E-A-T coverage              │
+│  KPIs: 3                                                          │
+│  Source: page_master, seo_citations, seo_authors_reviewers       │
+└──────────────────────────────────────────────────────────────────┘
+
+Total: 15 KPIs across 4 layers
+```
+
+### Why "Bottom-Up" Order (Layer 1 → 4)?
+
+```
+Content Quality (L1) is the foundation
+   ↓ feeds into
+SEO Performance (L2) — quality content ranks better
+   ↓ feeds into
+AI Visibility (L3) — ranked content gets cited by AI
+   ↓ validates
+Knowledge Graph (L4) — KG health = result of all above
+
+→ ถ้า L1 อ่อน → L2/3/4 ก็จะอ่อน
+→ Optimize bottom-up ดีกว่า top-down
+```
+
+---
+
+## 20.2 Layer 1: Content Quality KPIs
+
+### KPI #1 — Citable Sentence Density
+
+```yaml
+definition: "Average citable sentences per page (Pattern A-E)"
+
+formula:
+  citable_density = total_citable_sentences / total_pages_with_content
+
+target:
+  excellent: ≥ 7
+  healthy:   5-6
+  needs_work: 3-4
+  critical:  < 3
+
+measurement:
+  - Auto-detect via regex patterns (Part 6 has Pattern A-E specs)
+  - Manual audit on sample (5%)
+
+source_table: page_master + content scraping
+
+action_on_low:
+  - Editorial sprint to add citables
+  - Use existing Pattern templates from Part 6
+```
+
+### KPI #2 — Content Freshness Score
+
+```yaml
+definition: "% pages updated within their layer-specific freshness threshold"
+
+freshness_thresholds_by_layer:
+  L4 Concern Pillars:    90 days  (medical YMYL)
+  L5 Knowledge Hub:      180 days
+  L2 Money Pages:        90 days  (pricing/services)
+  L7 Evidence Pages:     30 days  (cases freshness)
+  L1 Authority:          365 days
+  L6 Protocol Pages:     180 days
+  L3 Product Pages:      180 days
+
+formula:
+  freshness_pct = pages_within_threshold / total_active_pages × 100
+
+target:
+  excellent: ≥ 85%
+  healthy:   75-84%
+  needs_work: 60-74%
+  critical:  < 60%
+
+source: page_master.last_content_review_at vs threshold per layer
+```
+
+### KPI #3 — E-E-A-T Coverage
+
+```yaml
+definition: "% pages with both reviewer attribution AND citation"
+
+formula:
+  eeat_pct = pages_with_reviewer_AND_citation / total_pages × 100
+
+target:
+  excellent: ≥ 95% (medical YMYL standard)
+  healthy:   85-94%
+  needs_work: 70-84%
+  critical:  < 70%
+
+requirements_per_page:
+  - reviewer_id IS NOT NULL (linked to seo_authors_reviewers)
+  - at least 1 row in seo_page_citations (≥ 1 citation)
+  - byline visible on page (frontend rendering)
+
+source: page_master + seo_page_citations + seo_authors_reviewers
+
+priority_layers:
+  - L4 Concern Pillars (PATIENT-facing — must have)
+  - L5 Knowledge Hub (CLINICAL — must have)
+  - L6 Protocol (PROCEDURAL — should have)
+  - L2 Money Pages (must have for medical YMYL)
+```
+
+---
+
+## 20.3 Layer 2: SEO Performance KPIs
+
+### KPI #4 — Organic Traffic Growth
+
+```yaml
+definition: "Month-over-month organic search traffic growth"
+
+formula:
+  growth_pct = (current_month_organic - previous_month_organic) / previous_month × 100
+
+target:
+  excellent: ≥ +15% MoM
+  healthy:   +5% to +15%
+  needs_work: -5% to +5%
+  critical:  < -5%
+
+source: GA4 (organic search channel)
+
+per_brand_breakdown:
+  - Track per brand_id
+  - Per Layer (L2 Money getting most? L5 Knowledge getting most?)
+  - Per cluster
+
+action_on_decline:
+  - Drill into which layers/clusters declined
+  - Check GSC for ranking drops
+  - Check freshness (KPI #2)
+```
+
+### KPI #5 — Keyword Coverage (Ranking Distribution)
+
+```yaml
+definition: "Distribution of target keywords by ranking position"
+
+formula:
+  top_3_pct = keywords_ranking_top_3 / total_target_keywords × 100
+  top_10_pct = keywords_ranking_top_10 / total_target_keywords × 100
+  top_20_pct = keywords_ranking_top_20 / total_target_keywords × 100
+
+target:
+  top_3: ≥ 15%
+  top_10: ≥ 35%
+  top_20: ≥ 60%
+
+source: GSC + Ahrefs + DataForSEO
+
+per_keyword_priority:
+  - High commercial intent (Money keywords) — top priority
+  - Brand keywords — should be 100% top 3
+  - Long-tail informational — broader targets OK
+```
+
+### KPI #6 — Internal Link Depth Distribution
+
+```yaml
+definition: "Click depth distribution by Tier"
+
+target_per_tier:
+  tier_a_money:        avg_depth ≤ 3 (strict)
+  tier_b_pillar:       avg_depth ≤ 4
+  tier_c_service:      avg_depth ≤ 5
+  tier_d_supporting:   avg_depth ≤ 6 (acceptable)
+
+formula:
+  tier_health_pct = pages_meeting_depth_threshold / total_pages_in_tier × 100
+
+target:
+  excellent: ≥ 95% per Tier
+  healthy:   85-94%
+  critical:  < 85% (any Tier A violation = immediate review)
+
+source: page_master.crawl_depth + computed link graph
+```
+
+### KPI #7 — Topical Authority Score
+
+```yaml
+definition: "Composite score showing dominance in topic clusters"
+
+formula:
+  cluster_authority = (
+    pages_in_cluster_ranked_top_10 × 2 +
+    pages_in_cluster_ranked_top_20 × 1 +
+    pages_in_cluster_ranked_top_50 × 0.5
+  ) / target_competitors_avg
+
+target:
+  dominant: > 1.5 (we exceed average competitor)
+  competitive: 1.0 - 1.5
+  trailing: < 1.0
+
+source: GSC + competitor analysis (Ahrefs)
+
+per_cluster_breakdown:
+  - Track each cluster_id separately
+  - Identify weak clusters → content sprint
+  - Identify strong clusters → maintain freshness
+```
+
+---
+
+## 20.4 Layer 3: AI/LLMO Visibility KPIs
+
+### KPI #8 — AI Citation Rate
+
+```yaml
+definition: "% of target queries where our content is cited by AI platforms"
+
+platforms_tracked:
+  - ChatGPT (Browse mode)
+  - Perplexity
+  - Gemini (Bard/Search)
+  - Claude (when applicable)
+
+formula:
+  citation_rate_per_platform = queries_with_our_citation / total_queries_tested × 100
+  overall_rate = avg(per_platform_rates)
+
+target:
+  excellent: ≥ 30%
+  healthy:   20-29%
+  needs_work: 10-19%
+  critical:  < 10%
+
+source: 
+  - seo_llm_citations table (auto-tracked via Flow D1)
+  - Manual query simulation (Part 21 spec)
+
+per_platform_breakdown:
+  - Track separately because each platform behaves differently
+  - Perplexity tends to cite more sources
+  - ChatGPT cites less but with higher trust
+```
+
+### KPI #9 — Entity Citation Coverage
+
+```yaml
+definition: "% of our entities cited by AI in queries about that entity"
+
+formula:
+  entity_coverage = entities_cited_at_least_once / total_entities_in_priority × 100
+
+priority_entities:
+  - Layer 4 Concern Pillars (sleep apnea, melasma, etc.)
+  - Tier A Services
+  - Doctor profiles (cited in "best doctor for X" queries)
+
+target:
+  excellent: ≥ 50%
+  healthy:   30-49%
+  needs_work: 15-29%
+  critical:  < 15%
+
+source: seo_llm_citations grouped by entity_fingerprint
+```
+
+### KPI #10 — Answer Inclusion Rate
+
+```yaml
+definition: "% of cited answers where our content is referenced (not just listed)"
+
+distinction:
+  cited:    URL appears in source list
+  included: actual content quoted/paraphrased in answer
+
+formula:
+  inclusion_rate = answers_with_our_content_referenced / total_citations × 100
+
+target:
+  excellent: ≥ 60%
+  healthy:   45-59%
+  needs_work: 30-44%
+  critical:  < 30%
+
+requirement_for_high_rate:
+  - Citable sentences (Pattern A-E) ≥ 5/page
+  - Self-contained sentences (no requires-context phrases)
+  - Specific numbers/data
+  - Brand attribution embedded
+
+source: manual review + LLM-judge automation
+```
+
+### KPI #11 — Brand Mention Rate
+
+```yaml
+definition: "% of relevant queries where our brand name is mentioned"
+
+formula:
+  mention_rate = queries_mentioning_brand / total_relevant_queries × 100
+
+target:
+  excellent: ≥ 40% (in our target query set)
+  healthy:   25-39%
+  needs_work: 15-24%
+  critical:  < 15%
+
+per_query_type:
+  - "Best clinic for [specialty]" — should mention us
+  - "[Specialty] in [location]" — should mention if local
+  - "[Specific procedure] cost" — should mention if relevant
+
+source: seo_brand_mentions table (parsed from AI answers)
+```
+
+---
+
+## 20.5 Layer 4: Knowledge Graph Health KPIs
+
+### KPI #12 — Entity Coverage Score
+
+```yaml
+definition: "% of priority entities that have associated content"
+
+formula:
+  entity_coverage = entities_with_active_pages / total_priority_entities × 100
+
+priority_entities = entities marked as 'high' or 'critical' priority in seo_entity_graph
+
+target:
+  excellent: ≥ 80%
+  healthy:   65-79%
+  needs_work: 45-64%
+  critical:  < 45%
+
+source: seo_entity_graph + page_master.primary_entity_fp
+
+per_layer_breakdown:
+  - Layer 4 Concern: ≥ 90% (every concern should have pillar)
+  - Layer 5 Knowledge: ≥ 70%
+  - Layer 6 Protocol: ≥ 60%
+```
+
+### KPI #13 — Entity Connectivity Score
+
+```yaml
+definition: "Average internal links per entity (graph density)"
+
+formula:
+  connectivity = total_entity_relations / total_entities
+
+target:
+  excellent: ≥ 7 connections/entity
+  healthy:   5-6
+  needs_work: 3-4
+  critical:  < 3
+
+source: seo_entity_graph.related_entities_fps + page_master link planning
+```
+
+### KPI #14 — Cluster Completeness Score
+
+```yaml
+definition: "% of clusters with healthy pillar-cluster ratio (8-25 supporting)"
+
+formula:
+  cluster_health_pct = healthy_clusters / total_clusters × 100
+
+per_cluster_health:
+  healthy:    8 ≤ supporting_pages ≤ 25
+  undersized: < 8 supporting
+  oversized:  > 25 supporting (should split)
+
+target:
+  excellent: ≥ 85% healthy
+  healthy:   70-84%
+  needs_work: 50-69%
+  critical:  < 50%
+
+source: seo_topic_cluster_master.cluster_health_status (from Part 5 view)
+```
+
+### KPI #15 — Sitemap Health Score
+
+```yaml
+definition: "Composite score from Part 4.10 metrics"
+
+formula: (per Part 4.10)
+  sitemap_health = (
+    (1 - orphan_rate/100) × 25 +
+    (1 - depth_violation_rate/100) × 25 +
+    section_balance_score × 25 +
+    cluster_completeness_pct × 25
+  ) / 100
+
+target:
+  excellent: 90-100
+  healthy:   75-89
+  needs_work: 60-74
+  critical:  < 60
+
+source: page_master + computed views (Part 4.10)
+```
+
+---
+
+## 20.6 Dashboard Specifications (5 Dashboards)
+
+### Dashboard 1: Executive Overview
+
+```yaml
+purpose: "30-second snapshot for executive review"
+audience: CEO, Strategy Lead, brand owners
+
+widgets:
+  - Total Organic Traffic (GA4) + MoM growth
+  - Top 10 Keywords count + delta
+  - AI Citation Rate (overall)
+  - Top 3 Performing Clusters
+  - Top 3 Underperforming Clusters
+  - Sitemap Health Score (gauge)
+  - Data Quality Overall (gauge)
+
+refresh_rate: Daily
+display: Looker Studio + Notion embed
+```
+
+### Dashboard 2: Knowledge Graph Health
+
+```yaml
+purpose: "Structural integrity of entity graph + clusters"
+audience: SEO Lead, Content Lead
+
+widgets:
+  - Entity Count by Type (chart)
+  - Entity Coverage % (gauge)
+  - Entity Connectivity Score (number)
+  - Top 10 Most-Connected Entities
+  - Top 10 Orphan Entities (action queue)
+  - Cluster Completeness Distribution
+  - Pillar-Cluster Ratio per Cluster
+  - Layer Distribution (pie chart)
+
+refresh_rate: Weekly
+display: Metabase/Superset (custom queries to Supabase)
+```
+
+### Dashboard 3: SEO Performance
+
+```yaml
+purpose: "Traditional SEO KPIs + technical health"
+audience: SEO team, Marketing Lead
+
+widgets:
+  - Traffic by Page Layer (stacked area)
+  - Top Pages (by traffic)
+  - Keyword Rankings Distribution (top 3/10/20)
+  - CTR by Tier
+  - Internal Link Graph (visualization)
+  - Click Depth Heatmap
+  - Tier A pages Crawl Depth Health
+  - Topical Authority by Cluster
+
+refresh_rate: Daily
+display: Looker Studio + GSC + GA4
+```
+
+### Dashboard 4: AI Visibility (Most Important — Differentiator)
+
+```yaml
+purpose: "Track AI/LLMO performance — our differentiator"
+audience: SEO Lead, AI Lead, Strategy Lead
+
+widgets:
+  - AI Citation Rate by Platform (ChatGPT, Perplexity, Gemini)
+  - Entity Citation Coverage (gauge)
+  - Answer Inclusion Rate Trend (line chart)
+  - Brand Mention Rate (gauge)
+  - Top Cited Pages
+  - Top Cited Entities
+  - Failed Queries (where we should be cited but aren't)
+  - Citable Density Map (per page)
+
+refresh_rate: Weekly (manual + automated query simulation)
+display: Custom dashboard (Python/Metabase) + Notion embed
+
+source_tables:
+  - seo_llm_citations
+  - seo_brand_mentions
+  - seo_llm_query_simulations (Part 21)
+```
+
+### Dashboard 5: Content Quality
+
+```yaml
+purpose: "Editorial + content production health"
+audience: Content Lead, Editorial Team
+
+widgets:
+  - Citable Density Distribution
+  - Freshness Heatmap (Layer × Time bucket)
+  - E-E-A-T Coverage (gauge)
+  - Pages Missing Reviewer (action queue)
+  - Pages Missing Citations (action queue)
+  - Content Production Velocity (pages/week)
+  - Quality Gate Pass Rate
+
+refresh_rate: Weekly
+display: Notion embed + Metabase
+```
+
+---
+
+## 20.7 Data Sources Mapping (Where Each KPI Comes From)
+
+| KPI | Primary Source | Secondary | Refresh |
+|-----|---------------|-----------|---------|
+| 1. Citable Density | page_master + content scraping | manual audit | Weekly |
+| 2. Freshness | page_master.last_content_review_at | n8n flow | Daily |
+| 3. E-E-A-T Coverage | page_citations + authors | — | Weekly |
+| 4. Organic Traffic | GA4 | — | Daily |
+| 5. Keyword Coverage | GSC + Ahrefs | DataForSEO | Daily |
+| 6. Click Depth | page_master + computed | crawl audit | Weekly |
+| 7. Topical Authority | GSC + competitors | Ahrefs | Monthly |
+| 8. AI Citation Rate | seo_llm_citations | query sim | Weekly |
+| 9. Entity Citation | seo_llm_citations | — | Weekly |
+| 10. Answer Inclusion | manual review | LLM judge | Weekly |
+| 11. Brand Mention | seo_brand_mentions | — | Weekly |
+| 12. Entity Coverage | entity_graph + page_master | — | Weekly |
+| 13. Connectivity | entity_graph relations | — | Weekly |
+| 14. Cluster Health | topic_cluster_master | — | Weekly |
+| 15. Sitemap Health | computed (Part 4.10) | — | Weekly |
+
+---
+
+## 20.8 Reporting Cadence & Workflows
+
+```yaml
+daily:
+  - GA4 data refresh
+  - GSC sync
+  - Slack daily snapshot (Executive Overview)
+  - Anomaly alerts
+
+weekly:
+  - 5 dashboards refresh
+  - Weekly Strategy meeting (Mon morning)
+  - Action items from underperforming areas
+  - AI Citation Audit (Flow D1)
+
+monthly:
+  - Trend analysis report (Notion page)
+  - Per-brand performance review
+  - Cluster health deep-dive
+  - Editorial planning based on gaps
+
+quarterly:
+  - Executive review
+  - Strategic adjustments
+  - Competitive analysis update
+  - Goal setting for next quarter
+```
+
+---
+
+## 20.9 Stack Recommendation (Implementation)
+
+```yaml
+stack_layer_1_easiest:
+  tools:
+    - GA4 + GSC (free, native Google)
+    - Looker Studio (free, Google)
+    - Google Sheets (manual KPIs)
+  pros: Free, fast setup
+  cons: Limited Knowledge Graph + AI tracking
+  use_case: Executive Dashboard ก่อน
+
+stack_layer_2_intermediate:
+  tools:
+    - + Metabase (open-source) or Superset
+    - + PostgreSQL (Supabase) connection
+    - + Custom SQL for KG metrics
+  pros: Rich KG dashboards, custom
+  cons: Setup time
+  use_case: KG Health + Content Quality dashboards
+
+stack_layer_3_advanced:
+  tools:
+    - + Python scripts for AI tracking automation
+    - + n8n flows for refresh
+    - + LangChain/Anthropic API for query simulation
+    - + pgvector queries
+  pros: Full AI visibility tracking
+  cons: Engineering effort
+  use_case: AI Visibility dashboard (our differentiator)
+
+recommendation: Start with Layer 1, evolve to Layer 2 in Month 2-3, Layer 3 in Month 4-6
+```
+
+---
+
+## 20.10 KPI Targets Summary (Quick Reference)
+
+```yaml
+content_quality_layer:
+  KPI_1_citable_density:    target ≥ 7/page
+  KPI_2_freshness:          target ≥ 85%
+  KPI_3_eeat_coverage:      target ≥ 95% (medical YMYL)
+
+seo_performance_layer:
+  KPI_4_traffic_growth:     target ≥ +15% MoM
+  KPI_5_keyword_top10:      target ≥ 35%
+  KPI_6_depth_health:       target ≥ 95% per tier
+  KPI_7_topical_authority:  target > 1.5 (vs competitor avg)
+
+ai_visibility_layer:
+  KPI_8_citation_rate:      target ≥ 30%
+  KPI_9_entity_coverage:    target ≥ 50%
+  KPI_10_answer_inclusion:  target ≥ 60%
+  KPI_11_brand_mention:     target ≥ 40%
+
+knowledge_graph_layer:
+  KPI_12_entity_coverage:   target ≥ 80%
+  KPI_13_connectivity:      target ≥ 7/entity
+  KPI_14_cluster_health:    target ≥ 85% healthy
+  KPI_15_sitemap_health:    target ≥ 90 score
+```
+
+---
+
+## 20.11 Future: Revenue Attribution Integration 🔮
+
+> **Scope:** ปัจจุบัน framework เน้น traffic + visibility + structure  
+> **Future:** เชื่อม revenue/conversion tracking เพื่อวัด ROI ของ SEO+LLMO
+
+### What's planned (not yet active)
+
+```yaml
+future_kpis_revenue_layer:
+  KPI_F1_mql_per_cluster:      "MQL generated per Topic Cluster"
+  KPI_F2_sql_attribution:      "SQL attributed to specific pages/clusters"
+  KPI_F3_cluster_ltv:          "Customer Lifetime Value per cluster source"
+  KPI_F4_roas_seo:             "Return on SEO investment per brand"
+  KPI_F5_ai_citation_to_lead:  "AI citation → website visit → MQL conversion path"
+
+future_schema_additions:
+  page_master:
+    + mql_count_30d (rollup from CRM)
+    + sql_count_30d
+    + revenue_attributed_30d
+  
+  topic_cluster_master:
+    + cluster_mql_30d
+    + cluster_revenue_30d
+
+integration_required:
+  - CRM sync (HubSpot, Salesforce, etc.)
+  - GA4 enhanced ecommerce
+  - Conversion tracking pixel events
+  - UTM attribution map
+```
+
+### Activation Triggers (when to implement)
+
+```
+Implement when:
+  ☐ Brand has > 100 MQLs/month → attribution becomes valuable
+  ☐ CRM is integrated with website (lead source tracking)
+  ☐ At least 6 months of stable traffic data exists
+  ☐ Multi-channel attribution model agreed upon
+
+Don't implement when:
+  ✗ Still in early SEO build phase
+  ✗ Lead volume too low for statistical significance
+  ✗ No CRM integration
+
+→ See Part 24 (Future Roadmap) for detailed activation plan
+```
+
+---
+
+## 20.12 Summary
+
+```
+✅ 4-Layer Measurement Stack (Content/SEO/AI/KG)
+✅ 15 KPIs total with formulas + targets + sources
+✅ 5 Dashboard specifications
+✅ Stack recommendations (3 maturity levels)
+✅ Reporting cadence (daily/weekly/monthly/quarterly)
+✅ Future: Revenue Attribution roadmap (Part 24 detail)
+
+→ Master measurement framework that ties Quality (Part 19) + AI Operations (Part 21) together
+```
+
+---
+
+# PART 21: AI Operations & Embedding Strategy
+
+> *🧠 Where neural fibers meet vector embeddings — the engine that makes the network intelligible to AI agents.*
+
+> **Why this Part exists:** ระบบเรามี seo_llm_citations table + AI Citation Monthly Template (Part 13.5) + n8n Flow D1 — แต่ขาด **operational depth** สำหรับ embedding strategy + tracking framework
+>
+> **Scope:** Vector storage + retrieval logic + AI citation tracking automation + per-platform tracking specs
+
+---
+
+## 21.1 AI Operations Stack Overview
+
+```
+┌──────────────────────────────────────────────────────────────────┐
+│  AI OPERATIONS — 3 Layers                                        │
+├──────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  Layer C: AI Visibility Tracking                                 │
+│  ──────────────────────────────                                  │
+│  - Query Simulation (test our content vs queries)                │
+│  - Brand Mention scraping (Perplexity API)                       │
+│  - Citation Rate calculation per platform                        │
+│  - Failure analysis (where we should rank but don't)             │
+│                                                                  │
+│  Layer B: Retrieval & Ranking                                    │
+│  ──────────────────────────                                      │
+│  - Hybrid search (vector + keyword)                              │
+│  - Re-ranking by authority_weight                                │
+│  - Filtering (brand, layer, vertical)                            │
+│                                                                  │
+│  Layer A: Embedding Foundation                                   │
+│  ────────────────────────────                                    │
+│  - What content gets embedded                                    │
+│  - Chunking strategy                                             │
+│  - Embedding model choice (multilingual TH+EN)                   │
+│  - Vector storage (pgvector)                                     │
+│                                                                  │
+└──────────────────────────────────────────────────────────────────┘
+
+→ Bottom-up: Layer A foundation enables B and C
+```
+
+---
+
+## 21.2 Layer A: Embedding Strategy
+
+### What Content Gets Embedded?
+
+```yaml
+priority_1_must_embed:
+  entity_descriptions:
+    source: seo_entity_graph.entity_description
+    chunking: 1 entity = 1-2 chunks
+    use_case: AI agent answers "what is X" with our description
+    
+  citable_sentences:
+    source: parsed from page content (Pattern A-E)
+    chunking: 1 sentence = 1 chunk (preserve meaning)
+    use_case: AI extracts our sentences as citations
+    
+  service_descriptions:
+    source: page_master where layer = 2 (Money Pages)
+    chunking: per service section (~200 tokens each)
+    use_case: AI recommends our services
+    
+  knowledge_articles:
+    source: page_master where layer = 5 (Knowledge Hub)
+    chunking: per H2 section (200-500 tokens)
+    use_case: AI cites our educational content
+
+priority_2_should_embed:
+  doctor_bios:
+    source: seo_authors_reviewers.bio
+    chunking: 1 doctor = 1 chunk
+    use_case: "Best doctor for X" queries
+    
+  treatment_protocols:
+    source: page_master where layer = 6 (Protocol)
+    chunking: per protocol step
+    use_case: How-to queries
+    
+  patient_stories:
+    source: page_master where layer = 7 (Evidence)
+    chunking: per story (de-identified)
+    use_case: Outcome queries
+
+priority_3_optional:
+  faq_pairs:
+    chunking: 1 Q&A = 1 chunk
+    use_case: AEO optimization
+    
+  comparison_tables:
+    chunking: 1 row = 1 chunk
+    use_case: "X vs Y" queries
+
+never_embed:
+  ❌ marketing copy without facts
+  ❌ navigation/UI elements  
+  ❌ legal disclaimers (boilerplate)
+  ❌ duplicate content across pages
+```
+
+### Chunking Strategy
+
+```yaml
+semantic_chunking:
+  method: split by H2/H3 boundaries (preserves logical units)
+  max_tokens_per_chunk: 500
+  min_tokens_per_chunk: 100
+  overlap_pct: 15-20% (preserve context across boundaries)
+
+chunk_metadata_required:
+  - chunk_id (UUID)
+  - source_page_fp (FK to page_master)
+  - source_entity_fp (FK to entity_graph if applicable)
+  - chunk_index (within source)
+  - chunk_text (raw text)
+  - chunk_token_count
+  - heading_path (e.g., "H1 > H2 > current section")
+  - layer (inherited from source page)
+  - tier (inherited)
+  - language (th-TH | en-US)
+
+quality_filters_before_embedding:
+  ✗ skip: < 100 tokens (too short, low signal)
+  ✗ skip: > 500 tokens (too long, dilute meaning)
+  ✗ skip: contains "Lorem ipsum" or template placeholders
+  ✗ skip: pages with status != 'active'
+```
+
+### Embedding Model Selection
+
+```yaml
+requirements:
+  - Multilingual (Thai + English)
+  - Cost-effective (we'll embed ~10,000+ chunks)
+  - Production-grade quality
+  - API stability
+
+candidates_evaluated:
+  text-embedding-3-large (OpenAI):
+    - Multilingual: ✅ Strong
+    - Cost: $0.13/1M tokens
+    - Dimensions: 3072
+    - Verdict: Premium choice — high quality but expensive
+
+  text-embedding-3-small (OpenAI):
+    - Cost: $0.02/1M tokens
+    - Dimensions: 1536
+    - Verdict: Good balance — recommended for our scale
+
+  BGE-m3 (BAAI):
+    - Multilingual: ✅ Excellent for Asian languages
+    - Cost: Free (self-host) or via Replicate
+    - Dimensions: 1024
+    - Verdict: Best for Thai-heavy content (alternative)
+
+  Cohere embed-multilingual-v3:
+    - Multilingual: ✅
+    - Cost: $0.10/1M tokens
+    - Dimensions: 1024
+    - Verdict: Good API, slightly pricier
+
+recommendation:
+  primary: text-embedding-3-small (OpenAI)
+  reason: Best cost/quality for our multilingual mix
+  fallback: BGE-m3 if cost becomes prohibitive at scale
+```
+
+### Vector Storage Schema (pgvector)
+
+```sql
+-- Main embeddings table
+CREATE TABLE seo_entity_embeddings (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  
+  -- Source linkage
+  source_type text NOT NULL,                  -- 'entity' | 'page' | 'doctor' | 'service'
+  source_id uuid NOT NULL,                    -- FK depending on source_type
+  source_fingerprint text NOT NULL,           -- e.g., page_fingerprint or entity_fingerprint
+  brand_id uuid REFERENCES brands(id),
+  
+  -- Chunk metadata
+  chunk_index integer NOT NULL,               -- 0, 1, 2, ... within source
+  chunk_text text NOT NULL,
+  chunk_token_count integer,
+  heading_path text,
+  
+  -- Layer/Tier inheritance
+  layer integer,                              -- 1-7
+  tier text,                                  -- A/B/C/D
+  funnel_stage text,
+  vertical_family text,
+  
+  -- Embedding
+  embedding vector(1536) NOT NULL,            -- OpenAI 3-small dim
+  embedding_model text NOT NULL,              -- 'text-embedding-3-small'
+  embedding_version text NOT NULL,            -- 'v1.0'
+  
+  -- Lifecycle
+  language text DEFAULT 'th-TH',
+  is_active boolean DEFAULT true,
+  embedded_at timestamptz DEFAULT now(),
+  invalidated_at timestamptz,
+  
+  -- Quality
+  confidence_score numeric(3,2),
+  citable_pattern text,                       -- 'A'/'B'/'C'/'D'/'E' if applicable
+  
+  CONSTRAINT valid_layer CHECK (layer BETWEEN 1 AND 7)
+);
+
+-- Indexes
+CREATE INDEX idx_embeddings_source ON seo_entity_embeddings(source_type, source_fingerprint);
+CREATE INDEX idx_embeddings_brand_layer ON seo_entity_embeddings(brand_id, layer) WHERE is_active = true;
+CREATE INDEX idx_embeddings_vector ON seo_entity_embeddings 
+  USING hnsw (embedding vector_cosine_ops);  -- HNSW for fast similarity
+```
+
+### Embedding Lifecycle
+
+```yaml
+when_to_embed:
+  initial:
+    - All Tier A/B pages on Day 1
+    - All Layer 4 Concern Pillars on Day 1
+    - Entity descriptions for high-priority entities
+
+  ongoing:
+    - New page published → embed within 24h
+    - Page content updated → re-embed within 7d
+    - Quarterly review → re-embed pages with > 90 days age
+
+when_to_invalidate:
+  - Source content deleted/archived
+  - Embedding model version updated (incremental migration)
+  - Quality issue detected (manual flag)
+
+cost_estimation:
+  pages: 1,000-1,500 × avg 3 chunks = ~3,000-4,500 chunks
+  entities: 466 × 1 chunk = ~466 chunks
+  doctors: 30 × 1 chunk = ~30 chunks
+  Total chunks: ~3,500-5,000
+  Avg tokens/chunk: 300
+  Total tokens: ~1-2M (varies by content size)
+  Cost (text-embedding-3-small @ $0.02/1M): ~$0.03 initial
+  Re-embedding monthly: ~$0.03/month
+  → Negligible cost
+```
+
+---
+
+## 21.3 Layer B: Retrieval & Ranking Logic
+
+### Hybrid Search Strategy
+
+```yaml
+why_hybrid:
+  - Vector search: semantic similarity (good for paraphrasing, intent)
+  - Keyword search: exact match (good for specific terms, brand names)
+  - Hybrid: combine both for best of both worlds
+
+implementation:
+  step_1_vector_search:
+    SELECT chunk_id, embedding <=> query_embedding AS similarity
+    FROM seo_entity_embeddings
+    WHERE is_active = true
+    ORDER BY embedding <=> query_embedding
+    LIMIT 50
+  
+  step_2_keyword_search:
+    SELECT chunk_id, ts_rank(to_tsvector('english', chunk_text), to_tsquery(query)) AS rank
+    FROM seo_entity_embeddings
+    WHERE is_active = true
+      AND to_tsvector('english', chunk_text) @@ to_tsquery(query)
+    LIMIT 50
+  
+  step_3_combine:
+    -- Reciprocal Rank Fusion (RRF) — industry standard
+    SELECT chunk_id, SUM(1.0 / (60 + rank)) AS rrf_score
+    FROM (vector_results UNION ALL keyword_results)
+    GROUP BY chunk_id
+    ORDER BY rrf_score DESC
+    LIMIT 20
+```
+
+### Re-ranking by Authority Weight
+
+```yaml
+why_rerank:
+  - Initial similarity score = "how relevant"
+  - Authority weight = "how trustworthy"
+  - We want both — Tier A page > Tier D page when similar relevance
+
+formula:
+  final_score = (
+    similarity_score × 0.6 +
+    authority_weight_normalized × 0.3 +
+    freshness_bonus × 0.1
+  )
+
+  authority_weight_normalized:
+    tier_A: 1.0
+    tier_B: 0.85
+    tier_C: 0.70
+    tier_D: 0.55
+
+  freshness_bonus:
+    < 30 days old: 1.0
+    30-90 days: 0.9
+    90-180 days: 0.8
+    > 180 days: 0.7
+```
+
+### Filters (Context-Aware Retrieval)
+
+```yaml
+common_filters:
+  by_brand:
+    - WHERE brand_id = ?
+    - Use case: brand-specific AI assistant
+  
+  by_layer:
+    - WHERE layer IN (?, ?, ...)
+    - Use case: only Money pages, only Knowledge, etc.
+  
+  by_vertical:
+    - WHERE vertical_family = ?
+    - Use case: cross-brand within healthcare
+  
+  by_language:
+    - WHERE language = ?
+    - Use case: Thai-only, English-only retrieval
+
+  by_funnel_stage:
+    - WHERE funnel_stage = ?
+    - Use case: target user at specific journey stage
+  
+  by_freshness:
+    - WHERE embedded_at > now() - interval '90 days'
+    - Use case: "latest research" queries
+```
+
+---
+
+## 21.4 Layer C: AI Citation Tracking Operations
+
+### Query Simulation Framework
+
+```yaml
+purpose: "Test if our content is cited by AI for target queries"
+
+step_1_build_query_set:
+  category_distribution:
+    - 30% Brand queries ("Brand A dental cost")
+    - 30% Specialty queries ("ฟันคุดถอนที่ไหนดี")
+    - 25% Symptom queries ("ปวดฟันกราม รักษายังไง")
+    - 15% Comparison queries ("ฟันรากเทียม Nobel vs Straumann")
+  
+  total_queries: 200-500 per brand (statistically significant)
+  
+  query_sources:
+    - GSC top 100 keywords
+    - SERP People Also Ask
+    - Reddit/Quora "people are asking"
+    - Manual brainstorm (sales/customer team input)
+
+step_2_run_simulation:
+  per_query:
+    1. Submit to ChatGPT (Browse mode)
+    2. Submit to Perplexity
+    3. Submit to Gemini
+    4. Capture: response text + cited URLs
+    
+  automation:
+    - Python script with API where available
+    - Manual for ChatGPT (no public API for browse mode currently)
+    - Browser automation for visibility
+
+step_3_classify_results:
+  per_response:
+    - Did our brand appear? (yes/no)
+    - Did our URL appear in citations? (list URLs)
+    - Was our content quoted/paraphrased? (yes/no)
+    - Was the answer accurate? (yes/no)
+    - Was it positive/neutral/negative? (sentiment)
+  
+  log_to: seo_llm_query_simulations table
+
+step_4_calculate_metrics:
+  - AI Citation Rate (KPI #8)
+  - Entity Coverage (KPI #9)
+  - Answer Inclusion (KPI #10)
+  - Brand Mention Rate (KPI #11)
+```
+
+### Database Schema for Query Simulation
+
+```sql
+CREATE TABLE seo_llm_query_simulations (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  
+  -- Query metadata
+  query_text text NOT NULL,
+  query_category text,                      -- 'brand'/'specialty'/'symptom'/'comparison'
+  query_intent text,                        -- 'informational'/'navigational'/'transactional'
+  query_priority text,                      -- 'high'/'medium'/'low'
+  brand_id uuid REFERENCES brands(id),
+  
+  -- Test execution
+  tested_at timestamptz NOT NULL DEFAULT now(),
+  platform text NOT NULL,                   -- 'chatgpt'/'perplexity'/'gemini'/'claude'
+  platform_version text,                    -- 'chatgpt-4o'/'perplexity-sonar-pro'/etc.
+  
+  -- Response
+  response_text text,
+  cited_urls text[],                        -- all URLs cited
+  response_sentiment text,                  -- 'positive'/'neutral'/'negative'
+  
+  -- Our visibility
+  our_brand_mentioned boolean DEFAULT false,
+  our_url_cited boolean DEFAULT false,
+  our_url_list text[],                      -- our URLs that appeared
+  our_content_quoted boolean DEFAULT false, -- exact phrases from our content
+  
+  -- Quality
+  answer_accuracy text,                     -- 'accurate'/'partial'/'inaccurate'
+  answer_completeness text,                 -- 'complete'/'partial'/'sparse'
+  
+  -- Workflow
+  reviewed_by text,                         -- email of reviewer
+  notes text,
+  
+  CONSTRAINT valid_platform CHECK (platform IN ('chatgpt','perplexity','gemini','claude','grok'))
+);
+
+CREATE INDEX idx_llm_sims_brand_date ON seo_llm_query_simulations(brand_id, tested_at DESC);
+CREATE INDEX idx_llm_sims_query ON seo_llm_query_simulations(query_text);
+CREATE INDEX idx_llm_sims_platform ON seo_llm_query_simulations(platform, tested_at DESC);
+```
+
+### Brand Mention Tracking (Automated)
+
+```yaml
+purpose: "Track brand mentions across AI platforms automatically"
+
+approach_1_perplexity_api:
+  - Perplexity has API with web search
+  - Submit query → parse response for brand mentions
+  - Log to seo_brand_mentions
+
+approach_2_browser_automation:
+  - Use Playwright/Puppeteer
+  - Automate ChatGPT browse mode
+  - Parse citations
+  - Log to seo_brand_mentions
+
+approach_3_manual_periodic:
+  - Weekly manual sample (50 queries)
+  - Spot-check + annotate
+  - Validate against automated counts
+
+recommended: Start with approach 3 (manual), automate with approach 1 (Perplexity) once volume justifies
+```
+
+---
+
+## 21.5 Operational Workflows
+
+### Weekly AI Citation Audit (extends Part 13.5)
+
+```yaml
+schedule: Monday 09:00 weekly
+
+workflow:
+  1. Auto-run query simulation (200 queries)
+  2. Calculate per-platform citation rates
+  3. Compare vs previous week
+  4. Identify wins (new citations) + losses
+  5. Generate report:
+     - In Notion (long-form)
+     - In Slack (summary + key wins/losses)
+  6. Action items for content team
+
+owner: SEO Lead
+sla: report by Monday EOD
+```
+
+### Monthly Embedding Refresh
+
+```yaml
+schedule: 1st of each month
+
+workflow:
+  1. Identify pages with content updates last 30d
+  2. Re-embed those pages (and their chunks)
+  3. Identify entities with description updates
+  4. Re-embed those entities
+  5. Validate new embeddings (similarity to known good)
+  6. Cleanup invalidated embeddings (older than 90d)
+
+owner: AI Operations Lead
+budget: ~$0.03/month (estimated)
+```
+
+### Quarterly Embedding Model Review
+
+```yaml
+schedule: Every 3 months
+
+workflow:
+  1. Review embedding model landscape (new models?)
+  2. Test current model vs alternatives on sample queries
+  3. Decide: keep, upgrade, or migrate
+  4. If migrating: incremental re-embedding plan
+  5. Document decision
+
+owner: AI Lead + Engineering
+```
+
+---
+
+## 21.6 Integration with Existing Stack
+
+```yaml
+existing_tables_used:
+  seo_llm_citations:
+    role: stores AI citations from natural traffic (organic)
+    relationship: complementary to query simulations (which test specific queries)
+  
+  seo_brand_mentions:
+    role: aggregated brand mention count across platforms
+    relationship: rollup from llm_citations + query_simulations
+  
+  seo_website_page_master:
+    role: source for embedding (when content changes)
+    relationship: trigger to re-embed via n8n flow
+  
+  seo_entity_graph:
+    role: source for entity embeddings
+    relationship: 1:N with seo_entity_embeddings
+  
+  seo_authors_reviewers:
+    role: source for doctor bio embeddings
+    relationship: 1:1 with embeddings table
+
+new_tables_added:
+  seo_entity_embeddings:        # vector storage
+  seo_llm_query_simulations:    # query test results
+```
+
+---
+
+## 21.7 Future: Trust Layer Automation 🔮
+
+> **Scope:** ปัจจุบัน E-E-A-T ผ่าน reviewer + citation manual  
+> **Future:** Automate author credibility scoring + citation weighting
+
+### What's Planned (Not Yet Active)
+
+```yaml
+future_trust_features:
+  author_credibility_score:
+    - Auto-compute from credentials, publications, citations
+    - Update reviewer weighting in Schema markup
+    - Higher-credibility authors → higher rank boost in AI citation
+  
+  citation_authority_weighting:
+    - Score citations by source quality (PubMed > random blog)
+    - Cite quality affects page authority_weight
+  
+  evidence_chain_automation:
+    - Trace claim → citation → source quality
+    - Flag claims without strong citations
+
+prerequisites_to_activate:
+  ☐ At least 100+ pages with mature citations
+  ☐ Reviewer table fully populated with credentials
+  ☐ Manual baseline scoring done (3 months)
+  ☐ ROI of automation > engineering cost
+```
+
+→ See **Part 24 (Future Roadmap)** for activation plan
+
+---
+
+## 21.8 Summary
+
+```
+✅ Layer A — Embedding Foundation
+   - What/how to embed (priorities)
+   - Chunking strategy (semantic, 200-500 tokens)
+   - Model selection (text-embedding-3-small primary)
+   - pgvector schema (seo_entity_embeddings)
+
+✅ Layer B — Retrieval & Ranking
+   - Hybrid search (vector + keyword)
+   - RRF combination
+   - Re-ranking by authority + freshness
+   - Context filters
+
+✅ Layer C — AI Citation Tracking
+   - Query Simulation framework (200-500 queries)
+   - Per-platform tracking (ChatGPT/Perplexity/Gemini)
+   - Database schema (seo_llm_query_simulations)
+   - Operational workflows
+
+→ Result: We can MEASURE + OPTIMIZE our AI visibility (KPIs #8-11 in Part 20)
+→ We can RETRIEVE our content for AI agents (RAG-ready)
+```
+
+---
+
+# PART 23: Medical Content Excellence
+
+> **🩺 The threshold of trust — where citation science, editorial discipline, and technical excellence converge to produce content that earns its place in the AI era.**
+>
+> **Why this Part exists:** Parts 1–22 cover architecture + content + AI ops. Part 23 covers what separates **elite medical content** (Mayo Clinic / Cleveland Clinic / Healthline tier) from "good" medical content. This is the layer that earns trust from Google, AI engines, and patients simultaneously.
+>
+> **Philosophy:** Reference external standards (WCAG, GRADE, ISO) — don't duplicate them. Provide **how to apply** them within EYWA, not academic copies.
+
+---
+
+## 23.1 Citation Tier System — Evidence Hierarchy
+
+### Why Tiers Matter
+
+```
+Old SEO: "have a citation" = box checked
+Elite SEO: "what kind of citation" = trust signal weight
+
+→ AI engines increasingly weight citation source quality
+→ Google's E-E-A-T quality raters check evidence hierarchy
+→ Reader trust scales with source authority
+```
+
+### The 6-Tier Evidence Hierarchy
+
+```yaml
+TIER 1 — Highest Evidence (Cochrane / Systematic Reviews / Meta-Analyses)
+  examples:
+    - Cochrane Database of Systematic Reviews
+    - Meta-analyses in NEJM / JAMA / BMJ / Lancet
+    - GRADE-rated systematic reviews
+  freshness_rule: ≤ 5 years (medical knowledge evolves)
+  schema_org_evidence_level: EvidenceLevelA
+  preferred_for: claims about treatment efficacy, prevention, risk
+
+TIER 2 — Randomized Controlled Trials (RCTs)
+  examples:
+    - PubMed peer-reviewed RCTs
+    - Phase 3 clinical trials
+    - CONSORT-compliant trial reports
+  freshness_rule: ≤ 7 years
+  schema_org_evidence_level: EvidenceLevelA (single high-quality) or B (multiple)
+  preferred_for: drug efficacy, intervention outcomes
+
+TIER 3 — Medical Society Clinical Guidelines
+  examples:
+    - AAD (American Academy of Dermatology)
+    - AAOMS (American Association of Oral and Maxillofacial Surgeons)
+    - AASM (American Academy of Sleep Medicine)
+    - ACOG, ASA, AAOS (medical specialty societies)
+    - Thai medical societies (สมาคมแพทย์ผิวหนัง, ทันตแพทยสมาคม, etc.)
+  freshness_rule: track latest version (guidelines update)
+  schema_org_evidence_level: EvidenceLevelB
+  preferred_for: clinical recommendations, standard of care
+
+TIER 4 — Government / Public Health Bodies
+  examples:
+    - WHO (World Health Organization)
+    - CDC (US Centers for Disease Control)
+    - NIH / NHS / NICE (UK)
+    - MOH Thailand (กระทรวงสาธารณสุข)
+    - FDA / Thai FDA (อย.)
+  freshness_rule: ≤ 3 years for stats; track latest for recommendations
+  schema_org_evidence_level: EvidenceLevelB
+  preferred_for: epidemiology, public health stats, regulatory info
+
+TIER 5 — Peer-Reviewed Observational / Cohort Studies
+  examples:
+    - PubMed cohort studies (STROBE-compliant)
+    - Case-control studies
+    - Cross-sectional surveys
+  freshness_rule: ≤ 7 years
+  schema_org_evidence_level: EvidenceLevelC
+  preferred_for: real-world evidence, epidemiological trends
+
+TIER 6 — Textbook / Expert Consensus / Hospital Data
+  examples:
+    - Standard medical textbooks (UpToDate, Harrison's, Goodman & Gilman's)
+    - Expert panel consensus statements
+    - Hospital case data (de-identified, aggregate)
+    - Brand's own clinical data (Brand B Clinical Data, etc.)
+  freshness_rule: textbook ≤ 5 years; consensus track latest
+  schema_org_evidence_level: EvidenceLevelC (or no level if expert opinion only)
+  preferred_for: foundational concepts, anatomical facts, brand-specific data
+```
+
+### Schema.org Integration
+
+```json
+// Example: A claim with evidence level marked
+{
+  "@type": "MedicalScholarlyArticle",
+  "headline": "Niacinamide reduces hyperpigmentation",
+  "citation": [
+    {
+      "@type": "ScholarlyArticle",
+      "name": "Topical niacinamide reduces yellowing, wrinkling, red blotchiness",
+      "author": "Bissett DL et al.",
+      "datePublished": "2005",
+      "publisher": "International Journal of Cosmetic Science",
+      "sameAs": "https://pubmed.ncbi.nlm.nih.gov/...",
+      "evidenceLevel": "https://schema.org/EvidenceLevelA"
+    }
+  ]
+}
+```
+
+### Citation Selection Rules
+
+```yaml
+priority_order_when_choosing:
+  1. Highest Tier available for the claim type
+  2. Most recent within Tier
+  3. Most authoritative author/journal within Tier
+  4. Most accessible to readers (open-access preferred)
+
+minimum_per_layer:
+  Layer_4_Concern_Pillars:    ≥ 3 citations, at least 1 in Tier 1-3
+  Layer_5_Knowledge_Hub:      ≥ 3 citations, at least 1 in Tier 1-3
+  Layer_6_Protocol_Pages:     ≥ 2 citations, at least 1 in Tier 2-3
+  Layer_2_Money_Pages:        ≥ 2 citations (Tier 3-4 acceptable)
+  Layer_7_Evidence_Pages:     ≥ 1 citation (often hospital data Tier 6)
+
+forbidden:
+  ✗ Wikipedia as primary source (use as starting point only)
+  ✗ Unverified blog posts
+  ✗ AI-generated content as citation
+  ✗ Self-citation chain (cite our own page that cites our own page)
+  ✗ Sponsored content unless disclosed
+```
+
+### Conflicting Evidence Handling
+
+```yaml
+when_evidence_conflicts:
+  rule_1: Cite the systematic review/meta-analysis if available
+  rule_2: Acknowledge the conflict explicitly
+    template: "Studies show mixed results. [Tier 1 source] found X, while [Tier 2 source] found Y."
+  rule_3: Default to medical society guideline position
+  rule_4: Never cherry-pick favorable evidence
+
+example_anti_pattern:
+  ❌ "Studies prove that [intervention] works." (citing only positive studies)
+
+example_correct:
+  ✅ "A 2024 Cochrane review found moderate evidence that [intervention] works for [population], 
+      though earlier RCTs showed mixed results."
+```
+
+### Conflict of Interest Disclosure
+
+```yaml
+when_required:
+  - Author has financial ties to drug/device manufacturer
+  - Brand is owned/funded by pharmaceutical company
+  - Sponsored content (must be clearly labeled)
+  - Doctor receives industry payments (transparency principle)
+
+format:
+  inline: "Disclosure: [Author] has received [type] from [entity] in [year]."
+  page_level: Conflicts of Interest section in /about
+  schema: schema:funder property where applicable
+```
+
+> 📚 **External standards referenced (do not duplicate):**
+> - GRADE: https://www.gradeworkinggroup.org/
+> - Cochrane Methods: https://methods.cochrane.org/
+> - PRISMA: http://www.prisma-statement.org/ (for systematic review citations)
+> - Schema.org MedicalEvidenceLevel: https://schema.org/MedicalEvidenceLevel
+
+---
+
+## 23.2 Medical Disclaimers & Red Lines
+
+### The Standard Disclaimer Framework
+
+Every page in Layers 4, 5, 6, 7 (medical content) must have a disclaimer block matched to content type:
+
+```yaml
+disclaimer_types:
+
+GENERAL_INFORMATIONAL (Layer 5 Knowledge):
+  thai: |
+    ข้อมูลในบทความนี้เป็นข้อมูลทั่วไปเพื่อการศึกษาเท่านั้น 
+    ไม่ใช่คำแนะนำทางการแพทย์ส่วนบุคคล หากมีข้อสงสัยหรืออาการเจ็บป่วย 
+    โปรดปรึกษาแพทย์หรือบุคลากรทางการแพทย์ที่มีใบอนุญาต
+  english: |
+    The information in this article is for general educational purposes only 
+    and is not personal medical advice. For any health concerns or symptoms, 
+    please consult a licensed healthcare provider.
+
+CONDITION_PILLAR (Layer 4 Concerns):
+  add_to_general: |
+    + อาการที่ระบุในบทความนี้อาจแตกต่างจากกรณีของคุณ 
+      การวินิจฉัยที่แม่นยำต้องการการตรวจร่างกายและประวัติทางการแพทย์ที่ครบถ้วน
+
+PROCEDURE_PROTOCOL (Layer 6 Protocols):
+  add_to_general: |
+    + ผลลัพธ์ของหัตถการขึ้นอยู่กับสภาพร่างกายของแต่ละบุคคล 
+    + ภาวะแทรกซ้อนเป็นไปได้ — ควรปรึกษาแพทย์เกี่ยวกับความเสี่ยงเฉพาะของคุณ
+
+DRUG_INFORMATION (within content):
+  add_to_general: |
+    + ห้ามใช้ยาโดยไม่ปรึกษาแพทย์หรือเภสัชกร 
+    + ข้อมูลขนาดยาเป็นข้อมูลทั่วไป — ขนาดที่เหมาะสมขึ้นอยู่กับแต่ละบุคคล
+    + รายงาน adverse drug reaction ต่อ อย. หากเกิดอาการไม่พึงประสงค์
+
+EMERGENCY_CONTENT:
+  add_to_general: |
+    + หากเป็นภาวะฉุกเฉิน โทรเรียกรถพยาบาลที่ 1669 หรือ 1554 ทันที
+    + ห้ามใช้ข้อมูลออนไลน์แทนการรักษาฉุกเฉิน
+```
+
+### Forbidden Language — Medical Red Lines
+
+```yaml
+absolute_red_lines:
+  ❌ NEVER USE:
+    - "cure" / "รักษาให้หายขาด" / "หายขาด 100%"
+    - "guaranteed" / "การันตี" / "รับประกัน"
+    - "miracle" / "ปาฏิหาริย์" / "มหัศจรรย์"
+    - "100% safe" / "ปลอดภัย 100%"
+    - "no side effects" / "ไม่มีผลข้างเคียง"
+    - "best in Thailand/world" / "ดีที่สุด" (without verifiable basis)
+    - "permanent results" / "ถาวร" (unless scientifically proven)
+    - "FDA approved for [off-label use]" (when not actually approved for that use)
+
+soft_red_lines:
+  ⚠️ AVOID without context/qualification:
+    - "natural therefore safe" — natural ≠ safe
+    - "everyone benefits" — individuals vary
+    - "instant results" — qualify with realistic timeline
+    - "doctors recommend" — which doctors? cite source
+
+acceptable_alternatives:
+  ✅ INSTEAD USE:
+    "cure"          → "manage", "control symptoms", "reduce", "improve"
+    "100% safe"     → "generally well-tolerated", "favorable safety profile"
+    "guaranteed"    → "consistent results in [N] studies"
+    "no side effects" → "common side effects include..."
+    "best"          → "leading", "established", "evidence-based"
+    "permanent"     → "long-lasting (typically [X] years)"
+```
+
+### "Consult Your Doctor" Trigger Patterns
+
+```yaml
+when_to_add_consultation_prompt:
+  always_at_top_of:
+    - Symptom-checking content (Layer 4)
+    - Drug information pages
+    - Self-treatment guides
+
+  always_inline_when_discussing:
+    - Specific dosages
+    - Drug interactions
+    - Pediatric/pregnancy/elderly considerations
+    - Surgery decisions
+    - Mental health treatment
+
+  pattern_examples:
+    inline: "Consult your doctor before adjusting dosage."
+    boxed_callout: "⚠️ ปรึกษาแพทย์ก่อนตัดสินใจ — ทุกกรณีมีความเฉพาะตัว"
+    end_of_section: "If you have these symptoms, please see a healthcare provider."
+```
+
+### Indication vs Off-Label Clarity
+
+```yaml
+when_writing_about_drugs_or_devices:
+  rule_1_state_indication:
+    "Drug X is approved for Indication Y by [FDA/Thai FDA]"
+  
+  rule_2_off_label_disclosure:
+    If discussing off-label use: 
+    "Drug X is sometimes used off-label for Z, though it is approved only for Y. 
+     Off-label use should be discussed with your doctor."
+  
+  rule_3_no_unapproved_claims:
+    Never imply a use that is not approved as if it were approved
+```
+
+### Vulnerable Population Care
+
+```yaml
+extra_caution_required_for:
+  pregnancy_lactation:
+    - Always include "consult OB-GYN" prompt
+    - Note FDA pregnancy category if relevant
+    - Reference WHO/Thailand Ministry of Public Health pregnancy guidelines
+  
+  pediatric_content:
+    - Age-appropriate language
+    - Parent/guardian guidance prompt
+    - Stricter safety thresholds
+    - COPPA-equivalent considerations for any data collection
+  
+  elderly:
+    - Note polypharmacy risks
+    - Cognitive impairment considerations
+    - Multimorbidity context
+  
+  mental_health:
+    - Crisis hotline visible: Thailand Department of Mental Health 1323
+    - International: see WHO mental health resources
+    - Suicide-related: must include crisis resources, never describe methods
+    - Eating disorders: must include support resources
+```
+
+> 📚 **External standards referenced:**
+> - Thailand Drug Advertisement Act (พ.ร.บ. ยา)
+> - Thai FDA (อย.) advertising regulations
+> - WHO ethical health communication guidelines
+
+---
+
+## 23.3 Authority Validation Standards
+
+### License Verification Workflow
+
+```yaml
+for_thai_medical_authors:
+  required_fields:
+    - tmc_license_number (แพทยสภา) — verifiable
+    - tmc_license_verified_at (timestamp)
+    - specialty_board_cert[] (สมาคมเฉพาะทาง)
+    - active_status (active/inactive/retired)
+  
+  verification_process:
+    1. Author submits license info
+    2. Operator verifies via TMC public registry
+    3. Set tmc_license_verified_at = now()
+    4. Set verification_method = 'TMC public registry lookup'
+    5. Re-verify annually
+
+for_international_authors:
+  required_fields:
+    - license_jurisdiction (US, UK, Singapore, etc.)
+    - license_authority (state board, GMC, SMC)
+    - license_number
+    - npi_number (US) or equivalent
+    - sameAs URLs (Healthgrades, Doctolib, Practo)
+
+for_dental_authors:
+  - thai_dental_council_license_number (ทันตแพทยสภา)
+  - additional fields per Thai Dental Council requirements
+
+display_requirements:
+  - License number visible on author bio page (not just credential text)
+  - Link to verification source where possible
+  - Active status clearly shown
+```
+
+### Schema.org Authority Markup
+
+```json
+{
+  "@type": "Physician",
+  "name": "Dr. Example Smith",
+  "medicalSpecialty": "Dermatology",
+  "identifier": [
+    {
+      "@type": "PropertyValue",
+      "propertyID": "TMC License",
+      "value": "12345"
+    }
+  ],
+  "sameAs": [
+    "https://www.healthgrades.com/...",
+    "https://en.wikipedia.org/wiki/...",
+    "https://www.doctolib.com/..."
+  ],
+  "memberOf": [
+    {
+      "@type": "MedicalOrganization",
+      "name": "American Academy of Dermatology"
+    },
+    {
+      "@type": "MedicalOrganization",
+      "name": "สมาคมแพทย์ผิวหนังแห่งประเทศไทย"
+    }
+  ]
+}
+```
+
+### Hospital / Clinic Accreditation
+
+```yaml
+international_accreditations:
+  JCI (Joint Commission International):
+    - Most prestigious for medical tourism
+    - Schema: schema:hasCredential
+  
+  ISO 9001 (Quality Management):
+    - Common for clinics
+  
+  HIMSS EMRAM:
+    - For digital health maturity
+
+thailand_specific:
+  HA (Healthcare Accreditation Institute Thailand):
+    - National hospital accreditation
+    - thai_dental_council certification for dental clinics
+
+display_pattern:
+  - Accreditation badges visible on /about and /home
+  - Schema markup with hasCredential property
+  - Link to accreditation body for verification
+```
+
+### Medical Advisory Board Pattern
+
+```yaml
+elite_brands_have:
+  visible_advisory_board_page:
+    url: /medical-advisory-board (or equivalent)
+    content_blocks:
+      - Board mission statement
+      - Each member: name, credentials, specialty, bio (≥150 words)
+      - Schema.org Person markup with full credentials
+      - Photo with consent
+      - Conflict of interest disclosures
+    
+  attribution_in_content:
+    - Articles list "Medically reviewed by [Board Member]"
+    - Link to advisory board page
+    - reviewed_at timestamp visible
+
+minimum_for_elite_tier:
+  - At least 3 advisory board members
+  - Different specialties represented (if multi-specialty brand)
+  - Active engagement (not figureheads)
+```
+
+---
+
+## 23.4 Multi-Stage Editorial Review
+
+### The 5-Stage Workflow
+
+```
+Draft → Stage 1 → Stage 2 → Stage 3 → Stage 4 → Stage 5 → Published
+        Medical   Editorial   SEO/LLMO   Legal    Final
+        accuracy  polish     compliance review   gate
+```
+
+### Stage Specifications
+
+```yaml
+STAGE_1_Medical_Accuracy:
+  reviewer: Licensed MD/DDS/specialist (matched to content vertical)
+  checklist:
+    ☐ All medical claims accurate
+    ☐ All citations valid and matched
+    ☐ Evidence tier appropriate (per Section 23.1)
+    ☐ Disclaimer block present and correct (per 23.2)
+    ☐ No red-line language (per 23.2)
+    ☐ Forbidden language absent
+    ☐ Specific dosages/intervals verified
+    ☐ Demographic considerations addressed (pregnancy, pediatric, elderly)
+  output: Medical sign-off with timestamp
+  sla: 3 business days
+  fail_action: Return to writer with specific corrections
+
+STAGE_2_Editorial_Polish:
+  reviewer: Senior medical writer / editor
+  checklist:
+    ☐ Tone matches brand voice
+    ☐ Reading level appropriate (typically Grade 8-10 for patient-facing)
+    ☐ Structure clear (H1/H2/H3 hierarchy)
+    ☐ Pattern A-F citables embedded (per Part 6)
+    ☐ Perspective Layer present (per Part 13)
+    ☐ Grammar and spelling
+    ☐ Cultural sensitivity (Thai context)
+  output: Editorial sign-off
+  sla: 2 business days
+
+STAGE_3_SEO_LLMO_Optimization:
+  reviewer: SEO Lead / LLMO specialist
+  checklist:
+    ☐ Schema.org markup correct and validated
+    ☐ Title + meta description optimized
+    ☐ Internal links (in/out) per cluster strategy
+    ☐ Citable sentences ≥ 5/page (per KPI #1)
+    ☐ FAQ block ≥ 8, 7 FAQ types covered (per Part 13)
+    ☐ Featured Snippet/AI Overview targets identified
+    ☐ Wikidata Q-number referenced where applicable (per 23.7 brand SERP)
+    ☐ Schema validated (rich-results.test.google.com)
+  output: SEO sign-off
+  sla: 2 business days
+
+STAGE_4_Legal_Compliance:
+  reviewer: Legal/Compliance Officer
+  checklist:
+    ☐ No false advertising claims
+    ☐ No off-label drug claims (per 23.2)
+    ☐ Disclosures present (conflict of interest, sponsored content)
+    ☐ Patient privacy protected (de-identified evidence per Part 13)
+    ☐ Drug Advertisement Act compliance (Thailand)
+    ☐ Thai FDA regulations respected
+    ☐ Copyright/usage rights clear (images, quotes)
+    ☐ Vulnerable population considerations met (per 23.2)
+  output: Legal sign-off
+  sla: 3 business days
+  trigger_full_review: any Layer 2/4/6 page; any drug/procedure mentioning
+
+STAGE_5_Final_Publish_Gate:
+  reviewer: Brand Owner / Editor-in-Chief
+  checklist:
+    ☐ All previous sign-offs present
+    ☐ Final read-through complete
+    ☐ Promotional plan ready
+    ☐ Publication date confirmed
+  output: Publish authorization
+  sla: 1 business day
+```
+
+### Handoff Documentation
+
+Each stage produces a record:
+
+```sql
+CREATE TABLE seo_editorial_reviews (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  page_id uuid REFERENCES seo_website_page_master(id),
+  stage integer NOT NULL,                       -- 1-5
+  reviewer_id uuid REFERENCES seo_authors_reviewers(id),
+  reviewed_at timestamptz DEFAULT now(),
+  status text NOT NULL,                         -- 'approved'/'rejected'/'revisions_requested'
+  checklist_completed jsonb,                    -- per-item ☐/☑ tracking
+  notes text,
+  blocking_issues text[],                       -- if rejected/revisions
+  CONSTRAINT valid_stage CHECK (stage BETWEEN 1 AND 5)
+);
+
+CREATE INDEX idx_editorial_reviews_page ON seo_editorial_reviews(page_id, stage);
+```
+
+### Lean Tier (when full 5-stage isn't feasible)
+
+```yaml
+minimum_acceptable_for_elite:
+  Tier_A_money_pages:        ALL 5 stages required
+  Tier_B_pillar_pages:       ALL 5 stages required
+  Tier_C_service_pages:      Stages 1, 2, 3, 5 (skip Legal unless drug claims)
+  Tier_D_supporting:         Stages 2, 3, 5 (Stage 1 only if medical claims)
+
+blocking_thresholds:
+  - Stage 1 fail = no publish (medical accuracy is non-negotiable)
+  - Stage 4 fail = no publish if drug/legal claims
+  - Stage 2/3 fail = revisions cycle, not block
+```
+
+---
+
+## 23.5 Core Web Vitals Targets per Layer
+
+### Performance Budget Framework
+
+```yaml
+google_core_web_vitals_2026_thresholds:
+  LCP (Largest Contentful Paint):
+    good: < 2.5s
+    needs_improvement: 2.5-4.0s
+    poor: > 4.0s
+  
+  INP (Interaction to Next Paint):       # replaced FID
+    good: < 200ms
+    needs_improvement: 200-500ms
+    poor: > 500ms
+  
+  CLS (Cumulative Layout Shift):
+    good: < 0.1
+    needs_improvement: 0.1-0.25
+    poor: > 0.25
+```
+
+### Layer/Tier-Specific Targets (Stricter than Default)
+
+```yaml
+LAYER_2_Money_Pages (Tier A-B — high commercial intent):
+  LCP: ≤ 2.0s          # 20% stricter — these convert; speed = revenue
+  INP: ≤ 150ms
+  CLS: ≤ 0.1
+  rationale: First impression for paying customers
+
+LAYER_4_Concern_Pillars (Tier B — high traffic):
+  LCP: ≤ 2.0s
+  INP: ≤ 150ms
+  CLS: ≤ 0.05         # very low — sensitive medical content shouldn't shift
+  rationale: High traffic, mobile-heavy users with anxiety
+
+LAYER_5_Knowledge_Hub (Tier C-D):
+  LCP: ≤ 2.5s
+  INP: ≤ 200ms
+  CLS: ≤ 0.1
+  rationale: Educational reading — slightly more lenient
+
+LAYER_7_Evidence_Pages (Tier D — heavy media):
+  LCP: ≤ 2.8s         # photos/videos justify slightly higher
+  INP: ≤ 200ms
+  CLS: ≤ 0.1
+  rationale: Patient stories with media justify slight relaxation
+
+LAYER_1_Authority / LAYER_3_Product:
+  LCP: ≤ 2.5s
+  INP: ≤ 200ms
+  CLS: ≤ 0.1
+```
+
+### Implementation Patterns
+
+```yaml
+must_have_optimizations:
+  ☐ Image optimization:
+    - WebP/AVIF formats
+    - Responsive srcset
+    - Lazy loading below fold
+    - Explicit width/height (prevent CLS)
+  
+  ☐ Font optimization:
+    - font-display: swap
+    - Preload critical fonts
+    - WOFF2 format
+  
+  ☐ Critical CSS inlined for above-fold
+  ☐ JavaScript deferred/async where possible
+  ☐ CDN for static assets (Bangkok edge nodes)
+  ☐ HTTP/2 or HTTP/3
+  ☐ Server response < 600ms (TTFB)
+
+monitoring:
+  - Real User Monitoring (RUM) via GA4 Web Vitals
+  - Lab data via PageSpeed Insights / Lighthouse
+  - Track per-Layer in Part 20 KPI dashboard
+  - Alert when Layer 2/4 violates target
+```
+
+> 📚 **External standards referenced:**
+> - Google Core Web Vitals: https://web.dev/vitals/
+> - Page Experience signals: Google Search Central documentation
+
+---
+
+## 23.6 Accessibility Essentials (WCAG 2.2 AA)
+
+### Why Accessibility Matters for Medical SEO
+
+```
+1. Legal: ADA/WCAG lawsuits common for medical sites
+2. SEO: Google increasingly weights accessibility signals
+3. Reach: 15-20% of users have some disability
+4. Trust: Accessible = thoughtful = professional
+5. Mobile: Many a11y best practices = mobile UX best practices
+```
+
+### Per-Component Checklist (WCAG 2.2 AA Compliance)
+
+```yaml
+text_and_typography:
+  ☐ Color contrast ≥ 4.5:1 for body text (3:1 for large text)
+  ☐ Resizable to 200% without breaking layout
+  ☐ Line height ≥ 1.5x font size
+  ☐ Don't convey info by color alone
+  ☐ Reading level appropriate (Grade 8-10 patient content)
+
+images:
+  ☐ Alt text on all meaningful images
+  ☐ Decorative images: alt=""
+  ☐ Medical imagery: descriptive alt with clinical context
+    Example: alt="X-ray showing peri-implant bone loss around lower right molar"
+  ☐ Before/after photos: alt describes both states + consent disclosure
+
+video_and_audio:
+  ☐ Captions on all videos (Thai + English where applicable)
+  ☐ Transcripts available
+  ☐ Audio descriptions for visual-only info
+  ☐ No autoplay with sound
+  ☐ Procedure videos: chapter markers + medical disclaimer
+
+navigation:
+  ☐ Keyboard navigable (no mouse-only interactions)
+  ☐ Visible focus indicators
+  ☐ Skip-to-main-content link
+  ☐ Logical tab order
+  ☐ Breadcrumbs on multi-level pages
+
+forms (appointment booking, contact):
+  ☐ Labels associated with inputs
+  ☐ Error messages descriptive
+  ☐ Required fields marked clearly (not by color alone)
+  ☐ Inline validation with screen reader announcements
+  ☐ Form submission feedback (success/failure clear)
+
+interactive_elements:
+  ☐ Buttons have accessible names
+  ☐ ARIA labels where needed
+  ☐ Modals trap focus and restore on close
+  ☐ Tooltips keyboard accessible
+
+cognitive_accessibility:
+  ☐ Plain language preferred
+  ☐ Medical jargon defined (or linked to Knowledge Hub)
+  ☐ Complex info chunked
+  ☐ Time limits avoided or extendable
+```
+
+### Medical-Specific Accessibility Patterns
+
+```yaml
+symptom_checker_accessibility:
+  - Multiple input methods (text, dropdown, voice)
+  - Confirmation step before submit
+  - Error recovery clear
+  - Emergency triggers (chest pain, severe headache) → immediate prompt to call 1669
+
+drug_information_accessibility:
+  - Tabular drug data with proper headers
+  - Dosage info in multiple formats (decimal, fraction)
+  - Interaction warnings prominent
+  - Print-friendly version available
+
+before_after_photos:
+  - Consent disclosure visible
+  - Alt text describes outcome neutrally
+  - "Results may vary" prominent
+  - Optional photo blur/preview for sensitive imagery
+```
+
+### Testing & Verification
+
+```yaml
+automated_testing:
+  - Lighthouse Accessibility audit (CI/CD pipeline)
+  - axe DevTools / WAVE
+  - Color contrast checkers
+
+manual_testing:
+  - Keyboard-only navigation (full site)
+  - Screen reader testing (NVDA/JAWS for desktop, VoiceOver for mobile)
+  - 200% zoom test
+  - Mobile a11y testing
+
+user_testing:
+  - Periodic testing with users with disabilities
+  - Document feedback in issue tracker
+
+minimum_score_targets:
+  Lighthouse Accessibility: ≥ 95
+  WAVE errors: 0
+  axe violations: 0 critical, 0 serious
+```
+
+> 📚 **External standards referenced:**
+> - WCAG 2.2: https://www.w3.org/WAI/WCAG22/quickref/
+> - ARIA Authoring Practices: https://www.w3.org/WAI/ARIA/apg/
+> - Section 508 (US gov): for international medical tourism market
+
+---
+
+## 23.7 Future: International SEO (Hreflang) 🔮
+
+> **Quick reference:** Activate when brand expands to multi-language or multi-country
+
+```yaml
+current_state:
+  - Most brands operate primarily in Thai (th-TH)
+  - English added selectively
+  - WPML installed but hreflang strategy not formalized
+
+future_consideration: Full International SEO Framework
+  what_it_adds:
+    - Hreflang patterns: x-default, country-language combinations
+    - URL structure decision tree (ccTLD vs subdirectory vs subdomain)
+    - Currency and unit localization
+    - Per-country regulatory variation handling
+    - Bing Webmaster + Yandex (medical tourism markets)
+
+activation_triggers:
+  ☐ Brand expands to multi-language (≥ 2 languages active)
+  ☐ Medical tourism strategy targeting specific countries
+  ☐ International accreditation (JCI) marketing push
+
+prerequisites:
+  ☐ Translation workflow (not just MT — medical content needs human review)
+  ☐ Legal review per target country (drug claims vary)
+  ☐ Currency display strategy
+```
+
+→ See **Part 24 (Future Roadmap & Beyond)** for activation plan
+
+---
+
+## 23.8 Future: Crisis & Reputation Management 🔮
+
+> **Quick reference:** Activate when brand reaches scale where crisis is statistically likely
+
+```yaml
+current_state:
+  - Per-page reviewer + citation = baseline trust
+  - No systematic crisis response framework
+
+future_consideration: Crisis Response Framework
+  what_it_adds:
+    - Negative review response playbook
+    - Medical malpractice content hygiene
+    - Drug recall / safety alert protocols
+    - Outdated medical info auto-flagging
+    - Disinformation response procedures
+    - Trust-erosion event response
+
+activation_triggers:
+  ☐ Brand has > 50K monthly visitors (statistical risk)
+  ☐ Any past negative event in news media
+  ☐ Multi-brand portfolio (≥ 5 brands — reputation contagion risk)
+  ☐ High-profile medical tourism brand
+
+prerequisites:
+  ☐ Designated crisis response team
+  ☐ Legal counsel relationship
+  ☐ PR partner or in-house capability
+  ☐ Monitoring tools (Mention, Brand24, GSC alerts)
+```
+
+→ See **Part 24** for activation plan
+
+---
+
+## 23.9 Future: Specialized Medical Content Types 🔮
+
+> **Quick reference:** Activate per-vertical when use case justifies
+
+```yaml
+specialized_content_types_planned:
+  drug_interaction_tables:
+    use_case: pharmacy or clinic with drug-heavy content
+    schema: schema:Drug + schema:DrugInteraction
+  
+  symptom_checker:
+    use_case: patient triage tool
+    requires: AI safety guardrails (no misdiagnosis risk)
+    schema: schema:MedicalCondition + schema:MedicalSymptom
+  
+  differential_diagnosis_content:
+    use_case: HCP-facing content
+    schema: schema:DDxElement
+  
+  clinical_pathway_diagrams:
+    use_case: protocol visualization
+    schema: schema:HowTo + schema:MedicalGuideline
+  
+  risk_calculators:
+    use_case: cardiovascular risk, BMI, diabetes risk
+    requires: heavy disclaimers + AI safety
+  
+  patient_forums_qa:
+    use_case: community engagement
+    requires: heavy moderation + medical review
+
+activation_triggers:
+  ☐ Specific vertical demands the format
+  ☐ Competitor analysis shows gap we can fill
+  ☐ Technical capability exists (AI safety, moderation)
+
+prerequisites_per_type:
+  ☐ Schema.org type validated
+  ☐ Editorial workflow extended for the format
+  ☐ Legal review (especially for risk calculators)
+```
+
+→ See **Part 24** for activation plan
+
+---
+
+## 23.10 Summary
+
+```
+Part 23 transforms EYWA™ PROTOCOL from "strong system" to "elite global standard":
+
+✅ 23.1 Citation Tier System (6-tier evidence hierarchy + GRADE + Schema.org)
+✅ 23.2 Medical Disclaimers & Red Lines (legal protection + AI trust)
+✅ 23.3 Authority Validation Standards (license + accreditation + advisory board)
+✅ 23.4 Multi-Stage Editorial Review (5-stage workflow + SLA)
+✅ 23.5 Core Web Vitals Targets per Layer (Google direct ranking)
+✅ 23.6 Accessibility Essentials (WCAG 2.2 AA — Google + ADA compliant)
+
+🔮 Future Notes (kept lean — activate when needed):
+   23.7 International SEO (Hreflang) — when multi-language
+   23.8 Crisis & Reputation Management — when scale demands it
+   23.9 Specialized Medical Content Types — per-vertical activation
+
+→ Result: คัมภีร์ EYWA™ PROTOCOL ครบ Mayo Clinic / Cleveland Clinic / Healthline tier
+→ Maintained lean (Part 23 ≈ 30KB, not 120KB) — sustainable for long-term ops
+→ External standards referenced (don't duplicate WCAG, GRADE, Schema.org)
+```
+
+---
+
+# PART 24: Future Roadmap & Beyond
+
+> **Why this Part exists:** ตามที่ผู้ใช้เลือก Option C+A — กระจาย future-proofing notes ไว้ใน Parts ที่เกี่ยวข้อง (RDF→Part 2, FHIR→Part 5, Trust→Part 13/21, Revenue→Part 20) + **สรุปท้ายเล่ม** เพื่อให้ navigation ง่าย
+>
+> **Purpose:** Single source of truth สำหรับ "อนาคตจะทำอะไร เมื่อไหร่" — ใช้เปรียบเทียบกับสถานการณ์ปัจจุบันและตัดสินใจว่าควร activate อะไรเมื่อไหร่
+
+---
+
+## 24.1 Future-Proofing Philosophy
+
+```
+หลักการ: Build for today, design for tomorrow
+
+❌ Don't:
+  - Implement everything Day 1 (over-engineering)
+  - Ignore future needs (technical debt)
+  - Build proprietary when standards exist
+
+✅ Do:
+  - Use standards (Schema.org, ISO, DAMA) ที่ extend ได้ในอนาคต
+  - Design schema with optional FK fields (NULL-able for future linkage)
+  - Document activation triggers ชัดเจน
+  - Keep dependencies minimal until needed
+```
+
+---
+
+## 24.2 Future Item #1 — Semantic Web (RDF/SPARQL)
+
+**Cross-reference:** [Part 2.6 Future: Semantic Web Integration](#part-2-6)
+
+### What
+
+```yaml
+current_state:
+  - Knowledge Graph stored in PostgreSQL relations + pgvector
+  - Entity relationships via FK + array fields
+  - Schema.org JSON-LD output (Tier 1/2/3)
+  - Sufficient for AI citation + content discovery
+
+future_state:
+  - RDF triples export (entity-property-value)
+  - SPARQL endpoint for semantic queries
+  - OWL ontology formalization (class hierarchies, restrictions)
+  - Reasoning rules (inferred relationships)
+
+example_use_case:
+  query_today:
+    "Who are doctors specializing in OSA at our clinics?"
+    → SQL JOIN through 4 tables
+  
+  query_future_with_RDF:
+    SELECT ?doctor WHERE {
+      ?doctor rdf:type schema:Physician .
+      ?doctor schema:medicalSpecialty schema:SleepMedicine .
+      ?doctor schema:worksFor ?clinic .
+      ?clinic mema:partOfBrand <example_brand> .
+    }
+    → semantic reasoning, cross-clinic discovery
+```
+
+### Why Future (Not Now)
+
+```
+Reasons to defer:
+  ✗ PostgreSQL + Schema.org JSON-LD already serves AI citation needs
+  ✗ SPARQL is over-engineering for current scale
+  ✗ Maintenance complexity high (need RDF expertise)
+  ✗ ROI unclear at current scale
+
+Reasons it might matter later:
+  ✓ Large-scale enterprise integration (multiple healthcare orgs)
+  ✓ Government health data exchange
+  ✓ Academic research consortium
+  ✓ Competitor (DKBio, etc.) starts using RDF
+```
+
+### Activation Triggers
+
+```yaml
+activate_when_any_true:
+  ☐ 5+ healthcare brands need shared knowledge graph
+  ☐ External research collaboration requested
+  ☐ Government RFP requires RDF/SPARQL
+  ☐ Migration to enterprise stack (e.g., GraphDB, Stardog)
+  ☐ Schema.org JSON-LD insufficient for new use case
+
+prerequisites:
+  ☐ RDF expertise on team (or contractor)
+  ☐ Stable PostgreSQL schema (Phase 1 complete)
+  ☐ Budget for triple store ($500-5000/month)
+  ☐ Migration plan to convert relations → triples
+```
+
+### Implementation Approach (When Ready)
+
+```
+Phase A: Export-only (parallel)
+  - Daily ETL: PostgreSQL → RDF triples
+  - Read-only SPARQL endpoint
+  - No write-back to operational DB
+
+Phase B: Hybrid query
+  - SPARQL for semantic questions
+  - SQL for transactional
+  - Both share same source data
+
+Phase C: Full ontology (advanced)
+  - OWL class definitions
+  - Reasoning rules
+  - Inferred triples
+```
+
+---
+
+## 24.3 Future Item #2 — FHIR Healthcare Interoperability
+
+**Cross-reference:** [Part 5.13 Future: Healthcare Interop (FHIR)](#part-5-13)
+
+### What
+
+```yaml
+current_state:
+  - Schema.org MedicalCondition / MedicalProcedure / Drug / etc.
+  - ICD-10 / SNOMED-CT / MeSH identifiers in entity_graph
+  - Suitable for SEO + AI citation
+  - NOT suitable for clinical interop (EHR/HIS systems)
+
+future_state:
+  - FHIR R4/R5 resource mapping
+  - Condition → fhir:Condition
+  - Procedure → fhir:Procedure
+  - Observation → fhir:Observation
+  - DiagnosticReport → fhir:DiagnosticReport
+  - Patient (from de-identified evidence) → fhir:Patient
+
+example_use_case:
+  scenario_today:
+    Marketing/SEO content about "ฟันคุด"
+    → SEO-optimized page only
+  
+  scenario_future:
+    Clinic ↔ Hospital integration
+    → Patient referrals with structured FHIR Bundle
+    → Cross-system clinical record sharing
+    → Telemedicine handoffs
+```
+
+### Why Future (Not Now)
+
+```
+Reasons to defer:
+  ✗ We're a marketing/SEO stack, not a clinical system
+  ✗ FHIR requires HIS/EHR integration partner
+  ✗ Compliance burden (HIPAA-Thai equivalent, PDPA-Health)
+  ✗ Most brands don't need EHR integration today
+
+Reasons it might matter later:
+  ✓ Hospital-grade clients (multi-specialty hospitals)
+  ✓ Digital health platform expansion
+  ✓ Insurance integration
+  ✓ Government health portal compliance
+```
+
+### Activation Triggers
+
+```yaml
+activate_when_any_true:
+  ☐ Onboard hospital-tier client requiring EHR sync
+  ☐ Insurance integration project
+  ☐ Telemedicine platform expansion
+  ☐ Clinical research data sharing required
+  ☐ Government health portal mandate
+
+prerequisites:
+  ☐ FHIR-certified developer on team
+  ☐ Compliance officer (PDPA-Health)
+  ☐ HIS/EHR partner identified
+  ☐ Legal review (data sharing agreements)
+  ☐ Audit logging infrastructure
+```
+
+### Implementation Approach (When Ready)
+
+```
+Phase A: Map existing entities to FHIR resources
+  - Document entity_graph → FHIR resource mapping
+  - Add fhir_resource_type field (NULL until activated)
+  - Validate against FHIR R5 spec
+
+Phase B: Read-only FHIR API
+  - Expose entity_graph as FHIR-compliant API
+  - GET /Condition/{id}, GET /Procedure/{id}
+  - No write yet
+
+Phase C: Bi-directional integration
+  - POST/PUT for inbound clinical data
+  - Synchronization with EHR partner
+  - Conflict resolution + audit trail
+```
+
+---
+
+## 24.4 Future Item #3 — Trust Layer Automation
+
+**Cross-reference:** [Part 13.X Future: Trust Layer Automation](#part-13-x), [Part 21.7 Future: Trust Layer Automation](#part-21-7)
+
+### What
+
+```yaml
+current_state:
+  - reviewer_id manually assigned per page
+  - Citations manually curated
+  - E-E-A-T quality measured by KPI #3 (coverage %)
+
+future_state:
+  - author_credibility_score: auto-computed from credentials, publications, AI citations
+  - citation_authority_weight: score citations by source quality (PubMed > random blog)
+  - evidence_chain_automation: trace claim → citation → source quality
+  - AI-flagged claims without strong backing
+
+example_use_case:
+  scenario_today:
+    Page has reviewer + 3 citations
+    Quality = "good" (binary)
+  
+  scenario_future:
+    Page has reviewer (cred_score 8.7/10)
+    + 3 citations (avg authority 7.2/10)
+    + evidence chain validated
+    Quality = 7.95/10 with breakdown
+    → Higher trust score → AI citation boost
+```
+
+### Activation Triggers
+
+```yaml
+activate_when_all_true:
+  ☐ 100+ pages with mature citation depth
+  ☐ Reviewer table fully populated (credentials, publications)
+  ☐ At least 6 months of manual baseline data
+  ☐ ROI of automation > engineering cost
+  ☐ AI Citation Rate (KPI #8) reaches plateau (need new lever)
+
+prerequisites:
+  ☐ Citation source quality scoring algorithm
+  ☐ External credential verification API integration (TMC, ORCID)
+  ☐ NLP pipeline for claim extraction
+  ☐ Manual review fallback for ambiguous cases
+```
+
+---
+
+## 24.5 Future Item #4 — Revenue Attribution & ROI Integration
+
+**Cross-reference:** [Part 20.11 Future: Revenue Attribution Integration](#part-20-11)
+
+### What
+
+```yaml
+current_state:
+  - KPIs measure traffic, rankings, citations
+  - No direct conversion or revenue tracking
+  - ROI calculated externally (offline)
+
+future_state:
+  - MQL/SQL attribution per page + cluster
+  - Customer Lifetime Value (CLV) per traffic source
+  - ROAS calculation for SEO investment
+  - AI citation → website visit → MQL → SQL → revenue chain tracking
+
+example_use_case:
+  scenario_today:
+    "We have 50K organic visits/month, citation rate 30%"
+    → unclear how this translates to revenue
+  
+  scenario_future:
+    "Cluster X has 5K visits, 50 MQL, 8 SQL, ฿800K revenue/month"
+    "AI Citation rate of 30% → ฿120K incremental revenue/month"
+    → data-driven editorial planning + investment decisions
+```
+
+### Activation Triggers
+
+```yaml
+activate_when_any_true:
+  ☐ Brand has > 100 MQLs/month (statistical significance)
+  ☐ CRM is integrated with website
+  ☐ At least 6 months stable traffic
+  ☐ Multi-channel attribution model agreed
+  ☐ Executive demands ROI accountability
+
+prerequisites:
+  ☐ CRM (HubSpot/Salesforce/etc.) integration
+  ☐ GA4 enhanced ecommerce events
+  ☐ UTM attribution map
+  ☐ Conversion pixels deployed
+  ☐ Lead scoring framework
+```
+
+### Implementation Approach (When Ready)
+
+```
+Phase A: Schema additions (low effort)
+  page_master:
+    + mql_count_30d (rollup from CRM)
+    + sql_count_30d
+    + revenue_attributed_30d
+  topic_cluster_master:
+    + cluster_mql_30d
+    + cluster_revenue_30d
+
+Phase B: CRM sync flows (n8n)
+  - Daily pull from CRM → calculate per-page rollups
+  - UTM-based attribution
+  - Multi-touch model (first/last/linear/data-driven)
+
+Phase C: Revenue dashboard
+  - Add KPI #16-20 (Revenue Layer)
+  - Per-cluster ROI report
+  - AI Citation → Revenue chain visualization
+```
+
+---
+
+## 24.6 Activation Decision Tree
+
+```
+ASK: What problem are you trying to solve?
+
+├─ "Our knowledge graph is too rigid, need cross-domain reasoning"
+│  → Activate RDF/SPARQL (22.2)
+│  Prerequisites: 5+ brands, RDF expertise, budget
+│
+├─ "We need to integrate with hospital EHR/HIS"
+│  → Activate FHIR (22.3)
+│  Prerequisites: hospital client, FHIR developer, compliance
+│
+├─ "We need to scale E-E-A-T quality without manual work"
+│  → Activate Trust Layer Automation (22.4)
+│  Prerequisites: 100+ pages mature, baseline data, NLP pipeline
+│
+├─ "We need to prove SEO ROI to executives"
+│  → Activate Revenue Attribution (22.5)
+│  Prerequisites: CRM, lead volume, attribution model
+│
+└─ "None of the above"
+   → Stay focused on current Parts 1-21
+   → Re-evaluate quarterly
+```
+
+---
+
+## 24.7 Future Items Priority Matrix
+
+| Item | Effort | ROI | Urgency | Priority |
+|------|--------|-----|---------|----------|
+| **Revenue Attribution** | Medium | High | Medium | **🟡 Highest priority future** |
+| **Trust Layer Automation** | Medium-High | Medium | Low | 🟢 Medium priority |
+| **FHIR Interop** | High | High (if needed) | Conditional | 🔵 Activate when triggered |
+| **RDF/SPARQL** | High | Low (current scale) | Low | ⚪ Defer indefinitely |
+
+### Recommended Sequence (When To Implement)
+
+```
+Year 1 (current — v3.0):
+  ✅ Build Parts 1-21 (foundation)
+  ✅ Stabilize data quality (Part 19)
+  ✅ Establish KPIs (Part 20)
+  ✅ Operate AI tracking (Part 21)
+
+Year 2 (likely):
+  → Revenue Attribution (Part 24.5)
+  → Reason: by then, MQL volume + CRM integration mature
+  → Effort: ~1-2 months engineering
+
+Year 3+ (conditional):
+  → Trust Layer Automation (Part 24.4)
+  → Reason: only if AI citation rate plateau requires new lever
+  → Effort: ~2-3 months
+
+Year 5+ (rare):
+  → FHIR (Part 24.3) — only if hospital clients onboarded
+  → RDF/SPARQL (Part 24.2) — only if academic/govt collaboration
+```
+
+---
+
+## 24.8 Connection to Schema_Overview Versioning
+
+```yaml
+schema_overview_progression:
+  v0.4 (current with v3.0):
+    - 21 base tables + 3 new (Part 19/21)
+    - Total: 24 tables
+  
+  v0.5 (Year 2 — Revenue Attribution):
+    + ALTER page_master add MQL/SQL/revenue fields
+    + ALTER topic_cluster_master add cluster_revenue
+    + No new tables
+  
+  v0.6 (Year 3 — Trust Layer):
+    + ALTER authors_reviewers add credibility_score
+    + ALTER citations add authority_weight
+    + NEW: seo_evidence_chains table
+  
+  v0.7 (Year 5+ — FHIR):
+    + ALTER entity_graph add fhir_resource_type
+    + ALTER citations add fhir_compliant flag
+    + NEW: seo_fhir_mappings table
+
+  v1.0 (RDF era):
+    + Major architectural shift
+    + Parallel triple store
+    + Documented separately
+```
+
+---
+
+## 24.9 Quarterly Review Checklist
+
+Use this every quarter to decide if any future item should activate:
+
+```
+□ Revenue Attribution:
+  - MQLs/month for top brand: ___
+  - CRM integrated? Y/N
+  - Executive asking for ROI numbers? Y/N
+  → If 100+ MQLs AND CRM AND Y: PLAN ACTIVATION
+
+□ Trust Layer Automation:
+  - AI Citation Rate trend: improving / plateau / declining
+  - Manual reviewer workload: sustainable / overload
+  → If plateau AND overload: PLAN ACTIVATION
+
+□ FHIR:
+  - Hospital-tier client in pipeline? Y/N
+  - Insurance integration project? Y/N
+  → If Y: PLAN ACTIVATION
+
+□ RDF/SPARQL:
+  - Multi-brand knowledge sharing requirement? Y/N
+  - Research collaboration request? Y/N
+  - Government RFP requiring RDF? Y/N
+  → If Y: PLAN ACTIVATION
+
+□ All No: Continue current Parts 1-21 focus, reassess next quarter
+```
+
+---
+
+## 24.10 Summary
+
+```
+✅ 4 Future-Proofing Items documented:
+   1. Semantic Web (RDF/SPARQL) — Year 5+ conditional
+   2. FHIR Interop — When hospital client onboarded
+   3. Trust Layer Automation — Year 3+ if needed
+   4. Revenue Attribution — Year 2 (most likely)
+
+✅ Each item has:
+   - Cross-reference to detailed note in related Part
+   - Activation triggers (when to start)
+   - Prerequisites (what must be ready)
+   - Implementation phases (how to roll out)
+
+✅ Decision tree + priority matrix for clear navigation
+
+✅ Quarterly review checklist for ongoing assessment
+
+→ Result: คัมภีร์ v3.0 พร้อมรับอนาคต — ไม่ over-engineer วันนี้ แต่ออกแบบ
+   schema/architecture ให้ extend ได้เมื่อจำเป็น
+```
+
+---
+
+## 24.11 Cross-Reference Index
+
+For detailed documentation of each future item, see:
+
+| Future Item | Detail Location | Activation Owner |
+|-------------|----------------|------------------|
+| RDF/Semantic Web | Part 2.6 + this Part 24.2 | CTO + Architecture Lead |
+| FHIR Interop | Part 5.13 + this Part 24.3 | Compliance + Engineering |
+| Trust Layer Automation | Part 13.X + Part 21.7 + this Part 24.4 | AI Lead + SEO Lead |
+| Revenue Attribution | Part 20.11 + this Part 24.5 | Marketing + Engineering |
+
+---
+
+# PART 25: WordPress Universal Kit
+
+> **Why this section:** Part 8.5 (CPT Registration) + Part 8.7 (ACF Field Groups) + Part 8.8 (Related Logic) ครอบคลุม WordPress implementation แต่กระจายและขาด **unifying framework**. Part 25 รวมเป็น "kit" เดียวที่ provision ครบจบ — บูทแบรนด์ใหม่ใน 1 วันได้, มี deterministic CPT activation, และทุกอย่าง derived จาก `brands` table
+
+## 25.1 Universal Kit Philosophy
+
+```
+หลักการ 4 ข้อ:
+
+1. SAME KIT EVERY BRAND
+   → 8 CPTs core + 6 optional + 8 taxonomies + 7 ACF groups = "the kit"
+   → ไม่เคยมีแบรนด์ที่ "ไม่ใช้" kit นี้
+   → ต่างกันแค่ "เปิด-ปิด" optional ตาม flag
+
+2. DERIVED FROM BRAND PROFILE
+   → ทุก activation อ่านจาก `brands` table
+   → ไม่มี manual config per brand
+   → onboarding = INSERT INTO brands; → kit auto-provision
+
+3. SAME URL CONTRACT
+   → CPT slugs ตายตัว (Part 4.11.2)
+   → /procedures/, /treatments/, /by-concern/ ฯลฯ ใช้เหมือนกันทุกแบรนด์
+   → cross-brand link consistency
+
+4. SAME RENDERING CONTRACT
+   → Template hierarchy เหมือนกัน
+   → Related Block logic เหมือนกัน (Part 8.8)
+   → Schema generation pipeline เหมือนกัน (Part 26)
+```
+
+## 25.2 CPT Tier Architecture
+
+```
+┌──────────────────────────────────────────────────────────────────┐
+│  TIER 1: CORE — เปิดใช้งานเสมอ ทุกแบรนด์ (8 CPTs)                 │
+├──────────────────────────────────────────────────────────────────┤
+│  CPT name        | Hosts entity_type   | URL pattern              │
+├──────────────────────────────────────────────────────────────────┤
+│  doctor          | person              | /our-doctors/{slug}      │
+│  branch          | organization        | /branches/{slug}         │
+│  procedure       | procedure           | /procedures/{slug}       │
+│  treatment       | treatment           | /treatments/{slug}       │
+│  technology      | device              | /technology/{slug}       │
+│  condition       | condition + symptom | /by-concern/{slug}       │
+│  case_study      | (none — CPT only)   | /case-studies/{slug}     │
+│  post (built-in) | concept (knowledge) | /knowledge/{slug}        │
+└──────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────┐
+│  TIER 2: COMMON OPTIONAL — เปิดบ่อย (2 CPTs)                       │
+├──────────────────────────────────────────────────────────────────┤
+│  CPT             | Activation flag           | URL pattern         │
+├──────────────────────────────────────────────────────────────────┤
+│  program         | has_treatment_pathways    | /programs/{slug}    │
+│                  | (derived: ≥1 program in   |                     │
+│                  |  signature_offerings OR   |                     │
+│                  |  count of multi-step      |                     │
+│                  |  treatments ≥ 3)          |                     │
+├──────────────────────────────────────────────────────────────────┤
+│  signature_system| signature_offerings ≥ 1   | /{slug}/ (root)     │
+│                  | (derived from brands.     | e.g., /mbm/         │
+│                  |  signature_offerings[])   |       /emsmile/     │
+└──────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────┐
+│  TIER 3: VERTICAL OPTIONAL — เปิดเฉพาะ vertical (4 CPTs)            │
+├──────────────────────────────────────────────────────────────────┤
+│  CPT             | Activation flag                   | URL         │
+├──────────────────────────────────────────────────────────────────┤
+│  ingredient      | vertical_family ∈ {beauty,        | /ingredients│
+│                  | wellness, skincare-media}         | /{slug}     │
+│                  | OR has_active_ingredients=true    |             │
+├──────────────────────────────────────────────────────────────────┤
+│  product         | sells_dtc=true OR has_ecommerce  | /products/  │
+│                  | OR vertical='ecommerce'           | {slug}      │
+├──────────────────────────────────────────────────────────────────┤
+│  drug            | has_pharmacy_focus=true OR        | /drugs/     │
+│                  | vertical='pharmacy'               | {slug}      │
+├──────────────────────────────────────────────────────────────────┤
+│  lab_test        | has_diagnostic_lab=true (lab is   | /lab-tests/ │
+│                  | primary product line, ไม่ใช่ส่วน  | {slug}      │
+│                  | ของ service flow)                 |             │
+└──────────────────────────────────────────────────────────────────┘
+
+Maximum: 14 CPTs | Typical activation: 8-11 CPTs
+```
+
+## 25.3 CPT Registration Specification
+
+### Core CPT 1 — `doctor`
+
+```yaml
+slug: doctor
+name: ['Doctor', 'Doctors']
+hosts_entity_type: person
+schema_org: [Person, Physician]
+URL: /our-doctors/{slug}
+
+register_post_type_args:
+  public: true
+  has_archive: true
+  archive_url: /our-doctors/
+  supports: [title, editor, thumbnail, custom-fields, page-attributes]
+  hierarchical: false
+  show_in_rest: true
+  rewrite: 
+    slug: 'our-doctors'
+    with_front: false
+  menu_position: 25
+  menu_icon: 'dashicons-businessperson'
+
+taxonomies_attached:
+  - specialty
+  - branch
+  - sitemap_section
+
+acf_field_groups:
+  - eywa_classification (universal)
+  - eywa_relationships (universal)
+  - doctor_meta (CPT-specific — see Part 25.5)
+
+template_hierarchy:
+  - single-doctor.php
+  - archive-doctor.php
+  - taxonomy-specialty.php (filtered list)
+```
+
+### Core CPT 2 — `branch`
+
+```yaml
+slug: branch
+name: ['Branch', 'Branches']
+hosts_entity_type: organization
+schema_org: [MedicalClinic, MedicalBusiness]
+URL: /branches/{slug}
+
+register_post_type_args:
+  public: true
+  has_archive: true
+  archive_url: /branches/
+  supports: [title, editor, thumbnail, custom-fields]
+  hierarchical: false
+  show_in_rest: true
+  rewrite:
+    slug: 'branches'
+
+taxonomies_attached:
+  - branch (self-tagging — ใช้ใน Type C local programmatic)
+  - sitemap_section
+
+acf_field_groups:
+  - eywa_classification
+  - eywa_relationships
+  - branch_meta (NAP, hours, services_offered, doctors_assigned)
+```
+
+### Core CPT 3 — `procedure`
+
+```yaml
+slug: procedure
+name: ['Procedure', 'Procedures']
+hosts_entity_type: procedure
+schema_org: MedicalProcedure
+URL: /procedures/{slug}
+
+register_post_type_args:
+  public: true
+  has_archive: true
+  supports: [title, editor, thumbnail, custom-fields, page-attributes]
+  hierarchical: false        # ใช้ ACF parent_of/child_of edge แทน
+  show_in_rest: true
+  rewrite:
+    slug: 'procedures'
+  menu_position: 21
+  menu_icon: 'dashicons-clipboard'
+
+taxonomies_attached:
+  - specialty
+  - topic_cluster
+  - concern
+  - branch
+  - audience
+  - sitemap_section
+  - entity_lifecycle
+
+acf_field_groups:
+  - eywa_classification
+  - eywa_relationships
+  - eywa_evidence
+  - procedure_meta (procedure-specific fields)
+  - llmo_citables (Tab 6 จาก Part 8.7)
+```
+
+### Core CPT 4 — `treatment`
+
+```yaml
+slug: treatment
+name: ['Treatment', 'Treatments']
+hosts_entity_type: treatment
+schema_org: MedicalTherapy
+URL: /treatments/{slug}
+
+register_post_type_args:
+  public: true
+  has_archive: true
+  supports: [title, editor, thumbnail, custom-fields, page-attributes]
+  hierarchical: false
+  show_in_rest: true
+  rewrite:
+    slug: 'treatments'
+  menu_position: 22
+  menu_icon: 'dashicons-heart'
+
+taxonomies_attached:
+  - specialty
+  - topic_cluster
+  - concern
+  - branch
+  - audience
+  - sitemap_section
+  - entity_lifecycle
+
+acf_field_groups:
+  - eywa_classification
+  - eywa_relationships
+  - eywa_evidence
+  - treatment_meta (พฤติกรรม + duration + phases)
+  - llmo_citables
+
+key_difference_from_procedure:
+  fields_unique_to_treatment:
+    - therapy_duration_weeks
+    - home_practice_required (boolean)
+    - phases (repeater)
+    - compliance_score_method
+    - expected_outcomes_timeline
+```
+
+### Core CPT 5 — `technology`
+
+```yaml
+slug: technology
+name: ['Technology', 'Technologies']
+hosts_entity_type: device   # entity_type ใช้ "device" ตาม schema.org
+schema_org: MedicalDevice
+URL: /technology/{slug}
+
+register_post_type_args:
+  public: true
+  has_archive: true
+  supports: [title, editor, thumbnail, custom-fields]
+  hierarchical: false
+  show_in_rest: true
+  rewrite:
+    slug: 'technology'
+  menu_position: 23
+  menu_icon: 'dashicons-screenoptions'
+
+taxonomies_attached:
+  - specialty
+  - topic_cluster
+  - branch
+  - sitemap_section
+
+acf_field_groups:
+  - eywa_classification
+  - eywa_relationships
+  - eywa_evidence
+  - technology_meta (FDA class, manufacturer, specs)
+```
+
+### Core CPT 6 — `condition` (hosts BOTH condition + symptom)
+
+```yaml
+slug: condition
+name: ['Concern', 'Concerns']    # User-facing label = "Concern"
+hosts_entity_type: condition + symptom (via entity_subtype)
+schema_org: 
+  - MedicalCondition (when entity_subtype='condition')
+  - MedicalSignOrSymptom (when entity_subtype='symptom')
+URL: /by-concern/{slug}
+
+register_post_type_args:
+  public: true
+  has_archive: true
+  supports: [title, editor, thumbnail, custom-fields, page-attributes]
+  hierarchical: false           # ใช้ ACF symptom_of edge แทน
+  show_in_rest: true
+  rewrite:
+    slug: 'by-concern'
+    hierarchical: true            # อนุญาต /by-concern/sleep/snoring/
+  menu_position: 24
+  menu_icon: 'dashicons-warning'
+
+taxonomies_attached:
+  - specialty
+  - topic_cluster
+  - concern (self-organizing — Section 5 hubs)
+  - audience
+  - sitemap_section
+
+acf_field_groups:
+  - eywa_classification
+  - eywa_relationships
+  - eywa_evidence
+  - condition_meta (ICD-10, prevalence, age_onset, severity)
+
+condition_vs_symptom_handling:
+  ACF field: entity_subtype (radio: 'condition' | 'symptom')
+  
+  template_logic:
+    if entity_subtype == 'symptom':
+      → render template: single-condition--symptom.php
+      → schema: MedicalSignOrSymptom
+      → Hero CTA: "ปัญหานี้คืออาการของอะไร?" → link to parent condition
+    
+    if entity_subtype == 'condition':
+      → render template: single-condition.php
+      → schema: MedicalCondition
+      → Hero: ICD code + overview
+```
+
+### Core CPT 7 — `case_study`
+
+```yaml
+slug: case_study
+name: ['Case Study', 'Case Studies']
+hosts_entity_type: (none — CPT only, not entity)
+schema_org: MedicalCaseReport
+URL: /case-studies/{slug}
+
+register_post_type_args:
+  public: true
+  has_archive: true
+  supports: [title, editor, thumbnail, custom-fields]
+  hierarchical: false
+  show_in_rest: true
+  rewrite:
+    slug: 'case-studies'
+  menu_position: 26
+  menu_icon: 'dashicons-portfolio'
+
+taxonomies_attached:
+  - topic_cluster
+  - audience            # Demographics — Executive, Athlete, ฯลฯ
+  - branch
+  - evidence_tier       # Tier 1-6 per Part 23.1
+  - sitemap_section
+
+acf_field_groups:
+  - eywa_classification
+  - eywa_relationships
+  - eywa_evidence (mandatory: reviewed_by, citations)
+  - case_study_meta (PDPA-safe pseudonyms, demographics, outcomes)
+```
+
+### Core CPT 8 — `post` (built-in WordPress, repurposed)
+
+```yaml
+slug: post (default WP)
+name: ['Knowledge Article', 'Knowledge']
+hosts_entity_type: concept (when L5/L6) | (none — content CPT)
+schema_org: 
+  - MedicalScholarlyArticle (L5 Pillar)
+  - Article (L6 Knowledge)
+URL: /knowledge/{slug}
+
+modify_default_post:
+  rewrite_slug_change: 'knowledge' (was 'blog' or '')
+  add_taxonomies:
+    - specialty
+    - topic_cluster
+    - concern
+    - audience
+    - sitemap_section
+
+acf_field_groups (when post_category='knowledge-pillar' OR Layer=L5):
+  - eywa_classification
+  - eywa_relationships
+  - eywa_evidence
+  - article_meta (reading_time, last_reviewed_date, evidence_grade)
+
+distinction:
+  L5_pillar_article: has_pillar_status=true, layer='L5', tier=A/B
+  L6_knowledge_article: layer='L6', tier=B/C/D
+  L5/L6 ใช้ post CPT เดียวกัน — ต่างที่ taxonomy + ACF
+```
+
+### Tier 2 CPT — `program`
+
+```yaml
+slug: program
+name: ['Program', 'Programs']
+hosts_entity_type: product (subtype: 'branded-program')
+schema_org: MedicalTherapy + hasPart
+URL: /programs/{slug}
+activation: brands.has_treatment_pathways = true
+
+register_post_type_args:
+  public: true
+  has_archive: true
+  supports: [title, editor, thumbnail, custom-fields, page-attributes]
+  hierarchical: false
+  show_in_rest: true
+  rewrite:
+    slug: 'programs'
+  menu_position: 27
+  menu_icon: 'dashicons-flag'
+
+taxonomies_attached:
+  - specialty
+  - topic_cluster
+  - concern
+  - branch
+  - audience
+  - sitemap_section
+
+acf_field_groups:
+  - eywa_classification
+  - eywa_relationships (uses `contains` to list constituent services)
+  - eywa_evidence
+  - eywa_program_meta (Tier 2 conditional)
+  - llmo_citables
+
+eywa_program_meta_fields:
+  - program_code (text — "P1", "P2")
+  - program_duration_weeks (number)
+  - phases (repeater: phase_number, phase_name, phase_summary)
+  - assessment_required (relationship → procedure CPT)
+  - outcomes_metrics (repeater: metric, target, timeframe)
+  - escalation_pathway (wysiwyg)
+  - followup_schedule (repeater: 3mo/6mo/12mo content)
+```
+
+### Tier 2 CPT — `signature_system`
+
+```yaml
+slug: signature_system
+name: ['Signature System', 'Signature Systems']
+hosts_entity_type: product (subtype: 'branded-system')
+schema_org: Product + MedicalGuideline
+URL: /{slug}/   ← root-level (e.g., /mbm/, /emsmile/)
+activation: brands.signature_offerings.length ≥ 1
+
+register_post_type_args:
+  public: true
+  has_archive: false       # signature ไม่มี archive
+  supports: [title, editor, thumbnail, custom-fields]
+  hierarchical: false
+  show_in_rest: true
+  rewrite:
+    slug: ''               # root-level — handled by custom rewrite rule
+    with_front: false
+  menu_position: 28
+  menu_icon: 'dashicons-star-filled'
+
+custom_rewrite_rule_required:
+  add_rewrite_rule(
+    '^([^/]+)/?$',
+    'index.php?post_type=signature_system&name=$matches[1]',
+    'top'
+  );
+  # หมายเหตุ: priority='top' เพื่อ catch ก่อน default page rule
+  # ต้องแน่ใจไม่ชนกับ existing slugs
+
+taxonomies_attached:
+  - specialty
+  - topic_cluster
+  - sitemap_section
+
+acf_field_groups:
+  - eywa_classification
+  - eywa_relationships (uses `contains` + `requires_assessment`)
+  - eywa_evidence
+  - eywa_signature_meta (Tier 2 conditional)
+  - llmo_citables
+
+eywa_signature_meta_fields:
+  - trademark_status (text: '®' | '™' | 'none')
+  - philosophy_summary (wysiwyg)
+  - usp_pillars (repeater: pillar_name, description)
+  - phases (repeater: phase_number, phase_name, content_link)
+  - pricing_tiers (repeater)
+  - exclusive_to_brand (boolean — sharing flag)
+  - signature_year_introduced (number)
+```
+
+### Tier 3 CPTs — Vertical Optional
+
+```yaml
+ingredient:
+  slug: ingredient
+  hosts_entity_type: ingredient
+  schema_org: 
+    - Drug (when has CAS + medical claim)
+    - DefinedTerm (when cosmetic-only)
+  URL: /ingredients/{slug}
+  activation: vertical ∈ {beauty, wellness, skincare-media}
+  
+  acf_field_groups:
+    - eywa_classification
+    - eywa_relationships
+    - ingredient_meta:
+      - inci_name
+      - cas_number
+      - chemical_formula
+      - typical_concentration_range_min/max (%)
+      - optimal_ph_min/max
+      - mechanism_of_action
+      - pregnancy_safe (boolean)
+      - synergistic_ingredients[] (relationship → ingredient)
+      - incompatible_ingredients[] (relationship → ingredient)
+      - target_skin_concerns[] (taxonomy concern)
+
+product:
+  slug: product
+  hosts_entity_type: product
+  schema_org: Product + (Drug if FDA-classified)
+  URL: /products/{slug}
+  activation: sells_dtc=true OR has_ecommerce
+  
+  acf_field_groups:
+    - eywa_classification
+    - eywa_relationships
+    - product_meta:
+      - manufacturer (post_object → organization)
+      - retail_price_thb
+      - size_ml
+      - launch_year
+      - thai_fda_registration
+      - affiliate_links (repeater)
+      - ingredient_list (relationship → ingredient CPT)
+      - schema_offers (price + availability)
+
+drug:
+  slug: drug
+  hosts_entity_type: drug
+  schema_org: Drug
+  URL: /drugs/{slug}
+  activation: has_pharmacy_focus=true
+  
+  acf_field_groups:
+    - eywa_classification
+    - eywa_relationships
+    - drug_meta:
+      - generic_name
+      - brand_names[] (repeater)
+      - prescription_class (Rx | OTC | controlled)
+      - active_ingredient (relationship → ingredient)
+      - dosage_forms[]
+      - typical_dosage
+      - contraindications
+      - drug_interactions[] (relationship → drug)
+      - pregnancy_category
+      - cost_indication
+
+lab_test:
+  slug: lab_test
+  hosts_entity_type: lab_test
+  schema_org: MedicalTest
+  URL: /lab-tests/{slug}
+  activation: has_diagnostic_lab=true
+  
+  acf_field_groups:
+    - eywa_classification
+    - eywa_relationships
+    - lab_test_meta:
+      - test_code (LOINC if available)
+      - sample_type (blood/saliva/urine/...)
+      - fasting_required (boolean)
+      - reference_ranges (repeater: demographic, range_min/max, unit)
+      - measures_biomarkers[] (relationship → biomarker entity)
+      - turnaround_days
+      - thai_labs_offering[] (relationship → organization)
+```
+
+## 25.4 Custom Taxonomies Specification
+
+```yaml
+# All 8 taxonomies — ALWAYS registered, regardless of brand
+
+specialty:
+  hierarchical: true
+  rewrite: 
+    slug: 'specialty'
+    hierarchical: true
+  public: true
+  show_in_rest: true
+  show_admin_column: true
+  attached_to: [doctor, procedure, treatment, technology, condition,
+                program, signature_system]
+  url_inclusion: conditional
+    - single_specialty brand: ❌ ไม่ใส่ใน URL
+    - multi_specialty brand: ✓ /services/{specialty}/{slug}
+    - hospital: ✓ /departments/{specialty}/{slug}
+
+topic_cluster:
+  hierarchical: true        # 2-level: domain → cluster
+  rewrite: false            # ❌ ไม่ใส่ URL — internal only
+  public: false
+  show_in_rest: true
+  show_admin_column: true
+  attached_to: [procedure, treatment, technology, condition,
+                program, signature_system, case_study, post,
+                ingredient, product, drug, lab_test]
+  validation_rule: ทุก content CPT ต้องเลือก ≥1 cluster ก่อน publish
+
+concern:
+  hierarchical: true
+  rewrite:
+    slug: 'concerns'
+    hierarchical: true
+  public: true
+  show_in_rest: true
+  show_admin_column: true
+  attached_to: [condition, procedure, treatment, program, post, case_study]
+  represents: Section 5 hubs (sleep-airway, pain-jaw, oral-health, etc.)
+
+branch:
+  hierarchical: false
+  rewrite:
+    slug: 'branches'
+  public: true
+  show_in_rest: true
+  show_admin_column: true
+  attached_to: [doctor, procedure, treatment, program, case_study]
+  represents: Local SEO + branch availability
+
+audience:
+  hierarchical: false
+  rewrite:
+    slug: 'for'             # /for/executive/, /for/athlete/
+  public: true
+  show_in_rest: true
+  show_admin_column: true
+  attached_to: [case_study, post, condition, program]
+  terms_examples: [executive, women-40-plus, athlete, pediatric, 
+                   senior, student]
+
+sitemap_section:
+  hierarchical: false
+  rewrite: false            # ❌ hidden taxonomy
+  public: false
+  show_in_rest: true        # ใช้ใน admin queries
+  show_admin_column: true
+  attached_to: [ALL content CPTs + page]
+  terms_locked: 
+    - 1-home, 2-about, 3-services, 4-technology, 
+    - 5-concerns, 6-knowledge, 7-cases, 8-contact
+
+entity_lifecycle:
+  hierarchical: false
+  rewrite: false
+  public: false
+  show_admin_column: true
+  attached_to: [procedure, treatment, technology, condition,
+                ingredient, product, drug, lab_test]
+  terms_locked: [emerging, growing, mature, deprecated]
+  purpose: editorial prioritization + "newest treatments" widget
+
+evidence_tier:
+  hierarchical: false
+  rewrite: false
+  public: false
+  show_admin_column: true
+  attached_to: [case_study]
+  terms_locked: [tier-1, tier-2, tier-3, tier-4, tier-5, tier-6]
+  reference: Part 23.1 — Evidence Hierarchy
+```
+
+## 25.5 ACF Field Groups (7 Universal + Conditional)
+
+```
+┌──────────────────────────────────────────────────────────────────┐
+│  7 ACF Field Groups (5 universal + 2 conditional)                 │
+├──────────────────────────────────────────────────────────────────┤
+│  Group 1: eywa_classification    [universal — all content CPTs]   │
+│  Group 2: eywa_relationships     [universal — all content CPTs]   │
+│  Group 3: eywa_evidence          [universal — L4-L7 mandatory]    │
+│  Group 4: eywa_llmo_citables     [universal — recommended L2-L5]  │
+│  Group 5: cpt_specific_meta      [per-CPT additional fields]      │
+│  ─────────────────────────────────────────────────────────────── │
+│  Group 6: eywa_program_meta      [conditional: program CPT only]  │
+│  Group 7: eywa_signature_meta    [conditional: signature_ only]   │
+└──────────────────────────────────────────────────────────────────┘
+
+→ Group 1-4 มาจาก Part 8.7 6-tab pattern (existing) — ขยายเล็กน้อย
+→ Group 5 = per-CPT meta จาก Part 25.3 (procedure_meta, treatment_meta, etc.)
+→ Group 6-7 = ใหม่ใน v3.4 (สำหรับ Tier 2 CPTs)
+```
+
+### Group 1 — `eywa_classification` (Universal)
+
+```yaml
+fields:
+  layer:
+    type: radio
+    options: [L1, L2, L3, L4, L5, L6, L7]
+    required: true
+  
+  tier:
+    type: radio
+    options: [A, B, C, D]
+    required: true
+  
+  funnel_stage:
+    type: radio
+    options: [top, mid, bottom, retain]
+    required: true
+  
+  sitemap_node_id:
+    type: text
+    validation: regex ^[1-8](\.\d+){0,3}$
+    required: true
+    example: "3.4.1.3.1"
+  
+  entity_subtype:
+    type: text
+    description: "Free-form subtype (e.g., 'cosmetic-active', 'branded-system')"
+  
+  entity_lifecycle:
+    type: select (linked to entity_lifecycle taxonomy)
+  
+  schema_org_type:
+    type: text (auto-fill from CPT mapping — readonly default)
+  
+  icd_10:
+    type: text
+    visible_when: entity_subtype='condition' | entity_subtype='symptom'
+  
+  wikidata_id:
+    type: text
+    placeholder: "Q12345"
+  
+  same_as_urls:
+    type: repeater (text — URL)
+```
+
+### Group 2 — `eywa_relationships` (Universal — drives Knowledge Graph)
+
+```yaml
+# Each field maps to ONE edge type from Part 2.7
+# These ACF fields are MIRRORS of seo_entity_relationships table
+
+fields:
+  parent_entity:
+    type: post_object
+    edge_type: child_of
+    constraint: same CPT as current
+    
+  related_entities:
+    type: relationship
+    edge_type: related_to (default — undirected)
+    max_items: 10
+    constraint: any CPT
+  
+  treats_concerns:
+    type: relationship
+    edge_type: treats
+    constraint: post_type=condition (entity_subtype='condition' only)
+    visible_when: CPT in [procedure, treatment, drug, technology]
+  
+  symptoms_of:
+    type: post_object
+    edge_type: symptom_of
+    constraint: post_type=condition (entity_subtype='condition')
+    visible_when: CPT=condition AND entity_subtype='symptom'
+  
+  uses_devices:
+    type: relationship
+    edge_type: uses
+    constraint: post_type=technology
+    visible_when: CPT in [procedure, treatment]
+  
+  uses_drugs:
+    type: relationship
+    edge_type: uses
+    constraint: post_type=drug
+    visible_when: CPT in [procedure, treatment] AND has_pharmacy_focus
+  
+  alternative_treatments:
+    type: relationship
+    edge_type: alternative_to
+    constraint: same CPT (procedure↔procedure, treatment↔treatment)
+    max_items: 8           # hard limit per Part 2.7
+    soft_warn_at: 6        # editorial warning
+  
+  part_of_program:
+    type: post_object       # single — entity belongs to 1 primary program
+    edge_type: part_of
+    constraint: post_type=program
+    visible_when: program CPT activated
+  
+  contains_services:
+    type: relationship
+    edge_type: contains
+    constraint: post_type IN [procedure, treatment]
+    visible_when: CPT in [program, signature_system]
+  
+  requires_assessments:
+    type: relationship
+    edge_type: requires_assessment
+    constraint: post_type=procedure (entity_subtype='diagnostic') 
+                OR post_type=lab_test
+    visible_when: CPT in [treatment, program, signature_system]
+  
+  evidenced_by_cases:
+    type: relationship
+    edge_type: evidenced_by
+    constraint: post_type=case_study
+```
+
+### Group 3 — `eywa_evidence` (Universal, L4-L7 mandatory)
+
+```yaml
+fields:
+  reviewed_by:
+    type: post_object → doctor CPT
+    required: when layer in [L4, L5, L6, L7]
+  
+  authored_by:
+    type: post_object → doctor CPT
+  
+  review_date:
+    type: date_picker
+    required: when reviewed_by is set
+  
+  medical_disclaimer:
+    type: true_false
+    default: true (when layer in [L4-L7])
+  
+  reviewer_note:
+    type: textarea
+  
+  evidence_strength:
+    type: radio
+    options: [high, moderate, low, anecdotal]
+    reference: Part 23.1
+  
+  citations:
+    type: repeater
+    sub_fields:
+      - citation_source_type (select: pubmed/cir/guideline/own-clinical/...)
+      - citation_url (url)
+      - citation_title (text)
+      - citation_year (number)
+      - tier (1-6 per Part 23.1)
+```
+
+### Group 4 — `eywa_llmo_citables` (Universal — for AI citation engineering)
+
+```yaml
+# จาก Part 8.7 Tab 6 — restored และขยาย
+
+fields:
+  brand_linked_citables:
+    type: repeater
+    min_items: 3 (for L2-L5)
+    sub_fields:
+      - statement (textarea — "From X cases at Brand Y, we found Z%")
+      - metric (text)
+      - time_period (text)
+      - source_citation (text)
+      - pattern_type (select: A/B/C/D/E/F per Part 6.2)
+  
+  perspective_blocks:
+    type: repeater
+    min_items: 4 (for pillar pages)
+    sub_fields:
+      - perspective_type (select: clinical/editorial/data-driven/myth-busting)
+      - content (wysiwyg)
+  
+  faq_items:
+    type: repeater
+    sub_fields:
+      - question (text)
+      - answer (textarea, 40-60 words)
+      - faq_type (select: 7 types per Part 13.X)
+  
+  speakable_selectors:
+    type: text
+    description: CSS selectors for Speakable schema
+```
+
+### Group 5 — `cpt_specific_meta` (per-CPT — see Part 25.3)
+
+แต่ละ CPT มี field group เฉพาะ (procedure_meta, treatment_meta, ingredient_meta, ฯลฯ) — spec อยู่ใน Part 25.3
+
+### Group 6 — `eywa_program_meta` (conditional, program CPT only)
+
+ดู Part 25.3 — Tier 2 CPT `program` section
+
+### Group 7 — `eywa_signature_meta` (conditional, signature_system only)
+
+ดู Part 25.3 — Tier 2 CPT `signature_system` section
+
+## 25.6 CPT Activation Flag Logic (Derived from `brands`)
+
+```sql
+-- brands table extension — flags ที่ derive
+-- (เพิ่มจาก Part 5.3 brands DDL)
+
+ALTER TABLE brands ADD COLUMN IF NOT EXISTS
+  cpt_activation_flags jsonb DEFAULT '{}'::jsonb;
+
+-- Computed view — flags derived from brand profile
+CREATE OR REPLACE VIEW v_brand_cpt_activation AS
+SELECT
+  b.id,
+  b.brand_slug,
+  
+  -- Tier 1 (always true)
+  true AS tier1_doctor,
+  true AS tier1_branch,
+  true AS tier1_procedure,
+  true AS tier1_treatment,
+  true AS tier1_technology,
+  true AS tier1_condition,
+  true AS tier1_case_study,
+  true AS tier1_post,
+  
+  -- Tier 2 (derived)
+  (
+    array_length(b.signature_offerings, 1) >= 1
+    OR (b.brand_profile->>'has_treatment_pathways')::boolean = true
+  ) AS tier2_program,
+  
+  (array_length(b.signature_offerings, 1) >= 1) AS tier2_signature_system,
+  
+  -- Tier 3 (vertical-driven)
+  (b.vertical_family IN ('beauty', 'wellness', 'skincare-media')
+   OR (b.brand_profile->>'has_active_ingredients')::boolean = true
+  ) AS tier3_ingredient,
+  
+  ((b.brand_profile->>'sells_dtc')::boolean = true
+   OR b.vertical_family = 'ecommerce'
+  ) AS tier3_product,
+  
+  ((b.brand_profile->>'has_pharmacy_focus')::boolean = true
+   OR b.vertical_family = 'pharmacy'
+  ) AS tier3_drug,
+  
+  ((b.brand_profile->>'has_diagnostic_lab')::boolean = true) 
+    AS tier3_lab_test
+FROM brands b;
+```
+
+```php
+// WordPress side — read flags from API and conditionally register CPTs
+add_action('init', 'eywa_register_post_types_dynamic');
+
+function eywa_register_post_types_dynamic() {
+    $brand_id = get_option('eywa_current_brand_id');
+    $flags = eywa_get_cpt_activation_flags($brand_id);
+    
+    // Tier 1 (always)
+    eywa_register_cpt_doctor();
+    eywa_register_cpt_branch();
+    eywa_register_cpt_procedure();
+    eywa_register_cpt_treatment();
+    eywa_register_cpt_technology();
+    eywa_register_cpt_condition();
+    eywa_register_cpt_case_study();
+    
+    // Tier 2 (conditional)
+    if ($flags['tier2_program']) eywa_register_cpt_program();
+    if ($flags['tier2_signature_system']) eywa_register_cpt_signature_system();
+    
+    // Tier 3 (conditional)
+    if ($flags['tier3_ingredient']) eywa_register_cpt_ingredient();
+    if ($flags['tier3_product']) eywa_register_cpt_product();
+    if ($flags['tier3_drug']) eywa_register_cpt_drug();
+    if ($flags['tier3_lab_test']) eywa_register_cpt_lab_test();
+}
+```
+
+## 25.7 URL Rewrite Patterns
+
+```
+┌──────────────────────────────────────────────────────────────────┐
+│  CPT / Page Type            URL Pattern                            │
+├──────────────────────────────────────────────────────────────────┤
+│  Home                       /                                      │
+│  About / Static             /about, /our-doctors                   │
+│  Procedure       /procedures/{slug}                     │
+│  Treatment       /treatments/{slug}                     │
+│  Service (multi-spec)       /services/{specialty}/{slug}          │
+│  Hospital department        /departments/{dept}/{slug}            │
+│  Technology                 /technology/{slug}                     │
+│  Concern (Layer 4)          /by-concern/{slug}                     │
+│  Knowledge (Layer 5)        /knowledge/{slug}                      │
+│  Case Study (Layer 7)       /case-studies/{slug}                   │
+│  Branch (Type B)            /branches/{slug}                       │
+│  Local Programmatic (Type C)/{service}-{branch}                    │
+│  Doctor Profile             /our-doctors/{slug}                    │
+│  Audience (Type D)          /for/{audience}/                       │
+│  Ingredient (skincare)      /ingredients/{slug}                    │
+│  Product (skincare/DTC)     /products/{slug}                       │
+│  Comparison page            /compare/{x}-vs-{y}                    │
+│  Program         /programs/{slug}                       │
+│  Signature System/{slug}/   (root-level: /mbm/, /emsmile/)│
+│  Drug            /drugs/{slug}                          │
+│  Lab Test        /lab-tests/{slug}                      │
+└──────────────────────────────────────────────────────────────────┘
+
+→ ทุก URL pattern follow Part 4.11 5 core URL rules (max depth, kebab-case,
+   no query strings, no brand prefix, descriptive slugs)
+```
+
+## 25.8 Template Hierarchy (Elementor Theme Builder)
+
+EYWA ใช้ **Elementor Pro Theme Builder** — ไม่มี PHP template files. Templates ทั้งหมดอยู่ใน WP database, จัดการผ่าน Elementor UI, distribute ผ่าน JSON exports
+
+```
+Elementor Theme Builder structure:
+
+Templates > Theme Builder > Single
+  ├─ single-doctor              → doctor CPT (Display Condition)
+  ├─ single-branch              → branch CPT
+  ├─ single-procedure           → procedure CPT
+  ├─ single-treatment           → treatment CPT
+  ├─ single-technology          → technology CPT
+  ├─ single-condition           → condition CPT
+  ├─ single-condition--symptom  → condition CPT (filter: entity_subtype='symptom')
+  ├─ single-case_study          → case_study CPT
+  ├─ single-post                → post (knowledge L5/L6, conditional by layer)
+  ├─ single-program             → program CPT (Tier 2)
+  ├─ single-signature_system    → signature_system CPT (Tier 2)
+  ├─ single-ingredient          → ingredient CPT (Tier 3)
+  ├─ single-product             → product CPT (Tier 3)
+  ├─ single-drug                → drug CPT (Tier 3)
+  └─ single-lab_test            → lab_test CPT (Tier 3)
+
+Templates > Theme Builder > Archive
+  ├─ archive-doctor             → /our-doctors/
+  ├─ archive-branch             → /branches/
+  ├─ archive-procedure          → /procedures/
+  ├─ archive-treatment          → /treatments/
+  ├─ archive-technology         → /technology/
+  ├─ archive-condition          → /by-concern/
+  ├─ archive-case_study         → /case-studies/
+  └─ blog                       → /knowledge/ (post archive)
+
+Templates > Theme Builder > Loop Item (reusable)
+  ├─ loop_doctor_card
+  ├─ loop_procedure_card
+  ├─ loop_condition_card
+  ├─ loop_case_study_card
+  ├─ loop_citation_card
+  ├─ loop_related_entity
+  └─ loop_cross_brand_ref
+
+Templates > Theme Builder > Header / Footer / 404 / Search
+
+Special Pages (regular pages with custom Elementor layout):
+  ├─ /compare/{x}-vs-{y}        → Compare landing page
+  ├─ /{specialty}-center        → Specialty Center hub (multi-specialty)
+  └─ /                          → Homepage
+```
+
+**Key principles:**
+- ❌ No PHP template files in theme
+- ✅ All templates in Elementor Theme Builder (visual)
+- ✅ Display Conditions bind templates to CPTs
+- ✅ Loop Item templates = reusable across single + archive views
+- ✅ Templates exported as JSON, distributed via GitHub repo
+- ✅ Brand customization via Site Settings (colors/fonts) — no template fork
+
+→ See **Section 25.11** for full Elementor Pro integration pattern
+
+## 25.9 Bootstrap Workflow (Day 1 New Brand)
+
+```
+┌──────────────────────────────────────────────────────────────────┐
+│  Day 1 Brand Bootstrap — Sequential Steps                          │
+├──────────────────────────────────────────────────────────────────┤
+
+Step 1 (PRE-WP — 30 min)
+  □ INSERT INTO brands (vertical, healthcare_format, 
+                        signature_offerings[], specialties[], ...)
+  □ Run EGP Step 0-2 (Part 2.6) → output: domain + cluster lists
+  □ INSERT INTO seo_topic_cluster_master (clusters from EGP)
+
+Step 2 (WP CORE — 1 hr)
+  □ Install WP + WPML + RankMath Pro + ACF Pro + WPCode
+  □ Plugin verification per Part 8.1
+
+Step 3 (TAXONOMIES — 30 min) — register BEFORE CPTs
+  □ Register 8 taxonomies (Part 25.4)
+  □ Bulk import taxonomy terms via CSV:
+    - specialty terms (from brands.medical_specialties[])
+    - topic_cluster terms (from EGP output, 2-level hierarchy)
+    - concern terms (from Section 5 hubs)
+    - branch terms (from brands.branches[])
+    - sitemap_section terms (8 terms, locked)
+    - audience terms (from brands.target_audiences[])
+    - entity_lifecycle terms (4 locked)
+    - evidence_tier terms (6 locked)
+
+Step 4 (CPT REGISTRATION — 30 min)
+  □ Read brand activation flags from API
+  □ Register Tier 1 CPTs (8 — always)
+  □ Conditionally register Tier 2 + Tier 3 CPTs
+
+Step 5 (ACF FIELD GROUPS — 1 hr)
+  □ Import ACF JSON exports for 7 field groups (Part 25.5)
+  □ Verify per-CPT visibility rules
+
+Step 6 (URL REWRITE — 15 min)
+  □ Flush rewrite rules
+  □ Test URL patterns (Part 25.7) render correctly
+  □ Setup signature_system root-level rewrite (if Tier 2 active)
+
+Step 7 (SCHEMA — 30 min) — see Part 26
+  □ Configure WPCode site-wide schema (Part 8.6)
+  □ Test schema generation Layer 1 (auto from CPT)
+
+Step 8 (TEMPLATES — 2-4 hrs)
+  □ Copy template skeletons (Part 25.8)
+  □ Configure related-block components (Part 8.8)
+  □ Test rendering on 1 sample page per CPT
+
+Step 9 (CONTENT IMPORT — varies)
+  □ Begin content migration / creation per editorial calendar
+  □ Each entity from EGP gets a draft post
+
+Step 10 (VALIDATION — 1 hr)
+  □ Run Sitemap Health Metrics (Part 4.10)
+  □ Verify entity coverage (KPI #12 — Part 20.5)
+  □ Verify schema rendering (Rich Results Test)
+
+Total Day 1 time (excluding content): ~6-8 hours
+```
+
+## 25.11 Elementor Pro Integration Pattern
+
+> **Why this section:** EYWA Universal Kit ใช้ **Elementor Pro + Hello Elementor theme** เป็น frontend stack (ไม่ใช่ Gutenberg blocks). นี่เป็นการตัดสินใจเชิง strategic — Elementor Pro Theme Builder + Loop Builder + Dynamic Tags ทำให้ design layer เป็น visual + designer-friendly + zero-PHP. Section นี้กำหนด integration pattern ระหว่าง Elementor Pro และ EYWA core (CPTs, ACF, Schema Pipeline)
+
+### 25.11.1 Stack Decision — Why Elementor Pro
+
+```yaml
+chosen_stack:
+  theme: Hello Elementor (minimal, blank slate)
+  builder: Elementor Pro
+  fields: ACF Pro
+  seo: RankMath Pro
+  multilingual: WPML
+  custom_layer: 4 EYWA plugins
+
+rationale:
+  ✅ Visual design — designer ทำงานได้โดยไม่ต้องเขียน PHP
+  ✅ Theme Builder — single template per CPT, conditional logic native
+  ✅ Loop Builder — repeating items (entities, citations) drag-drop
+  ✅ Dynamic Tags — pull ACF fields automatically
+  ✅ Display Conditions — apply templates per CPT/taxonomy/specific posts
+  ✅ Template export/import — distribute templates ระหว่าง brands
+  ✅ Designer-friendly — 80% ของงาน design ทำใน UI
+
+trade_offs_(accepted):
+  ⚠ Elementor Pro = $59-399/year per site
+  ⚠ Hello theme = no built-in schema (EYWA Schema Pipeline plugin ทำ)
+  ⚠ Page render time slower than pure code (mitigated by caching)
+  ⚠ Lock-in to Elementor (acceptable — industry-standard tool)
+
+what_eywa_plugins_handle (vs Elementor):
+  Elementor Pro:           visual layout + dynamic content + design system
+  EYWA plugins:            CPT registration + ACF fields + schema generation +
+                            scoring + cross-brand tracking + business logic
+  
+  → Clear separation of concerns
+  → Each tool does what it's best at
+```
+
+### 25.11.2 Plugin Architecture (Revised for Elementor)
+
+EYWA stack on a per-brand WordPress install:
+
+```yaml
+required_plugins (in install order):
+  1. Hello Elementor theme       (free, minimal)
+  2. Elementor (free)             (foundation)
+  3. Elementor Pro                (Theme Builder + Loop Builder)
+  4. ACF Pro                      (custom fields + JSON sync)
+  5. RankMath Pro                 (SEO meta + sitemap)
+  6. WPML                         (if multilingual brand)
+  7. EYWA core plugins (4):
+     - eywa-core                  (foundation, brand profile)
+     - eywa-cpt-activation        (register CPTs from brand flags)
+     - eywa-acf-fields            (ACF JSON file distribution)
+     - eywa-schema-pipeline       (3-Layer schema generation)
+
+eywa_plugins_NOT_needed (was in earlier specs):
+  ❌ eywa-related-blocks (deprecated — replaced by Elementor Pro Loop Builder)         — Elementor Loop Builder ทำดีกว่า
+  ❌ eywa-templates-php          — Elementor Theme Builder ทำดีกว่า
+  
+  → Reduce 5 plugins → 4 plugins
+```
+
+### 25.11.3 Theme Builder Templates (12 single + 8 archive + loop items)
+
+Designer สร้างใน Elementor Theme Builder (visual, no PHP):
+
+```yaml
+single_templates_(12_per_brand):
+  
+  doctor_template:
+    display_condition: Posts > Doctor CPT
+    structure:
+      - Hero: doctor_name + photo + specialty chips
+      - Bio: rich text from ACF
+      - Credentials: repeater list from ACF
+      - Specialties: taxonomy display
+      - Branches: relationship loop to Branch CPT
+      - Booking CTA: brand-level dynamic
+      - Related Doctors: loop (same specialty)
+      - Recent Posts: loop (authored by this doctor)
+  
+  branch_template:
+    display_condition: Posts > Branch CPT
+    structure:
+      - Hero: branch_name + main image + address
+      - Operating Hours: repeater per day
+      - Contact: phone, email, map embed
+      - Doctors at this branch: loop
+      - Services available: loop
+      - Directions + Parking info
+  
+  procedure_template:
+    display_condition: Posts > Procedure CPT
+    structure:
+      - Hero: procedure_name + before/after image
+      - Overview: rich text
+      - Process Steps: repeater
+      - Duration + Recovery: ACF fields
+      - Technologies Used: relationship loop
+      - Treats Conditions: relationship loop
+      - Doctors Performing: relationship loop
+      - Case Studies: loop (linked via case_study CPT)
+      - FAQ: repeater (drives FAQ schema)
+  
+  treatment_template:
+    [similar structure with treatment_pathway_steps]
+  
+  technology_template:
+    [similar with manufacturer, regulatory_clearance]
+  
+  condition_template:
+    display_condition: Posts > Condition CPT
+    structure:
+      - Hero: condition_name + ICD-10 code
+      - Symptoms: relationship loop to symptom entities
+      - Risk Factors: rich text
+      - Diagnosis Methods: rich text
+      - Treatments: relationship loop to treatment CPT
+      - Procedures: relationship loop to procedure CPT
+      - Citations: loop (Tier 1-3)
+      - FAQ: repeater
+      - Cross-Brand References: loop (federation feature)
+  
+  case_study_template:
+    [patient demographics, before/after, treatment used, outcome]
+  
+  post_template:
+    [knowledge layer L5/L6 — flexible content sections]
+  
+  # Tier 2:
+  program_template:
+    [included procedures loop, duration, target audience]
+  
+  signature_system_template:
+    [methodology steps, branded terminology, exclusivity claim]
+  
+  # Tier 3:
+  ingredient_template:
+    [active compound, mechanism, used in products loop]
+  
+  product_template:
+    [SKU, price, ingredients loop, gallery]
+
+archive_templates_(8_per_brand):
+  - archive-doctor      (/our-doctors/)
+  - archive-branch      (/branches/)
+  - archive-procedure   (/procedures/)
+  - archive-treatment   (/treatments/)
+  - archive-technology  (/technology/)
+  - archive-condition   (/by-concern/)
+  - archive-case_study  (/case-studies/)
+  - blog                (/knowledge/)
+
+loop_item_templates_(reusable):
+  - loop_related_entity     (used in single templates' related sections)
+  - loop_citation_card      (used in citations sections)
+  - loop_doctor_card        (used in archive-doctor + branch single)
+  - loop_procedure_card     (used in archive-procedure + condition single)
+  - loop_case_study_card    (used in archive-case_study + procedure single)
+  - loop_cross_brand_ref    (used for federation external links)
+
+global_templates:
+  - header                  (Theme Builder Header part)
+  - footer                  (Theme Builder Footer part)
+  - 404                     (custom 404 page)
+  - search_results          (search archive)
+```
+
+### 25.11.4 Dynamic Tags Mapping (ACF → Elementor Widgets)
+
+```yaml
+mapping_pattern:
+
+  ACF text field:
+    elementor_widget: Heading / Text Editor
+    dynamic_tag: ACF Field → field_name
+    
+  ACF textarea/wysiwyg:
+    elementor_widget: Text Editor
+    dynamic_tag: ACF Field → field_name
+    
+  ACF image:
+    elementor_widget: Image
+    dynamic_tag: ACF Field → field_name (image type)
+    
+  ACF gallery:
+    elementor_widget: Image Gallery / Image Carousel
+    dynamic_tag: ACF Gallery → field_name
+    
+  ACF repeater:
+    elementor_widget: Loop Grid / Loop Carousel
+    query: ACF Repeater → field_name
+    template: Custom Loop Item Template
+    
+  ACF relationship (single):
+    elementor_widget: any widget with text
+    dynamic_tag: ACF Relationship → field_name → property
+    
+  ACF relationship (multiple):
+    elementor_widget: Loop Grid
+    query: ACF Relationship → field_name
+    template: relevant loop item (e.g., loop_doctor_card)
+    
+  ACF taxonomy:
+    elementor_widget: Post Info or custom widget
+    dynamic_tag: ACF Taxonomy → field_name
+    
+  ACF group:
+    elementor_widget: container
+    children dynamic tags → ACF Group > sub_field
+
+  EYWA-specific patterns:
+    
+    edge_relationship_display:
+      use: ACF eywa_relationships group
+      widget: Loop Grid with filter
+      query: get_field('treats_entities') or similar
+      output: cards of related entities
+    
+    citation_list:
+      use: ACF citations repeater
+      widget: Loop Grid
+      template: loop_citation_card
+      sort: by tier ascending
+    
+    cross_brand_ref:
+      use: ACF cross_brand_references repeater
+      widget: Loop Grid
+      conditional_visibility: only show if status='live'
+      template: loop_cross_brand_ref
+```
+
+### 25.11.5 Loop Builder Patterns
+
+Critical for EYWA — most "related" sections use Loop Builder:
+
+```yaml
+example_1_related_procedures_in_condition_template:
+  
+  step_1_create_loop_item_template:
+    name: "loop_procedure_card"
+    type: Loop Item (in Theme Builder)
+    structure:
+      - Image (Dynamic Tag: ACF procedure_main_image)
+      - Heading (Dynamic Tag: Post Title)
+      - Excerpt (Dynamic Tag: ACF short_description)
+      - Duration badge (Dynamic Tag: ACF duration_minutes)
+      - Read more link (Dynamic Tag: Post URL)
+  
+  step_2_use_in_condition_single_template:
+    add: Loop Grid widget
+    query:
+      Source: Related Posts
+      Post Type: Procedure
+      Manual Selection: ACF Field "treats_procedures"
+      [OR via ACF Relationship dynamic query]
+    template: loop_procedure_card
+    columns: 3 desktop, 2 tablet, 1 mobile
+
+example_2_citations_loop:
+  
+  loop_item_template:
+    name: "loop_citation_card"
+    structure:
+      - Tier badge (color-coded by tier 1-6)
+      - Title with link to source
+      - Authors + Year
+      - Quote (if available)
+  
+  use_in_template:
+    add: Loop Grid (or Loop Carousel)
+    query: ACF Repeater → citations
+    template: loop_citation_card
+    sort: by tier ASC then year DESC
+
+example_3_cross_brand_references:
+  
+  loop_item_template:
+    name: "loop_cross_brand_ref"
+    structure:
+      - Target brand logo
+      - Anchor text
+      - Conditional: status badge
+      - If status='live': clickable link
+      - If status='draft_at_target': disabled state with note
+  
+  use_in_template:
+    add: Loop Grid
+    query: ACF Repeater → cross_brand_references
+    filter: status NOT IN ('broken')
+    template: loop_cross_brand_ref
+```
+
+### 25.11.6 Schema Pipeline Compatibility (with Elementor)
+
+> **Critical concern:** Hello Elementor theme has no built-in schema. EYWA Schema Pipeline plugin handles this independently of Elementor's render
+
+```yaml
+schema_independence:
+  
+  Elementor_renders: HTML body (visual layout)
+  EYWA_schema_pipeline: <script type="application/ld+json"> in <head>
+  
+  → Two systems, separate concerns
+  → Designer changes layout → schema unchanged
+  → Editor adds citation in ACF → schema auto-updates
+  → No conflict between Elementor cache and schema cache
+  
+hook_priority:
+  EYWA_schema_pipeline:
+    add_action('wp_head', 'eywa_emit_schema', 5)
+    # Priority 5 = early, before Elementor's head additions
+  
+  Elementor_default_head_actions: priority 10+
+  
+  Result: schema appears at top of <head>, clean position
+
+verification_workflow:
+  - Designer modifies single-doctor template in Elementor
+  - Page renders with new layout
+  - View source → schema markup unchanged
+  - Google Rich Results Test → still passes
+  - JSON-LD validated independently
+
+testing_checklist:
+  □ schema present in <head>
+  □ schema not duplicated by Elementor
+  □ Rich Results Test passes for all CPT types
+  □ schema updates when ACF fields change (cache invalidation)
+```
+
+### 25.11.7 Template Distribution Strategy (GitHub)
+
+How to share Elementor templates across brands:
+
+```yaml
+github_repo: eywa-elementor-templates
+
+structure:
+  /single/                          # 12 single templates
+    single-doctor.json
+    single-branch.json
+    single-procedure.json
+    ...
+  /archive/                          # 8 archive templates
+    archive-doctor.json
+    ...
+  /loop-items/                       # 6+ loop item templates
+    loop_doctor_card.json
+    loop_procedure_card.json
+    loop_citation_card.json
+    loop_cross_brand_ref.json
+    ...
+  /global/                           # Header, footer, 404
+    header.json
+    footer.json
+    404.json
+  /docs/
+    import_workflow.md
+    customization_guide.md
+    brand_specific_overrides.md
+
+distribution_workflow:
+
+  master_designer (you or lead):
+    step_1: Design template in master/dev WP
+    step_2: Templates > Theme Builder > select template > 
+            ⋯ menu > Export Template (downloads JSON)
+    step_3: Place JSON in correct folder of repo
+    step_4: Commit to GitHub with meaningful message
+
+  per_brand_deployment:
+    step_1: Brand WP install with Elementor Pro + ACF Pro + EYWA plugins
+    step_2: Templates > Theme Builder > Import Template
+    step_3: Upload JSON files
+    step_4: Templates auto-bind to CPTs (Display Conditions intact)
+    step_5: Brand designer customizes:
+            - Colors (Site Settings)
+            - Typography (Site Settings)
+            - Brand-specific imagery
+            - Layout tweaks if needed
+    step_6: Save brand-specific overrides to per-brand repo
+
+upgrade_workflow:
+  When master template updated (e.g., new section added):
+    step_1: Pull updated JSON from eywa-elementor-templates repo
+    step_2: Re-import to brand WP
+    step_3: Elementor merges (or replaces with notice)
+    step_4: Brand reviews + re-applies brand customizations
+    
+  ⚠ Elementor doesn't auto-merge — manual review needed
+  → For breaking changes, document migration in CHANGELOG.md
+```
+
+### 25.11.8 Brand Customization Layer
+
+How each brand customizes shared templates without breaking sync:
+
+```yaml
+brand_specific_customization_(safe):
+  
+  via_Elementor_Site_Settings:
+    - Global Colors (brand palette)
+    - Global Fonts (brand typography)
+    - Default theme styles
+    → applies to ALL templates automatically
+    → upgrade-safe (separate from template JSON)
+  
+  via_Custom_CSS_(per_brand_repo):
+    - Element overrides
+    - Brand-specific accents
+    - Stored in /custom-css/ in brand repo
+    → loaded via theme functions.php
+    → independent of templates
+  
+  via_per_brand_template_overrides:
+    - Clone master template
+    - Modify layout for brand-specific need
+    - Save to brand repo: /elementor-templates-overrides/
+    - Display Condition: this brand only
+  
+  not_recommended_(breaks_sync):
+    ❌ Edit master template directly in shared repo
+    ❌ Override widget settings without versioning
+    ❌ Hardcode brand-specific text (use Dynamic Tags instead)
+```
+
+### 25.11.9 Required Elementor Pro Features Used
+
+```yaml
+checklist_of_features_needed:
+  
+  ✅ Theme Builder
+     - Header, Footer, Single, Archive, Search, 404
+     - Display Conditions per template
+  
+  ✅ Loop Builder + Loop Item templates
+     - Custom skin for repeating content
+     - Connect to any post query or ACF repeater
+  
+  ✅ Dynamic Tags
+     - ACF fields integration (text, image, repeater)
+     - Post fields, Site fields
+     - Custom dynamic tag registration (advanced)
+  
+  ✅ Display Conditions
+     - Post type targeting
+     - Taxonomy targeting
+     - Specific post targeting (for landing pages)
+  
+  ✅ Site Settings
+     - Global Colors + Fonts
+     - Default Layouts
+     - Theme Style
+  
+  ✅ Form Widget (Pro)
+     - Booking forms
+     - Contact forms
+     - Newsletter signup
+  
+  ✅ Custom CSS per element
+     - Fine-tuning without external CSS
+  
+  optional_(nice_to_have):
+     - Popup Builder (CTAs, exit intent)
+     - WooCommerce Builder (if brand sells products)
+     - Custom Dynamic Tags (PHP — for advanced EYWA fields)
+```
+
+### 25.11.10 Performance Considerations
+
+```yaml
+elementor_performance_optimizations:
+  
+  caching:
+    - WP Rocket / WP Super Cache (full page cache)
+    - Elementor's built-in CSS optimizer
+    - EYWA Schema cache (separate from page cache)
+  
+  asset_loading:
+    - Lazy load images (Elementor Pro feature)
+    - Defer JS (Elementor + plugins)
+    - Critical CSS for above-fold (manual or plugin)
+  
+  database_queries:
+    - ACF caching for repeater queries
+    - Loop Builder query optimization
+    - Schema cache prevents recomputation
+  
+  measurement:
+    - Lighthouse score target: ≥85 mobile, ≥95 desktop
+    - Core Web Vitals: pass all metrics
+    - LCP target: ≤2.5s
+    - CLS target: ≤0.1
+
+optimization_layers:
+  Layer_1_Elementor: built-in optimizer (CSS, JS, fonts)
+  Layer_2_caching_plugin: WP Rocket / similar
+  Layer_3_CDN: Cloudflare / similar
+  Layer_4_hosting: SSD + PHP 8.2+ + adequate RAM
+```
+
+### 25.11.11 Cross-References
+
+| Topic | See Also |
+|-------|----------|
+| ACF Field Groups (drives Dynamic Tags) | Part 25.5 |
+| CPT registration (basis for Display Conditions) | Part 25.3 |
+| Schema Pipeline (independent of Elementor) | Part 26 |
+| Page templates anatomy | Part 9 |
+| Related Section Logic (Loop Builder usage) | Part 8.8 |
+| Cross-Brand References (Loop pattern) | Part 4.12 |
+| Bootstrap Workflow (template import step) | Part 25.9 |
+| Federation pattern (template distribution) | Part 10.7 |
+| WCAG accessibility (template requirements) | Part 9.7 |
+
+---
+
+## 25.10 Cross-References
+
+| Topic | See Also |
+|-------|----------|
+| Entity Genesis Protocol (Step 1 input) | Part 2.6 |
+| Edge vocabulary (drives ACF relationships) | Part 2.7 |
+| Sitemap architecture (URL contract) | Part 4.11 |
+| Database schema (brands, entity_graph) | Part 5.3, 5.4 |
+| Existing CPT registration (superseded) | Part 8.5 |
+| ACF Field Groups (extended) | Part 8.7 |
+| Related Section Logic (powered by ACF) | Part 8.8 |
+| Schema Pipeline (consumes ACF) | Part 26 |
+| Vertical profiles (CPT activation context) | Part 14 |
+| WordPress code library | Appendix D |
+
+---
+
+# PART 26: Schema Generation Pipeline
+
+> **Why this section:** Bible Part 7.5 (Schema Tier Architecture) อธิบาย **WHAT schema** ที่ต้อง emit แต่ไม่ครอบคลุมเรื่อง **HOW** ที่ schema ถูก generate. ปัจจุบัน schema generation กระจายอยู่หลายที่ — RankMath UI, WPCode site-wide, custom functions — โดยไม่มี **unifying pipeline**. ผลคือ data drift: schema บอกอย่างหนึ่ง, page content บอกอีกอย่าง, ACF บอกอีกอย่าง. Part 26 อุดช่องโดยกำหนด **3-Layer pipeline** ที่ derive schema จาก single source of truth (ACF + entity graph) และให้ manual override อยู่บนสุด — ไม่กระจายอีกต่อไป
+
+## 26.1 Pipeline Philosophy
+
+```
+หลักการ "Single Source of Truth":
+
+  Same data drives 4 systems simultaneously:
+  
+              ACF eywa_relationships
+                       │
+        ┌──────────────┼──────────────┬────────────┐
+        ↓              ↓              ↓            ↓
+  ┌──────────┐  ┌──────────┐  ┌──────────────┐ ┌──────────┐
+  │ Schema   │  │ Related  │  │ Sitemap XML  │ │ AI Vector│
+  │ JSON-LD  │  │ Block UI │  │ <link>       │ │ Embeddings│
+  └──────────┘  └──────────┘  └──────────────┘ └──────────┘
+  
+  Editor บอก ACF ครั้งเดียว → 4 ระบบ sync อัตโนมัติ
+  → ไม่มี data drift
+  → schema เชื่อถือได้เพราะมันมาจาก data จริง
+  → AI/Google trust signal สูง
+```
+
+### What's wrong with current state
+
+```yaml
+problem_1_fragmented_sources:
+  - schema_basic_org: WPCode site-wide (Part 8.6)
+  - schema_per_page_basic: RankMath UI
+  - schema_relationships: not generated (missing)
+  - schema_speakable: ACF Tab 4 → custom hook
+  - schema_faq: RankMath UI
+  → no unified pipeline
+
+problem_2_no_relationship_graph:
+  - Knowledge graph อยู่ใน DB (entity_graph + relationships)
+  - แต่ schema ไม่ได้ใช้ — emit แค่ basic types
+  - AI/Google มองเห็นแค่ "MedicalProcedure" ไม่เห็น
+    "MedicalProcedure that treats X, uses Y, alternative_to Z"
+
+problem_3_data_drift:
+  - ACF บอก: HA Injection treats TMJ Disorder
+  - Schema บอก: just "MedicalProcedure" (no relationship)
+  - Sitemap XML บอก: no related links
+  → AI confused, signal weak
+```
+
+## 26.2 Pipeline Architecture (3 Layers)
+
+```
+┌──────────────────────────────────────────────────────────────────┐
+│  Layer 3: Manual Override            [Highest Precedence]         │
+│  ─────────────────────────────────────────────────────           │
+│  Source: RankMath UI (per-page editorial decisions)              │
+│  Triggers: FAQ schema, HowTo schema, special cases               │
+│  Storage: postmeta `_rank_math_schema_*`                         │
+│  Render: RankMath plugin                                         │
+└──────────────────────────────────────────────────────────────────┘
+                            ↑ overrides
+┌──────────────────────────────────────────────────────────────────┐
+│  Layer 2: Auto-Relationship Graph    [Knowledge Graph Render]     │
+│  ─────────────────────────────────────────────────────           │
+│  Source: ACF eywa_relationships + seo_entity_relationships        │
+│  Triggers: ทุก relationship edge ที่ entity มี                    │
+│  Output: schema @id graph (cross-references between entities)    │
+│  Render: Custom function eywa_emit_relationship_schema()         │
+└──────────────────────────────────────────────────────────────────┘
+                            ↑ extends
+┌──────────────────────────────────────────────────────────────────┐
+│  Layer 1: Auto-Baseline              [CPT Type Mapping]           │
+│  ─────────────────────────────────────────────────────           │
+│  Source: CPT + entity_subtype                                    │
+│  Logic: Static mapping table (Part 26.3)                         │
+│  Output: @type + basic properties (name, url, description)       │
+│  Render: Custom function eywa_emit_baseline_schema()             │
+└──────────────────────────────────────────────────────────────────┘
+
+Order of evaluation: Layer 1 → Layer 2 → Layer 3 (later overrides earlier)
+Order of precedence: Layer 3 wins conflicts > Layer 2 > Layer 1
+```
+
+## 26.3 Layer 1: CPT → Schema.org Type Mapping
+
+### Master Mapping Table (Locked)
+
+```php
+// File: wp-content/mu-plugins/eywa-schema-pipeline.php
+// หรือ functions.php
+
+function eywa_get_schema_type_mapping() {
+    return [
+        // Core CPTs (Tier 1)
+        'doctor' => [
+            'primary_type' => 'Physician',
+            'fallback_type' => 'Person',
+            'auto_properties' => [
+                'name' => 'post_title',
+                'jobTitle' => 'acf:credentials_title',
+                'medicalSpecialty' => 'taxonomy:specialty',
+                'worksFor' => 'acf:practices_at[]',
+            ],
+        ],
+        
+        'branch' => [
+            'primary_type' => 'MedicalClinic',
+            'fallback_type' => 'MedicalBusiness',
+            'auto_properties' => [
+                'name' => 'post_title',
+                'address' => 'acf:nap_address',
+                'telephone' => 'acf:nap_phone',
+                'openingHours' => 'acf:nap_hours',
+                'parentOrganization' => 'eywa:current_brand',
+            ],
+        ],
+        
+        'procedure' => [
+            'primary_type' => 'MedicalProcedure',
+            'auto_properties' => [
+                'name' => 'post_title',
+                'description' => 'acf:hero_summary',
+                'medicalSpecialty' => 'taxonomy:specialty',
+                'bodyLocation' => 'acf:body_location',
+                'preparation' => 'acf:preparation_notes',
+            ],
+        ],
+        
+        'treatment' => [
+            'primary_type' => 'MedicalTherapy',
+            'auto_properties' => [
+                'name' => 'post_title',
+                'description' => 'acf:hero_summary',
+                'medicalSpecialty' => 'taxonomy:specialty',
+                'doseSchedule' => 'acf:therapy_duration_weeks',
+            ],
+        ],
+        
+        'technology' => [
+            'primary_type' => 'MedicalDevice',
+            'auto_properties' => [
+                'name' => 'post_title',
+                'description' => 'acf:hero_summary',
+                'manufacturer' => 'acf:manufacturer',
+                'medicalSpecialty' => 'taxonomy:specialty',
+            ],
+        ],
+        
+        'condition' => [
+            // Conditional based on entity_subtype
+            'primary_type' => function($post) {
+                $subtype = get_field('entity_subtype', $post->ID);
+                return $subtype === 'symptom' 
+                    ? 'MedicalSignOrSymptom' 
+                    : 'MedicalCondition';
+            },
+            'auto_properties' => [
+                'name' => 'post_title',
+                'description' => 'acf:hero_summary',
+                'code' => 'acf:icd_10',
+                'possibleTreatment' => 'edge:treated_by',
+                'signOrSymptom' => 'edge:symptom_of (inverse)',
+            ],
+        ],
+        
+        'case_study' => [
+            'primary_type' => 'MedicalCaseReport',
+            'auto_properties' => [
+                'name' => 'post_title',
+                'description' => 'acf:hero_summary',
+                'datePublished' => 'post_date',
+                'reviewedBy' => 'acf:reviewed_by',
+                'about' => 'edge:related_to',
+            ],
+        ],
+        
+        'post' => [
+            // Conditional based on layer
+            'primary_type' => function($post) {
+                $layer = get_field('layer', $post->ID);
+                return ($layer === 'L5')
+                    ? 'MedicalScholarlyArticle'
+                    : 'Article';
+            },
+            'auto_properties' => [
+                'headline' => 'post_title',
+                'datePublished' => 'post_date',
+                'dateModified' => 'post_modified',
+                'author' => 'acf:authored_by',
+                'reviewedBy' => 'acf:reviewed_by',
+            ],
+        ],
+        
+        // Tier 2 Common Optional
+        'program' => [
+            'primary_type' => 'MedicalTherapy',
+            'additional_types' => ['Product'],   // multi-typing
+            'auto_properties' => [
+                'name' => 'post_title',
+                'description' => 'acf:hero_summary',
+                'duration' => 'acf:duration_weeks',
+                'hasPart' => 'edge:contains',
+                'preparation' => 'edge:requires_assessment',
+            ],
+        ],
+        
+        'signature_system' => [
+            'primary_type' => 'Product',
+            'additional_types' => ['MedicalGuideline'],
+            'auto_properties' => [
+                'name' => 'post_title',
+                'description' => 'acf:philosophy_summary',
+                'brand' => 'eywa:current_brand',
+                'category' => 'acf:entity_subtype',
+            ],
+        ],
+        
+        // Tier 3 Vertical Optional
+        'ingredient' => [
+            'primary_type' => function($post) {
+                return get_field('has_medical_claim', $post->ID)
+                    ? 'Drug'
+                    : 'DefinedTerm';
+            },
+            'auto_properties' => [
+                'name' => 'post_title',
+                'inchi' => 'acf:cas_number',
+                'description' => 'acf:hero_summary',
+            ],
+        ],
+        
+        'product' => [
+            'primary_type' => 'Product',
+            'auto_properties' => [
+                'name' => 'post_title',
+                'brand' => 'acf:manufacturer',
+                'offers' => 'acf:retail_price_thb (build Offer node)',
+            ],
+        ],
+        
+        'drug' => [
+            'primary_type' => 'Drug',
+            'auto_properties' => [
+                'name' => 'post_title',
+                'activeIngredient' => 'acf:active_ingredient',
+                'drugClass' => 'acf:prescription_class',
+                'dosageForm' => 'acf:dosage_forms',
+            ],
+        ],
+        
+        'lab_test' => [
+            'primary_type' => 'MedicalTest',
+            'auto_properties' => [
+                'name' => 'post_title',
+                'usedToDiagnose' => 'edge:diagnoses',
+                'normalRange' => 'acf:reference_ranges',
+                'sampleType' => 'acf:sample_type',
+            ],
+        ],
+    ];
+}
+```
+
+### Layer 1 Renderer
+
+```php
+function eywa_emit_baseline_schema($post_id) {
+    $post = get_post($post_id);
+    $cpt = $post->post_type;
+    $mapping = eywa_get_schema_type_mapping();
+    
+    if (!isset($mapping[$cpt])) {
+        return null;
+    }
+    
+    $config = $mapping[$cpt];
+    
+    // Resolve primary type (may be callable for conditional types)
+    $primary_type = is_callable($config['primary_type'])
+        ? call_user_func($config['primary_type'], $post)
+        : $config['primary_type'];
+    
+    $schema = [
+        '@context' => 'https://schema.org',
+        '@type' => $primary_type,
+        '@id' => get_permalink($post_id),
+        'url' => get_permalink($post_id),
+    ];
+    
+    // Add additional types (multi-typing)
+    if (!empty($config['additional_types'])) {
+        $schema['@type'] = array_merge(
+            [$primary_type],
+            $config['additional_types']
+        );
+    }
+    
+    // Resolve auto_properties
+    foreach ($config['auto_properties'] as $schema_key => $source) {
+        $value = eywa_resolve_property_source($source, $post_id);
+        if ($value !== null) {
+            $schema[$schema_key] = $value;
+        }
+    }
+    
+    return $schema;
+}
+```
+
+## 26.4 Layer 2: Edge → Schema Property Mapping
+
+### Master Edge → Schema Property Table
+
+```yaml
+# Each of 10 edges maps to specific schema.org property
+# Drives "Knowledge Graph Render" — the @id cross-reference graph
+
+edge_to_schema_mapping:
+  
+  parent_of:
+    schema_property: subOrganization (for Organization)
+                     | (custom: 'eywa:hasChild')
+    direction: forward  
+    emit_on: parent_entity page
+    multi_value: true
+  
+  child_of:
+    schema_property: parentOrganization (for Organization)
+                     | (custom: 'eywa:isChildOf')
+    direction: forward
+    emit_on: child_entity page
+    multi_value: false (single parent)
+  
+  subtype_of:
+    schema_property: additionalType
+    direction: forward
+    emit_as: URL of parent type
+    multi_value: true
+  
+  treats:
+    schema_property: indication            # for Drug, Procedure
+                     | relevantSpecialty   # alt
+    direction: forward
+    target_constraint: MedicalCondition
+    multi_value: true
+    
+    emit_pattern: |
+      "indication": [
+        {"@type": "MedicalCondition", "@id": "..."},
+        ...
+      ]
+  
+  treated_by:
+    schema_property: possibleTreatment
+    direction: forward (on Condition page)
+    emit_on: condition_entity page
+    multi_value: true
+  
+  symptom_of:
+    schema_property: signOrSymptom (INVERSE — emitted on Condition)
+    direction: backward
+    emit_on: parent condition page (not symptom page)
+    multi_value: true
+  
+  uses:
+    schema_property: 
+      - usesDevice (when target=device/technology)
+      - drug (when target=drug)
+      - studyEntity (when target=lab_test)
+    direction: forward
+    multi_value: true
+  
+  used_by:
+    schema_property: (inverse — typically not emitted directly)
+    note: "Render via 'mainEntityOfPage' relationships if needed"
+  
+  alternative_to:
+    schema_property: (no direct schema.org property)
+    custom_emit: ItemList "Alternative Treatments"
+    
+    emit_pattern: |
+      // Embedded as separate ItemList in @graph
+      {
+        "@type": "ItemList",
+        "@id": "{page_url}#alternatives",
+        "itemListElement": [
+          {"@type": "ListItem", "position": 1, "item": {"@id": "..."}}
+        ]
+      }
+  
+  part_of:
+    schema_property: isPartOf
+    direction: forward
+    target_typically: program | signature_system
+    multi_value: true (entity can be in multiple programs)
+  
+  contains:
+    schema_property: hasPart
+    direction: forward
+    emit_on: program | signature_system page
+    multi_value: true
+  
+  requires_assessment:
+    schema_property: preparation (custom extension)
+                     | study (alt)
+    direction: forward
+    target_constraint: procedure (diagnostic) | lab_test
+    multi_value: true
+    
+    emit_pattern: |
+      "preparation": {
+        "@type": "MedicalProcedure",
+        "@id": "{assessment_url}",
+        "additionalProperty": {
+          "@type": "PropertyValue",
+          "name": "requirementType",
+          "value": "mandatory_pre_treatment"
+        }
+      }
+  
+  evidenced_by:
+    schema_property: citation
+    direction: forward
+    target_constraint: case_study
+    multi_value: true (top 3-6 most relevant)
+  
+  related_to:
+    schema_property: about | mainEntity
+    direction: forward (undirected)
+    multi_value: true
+    note: "Lowest priority — used only when no specific edge fits"
+```
+
+### Layer 2 Renderer
+
+```php
+function eywa_emit_relationship_schema($post_id, $baseline_schema) {
+    global $wpdb;
+    
+    // Query edges from junction table
+    $edges = $wpdb->get_results($wpdb->prepare(
+        "SELECT edge_type, to_entity_fp, edge_note 
+         FROM seo_entity_relationships 
+         WHERE from_entity_fp = %s",
+        eywa_get_entity_fingerprint($post_id)
+    ));
+    
+    if (empty($edges)) {
+        return $baseline_schema;
+    }
+    
+    $edge_mapping = eywa_get_edge_schema_mapping();
+    
+    // Group edges by schema property
+    foreach ($edges as $edge) {
+        $config = $edge_mapping[$edge->edge_type] ?? null;
+        if (!$config) continue;
+        
+        $schema_property = $config['schema_property'];
+        $target_post_id = eywa_resolve_entity_fp_to_post($edge->to_entity_fp);
+        
+        if (!$target_post_id) continue;
+        
+        // Build linked entity reference
+        $linked_entity = [
+            '@type' => eywa_get_schema_type_for_post($target_post_id),
+            '@id' => get_permalink($target_post_id),
+            'name' => get_the_title($target_post_id),
+        ];
+        
+        // Multi-value handling
+        if ($config['multi_value']) {
+            if (!isset($baseline_schema[$schema_property])) {
+                $baseline_schema[$schema_property] = [];
+            }
+            $baseline_schema[$schema_property][] = $linked_entity;
+        } else {
+            $baseline_schema[$schema_property] = $linked_entity;
+        }
+        
+        // Special case: alternative_to → ItemList
+        if ($edge->edge_type === 'alternative_to') {
+            $baseline_schema['_alternatives_list'][] = $linked_entity;
+        }
+    }
+    
+    // Convert _alternatives_list to ItemList node (separate @graph entry)
+    if (!empty($baseline_schema['_alternatives_list'])) {
+        $alternatives_node = [
+            '@type' => 'ItemList',
+            '@id' => get_permalink($post_id) . '#alternatives',
+            'name' => 'Alternative Treatments',
+            'itemListElement' => array_map(function($item, $index) {
+                return [
+                    '@type' => 'ListItem',
+                    'position' => $index + 1,
+                    'item' => ['@id' => $item['@id']],
+                ];
+            }, $baseline_schema['_alternatives_list'], 
+              array_keys($baseline_schema['_alternatives_list'])),
+        ];
+        unset($baseline_schema['_alternatives_list']);
+        // Will add to @graph in Section 26.6
+    }
+    
+    return $baseline_schema;
+}
+```
+
+## 26.5 Layer 3: Manual Override (RankMath Integration)
+
+```yaml
+when_to_use_layer_3:
+  - FAQ schema (RankMath UI handles this best)
+  - HowTo schema (procedure step-by-step)
+  - Recipe schema (rare for medical sites)
+  - SpecialAnnouncement schema (clinic closures)
+  - Custom Review/Rating overrides
+  - Edge cases ที่ Layer 1+2 ไม่ครอบคลุม
+
+storage:
+  RankMath stores in postmeta:
+    _rank_math_schema_FAQPage
+    _rank_math_schema_HowTo
+    _rank_math_schema_Article
+  
+  Custom plugin can also store:
+    _eywa_schema_override jsonb (raw JSON-LD override)
+
+precedence_logic:
+  1. Read postmeta _eywa_schema_override
+     - If exists → return as-is (FULL override)
+     - If not → continue to RankMath
+  
+  2. Read RankMath schemas
+     - Merge into @graph (additive — appends to Layer 1+2)
+  
+  3. Layer 1+2 baseline
+     - Always present
+```
+
+### Layer 3 Integration Pattern
+
+```php
+function eywa_apply_manual_overrides($post_id, $auto_schema) {
+    // Full override check
+    $full_override = get_post_meta($post_id, '_eywa_schema_override', true);
+    if (!empty($full_override)) {
+        return is_string($full_override) 
+            ? json_decode($full_override, true) 
+            : $full_override;
+    }
+    
+    // Partial overrides — merge with RankMath schemas
+    $rank_math_faq = get_post_meta($post_id, '_rank_math_schema_FAQPage', true);
+    $rank_math_howto = get_post_meta($post_id, '_rank_math_schema_HowTo', true);
+    
+    $additional_nodes = [];
+    if ($rank_math_faq) $additional_nodes[] = $rank_math_faq;
+    if ($rank_math_howto) $additional_nodes[] = $rank_math_howto;
+    
+    return [
+        '@graph' => array_merge(
+            [$auto_schema],           // Layer 1+2 baseline
+            $additional_nodes          // Layer 3 RankMath additions
+        ),
+    ];
+}
+```
+
+## 26.6 @graph Pattern
+
+```
+ทำไมใช้ @graph:
+  - 1 page อาจมีหลาย entity (procedure + condition + reviewer)
+  - แต่ละ entity ต้องมี @id ของตัวเอง
+  - @graph allows มี multiple top-level entities ใน 1 JSON-LD
+
+Pattern แต่ละ page:
+
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    
+    // Node 1: Primary entity (Layer 1+2)
+    {
+      "@type": "MedicalProcedure",
+      "@id": "https://brand.com/procedures/ha-injection-tmj",
+      "name": "HA Injection (TMJ)",
+      "description": "...",
+      "indication": [
+        {"@type": "MedicalCondition", "@id": "...tmj-disorder"}
+      ],
+      "drug": {"@type": "Drug", "@id": "...hyaluronic-acid"},
+      "usesDevice": {"@type": "MedicalDevice", "@id": "...btl"},
+      "isPartOf": {"@type": "MedicalTherapy", "@id": "...p1-program"},
+      "citation": [
+        {"@type": "MedicalCaseReport", "@id": "...case-1"}
+      ]
+    },
+    
+    // Node 2: Alternative ItemList (Layer 2 — alternative_to edge)
+    {
+      "@type": "ItemList",
+      "@id": "...#alternatives",
+      "name": "Alternative Treatments",
+      "itemListElement": [...]
+    },
+    
+    // Node 3: BreadcrumbList (auto-baseline)
+    {
+      "@type": "BreadcrumbList",
+      "@id": "...#breadcrumbs",
+      "itemListElement": [...]
+    },
+    
+    // Node 4: FAQPage (Layer 3 — RankMath manual)
+    {
+      "@type": "FAQPage",
+      "@id": "...#faq",
+      "mainEntity": [...]
+    }
+  ]
+}
+```
+
+### @graph Builder
+
+```php
+function eywa_build_page_graph($post_id) {
+    // Layer 1: Baseline
+    $baseline = eywa_emit_baseline_schema($post_id);
+    
+    // Layer 2: Add relationships
+    $with_relationships = eywa_emit_relationship_schema($post_id, $baseline);
+    
+    // Auto-generated additional nodes
+    $breadcrumb_node = eywa_build_breadcrumb_node($post_id);
+    $alternatives_node = eywa_extract_alternatives_node($with_relationships);
+    
+    // Layer 3: Manual overrides (RankMath FAQ/HowTo)
+    $manual_nodes = eywa_get_manual_override_nodes($post_id);
+    
+    // Assemble @graph
+    $graph = array_filter([
+        $with_relationships,
+        $breadcrumb_node,
+        $alternatives_node,
+        ...$manual_nodes,
+    ]);
+    
+    return [
+        '@context' => 'https://schema.org',
+        '@graph' => array_values($graph),
+    ];
+}
+```
+
+## 26.7 Pipeline Integration with RankMath
+
+```php
+// Hook ที่ RankMath เปิดให้ filter schema
+add_filter('rank_math/json_ld', 'eywa_inject_pipeline_schema', 99, 2);
+
+function eywa_inject_pipeline_schema($data, $jsonld) {
+    if (!is_singular()) return $data;
+    
+    $post_id = get_the_ID();
+    $cpt = get_post_type($post_id);
+    
+    // ไม่ override built-in WP types (page, attachment)
+    if (in_array($cpt, ['page', 'attachment'])) return $data;
+    
+    // Build EYWA pipeline schema
+    $eywa_graph = eywa_build_page_graph($post_id);
+    
+    // Strategy: REPLACE RankMath default schema with EYWA pipeline
+    // (RankMath FAQ/HowTo ยังถูก append ผ่าน Layer 3)
+    return $eywa_graph;
+}
+```
+
+```yaml
+deployment_strategy:
+  conservative_approach:
+    1. เริ่มจาก Layer 1 only (auto-baseline จาก CPT)
+    2. ค่อยๆ add Layer 2 (relationships) ทีละ edge type
+    3. Layer 3 (manual override) ใช้ตามต้องการ
+  
+  aggressive_approach:
+    1. Deploy ทั้ง 3 layers พร้อมกัน
+    2. Validate ผ่าน Rich Results Test
+    3. Monitor schema errors
+  
+  recommended: conservative_approach (lower risk)
+```
+
+## 26.8 Schema Caching Strategy
+
+```yaml
+why_cache:
+  - generate_schema() อ่าน DB หลายครั้ง (ACF + entity_relationships)
+  - Render full @graph ใช้เวลา 50-200ms
+  - Cache reduces TTFB significantly
+
+cache_layers:
+  
+  Layer A: Object cache (Redis/Memcached)
+    key: "eywa_schema_{$post_id}_{$post_modified}"
+    ttl: 24 hours
+    invalidate_on: post update, ACF update, edge update
+  
+  Layer B: Database cache
+    table: seo_website_page_master.schema_cache_json (existing field)
+    update_trigger: 
+      - on post save
+      - on ACF field save
+      - on seo_entity_relationships INSERT/UPDATE/DELETE
+    ttl: until manual invalidation
+  
+  Layer C: CDN cache (Cloudflare/Fastly)
+    Page-level cache → schema embedded in HTML
+    Purge on post update via WP→CDN webhook
+```
+
+```php
+function eywa_get_schema_cached($post_id) {
+    $cache_key = "eywa_schema_{$post_id}_" . get_post_modified_time('U', false, $post_id);
+    
+    // Layer A: Object cache
+    $cached = wp_cache_get($cache_key, 'eywa_schema');
+    if ($cached !== false) return $cached;
+    
+    // Layer B: DB cache
+    global $wpdb;
+    $db_cached = $wpdb->get_var($wpdb->prepare(
+        "SELECT schema_cache_json FROM {$wpdb->prefix}seo_website_page_master 
+         WHERE post_id = %d AND cache_valid = 1",
+        $post_id
+    ));
+    
+    if ($db_cached) {
+        $schema = json_decode($db_cached, true);
+        wp_cache_set($cache_key, $schema, 'eywa_schema', DAY_IN_SECONDS);
+        return $schema;
+    }
+    
+    // Compute fresh
+    $schema = eywa_build_page_graph($post_id);
+    
+    // Save to both caches
+    wp_cache_set($cache_key, $schema, 'eywa_schema', DAY_IN_SECONDS);
+    $wpdb->update(
+        $wpdb->prefix . 'seo_website_page_master',
+        ['schema_cache_json' => json_encode($schema), 'cache_valid' => 1],
+        ['post_id' => $post_id]
+    );
+    
+    return $schema;
+}
+```
+
+## 26.9 Validation & Testing
+
+```yaml
+validation_levels:
+  
+  level_1_syntactic:
+    tool: JSON validator
+    check: valid JSON-LD syntax
+    automation: PHP unit test on each schema render
+  
+  level_2_schema_org:
+    tool: Schema.org Validator (validator.schema.org)
+    check: valid schema.org types + properties
+    automation: scheduled Selenium test
+  
+  level_3_google_rich_results:
+    tool: Google Rich Results Test
+    check: eligible for Rich Results
+    automation: weekly cron via API
+  
+  level_4_knowledge_graph:
+    tool: custom EYWA validator
+    check:
+      - @id resolves to actual page
+      - All edges reference existing entities
+      - No orphan @id references
+      - Bi-directional edge sync verified
+    automation: nightly cron
+  
+  level_5_ai_citation:
+    tool: AI platform queries (ChatGPT, Perplexity, Claude)
+    check: brand entities cited correctly
+    cadence: monthly (Part 13.5)
+```
+
+### Test Suite Pattern
+
+```php
+// File: tests/SchemaValidationTest.php
+
+class EywaSchemaValidationTest extends WP_UnitTestCase {
+    
+    public function test_procedure_emits_medical_procedure_type() {
+        $post_id = $this->factory->post->create([
+            'post_type' => 'procedure',
+            'post_title' => 'Test Procedure',
+        ]);
+        
+        $schema = eywa_emit_baseline_schema($post_id);
+        
+        $this->assertEquals('MedicalProcedure', $schema['@type']);
+        $this->assertEquals(get_permalink($post_id), $schema['@id']);
+    }
+    
+    public function test_treats_edge_emits_indication_property() {
+        $procedure_id = $this->create_test_entity('procedure');
+        $condition_id = $this->create_test_entity('condition');
+        
+        $this->create_edge($procedure_id, 'treats', $condition_id);
+        
+        $schema = eywa_build_page_graph($procedure_id);
+        
+        $primary = $schema['@graph'][0];
+        $this->assertArrayHasKey('indication', $primary);
+        $this->assertEquals(
+            get_permalink($condition_id),
+            $primary['indication'][0]['@id']
+        );
+    }
+    
+    public function test_alternative_to_emits_itemlist_node() {
+        $proc_a = $this->create_test_entity('procedure');
+        $proc_b = $this->create_test_entity('procedure');
+        $proc_c = $this->create_test_entity('procedure');
+        
+        $this->create_edge($proc_a, 'alternative_to', $proc_b);
+        $this->create_edge($proc_a, 'alternative_to', $proc_c);
+        
+        $schema = eywa_build_page_graph($proc_a);
+        
+        $itemlist = array_filter($schema['@graph'], function($node) {
+            return $node['@type'] === 'ItemList';
+        });
+        
+        $this->assertNotEmpty($itemlist);
+        $this->assertCount(2, reset($itemlist)['itemListElement']);
+    }
+    
+    // ... more tests per edge type
+}
+```
+
+## 26.10 Worked Example: HA Injection Page Output
+
+```json
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "MedicalProcedure",
+      "@id": "https://vth-biodent.com/procedures/ha-injection-tmj",
+      "url": "https://vth-biodent.com/procedures/ha-injection-tmj",
+      "name": "Hyaluronic Acid (HA) Injection — ฉีดหล่อลื่นข้อต่อขากรรไกร",
+      "description": "การฉีด HA เข้าข้อต่อขากรรไกรเพื่อลดการอักเสบและหล่อลื่นข้อต่อ",
+      "medicalSpecialty": [
+        {
+          "@type": "MedicalSpecialty",
+          "@id": "https://vth-biodent.com/specialty/oral-maxillofacial-surgery",
+          "name": "Oral and Maxillofacial Surgery"
+        }
+      ],
+      "indication": [
+        {
+          "@type": "MedicalCondition",
+          "@id": "https://vth-biodent.com/by-concern/tmj-disorder",
+          "name": "TMJ Disorder",
+          "code": {
+            "@type": "MedicalCode",
+            "codeValue": "M26.609",
+            "codingSystem": "ICD-10"
+          }
+        }
+      ],
+      "drug": {
+        "@type": "Drug",
+        "@id": "https://vth-biodent.com/drugs/hyaluronic-acid",
+        "name": "Hyaluronic Acid"
+      },
+      "usesDevice": {
+        "@type": "MedicalDevice",
+        "@id": "https://vth-biodent.com/technology/btl-combined-unit",
+        "name": "BTL Combined Unit (BTL-4000)"
+      },
+      "isPartOf": {
+        "@type": "MedicalTherapy",
+        "@id": "https://vth-biodent.com/programs/p1-tmj-bruxism",
+        "name": "P1 TMJ & Bruxism Relief Program"
+      },
+      "citation": [
+        {
+          "@type": "MedicalCaseReport",
+          "@id": "https://vth-biodent.com/case-studies/tmj-recovery-non-surgical-1",
+          "name": "TMJ เรื้อรัง — Non-Surgical Recovery"
+        }
+      ],
+      "reviewedBy": {
+        "@type": "Physician",
+        "@id": "https://vth-biodent.com/our-doctors/amornpong",
+        "name": "ทพ. อมรพงษ์"
+      }
+    },
+    {
+      "@type": "ItemList",
+      "@id": "https://vth-biodent.com/procedures/ha-injection-tmj#alternatives",
+      "name": "Alternative Treatments",
+      "numberOfItems": 3,
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "item": {
+            "@id": "https://vth-biodent.com/procedures/corticosteroid-injection-tmj"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "item": {
+            "@id": "https://vth-biodent.com/procedures/viscosupplementation-tmj"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "item": {
+            "@id": "https://vth-biodent.com/treatments/botox-tmj"
+          }
+        }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://vth-biodent.com/procedures/ha-injection-tmj#breadcrumbs",
+      "itemListElement": [
+        {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://vth-biodent.com/"},
+        {"@type": "ListItem", "position": 2, "name": "Procedures", "item": "https://vth-biodent.com/procedures/"},
+        {"@type": "ListItem", "position": 3, "name": "HA Injection (TMJ)"}
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://vth-biodent.com/procedures/ha-injection-tmj#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "การฉีด HA TMJ เจ็บไหม?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "..."
+          }
+        }
+      ]
+    }
+  ]
+}
+```
+
+→ AI/Google เห็น:
+- Procedure ที่ treats TMJ Disorder, uses HA + BTL, part of P1 Program
+- Alternatives 3 อันที่ structured navigable
+- Reviewer credibility (Physician @id)
+- Breadcrumb structure
+- FAQ พร้อม answers
+- ทุก @id resolveได้ → knowledge graph เชื่อมจริง
+
+## 26.11 Cross-References
+
+| Topic | See Also |
+|-------|----------|
+| Schema Tier Architecture (3-tier site/page/content) | Part 7.5 |
+| @graph pattern (originally introduced) | Part 7.5.5 |
+| Cross-reference via @id | Part 7.5.6 |
+| WPCode site-wide schema (Layer 0 — site) | Part 8.6 |
+| ACF Field Groups (drives Layer 1+2 input) | Part 8.7, Part 25.5 |
+| Edge vocabulary (drives Layer 2 mapping) | Part 2.7 |
+| Entity Polymorphism (storage strategy) | Part 2.5 |
+| WordPress code reference (existing functions) | Appendix D.1 (generate_schema) |
+| Knowledge Graph Health KPIs | Part 20.5 (KPI #13) |
+| Editorial review (Layer 3 manual gate) | Part 23.4 |
+| AI Citation tracking (downstream signal) | Part 13.5, Part 21.4 |
+
+---
+
+# PART 27: EYWA Scoring Framework
+
+> **Why this section:** Bible Parts 1-26 ครอบคลุม **architecture + content + implementation** ครบ — แต่ระบบยังขาดอย่างหนึ่ง: **ตัวเลขที่ deterministic** ที่บอกว่า "entity นี้แข็งแค่ไหน?" หรือ "page นี้ E-E-A-T ครบไหม?". ปัจจุบันมี field เช่น `entity_authority_score (0-100)` ใน schema — แต่ไม่มี formula ระบุไว้ว่าคำนวณยังไง. ผลคือถ้า implementer 2 คนทำ system → ได้ตัวเลขต่างกัน → "Universal" claim พังทันที. Part 27 อุดช่องนี้ด้วย **EYWA Scoring Framework** — ระบบ scoring ของเราเอง ที่ transparent + auditable + deterministic + iterable
+
+## 27.1 Philosophy & Honest Framing
+
+### 27.1.1 What This Framework Is — and Isn't
+
+```
+✅ EYWA Scoring Framework คือ:
+  • ระบบ scoring ของ EYWA — สร้างเอง สำหรับใช้ภายใน
+  • Evidence-informed (อ้างอิงจาก standards ที่มีจริง — Cochrane GRADE, 
+    Google E-E-A-T, PageRank theory)
+  • Transparent (เปิดเผย formula ทั้งหมด — ไม่ใช่ black box)
+  • Deterministic (input เดิม → output เดิมทุกครั้ง)
+  • Versioned (มี v1.0, v2.0 — ปรับปรุงได้แต่ track ประวัติ)
+  • Auditable (ทุก score มี breakdown ดูได้ว่า factor ไหนสูง/ต่ำ)
+
+❌ EYWA Scoring Framework ไม่ใช่:
+  • International standard (ไม่มี ISO standard สำหรับ SEO scoring)
+  • Industry-standard formula (Moz/Ahrefs/SEMrush ทุกตัวเป็น proprietary)
+  • Single "correct" answer (formula อาจปรับ weights ตามข้อมูลจริง)
+  • Replacement for human judgment (เป็น tool ช่วย ไม่ใช่ตัดสินใจแทน)
+```
+
+### 27.1.2 Honest References (ที่เราอ้างอิงจริง)
+
+```yaml
+tier_A_real_standards:
+  cochrane_GRADE:
+    source: "Cochrane Collaboration + GRADE Working Group"
+    used_in: "citation_authority_weight (Tier 1-6)"
+    nature: "international medical evidence standard"
+  
+  google_e_e_a_t_framework:
+    source: "Google Search Quality Evaluator Guidelines (December 2022)"
+    used_in: "e_e_a_t_score (4 factors: Experience/Expertise/Authoritativeness/Trust)"
+    nature: "Google's published framework"
+  
+  pagerank_algorithm:
+    source: "Brin & Page 1998 (Stanford)"
+    used_in: "Via DataForSEO — domain_rank, page_rank fields"
+    nature: "foundational academic algorithm"
+  
+  schema_org_validation:
+    source: "schema.org + Google Rich Results"
+    used_in: "schema_completeness factor"
+    nature: "W3C standard"
+  
+  wcag_2_1:
+    source: "W3C Web Content Accessibility Guidelines"
+    used_in: "accessibility_score factor"
+    nature: "W3C standard"
+
+tier_B_industry_consensus:
+  searchmetrics_correlation_studies:
+    used_in: "weight assignments (informed by — not derived from)"
+  
+  backlinko_ranking_factors:
+    used_in: "factor selection (citation count, content depth, freshness)"
+  
+  dataforseo_methodology:
+    source: "DataForSEO public documentation"
+    used_in: "rank metrics + traffic estimation"
+    note: "DataForSEO uses original PageRank formula — academically grounded"
+
+tier_C_eywa_synthesis:
+  specific_weights_(20%, 25%, etc):
+    status: "EYWA-specific — educated guess based on Tier A+B references"
+    iteration_plan: "Adjust based on correlation studies after VTH live"
+  
+  threshold_values_(10 pages = 100):
+    status: "EYWA-specific heuristic"
+    iteration_plan: "Tune based on actual brand data"
+  
+  combination_function_(weighted_sum):
+    status: "EYWA chose for transparency over ML accuracy"
+    rationale: "Auditable > Slightly more accurate"
+```
+
+### 27.1.3 Formula Versioning Strategy
+
+```yaml
+version_naming:
+  format: "{score_name}_formula_v{major}.{minor}"
+  examples:
+    - entity_authority_formula_v1.0
+    - e_e_a_t_formula_v1.0
+
+change_governance:
+  minor_version_bump: 
+    - Adjust weights without changing factors
+    - Adjust thresholds
+    - Backward-compatible (scores from v1.0 vs v1.1 differ <10%)
+  
+  major_version_bump:
+    - Add/remove factors
+    - Change combination function (weighted_sum → ML model)
+    - Breaking change — all scores must be recomputed
+    - Migration plan required
+
+stored_per_score_record:
+  formula_version: text  # e.g., "v1.0"
+  computed_at: timestamptz
+  factor_breakdown: jsonb  # for transparency
+
+backward_compatibility:
+  rule: "Old version formulas remain documented in this section"
+  rationale: "Historical scores must be reproducible"
+```
+
+### 27.1.4 Compute Strategy
+
+```yaml
+compute_timing:
+  realtime: "Simple aggregations (COUNT, SUM, AVG) — via PostgreSQL views"
+  batch_nightly: "Composite scores requiring normalization — n8n cron"
+  on_demand: "Recompute on entity/edge change → invalidate cache"
+
+caching:
+  storage: 
+    - score value: in main entity row
+    - factor breakdown: in entity.score_breakdown jsonb
+    - formula version: in entity.score_formula_version
+  invalidation:
+    - On dependent data change (page count, edge count, citation update)
+    - Manual refresh via WP-CLI command
+
+transparency:
+  ui_requirement: "Admin should see factor breakdown for any score"
+  api_endpoint: "/api/v1/entity/{fp}/authority-breakdown"
+```
+
+## 27.2 Entity-Level Scores
+
+### 27.2.1 entity_authority_score (0-100) — `entity_authority_formula_v1.0`
+
+**Purpose:** วัด "อำนาจ" ของ entity ใน knowledge graph — ใช้ใน:
+- Ranking related entities (สำหรับ Related Block)
+- Schema priority (entities สูงได้ schema rich กว่า)
+- Editorial prioritization (entities ต่ำต้อง content boost)
+
+**Formula:**
+
+```python
+def entity_authority_score_v1_0(entity_fp: str, brand_id: str) -> dict:
+    """
+    Returns: {
+      'score': 0-100,
+      'factors': {...},  # transparency breakdown
+      'formula_version': 'v1.0'
+    }
+    """
+    
+    # ─── Factor 1: Internal Coverage (20%) ───
+    # How many pages within this brand reference this entity?
+    page_count = count_pages_with_primary_entity(entity_fp, brand_id)
+    factor_internal_coverage = min(100, page_count * 10)
+    # Justification: 10 pages anchored = strong topical depth = 100 points
+    
+    # ─── Factor 2: Edge In-Degree (15%) ───
+    # How many other entities reference this one?
+    in_degree = count_edges_to_entity(entity_fp)
+    factor_edge_centrality = min(100, in_degree * 5)
+    # Justification: PageRank theory — high in-degree = authority signal
+    # 20 incoming edges = 100 points
+    
+    # ─── Factor 3: Citation Density (20%) ───
+    # Average citations per page anchored to this entity
+    avg_citations = avg_citations_per_anchored_page(entity_fp, brand_id)
+    factor_citation_density = min(100, avg_citations * 10)
+    # Justification: E-E-A-T (Authoritativeness)
+    # 10 citations average = 100 points
+    
+    # ─── Factor 4: Search Volume Authority (15%) ───
+    # From DataForSEO Keywords API + entity's cluster
+    search_vol = aggregate_search_volume_for_entity(entity_fp)
+    if search_vol == 0:
+        factor_search_authority = 0
+    else:
+        # Logarithmic — 100K monthly searches = 100 points
+        factor_search_authority = min(100, log10(search_vol) * 20)
+    
+    # ─── Factor 5: External Authority (15%) ───
+    # From DataForSEO Backlinks API — domain_from_rank weighted
+    # Sum of (domain_from_rank × dofollow_weight) for all backlinks 
+    # to anchored pages
+    backlink_score = compute_weighted_backlinks(entity_fp, brand_id)
+    factor_external_authority = min(100, backlink_score)
+    # Justification: PageRank-style — quality > quantity
+    
+    # ─── Factor 6: AI Citation Rate (15%) ───
+    # How often does AI engines cite this entity? (last 90 days)
+    ai_citations = count_ai_citations_recent(entity_fp, days=90)
+    factor_ai_visibility = min(100, ai_citations * 5)
+    # Justification: 2026 AI-search era — direct relevance signal
+    # 20 AI citations in 90 days = 100 points
+    
+    # ─── Weighted Combination ───
+    score = (
+        factor_internal_coverage  * 0.20 +
+        factor_edge_centrality    * 0.15 +
+        factor_citation_density   * 0.20 +
+        factor_search_authority   * 0.15 +
+        factor_external_authority * 0.15 +
+        factor_ai_visibility      * 0.15
+    )
+    
+    return {
+        'score': round(score, 2),
+        'factors': {
+            'internal_coverage': round(factor_internal_coverage, 2),
+            'edge_centrality': round(factor_edge_centrality, 2),
+            'citation_density': round(factor_citation_density, 2),
+            'search_authority': round(factor_search_authority, 2),
+            'external_authority': round(factor_external_authority, 2),
+            'ai_visibility': round(factor_ai_visibility, 2),
+        },
+        'weights': {
+            'internal_coverage': 0.20,
+            'edge_centrality': 0.15,
+            'citation_density': 0.20,
+            'search_authority': 0.15,
+            'external_authority': 0.15,
+            'ai_visibility': 0.15,
+        },
+        'formula_version': 'v1.0',
+        'computed_at': now_iso(),
+    }
+```
+
+**Score interpretation (v1.0):**
+
+```
+0-20    Emerging      → Editorial: needs content investment
+21-40   Growing       → Stable but needs more depth
+41-60   Established   → Healthy, maintain
+61-80   Strong        → Authority entity, leverage in marketing
+81-100  Dominant      → Pillar entity, central to brand
+```
+
+### 27.2.2 entity_freshness_score (0-1) — `entity_freshness_formula_v1.0`
+
+**Purpose:** วัดความสดของข้อมูล entity — ส่งผลต่อ Google's Query Deserves Freshness (QDF) signal
+
+```python
+def entity_freshness_score_v1_0(entity_fp: str, brand_id: str) -> float:
+    """Returns 0.0-1.0"""
+    
+    # Most recent content update across all pages anchored to entity
+    last_update = max_last_modified_anchored_pages(entity_fp, brand_id)
+    if not last_update:
+        return 0.0
+    
+    days_old = (now() - last_update).days
+    
+    # Decay curve (medical content priority — 12 months = stale)
+    if days_old <= 90:    return 1.0      # Fresh
+    elif days_old <= 180: return 0.85     # Recent
+    elif days_old <= 365: return 0.65     # Aging
+    elif days_old <= 730: return 0.40     # Stale
+    else:                 return 0.20     # Very stale (review needed)
+
+# Justification: Medical content has elevated freshness expectations
+# Per Google E-E-A-T guidelines for YMYL topics
+```
+
+### 27.2.3 entity_completeness_score (0-1) — `entity_completeness_formula_v1.0`
+
+**Purpose:** วัดว่า entity record ใน DB มีข้อมูลครบแค่ไหน
+
+```python
+def entity_completeness_score_v1_0(entity_fp: str) -> float:
+    """Returns 0.0-1.0"""
+    entity = get_entity(entity_fp)
+    
+    required_fields = [
+        ('entity_type', 1.0),         # mandatory
+        ('canonical_name', 1.0),      # mandatory
+        ('topic_cluster_id', 1.0),    # mandatory
+        ('schema_org_type', 1.0),     # mandatory
+        ('description', 0.8),
+        ('alternative_names', 0.6),
+        ('wikidata_id', 0.6),
+        ('icd_10_code', 0.7),         # if applicable to type
+        ('same_as_urls', 0.5),
+        ('search_volume_total', 0.4),
+    ]
+    
+    achieved = 0
+    possible = 0
+    for field, weight in required_fields:
+        possible += weight
+        if has_value(entity, field):
+            achieved += weight
+    
+    return round(achieved / possible, 2)
+```
+
+## 27.3 Edge-Level Scores
+
+### 27.3.1 edge_strength (0-1) — `edge_strength_formula_v1.0`
+
+**Purpose:** วัดความ "แน่น" ของ relationship — ใช้ใน:
+- Related entity ranking (สูง → priority)
+- Schema graph emission (สูง → emit ก่อน)
+
+```python
+def edge_strength_v1_0(edge_record: Edge) -> float:
+    """Returns 0.0-1.0"""
+    
+    # Base strength = 1.0 (default)
+    strength = 1.0
+    
+    # Adjustment 1: Edge note modifiers
+    note = edge_record.edge_note or ''
+    if 'off-label' in note.lower():           strength *= 0.7
+    if 'historical' in note.lower():          strength *= 0.6
+    if 'experimental' in note.lower():        strength *= 0.5
+    if 'mainstream' in note.lower():          strength *= 1.0  # default
+    
+    # Adjustment 2: Citation backing
+    citations_supporting = count_citations_supporting_edge(edge_record.id)
+    if citations_supporting >= 5:    strength *= 1.0  # well-supported
+    elif citations_supporting >= 2:  strength *= 0.95
+    elif citations_supporting >= 1:  strength *= 0.9
+    else:                             strength *= 0.85  # uncited
+    
+    # Adjustment 3: Edge type-specific
+    edge_type_modifier = {
+        'parent_of': 1.0, 'child_of': 1.0,            # structural — strong
+        'subtype_of': 1.0,
+        'treats': 0.95, 'treated_by': 0.95,            # clinical — strong
+        'symptom_of': 0.95,
+        'uses': 0.95, 'used_by': 0.95,
+        'part_of': 1.0, 'contains': 1.0,
+        'requires_assessment': 0.9,
+        'evidenced_by': 0.95,
+        'alternative_to': 0.85,                        # less certain
+        'related_to': 0.7,                             # generic — weakest
+    }.get(edge_record.edge_type, 0.8)
+    strength *= edge_type_modifier
+    
+    return round(min(1.0, max(0.0, strength)), 3)
+```
+
+### 27.3.2 edge_evidence_score (0-1) — `edge_evidence_formula_v1.0`
+
+**Purpose:** วัดว่า edge ถูก backed up by evidence ดีแค่ไหน
+
+```python
+def edge_evidence_score_v1_0(edge_id: str) -> float:
+    """
+    Returns 0.0-1.0
+    Combines citation count, citation tier, and freshness
+    """
+    citations = get_citations_supporting_edge(edge_id)
+    
+    if not citations:
+        return 0.0
+    
+    # Weighted average of citation authorities
+    weights = [citation_authority_weight_v1_0(c) for c in citations]
+    avg_weight = sum(weights) / len(weights)
+    
+    # Volume bonus (more citations = stronger evidence, with diminishing return)
+    volume_bonus = min(0.2, len(citations) * 0.05)
+    # 4 citations = 0.2 max bonus
+    
+    score = avg_weight + volume_bonus
+    return round(min(1.0, score), 3)
+```
+
+## 27.4 Page-Level Scores
+
+### 27.4.1 e_e_a_t_score (0-100) — `e_e_a_t_formula_v1.0`
+
+**Purpose:** Implement Google's E-E-A-T framework — drives KPI #3 (E-E-A-T Coverage)
+
+**Reference:** Google Search Quality Evaluator Guidelines (December 2022)
+
+```python
+def e_e_a_t_score_v1_0(page_id: str) -> dict:
+    """Returns score 0-100 + factor breakdown"""
+    page = get_page(page_id)
+    
+    # ─── Experience (25%) — first-hand knowledge signals ───
+    experience = 0
+    case_studies = count_linked_case_studies(page_id)
+    if case_studies >= 3:        experience += 40
+    elif case_studies >= 1:      experience += 25
+    
+    citables = count_brand_linked_citables(page_id)
+    if citables >= 3:            experience += 30
+    elif citables >= 1:          experience += 15
+    
+    if page.years_practice_referenced: experience += 30
+    
+    experience = min(100, experience)
+    
+    # ─── Expertise (25%) — credentialed authorship ───
+    expertise = 0
+    reviewer = get_reviewer(page.reviewed_by_id)
+    if reviewer:
+        if reviewer.has_specialty_credentials:  expertise += 40
+        if reviewer.years_experience >= 10:     expertise += 25
+        elif reviewer.years_experience >= 5:    expertise += 15
+        if reviewer.publications_count >= 3:    expertise += 25
+        elif reviewer.publications_count >= 1:  expertise += 10
+        if reviewer.is_principal_doctor_at_brand: expertise += 10
+    
+    expertise = min(100, expertise)
+    
+    # ─── Authoritativeness (25%) — citation quality ───
+    authority = 0
+    citations = get_page_citations(page_id)
+    
+    # Citation count
+    if len(citations) >= 5:    authority += 40
+    elif len(citations) >= 3:  authority += 30
+    elif len(citations) >= 1:  authority += 20
+    
+    # Citation tier (avg)
+    if citations:
+        avg_tier = sum(c.tier for c in citations) / len(citations)
+        # Tier 1 = best (60 pts), Tier 6 = worst (10 pts)
+        tier_bonus = max(0, 60 - (avg_tier - 1) * 10)
+        authority += tier_bonus
+    
+    authority = min(100, authority)
+    
+    # ─── Trust (25%) — accuracy + transparency signals ───
+    trust = 0
+    if page.medical_disclaimer_shown:           trust += 25
+    if page.last_reviewed_within_12_months:     trust += 25
+    if page.has_methodology_section:            trust += 15
+    if page.author_bio_visible:                 trust += 15
+    if page.contact_info_visible:               trust += 10
+    if page.last_modified_visible:              trust += 10
+    
+    trust = min(100, trust)
+    
+    # ─── Combine (equal weights — Google framework) ───
+    score = (experience + expertise + authority + trust) / 4
+    
+    return {
+        'score': round(score, 2),
+        'factors': {
+            'experience': experience,
+            'expertise': expertise,
+            'authoritativeness': authority,
+            'trust': trust,
+        },
+        'formula_version': 'v1.0',
+    }
+```
+
+### 27.4.2 content_quality_score (0-100) — `content_quality_formula_v1.0`
+
+**Purpose:** Composite page score — combines E-E-A-T + structural + freshness
+
+```python
+def content_quality_score_v1_0(page_id: str) -> float:
+    """Returns 0-100"""
+    
+    # 5 sub-scores combined
+    eeat = e_e_a_t_score_v1_0(page_id)['score']                    # 0-100
+    structure = structural_completeness_score(page_id)             # 0-100
+    freshness = page_freshness_score_v1_0(page_id) * 100           # 0-100
+    accessibility = lighthouse_a11y_score(page_id)                 # 0-100
+    schema_completeness = schema_validation_score(page_id)         # 0-100
+    
+    score = (
+        eeat               * 0.40 +  # E-E-A-T = primary
+        structure          * 0.20 +  # Layout completeness
+        freshness          * 0.15 +
+        accessibility      * 0.15 +  # WCAG AA per Part 9.7
+        schema_completeness * 0.10
+    )
+    
+    return round(score, 2)
+
+
+def structural_completeness_score(page_id: str) -> float:
+    """Layout structural completeness per Part 9 templates"""
+    page = get_page(page_id)
+    
+    score = 0
+    if page.has_hero_section:         score += 15
+    if page.has_h1_unique:            score += 10
+    if page.has_breadcrumbs:          score += 10
+    if page.h2_count >= 3:            score += 15
+    if page.has_faq_section:          score += 15
+    if page.has_related_section:      score += 15
+    if page.has_cta_section:          score += 10
+    if page.has_author_bio:           score += 10
+    
+    return min(100, score)
+```
+
+### 27.4.3 page_freshness_score (0-1) — `page_freshness_formula_v1.0`
+
+```python
+def page_freshness_score_v1_0(page_id: str) -> float:
+    """
+    Returns 0.0-1.0
+    Considers BOTH publish date AND last reviewed date
+    """
+    page = get_page(page_id)
+    
+    # Last meaningful update (review > modify)
+    last_meaningful = max(
+        page.last_reviewed_at or page.published_at,
+        page.last_modified_at or page.published_at
+    )
+    
+    days_old = (now() - last_meaningful).days
+    
+    # Layer-aware decay (some content types stay fresh longer)
+    if page.layer in ['L4', 'L5']:  # Concern + Pillar — high freshness expectation
+        if days_old <= 90:    return 1.0
+        elif days_old <= 180: return 0.85
+        elif days_old <= 365: return 0.65
+        elif days_old <= 540: return 0.40
+        else:                 return 0.15
+    
+    elif page.layer in ['L1', 'L2']:  # Authority + Service — medium decay
+        if days_old <= 180:   return 1.0
+        elif days_old <= 365: return 0.85
+        elif days_old <= 730: return 0.65
+        else:                 return 0.40
+    
+    elif page.layer == 'L7':  # Case studies — slow decay
+        if days_old <= 365:   return 1.0
+        elif days_old <= 1095: return 0.80
+        else:                 return 0.60
+    
+    else:  # L3 Tech, L6 Knowledge — standard
+        if days_old <= 180:   return 1.0
+        elif days_old <= 365: return 0.85
+        elif days_old <= 730: return 0.55
+        else:                 return 0.30
+```
+
+## 27.5 Cluster-Level Scores
+
+### 27.5.1 cluster_health_score (0-100) — `cluster_health_formula_v1.0`
+
+**Purpose:** Drives KPI #14 (Cluster Health). อ้างอิงรูจาก Bible Part 7
+
+```python
+def cluster_health_score_v1_0(cluster_id: str) -> dict:
+    """Returns score 0-100 + factor breakdown"""
+    cluster = get_cluster(cluster_id)
+    entities = get_entities_in_cluster(cluster_id)
+    
+    # ─── Factor 1: Critical Mass (25%) ───
+    # Bible Part 7.7 — clusters need ≥5 entities
+    entity_count = len(entities)
+    if entity_count >= 10:    critical_mass = 100
+    elif entity_count >= 5:   critical_mass = 80
+    elif entity_count >= 3:   critical_mass = 50
+    else:                      critical_mass = 20
+    
+    # ─── Factor 2: Pillar Presence (25%) ───
+    # Bible Part 7.7 — every cluster needs ≥1 L5 pillar
+    pillar_count = count_pillar_pages_in_cluster(cluster_id)
+    if pillar_count >= 2:    pillar = 100
+    elif pillar_count == 1:  pillar = 80
+    else:                     pillar = 0
+    
+    # ─── Factor 3: Avg Entity Authority (25%) ───
+    # How strong are entities in this cluster?
+    avg_authority = avg([
+        e.entity_authority_score for e in entities if e.entity_authority_score
+    ])
+    avg_authority = avg_authority or 0
+    # Already 0-100, no normalization needed
+    
+    # ─── Factor 4: Internal Linking Density (25%) ───
+    # How well-connected are entities within cluster?
+    internal_edges = count_edges_within_cluster(cluster_id)
+    expected_edges = entity_count * 2  # heuristic: 2 edges per entity ideal
+    if expected_edges == 0:
+        linking_density = 0
+    else:
+        linking_density = min(100, (internal_edges / expected_edges) * 100)
+    
+    # ─── Combine ───
+    score = (
+        critical_mass    * 0.25 +
+        pillar           * 0.25 +
+        avg_authority    * 0.25 +
+        linking_density  * 0.25
+    )
+    
+    return {
+        'score': round(score, 2),
+        'factors': {
+            'critical_mass': critical_mass,
+            'pillar_presence': pillar,
+            'avg_entity_authority': round(avg_authority, 2),
+            'linking_density': round(linking_density, 2),
+        },
+        'formula_version': 'v1.0',
+    }
+```
+
+### 27.5.2 cluster_topical_authority (0-100) — `cluster_topical_authority_formula_v1.0`
+
+**Purpose:** วัดว่า brand มี topical authority ใน cluster แค่ไหน — drives KPI #7
+
+```python
+def cluster_topical_authority_v1_0(cluster_id: str, brand_id: str) -> float:
+    """Returns 0-100"""
+    
+    # Factor 1: Coverage breadth (40%)
+    entities_total = count_entities_in_cluster(cluster_id)
+    entities_with_brand_pages = count_entities_with_brand_page(cluster_id, brand_id)
+    coverage = (entities_with_brand_pages / entities_total) * 100 if entities_total else 0
+    
+    # Factor 2: SERP visibility (40%) — DataForSEO Domain Rank Overview
+    # Rankings of brand's pages for cluster keywords
+    serp_visibility = compute_serp_visibility(cluster_id, brand_id)
+    # 0-100 derived from DataForSEO's pos_1, pos_2_3, pos_4_10 distribution
+    
+    # Factor 3: Backlink profile (20%) — DataForSEO Backlinks
+    backlink_strength = compute_backlink_strength_for_cluster(cluster_id, brand_id)
+    
+    score = coverage * 0.40 + serp_visibility * 0.40 + backlink_strength * 0.20
+    return round(score, 2)
+```
+
+## 27.6 Citation-Level Scores
+
+### 27.6.1 citation_authority_weight (0-1) — `citation_authority_formula_v1.0`
+
+**Purpose:** Convert citation tier (1-6 from Bible Part 23.1) + freshness to weight
+
+```python
+def citation_authority_weight_v1_0(citation: Citation) -> float:
+    """Returns 0.0-1.0"""
+    
+    # ─── Tier-based base weight (Bible Part 23.1) ───
+    # Reference: Cochrane GRADE evidence hierarchy
+    tier_weights = {
+        1: 1.00,   # Meta-analysis / systematic review (highest)
+        2: 0.85,   # RCT
+        3: 0.70,   # Cohort study
+        4: 0.55,   # Authoritative guidelines (WHO, NIH, ADA)
+        5: 0.40,   # Observational / case series
+        6: 0.25,   # Foundational textbook / consensus
+    }
+    base = tier_weights.get(citation.tier, 0.10)
+    
+    # ─── Freshness modifier ───
+    age_years = (now() - citation.publication_date).days / 365.0
+    
+    if citation.tier == 6:
+        # Textbooks decay slower
+        if age_years <= 5:    fresh = 1.0
+        elif age_years <= 15: fresh = 0.85
+        else:                  fresh = 0.65
+    else:
+        # Research papers decay faster
+        if age_years <= 2:    fresh = 1.0
+        elif age_years <= 5:  fresh = 0.85
+        elif age_years <= 10: fresh = 0.65
+        else:                  fresh = 0.40
+    
+    weight = base * fresh
+    return round(weight, 3)
+```
+
+## 27.7 Brand-Level Scores
+
+### 27.7.1 brand_authority_score (0-100) — `brand_authority_formula_v1.0`
+
+**Purpose:** Top-level rollup — overall brand health
+
+```python
+def brand_authority_score_v1_0(brand_id: str) -> dict:
+    """Returns score 0-100 + factor breakdown"""
+    brand = get_brand(brand_id)
+    
+    # ─── Factor 1: DataForSEO Domain Rank (25%) ───
+    # External authority signal — PageRank-based
+    domain_rank = get_dataforseo_domain_rank(brand.primary_domain)  
+    # On 0-100 scale (set rank_scale='one_hundred')
+    factor_external = domain_rank or 0
+    
+    # ─── Factor 2: Avg Cluster Health (20%) ───
+    clusters = get_brand_clusters(brand_id)
+    avg_cluster_health = avg([
+        cluster_health_score_v1_0(c.id)['score'] for c in clusters
+    ]) if clusters else 0
+    
+    # ─── Factor 3: Avg E-E-A-T Coverage (20%) ───
+    # % of pages with reviewer + ≥1 citation (KPI #3)
+    pages = get_brand_pages(brand_id)
+    eeat_compliant = sum(1 for p in pages 
+                          if p.reviewed_by_id and p.citation_count >= 1)
+    eeat_coverage = (eeat_compliant / len(pages) * 100) if pages else 0
+    
+    # ─── Factor 4: AI Citation Visibility (15%) ───
+    # AI citation rate (last 90 days)
+    ai_citations = count_brand_ai_citations(brand_id, days=90)
+    ai_visibility = min(100, ai_citations * 2)  # 50 citations = 100
+    
+    # ─── Factor 5: Knowledge Graph Coverage (10%) ───
+    # KPI #12 — % entities with ≥1 page
+    coverage_pct = compute_entity_coverage_pct(brand_id)
+    
+    # ─── Factor 6: Sitemap Health (10%) ───
+    # KPI #15 — Bible Part 4.10
+    sitemap_health = compute_sitemap_health_score(brand_id)
+    
+    score = (
+        factor_external      * 0.25 +
+        avg_cluster_health   * 0.20 +
+        eeat_coverage        * 0.20 +
+        ai_visibility        * 0.15 +
+        coverage_pct         * 0.10 +
+        sitemap_health       * 0.10
+    )
+    
+    return {
+        'score': round(score, 2),
+        'factors': {
+            'external_authority_dataforseo': round(factor_external, 2),
+            'avg_cluster_health': round(avg_cluster_health, 2),
+            'eeat_coverage_pct': round(eeat_coverage, 2),
+            'ai_visibility': round(ai_visibility, 2),
+            'kg_coverage_pct': round(coverage_pct, 2),
+            'sitemap_health': round(sitemap_health, 2),
+        },
+        'formula_version': 'v1.0',
+    }
+```
+
+### 27.7.2 ai_citation_readiness (0-100) — `ai_readiness_formula_v1.0`
+
+**Purpose:** วัดความพร้อมของ brand ในการถูก AI citing — emerging metric for AI search era
+
+```python
+def ai_citation_readiness_v1_0(brand_id: str) -> float:
+    """Returns 0-100"""
+    
+    # Factor 1: Schema markup completeness (25%)
+    schema_pct = pct_pages_with_valid_schema(brand_id)
+    
+    # Factor 2: Entity disambiguation (20%)
+    entities_with_wikidata = pct_entities_with_wikidata_id(brand_id)
+    
+    # Factor 3: Citable density (20%)
+    avg_citables_per_page = avg_brand_linked_citables(brand_id)
+    citable_factor = min(100, avg_citables_per_page * 25)  # 4 citables = 100
+    
+    # Factor 4: Reviewed content pct (15%)
+    reviewed_pct = pct_pages_reviewed_recently(brand_id, months=12)
+    
+    # Factor 5: FAQ schema coverage (10%)
+    faq_pct = pct_pages_with_faq_schema(brand_id)
+    
+    # Factor 6: Speakable schema coverage (10%)
+    speakable_pct = pct_pages_with_speakable_schema(brand_id)
+    
+    score = (
+        schema_pct           * 0.25 +
+        entities_with_wikidata * 0.20 +
+        citable_factor       * 0.20 +
+        reviewed_pct         * 0.15 +
+        faq_pct              * 0.10 +
+        speakable_pct        * 0.10
+    )
+    
+    return round(score, 2)
+```
+
+## 27.8 KPI Formula Reference (15 KPIs from Part 20)
+
+```yaml
+# Explicit formulas for all 15 KPIs
+
+KPI_1_citable_density:
+  formula: avg(brand_linked_citables_count) per page across brand
+  target: ≥3 per L2-L5 page
+  
+KPI_2_freshness:
+  formula: pct_pages_freshness_score >= 0.65
+  target: ≥80%
+
+KPI_3_eeat_coverage:
+  formula: pct_pages_with(reviewer + citations>=1)
+  target: ≥80% for L4-L7
+
+KPI_4_organic_traffic:
+  source: GA4
+  formula: monthly organic sessions
+  growth_target: +15% YoY
+
+KPI_5_keyword_rankings:
+  source: DataForSEO SERP API
+  formula: count(keywords ranking pos_1) + count(keywords ranking pos_2_3 × 0.5)
+  target: brand-specific
+
+KPI_6_internal_links:
+  formula: avg(internal_inbound_count) per page
+  target: ≥3
+
+KPI_7_topical_authority:
+  formula: cluster_topical_authority_v1_0 averaged across clusters
+  target: ≥60
+
+KPI_8_ai_citation_rate:
+  source: AI monitoring
+  formula: ai_citations_count / total_branded_queries × 100
+  target: ≥30%
+
+KPI_9_entity_citation:
+  formula: avg(ai_citations_per_entity) for brand entities
+  target: ≥1 per top-tier entity per month
+
+KPI_10_answer_inclusion:
+  formula: pct_target_queries with brand in AI Overview / featured snippet
+  target: ≥20%
+
+KPI_11_brand_mention_rate:
+  source: AI monitoring + DataForSEO Content Analysis API (sentiment)
+  formula: brand_mentions_count / industry_mentions × 100
+  target: brand-specific
+
+KPI_12_entity_coverage:
+  formula: pct_entities_with_page (per brand)
+  target: ≥75%
+
+KPI_13_connectivity:
+  formula: avg_edges_per_entity
+  target: ≥3
+
+KPI_14_cluster_health:
+  formula: cluster_health_score_v1_0 averaged
+  target: ≥70 across all clusters
+
+KPI_15_sitemap_health:
+  formula: Bible Part 4.10 sitemap_health_score (already defined)
+  target: ≥75
+```
+
+## 27.9 Computation Strategy
+
+### 27.9.1 Compute Frequency Map
+
+| Score | Frequency | Method |
+|-------|-----------|--------|
+| edge_strength | On edge create/update | DB trigger |
+| edge_evidence_score | On citation add to edge | DB trigger |
+| entity_completeness_score | Real-time | PostgreSQL view |
+| citation_authority_weight | On citation add | DB trigger |
+| entity_freshness_score | Daily | Cron |
+| page_freshness_score | Daily | Cron |
+| structural_completeness | On page save | Hook (WordPress) |
+| e_e_a_t_score | On page save + nightly | Hook + Cron |
+| content_quality_score | On page save + nightly | Hook + Cron |
+| entity_authority_score | Nightly | Cron (composite — heavy) |
+| cluster_health_score | Nightly | Cron |
+| cluster_topical_authority | Weekly | Cron (DataForSEO API call) |
+| ai_citation_readiness | Weekly | Cron |
+| brand_authority_score | Weekly | Cron (top-level rollup) |
+
+### 27.9.2 SQL Function Pattern Example
+
+```sql
+-- Example: entity_authority_score as PostgreSQL function
+-- Deployable directly to Supabase
+
+CREATE OR REPLACE FUNCTION compute_entity_authority_v1(
+  p_entity_fp text,
+  p_brand_id text
+) RETURNS jsonb AS $$
+DECLARE
+  v_page_count integer;
+  v_edge_in_degree integer;
+  v_avg_citations numeric;
+  v_search_vol bigint;
+  v_backlink_score numeric;
+  v_ai_citations integer;
+  v_score numeric;
+  v_factors jsonb;
+BEGIN
+  -- Factor 1: Internal coverage
+  SELECT COUNT(*) INTO v_page_count
+  FROM seo_website_page_master
+  WHERE primary_entity_fp = p_entity_fp AND brand_id = p_brand_id;
+  
+  -- Factor 2: Edge in-degree
+  SELECT COUNT(*) INTO v_edge_in_degree
+  FROM seo_entity_relationships WHERE to_entity_fp = p_entity_fp;
+  
+  -- Factor 3: Citation density
+  SELECT AVG(c.cnt) INTO v_avg_citations FROM (
+    SELECT pm.id, COUNT(pc.id) as cnt
+    FROM seo_website_page_master pm
+    LEFT JOIN seo_page_citations pc ON pm.id = pc.page_id
+    WHERE pm.primary_entity_fp = p_entity_fp AND pm.brand_id = p_brand_id
+    GROUP BY pm.id
+  ) c;
+  
+  -- Factor 4: Search volume (from entity record — populated by DataForSEO sync)
+  SELECT search_volume_total INTO v_search_vol
+  FROM seo_entity_graph WHERE entity_fingerprint = p_entity_fp;
+  
+  -- Factor 5: Backlink score (computed from DataForSEO data in seo_backlinks_*)
+  SELECT COALESCE(SUM(domain_from_rank), 0) / 10.0 INTO v_backlink_score
+  FROM seo_backlinks_links bl
+  JOIN seo_website_page_master pm ON bl.target_url = pm.url
+  WHERE pm.primary_entity_fp = p_entity_fp;
+  
+  -- Factor 6: AI citations (last 90 days)
+  SELECT COUNT(*) INTO v_ai_citations
+  FROM seo_llm_citations
+  WHERE entity_fingerprint_cited = p_entity_fp
+    AND cited_at >= NOW() - INTERVAL '90 days';
+  
+  -- Build factors with normalization
+  v_factors := jsonb_build_object(
+    'internal_coverage', LEAST(100, v_page_count * 10),
+    'edge_centrality', LEAST(100, v_edge_in_degree * 5),
+    'citation_density', LEAST(100, COALESCE(v_avg_citations, 0) * 10),
+    'search_authority', CASE 
+      WHEN v_search_vol IS NULL OR v_search_vol = 0 THEN 0
+      ELSE LEAST(100, LOG(v_search_vol) * 20)
+    END,
+    'external_authority', LEAST(100, v_backlink_score),
+    'ai_visibility', LEAST(100, v_ai_citations * 5)
+  );
+  
+  -- Weighted sum
+  v_score := 
+    (v_factors->>'internal_coverage')::numeric  * 0.20 +
+    (v_factors->>'edge_centrality')::numeric    * 0.15 +
+    (v_factors->>'citation_density')::numeric   * 0.20 +
+    (v_factors->>'search_authority')::numeric   * 0.15 +
+    (v_factors->>'external_authority')::numeric * 0.15 +
+    (v_factors->>'ai_visibility')::numeric      * 0.15;
+  
+  RETURN jsonb_build_object(
+    'score', ROUND(v_score, 2),
+    'factors', v_factors,
+    'formula_version', 'v1.0',
+    'computed_at', NOW()
+  );
+END;
+$$ LANGUAGE plpgsql;
+
+-- Usage:
+-- SELECT compute_entity_authority_v1('entity:tmj_disorder', 'vth-biodent');
+```
+
+### 27.9.3 Storage Strategy
+
+```sql
+-- Add to seo_entity_graph
+ALTER TABLE seo_entity_graph ADD COLUMN IF NOT EXISTS
+  entity_authority_score numeric;
+ALTER TABLE seo_entity_graph ADD COLUMN IF NOT EXISTS
+  entity_authority_breakdown jsonb;
+ALTER TABLE seo_entity_graph ADD COLUMN IF NOT EXISTS
+  entity_authority_formula_version text DEFAULT 'v1.0';
+ALTER TABLE seo_entity_graph ADD COLUMN IF NOT EXISTS
+  entity_authority_computed_at timestamptz;
+
+-- Same pattern for other scored entities (pages, clusters, brands)
+```
+
+## 27.10 Validation & Testing
+
+### 27.10.1 Test Cases per Formula
+
+```python
+# Example: entity_authority_score test cases
+
+class TestEntityAuthorityV1(TestCase):
+    
+    def test_zero_data_returns_zero(self):
+        """Empty entity should score 0"""
+        result = entity_authority_score_v1_0('entity:nothing', 'test-brand')
+        self.assertEqual(result['score'], 0.0)
+    
+    def test_max_factors_caps_at_100(self):
+        """All factors maxed should give 100"""
+        # Create entity with 100+ pages, 100+ edges, etc.
+        result = entity_authority_score_v1_0('entity:perfect', 'test-brand')
+        self.assertEqual(result['score'], 100.0)
+    
+    def test_known_brand_baseline(self):
+        """VTH BioDent TMJ Disorder should score 60-80"""
+        result = entity_authority_score_v1_0(
+            'entity:tmj_disorder', 'vth-biodent'
+        )
+        self.assertGreater(result['score'], 60)
+        self.assertLess(result['score'], 80)
+    
+    def test_factor_breakdown_sums_correctly(self):
+        """Weighted factors should sum to score"""
+        result = entity_authority_score_v1_0('entity:test', 'test-brand')
+        weights = {'internal_coverage': 0.20, 'edge_centrality': 0.15, ...}
+        manual_sum = sum(
+            result['factors'][k] * weights[k] for k in weights
+        )
+        self.assertAlmostEqual(result['score'], manual_sum, places=2)
+```
+
+### 27.10.2 Sanity Bounds
+
+```yaml
+all_scores_must_satisfy:
+  - score ∈ [min_bound, max_bound]
+  - factor_breakdown matches score
+  - formula_version is documented
+  - computed_at is recent (per frequency map)
+
+automated_checks:
+  - daily cron: report scores outside bounds
+  - alert if formula_version mismatch
+  - alert if computed_at too old (> 2x expected frequency)
+```
+
+### 27.10.3 Correlation Testing (Phase 4 — Post-Launch)
+
+```yaml
+goal: "Validate formulas predict real-world outcomes"
+
+correlations_to_track:
+  entity_authority_score:
+    expected_correlation: "high authority entities → more AI citations"
+    measure: Pearson correlation > 0.5
+    timeframe: 6 months post-launch
+  
+  e_e_a_t_score:
+    expected_correlation: "high E-E-A-T → better SERP rankings"
+    measure: rankings improvement after E-E-A-T fixes
+  
+  cluster_health_score:
+    expected_correlation: "healthy clusters → higher organic traffic"
+    measure: traffic / cluster correlation
+
+iteration_trigger:
+  if correlation < 0.3 → revisit formula weights → v1.1 update
+```
+
+## 27.11 DataForSEO Field Mapping
+
+| EYWA Score Factor | DataForSEO Endpoint | Fields Used |
+|-------------------|---------------------|-------------|
+| backlink_score | /backlinks/summary/live | rank, backlinks, referring_domains, dofollow ratio |
+| domain_authority (external) | /backlinks/summary/live | rank (with rank_scale=one_hundred) |
+| referring_quality | /backlinks/referring_domains/live | domain_from_rank per referrer |
+| serp_visibility | /dataforseo_labs/google/domain_rank_overview/live | pos_1, pos_2_3, pos_4_10 etc |
+| traffic_estimate | /dataforseo_labs/google/bulk_traffic_estimation/live | organic.etv, paid.etv |
+| keyword_rankings | /serp/google/organic/live/advanced | rank position, SERP features |
+| keyword_volume | /keywords_data/google_ads/search_volume/live | search_volume, cpc, competition |
+| keyword_difficulty | /dataforseo_labs/google/bulk_keyword_difficulty/live | keyword_difficulty |
+| brand_mentions | /content_analysis/summary/live | rank, sentiment, mention frequency |
+
+## 27.12 Implementation Phasing
+
+```yaml
+phase_C_database (Phase 1A):
+  □ Add score columns to all relevant tables
+  □ Create PostgreSQL functions for each formula
+  □ Create indexes for performance
+  □ Set up triggers for real-time computes
+
+phase_C_n8n (Phase 1C):
+  □ DataForSEO daily/weekly fetch flows
+  □ Score recompute cron jobs (per Section 27.9.1)
+  □ Cache invalidation on entity/edge change
+
+phase_D_wordpress (Phase 2):
+  □ Read scores in template logic
+  □ Display score breakdowns in admin UI
+  □ Use scores for related-content ranking
+  □ Integrate Lighthouse + axe scores into content_quality
+
+phase_E_validation (Phase 3D):
+  □ Test all formulas with VTH data
+  □ Verify sanity bounds
+  □ Begin correlation tracking
+  □ Document any formula issues for v1.1
+
+phase_F_iteration (post-launch):
+  □ Correlation testing (6 months data)
+  □ Adjust weights → v1.1
+  □ Add/refine formulas based on real-world performance
+```
+
+## 27.13 Cross-References
+
+| Topic | See Also |
+|-------|----------|
+| Citation tier hierarchy (basis for citation weight) | Part 23.1 |
+| 15 KPIs framework (formulas implemented here) | Part 20 |
+| Sitemap Health Score (KPI #15 — already defined) | Part 4.10 |
+| E-E-A-T concept origins | Part 6 (Content Standard) |
+| Cluster creation rules (cluster_health inputs) | Part 7.7 |
+| Knowledge graph (entity_authority graph context) | Part 2.6, 2.7 |
+| Schema completeness (input to content_quality) | Part 26 |
+| WCAG accessibility (a11y factor in content_quality) | Part 9.7 |
+| DataForSEO field reference | Section 27.11 (this part) |
+| Database schema additions | Schema_Overview Section 4.x |
+
+---
+
+# PART 28: Multilingual Strategy
+
+> **Why this Part exists:** EYWA brands ส่วนใหญ่ดำเนินงานใน **multilingual context** — Thai เป็นภาษาหลัก แต่รองรับ English (medical tourism, international audience), และ roadmap ระยะยาวมีอีก 6 ภาษา (Chinese, Japanese, Korean, Arabic, French, Spanish). Multilingual ไม่ใช่ "translate ตอนสุดท้าย" — มันส่งผลต่อ **architecture decisions ทั้งระบบ** (entity pattern, scoring, schema, ACF, Elementor templates, AI/LLMO citation, DataForSEO tracking). Part 28 รวบรวม multilingual considerations ทั้งหมดในที่เดียว เพื่อให้ implementer ไม่พลาด
+
+> ⚠️ **v3.12 NOTICE — Two-Tier Multilingual Strategy (DR-009):**
+>
+> Schema v1.8 formalizes multilingual handling into TWO TIERS based on data semantics:
+>
+> **Tier 1 — Concept Tables (1 row + jsonb translations):**
+> - Used for: entity, cluster, brand, author, doctor, branch, citation
+> - Pattern: `canonical_names jsonb`, `aliases jsonb`, `descriptions jsonb`
+> - Same concept, multiple language labels (DRY pattern)
+>
+> **Tier 2 — Content Tables (1 row per language + translation_group_id):**
+> - Used for: page, keyword, review
+> - Each language is a separate row with unique fingerprint
+> - All translations share `translation_group_id` (format `tg_{ULID16}`)
+> - One row marked `is_source_page = true` (canonical for hreflang)
+>
+> See:
+> - **Schema_Overview v1.8 Appendix E** — Two-Tier strategy + decision matrix + lifecycle examples
+> - **DECISION_RECORDS DR-009** — Decision rationale
+> - **Section 28.3 below** — Entity-specific multilingual pattern (Tier 1 example)
+
+## 28.1 Language Strategy & Roadmap
+
+### 28.1.1 Supported Languages — Phased Rollout
+
+```yaml
+phase_1_immediate (Q2 2026):
+  primary: th (Thai) — default language, every brand
+  secondary: en (English) — medical tourism, international SEO
+  
+  rationale:
+    - Thai = primary market (90%+ revenue from Thai patients initially)
+    - English = expansion + medical tourism + AI engine reach
+    - Both critical for Phase 3 VTH BioDent launch
+
+phase_2_year_1 (2026-2027):
+  add_when_market_demand_clear:
+    zh: Chinese (Simplified) — China medical tourism
+    ja: Japanese — Japanese expats in Thailand
+    ko: Korean — Korean expats + medical tourism
+  
+  trigger_for_activation:
+    - Inbound traffic from market reaches threshold (5%+)
+    - Doctor partnerships with that country's clinics
+    - Medical tourism agency contracts
+
+phase_3_year_2_plus (2027+):
+  long_tail_languages:
+    ar: Arabic (RTL) — Middle East medical tourism
+    fr: French — francophone Africa + tourism
+    es: Spanish — Spanish-speaking tourism
+  
+  conditional_activation: case-by-case business need
+
+total_capacity: 8 languages designed in architecture
+implementation_order: Thai → English → others (just-in-time)
+```
+
+### 28.1.2 Why This Matters Architecturally
+
+```yaml
+multilingual_is_NOT:
+  ❌ "Translate content at the end before publishing"
+  ❌ "Same English content translated to other languages"
+  ❌ "Add language switcher and call it done"
+
+multilingual_IS:
+  ✅ Cross-cutting architectural concern affecting:
+     - Database schema (jsonb fields per language)
+     - Entity model (single entity, multilingual labels)
+     - Scoring system (per-language scores)
+     - Schema markup (inLanguage, sameAs)
+     - Translation workflow (AI-draft + review)
+     - URL structure (subdirectory pattern)
+     - WPML configuration (CPT translation rules)
+     - Elementor templates (Dynamic Tags pull translated values)
+     - DataForSEO tracking (per-locale data)
+     - AI/LLMO strategy (multilingual citables)
+     - Cross-brand referrals (language-aware)
+```
+
+## 28.2 URL Structure (Subdirectory + Thai Default)
+
+### 28.2.1 Confirmed Decision
+
+```yaml
+url_pattern_locked:
+  
+  thai_default:
+    homepage: vth-biodent.com/
+    knowledge: vth-biodent.com/knowledge/peri-implantitis/
+    procedure: vth-biodent.com/procedures/dental-implant/
+    doctor: vth-biodent.com/doctors/dr-somchai/
+  
+  english:
+    homepage: vth-biodent.com/en/
+    knowledge: vth-biodent.com/en/knowledge/peri-implantitis/
+    procedure: vth-biodent.com/en/procedures/dental-implant/
+    doctor: vth-biodent.com/en/doctors/dr-somchai/
+  
+  future_languages:
+    chinese: vth-biodent.com/zh/...
+    japanese: vth-biodent.com/ja/...
+    korean: vth-biodent.com/ko/...
+    arabic: vth-biodent.com/ar/...    # RTL
+    french: vth-biodent.com/fr/...
+    spanish: vth-biodent.com/es/...
+
+rationale_for_subdirectory:
+  ✅ Single domain = cumulative authority
+  ✅ Easier to manage SSL, CDN, analytics
+  ✅ Simpler GSC setup (1 property)
+  ✅ Clear hierarchy for users + crawlers
+  ✅ WPML default + recommended pattern
+
+rejected_alternatives:
+  ❌ Subdomain (th.brand.com): splits authority
+  ❌ Separate ccTLD (.co.th + .com): expensive, complex
+  ❌ Query parameter (?lang=en): poor SEO
+```
+
+### 28.2.2 WPML Configuration
+
+```yaml
+wpml_settings:
+  language_url_format: 'directory'    # /en/, /zh/ etc.
+  default_language: 'th'              # Thai = no prefix
+  default_url: 'no_prefix'             # /knowledge/ NOT /th/knowledge/
+  
+  language_negotiation_type: 1         # different languages in directories
+  
+  hidden_languages: []                # all visible
+  
+  url_normalization:
+    case: lowercase
+    trailing_slash: yes
+    no_double_slashes: enforced
+```
+
+### 28.2.3 Special URL Cases
+
+```yaml
+non_translated_urls:
+  
+  signature_systems_(brand_specific):
+    Thai default: vth-biodent.com/mbm/
+    English: vth-biodent.com/en/mbm/
+    
+    Note: Branded methodologies (e.g., Mouth Bio Mapping)
+          keep same slug across languages — name is universal
+  
+  doctor_profiles:
+    Thai: vth-biodent.com/doctors/dr-somchai/
+    English: vth-biodent.com/en/doctors/dr-somchai/
+    
+    Note: Doctor names slug = transliteration, kept same
+          Display name varies (Dr. Somchai / นพ. สมชาย)
+
+  branch_pages:
+    Same slug across languages (location identifier)
+    Display content fully translated
+```
+
+## 28.3 Entity Multilingual Pattern
+
+### 28.3.1 Single Entity, Multilingual Labels
+
+```yaml
+core_decision:
+  pattern: ONE entity record, multilingual values via jsonb
+  
+  not_used:
+    ❌ Separate entity per language
+    ❌ Translation tables joined to entity
+
+rationale:
+  ✅ Knowledge graph stays unified (1 entity = 1 concept)
+  ✅ Edges defined once (not duplicated per language)
+  ✅ Wikidata mapping cleaner (1 Q-ID per entity)
+  ✅ ICD-10 / SNOMED codes universal (no duplication)
+  ✅ Scoring computed at entity level (cross-language signals)
+  ✅ AI/LLMO benefits from multilingual labels on same entity
+```
+
+### 28.3.2 Schema Implementation
+
+```sql
+-- Extends seo_entity_graph for multilingual
+
+ALTER TABLE seo_entity_graph ADD COLUMN IF NOT EXISTS
+  canonical_names jsonb DEFAULT '{}';
+-- Structure (per language ISO code):
+-- {
+--   "th": "โรคข้อต่อขากรรไกร",
+--   "en": "Temporomandibular Joint Disorder",
+--   "zh": "颞下颌关节紊乱",
+--   "ja": "顎関節症",
+--   "ko": "턱관절 장애",
+--   "ar": "اضطراب المفصل الفكي الصدغي",
+--   "fr": "Trouble de l'articulation temporo-mandibulaire",
+--   "es": "Trastorno de la articulación temporomandibular"
+-- }
+
+ALTER TABLE seo_entity_graph ADD COLUMN IF NOT EXISTS
+  descriptions jsonb DEFAULT '{}';
+-- Same per-language structure for description text
+
+ALTER TABLE seo_entity_graph ADD COLUMN IF NOT EXISTS
+  alternative_names_per_language jsonb DEFAULT '{}';
+-- {
+--   "th": ["TMJ", "ขากรรไกรค้าง", "ข้อต่อขากรรไกรเสื่อม"],
+--   "en": ["TMJ", "TMD", "Jaw joint disorder"]
+-- }
+
+ALTER TABLE seo_entity_graph ADD COLUMN IF NOT EXISTS
+  search_volume_per_language jsonb DEFAULT '{}';
+-- DataForSEO tracking per language market:
+-- {
+--   "th": {"monthly_volume": 5400, "trend": "stable"},
+--   "en": {"monthly_volume": 12000, "trend": "rising"}
+-- }
+```
+
+### 28.3.3 Query Patterns
+
+```sql
+-- Render entity name for current page language
+SELECT 
+  COALESCE(
+    canonical_names->>$1,           -- requested language
+    canonical_names->>'en',          -- fallback to English
+    canonical_names->>'th'           -- fallback to Thai
+  ) as display_name
+FROM seo_entity_graph
+WHERE entity_fingerprint = $2;
+
+-- Find entities missing translation
+SELECT entity_fingerprint, canonical_names
+FROM seo_entity_graph
+WHERE NOT (canonical_names ? 'en')   -- missing English
+  AND brand_scope @> ARRAY['vth-biodent']
+LIMIT 100;
+```
+
+## 28.4 Translation Workflow (AI-Draft + Human Review)
+
+### 28.4.1 Workflow Stages
+
+```yaml
+stage_1_thai_creation_(default):
+  who: Thai-language editor
+  where: Notion (Entities DB or Pages DB)
+  what: Create entity/page in Thai with full content
+  status: draft → ready_for_publish (Thai-only initially)
+  
+  fields_filled:
+    - canonical_names.th = "โรค TMJ"
+    - descriptions.th = full Thai description
+    - All ACF content fields in Thai
+  
+  quality_gates:
+    - Editorial review (Bible Part 23.4)
+    - Citation verification
+    - Medical accuracy check (if applicable)
+
+stage_2_english_ai_draft:
+  trigger: 
+    - automatic on Thai approval (configurable)
+    - OR manual flag: "needs_english_translation"
+  
+  process:
+    - n8n flow calls AI translation API:
+      Source: Anthropic Claude (recommended for medical context)
+      Alternative: GPT-4, DeepL (medical-grade)
+    - Input: Thai canonical_name + description + key fields
+    - Output: English draft populated to:
+      - canonical_names.en
+      - descriptions.en
+      - Other translatable ACF fields
+  
+  status: translation_status = 'machine_translated'
+  flag: needs_human_review = true
+
+stage_3_human_review:
+  who: bilingual reviewer (medical professional preferred)
+  where: Notion English view of same entity
+  
+  review_checklist:
+    □ Medical terminology accurate
+    □ Brand voice preserved
+    □ Tone appropriate (formal/clinical)
+    □ Cultural appropriateness
+    □ Idioms/phrases natural
+    □ Numbers/units converted (if needed)
+    □ References (Thai-only references replaced or kept)
+  
+  actions:
+    - Edit incorrect translations
+    - Refine clunky phrasing
+    - Verify medical terms against authoritative sources
+  
+  on_complete:
+    translation_status = 'human_reviewed'
+    needs_human_review = false
+
+stage_4_publish_to_wordpress:
+  via: n8n flow + WPML REST API integration
+  
+  creates:
+    - Thai post (default URL)
+    - English post (linked via WPML)
+    - hreflang tags auto-generated
+    - Schema includes inLanguage + sameAs
+  
+  result: both languages live simultaneously
+
+stage_5_ongoing_maintenance:
+  thai_content_update: 
+    → flag English version as 'needs_review' if change is significant
+  
+  english_only_update:
+    → done in English Notion view
+    → no impact on Thai version
+```
+
+### 28.4.2 AI Translation Configuration
+
+```yaml
+ai_translation_provider:
+  primary: Anthropic Claude (claude-sonnet-4-7)
+  fallback: GPT-4
+  
+  prompt_template: |
+    You are a medical translator specializing in Thai-English translation 
+    for healthcare content. Translate the following from {source_lang} to 
+    {target_lang}, preserving:
+    
+    1. Medical accuracy and clinical terminology
+    2. Brand voice (professional, empathetic, expert)
+    3. SEO keyword intent (do not translate proper nouns or branded terms)
+    4. Cultural appropriateness for {target_market}
+    5. Patient-friendly language (avoid jargon when possible)
+    
+    Keep these terms untranslated:
+    - Brand names (e.g., VTH BioDent, Mouth Bio Mapping, EmSmile)
+    - Medical device brands (e.g., Solea, BioPak)
+    - ICD-10 codes
+    - Drug brand names (use generic name in target language)
+    
+    Source text ({source_lang}):
+    {source_text}
+    
+    Provide ONLY the translation, no commentary.
+  
+  cost_estimate:
+    avg_tokens_per_entity: 500-2000 (description + fields)
+    cost_per_1k_tokens: ~$0.003 (Claude Sonnet)
+    300_entities × 2_languages: ~$5-15 per brand initial draft
+    ongoing: ~$2-5/month per brand (incremental updates)
+
+quality_checks:
+  automatic:
+    - Length sanity (translated text not <30% or >300% of source)
+    - No untranslated chunks (catch AI failure)
+    - Markdown formatting preserved
+    - Links preserved
+  
+  manual_review_triggers:
+    - Medical claim sentences (high-risk content)
+    - Citation quotes (preserve verbatim)
+    - Disclaimer text (legal precision needed)
+    - Pillar pages (E-E-A-T sensitive)
+```
+
+## 28.5 WPML Configuration for EYWA CPTs
+
+### 28.5.1 Per-CPT Translation Settings
+
+```yaml
+wpml_translation_management:
+  
+  always_translate_(content):
+    - condition           # medical content, full translation
+    - procedure           # treatment descriptions
+    - treatment           # care pathways
+    - case_study          # patient stories
+    - post                # knowledge content
+    - program             # branded programs (Tier 2)
+    - signature_system    # branded methodologies
+  
+  translate_with_special_handling:
+    - doctor:
+        translate: bio, credentials descriptions
+        copy_once: doctor photo, name (transliteration)
+        sync: specialty taxonomy
+    
+    - branch:
+        translate: branch description, parking notes
+        copy_once: address, phone, GPS coordinates, photos
+        adjust_per_language: operating_hours format
+  
+  translate_carefully_(vertical_specific):
+    - ingredient          # technical names + descriptions
+    - drug                # generic names + brand names
+    - lab_test            # test names + procedures
+    - product             # product descriptions
+    - technology          # device descriptions
+
+never_translate_(universal):
+  - taxonomies (use term IDs across languages):
+    sitemap_section, layer, tier, funnel_stage, lifecycle_state
+  - URL slugs of doctors, branches (transliteration kept)
+  - SKUs, codes, IDs
+```
+
+### 28.5.2 ACF + WPML Field Translation Rules
+
+```yaml
+acf_field_translation_settings:
+  
+  translate_per_language_(Translation_Editor):
+    field_types:
+      - text, textarea, wysiwyg
+      - email, url
+      - select, radio (label translation)
+      - repeater (subfields translated individually)
+    
+    examples:
+      - canonical_name → translated
+      - description → translated
+      - faq_repeater (question + answer per row) → translated
+      - meta_description → translated
+      - hero_subtitle → translated
+  
+  copy_(same_value_all_languages):
+    field_types:
+      - number
+      - true_false
+      - date_picker
+      - color_picker
+      - relationship (post connections)
+      - taxonomy (term connections)
+    
+    examples:
+      - publication_date → same across languages
+      - icd_10_code → universal
+      - entity_authority_score → computed once
+      - reviewed_by (relationship) → same doctor
+      - tier_evidence → universal classification
+  
+  copy_once_(initial_value_then_independent):
+    field_types:
+      - image, gallery (with separate alt_text per language)
+      - file
+    
+    note: 
+      - Image asset same across languages
+      - alt_text translated per language (separate ACF field)
+  
+  not_translated_(language_specific_value):
+    examples:
+      - search_volume (different per market!)
+      - keyword_difficulty (different per market)
+      - local_keyword_target (different per market)
+      - cultural_context_notes (per language)
+
+configuration_in_wpml:
+  WPML > Settings > Custom Fields Translation:
+    For each ACF field: set Translation behavior
+    
+  Best practice:
+    Configure ACF field group → Translation Preferences
+    Once configured, all fields in group inherit settings
+    Override individually if needed
+```
+
+## 28.6 hreflang Strategy
+
+### 28.6.1 Auto-Generation by WPML
+
+```yaml
+hreflang_auto_generated:
+  source: WPML (automatic)
+  validation: RankMath Pro
+  
+  rendered_in_html_head:
+    <link rel="alternate" hreflang="th" href="https://vth-biodent.com/knowledge/tmj/" />
+    <link rel="alternate" hreflang="en" href="https://vth-biodent.com/en/knowledge/tmj/" />
+    <link rel="alternate" hreflang="x-default" href="https://vth-biodent.com/knowledge/tmj/" />
+  
+  rules:
+    - Every translated page declares all alternates
+    - x-default points to Thai (default language)
+    - hreflang codes use ISO 639-1 (2-letter)
+    - For regional variants: th-TH, en-US, etc. (if needed)
+```
+
+### 28.6.2 Validation Workflow
+
+```yaml
+validation_layers:
+  
+  layer_1_automatic:
+    - WPML generates on every page render
+    - hreflang_validated field tracks per page
+  
+  layer_2_rankmath:
+    - RankMath Pro validates hreflang setup
+    - Flags missing translations
+    - Flags broken hreflang chains
+  
+  layer_3_eywa_n8n:
+    - Daily flow checks Google Search Console
+    - Reports hreflang errors
+    - Alerts editorial team
+  
+  layer_4_manual_audit:
+    - Quarterly hreflang health check
+    - Tools: Screaming Frog, Sitebulb
+    - Cross-reference with sitemap
+```
+
+### 28.6.3 Common Issues & Mitigations
+
+```yaml
+issue_1_missing_translation:
+  symptom: Thai page exists, English version missing
+  hreflang_impact: only Thai version declares hreflang (incomplete)
+  mitigation:
+    - Editorial flag: "missing_english_translation"
+    - n8n daily report
+    - Block hreflang publication until both languages ready (config option)
+
+issue_2_broken_hreflang_chain:
+  symptom: Thai → English declared, English → Thai missing
+  hreflang_impact: Google ignores (must be reciprocal)
+  mitigation:
+    - WPML normally handles correctly
+    - RankMath validates chain
+    - Manual audit if errors persist
+
+issue_3_redirect_in_hreflang:
+  symptom: hreflang URL redirects (301/302)
+  hreflang_impact: Google de-prioritizes
+  mitigation:
+    - Always use canonical (final) URL in hreflang
+    - n8n daily HTTP HEAD validation
+
+issue_4_rtl_language_(arabic):
+  symptom: Arabic content rendered LTR
+  hreflang_impact: none directly
+  layout_impact: significant
+  mitigation:
+    - Hello theme RTL ready
+    - WPML handles dir="rtl" automatically
+    - Test in Elementor preview before publish
+```
+
+## 28.7 Schema Markup Multilingual
+
+### 28.7.1 Per-Page Schema Pattern
+
+```javascript
+// EYWA Schema Pipeline output for Thai page
+
+{
+  "@context": "https://schema.org",
+  "@type": "MedicalCondition",
+  "@id": "https://vth-biodent.com/by-concern/tmj-disorder/#condition",
+  
+  // Language declaration
+  "inLanguage": "th",
+  
+  // Localized name + alternates
+  "name": "โรคข้อต่อขากรรไกร",
+  "alternateName": ["TMJ", "ขากรรไกรค้าง"],
+  
+  // Localized description
+  "description": "...",
+  
+  // Universal identifiers (cross-language)
+  "code": {
+    "@type": "MedicalCode",
+    "codeValue": "M26.6",
+    "codingSystem": "ICD-10"
+  },
+  "sameAs": [
+    "https://www.wikidata.org/wiki/Q768229",   // Universal identifier
+    "https://vth-biodent.com/en/by-concern/tmj-disorder/#condition"  // English version
+  ],
+  
+  // Translation linkage
+  "workTranslation": [
+    {
+      "@type": "MedicalCondition",
+      "@id": "https://vth-biodent.com/en/by-concern/tmj-disorder/#condition",
+      "inLanguage": "en",
+      "name": "Temporomandibular Joint Disorder"
+    }
+  ]
+}
+```
+
+### 28.7.2 Schema Pipeline Multilingual Logic
+
+```yaml
+eywa_schema_pipeline_multilingual:
+  
+  per_page_render:
+    detect_language: get current page language from WPML
+    
+    pull_from_acf:
+      - canonical_name (in current language)
+      - description (in current language)
+      - other localized fields
+    
+    pull_universal:
+      - icd_10_code (same)
+      - wikidata_id (same)
+      - schema.org type (same)
+      - publication_date (same)
+    
+    generate_alternates:
+      - For each translated version:
+        Get URL via WPML API
+        Add to sameAs array
+        Add to workTranslation array
+    
+    output:
+      <script type="application/ld+json">
+        { ... full schema with multilingual support }
+      </script>
+
+caching:
+  per language + per page = separate cache entries
+  invalidation: when ACF field updates in any language
+```
+
+## 28.8 Citation Language Handling
+
+### 28.8.1 Multilingual Citation Strategy
+
+```yaml
+citation_language_decisions:
+  
+  english_citations_on_thai_page:
+    status: ACCEPTABLE (recommended in many cases)
+    rationale:
+      - PubMed papers primarily English
+      - Authoritative medical sources English-dominant
+      - Thai readers expect English citations for credibility
+      - Google understands cross-language citations
+    
+    presentation:
+      - Show English citation as-is
+      - Optional: Thai annotation: "(งานวิจัยภาษาอังกฤษ)"
+      - Translate quote selectively (if used inline)
+  
+  thai_citations_on_thai_page:
+    status: PREFERRED when available
+    sources:
+      - Thai medical journals
+      - Thai Ministry of Health publications
+      - Royal College of Physicians of Thailand
+    
+    presentation: native Thai text
+  
+  thai_citations_on_english_page:
+    status: USE CAUTIOUSLY
+    rationale: 
+      - English readers may not access Thai sources
+      - Reduce credibility for international audience
+    
+    handling:
+      - Provide English title translation
+      - Note "(in Thai)" disclosure
+      - Prefer English alternative if available
+  
+  citation_database_storage:
+    seo_citations.language: 'en' / 'th' / 'zh' / etc.
+    seo_citations.title: native title (in original language)
+    seo_citations.title_translations: jsonb (translated titles)
+```
+
+### 28.8.2 EYWA Citation Authority Weight (Multilingual)
+
+```yaml
+extended_formula_for_multilingual:
+  
+  base_citation_authority_weight (Bible Part 27.6.1):
+    [tier weight × freshness modifier]
+  
+  multilingual_adjustment:
+    same_language_as_page: × 1.0  (no penalty)
+    different_language_translated: × 0.95
+    different_language_untranslated: × 0.85
+    universal_authority (PubMed, WHO): × 1.0  (regardless of language)
+  
+  rationale:
+    - Universal authority sources don't suffer language penalty
+    - Translated sources ~95% as effective
+    - Untranslated cross-language ~85% (less accessible to readers)
+
+implementation:
+  citation_authority_weight = 
+    base_weight × language_modifier
+```
+
+## 28.9 Multilingual EYWA Scoring
+
+### 28.9.1 Per-Language Scoring Strategy
+
+```yaml
+scoring_decision: COMPUTE PER LANGUAGE + AGGREGATE
+
+rationale:
+  - Thai performance ≠ English performance
+  - Different markets, different signals
+  - Resource allocation needs per-language visibility
+  - Aggregate provides portfolio view
+
+storage_pattern:
+  
+  entity_authority_score_th: numeric
+  entity_authority_score_en: numeric
+  entity_authority_score: numeric
+    -- aggregate strategy: max(per_language_scores)
+    -- alternative: weighted by traffic share
+  
+  Same pattern for:
+    e_e_a_t_score_*
+    content_quality_score_*
+    cluster_health_score_*
+    brand_authority_score_*
+    ai_citation_readiness_*
+```
+
+### 28.9.2 Per-Language Compute Logic
+
+```sql
+-- Example: entity_authority_score_th computation
+-- Same formula as Bible Part 27.2.1 BUT scoped to Thai data
+
+CREATE OR REPLACE FUNCTION compute_entity_authority_per_language_v1(
+  p_entity_fp text,
+  p_brand_id text,
+  p_language text
+) RETURNS jsonb AS $$
+DECLARE
+  v_factors jsonb;
+  v_score numeric;
+BEGIN
+  -- Factor 1: Internal Coverage (pages in this language)
+  -- Factor 2: Edge in-degree (universal — same across languages)
+  -- Factor 3: Citation density (citations on this language's pages)
+  -- Factor 4: Search volume (DataForSEO data for this language market)
+  -- Factor 5: External authority (backlinks to this language's pages)
+  -- Factor 6: AI citation rate (in this language by AI engines)
+  
+  -- ... (full computation per language scope)
+  
+  RETURN jsonb_build_object(
+    'score', v_score,
+    'language', p_language,
+    'factors', v_factors,
+    'formula_version', 'v1.0-multilingual'
+  );
+END;
+$$ LANGUAGE plpgsql;
+
+-- Aggregate score: max across languages
+UPDATE seo_entity_graph SET
+  entity_authority_score = GREATEST(
+    COALESCE(entity_authority_score_th, 0),
+    COALESCE(entity_authority_score_en, 0)
+  )
+WHERE entity_fingerprint = $1;
+```
+
+### 28.9.3 Cross-Language Insights
+
+```yaml
+operator_dashboards_(multilingual):
+  
+  per_brand_per_language_breakdown:
+    "VTH Thai: brand_authority = 78"
+    "VTH English: brand_authority = 45"
+    → English market underperforming, allocate resources
+  
+  cluster_strength_comparison:
+    "TMJ cluster — Thai: 85, English: 32"
+    → English TMJ content needs investment
+  
+  citation_balance:
+    "Thai pages: 60% citations from Thai sources"
+    "English pages: 80% citations from international sources"
+    → balanced, appropriate
+  
+  ai_citation_visibility:
+    "Thai AI queries: VTH cited 35% of time"
+    "English AI queries: VTH cited 12% of time"
+    → significant English-side opportunity
+```
+
+## 28.10 Elementor + WPML Template Strategy
+
+### 28.10.1 Single Template, Dynamic Content
+
+```yaml
+template_strategy_locked:
+  pattern: ONE Elementor template per CPT (not per language)
+  
+  how_it_works:
+    1. Designer creates single-doctor template once
+    2. WPML translates ACF field values per language
+    3. Dynamic Tags pull translated values automatically
+    4. Same layout renders in all languages
+  
+  benefits:
+    ✅ Maintain ONE template = faster updates
+    ✅ Layout consistency across languages
+    ✅ No drift between language versions
+    ✅ Simpler version control
+
+what_changes_per_language:
+  - Text content (via Dynamic Tags pulling translated ACF)
+  - Image alt text (via translated ACF alt field)
+  - Date format (via WPML locale settings)
+  - Number format (via WPML locale)
+  - RTL flip for Arabic (automatic via WPML + Hello theme)
+
+what_stays_same_per_language:
+  - Layout structure
+  - Widget arrangement
+  - Color palette (Site Settings)
+  - Typography (Site Settings, with locale-specific font fallbacks)
+```
+
+### 28.10.2 Language Switcher Implementation
+
+```yaml
+elementor_language_switcher:
+  widget: WPML Language Switcher (Elementor-compatible)
+  position: header (consistent placement across templates)
+  
+  display_options:
+    style: flag + native language name
+    show_only_translated: true (don't show language without translation)
+    current_language_display: highlighted
+  
+  example:
+    [TH 🇹🇭] [EN 🇺🇸] [ZH 🇨🇳]
+    Active language has different styling
+```
+
+### 28.10.3 RTL Considerations (Arabic)
+
+```yaml
+rtl_support_for_arabic:
+  
+  what_handles_automatically:
+    - WPML detects Arabic = RTL language
+    - Adds dir="rtl" to <html>
+    - Hello Elementor theme switches layout
+    - Elementor Pro RTL mode: layout mirrors
+    - Icons/buttons swap sides automatically
+  
+  manual_considerations:
+    - Brand logo: typically don't mirror
+    - Phone numbers: keep LTR within RTL context
+    - English text within Arabic: needs <span dir="ltr">
+    - Number formatting: Arabic-Indic numerals or Western
+  
+  testing_checklist_when_arabic_added:
+    □ Layout flips correctly
+    □ Navigation menu mirrors
+    □ Form fields align right
+    □ Icons swap sides (chevrons, arrows)
+    □ Mixed-direction content (English in Arabic) renders cleanly
+    □ Schema markup includes dir="rtl"
+
+elementor_rtl_setup:
+  WordPress > Settings > General > Site Language: 'العربية'
+  WPML > Languages > Arabic: enabled, RTL set
+  Hello theme: detects automatically
+  Elementor: switches editor to RTL mode automatically
+  Custom CSS: use logical properties (margin-inline-start vs margin-left)
+```
+
+## 28.11 DataForSEO Multilingual Tracking
+
+### 28.11.1 Per-Language DataForSEO Setup
+
+```yaml
+dataforseo_multilingual_strategy:
+  
+  separate_tracking_streams:
+    
+    backlinks:
+      query_targets: 
+        - vth-biodent.com/* (universal)
+        - vth-biodent.com/en/* (English-specific)
+        - vth-biodent.com/zh/* (Chinese-specific)
+      
+      analysis: backlinks per language section
+      benefit: identify language-specific link gaps
+    
+    rankings:
+      separate_location_language_combinations:
+        - location: Thailand, language: Thai
+        - location: Thailand, language: English (medical tourism)
+        - location: Singapore, language: English (regional)
+        - location: China, language: Chinese (medical tourism)
+      
+      tracked_keywords:
+        Thai keywords: "การรักษา TMJ", "หมอฟันเชี่ยวชาญ TMJ"
+        English keywords: "TMJ treatment Bangkok", "best TMJ specialist Thailand"
+        Chinese keywords: tracked when zh launches
+    
+    keyword_volume:
+      query_per_target_market:
+        - search_volume in Thai (TH market)
+        - search_volume in English (US/UK/SG markets)
+      
+      stored_in: search_volume_per_language jsonb
+    
+    domain_rank:
+      tracked_at_domain_level (universal)
+      interpreted_per_language: 
+        - Thai-language strength
+        - English-language strength
+        - Cross-reference per language section
+```
+
+### 28.11.2 n8n Flow Pattern (Multilingual)
+
+```yaml
+flow_dataforseo_multilingual_sync:
+  schedule: daily for rankings, weekly for backlinks
+  
+  per_brand_loop:
+    for each brand:
+      get active_languages from brand_profile
+      
+      for each language in active_languages:
+        # Rankings
+        fetch_serp_rankings(
+          domain=brand.domain,
+          location=language_to_market[language],
+          language_code=language,
+          path_filter=f"/{language}/*"  # if not default lang
+        )
+        store in seo_x_ads_keywords_x_url_daily_logs (with language tag)
+        
+        # Keyword research (less frequent)
+        if keyword_refresh_due:
+          fetch_keyword_volume(
+            keywords=brand.tracked_keywords[language],
+            location=language_to_market[language],
+            language=language
+          )
+          update search_volume_per_language jsonb on entities
+      
+      # Backlinks (universal + per-language)
+      fetch_backlinks(target=brand.domain)
+      categorize by language section
+      store with language attribution
+```
+
+## 28.12 AI/LLMO Multilingual Considerations
+
+### 28.12.1 AI Engine Language Capabilities (2026 Snapshot)
+
+```yaml
+ai_engine_per_language_strength:
+  
+  ChatGPT_(GPT-5_class):
+    th: very strong (medical content reliable)
+    en: native
+    zh: very strong
+    ja: very strong
+    ko: strong
+    ar: strong (RTL handling improved)
+    fr/es: native-level
+    citation_pattern: response_language matches query
+  
+  Claude_(Sonnet_4.7+):
+    th: very strong
+    en: native
+    zh/ja/ko: very strong
+    ar: strong
+    fr/es: native-level
+    excellent_for: medical context translation
+  
+  Gemini:
+    multilingual_strong
+    integrates: Google Search (good for medical signals)
+  
+  Perplexity:
+    multilingual_strong
+    citation_format: includes source URL with language hints
+```
+
+### 28.12.2 EYWA AI/LLMO Multilingual Strategy
+
+```yaml
+content_strategy_per_language:
+  
+  thai_content:
+    audience: Thai patients (primary market)
+    
+    EYWA_focus:
+      - Brand-linked citables in Thai (Patterns A-F per Bible Part 13)
+      - Thai medical terminology accuracy
+      - Local cultural context (e.g., Thai healthcare system references)
+      - Cite Thai authoritative sources (Royal College, Ministry of Health)
+    
+    AI_citation_target:
+      - Thai users ask "TMJ คืออะไร" → AI cites VTH Thai page
+      - Brand mention rate in Thai responses
+  
+  english_content:
+    audience: international patients (medical tourism)
+    
+    EYWA_focus:
+      - Compete in higher-quality SERP
+      - International credibility (PubMed, WHO references)
+      - Medical tourism keywords
+      - International doctor credentials
+    
+    AI_citation_target:
+      - "best dental clinic Thailand" → VTH cited
+      - International medical tourism queries
+  
+  cross_lingual_synergy:
+    - Same entity, multilingual descriptions
+    - Wikidata IDs link languages naturally
+    - AI knowledge graph benefits from multilingual labels
+    - Schema sameAs declarations strengthen entity recognition
+```
+
+### 28.12.3 ai_citation_readiness Multilingual
+
+```yaml
+extended_ai_readiness_factors:
+  
+  per_language_factors_(Bible_Part_27.7.2_extended):
+    schema_completeness_per_language: 
+      pct_pages_with_valid_inLanguage_schema
+    
+    multilingual_label_completeness:
+      pct_entities_with_canonical_names_in_language
+    
+    translation_quality_indicator:
+      pct_pages_human_reviewed (vs machine_translated only)
+    
+    citation_appropriateness:
+      pct_citations_appropriate_for_language_audience
+  
+  scoring:
+    ai_citation_readiness_th: 0-100
+    ai_citation_readiness_en: 0-100
+    ai_citation_readiness: GREATEST of all
+```
+
+## 28.13 Cross-Brand + Multilingual Interaction
+
+### 28.13.1 Federation + Multilingual Patterns
+
+```yaml
+universal_resources_(brand_scope = ['*']):
+  
+  citations:
+    PubMed paper has same identifier across all brands AND languages
+    title in original language
+    title_translations jsonb for translated versions
+    Used by:
+      - VTH Thai page → cite as "{Thai annotation}"
+      - VTH English page → cite as English title
+      - VitalSleep Thai page → cite same PubMed paper
+  
+  generic_entities:
+    "TMJ Disorder" entity universal
+    canonical_names jsonb has all 8 languages
+    Used by VTH + any other dental brand in any language
+
+cross_brand_referrals_(multilingual):
+  
+  scenario: VTH Thai page → links to VitalSleep Thai page
+  pattern: same-language cross-brand reference (most common)
+  
+  scenario: VTH Thai page → links to VitalSleep English page
+  pattern: cross-language cross-brand reference (rare)
+  handling: 
+    - Add language hint to anchor: "อ่านที่ VitalSleep (English)"
+    - Track in cross_brand_references with target_language field
+```
+
+### 28.13.2 Operator Multilingual Dashboards
+
+```yaml
+operator_view_extensions:
+  
+  per_brand_per_language_health:
+    "VTH Thai: 95% complete, score 78"
+    "VTH English: 60% complete, score 45"
+    "VitalSleep Thai: 90% complete, score 72"
+    "VitalSleep English: 30% complete, score 18"
+    
+    insight: "VitalSleep English content massively underdeveloped"
+  
+  translation_pipeline_visibility:
+    "127 pages awaiting English translation across portfolio"
+    "8 pages awaiting human review (translated)"
+    "3 pages with Thai update needing English re-review"
+  
+  resource_allocation_multilingual:
+    "Allocate translator hours: VitalSleep English priority"
+    "AI translation cost: $24 this month (300 entities)"
+```
+
+## 28.14 Implementation Phasing
+
+### 28.14.1 Phase Mapping
+
+```yaml
+phase_3_VTH_pilot_(immediate):
+  □ Thai content (default) — full editorial process
+  □ English content via AI-draft + human review
+  □ WPML configured for TH + EN
+  □ hreflang validation
+  □ Both languages live at launch
+
+phase_4_post_launch:
+  □ Monitor per-language KPIs
+  □ Refine translation quality based on feedback
+  □ Add 3rd language if market demand emerges
+
+phase_5_long_tail_languages:
+  □ Activate Chinese/Japanese/Korean as needed
+  □ Specialized translators for medical content
+  □ Per-language community engagement
+
+phase_6_RTL_languages:
+  □ Arabic activation when expanding to Middle East
+  □ RTL testing thorough (templates, schema)
+  □ Cultural adaptation review
+```
+
+### 28.14.2 Cost & Resource Estimates
+
+```yaml
+per_brand_multilingual_costs:
+  
+  initial_setup_(Thai_+_English):
+    AI translation (300 entities): ~$10-20 one-time
+    Human review (300 entities × 5 min avg): ~25 hours
+    Reviewer cost (medical translator): ~$25-50/hr
+    Total review cost: $625-1250
+    
+    WPML license: ~$200/year (Multilingual Agency tier)
+    Already in stack
+  
+  ongoing_monthly:
+    AI incremental translation: ~$2-5/month
+    Human review (new content): ~5-10 hours/month
+    Total: ~$150-300/month per brand for English maintenance
+  
+  per_additional_language:
+    initial: similar (~25 hours review)
+    ongoing: ~5-8 hours/month
+    
+  total_for_8_languages:
+    initial setup: ~7 × $1000 = $7,000 per brand (one-time)
+    ongoing: ~$1,500-2,000/month per brand at full 8 languages
+    
+    note: phased rollout means costs spread over years
+```
+
+## 28.15 Cross-References
+
+| Topic | See Also |
+|-------|----------|
+| Schema multilingual fields | Schema_Overview Section 5.1 (page_master) |
+| Entity multilingual pattern | Section 28.3 + Schema_Overview Section 4.1 |
+| WPML basic integration | Section 7.5.7 |
+| hreflang validation | Section 4.10 (Sitemap Health) |
+| Schema markup patterns | Part 26 (Schema Pipeline) |
+| ACF + WPML configuration | Section 25.5 + 25.11.4 |
+| Elementor + WPML templates | Section 25.11 |
+| EYWA Scoring (extended) | Part 27 |
+| AI/LLMO strategy | Part 13 |
+| DataForSEO endpoints | Section 27.11 |
+| Federation + multilingual | Section 10.7 + 28.13 |
+| Citation language handling | Part 23 (Citation Hierarchy) + 28.8 |
+
+---
+
+## Appendix A: Quick Reference Cards
+
+### A.1 Entity Type Quick Selector (reconciled to 15 types)
+
+| ถ้าเป็น... | entity_type | Extension/CPT | Schema.org |
+|---|---|---|---|
+| โรค/ภาวะ | `condition` | CPT: condition (subtype='condition') | MedicalCondition |
+| อาการ | `symptom` | CPT: condition (subtype='symptom') | MedicalSignOrSymptom |
+| หัตถการ (one-time) | `procedure` | CPT: procedure | MedicalProcedure |
+| การรักษา (พฤติกรรม/ระยะยาว) | `treatment` | CPT: treatment | MedicalTherapy |
+| อุปกรณ์/เครื่องมือ | `device` | CPT: technology | MedicalDevice |
+| แนวคิด/ปรากฏการณ์ | `concept` | CPT: post (knowledge) | DefinedTerm |
+| ผลิตภัณฑ์ขายปลีก | `product` | CPT: product (Tier 3) | Product |
+| ยา (Rx/OTC) | `drug` | CPT: drug (Tier 3) | Drug |
+| ส่วนผสม/active | `ingredient` | CPT: ingredient (Tier 3) | Drug \| DefinedTerm |
+| ส่วนของร่างกาย | `anatomy` | (in cross-cutting domain) | AnatomicalStructure |
+| สาขาเชี่ยวชาญ | `specialty` | Taxonomy: specialty | MedicalSpecialty |
+| การตรวจแลบ | `lab_test` | CPT: lab_test (Tier 3) | MedicalTest |
+| ตัวบ่งชี้ทางชีวภาพ | `biomarker` | no CPT — host on `post` (L6) for deep-dives, inline within `lab_test` otherwise. Promote to Tier 3 CPT in v3.5+ if brand is biomarker-heavy (e.g., longevity clinic) | MedicalEntity (custom) |
+| หมอ/นักวิจัย | `person` | CPT: doctor | Person \| Physician |
+| คลินิก/แบรนด์/สาขา | `organization` | CPT: branch | Organization \| MedicalClinic |
+
+### A.2 Vertical Quick Selector
+
+| Brand → | Use vertical | Use sub_vertical |
+|---|---|---|
+| the brand (skincare phase) | media | skincare-media |
+| Future the brand aesthetic | media | aesthetic-media |
+| External dental clinic | clinic | dental |
+| External derm clinic | clinic | dermatology |
+| External hospital | hospital | general or specialty-X |
+
+### A.3 Citation Pattern Quick Selector
+
+| สถานการณ์ | Pattern | Example source |
+|---|---|---|
+| Skincare ingredient claim | Pattern B + cir/pubmed | "the brand analysis of 87 products..." |
+| Dental procedure outcome | Pattern A | "From 3,000 implant patients at Brand B..." |
+| Product comparison | Pattern C | "the brand lab pH testing of 30 toners..." |
+| Reader behavior insight | Pattern D | "Survey of 1,200 the brand readers..." |
+| Drug efficacy | Pattern A or external | PubMed RCT |
+
+---
+
+## Appendix B: Complete Table & Schema Master List
+
+> **34 ตาราง** ทั้งหมด แบ่งเป็น 6 categories: Core (10) + Extension (9) + i18n (4) + Local SEO (5) + **LLMO/AI Operations (5)** + Governance/Ops (1)
+
+### B.1 Master List Overview
+
+```
+┌────────────────────────────────────────────────────────────────┐
+│  TOTAL: 34 TABLES (v2.4)                                       │
+├────────────────────────────────────────────────────────────────┤
+│  Category A: Core Knowledge Graph (10 tables)                  │
+│  Category B: Type-Specific Extensions (9 tables)               │
+│  Category C: Internationalization / i18n (4 tables)            │
+│  Category D: Local SEO (5 tables)                              │
+│  Category E: LLMO / AI Operations (5 tables)           │
+│  Category F: Governance & Operations (1 table)                 │
+└────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+### B.2 Category A: Core Knowledge Graph (10 tables)
+
+| # | Table | Purpose | Section |
+|---|-------|---------|---------|
+| 1 | `brands` | Multi-brand registry + vertical/specialty metadata | 3.2 |
+| 2 | `seo_cluster_master` | SKOS controlled vocabulary (cross-vertical taxonomy) | 3.6.3 |
+| 3 | `seo_entity_graph` | Universal entity store (polymorphic via entity_type) | 3.3 |
+| 4 | `seo_authors_reviewers` | E-E-A-T credentials & reviewer chain | 3.6.1 |
+| 5 | `seo_citations` | Source registry (PubMed, CIR, SCCS, etc.) | 3.6.2 |
+| 6 | `seo_website_page_master` | Page taxonomy & URL structure | 3.6.4 |
+| 7 | `seo_internal_links` | Internal link graph (hub-spoke enforcement) | 3.6.4 |
+| 8 | `seo_keyword_master` | Keyword-entity mapping | 3.6.4 |
+| 9 | `seo_llm_citations` | AI citation tracking (ChatGPT/Perplexity/Claude/Gemini) | 3.6.4 |
+| 10 | `seo_brand_mentions` | Cross-platform brand mention tracking (Everywhere SEO) | 3.6.5 |
+
+#### Schema Summary — Category A
+
+**Table 1: `brands`** — Master registry
+```sql
+PRIMARY KEY: id (UUID)
+KEY FIELDS:
+  - brand_name, company, status
+  - vertical, sub_vertical, business_model[]
+  - medical_specialties[], primary_specialty      
+  - knowledge_graph_namespace, parent_org_id
+  - llms_txt_url, default_schema_org
+  - brand_color_*, default_reviewer_fp
+  - country_code, timezone, primary_language
+RELATIONSHIPS: parent of all brand-scoped data
+```
+
+**Table 2: `seo_cluster_master`** — SKOS taxonomy
+```sql
+PRIMARY KEY: id (UUID)
+UNIQUE: fingerprint
+KEY FIELDS:
+  - skos_concept_id, pref_label, pref_label_local
+  - alt_labels[], hierarchy: broader_id, narrower_ids[]
+  - cluster_type: 'topical'|'content-format'|'audience'
+  - brand_scope[], applicable_verticals[], vertical_specific
+  - definition, scope_note, status
+RELATIONSHIPS:
+  - self-reference: broader_id (SKOS hierarchy)
+  - referenced by: seo_entity_graph.topic_cluster_id
+                   seo_website_page_master.topical_cluster_id
+```
+
+**Table 3: `seo_entity_graph`** — Universal entity store
+```sql
+PRIMARY KEY: id (UUID)
+UNIQUE: fingerprint
+KEY FIELDS:
+  - entity_type (CONTROLLED — see Section 3.4)
+  - entity_subtype, name, name_local, aliases[]
+  - icd_10_code, icd_11_code, snomed_ct_id, mesh_id, umls_cui
+  - schema_org_type, wikidata_id, wikipedia_url, same_as[]
+  - parent_entity_fp, related_entities_fps[], hierarchy_path
+  - topic_cluster_id (FK)
+  - brand_scope[], applicable_verticals[]
+  - evidence_level, type_properties (JSONB)
+  - reviewed_by_fp, freshness_status, last_reviewed_at
+RELATIONSHIPS:
+  - 1:1 with extension table (per entity_type)
+  - referenced by: pages, links, keywords, mentions
+```
+
+**Table 4: `seo_authors_reviewers`**
+```sql
+PRIMARY KEY: id (UUID)
+KEY FIELDS:
+  - full_name, full_name_local, photo_url
+  - credential_types[] (CONTROLLED VOCAB)
+  - specialties[], sub_specialties[]
+  - license_authority, license_number, license_country
+  - orcid_id, scopus_id, google_scholar_url
+  - primary_affiliation_fp, affiliations_fps[]
+  - brand_scope[], applicable_verticals[]
+  - bio, bio_local, social URLs
+```
+
+**Table 5: `seo_citations`**
+```sql
+PRIMARY KEY: id (UUID)
+KEY FIELDS:
+  - source_type (CONTROLLED — see Section 3.7)
+  - title, authors[], pubmed_id, doi, isbn, url
+  - journal, publisher, publication_date
+  - evidence_level: 'level-1'..'level-5' (Oxford CEBM)
+  - citation_purpose[]
+  - applicable_verticals[]
+```
+
+**Tables 6-9 (Web/Search)** — schemas inherited from v1.1
+```sql
+seo_website_page_master:    page_id, primary_entity_fp, topical_cluster_id,
+                            content_format_id, reviewed_by_fp, cited_sources_fps[],
+                            url, title, meta, schema_org_type, vertical
+seo_internal_links:         from_page_id, to_page_id, anchor_text, link_type,
+                            cluster_relation
+seo_keyword_master:         keyword, search_volume, intent, mapped_entity_fp,
+                            mapped_pages[], applicable_verticals[]
+seo_llm_citations:          query, ai_platform, was_cited, position, snippet,
+                            cited_url, brand_id, audit_date
+```
+
+**Table 10: `seo_brand_mentions`** — Everywhere SEO tracking
+```sql
+PRIMARY KEY: id (UUID)
+KEY FIELDS:
+  - brand_id (FK), source_type, source_platform
+  - source_url, source_domain
+  - mention_type, sentiment, context_summary
+  - estimated_reach, engagement_count, followers_count
+  - related_entities_fps[], related_pages[]
+  - author_handle, author_is_competitor, author_is_customer
+  - discovered_via, mention_date
+  - action_taken, action_taken_by, action_taken_at
+PURPOSE: Google March 2026 "Everywhere SEO" signal tracking
+```
+
+---
+
+### B.3 Category B: Type-Specific Extension Tables (9 tables)
+
+> **Pattern:** 1:1 FK to `seo_entity_graph.id` ON DELETE CASCADE
+> **Trigger:** populated when `entity_type` matches
+
+| # | Table | Used by entity_type | Key purpose |
+|---|-------|---------------------|-------------|
+| 11 | `seo_entity_ingredient` | 'ingredient' | INCI, regulatory, cosmetic-specific properties |
+| 12 | `seo_entity_product` | 'product' | Commercial product (skincare/supplement/device) |
+| 13 | `seo_entity_procedure` | 'procedure' | Medical/dental/aesthetic procedures |
+| 14 | `seo_entity_condition` | 'condition' | Diseases & medical conditions |
+| 15 | `seo_entity_drug` | 'drug' | Rx/OTC pharmaceuticals |
+| 16 | `seo_entity_anatomy` | 'anatomy' | Body anatomy entities |
+| 17 | `seo_entity_organization` | 'organization' | Clinics, hospitals, brand companies |
+| 18 | `seo_entity_lab_test` | 'lab_test' | Lab tests, imaging, biopsies |
+| 19 | `seo_entity_device` | 'device' | Medical/beauty devices |
+
+#### Schema Summary — Category B
+
+**Table 11: `seo_entity_ingredient`**
+```sql
+KEY FIELDS:
+  - inci_name, inci_aliases[], cas_number, ec_number
+  - ewg_id, cosing_ref_no
+  - comedogenic_rating (0-5), irritancy_rating (0-5)
+  - pregnancy_safe, breastfeeding_safe, fungal_acne_safe
+  - photosensitivity, function_categories[]
+  - typical_concentration_min/max, effective_concentration_min
+  - thai_fda_classification, thai_fda_max_concentration
+  - eu_annex_restriction, us_fda_status
+  - ph_range_optimal, light_sensitive, air_sensitive
+  - common_incompatibilities[]
+USED BY: Skincare media, Wellness media, Dermatology clinic
+```
+
+**Table 12: `seo_entity_product`**
+```sql
+KEY FIELDS:
+  - manufacturer_entity_fp, brand_name_display
+  - product_category, product_type, product_subtype
+  - launch_year, discontinue_year, is_active
+  - thai_fda_registration_no, country_of_origin
+  - contains_ingredients_fps[], declared_concentrations (JSONB)
+  - ingredient_list_full
+  - retail_price_thb, size, retail_price_per_ml
+  - affiliate_links (JSONB), official_url
+  - our_rating, our_review_summary
+  - product_image_url, ingredient_label_image_url
+USED BY: Skincare media, Wellness media, e-commerce sites
+```
+
+**Table 13: `seo_entity_procedure`**
+```sql
+KEY FIELDS:
+  - procedure_category, cpt_code, hcpcs_code, thai_procedure_code
+  - duration_typical_min, invasiveness_level
+  - recovery_time_typical_days, anesthesia_type
+  - contraindications_fps[], required_devices_fps[]
+  - body_region_fps[], performed_by_specialties[]
+  - success_rate_typical, common_side_effects[]
+  - serious_complications_rate
+USED BY: All clinics/hospitals (heaviest in OMS, craniofacial,
+         aesthetic, dermatology)
+```
+
+**Table 14: `seo_entity_condition`**
+```sql
+KEY FIELDS:
+  - condition_category, is_chronic, is_contagious
+  - prevalence_rate, prevalence_thai
+  - affected_demographics (JSONB)
+  - affected_systems[], related_anatomy_fps[]
+  - common_symptoms_fps[], diagnostic_tests_fps[]
+  - standard_treatments_fps[], severity_grading_system
+  - red_flag_symptoms[], when_to_see_doctor
+USED BY: Universal — every vertical
+```
+
+**Table 15: `seo_entity_drug`**
+```sql
+KEY FIELDS:
+  - generic_name, brand_names[], inn_name
+  - drug_class, atc_code, schedule_dea
+  - rx_otc_status, fda_pregnancy_category
+  - thai_drug_class
+  - active_ingredient_fps[]
+  - approved_indications_fps[], off_label_uses_fps[]
+  - contraindications_fps[], drug_interactions_fps[]
+  - common_side_effects[], serious_side_effects[]
+  - pregnancy_safe, breastfeeding_safe
+USED BY: Universal (heavy in derm, hospital)
+```
+
+**Table 16: `seo_entity_anatomy`**
+```sql
+KEY FIELDS:
+  - body_system, parent_anatomy_fp
+  - fma_id (Foundational Model of Anatomy)
+  - ta_code (Terminologia Anatomica)
+USED BY: Clinics/hospitals (educational content)
+```
+
+**Table 17: `seo_entity_organization`**
+```sql
+KEY FIELDS:
+  - org_type ('clinic'|'hospital'|'cosmetic-brand'|...)
+  - established_year, country_code
+  - branches (JSONB), google_business_profile_url
+  - certifications[], accreditations[]
+  - specialties_offered_fps[], affiliated_persons_fps[]
+  - parent_company, brand_tier, origin_country
+  - official_website, social_handles (JSONB)
+USED BY: Universal — clinics, hospitals, cosmetic brands, regulators
+```
+
+**Table 18: `seo_entity_lab_test`**
+```sql
+KEY FIELDS:
+  - loinc_code, test_category, specimen_type
+  - reference_range_default, unit_of_measure
+  - associated_conditions_fps[], typical_indications[]
+  - preparation_required
+USED BY: Clinics, hospitals, dental sleep medicine (PSG, HSAT)
+```
+
+**Table 19: `seo_entity_device`**
+```sql
+KEY FIELDS:
+  - device_category, fda_clearance_class, fda_clearance_no
+  - ce_marking, thai_fda_medical_device_no
+  - manufacturer_fp, use_cases_fps[]
+  - intended_for, specifications (JSONB)
+USED BY: All verticals (CPAP, lasers, oral appliances, beauty devices)
+```
+
+---
+
+### B.4 Category C: Internationalization / i18n (4 tables)
+
+| # | Table | Purpose | Section |
+|---|-------|---------|---------|
+| 20 | `seo_languages` | Language registry (ISO codes + metadata) | 3.6.6 |
+| 21 | `seo_entity_translations` | Entity translations (junction) | 3.6.7 |
+| 22 | `seo_cluster_translations` | Cluster translations (junction) | 3.6.7 |
+| 23 | `seo_authors_translations` | Author bio translations (junction) | 3.6.7 |
+
+#### Schema Summary — Category C
+
+**Table 20: `seo_languages`**
+```sql
+PRIMARY KEY: id (UUID), UNIQUE: language_code
+KEY FIELDS:
+  - language_code (ISO 639-1: 'th','en','zh','ja')
+  - language_code_extended (BCP 47: 'th-TH','en-US')
+  - language_name_en, language_name_native
+  - flag_emoji, display_order
+  - status: 'active'|'planned'|'deprecated'
+  - enabled_for_brands[]
+  - default_translation_workflow, default_reviewer_fp
+  - text_direction, date_format
+  - hreflang_code, google_search_locale
+USED BY: All translation tables + brands (FK validation)
+```
+
+**Table 21: `seo_entity_translations`**
+```sql
+PRIMARY KEY: (entity_id, language_code)  ← composite
+FK: entity_id → seo_entity_graph(id)
+    language_code → seo_languages(language_code)
+KEY FIELDS:
+  - name, aliases[], description, evidence_summary
+  - translation_quality_tier (1-4)
+  - translated_by_fp, translated_via, ai_model_used
+  - reviewed_by_native_fp, review_status
+  - source_entity_version, is_current
+PURPOSE: Replace _local fields from v2.1
+         Junction pattern — flexible for any number of languages
+```
+
+**Table 22: `seo_cluster_translations`**
+```sql
+PRIMARY KEY: (cluster_id, language_code)
+KEY FIELDS:
+  - pref_label, alt_labels[]
+  - definition, scope_note, example
+  - translation_quality_tier
+  - translated_by_fp, reviewed_by_native_fp, review_status
+PURPOSE: Multilingual SKOS labels
+```
+
+**Table 23: `seo_authors_translations`**
+```sql
+PRIMARY KEY: (author_id, language_code)
+KEY FIELDS:
+  - display_name (e.g., Thai vs Latin script names)
+  - bio, short_bio
+  - translation_quality_tier
+  - reviewed_by_native_fp, review_status
+PURPOSE: Author profiles in multiple languages
+```
+
+---
+
+### B.5 Category D: Local SEO (5 tables)
+
+| # | Table | Purpose | Phase | Section |
+|---|-------|---------|-------|---------|
+| 24 | `seo_locations` | Multi-branch + GBP integration | Phase 1 (clinic Day 1) | 3.8.1 |
+| 25 | `seo_reviews` | Multi-platform reviews + PDPA workflow | Phase 1 (clinic Day 1) | 3.8.2 |
+| 26 | `seo_directory_listings` | NAP citations + consistency | Phase 1 (clinic Day 1) | 3.8.3 |
+| 27 | `seo_gbp_posts` | GBP Posts management | Phase 2 (when budget) | 3.8.4 |
+| 28 | `seo_local_rankings` | Local Pack tracking | Phase 2 (paid tool) | 3.8.5 |
+
+#### Schema Summary — Category D
+
+**Table 24: `seo_locations`** — Multi-branch registry
+```sql
+PRIMARY KEY: id (UUID)
+KEY FIELDS:
+  - organization_entity_id (FK), brand_id (FK)
+  - location_name, location_slug, is_primary
+  - NAP: business_name_legal/brand, street_address, district,
+         city, postal_code, country_code, formatted_address
+  - Geo: latitude, longitude, plus_code
+  - Contact: primary_phone, line_id, email
+  - Hours: business_hours JSONB, special_hours JSONB
+  - Services: services_offered_fps[], specialties_at_location[],
+              doctors_at_location_fps[], equipment_available_fps[]
+  - GBP: gbp_place_id, gbp_account_id, gbp_categories[],
+         gbp_review_count, gbp_avg_rating, gbp_last_synced_at
+  - Other directories: apple_maps_id, facebook_page_url,
+                       wongnai_url, wongnai_id
+  - Schema: local_business_schema_type
+  - Photos: primary_photo_url, exterior_photos[], interior_photos[]
+  - Status: active/closed/temp-closed, opened_date, closed_date
+  - Compliance: business_registration_no, medical_license_no
+USED BY: Clinic, Hospital verticals
+```
+
+**Table 25: `seo_reviews`** — Multi-platform reviews
+```sql
+PRIMARY KEY: id (UUID)
+UNIQUE: (source_platform, source_review_id) — dedupe
+KEY FIELDS:
+  - location_id (FK), brand_id (FK)
+  - source_platform, source_review_id, source_url
+  - reviewer_name, reviewer_anonymized, is_local_guide
+  - rating (1.0-5.0), review_title, review_text, review_language
+  - review_photos[], review_videos[], posted_at
+  - Response: response_required, response_priority, response_status
+              response_text, responded_at, responded_by_fp
+              response_legal_reviewed, pdpa_risk_flag
+  - NLP: detected_topics[], sentiment, sentiment_score,
+         mentioned_entities_fps[]
+  - Verification: is_verified_customer, is_flagged, flag_reason
+PURPOSE: PDPA-safe review response workflow + multi-platform aggregation
+```
+
+**Table 26: `seo_directory_listings`** — NAP citations
+```sql
+PRIMARY KEY: id (UUID)
+KEY FIELDS:
+  - location_id (FK), brand_id (FK)
+  - directory_name, directory_category, directory_authority_score
+  - is_thai_specific, is_industry_specific, industry_focus
+  - citation_url, status (live/pending/rejected/duplicate)
+  - claim_status (claimed/unclaimed/in-progress)
+  - NAP listed: business_name_listed, address_listed,
+                phone_listed, website_listed
+  - Consistency: nap_match_score, name/address/phone match scores
+                 has_inconsistency (GENERATED), inconsistency_notes
+  - Discovery: found_via, discovered_at
+  - Verification: last_verified_at, next_verification_due
+USED BY: Clinic, Hospital — track NAP across ~50 directories
+NAMING NOTE: distinct from seo_citations (academic) — these are
+             "directory listings" / "NAP citations" in Local SEO
+```
+
+**Table 27: `seo_gbp_posts`** — GBP Posts management
+```sql
+PRIMARY KEY: id (UUID)
+KEY FIELDS:
+  - location_id (FK), brand_id (FK)
+  - post_type (standard/event/offer/product/covid-update)
+  - campaign_id, campaign_name
+  - title, body, language_code, photo_url, video_url
+  - cta_type, cta_url
+  - Event/Offer-specific fields
+  - Schedule: scheduled_for, published_at, expires_at
+  - Status: status, approval_status, approved_by_fp
+  - GBP: gbp_post_id, gbp_post_url, gbp_published_at, gbp_api_response
+  - Performance: views_count, clicks_count, conversions_count
+  - Multi-location: batch_id, parent_post_id
+PURPOSE: Multi-location publishing + performance attribution
+         (GBP Posts disappear after 6 months — local archive critical)
+```
+
+**Table 28: `seo_local_rankings`** — Local Pack tracking
+```sql
+PRIMARY KEY: id (UUID)
+KEY FIELDS:
+  - keyword_id (FK), location_id (FK), brand_id (FK)
+  - search_location_lat/lng, search_location_name, search_radius_km
+  - device_type
+  - local_pack_position, local_pack_total_results, local_finder_position
+  - maps_position, maps_total_results
+  - organic_position, featured_in_snippet, ai_overview_cited
+  - Top 3 competitors at this query
+  - checked_at, data_source, previous_position, position_change
+PURPOSE: Track Local Pack rankings from various search points
+COST NOTE: Auto-tracking requires paid tool ($24-99/mo per location)
+```
+
+---
+
+### B.6 Category E: LLMO / AI Operations (5 tables)
+
+| # | Table | Purpose | Phase | Section |
+|---|-------|---------|-------|---------|
+| 29 | `seo_predicted_prompts` | Prompt prediction bank (write content for prompts, not keywords) | Phase 1 | 3.11.1 |
+| 30 | `seo_ai_response_analysis` | Per-citation deep analysis + ranking signals | Phase 1-2 | 3.11.2 |
+| 31 | `seo_ai_platforms` | Extensible AI platform registry (15+ platforms) | Day 1 | 3.11.3 |
+| 32 | `seo_ai_agent_visits` | AI browsing agent tracking (Layer 5 prep) | Phase 2-3 | 3.11.4 |
+| 33 | `seo_voice_search_queries` | Voice/chatbot conversational AI | Phase 2-3 | 3.11.5 |
+
+#### Schema Summary — Category E
+
+**Table 29: `seo_predicted_prompts`**
+```sql
+PRIMARY KEY: id (UUID)
+KEY FIELDS:
+  - brand_id (FK)
+  - prompt_text, prompt_text_local, prompt_variations JSONB
+  - intent_type (informational/comparison/decision/...)
+  - query_modality (text/voice/multimodal/agent)
+  - conversational_turn (initial/follow_up/clarification)
+  - target_entity_fp, target_keyword_id, target_cluster_id
+  - expected_answer_summary, expected_difficulty
+  - coverage_status (unaddressed/partial/covered/optimized)
+  - test_results JSONB (per platform)
+  - citation_rate_avg
+  - status (predicted/validated/monitoring/won/lost)
+  - priority, applicable_languages[], applicable_verticals[]
+PURPOSE: Move from keyword-first to prompt-first content design
+```
+
+**Table 30: `seo_ai_response_analysis`**
+```sql
+PRIMARY KEY: id (UUID)
+FK: llm_citation_id → seo_llm_citations
+KEY FIELDS:
+  - Citation: position, total_in_response, is_primary_source,
+              attribution_format
+  - Quote: extracted, length_chars/words, verbatim, position
+  - Context: citation_context, citation_purpose, qualifying_language
+  - Co-citation: co_cited_competitors[], co_cited_authoritative[],
+                 co_citation_relationship
+  - Share: our_share_of_response, response_word_count
+  - Full: ai_response_full, ai_response_summary
+  - Signals: observed_ranking_signals JSONB (snapshot at citation time)
+  - Hypothesis: likely_ranking_factors[], signal_correlation_score
+  - Audit: analyzed_at, analyzed_by, analysis_method, confidence
+PURPOSE: Why did AI cite us? Correlate page properties to citation outcomes
+```
+
+**Table 31: `seo_ai_platforms`** — Registry of all AI platforms
+```sql
+PRIMARY KEY: id (UUID)
+UNIQUE: platform_name
+KEY FIELDS:
+  - Identity: platform_name, display_name, company, url
+  - Versioning: current_version, version_history, major_change_log
+  - Capabilities: web_search, realtime_data, memory, voice/image_input,
+                  browsing_agent, code_execution, api_available
+  - Behavior: preferred_citation_style, preferred_source_types[],
+              query_priority_factors JSONB (per-platform ranking weights)
+  - Tracking: tracking_enabled, audit_endpoint, audit_method,
+              audit_credentials_ref, audit_rate_limit, audit_cost
+  - Locale: supported_languages[], primary_market
+  - Status: active/beta/planned/deprecated, importance_tier (1-5)
+  - Detection: detection_user_agents[], detection_ip_ranges[]
+SEED DATA: 15+ platforms (chatgpt, perplexity, claude, gemini,
+           grok, copilot, deepseek, qwen, mistral, meta_ai,
+           google_ai_overview, siri, google_assistant, alexa, line_oa_ai)
+```
+
+**Table 32: `seo_ai_agent_visits`** — Layer 5 preparation
+```sql
+PRIMARY KEY: id (UUID)
+FK: brand_id, page_id, agent_platform_id, citation_id (optional)
+KEY FIELDS:
+  - Visit: visited_at, visit_url, http_status_code
+  - Agent: agent_type, user_agent_string, ip_address, ip_country, ip_org
+  - Session: session_id, referer, visited_from_query
+  - Behavior: pages_visited, time_on_page, scroll_depth, interactions JSONB
+              sequential_navigation, rapid_systematic_crawl
+  - Purpose: detected_purpose, data_extracted_likely[]
+  - Outcome: led_to_citation, citation_id, cited_within_hours,
+             led_to_user_arrival
+  - Detection: detection_method, detection_confidence
+  - Logged: raw_log_entry JSONB, request_headers, response_size
+  - Action: agent_treatment (allowed/rate_limited/blocked/optimized)
+PURPOSE: Track AI agent crawls, prepare for Layer 5 AI agent era
+```
+
+**Table 33: `seo_voice_search_queries`** — Voice + conversational
+```sql
+PRIMARY KEY: id (UUID)
+FK: brand_id, source_platform_id, matched_predicted_prompt_id
+KEY FIELDS:
+  - Query: text, text_normalized, language, word_count
+  - Modality: query_modality, source_platform
+  - Audio: duration, dialect, audio_quality, speaker_demographics
+  - Intent: intent_type, is_question, is_command, is_local_intent,
+            question_word
+  - Targeting: matched prompt + entity + keyword
+  - Local: detected_user_location_city/lat/lng
+  - Response: response_provided, cited_us, cited_competitor, redirected
+  - Source: query_source, observation_method
+  - Frequency: occurrence_count, first/last_observed, unique_users
+PURPOSE: Voice + chatbot query optimization, Thai dialect support
+```
+
+---
+
+### B.7 Category F: Governance & Operations (1 table)
+
+| # | Table | Purpose | Section |
+|---|-------|---------|---------|
+| 34 | `seo_schema_changes` | Schema change log (Major changes only) | 13.4 |
+
+**Table 34: `seo_schema_changes`**
+```sql
+KEY FIELDS:
+  - change_number (SERIAL), proposal_url
+  - change_type, description, affected_tables[]
+  - proposed_by_fp, approved_by_fps[]
+  - approved_at, implemented_at
+  - migration_script_path, rollback_script_path
+  - validation_status, notes
+PURPOSE: Audit trail for all Major schema changes
+          (Category 3 changes per Part 15.2)
+```
+
+---
+
+### B.6 Relationship Map (Visual) — v2.2 Updated
+
+```
+                            ┌─────────────────┐
+                            │  brands         │
+                            │  (vertical +    │
+                            │   specialties + │
+                            │   languages)    │
+                            └────────┬────────┘
+                                     │ brand_id (scope)
+       ┌─────────────────────────────┼──────────────────────┐
+       │                             │                      │
+       ▼                             ▼                      ▼
+┌─────────────┐             ┌──────────────┐      ┌────────────────┐
+│seo_languages│◀────────────│ Translation  │      │ seo_brand_     │
+│(registry)   │  FK         │ tables (3):  │      │ mentions    │
+└─────────────┘             │ - entity_*   │      └────────────────┘
+                            │ - cluster_*  │
+                            │ - authors_*  │
+                            └──────┬───────┘
+                                   │ FK to entity/cluster/author
+        ┌──────────────────────────┴────────────────────┐
+        ▼                                               ▼
+┌────────────────┐                          ┌─────────────────┐
+│seo_cluster_    │                          │ seo_authors_    │
+│master (SKOS)   │                          │ reviewers       │
+└───────┬────────┘                          └─────────────────┘
+        │ topic_cluster_id
+        ▼
+┌────────────────────────────────┐
+│  seo_entity_graph              │
+│  (entity_type polymorphism)    │
+│  + applicable_verticals[]      │
+└────────┬───────────────────────┘
+         │ 1:1 by entity_type
+   ┌─────┼─────┬──────┬──────┬──────┐
+   ▼     ▼     ▼      ▼      ▼      ▼
+┌─────┐┌──────┐┌────┐┌────┐┌────┐┌──────┐
+│ingr.││produ.││proc││cond││drug││anat. │
+└─────┘└──────┘└────┘└────┘└────┘└──────┘
+                                          (+ org, lab_test, device — 9 total)
+
+         ┌──────────────────────────────┐
+         │  seo_website_page_master     │
+         │  + WP integration fields  │
+         │  + multilingual fields    │
+         └──────┬───────────────────────┘
+                │
+       ┌────────┴─────────┬──────────────────┐
+       ▼                  ▼                  ▼
+  ┌──────────┐  ┌──────────────────┐  ┌─────────────┐
+  │internal_ │  │seo_keyword_master│  │seo_citations│
+  │links     │  └──────────────────┘  └─────────────┘
+  └──────────┘
+
+  ┌──────────────────┐    ┌─────────────────────┐
+  │seo_llm_citations │    │seo_schema_changes   │
+  │(AI citation log) │    │(governance audit)   │
+  └──────────────────┘    └─────────────────────┘
+
+       WordPress (CMS) ←─── KG Bridge plugin ───→ Supabase (KG)
+       • WPML translations                        • All 24 tables
+       • RankMath schema base                     • Edge Functions
+       • ACF entity pickers                       • RLS by brand_scope
+```
+
+---
+
+### B.6 Implementation Priority Matrix
+
+> ใช้ matrix นี้วางลำดับการสร้างตาราง
+
+| Priority | Vertical Use Case | Tables to Build First |
+|----------|-------------------|----------------------|
+| 🔴 **Day 1 (Essential — every project)** | All | brands, seo_cluster_master, seo_entity_graph, seo_authors_reviewers, seo_citations |
+| 🔴 **Week 1 (Core SEO)** | All | seo_website_page_master, seo_internal_links, seo_keyword_master |
+| 🟡 **Week 2-4 (LLMO)** | All | seo_llm_citations, seo_brand_mentions, seo_schema_changes |
+| 🔴 **Week 2 (the brand skincare)** | Skincare media | seo_entity_ingredient, seo_entity_product, seo_entity_condition |
+| 🟡 **Month 2 (the brand expansion)** | Skincare media | seo_entity_organization, seo_entity_drug |
+| 🔴 **Day 1 (clinic project)** | Clinic | seo_entity_procedure, seo_entity_condition, seo_entity_organization |
+| 🟡 **Week 2 (clinic)** | Clinic | seo_entity_drug, seo_entity_device, seo_entity_anatomy |
+| 🟢 **Optional / late** | Clinic | seo_entity_lab_test (when imaging-heavy content needed) |
+
+---
+
+### B.8 Migration Order (v2.1 → v2.2)
+
+```
+Step 1: Update brands table
+  ALTER TABLE brands ADD default_language, supported_languages[],
+                          language_url_pattern, wpml_enabled,
+                          wp_site_id, wp_base_url;
+
+Step 2: Create i18n foundation
+  CREATE TABLE seo_languages;
+  Seed: th, en, zh, ja (status: active for th, planned for others)
+
+Step 3: Create translation junction tables
+  CREATE TABLE seo_entity_translations
+    (PK: entity_id + language_code, FK to entity_graph + languages)
+  CREATE TABLE seo_cluster_translations
+    (PK: cluster_id + language_code)
+  CREATE TABLE seo_authors_translations
+    (PK: author_id + language_code)
+
+Step 4: Migrate data from _local fields
+  For each row in seo_entity_graph:
+    INSERT INTO seo_entity_translations
+      (entity_id, language_code='th', name=name_local,
+       description=description_local, aliases=aliases_local)
+  Same for cluster_master and authors_reviewers.
+
+Step 5: Drop old _local fields
+  ALTER TABLE seo_entity_graph DROP name_local, description_local, aliases_local;
+  ALTER TABLE seo_cluster_master DROP pref_label_local, alt_labels_local;
+  ALTER TABLE seo_authors_reviewers DROP bio_local;
+
+Step 6: Update seo_website_page_master
+  ALTER TABLE seo_website_page_master ADD
+    language_code, hreflang_group_id, is_default_language,
+    translation_quality_tier, translated_by_fp, reviewed_by_native_fp,
+    translation_status,
+    wp_post_id, wp_post_type, wp_trid, wp_post_status,
+    wp_url_slug, wp_last_synced_at, wp_sync_status;
+
+Step 7: Build hreflang groups for existing pages
+  Generate UUID per content topic, assign to all language versions.
+
+Step 8: Add indexes
+  CREATE INDEX on translation tables (language_code, review_status)
+  CREATE INDEX on page_master (wp_post_id, language_code)
+
+Step 9: Build "KG Bridge" WordPress plugin (parallel work)
+  See Part 16.2 for plugin specs.
+
+Step 10: Setup Supabase RLS, Edge Functions, Auth roles
+  See Part 16.4.
+
+Step 11: Validation
+  - Schema markup test (per language)
+  - hreflang validation
+  - Sync flow end-to-end test
+  - AI Citation Audit baseline (per language)
+```
+
+---
+
+### B.9 Migration Order (v1.1 → v2.2 fresh start)
+
+ลำดับการ ALTER/CREATE — ทำตามนี้เพื่อหลีกเลี่ยง FK conflicts:
+
+```
+Step 1: Update brands table
+  ALTER TABLE brands ADD vertical, sub_vertical, business_model,
+                          knowledge_graph_namespace, parent_org_id,
+                          medical_specialties[], primary_specialty;
+
+Step 2: Update seo_cluster_master
+  ALTER TABLE seo_cluster_master ADD applicable_verticals[],
+                                     vertical_specific;
+
+Step 3: Update seo_entity_graph (CRITICAL)
+  ALTER TABLE seo_entity_graph ADD entity_type, entity_subtype,
+                                   applicable_verticals[],
+                                   type_properties (JSONB);
+  ADD CHECK CONSTRAINT valid_entity_type;
+  Backfill entity_type for existing rows.
+
+Step 4: Update seo_authors_reviewers + seo_citations
+  Add applicable_verticals[], expand controlled vocabs.
+
+Step 5: CREATE 9 extension tables (in any order)
+  Each with FK to seo_entity_graph(id) ON DELETE CASCADE.
+
+Step 6: CREATE seo_brand_mentions
+  FK to brands(id).
+
+Step 7: CREATE seo_schema_changes
+  Standalone audit table.
+
+Step 8: Migrate existing data
+  Move ingredient/product/procedure-specific fields from
+  entity_graph (or wherever) → respective extension tables.
+
+Step 9: Add indexes (per Section 3.x)
+
+Step 10: Run validation
+  Schema markup test, AI Citation Audit baseline.
+```
+
+---
+
+### B.11 Total Field Count by Category (v2.4)
+
+| Category | Tables | Estimated Field Count |
+|----------|--------|------------------------|
+| Core | 10 | ~155 fields |
+| Extensions | 9 | ~120 fields |
+| i18n | 4 | ~50 fields |
+| Local SEO | 5 | ~120 fields |
+| **LLMO/AI Operations** | **5** | **~150 fields** |
+| Governance | 1 | ~15 fields |
+| **Total** | **34** | **~610 fields** |
+
+⚠️ **Field count growing** = governance + sync flow validation increasingly important
+⚠️ **Build all Day 1, activate progressively** per Section 1.8 phase plan
+
+
+---
+
+---
+
+## 18.7 Multi-Workspace Sync Strategy (Federation)
+
+> 📌 **Numbering Note:** This section is numbered 18.7 (not 18.10) for backward-compatible cross-references — it was originally located within Part 18 but reorganized into Appendix B during v3.10.1 cleanup. The section number is preserved intentionally; do not renumber.
+
+> **Why this section:** Sections 18.1-18.6 ครอบคลุม Notion DBs design ภายใน 1 workspace — แต่ EYWA federation pattern (Part 10.7) ใช้หลาย Notion workspaces (per team) ที่ทุก workspace mirror Supabase ตารางเดียวกันแต่กรองด้วย brand_scope. Section นี้กำหนด sync strategy ที่รองรับ multi-workspace setup โดยไม่ให้ data conflict
+
+### 18.7.1 Workspace Topology
+
+```yaml
+workspace_pattern:
+  
+  team_workspaces (1-N per team):
+    purpose: editorial work for assigned brand(s)
+    members: editorial team (writers, reviewers, doctors)
+    notion_account: per-team account (may be different from operator)
+    
+    structure: identical to template (Section 18.1)
+      - Entities DB
+      - Relationships DB
+      - Clusters DB
+      - Citations DB
+      - Pages DB
+      - LLMO Citables DB
+    
+    filter_pattern:
+      - Each DB has property: brand_scope (multi-select)
+      - View filter: brand_scope contains assigned_brands[]
+      - OR brand_scope contains '*' (universal resources)
+    
+    permissions:
+      - Edit: their assigned brand entries
+      - Read: universal entries
+      - No-access: other teams' brand entries
+  
+  operator_workspace (1, owned by you):
+    purpose: portfolio management, executive oversight
+    members: you + executive team
+    notion_account: master operator account
+    
+    structure: identical + additional dashboards
+      - Portfolio overview database
+      - Resource allocation dashboard
+      - Cross-brand referral status
+      - Brand health KPI rollup
+    
+    filter_pattern:
+      - No brand filter (sees everything)
+      - Aggregation views (group by brand)
+    
+    permissions:
+      - Full read/write all brands
+      - Override authority for conflicts
+```
+
+### 18.7.2 Sync Architecture
+
+```
+┌──────────────────────────────────────────────────────────────────┐
+│  Multi-Workspace Sync Topology                                     │
+├──────────────────────────────────────────────────────────────────┤
+│                                                                    │
+│  Team A Notion ─┐                                                 │
+│  (brands: A, B) │                                                 │
+│                 │                                                 │
+│  Team B Notion ─┼─► n8n Sync Hub ◄─► Supabase (single source)   │
+│  (brands: C, D) │       │                                        │
+│                 │       │                                        │
+│  Team C Notion ─┘       │                                        │
+│  (brands: E, F)         │                                        │
+│                          ▼                                        │
+│  Operator Notion ◄────► n8n Aggregation                         │
+│  (all brands)            (read-only views)                       │
+│                                                                    │
+└──────────────────────────────────────────────────────────────────┘
+```
+
+### 18.7.3 Per-Team Sync Flow Pattern
+
+```yaml
+flow_name: notion_team_a_sync
+schedule: real-time (Notion webhooks) + every 15 min reconciliation
+
+trigger_events:
+  notion_webhook_create:
+    when: new entry in Team A's Entities DB
+    action:
+      1. Validate: brand_scope contains assigned brands only
+      2. UPSERT to Supabase seo_entity_graph
+      3. Conflict resolution:
+         IF entity_fingerprint already exists:
+           - Different team owns → REJECT, alert Team A
+           - Universal entity (brand_scope='*') → MERGE
+           - Same team owns → UPDATE
+  
+  notion_webhook_update:
+    when: existing entry modified in Team A
+    action:
+      1. Check ownership: brand_scope must intersect Team A's brands
+      2. UPDATE Supabase
+      3. If brand_scope expanded to include other team's brands:
+         → Notify other team for review
+  
+  notion_webhook_delete:
+    when: entry archived in Team A
+    action:
+      1. Check: is this entry referenced by other brands?
+      2. IF yes: prevent delete, alert "shared resource, archive instead"
+      3. IF no: soft-delete in Supabase (set archived_at)
+  
+  supabase_change_trigger:
+    when: Supabase entry modified by another team or operator
+    action:
+      1. Check brand_scope: should appear in Team A's view?
+      2. IF yes: push update to Team A's Notion
+      3. IF no: skip (Team A doesn't need to see)
+  
+  reconciliation_job (every 15 min):
+    - Compare Notion entries vs Supabase
+    - Detect drift (out-of-sync states)
+    - Repair: Notion = source for editorial fields
+              Supabase = source for computed/derived fields
+```
+
+### 18.7.4 Conflict Resolution Rules
+
+```yaml
+conflict_scenarios:
+  
+  scenario_1_simultaneous_edit:
+    setup: Team A and Team B both editing same universal entity
+    resolution:
+      - Last-write-wins (Notion timestamp)
+      - Both teams notified of change
+      - Operator can override if needed
+  
+  scenario_2_brand_scope_change:
+    setup: Team A removes brand_x from entity's brand_scope
+            but brand_x still uses entity in pages
+    resolution:
+      - Block removal
+      - Alert: "X pages still reference this entity"
+      - Require explicit migration or override
+  
+  scenario_3_team_a_creates_brand_b_entity:
+    setup: Team A accidentally tags entity with brand_b
+            (which is Team B's brand)
+    resolution:
+      - Validation error at sync time
+      - Notion alert: "You don't have write access to brand_b"
+      - Suggest: change brand_scope OR ask Team B to take over
+  
+  scenario_4_operator_override:
+    setup: Operator changes entity that Team A is editing
+    resolution:
+      - Operator changes win
+      - Team A's Notion shows warning: "Modified by operator"
+      - Team A re-syncs latest version
+```
+
+### 18.7.5 Brand Scope Validation (n8n flow config — not DB table)
+
+> **Important:** Brand scope validation lives in **n8n flow config**, not in a Supabase table. The Notion workspace = team identifier (manual setup by operator). Each n8n flow knows which brand_ids its source workspace can write to via per-flow environment variables.
+
+```yaml
+validation_architecture:
+  
+  source_of_truth:
+    operator_mental_model: "Workspace A handles brands [vth, vitalsleep]"
+    n8n_flow_config: 
+      flow_workspace_a_sync:
+        env: ALLOWED_BRANDS = ["vth-biodent", "vitalsleep"]
+        env: WORKSPACE_ROLE = "editorial"  # vs "curator", "operator"
+    notion_workspace: members invited by operator (Notion native ACL)
+    supabase: just receives validated writes (no team awareness)
+  
+  on_notion_create_or_update:
+    n8n_flow_validates_before_supabase_write:
+      rule_1: brand_scope must be non-empty
+      rule_2: each brand_id in scope must exist in brands table
+      rule_3: brand_scope ⊆ ALLOWED_BRANDS env var
+              (unless brand_scope = ['*'] AND WORKSPACE_ROLE in ['curator', 'operator'])
+    
+    on_violation:
+      → flow logs error
+      → flow writes back to Notion: error comment on entry
+      → entry stays in Notion (not synced to Supabase)
+      → operator notified for manual resolution
+    
+    example_violations:
+      ❌ Workspace A flow detects entry with brand_scope = ['brand_x']
+         (brand_x not in ALLOWED_BRANDS)
+         → REJECT, comment: "This workspace doesn't manage brand_x"
+      
+      ❌ Entry with brand_scope = []
+         → REJECT, comment: "Must specify at least one brand"
+      
+      ✅ Workspace A entry with brand_scope = ['vth-biodent']
+         (vth-biodent in ALLOWED_BRANDS)
+         → ACCEPT, sync to Supabase
+      
+      ✅ Operator workspace entry with brand_scope = ['*']
+         (WORKSPACE_ROLE = 'operator')
+         → ACCEPT, becomes universal resource
+
+  on_brand_scope_change:
+    rule_1: cannot remove brand_id from scope if pages reference it
+            → enforced via SQL check: query seo_website_page_master.brand_id
+    rule_2: adding new brand_id requires that brand's workspace approval
+            → workflow: pending_approval status, operator coordinates
+    rule_3: changing ['*'] → specific brands = downgrade
+            → requires operator workspace (not editorial)
+
+operator_setup_steps_for_new_workspace:
+  step_1: Create Notion workspace (or invite to existing)
+  step_2: Add team members in Notion (Notion's ACL)
+  step_3: Configure n8n flow for that workspace:
+          - ALLOWED_BRANDS = [list]
+          - WORKSPACE_ROLE = editorial / curator / operator
+          - Notion webhook → Supabase sync direction
+  step_4: Activate flow → workspace starts syncing
+  
+  no_supabase_table_changes_needed
+  no_user_management_in_db
+  team_is_a_concept_in_operator's_head
+```
+
+### 18.7.6 Universal Resource Curation
+
+```yaml
+universal_resources (brand_scope = ['*']):
+  curated_by: operator OR designated curator role
+  examples:
+    - PubMed citations
+    - WHO/CDC guidelines
+    - Generic medical entities (TMJ Disorder, Sleep Apnea)
+    - Standard taxonomy terms
+    - Reference doctors (visiting specialists)
+  
+  promotion_workflow:
+    step_1: Team identifies resource as potentially shared
+    step_2: Team creates with brand_scope = ['team_brand']
+    step_3: Team requests promotion to universal:
+            → flag: "candidate_for_universal" = true
+    step_4: Curator/Operator reviews:
+            - Is it truly generic (not brand-specific)?
+            - Is description neutral (no brand voice)?
+            - Is metadata complete?
+    step_5: If approved:
+            → brand_scope = ['*']
+            → Visible to all teams now
+            → Other teams notified: "New universal resource available"
+    step_6: If rejected:
+            → Keep brand-specific
+            → Reason logged for team learning
+
+operator_dashboard_for_universal_curation:
+  - Pending promotions queue
+  - Universal resource catalog (browsable)
+  - Usage analytics: which brands use which universal resources
+  - Quality monitoring: stale universal resources flagged
+```
+
+### 18.7.7 Operator Workspace — Aggregation Patterns
+
+```yaml
+operator_specific_databases:
+  
+  portfolio_overview:
+    rows: brand_id (one per brand)
+    properties:
+      - brand_name
+      - vertical
+      - active_team
+      - content_velocity_30d (pages published)
+      - kpi_rollup_score (aggregate of all KPIs)
+      - blockers_count (pages stuck in workflow)
+      - cross_brand_refs_pending
+      - last_sync_at
+    views:
+      - by health (sorted: red → yellow → green)
+      - by vertical
+      - by team
+  
+  resource_allocation_dashboard:
+    rows: team
+    properties:
+      - team_name
+      - assigned_brands
+      - active_writers
+      - velocity (pages/week)
+      - utilization_pct
+      - bottlenecks
+    actions:
+      - reassign brand to another team
+      - request team capacity increase
+  
+  cross_brand_initiatives:
+    rows: initiative (e.g., "Sleep apnea content network")
+    properties:
+      - participating_brands[]
+      - status
+      - linked_pages[]
+      - completion_pct
+  
+  universal_resource_catalog:
+    rows: universal entities/citations
+    properties:
+      - resource_name
+      - type (entity, citation, doctor)
+      - usage_count (pages referencing)
+      - using_brands[]
+      - last_modified
+      - quality_score
+```
+
+### 18.7.8 Onboarding New Team — Workspace Setup
+
+```yaml
+new_team_onboarding:
+  
+  step_1_team_account:
+    - Create new Notion workspace under team's account
+    - OR add to existing team workspace if structure allows
+  
+  step_2_template_clone:
+    - Use EYWA Notion Workspace Template (provided by operator)
+    - Template includes:
+      * All required DB structures
+      * Default views (filtered to TBD brand)
+      * Property formulas
+      * Standard automation rules
+  
+  step_3_brand_assignment:
+    - Operator configures n8n flow for new workspace:
+      - Set ALLOWED_BRANDS env var: ["brand_a", "brand_b"]
+      - Set WORKSPACE_ROLE: "editorial" (or curator/operator)
+      - Configure Notion webhook URL → n8n endpoint
+    - No DB changes needed — assignment lives in flow config
+  
+  step_4_n8n_flow_provisioning:
+    - n8n flow auto-deploys for new workspace:
+      - Notion webhook handlers
+      - Bidirectional sync to Supabase
+      - Validation rules per team's brand_scope
+  
+  step_5_initial_data_pull:
+    - Operator triggers: pull all entries for team's brands from Supabase
+    - Push to new Notion workspace
+    - Team sees their brands' content immediately
+  
+  step_6_handoff_meeting:
+    - Operator walks team through:
+      * Their workspace structure
+      * brand_scope filter convention
+      * Universal resource access
+      * Cross-brand referral system
+      * Conflict resolution (when to escalate)
+  
+  total: ~1 day setup, team operational immediately
+```
+
+### 18.7.9 Cross-References
+
+| Topic | See Also |
+|-------|----------|
+| Federation architecture | Part 10.7 |
+| Notion DB list (mirrored across workspaces) | Part 18.1 |
+| Field mapping rules | Part 18.5 |
+| Bootstrap workspace template | Part 18.6 |
+| n8n sync flows | Part 17 |
+| brand_scope field convention | Part 10.7.5 |
+| Cross-brand link tracking | Part 4.12 |
+| Operator dashboards | Part 20 (KPIs) |
+
+---
+
+## Appendix D: WordPress Code Reference Library
+
+> **Why this Appendix:** Sections 8.5-8.8 อธิบาย concept ของ CPT registration, ACF field groups, และ Related Section logic — แต่ developer ต้องการ **ready-to-use PHP code** ที่ copy ไป customize ได้ทันที. Appendix นี้รวบรวม code reference ทั้งหมดไว้ในที่เดียว แยกออกจาก main spec เพื่อไม่ให้ Part 8 หนักเกินไป
+
+### D.1 `generate_schema()` — Programmatic JSON-LD from Entity Graph
+
+**Purpose:** Generate Tier 2 (Page-Level) Schema markup จาก ACF data ของ post นั้นๆ — render ใน body close to content
+
+**Use case:** เรียกใน theme template (เช่น `single-treatment.php`) หรือ via shortcode
+
+```php
+<?php
+/**
+ * EYWA — Generate Tier 2 Page-Level Schema from ACF
+ * Reference: Part 7.5.3 + Section 8.6
+ *
+ * @param int $post_id WordPress post ID
+ * @return array Schema.org JSON-LD ready for json_encode
+ */
+function eywa_generate_page_schema($post_id) {
+    // ============= Required ACF fields =============
+    $entity        = get_field('primary_entity', $post_id);
+    $schema_type   = get_field('schema_type', $post_id);
+    $page_url      = get_permalink($post_id);
+    $page_id       = $page_url . '#webpage';
+    $entity_id     = $page_url . '#entity';
+
+    // ============= Base schema =============
+    $schema = [
+        '@context'    => 'https://schema.org',
+        '@graph'      => []
+    ];
+
+    // ============= Primary entity (MedicalCondition / Procedure / etc) =============
+    $primary_entity = [
+        '@type'       => $schema_type,
+        '@id'         => $entity_id,
+        'name'        => get_the_title($post_id),
+        'description' => get_field('hero_summary', $post_id),
+    ];
+
+    // -- ICD-10 / ICD-11 / SNOMED CT --
+    $codes = [];
+    if ($icd10 = get_field('icd_10_code', $post_id)) {
+        $codes[] = [
+            '@type'        => 'MedicalCode',
+            'code'         => $icd10,
+            'codingSystem' => 'ICD-10-CM'
+        ];
+    }
+    if ($icd11 = get_field('icd_11_code', $post_id)) {
+        $codes[] = [
+            '@type'        => 'MedicalCode',
+            'code'         => $icd11,
+            'codingSystem' => 'ICD-11-MMS'
+        ];
+    }
+    if ($snomed = get_field('snomed_ct_id', $post_id)) {
+        $codes[] = [
+            '@type'        => 'MedicalCode',
+            'code'         => $snomed,
+            'codingSystem' => 'SNOMED-CT'
+        ];
+    }
+    if (!empty($codes)) {
+        $primary_entity['code'] = $codes;
+    }
+
+    // -- sameAs (Wikipedia + Wikidata) --
+    if ($entity) {
+        $same_as = [];
+        if ($wikipedia = get_field('wikipedia_url', $entity)) {
+            $same_as[] = $wikipedia;
+        }
+        if ($wikidata = get_field('wikidata_id', $post_id)) {
+            $same_as[] = 'https://www.wikidata.org/wiki/' . $wikidata;
+        }
+        if (!empty($same_as)) {
+            $primary_entity['sameAs'] = $same_as;
+        }
+    }
+
+    $schema['@graph'][] = $primary_entity;
+
+    // ============= MedicalWebPage wrapper =============
+    $organization_id = home_url() . '/#organization';
+    $webpage = [
+        '@type'         => 'MedicalWebPage',
+        '@id'           => $page_id,
+        'url'           => $page_url,
+        'name'          => get_the_title($post_id),
+        'about'         => ['@id' => $entity_id],
+        'publisher'     => ['@id' => $organization_id],
+        'datePublished' => get_the_date('c', $post_id),
+        'dateModified'  => get_the_modified_date('c', $post_id),
+        'inLanguage'    => 'th',  // or use ICL_LANGUAGE_CODE for WPML
+    ];
+
+    // -- Reviewed by --
+    if ($reviewer = get_field('reviewed_by', $post_id)) {
+        $reviewer_id = get_permalink($reviewer) . '#person';
+        $webpage['reviewedBy'] = [
+            '@id'  => $reviewer_id,
+            '@type' => 'Physician',
+            'name' => get_the_title($reviewer),
+            'url'  => get_permalink($reviewer),
+            'worksFor' => ['@id' => $organization_id]
+        ];
+    }
+
+    // -- Speakable --
+    if ($speakable_selectors = get_field('speakable_selectors', $post_id)) {
+        $webpage['speakable'] = [
+            '@type'     => 'SpeakableSpecification',
+            'cssSelector' => array_map('trim', explode(',', $speakable_selectors))
+        ];
+    }
+
+    $schema['@graph'][] = $webpage;
+
+    // ============= FAQPage (Tier 3 inline schema) =============
+    if ($faqs = get_field('faq_items', $post_id)) {
+        $faq_page = [
+            '@type'      => 'FAQPage',
+            '@id'        => $page_url . '#faqs',
+            'mainEntity' => array_map(function ($faq) {
+                return [
+                    '@type'          => 'Question',
+                    'name'           => $faq['question'],
+                    'acceptedAnswer' => [
+                        '@type' => 'Answer',
+                        'text'  => $faq['answer']
+                    ]
+                ];
+            }, $faqs)
+        ];
+        $schema['@graph'][] = $faq_page;
+    }
+
+    // ============= BreadcrumbList (auto-generate) =============
+    $schema['@graph'][] = eywa_generate_breadcrumb_schema($post_id);
+
+    return $schema;
+}
+
+/**
+ * Helper: Auto-generate BreadcrumbList from page hierarchy
+ */
+function eywa_generate_breadcrumb_schema($post_id) {
+    $items = [];
+    $position = 1;
+
+    // Home
+    $items[] = [
+        '@type'    => 'ListItem',
+        'position' => $position++,
+        'name'     => 'Home',
+        'item'     => home_url()
+    ];
+
+    // CPT archive
+    $post_type = get_post_type($post_id);
+    $cpt_obj = get_post_type_object($post_type);
+    if ($cpt_obj && $cpt_obj->has_archive) {
+        $items[] = [
+            '@type'    => 'ListItem',
+            'position' => $position++,
+            'name'     => $cpt_obj->labels->name,
+            'item'     => get_post_type_archive_link($post_type)
+        ];
+    }
+
+    // Current page
+    $items[] = [
+        '@type'    => 'ListItem',
+        'position' => $position,
+        'name'     => get_the_title($post_id),
+        'item'     => get_permalink($post_id)
+    ];
+
+    return [
+        '@type'           => 'BreadcrumbList',
+        'itemListElement' => $items
+    ];
+}
+
+// ============= Theme integration =============
+// In single-treatment.php (or via init action):
+// $schema = eywa_generate_page_schema(get_the_ID());
+// echo '<script type="application/ld+json">' . wp_json_encode($schema) . '</script>';
+```
+
+### D.2 `get_related_content()` — 3-Tier Fallback Algorithm
+
+**Purpose:** Implement Section 8.8 Related Section Logic with priority order
+
+```php
+<?php
+/**
+ * EYWA — Get Related Content with 3-tier fallback
+ * Reference: Section 8.8
+ *
+ * @param int    $current_post_id  Current post
+ * @param string $type             CPT slug (treatment / concern / article / ...)
+ * @param int    $limit            Max items to return
+ * @return WP_Post[]
+ */
+function eywa_get_related_content($current_post_id, $type, $limit = 4) {
+    // ============= TIER 1: Manual Override =============
+    $manual = get_field('manual_related_' . $type, $current_post_id);
+    if (is_array($manual) && count($manual) >= 3) {
+        return array_slice($manual, 0, $limit);
+    }
+
+    // ============= TIER 2: Same content_cluster =============
+    $clusters = get_the_terms($current_post_id, 'content_cluster');
+    if (empty($clusters) || is_wp_error($clusters)) {
+        return [];
+    }
+    $cluster_slug = $clusters[0]->slug;
+
+    $tier2_query = new WP_Query([
+        'post_type'      => $type,
+        'tax_query'      => [
+            [
+                'taxonomy' => 'content_cluster',
+                'field'    => 'slug',
+                'terms'    => $cluster_slug
+            ]
+        ],
+        'post__not_in'   => [$current_post_id],
+        'posts_per_page' => $limit,
+        'orderby'        => 'menu_order date',
+        'order'          => 'DESC',
+        'meta_query'     => [
+            [
+                'key'     => 'freshness_status',
+                'value'   => ['fresh', 'aging'],
+                'compare' => 'IN'
+            ]
+        ]
+    ]);
+
+    $tier2_posts = $tier2_query->posts;
+
+    if (count($tier2_posts) >= $limit) {
+        return $tier2_posts;
+    }
+
+    // ============= TIER 3: Same semantic_topic (fallback) =============
+    $remaining = $limit - count($tier2_posts);
+    $semantic_topics = get_the_terms($current_post_id, 'semantic_topic');
+    if (empty($semantic_topics) || is_wp_error($semantic_topics)) {
+        return $tier2_posts;
+    }
+
+    $exclude = array_merge(
+        [$current_post_id],
+        wp_list_pluck($tier2_posts, 'ID')
+    );
+
+    $tier3_query = new WP_Query([
+        'post_type'      => $type,
+        'tax_query'      => [
+            [
+                'taxonomy' => 'semantic_topic',
+                'field'    => 'slug',
+                'terms'    => $semantic_topics[0]->slug
+            ]
+        ],
+        'post__not_in'   => $exclude,
+        'posts_per_page' => $remaining,
+        'orderby'        => 'date',
+        'order'          => 'DESC',
+    ]);
+
+    return array_merge($tier2_posts, $tier3_query->posts);
+}
+
+/**
+ * Helper: Per-page-type priority order (Section 8.8.2)
+ */
+function eywa_get_related_priority_for($current_post_type) {
+    $priority_map = [
+        'treatment'   => ['treatment', 'concern', 'case_study', 'article'],
+        'concern'     => ['treatment', 'concern', 'case_study', 'article'],  // treatment first!
+        'technology'  => ['treatment', 'technology', 'case_study', 'article'],
+        'article'     => ['article', 'concern', 'treatment', 'case_study'],
+        'case_study'  => ['case_study', 'treatment', 'concern', 'article'],
+        'ingredient'  => ['ingredient', 'product', 'concern', 'article'],
+        'product'     => ['product', 'ingredient', 'article'],
+    ];
+    return $priority_map[$current_post_type] ?? ['article'];
+}
+
+/**
+ * Render related sections in priority order
+ */
+function eywa_render_related_sections($post_id) {
+    $post_type = get_post_type($post_id);
+    $priority = eywa_get_related_priority_for($post_type);
+
+    $output = '';
+    foreach ($priority as $type) {
+        $related = eywa_get_related_content($post_id, $type, 4);
+        if (!empty($related)) {
+            $output .= sprintf('<section class="related-%s">', esc_attr($type));
+            $output .= sprintf('<h3>Related %s</h3>', ucfirst($type));
+            $output .= '<ul>';
+            foreach ($related as $item) {
+                $output .= sprintf(
+                    '<li><a href="%s">%s</a></li>',
+                    esc_url(get_permalink($item)),
+                    esc_html(get_the_title($item))
+                );
+            }
+            $output .= '</ul></section>';
+        }
+    }
+    return $output;
+}
+```
+
+### D.3 ACF Field Group Programmatic Registration
+
+**Purpose:** Register ACF field groups via PHP (instead of UI) — version-controllable + repeatable across sites
+
+```php
+<?php
+/**
+ * EYWA — ACF Field Groups for Content CPTs
+ * Reference: Section 8.7
+ * Required: ACF Pro (acf_add_local_field_group)
+ */
+
+if (function_exists('acf_add_local_field_group')) {
+
+    acf_add_local_field_group([
+        'key'    => 'group_eywa_content_treatment',
+        'title'  => 'Treatment Fields (EYWA v3.3)',
+        'fields' => array_merge(
+            eywa_acf_tab_core_content(),
+            eywa_acf_tab_relationships(),
+            eywa_acf_tab_eeat(),
+            eywa_acf_tab_schema(),
+            eywa_acf_tab_faq(),
+            eywa_acf_tab_llmo_citables(),
+            eywa_acf_tab_treatment_specifics()
+        ),
+        'location' => [
+            [
+                [
+                    'param'    => 'post_type',
+                    'operator' => '==',
+                    'value'    => 'treatment'
+                ]
+            ]
+        ],
+        'menu_order'    => 0,
+        'position'      => 'normal',
+        'style'         => 'default',
+        'label_placement' => 'top',
+    ]);
+
+    // Repeat for: condition, ingredient, product, case_study, etc.
+}
+
+/** Tab 1: Core Content */
+function eywa_acf_tab_core_content() {
+    return [
+        ['key' => 'tab_core', 'type' => 'tab', 'label' => 'Core Content'],
+        ['key' => 'field_hero_summary', 'name' => 'hero_summary',
+         'type' => 'wysiwyg', 'label' => 'Hero Summary (Speakable, 40-50 words)',
+         'required' => 1, 'instructions' => 'class="hero-summary speakable-block"'],
+        ['key' => 'field_quick_facts', 'name' => 'quick_facts',
+         'type' => 'repeater', 'label' => 'Quick Facts (Citable bullets)',
+         'sub_fields' => [
+            ['key' => 'qf_label', 'name' => 'label', 'type' => 'text', 'label' => 'Label'],
+            ['key' => 'qf_value', 'name' => 'value', 'type' => 'text', 'label' => 'Value'],
+         ]],
+        ['key' => 'field_main_content', 'name' => 'main_content',
+         'type' => 'wysiwyg', 'label' => 'Main Content'],
+        ['key' => 'field_cta_section', 'name' => 'cta_section',
+         'type' => 'wysiwyg', 'label' => 'Final CTA Section'],
+    ];
+}
+
+/** Tab 6: LLMO Citables (v3.3 spec) */
+function eywa_acf_tab_llmo_citables() {
+    return [
+        ['key' => 'tab_llmo', 'type' => 'tab', 'label' => 'LLMO Citables'],
+        ['key' => 'field_brand_linked_citables', 'name' => 'brand_linked_citables',
+         'type' => 'repeater', 'label' => 'Brand-linked Citables (min 3)',
+         'min' => 3, 'instructions' => 'See Part 6.2 for Pattern A-F formulas',
+         'sub_fields' => [
+            ['key' => 'bc_statement', 'name' => 'statement',
+             'type' => 'textarea', 'label' => 'Statement (15-30 words)'],
+            ['key' => 'bc_metric', 'name' => 'metric',
+             'type' => 'text', 'label' => 'Metric (e.g., "500 ราย")'],
+            ['key' => 'bc_time_period', 'name' => 'time_period',
+             'type' => 'text', 'label' => 'Time period (e.g., "ปี 2025")'],
+            ['key' => 'bc_source', 'name' => 'source_citation',
+             'type' => 'text', 'label' => 'Source citation'],
+            ['key' => 'bc_pattern', 'name' => 'pattern_type',
+             'type' => 'select', 'label' => 'Pattern',
+             'choices' => [
+                'A' => 'A — Clinical Data',
+                'B' => 'B — Editorial Analysis',
+                'C' => 'C — Comparative Lab',
+                'D' => 'D — Reader Survey',
+                'E' => 'E — Brand Stance',
+                'F' => 'F — Evidence-Level',
+             ]],
+         ]],
+        ['key' => 'field_perspective_blocks', 'name' => 'perspective_blocks',
+         'type' => 'repeater', 'label' => 'Perspective Layer Blocks (min 4)',
+         'min' => 4, 'instructions' => 'See Part 6.3 for templates',
+         'sub_fields' => [
+            ['key' => 'pb_type', 'name' => 'perspective_type',
+             'type' => 'select', 'label' => 'Type',
+             'choices' => [
+                'alpha' => 'α — Clinical Insight',
+                'beta'  => 'β — Brand Stance',
+                'gamma' => 'γ — Myth-busting',
+                'delta' => 'δ — Patient Journey',
+             ]],
+            ['key' => 'pb_content', 'name' => 'content',
+             'type' => 'wysiwyg', 'label' => 'Content (use template)'],
+         ]],
+    ];
+}
+
+// (Other tab functions follow same pattern — abbreviated for brevity)
+// Full implementation: see /wp-content/themes/eywa/inc/acf-field-groups.php
+```
+
+### D.4 Theme Integration Hooks
+
+**Purpose:** Wire functions D.1-D.3 into WordPress lifecycle
+
+```php
+<?php
+/**
+ * EYWA — Theme Integration Hooks
+ * Place in functions.php or custom plugin
+ */
+
+// 1. Render Tier 2 Schema in <head>
+add_action('wp_head', function () {
+    if (!is_singular()) return;
+    $post_id = get_queried_object_id();
+    if (!in_array(get_post_type($post_id), ['treatment', 'condition', 'ingredient', 'product', 'article'])) {
+        return;
+    }
+    $schema = eywa_generate_page_schema($post_id);
+    echo "\n<!-- EYWA Tier 2 Schema -->\n";
+    echo '<script type="application/ld+json">' . wp_json_encode($schema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . '</script>' . "\n";
+}, 20);
+
+// 2. Shortcode for Related Sections
+add_shortcode('eywa_related', function ($atts) {
+    $atts = shortcode_atts(['post_id' => null], $atts);
+    $post_id = $atts['post_id'] ?: get_the_ID();
+    return eywa_render_related_sections($post_id);
+});
+
+// 3. Shortcode for Speakable Hero
+add_shortcode('eywa_speakable_hero', function () {
+    $hero = get_field('hero_summary');
+    if (!$hero) return '';
+    return '<div class="hero-summary speakable-block">' . $hero . '</div>';
+});
+
+// 4. Auto-add freshness check on every save
+add_action('save_post', function ($post_id) {
+    if (wp_is_post_revision($post_id)) return;
+    update_post_meta($post_id, 'last_modified_eywa', current_time('mysql'));
+});
+```
+
+### D.5 Cross-References
+
+| Topic | See Also |
+|-------|----------|
+| Tier 1 schema (site-wide) — uses WPCode, not PHP | Part 8.6 |
+| Tier 2 schema — D.1 implements this | Part 7.5.3 |
+| Tier 3 inline schemas (FAQ/Speakable) — D.1 includes | Part 7.5.4 |
+| Related Section Logic concept | Part 8.8 |
+| ACF Field Groups concept | Part 8.7 |
+| Multi-format schemas (Video/Podcast/PDF) | Part 7.5.8 |
+
+---
+
+---
+
+**END OF DOCUMENT v3.3 — คัมภีร์ EYWA™ PROTOCOL**
+
+
+*🌿 EYWA™ PROTOCOL Bible v3.3 • May 2026*
+*The Universal Knowledge Graph SEO Specification for the AI Era*
+*Multi-vertical, multi-brand, multi-specialty, multi-lingual, multi-location, AI-future-ready*
+
+*Created by The Gifted Digital Marketing Co., Ltd.*
+*EYWA™ is a registered service mark — Class 35+42, DIP Thailand (filed 2026-04-20)*
+*Implementation: Notion + Supabase + n8n + WordPress (loose-coupled via automation)*
+
+**Service Suite:** Audit · Graph · Stack · Vital · Forge · Score · Atlas
+
+**v3.3 Changelog (Implementation Restoration):**
+- 🔧 Restored actionable implementation guides from v1.1 source
+- ➕ Section 4.11: URL Structure Rules (CMS-agnostic)
+- ➕ Section 7.5.8: Multi-format Content Schemas (Video/Image/Podcast/PDF)
+- ➕ Section 7.6: Cluster Lifecycle States (state diagram)
+- ➕ Section 7.7: Cluster Creation Rules (5 mandatory checks)
+- 🔄 Section 7.8: Review Cycles (renumbered from 7.6)
+- ➕ Section 8.1: Plugin Stack Recommendations (with avoid list)
+- ➕ Section 8.6: WPCode Site-wide Schema Setup (8-step guide)
+- ➕ Section 8.7: ACF Field Groups Reference (per-CPT, 6 tabs + LLMO Citables)
+- ➕ Section 8.8: Related Section Logic (per-page-type priority + fallback)
+- ➕ Appendix D: WordPress Code Reference Library (PHP functions)
+- ✅ Backward compatible: zero schema/n8n/Notion changes
+- 🎯 Mission: Architecture → Implementation actionable Day 1
+
+**v3.2 Changelog (Day 1 unified spec):**
+- 📊 Part 5 restructured to 9 logical groups (28 tables total)
+- Group 5 added: Performance Fact Tables (rolling + yearly partition)
+- Group 6 added: Backlinks & Off-Page
+- 📊 Companion: Schema_Overview EYWA v1.0 (full DDL + descriptions)
+- 🔧 Day 1 mindset — no deployed/pending drift markers
+
+**v3.1 Changelog (lean elite medical tier):**
+- 🩺 Part 23: Medical Content Excellence (Citation Tiers + Disclaimers + Editorial Workflow + CWV + WCAG)
+- ➕ Pattern F (Evidence-Level Citable Sentence)
+- ➕ Wikidata Q-number / Brand SERP setup
+- ➕ Authority validation schema (license, accreditation, advisory board)
+- ➕ seo_editorial_reviews table (5-stage workflow tracking)
+
+**v3.0 Changelog:**
+- Part 19: Data Quality Framework (5 DAMA dimensions)
+- Part 20: Measurement & KPI Framework (4-Layer, 15 KPIs, 5 dashboards)
+- Part 21: AI Operations & Embedding Strategy (RAG-ready)
+- Part 24: Future Roadmap & Beyond (RDF/FHIR/Trust/Revenue) — was Part 22
+- ➕ Part 11.6: MVP/Growth/Scale tiered scope
+- ➕ Part 15.X: Operational Governance (Data Steward, SLA, Rollback)
+- ➕ Part 2.6: Future Note — Semantic Web (RDF) integration
+- ➕ Part 5.13: Future Note — FHIR Healthcare Interoperability
+- ➕ Part 13.X: Future Note — Trust Layer Automation
+
+*Aligned with Google March 2026 Core Update + AI Agent Era*
+*Backward compatible with v2.0–v2.9*
