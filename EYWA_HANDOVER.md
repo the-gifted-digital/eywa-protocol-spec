@@ -1488,6 +1488,8 @@ session_2026_05_10_part_4:  # 🆕 NEW v1.6 (continued same day — DR-020 inter
 
 For each main pillar topic identified in Phase A/B.1, research authoritative sources BEFORE entity creation. This builds the universal citation pool that downstream phases (C, F) will draw from.
 
+> **Scope:** Phase B.2 = **BREADTH-level survey** (5-15 sources per pillar — covers main claims). Per-page **DEPTH-level intensive research** happens in Phase F step 3 — see §7.7. Pool grows organically across both phases.
+
 ```yaml
 citation_research_per_pillar:
   for_each_topic:
@@ -1605,20 +1607,91 @@ stage_1_gate_checklist:
 
 ### 7.7 Phase F — Content Production
 
-Per-page requirements: schema planned, citations from Phase B.2 pool linked via `seo_page_citations`, author+reviewer assigned, multilingual fields, WCAG AA, internal links per plan, citable patterns used.
+Per-page requirements: schema planned, citations from Phase B.2 pool **+ per-page intensive research** linked via `seo_page_citations`, author+reviewer assigned, multilingual fields, WCAG AA, internal links per plan, citable patterns used.
 
-**Citation Workflow in Stage 2 🆕 v1.6:**
-- Writer pulls from `citation-pool-seed.md` (Phase B.2 output) when writing each page
-- Each citation used → row in `seo_page_citations` junction (page_id × citation_id)
-- New citations discovered during writing → ADD to pool (new row in `seo_citations`) — pool keeps growing
-- Pattern E Brand Stance — backed by Tier 5 brand internal data + ≥1 Tier 1-2 supporting citation
+**Per-Page Citation Workflow 🆕 v1.6 (5-step, run BEFORE writing prose):**
+
+```yaml
+step_1_pre_write_survey:
+  action: "Pull from citation-pool-seed.md (or seo_citations table) — filter by page's primary_entity + cluster_id"
+  output: "Candidate list of relevant citations from existing pool"
+  rationale: "Federation reuse — don't re-research what other brands already found"
+
+step_2_gap_analysis:
+  action: |
+    For each major claim in page outline:
+      - Does pool already have a backing citation?
+      - If yes → mark as covered
+      - If no → flag as 'gap' (needs intensive research in step 3)
+    
+    Required claims to back per template:
+      - T1/T2: 5-10 claims (statistics, mechanisms, outcomes)
+      - T3/T4: 3-5 claims (accuracy, indications)
+      - T6a Guide: 8-15 claims (comprehensive)
+      - T7 Comparison: 5-8 claims (per option)
+      - T8 Case Study: 2-4 claims (clinical context)
+  output: "List of gaps requiring fresh citation research"
+
+step_3_intensive_per_page_research: ⭐ # explicit allowance for additional research
+  action: |
+    For EACH gap from step 2:
+      - Research 1-3 candidate citations (PubMed, Cochrane, AASM, etc.)
+      - Apply 6-tier classification (Bible Part 23.1):
+          1: Clinical guidelines / gov health bodies
+          2: Peer-reviewed journals / Cochrane
+          3: Authoritative medical org publications
+          4: Expert-authored books/textbooks
+          5: Brand internal data — brand_scope=['{brand}']
+          6: Reputable secondary sources
+      - Verify freshness (within tier-specific threshold)
+      - Capture metadata: doi, pmid, pmc_id, isbn, publication_year, url
+      - EUG-style dedup check against existing pool (same DOI/PMID = reuse, not duplicate)
+      - Add new citations to seo_citations pool — brand_scope based on universality
+  
+  intensity_principle: |
+    Phase B.2 = BREADTH-level survey (what could OSA pillar cite, generally?)
+    Phase F step 3 = DEPTH-level research (what does THIS specific OSA page need?)
+    
+    Per-page research is more granular and may surface citations Phase B.2 missed.
+    Pool grows organically — first brand to write topic does heaviest lifting,
+    subsequent brands reuse + add edge-case citations.
+  
+  output: "New citations added to pool + linked to current page's claim list"
+
+step_4_write_content:
+  action: |
+    With full citation set in hand:
+      - Write Part 1 prose (per template structure — DR-020)
+      - Apply Pattern A-E citables formulas (Bible Part 6 + Content_Templates §2.8)
+      - Track each citable sentence in Part 2 Citation Map table
+      - Pattern E Brand Stance — backed by Tier 5 brand internal data + ≥1 Tier 1-2 supporting
+  output: "Draft markdown file ready for editorial review"
+
+step_5_persist_on_publish:
+  action: |
+    On final approval:
+      - Each citation used → row in seo_page_citations junction (page_id × citation_id × Pattern + section_context)
+      - Pool keeps growing — federation benefits scale up over portfolio
+  output: "seo_page_citations populated; citation usage trackable across portfolio"
+```
+
+**Why allow per-page intensive research:**
+- Phase B.2 covers 5-15 citations per pillar (broad survey)
+- Real pages may need 8-20 citations for depth (specific claims need specific sources)
+- Without explicit step 3, writers either skip citations or stop to ask operator
+- With step 3 codified: writers know research IS allowed + expected during writing
+- Pool grows: brand 1 does heavy research → brand 2-13 reuse + add their edge cases
 
 **Template-driven workflow (DR-020):**
 - Each page selects template_id (T1-T19) — see `Content_Templates_EYWA_v1_0.md` + `examples/`
 - Part 1 = WYSIWYG content (review-ready)
 - Part 2 = 9 multi-toggle technical + editorial spec
+- Citation Map table in Part 2 tracks all citables with section + Pattern + citation_id
 
 **5-stage editorial workflow:** Medical → SEO → Brand Voice → Legal/PDPA → Final Sign-off (Bible Part 23.4)
+- Medical review checks citation tier ≥3 for primary evidence
+- SEO review checks Pattern A-E coverage minimums per template
+- Citation freshness re-checked at this stage (catches expired sources)
 
 ### 7.8 Phase G — Deployment
 
