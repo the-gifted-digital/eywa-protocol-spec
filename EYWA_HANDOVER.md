@@ -2170,24 +2170,133 @@ Stop and escalate to operator if:
 
 ## 🔄 Section 9 — Update & Sync Protocols
 
-### 9.1 When Spec Changes
+> **Operating principle:** Brands work in parallel. Batching DR locks before spec updates causes massive backfill cost across all in-flight brands. Therefore: **update spec immediately when DR enters Proposed, lock after soak period.** See §9.1–9.3 for the full workflow.
+
+### 9.1 DR Lifecycle (Brand-Specific vs System-Wide)
+
+When a decision surfaces during brand work, route it via **decision tree**:
+
+```
+Decision needed
+      │
+      ▼
+Does this affect ONLY this brand's content/structure/voice?
+      │
+      ├── YES ──► Path 1: Brand-Specific DR
+      │           - Log in eywa-{brand}/docs/decision-records.md (SS-DR-NNN, VTH-DR-NNN, etc.)
+      │           - Adapt brand work IMMEDIATELY
+      │           - Status: Locked (no soak needed — brand owns the call)
+      │           - DO NOT touch eywa-protocol-spec
+      │
+      └── NO ───► Path 2: System-Wide DR
+                  - Affects multiple brands, schema, edge vocab, governance, or templates
+                  - Draft DR-NNN in eywa-protocol-spec/DECISION_RECORDS.md (Status: Proposed)
+                  - Apply Immediate Update Protocol (§9.2)
+                  - Soak 2 weeks → Schema Review Board → Lock or Reject
+```
+
+**Path 1 examples (brand-specific, no spec change):**
+
+- SS-DR-001: Blue Diamond as hero implant brand (SmileScape pricing strategy)
+- SS-DR-004: Founders treatment under Clinical Team (SmileScape narrative choice)
+- VTH-DR-001 (hypothetical): "Use sleep-medicine angle for OSA pillar" (brand voice)
+
+**Path 2 examples (system-wide, spec change required):**
+
+- DR-019: FAQ/HowTo schema deprecation handling (affects all 13 brands' template emission)
+- DR-020: Content_Templates v1.3 mandate (affects all brand content)
+- DR-021: Internal linking architecture HYBRID (affects schema + all brand sitemaps)
+
+**Why brand-specific stays brand-specific:** SmileScape's hero brand choice doesn't constrain TC Smile or Deezy. Forcing it into the universal spec creates noise and false precedent. Universal DRs are reserved for things every brand must consider.
+
+### 9.2 Immediate Update Protocol (when DR enters Proposed)
+
+**Trigger:** New system-wide DR drafted with Status: Proposed.
+
+**Steps (within same session if possible):**
+
+1. **Author DR** in `eywa-protocol-spec/DECISION_RECORDS.md` with full ADR format (Status: **Proposed**)
+2. **Identify affected spec files** — typically subset of:
+   - `BIBLE_v3_X.md` (concepts, principles)
+   - `SCHEMA_v1_X.md` (column adds/changes)
+   - `Content_Templates_EYWA_v1_X.md` (template blocks)
+   - `EYWA_HANDOVER.md` (Pre-Flight checklist, workflow steps)
+3. **Update each affected spec file IMMEDIATELY** with:
+   - Bump minor version (Bible v3.14 → v3.15, Schema v1.10 → v1.11, etc.)
+   - Add Proposed marker: `🆕 DR-NNN Proposed — soft guidance until lock {YYYY-MM-DD}`
+   - Cross-link to DR-NNN in DECISION_RECORDS.md
+4. **Update changelog** in each spec file with one-line entry per DR
+5. **Update Pre-Flight Checklist** (§10) — add awareness section for new DR
+6. **Commit + push** with message: `feat(spec): DR-NNN proposed — {one-line description}`
+7. **Notify brands in flight** (project memory `project_eywa_spec_governance.md` — log review date)
+
+**Locked vs Proposed signaling discipline:**
+
+- Every Proposed item in spec MUST carry: `🆕 DR-NNN Proposed — review {YYYY-MM-DD}`
+- Brands implementing Stage 1 follow **Locked DRs only** as binding; Proposed = preview / informational
+- When Locked, remove Proposed marker, bump major or minor per impact, update changelog
+
+**Why immediate (not batched):**
+
+| Scenario | Batched (old) | Immediate (current) |
+|----------|--------------|---------------------|
+| 5 brands in Stage 1, 3 DRs queue up over 6 weeks | All 5 brands rebuild Stage 1 outputs after batch lock | New brands started after each DR Proposed adopt latest; only brands started before each DR backfill on next stage gate |
+| Bible version churn | Low (1 bump per quarter) | Higher (3-5 bumps per quarter) — acceptable with semver discipline |
+| Risk of half-baked DR entering spec | Low | Mitigated by Proposed status + soak window + Lock review |
+| Operator coordination cost | High (many brands need backfill on same week) | Low (each brand picks up at next gate) |
+
+### 9.3 Brand Snapshot Discipline
+
+Each brand pins its current **EYWA Spec Snapshot** at Stage gates and adopts new DRs on each subsequent gate.
+
+**brand-config.json metadata block:**
+
+```json
+{
+  "eywa_spec_snapshot": {
+    "bible_version": "3.14",
+    "schema_version": "1.10",
+    "templates_version": "1.3",
+    "handover_version": "1.6",
+    "drs_locked_at_snapshot": ["DR-001", "DR-002", "...", "DR-018"],
+    "drs_proposed_at_snapshot": ["DR-013", "DR-014", "DR-019", "DR-020", "DR-021"],
+    "snapshot_taken_at": "2026-05-10",
+    "snapshot_taken_at_stage": "Stage 1 Phase E"
+  }
+}
+```
+
+**Snapshot rules:**
+
+1. **Set snapshot** when brand enters Stage 1 (Phase A start) — pin versions
+2. **Re-snapshot** at each Stage gate (Stage 1 → 1.5, Stage 1.5 → 2) — adopt newly Locked DRs
+3. **Mid-stage DR locks** — log in brand changelog, decide per DR whether to retrofit now or defer to next gate (most defer)
+4. **Proposed DRs at snapshot** — brand may opt-in early ("we want DR-021 internal linking pattern even before lock") — log decision in brand changelog
+
+**Why this matters:**
+
+- **Traceability:** Every published page is traceable to which spec version produced it
+- **Auditability:** When a Locked DR retroactively breaks something, we know which brands+pages need patching
+- **Forward compatibility:** Brand authors don't chase a moving spec mid-stage — only at gates
+
+### 9.4 When Spec Changes (operational sync)
 
 1. Read changelog of new version
-2. Identify affected current work
+2. Identify affected current work via `drs_proposed_at_snapshot` vs current Locked DRs
 3. Replace project knowledge files (delete old, upload new)
-4. Update brand-config.json metadata (eywa_protocol_version)
+4. Update brand-config.json metadata (`eywa_spec_snapshot.*`)
 5. Re-validate pending entities/pages against new spec
-6. Document forced refactors in DECISION_RECORDS
+6. Document forced refactors in brand `decision-records.md` (not universal DR)
 
-### 9.2 When Brand Config Changes
+### 9.5 When Brand Config Changes
 
 Triggers: new service line, specialty add/remove, CPT flag changes, new language.
 
 Steps: update brand-config.json → push GitHub → if structural, re-run affected EGP steps → update sitemap → re-validate cluster health.
 
-### 9.3 When Decision Made
+### 9.6 DR Format Reminder
 
-Document context, options, choice, rationale, consequences, references in DR-NNN format. Append-only. Universal decisions go to eywa-protocol-spec, brand-specific to eywa-{brand}/docs/.
+Every DR (universal or brand-specific) carries: **Status, Context, Options Considered, Decision, Rationale, Consequences, References**. Append-only. Universal → `eywa-protocol-spec/DECISION_RECORDS.md`. Brand-specific → `eywa-{brand}/docs/decision-records.md` with brand prefix (SS-DR, VTH-DR, etc.).
 
 ---
 
@@ -2197,13 +2306,14 @@ Document context, options, choice, rationale, consequences, references in DR-NNN
 session_kickoff_checklist:
   
   context_verification:
-    ☐ Read EYWA_HANDOVER.md (this file — v1.6)
+    ☐ Read EYWA_HANDOVER.md (this file — v1.7)
     ☐ Read latest Bible version (v3.14 as of 2026-05-10)
     ☐ Read latest Schema version (v1.10 as of 2026-05-10)
-    ☐ Read brand-config.json
+    ☐ Read brand-config.json (incl. eywa_spec_snapshot block — §9.3)
     ☐ Read DECISION_RECORDS.md (v1.7, DR-001..DR-021 — DR-013/014/019/020/021 Proposed; DR-015..DR-018 Locked)
     ☐ Read Content_Templates_EYWA_v1_0.md (v1.3 internal DRAFT, ~2,420 lines — pending DR-020 lock)
     ☐ Read brand-concept.md (if exists)
+    ☐ Read brand decision-records.md (eywa-{brand}/docs/ — SS-DR/VTH-DR/etc., per §9.1 Path 1)
   
   content_production_references:  # 🆕 v1.6 (added 2026-05-10 part 4)
     ☐ Read examples/T1-medical-condition-SKELETON.md (Part 1/Part 2 separation reference)
@@ -2418,6 +2528,44 @@ schema_appendices:
 ---
 
 ## 📜 Changelog
+
+### v1.7 (2026-05-10) — DR Workflow Formalization 🔁
+
+Codifies parallel-brand DR workflow after operator pushback on "batch before Bible bump" approach. Brands work in parallel; batching causes massive backfill cost, so spec is now updated **immediately** when DR enters Proposed status.
+
+**Headline Changes:**
+
+- 🔄 **Section 9 — Update & Sync Protocols** restructured (3 subsections → 6):
+  - **9.1 DR Lifecycle** — Decision tree: Brand-Specific (Path 1) vs System-Wide (Path 2)
+  - **9.2 Immediate Update Protocol** — Step-by-step for spec updates when DR enters Proposed
+  - **9.3 Brand Snapshot Discipline** — `eywa_spec_snapshot` block in brand-config.json + Stage-gate adoption rules
+  - **9.4 When Spec Changes** (was 9.1) — operational sync
+  - **9.5 When Brand Config Changes** (was 9.2)
+  - **9.6 DR Format** (was 9.3)
+
+- 🎯 **Why this matters:**
+  - 5 brands working in parallel × 3 DRs queued over 6 weeks = batched lock forces all 5 to rebuild Stage 1 outputs
+  - Immediate update = each brand picks up new DRs at next stage gate; only mid-stage DRs require optional retrofit
+  - Bible version churn (3-5 bumps/quarter vs 1) is acceptable with semver discipline + DR cross-links
+
+- ✅ **Backward compatible:**
+  - All existing Locked DRs retain status
+  - DR-013/014/019/020/021 already in Proposed status — no change to their state
+  - brand-config.json `eywa_spec_snapshot` block is additive (existing brands can backfill at next gate)
+
+### v1.6 (2026-05-10) — Stage 1.5 + Citation Pool + Sitemap Quality Gates + Content Templates 🏗️🌱
+
+Companion update to Bible v3.14 + Schema v1.10 + DECISION_RECORDS v1.6 + Content_Templates v1.3 (DRAFT).
+
+**Headline Changes:**
+
+- 🆕 **Section 5.8 — Citation Pool Planning File** added (13-column schema for Phase B.2 breadth seeding)
+- 🆕 **Section 5.11 — Per-Brand Repo Folder Structure** restructured (content-plan/, content-drafts/, theme/, deployment/, multilingual/, reports/)
+- 🆕 **Stage 1.5 Migration** added between Stage 1 Gate and Stage 2 (markdown → Supabase)
+- 🆕 **Sitemap Quality Gates** (Phase E.4.5) — Market Reconciliation, Page Viability Assessment, Content Brief
+- 🆕 **Section 10 Pre-Flight** — added schema_emission_awareness, content_template_awareness, part_1_part_2_separation, section_2_pattern_awareness, internal_linking_awareness blocks
+- 🆕 **DR-015..DR-021** referenced (DR-015..018 Locked, DR-019..021 Proposed)
+- 🆕 **examples/** folder (T1 SKELETON, T1 OSA WORKED EXAMPLE, SECTION-2-PATTERNS-REFERENCE)
 
 ### v1.5 (2026-05-09) — DR-013 + DR-014 Proposed (Field-Tested Feedback) 🌱
 
