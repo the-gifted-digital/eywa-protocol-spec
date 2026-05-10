@@ -3,10 +3,26 @@
 > **Companion document to** EYWA Bible v3.14 + Schema Overview v1.10
 > **Universal Content Production Standards across 13 brands × 6 verticals**
 
-**Version:** v1.2 (DRAFT 2026-05-10)
+**Version:** v1.3 (DRAFT 2026-05-10)
 **Status:** Proposed — pending DR-020 lock
 **Companion to:** Bible v3.14 + Schema Overview v1.10 + DECISION_RECORDS v1.6
-**Format:** Append-only with semantic versioning (v1.0 → v1.1 → v1.2 backward compatible)
+**Format:** Append-only with semantic versioning (v1.0 → v1.1 → v1.2 → v1.3 backward compatible)
+
+## v1.3 Changelog (2026-05-10) — Section 2 Pattern Lock + Icon Taxonomy
+
+Operator review of Section 2 across all 25 templates surfaced need for:
+- Per-template Quick Facts variations (some templates need different fields, some skip entirely)
+- Universal Icon Taxonomy (consistent across templates for visual coherence)
+- Concrete render examples (writers + designers reference)
+
+- ➕ **B02 spec expanded** — `per_template_variations` documents all 25 templates' Section 2 patterns
+- 📁 **NEW reference file** `/examples/SECTION-2-PATTERNS-REFERENCE.md` (~600 lines) — concrete rendered examples for all 25 templates with EYWA brand context (VTH/Trin/SmileScape/Genowell etc.)
+- 🎨 **Universal Icon Taxonomy** — 35+ icons mapped to consistent use cases across templates (👤 audience, ✅ reviewer, 🎯 outcome, 📅 timeline, 🚨 emergency, etc.)
+- 📊 **Template grouping locked**:
+  - Group A (16): Quick Facts with 5-essential + toggle pattern
+  - Group B (4): Alternative blocks (T8 patient_profile / T9 credentials / T10 address / T18 branch_hero)
+  - Group C (3): Skip Section 2 entirely (T11 institutional / T13 pricing / T19 promo)
+- 📝 No Schema impact (rendering layer only)
 
 ## v1.2 Changelog (2026-05-10) — Part 1 / Part 2 Strict Separation
 
@@ -231,7 +247,16 @@ B02_quick_facts_table:
   
   example_sources:
     - "/examples/T1-osa-vth-biodent-WORKED-EXAMPLE.md §2 (v1.2 5+toggle pattern)"
+    - "/examples/SECTION-2-PATTERNS-REFERENCE.md — RENDERED EXAMPLES for all 25 templates 🆕"
     - "Original sample sleep apnea (12-row legacy format pre-v1.2)"
+  
+  reference_doc: "/examples/SECTION-2-PATTERNS-REFERENCE.md"
+  reference_doc_includes:
+    - "All 25 templates with concrete render examples (real EYWA brand context)"
+    - "Universal Icon Taxonomy (35+ icons mapped to use cases)"
+    - "Group A (16 templates with Quick Facts) / B (4 alternative blocks) / C (3 skip)"
+    - "Validation checklist per template"
+    - "Status: Approved 2026-05-10 (operator review)"
 
 B03_at_a_glance_summary:
   purpose: "TL;DR for impatient readers + AI summary feed"
