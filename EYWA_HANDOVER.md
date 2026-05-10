@@ -3,9 +3,9 @@
 > **For Claude (and any AI assistant) working on a new brand within the EYWA portfolio.**  
 > **Read this file first, every new project, every new session.**
 
-**Document Version:** 1.6  
-**Last Updated:** 2026-05-10  
-**Companion to:** EYWA Bible v3.14 + Schema Overview v1.10 + DECISION_RECORDS v1.7 + Content_Templates_EYWA_v1_0.md (DRAFT)  
+**Document Version:** 1.8  
+**Last Updated:** 2026-05-11  
+**Companion to:** EYWA Bible v3.14 + Schema Overview v1.10 + DECISION_RECORDS v1.8 + Content_Templates_EYWA_v1_0.md (DRAFT)  
 **Created by:** The Gifted Digital Marketing Co., Ltd.
 
 ---
@@ -1739,19 +1739,71 @@ session_2026_05_10_part_5:  # 🆕 NEW v1.6 (continued same day — Stage 1.5 + 
 
 **Output:** `eywa-{brand}/docs/brand-concept.md` — get operator approval.
 
-### 7.3 Phase B — Research & Discovery + Citation Pool Seeding 🆕 v1.6
+### 7.3 Phase B — Lean Research & Discovery 🆕 v1.8 (DR-022 Proposed)
 
-**Part B.1 — Market & Audience Research:**
-- **Competitor analysis** (DataForSEO + manual)
-- **Keyword research** (DataForSEO Labs + Google Keyword Planner)
-- **Patient journey mapping** (interviews + reviews)
-- **Existing content audit** (if migration scenario)
+> **🔄 v1.8 Restructure (DR-022 Proposed — review 2026-06-07):** Phase B is now a single human-blocking lean phase. DFS volume + SERP enrichment runs **asynchronously after Stage 1.5 push** (background n8n trigger). Refinement happens once in NEW Phase E.refine after enrichment lands. Operator does NOT block Phase B waiting for DFS data.
 
-**Part B.2 — Citation Pool Seeding 🆕 (Bible Part 23.1 — 6-tier hierarchy):**
+**Phase B inputs:**
+- `brand-concept.md` (Phase A output)
+- Operator domain knowledge
+- WebSearch breadth research (competitor sitemaps, manual SERP/PAA peek, Google autocomplete)
 
-For each main pillar topic identified in Phase A/B.1, research authoritative sources BEFORE entity creation. This builds the universal citation pool that downstream phases (C, F) will draw from.
+**Phase B outputs (5 files — replaces single `research-notes.md`):**
 
-> **Scope:** Phase B.2 = **BREADTH-level survey** (5-15 sources per pillar — covers main claims). Per-page **DEPTH-level intensive research** happens in Phase F step 3 — see §7.7. Pool grows organically across both phases.
+```yaml
+keyword-seed-list.md:
+  source: operator + AI brand-driven dump (NO DFS)
+  scope: every service + signature + concern + question topic the brand should cover
+  example: SmileScape content-plan/keyword-research-dump.md (~680 KW × 16 clusters)
+  policy: brand-led — captures topical territory regardless of volume
+
+competitor-scan.md:
+  source: WebSearch (browse competitor sites, SERP top 5-10 per pillar)
+  scope: structural intelligence (page types, sitemap shapes, USP positioning)
+
+citation-pool-seed.md:
+  source: Bible Part 23.1 — 6-tier hierarchy
+  scope: 5-15 authoritative sources per pillar (BREADTH survey)
+  schema: matches seo_citations columns (tier, schema_evidence_level, doi, authors, journal, year, url, brand_scope)
+
+patient-journey.md:
+  source: operator + interviews + reviews
+  scope: audience persona, funnel stage map, painpoint catalog, anxiety triggers
+
+```
+
+**Phase B outputs (deferred — populated AFTER Stage 1.5 push, NOT in Phase B):**
+
+```yaml
+keyword-volume-data.csv:           # Auto-populated by n8n cheap pull (24-48h SLA)
+serp-intelligence-shortlist.md:    # Operator approves Tier A/B → DFS SERP scrape (manual gate)
+gap-report.md:                     # Phase E.refine output (AI-generated, operator-reviewed)
+```
+
+**Two-Layer Sitemap Architecture (DR-022):**
+
+```yaml
+layer_1_brand_service:
+  scope: [Section 1 Home, 2 Uniqueness, 3 Services, 4 Tech, 7 Branches, 8 Contact]
+  policy: VOLUME-IMMUNE — every service/signature/founder/branch = page
+  rationale: topical authority + E-E-A-T + AI citation context completeness
+  cut_for_low_volume: ❌ NEVER
+
+layer_2_knowledge_blog:
+  scope: [Section 5 Concerns, Section 6 Knowledge]
+  policy: VOLUME-DRIVEN additions via Phase E.refine gap discovery
+  rationale: traffic harvesting + AI citation entry
+  cut_for_low_viability: ⚠️ Layer 2 only (DR-016 applies)
+
+layer_3_internal_linking:
+  policy: priority_score weights authority flow; never deletes pages
+```
+
+**Citation Pool Seeding (Bible Part 23.1 — 6-tier hierarchy):**
+
+For each main pillar topic, research authoritative sources BEFORE entity creation. This builds the universal citation pool that downstream phases (C, F) will draw from.
+
+> **Scope:** Phase B citation = **BREADTH-level survey** (5-15 sources per pillar — covers main claims). Per-page **DEPTH-level intensive research** happens in Phase F step 3 — see §7.7. Pool grows organically across both phases.
 
 ```yaml
 citation_research_per_pillar:
@@ -1937,6 +1989,67 @@ stage_1_5_workflow:
       - Orphan detection (pages with required_min_inbound > actual)
       - Authority depth check (Tier A ≤ 3, Tier B ≤ 4)
   
+  step_3a_async_kw_enrichment:  # 🆕 v1.8 (DR-022 Proposed)
+    duration: "24-48h cheap pull / up to 7 days SERP scrape — async, non-blocking"
+    trigger: "n8n auto-trigger on seo_x_ads_keywords_contextual_master INSERT/UPDATE"
+    
+    cheap_layer_auto:  # no operator gate
+      endpoint: DataForSEO Keywords Volume + KD + CPC
+      target_table: seo_x_ads_keywords_monthly_market_snapshot
+      cost: "~$0.05-0.10 per ~680 KW (full seed list)"
+      sla: "within 24-48h of seed push"
+      computed_scores_n8n_local:
+        - seo_ads_priority_score (0-100)
+        - seo_roi_proxy
+        - keyword_risk_score
+        - keyword_maturity_score
+        - intent_confidence_score
+    
+    expensive_layer_manual:  # operator approval gate
+      endpoint: DataForSEO SERP API (full scrape + PAA + related + AI Overview)
+      target_table: seo_x_ads_keyword_serp_competitors
+      target_scope: Tier A/B shortlist only (~150-250 KW per brand)
+      cost: "~$0.10-0.30 per shortlist batch"
+      cost_gate: "operator reviews shortlist + approves before pull"
+      sla: "within 7 days of approval"
+    
+    operator_action: "no manual blocking — work continues on column completion + linking"
+
+  step_3b_phase_E_refine:  # 🆕 v1.8 (DR-022 Proposed) — NEW iterative refinement step
+    duration: "~2-4 hours per brand (after enrichment lands)"
+    trigger: "enrichment data complete (cheap + expensive layers populated)"
+    
+    inputs_AI_analyzes:
+      - seo_x_ads_keywords_contextual_master (operator-authored)
+      - seo_x_ads_keywords_monthly_market_snapshot (enriched volume + scores)
+      - seo_x_ads_keyword_serp_competitors (PAA + related + competitors)
+      - sitemap (current Layer 1 + Layer 2)
+      - entities + clusters
+    
+    output: content-plan/gap-report.md (auto-generated):
+      sections:
+        - high_vol_kw_no_entity         # entity gap to fill
+        - high_vol_kw_no_page           # Layer 2 page candidate
+        - paa_clusters_uncovered        # potential Section 5/6 page
+        - autocomplete_expansions       # KW expansion suggestions
+        - serp_feature_template_mismatch # template_id review
+        - tier_reweight_proposals       # priority_score-based A/B/C adjustments
+    
+    refinement_scope_policy:
+      ADD Layer 2 page                : "✅ free (gap-driven additions)"
+      SPLIT page (multi-intent PAA)   : "✅ free"
+      MERGE thin pages (no live URL)  : "⚠️ allowed pre-deploy only"
+      CUT page                        : "❌ NEVER for Layer 1; ⚠️ Layer 2 only if DR-016 viability fails"
+      REORDER tier A/B/C              : "✅ free (uses priority_score)"
+      flexibility_clause: "operator may override case-by-case with brand DR (SS-DR-NNN, VTH-DR-NNN, etc.)"
+    
+    process:
+      1. AI generates gap-report.md
+      2. Operator reviews each finding (✅/❌ per item)
+      3. Sitemap delta applied (ADD-only by default, REORDER OK, MERGE conditional)
+      4. Updates flow back to seo_website_page_master + Notion sync
+      5. KW context (painpoint/anxiety/insight) flows to Phase F via seo_x_ads_keywords_contextual_master
+
   step_4_stage_1_5_gate:
     duration: "~30 mins"
     checklist:
@@ -1951,6 +2064,9 @@ stage_1_5_workflow:
       ☐ Cross-brand links: justification + approval present
       ☐ Authority depth: Tier A ≤ 3, Tier B ≤ 4
       ☐ Citation freshness audit clean (no Tier 1-3 stale)
+      ☐ KW enrichment complete: monthly_market_snapshot populated for ≥95% seed KW (🆕 DR-022)
+      ☐ Phase E.refine gap-report.md reviewed + sitemap delta applied (🆕 DR-022)
+      ☐ Layer 1 sitemap unchanged from Stage 1 Gate (volume-immune verification — 🆕 DR-022)
     
     on_pass:
       - git tag: stage-1-5-db-ready-{brand}-{YYYY-MM-DD}
@@ -1975,6 +2091,25 @@ stage_1_5_workflow:
 ### 7.7 Phase F — Content Production
 
 Per-page requirements: schema planned, citations from Phase B.2 pool **+ per-page intensive research** linked via `seo_page_citations`, author+reviewer assigned, multilingual fields, WCAG AA, internal links per plan, citable patterns used.
+
+**🆕 v1.8 — Per-Page KW Context Consumption (DR-022 Proposed):**
+
+Content writers pull per-page KW context from `seo_x_ads_keywords_contextual_master` to calibrate voice and structure:
+
+```yaml
+kw_context_per_page_brief:
+  keyword_painpoint        : "→ hook + intro section (lead with patient's actual pain)"
+  keyword_core_insight     : "→ primary message + section narrative"
+  anxiety_level            : "→ tone calibration (high → reassuring; medium → educational; low → informational)"
+  funnel_stage             : "→ CTA strategy + page depth (Awareness=lighter, Consideration=deeper, Decision=transactional)"
+  predicted_serp_features  : "→ schema emit + section pattern (Featured Snippet → 40-60w direct answer block)"
+  search_intent            : "→ template_id confirmation (Informational=T1/T6a, Commercial=T2, Local=T7/T9)"
+
+content_brief_query_pattern:
+  - Join page → primary_keyword_fp → seo_x_ads_keywords_contextual_master (context)
+  - Join page → primary_keyword_fp → seo_x_ads_keywords_monthly_market_snapshot (volume + scores for length target)
+  - Join page → primary_keyword_fp → seo_x_ads_keyword_serp_competitors (PAA → FAQ section, competitor URLs → competitive differentiation)
+```
 
 **Per-Page Citation Workflow 🆕 v1.6 (5-step, run BEFORE writing prose):**
 
@@ -2306,11 +2441,11 @@ Every DR (universal or brand-specific) carries: **Status, Context, Options Consi
 session_kickoff_checklist:
   
   context_verification:
-    ☐ Read EYWA_HANDOVER.md (this file — v1.7)
+    ☐ Read EYWA_HANDOVER.md (this file — v1.8)
     ☐ Read latest Bible version (v3.14 as of 2026-05-10)
     ☐ Read latest Schema version (v1.10 as of 2026-05-10)
     ☐ Read brand-config.json (incl. eywa_spec_snapshot block — §9.3)
-    ☐ Read DECISION_RECORDS.md (v1.7, DR-001..DR-021 — DR-013/014/019/020/021 Proposed; DR-015..DR-018 Locked)
+    ☐ Read DECISION_RECORDS.md (v1.8, DR-001..DR-022 — DR-013/014/019/020/021/022 Proposed; DR-015..DR-018 Locked)
     ☐ Read Content_Templates_EYWA_v1_0.md (v1.3 internal DRAFT, ~2,420 lines — pending DR-020 lock)
     ☐ Read brand-concept.md (if exists)
     ☐ Read brand decision-records.md (eywa-{brand}/docs/ — SS-DR/VTH-DR/etc., per §9.1 Path 1)
@@ -2390,6 +2525,18 @@ session_kickoff_checklist:
     ☐ Orphan check: page with required_min_inbound > 0 has actual inbound count satisfied?
     ☐ Cross-brand links: cross_brand_approved=true on from_page + cross_brand_justification text present?
     ☐ Authority depth: Tier A pages crawl_depth ≤ 3, Tier B ≤ 4?
+  
+  lean_phase_b_two_layer_awareness:  # 🆕 v1.8 (added 2026-05-11 — DR-022 Proposed, soft guidance until lock 2026-06-07)
+    ☐ Phase B output split into 5 files? (keyword-seed-list, competitor-scan, citation-pool-seed, patient-journey + post-enrichment: keyword-volume-data.csv, serp-intelligence-shortlist, gap-report)
+    ☐ Phase B does NOT block on DFS volume? (volume = async background after Stage 1.5 push)
+    ☐ Two-Layer Sitemap classification applied? (Layer 1 = S1/S2/S3/S4/S7/S8 brand-immune / Layer 2 = S5/S6 vol-driven / Layer 3 = internal linking)
+    ☐ Layer 1 pages NEVER cut for low volume? (verified at Stage 1.5 Gate)
+    ☐ Stage 1.5 step_3a — n8n cheap pull triggered on contextual_master INSERT? (24-48h SLA)
+    ☐ Stage 1.5 step_3a — Tier A/B SERP scrape requires operator approval? (cost gate)
+    ☐ Stage 1.5 step_3b — Phase E.refine gap-report.md generated + reviewed?
+    ☐ Refinement scope respected? (ADD Layer 2 ✅ / SPLIT ✅ / MERGE ⚠️ pre-deploy / CUT ❌ Layer 1)
+    ☐ Phase F Content brief consumes KW context? (painpoint → hook / anxiety → tone / insight → message / funnel → CTA)
+    ☐ research-notes.md DEPRECATED in favor of 5 split files (no new brands should create research-notes.md)
 ```
 
 ---
@@ -2528,6 +2675,43 @@ schema_appendices:
 ---
 
 ## 📜 Changelog
+
+### v1.8 (2026-05-11) — DR-022 Lean Phase B + Two-Layer Sitemap + Iterative Refinement 🌱
+
+Field-tested workflow change from VTH BioDent + SmileScape sessions. Replaces lump Phase B (volume-gated) with lean planning loop + async background DFS enrichment + single iterative refinement (Phase E.refine).
+
+**Headline Changes:**
+
+- 🔄 **§7.3 Phase B restructured (lean):**
+  - Single human-blocking phase (NOT 5 sub-phases)
+  - DFS volume + SERP enrichment moved to **async background** (post-Stage 1.5)
+  - 5 output files (replaces single `research-notes.md`):
+    `keyword-seed-list.md` / `competitor-scan.md` / `citation-pool-seed.md` / `patient-journey.md` (Phase B)
+    + `keyword-volume-data.csv` / `serp-intelligence-shortlist.md` / `gap-report.md` (post-enrichment)
+  - Two-Layer Sitemap pattern documented (Layer 1 brand-immune / Layer 2 vol-driven / Layer 3 internal linking)
+
+- 🆕 **Stage 1.5 NEW steps:**
+  - **step_3a — Async KW Enrichment:** n8n auto-trigger on `seo_x_ads_keywords_contextual_master` INSERT → cheap pull (24-48h SLA, no gate); Tier A/B SERP scrape (manual approval gate, ~$0.10-0.30/batch)
+  - **step_3b — Phase E.refine:** AI-generated `gap-report.md` → operator review → sitemap delta (ADD-only default, REORDER OK, MERGE conditional, CUT NEVER for Layer 1)
+
+- 🆕 **§7.7 Phase F — KW Context Consumption:**
+  - Content writers query `contextual_master` per page for: painpoint → hook / anxiety_level → tone / core_insight → message / funnel_stage → CTA / predicted_serp_features → schema emit / search_intent → template_id
+
+- 🆕 **§10 Pre-Flight — `lean_phase_b_two_layer_awareness` block** (10 checks)
+
+- 🎯 **Why this matters:**
+  - Phase 1 timeline shortened (no DFS gate blocking entity/sitemap/citation)
+  - 30-60% cheaper DFS spend per brand via layered enrichment (cheap full-list + expensive shortlist)
+  - Brand topical authority preserved (Layer 1 service pages volume-immune)
+  - Modern E-E-A-T + AI search era alignment (whole-site context > volume-only selection)
+  - Maps to existing 4-table KW architecture + n8n flows (no schema migrations)
+
+- 📚 **Companion DR:** DR-022 (Proposed) in DECISION_RECORDS v1.8
+
+- ✅ **Backward compatible:**
+  - No schema changes
+  - VTH BioDent + SmileScape adopt at next stage gate (logged in respective brand changelog)
+  - 11 empty brand repos use DR-022 from inception
 
 ### v1.7 (2026-05-10) — DR Workflow Formalization 🔁
 

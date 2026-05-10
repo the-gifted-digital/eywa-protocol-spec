@@ -2,8 +2,8 @@
 
 > **Append-only architectural decision log.** Each record explains WHY a decision was made — not just WHAT.
 
-**Document Version:** 1.7  
-**Last Updated:** 2026-05-10  
+**Document Version:** 1.8  
+**Last Updated:** 2026-05-11  
 **Format:** Reverse chronological (newest first)
 
 ---
@@ -31,6 +31,206 @@
 ---
 
 ## Decisions Log
+
+### [DR-022] — Lean Phase B + Two-Layer Sitemap + Iterative Refinement (2026-05-11) 🌱
+
+**Status:** Proposed (review 2026-06-07, paired with DR-019/020/021)
+**Bible Reference:** Part 4 (Sitemap Architecture), Part 23.1 (Citation), Part 25.6 (Brand Config)
+**Schema Reference:** No schema changes — uses existing 4 KW tables (`seo_x_ads_keywords_contextual_master`, `seo_x_ads_keywords_monthly_market_snapshot`, `seo_x_ads_keyword_serp_competitors`, `seo_x_ads_keywords_x_url_daily_logs`)
+
+**Context:**
+
+Original Phase B (Handover §7.3 v1.7) was a single lump phase mixing competitor scan, KW research, patient journey, content audit. Field-tested with VTH BioDent + SmileScape revealed three operational problems:
+
+1. **Volume gate confusion** — Spec didn't say whether DFS volume data was required before sitemap/entity work could proceed. Operators either over-waited (bottleneck) or skipped volume entirely (under-prioritized).
+2. **Cost inefficiency** — Pulling DFS SERP scrape on full seed list (~680 KW for SmileScape) wastes spend on long-tail KW that get cut anyway. SERP scrape is the expensive endpoint (~$0.60-2.00 per 1000 KW vs $0.05 for volume).
+3. **Volume-driven page cuts vs brand-driven sitemap conflict** — Some operators cut service pages with low volume, fragmenting topical authority and brand narrative. Industry shift (Google E-E-A-T era + AI search context absorption) favors complete topical coverage over volume-only selection.
+
+**Decision:**
+
+Reorganize Phase B into a **lean planning loop** with **async background enrichment** and **single iterative refinement**, replacing the volume-gated multi-phase model.
+
+#### 1. Two-Layer Sitemap Architecture
+
+```yaml
+layer_1_brand_service:
+  scope: [Section 1 Home, 2 Uniqueness, 3 Services, 4 Technology, 7 Branches, 8 Contact]
+  policy: VOLUME-IMMUNE — every service/signature/founder/branch the brand has = page
+  rationale: topical authority + E-E-A-T + brand truth + AI citation context completeness
+  cut_allowed: NEVER for low-volume reasons
+
+layer_2_knowledge_blog:
+  scope: [Section 5 Concerns, Section 6 Knowledge]
+  policy: VOLUME-DRIVEN — additions selected via gap discovery from enriched KW data
+  rationale: traffic harvesting + AI citation entry + funnel TOFU
+  cut_allowed: yes for Layer 2 candidates that fail Page Viability (DR-016)
+
+layer_3_internal_linking:
+  policy: VOLUME-AWARE for weighting, STRUCTURE-FIXED for existence
+  rationale: priority_score guides authority flow; never used to delete pages
+```
+
+#### 2. Lean Phase B (single human-blocking phase, not 5 sub-phases)
+
+```yaml
+phase_B_lean:
+  inputs:
+    - brand-concept.md (Phase A output)
+    - operator domain knowledge
+    - WebSearch breadth research (competitor sitemaps, manual SERP/PAA peek, autocomplete)
+
+  outputs:
+    - keyword-seed-list.md         # Brand-driven KW dump (no DFS — current SmileScape pattern)
+    - competitor-scan.md           # Layer 1 competitive landscape
+    - citation-pool-seed.md        # 5-15 sources per pillar (existing Phase B.2)
+    - patient-journey.md           # audience research
+
+  what_NOT_to_do_in_phase_B:
+    - DO NOT pull DFS volume here (deferred to async background)
+    - DO NOT make page cuts based on volume (Layer 1 immune)
+    - DO NOT block waiting for volume data
+```
+
+#### 3. Stage 1 Gate Adjustment
+
+Stage 1 Gate confirms: **sitemap structure + entity graph + KW seed list + citation pool seed** — NOT volume data. Operator can proceed to Stage 1.5 with structural confidence alone.
+
+#### 4. Stage 1.5 Push + Async Enrichment Trigger
+
+```yaml
+stage_1_5_migration:
+  step_1: markdown content-plan/ → Supabase tables (existing)
+  step_2: Notion ↔ Supabase sync (existing DR-006)
+  step_3_NEW: n8n auto-trigger on seo_x_ads_keywords_contextual_master INSERT
+              → cheap pull (volume + KD + CPC) into seo_x_ads_keywords_monthly_market_snapshot
+              SLA: within 24-48h
+              cost_gate: none (cheap)
+  step_4_NEW: operator approves Tier A/B shortlist for SERP scrape
+              → DFS SERP API → seo_x_ads_keyword_serp_competitors
+              cost_gate: manual approval (~$0.10-0.30 per shortlist batch)
+              SLA: within 7 days of approval
+```
+
+#### 5. Phase E.refine — Iterative Refinement (NEW phase, post-enrichment)
+
+```yaml
+phase_E_refine:
+  trigger: enrichment data lands in monthly_market_snapshot + serp_competitors
+  
+  inputs_AI_analyzes:
+    - seo_x_ads_keywords_contextual_master (operator authored)
+    - seo_x_ads_keywords_monthly_market_snapshot (enriched volume + scores)
+    - seo_x_ads_keyword_serp_competitors (PAA + related + competitor URLs)
+    - sitemap.md (Layer 1 + Layer 2 current)
+    - entities.md / clusters.md
+  
+  output: gap-report.md with structured findings:
+    - high_vol_kw_no_entity        → entity gap to fill
+    - high_vol_kw_no_page          → Layer 2 page candidate
+    - paa_clusters_uncovered       → potential Section 5/6 page
+    - autocomplete_expansions      → KW expansion suggestions
+    - serp_feature_template_mismatch → template_id review
+    - tier_reweight_proposals      → priority_score-based A/B/C adjustments
+  
+  refinement_scope_policy:
+    ADD Layer 2 page                : ✅ free (gap-driven additions)
+    SPLIT page (multi-intent PAA)   : ✅ free
+    MERGE thin pages                : ⚠️ allowed if no live URL (pre-deploy)
+    CUT page                        : ❌ NEVER (Layer 1 immune; Layer 2 stays unless DR-016 viability fails)
+    REORDER tier A/B/C              : ✅ free (uses priority_score)
+    
+    flexibility_clause: operator may override on case-by-case basis with brand DR
+                        (e.g., SS-DR-NNN logged in eywa-{brand}/docs/decision-records.md)
+  
+  process:
+    1. AI generates gap-report.md
+    2. Operator reviews each finding (✅/❌ per item)
+    3. Sitemap delta applied (ADD-only by default, REORDER OK, MERGE conditional)
+    4. Stage 1.5 Gate re-confirmed
+```
+
+#### 6. Phase F Content Production — KW Context Consumption
+
+Content writers consume per-page KW context from `seo_x_ads_keywords_contextual_master`:
+
+```yaml
+content_brief_uses_kw_context:
+  keyword_painpoint        → hook + intro section
+  keyword_core_insight     → primary message + section narrative
+  anxiety_level            → tone calibration (high anxiety → reassuring; low → informational)
+  funnel_stage             → CTA strategy + page depth
+  predicted_serp_features  → schema emit + section pattern (Featured Snippet → 40-60w direct answer)
+  search_intent            → template_id confirmation (T1/T2/T6a/T7)
+```
+
+#### 7. Output File Restructure (deprecate `research-notes.md`)
+
+Replace single dump with 5 specific files:
+
+```
+content-plan/
+├── keyword-seed-list.md            (Phase B — operator)
+├── competitor-scan.md              (Phase B — operator + WebSearch)
+├── citation-pool-seed.md           (Phase B — existing)
+├── patient-journey.md              (Phase B — operator)
+├── keyword-volume-data.csv         (post-enrichment — n8n export, optional cache)
+├── serp-intelligence-shortlist.md  (post-enrichment — Tier A/B only)
+└── gap-report.md                   (Phase E.refine — auto-generated, operator-reviewed)
+```
+
+**Rationale:**
+
+1. **Industry alignment:** Modern topical-authority SEO (2024-2026, post-HCU) favors brand-complete sitemaps over volume-only selection. AI search (SGE/AIO/Perplexity) reads whole-site context — missing service pages = missing context = reduced citation likelihood. Long-tail aggregation (200 pages × 10 vol = 2,000+/mo combined) often beats curated high-vol selection due to topical match.
+
+2. **Cost efficiency:** Layered enrichment (cheap full-list volume + expensive shortlist SERP) is 30-60% cheaper than one-shot full-SERP pull. Maps directly to existing 4-table architecture which was designed for this pattern.
+
+3. **Operator throughput:** Lean Phase B unblocks parallel work (Phase C entity / sitemap / citation / patient journey can all proceed without DFS). Refinement happens once asynchronously, not as a per-decision gate.
+
+4. **Brand truthfulness:** Service pages exist because the brand offers the service, not because Google has volume. This serves SmileScape (specialty clinic with new/premium services like Ceramic Implant where Thai market awareness is still building) and similar mid-value vertical brands.
+
+5. **Existing infrastructure leverage:** Supabase 4-table KW architecture + n8n workflows + Notion sync (DR-006) already built for this pattern. No schema migrations needed.
+
+**Consequences:**
+
+✅ **Positive:**
+- Phase 1 timeline shortened (no DFS gate)
+- Lower DFS cost per brand (~$0.50 vs ~$1.40 one-shot)
+- Topical authority preserved (Layer 1 complete)
+- Volume intelligence still consumed (Layer 2 augmentation + tier weighting + production prep)
+- Content production gets richer per-page context (painpoint, anxiety, insight)
+
+⚠️ **Trade-offs:**
+- Refinement adds round-trip (Stage 1.5 → enrichment → refine → Stage 1.5 confirm)
+- Operator must review gap-report.md (manual approval gate)
+- SERP scrape requires manual approval (cost gate friction)
+
+🚧 **Known limitations:**
+- Bible §9.8 word-count standards still need volume for SERP-length comparison → falls in Phase F (post-Stage 1.5)
+- DR-016 Page Viability §4.14 only applies to Layer 2 candidates (Layer 1 exempt) — needs Bible §4.14 amendment
+- DR-018 Page Content Length Standards still applies to all pages (volume not required for Standards baseline)
+
+**Migration Path (existing brands):**
+
+| Brand | Stage | Action |
+|-------|-------|--------|
+| SmileScape | Stage 1 Phase E (414p WIP) | adopt DR-022 — current `keyword-research-dump.md` ↔ `keyword-seed-list.md`; defer DFS to Stage 1.5 background |
+| VTH BioDent | Stage 1 Gate reached (Stage 1.5 blocked) | adopt DR-022 at Stage 1.5 entry — backfill split files from `research-notes.md` |
+| 11 empty brands | Pre-Stage 1 | use DR-022 from inception |
+
+**References:**
+
+- Handover v1.8 §7.3 (Phase B restructure), §7.6.x (new Phase E.refine), §10 (Pre-Flight awareness)
+- Bible Part 4 (Sitemap Architecture)
+- Bible §4.14 (Page Viability — to be amended for Layer 1 exemption)
+- DR-006 (Two-Phase Hierarchy Sync — Stage 1.5 dependency)
+- DR-015 (Brand Scope Market Reconciliation — input to Phase B)
+- DR-016 (Page Viability — applies to Layer 2 only)
+- DR-018 (Page Content Length Standards — applies to all)
+- DR-020 (Universal Content Templates — KW context consumption per template)
+- DR-021 (Internal Linking — uses priority_score for weighting)
+- Field tests: VTH BioDent (Stage 1 done) + SmileScape (`content-plan/keyword-research-dump.md`, ~680 KW × 16 clusters, commit `493a2d7`)
+
+---
 
 ### [DR-021] — Internal Linking Architecture (HYBRID) (2026-05-10) 🌱
 
@@ -117,7 +317,7 @@ operator_notion_db_precedent:
 - ⚠️ n8n flow updates (~6 hours)
 - ⚠️ Initial population per brand (~2-3 hours per brand)
 - ⚠️ Total: ~15-20 hours one-time + ~2-3 hours per brand
-- 🚧 Follow-up: DR-022 candidate (External Authoritative Link Tracking — extend to_external_url usage)
+- 🚧 Follow-up: DR-023 candidate (External Authoritative Link Tracking — extend to_external_url usage). [DR-022 claimed 2026-05-11 for Lean Phase B + Two-Layer Sitemap workflow]
 - 🚧 Follow-up: DR-023 candidate (Anchor Diversity Algorithm — formal scoring formula)
 
 **Open Questions for Review:**
@@ -2060,11 +2260,14 @@ Decisions to be documented as they emerge:
 - [ ] **DR-019:** Editorial review workflow tooling *(was DR-017)*
 - [ ] **DR-020:** CDN strategy (Cloudflare, BunnyCDN, etc.) *(was DR-018)*
 - [ ] **DR-021:** Image optimization pipeline *(was DR-019)*
-- [ ] **DR-022:** Analytics stack (GA4 + custom + ?) *(was DR-020)*
-- [ ] **DR-023:** Backup + disaster recovery strategy *(was DR-021)*
-- [ ] **DR-024:** Migration repo strategy (separate vs subfolder) *(was DR-022)*
-- [ ] **DR-025:** Notion database sync scope (which tables sync) *(was DR-023)*
-- [ ] **DR-026:** Branch testing protocol for migrations *(was DR-024)*
+- [ ] **DR-023:** External Authoritative Link Tracking (extend `to_external_url` usage from seo_page_internal_links) *(claimed 2026-05-11 from DR-021 follow-up)*
+- [ ] **DR-024:** Analytics stack (GA4 + custom + ?) *(was DR-022)*
+- [ ] **DR-025:** Backup + disaster recovery strategy *(was DR-023)*
+- [ ] **DR-026:** Migration repo strategy (separate vs subfolder) *(was DR-024)*
+- [ ] **DR-027:** Notion database sync scope (which tables sync) *(was DR-025)*
+- [ ] **DR-028:** Branch testing protocol for migrations *(was DR-026)*
+
+> **Note on renumbering (v1.8):** DR-022 (Lean Phase B + Two-Layer Sitemap + Iterative Refinement) became Proposed in v1.8. Future placeholders shifted from DR-022..DR-026 to DR-024..DR-028 (DR-023 newly claimed for External Link Tracking). Future placeholders preserve their previous topic context.
 
 > **Note on renumbering (v1.3):** DR-013 (Edge Vocabulary v3.5 Expansion) and DR-014 (Concept Entity Subtype Lock) became Proposed decisions in v1.3 (field-tested feedback from VTH BioDent). Future placeholders shifted from DR-013..DR-024 to DR-015..DR-026 to preserve numbering continuity. Future placeholders preserve their previous topic context.
 
@@ -2108,6 +2311,41 @@ decision_record_governance:
 ---
 
 ## Changelog
+
+### v1.8 (2026-05-11) — DR-022 Proposed (Lean Phase B + Two-Layer Sitemap + Iterative Refinement) 🌱
+
+Field-tested workflow proposal from VTH BioDent + SmileScape sessions. Replaces lump Phase B with lean planning loop + async background DFS enrichment + single iterative refinement.
+
+**Headline Changes:**
+
+- ➕ **DR-022 (NEW, Proposed):** Lean Phase B + Two-Layer Sitemap. 7 sub-decisions:
+  1. Two-Layer Sitemap (Layer 1 brand-immune / Layer 2 volume-driven / Layer 3 internal linking)
+  2. Lean Phase B (single human-blocking phase, not 5 sub-phases — no DFS gate)
+  3. Stage 1 Gate adjustment (sitemap structure confirmed without volume data)
+  4. Stage 1.5 async enrichment trigger (n8n on `seo_x_ads_keywords_contextual_master` INSERT)
+  5. Phase E.refine NEW (post-enrichment iterative refinement with gap-report.md)
+  6. Phase F KW context consumption (painpoint/anxiety/insight per page)
+  7. Output file restructure (deprecate `research-notes.md`, split into 5 specific files)
+
+- 🎯 **Why this matters:**
+  - Phase 1 timeline shortened (no DFS gate blocking entity/sitemap/citation)
+  - 30-60% cheaper DFS spend per brand via layered enrichment (cheap full-list volume + expensive shortlist SERP)
+  - Brand topical authority preserved (Layer 1 service pages volume-immune)
+  - Modern E-E-A-T + AI search era alignment (whole-site context > volume-only selection)
+  - Maps to existing 4-table KW infrastructure + n8n flows (no schema migrations)
+
+- 🔄 **Renumbering:**
+  - DR-023 newly claimed for External Authoritative Link Tracking (was DR-022 follow-up note in DR-021)
+  - Future placeholders DR-022..DR-026 → DR-024..DR-028
+
+- ✅ **Backward compatible:**
+  - No schema changes
+  - VTH BioDent (Stage 1 done) + SmileScape (Stage 1 Phase E) adopt at next gate
+  - 11 empty brand repos use DR-022 from inception
+
+- 🚧 **Pending Bible amendments (post-lock):**
+  - Bible §4.14 Page Viability — Layer 1 exemption clause
+  - Bible Part 4 — Two-Layer Sitemap pattern documentation
 
 ### v1.7 (2026-05-10) — DR-021 Proposed (Internal Linking Architecture HYBRID) 🌱
 
