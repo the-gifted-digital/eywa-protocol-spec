@@ -27,6 +27,19 @@
 
 ## 🎯 Section 1 — Project Setup Checklist (ก่อนเริ่มทุกอย่าง)
 
+### 1.0 New Brand? Start with Bootstrap Kit 🆕 v1.8
+
+> **If bootstrapping a brand-new brand repo from scratch**, follow:
+>
+> 📄 **[`templates/NEW_BRAND_BOOTSTRAP.md`](templates/NEW_BRAND_BOOTSTRAP.md)** — step-by-step ~15 min checklist
+>
+> The templates folder provides:
+> - `brand-config.template.json` (federation config baseline)
+> - `README.template.md` (brand repo README)
+> - `folder-skeleton/` (full directory tree with `.gitkeep` + 7 starter docs)
+>
+> **Per templates/README.md Flexibility Clause:** Templates are baselines, not strict cages. Brands may add/omit files per real production needs — log deviations in brand `docs/decision-records.md`. Core 4 required: `brand-config.json` / `docs/brand-concept.md` / `docs/decision-records.md` / `docs/changelog.md`.
+
 ### 1.1 Required Files in Project Knowledge
 
 ตรวจให้แน่ใจว่า project นี้มีไฟล์ครบ:
@@ -35,11 +48,15 @@
 ☑ EYWA_PROTOCOL_v3_X_X.md          ← Bible (latest version)
 ☑ Schema_Overview_EYWA_v1_X.md     ← Database schema spec
 ☑ EYWA_HANDOVER.md                 ← This file
+☑ DECISION_RECORDS.md              ← DR log (v1.8+)
+☑ Content_Templates_EYWA_v1_0.md   ← Content templates (DRAFT v1.3+)
 ☐ {brand}_concept.md               ← Brand-specific context (optional but preferred)
-☐ {brand}_research_notes.md        ← Research data (optional)
+☐ {brand}_research_notes.md        ← DEPRECATED per DR-022 — use 5 split files in content-plan/
 ```
 
 > **If Bible/Schema are missing or outdated:** STOP. Ask the operator to upload latest versions from `https://github.com/the-gifted-digital/eywa-protocol-spec/`. Do not proceed with stale specs.
+>
+> **If brand repo is missing bootstrap structure:** point to `templates/NEW_BRAND_BOOTSTRAP.md` (§1.0 above) before continuing.
 
 ### 1.2 Verify GitHub Connection
 
@@ -2676,9 +2693,9 @@ schema_appendices:
 
 ## 📜 Changelog
 
-### v1.8 (2026-05-11) — DR-022 Lean Phase B + Two-Layer Sitemap + Iterative Refinement 🌱
+### v1.8 (2026-05-11) — DR-022 Lean Phase B + Two-Layer Sitemap + Iterative Refinement + Bootstrap Kit 🌱
 
-Field-tested workflow change from VTH BioDent + SmileScape sessions. Replaces lump Phase B (volume-gated) with lean planning loop + async background DFS enrichment + single iterative refinement (Phase E.refine).
+Field-tested workflow change from VTH BioDent + SmileScape sessions. Replaces lump Phase B (volume-gated) with lean planning loop + async background DFS enrichment + single iterative refinement (Phase E.refine). Companion: NEW `templates/` folder enables ~15-min brand bootstrap from baseline.
 
 **Headline Changes:**
 
@@ -2698,6 +2715,20 @@ Field-tested workflow change from VTH BioDent + SmileScape sessions. Replaces lu
   - Content writers query `contextual_master` per page for: painpoint → hook / anxiety_level → tone / core_insight → message / funnel_stage → CTA / predicted_serp_features → schema emit / search_intent → template_id
 
 - 🆕 **§10 Pre-Flight — `lean_phase_b_two_layer_awareness` block** (10 checks)
+
+- 🆕 **`templates/` folder (NEW):**
+  - `NEW_BRAND_BOOTSTRAP.md` — ~15-min step-by-step bootstrap checklist with Flexibility Clause
+  - `brand-config.template.json` — federation config baseline (incl. `eywa_spec_snapshot` per §9.3)
+  - `README.template.md` — brand repo README template
+  - `folder-skeleton/` — full directory tree with `.gitkeep` markers + 7 starter docs:
+    - `docs/brand-concept.template.md` (Phase A — 14 sections)
+    - `docs/decision-records.template.md` (brand DR log scaffold)
+    - `docs/changelog.template.md` (audit trail scaffold)
+    - `content-plan/keyword-seed-list.template.md` (Phase B — DR-022)
+    - `content-plan/competitor-scan.template.md` (Phase B — DR-022)
+    - `content-plan/citation-pool-seed.template.md` (Phase B.2 — Bible §23.1)
+    - `content-plan/patient-journey.template.md` (Phase B — DR-022 + Phase F context)
+  - §1.0 added to Handover pointing to bootstrap kit
 
 - 🎯 **Why this matters:**
   - Phase 1 timeline shortened (no DFS gate blocking entity/sitemap/citation)

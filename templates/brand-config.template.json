@@ -1,0 +1,177 @@
+{
+  "$schema": "https://eywa-protocol.thegifteddigital.com/schemas/brand-config-v1.json",
+  "_doc": "Brand-level configuration for {BRAND_NAME} — EYWA Protocol implementation. Replace {PLACEHOLDERS} with actual values. Fields with TBD = pending operator info. See Bible §25.6 for field details.",
+  "_template_version": "1.0",
+  "_template_last_updated": "2026-05-11",
+
+  "brand_id": "{brand-id-kebab-case}",
+  "brand_name": "{Brand Display Name}",
+  "brand_name_translations": {
+    "th": "{ชื่อแบรนด์ภาษาไทย}",
+    "en": "{English Brand Name}",
+    "zh": null,
+    "ja": null,
+    "ko": null,
+    "ar": null,
+    "fr": null,
+    "es": null
+  },
+
+  "domain": "{example-domain.com}",
+  "domain_alternates": [],
+
+  "vertical_family": "{dental_clinic | aesthetic_clinic | wellness_clinic | medical_specialty | other}",
+  "healthcare_format": "{specialty_clinic | hospital | wellness_center | aesthetic_studio | other}",
+  "positioning_tier": "{ULTRA_PREMIUM | PREMIUM | MID_PREMIUM | MID_VALUE | VALUE}",
+
+  "active_languages": ["th"],
+  "default_language": "th",
+  "future_languages": [],
+
+  "brand_concept": {
+    "tagline_th": "{สโลแกนภาษาไทย}",
+    "tagline_en": "{English tagline}",
+    "core_positioning": "{One-line positioning statement — what makes the brand stand out}",
+    "tone": "{e.g. Professional & Clear, Humble yet Confident, Evidence-based, Family-warmth}",
+    "persona": "{e.g. The Trusted Expert, The Caring Healer, The Modern Innovator}"
+  },
+
+  "_optional_brand_blocks_doc": "Add brand-specific blocks here if needed (e.g., core_values_dna, signature_techniques, founders, branches). See SmileScape brand-config.json for example. Brands MAY ADD/OMIT blocks as needed — see templates/NEW_BRAND_BOOTSTRAP.md flexibility clause.",
+
+  "signature_offerings": [
+    {
+      "name": "{Hero Service / Signature Treatment Name}",
+      "abbreviation": "{Short Name}",
+      "url_slug": "{kebab-case-slug}",
+      "type": "{signature_treatment | signature_technique | signature_program | diagnostic_methodology}",
+      "_note": "{Why this is hero/signature for this brand}"
+    }
+  ],
+
+  "specialty_focus": [
+    "{specialty_id_snake_case_1}",
+    "{specialty_id_snake_case_2}"
+  ],
+
+  "branches": [
+    {
+      "name": "{Branch Name}",
+      "transit": "{Public transport reference if applicable}",
+      "type": "primary"
+    }
+  ],
+
+  "cpt_activation_flags": {
+    "_doc": "Tier 1 always-active. Tier 2/3 conditional based on brand needs.",
+
+    "tier_1_active": {
+      "doctor": true,
+      "branch": true,
+      "procedure": true,
+      "treatment": true,
+      "technology": true,
+      "condition": true,
+      "case_study": true,
+      "post": true
+    },
+
+    "tier_2_active": {
+      "program": false,
+      "signature_system": false
+    },
+
+    "tier_3_active": {
+      "ingredient": false,
+      "product": false,
+      "drug": false,
+      "lab_test": false
+    }
+  },
+
+  "brand_profile_keys": {
+    "founding_year": "TBD",
+    "license_number": "TBD",
+    "license_authority": "{e.g. กรมสนับสนุนบริการสุขภาพ}",
+    "primary_address_th": "TBD",
+    "primary_phone": "TBD",
+    "primary_email": "TBD",
+
+    "social_media": {
+      "facebook": null,
+      "instagram": null,
+      "line": null,
+      "youtube": null,
+      "tiktok": null,
+      "google_business_profile": null
+    },
+
+    "wikidata_id": null,
+    "schema_org_type": ["{MedicalClinic | Dentist | MedicalBusiness | LocalBusiness}"]
+  },
+
+  "content_strategy": {
+    "primary_audience": "{e.g. thai_patients_30_60}",
+    "secondary_audience": [],
+    "translation_strategy": "ai_draft_human_review",
+    "editorial_review_required": true,
+    "minimum_evidence_tier_for_publication": 4
+  },
+
+  "team_assignment": {
+    "_doc": "Notion workspace + n8n flow config — tracked outside of this file",
+    "primary_team": "{team_alpha | team_beta | etc}",
+    "notion_workspace_url": "TBD"
+  },
+
+  "kpi_targets": {
+    "_doc": "Per-brand KPI targets. See Bible Part 20.",
+    "organic_traffic_monthly_pv": 50000,
+    "ai_citation_rate_target": 0.25,
+    "branded_search_volume_target": 1000,
+    "core_web_vitals_lcp_target": 2.5,
+    "wcag_compliance_target": "AA"
+  },
+
+  "engagement": {
+    "deal_status": "{LEAD | NEGOTIATING | CLOSED | PAUSED | CHURNED}",
+    "deal_closed_date": null,
+    "_doc": "Add founding_partner_rate / monthly_rate / start_date when deal closes"
+  },
+
+  "deployment": {
+    "wordpress_version_required": "6.5+",
+    "php_version_required": "8.2+",
+    "hosting_environment": "TBD",
+    "cdn_provider": "TBD",
+    "current_site_state": "{e.g. greenfield | near_empty | partial | mature}",
+    "rebuild_required": true
+  },
+
+  "metadata": {
+    "config_version": "1.0",
+    "created_at": "{YYYY-MM-DD}",
+    "last_updated_at": "{YYYY-MM-DD}"
+  },
+
+  "eywa_spec_snapshot": {
+    "_doc": "Per Handover §9.3 — pin spec versions at Stage entry, re-snapshot at each Stage gate. Brands implement Locked DRs as binding; Proposed DRs are preview/informational unless explicitly opted-in.",
+    "bible_version": "3.14",
+    "schema_version": "1.10",
+    "templates_version": "1.3-DRAFT",
+    "handover_version": "1.8",
+    "decision_records_version": "1.8",
+    "drs_locked_at_snapshot": [
+      "DR-001", "DR-002", "DR-003", "DR-004", "DR-005",
+      "DR-006", "DR-007", "DR-008", "DR-009", "DR-010",
+      "DR-011", "DR-012", "DR-015", "DR-016", "DR-017", "DR-018"
+    ],
+    "drs_proposed_at_snapshot": [
+      "DR-013", "DR-014", "DR-019", "DR-020", "DR-021", "DR-022"
+    ],
+    "drs_proposed_opted_in_early": [],
+    "drs_proposed_opted_in_early_rationale": "{If opting in early, document why here. Otherwise leave empty list and Proposed DRs are informational only.}",
+    "snapshot_taken_at": "{YYYY-MM-DD}",
+    "snapshot_taken_at_stage": "{e.g. Stage 1 Phase A entry}",
+    "next_snapshot_due_at_stage": "{Stage 1 Gate | Stage 1.5 entry | Stage 2 entry}"
+  }
+}

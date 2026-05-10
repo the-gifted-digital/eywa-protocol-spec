@@ -1,0 +1,187 @@
+# 🌱 New Brand Bootstrap Checklist
+
+> **Goal:** Spin up a new brand repo from zero to **Phase A ready** in ~15 minutes.
+> **Companion to:** `EYWA_HANDOVER.md` §1 Project Setup Checklist + §5.11 Per-Brand Folder Structure.
+
+---
+
+## Flexibility Clause 🌿
+
+This checklist is the **baseline standard**, not a strict cage. Each brand may:
+
+- ✅ **ADD brand-specific files** if they serve real production needs (e.g., `docs/oem-supplier-catalog.md` for a brand that imports devices, or `content-plan/promo-calendar.md` for a brand with seasonal campaigns)
+- ✅ **OMIT non-applicable files** (e.g., a single-branch brand may skip `docs/branches.md` and put info inline in brand-concept)
+- ✅ **CREATE custom subfolders** under existing folders (e.g., `docs/regulatory/` for a brand under FDA scrutiny)
+- ❌ **DO NOT skip the core 4** (they are spec contracts):
+  - `brand-config.json` (federation key)
+  - `docs/brand-concept.md` (Phase A deliverable)
+  - `docs/decision-records.md` (brand-specific DRs per Handover §9.1 Path 1)
+  - `docs/changelog.md` (audit trail)
+
+If unsure whether to add or omit, log the decision in `docs/decision-records.md` as a brand-specific DR (e.g., `{BRAND}-DR-001: Skip multilingual/ folder until language expansion approved`).
+
+---
+
+## Pre-Bootstrap
+
+```yaml
+prerequisites:
+  ☐ Brand identified + brand_id chosen (kebab-case, e.g., "tc-smile", "smile-scape")
+  ☐ Repo created on GitHub: github.com/the-gifted-digital/eywa-{brand-id}
+  ☐ Local clone exists at /Volumes/SSD NN/CLAUDE AI/repos/brands/eywa-{brand-id}/
+  ☐ Operator has access to brand source materials (if any — concept docs, existing site, brand book)
+```
+
+---
+
+## Step-by-Step (15 minutes)
+
+### Step 1 — Copy folder skeleton (~1 min)
+
+```bash
+cd "/Volumes/SSD NN/CLAUDE AI/repos/brands/eywa-{brand-id}"
+cp -r ../../eywa-protocol-spec/templates/folder-skeleton/. .
+```
+
+This creates: `docs/` (with signature-programs/), `content-plan/` (with archive/), `content-drafts/{pillar-pages, supporting-pages, citations}/`, `content-published/`, `theme/{brand-assets, custom-css, elementor-templates-overrides}/`, `deployment/acf-overrides/`, `multilingual/`, `reports/`.
+
+**Optional folders to remove if not needed:**
+- `multilingual/` — only TH brand → safe to keep empty (no harm)
+- `theme/elementor-templates-overrides/` — only if brand will customize global Elementor templates
+- `deployment/acf-overrides/` — only if brand needs custom ACF beyond GTGT defaults
+
+### Step 2 — Copy + customize brand-config.json (~5 min)
+
+```bash
+cp ../../eywa-protocol-spec/templates/brand-config.template.json brand-config.json
+```
+
+Then edit `brand-config.json`:
+
+```yaml
+required_fields_to_replace:
+  ☐ brand_id, brand_name, brand_name_translations.th + en
+  ☐ domain
+  ☐ vertical_family + healthcare_format + positioning_tier
+  ☐ brand_concept (tagline_th, tagline_en, core_positioning, tone, persona)
+  ☐ signature_offerings[] (at least 1 — hero service)
+  ☐ specialty_focus[] (at least 1)
+  ☐ branches[] (at least 1)
+  ☐ schema_org_type
+  ☐ engagement.deal_status (LEAD | NEGOTIATING | CLOSED | PAUSED)
+  ☐ deployment.current_site_state
+  ☐ metadata.created_at + last_updated_at
+  ☐ eywa_spec_snapshot.snapshot_taken_at + snapshot_taken_at_stage
+
+optional_fields_keep_as_TBD_until_known:
+  ☐ founders / clinical_team (if brand has dedicated section)
+  ☐ founding_year, license_number, primary_address_th, primary_phone
+  ☐ social_media URLs
+  ☐ team_assignment.notion_workspace_url
+```
+
+### Step 3 — Copy + customize README.md (~2 min)
+
+```bash
+cp ../../eywa-protocol-spec/templates/README.template.md README.md
+```
+
+Edit `README.md` with brand-specific text (positioning, hero service, founders, branches, engagement status). See VTH BioDent or SmileScape README as reference.
+
+### Step 4 — Initialize core docs (~5 min)
+
+```bash
+cp ../../eywa-protocol-spec/templates/folder-skeleton/docs/brand-concept.template.md docs/brand-concept.md
+cp ../../eywa-protocol-spec/templates/folder-skeleton/docs/decision-records.template.md docs/decision-records.md
+cp ../../eywa-protocol-spec/templates/folder-skeleton/docs/changelog.template.md docs/changelog.md
+```
+
+Fill `docs/brand-concept.md` skeleton with brand identity (vision, mission, positioning, values, hero service, signature techniques, founders, audience, voice). This is **Phase A output** — required before Phase B can start.
+
+`docs/decision-records.md` starts empty (just header). Brand DRs accumulate as decisions emerge during work (per Handover §9.1 Path 1).
+
+`docs/changelog.md` records this bootstrap as the first entry.
+
+### Step 5 — Optional: copy Phase B planning templates (~2 min)
+
+Only if starting Phase B in same session:
+
+```bash
+cp ../../eywa-protocol-spec/templates/folder-skeleton/content-plan/keyword-seed-list.template.md content-plan/keyword-seed-list.md
+cp ../../eywa-protocol-spec/templates/folder-skeleton/content-plan/competitor-scan.template.md content-plan/competitor-scan.md
+cp ../../eywa-protocol-spec/templates/folder-skeleton/content-plan/citation-pool-seed.template.md content-plan/citation-pool-seed.md
+cp ../../eywa-protocol-spec/templates/folder-skeleton/content-plan/patient-journey.template.md content-plan/patient-journey.md
+```
+
+These are the 4 Phase B output files per DR-022 (Lean Phase B).
+
+### Step 6 — First commit (~1 min)
+
+```bash
+git add .
+git commit -m "Brand bootstrap: eywa-{brand-id}
+
+Folder skeleton + brand-config + core docs initialized from
+templates/ baseline. Phase A brand-concept.md ready for editing.
+
+Spec snapshot pinned: Bible v3.14 / Schema v1.10 / Templates v1.3-DRAFT
+                      / Handover v1.8 / DR v1.8
+
+Per Handover §9.3 — eywa_spec_snapshot block records this entry point.
+Per DR-022 (Proposed) — Lean Phase B workflow adopted from inception."
+
+git push -u origin main
+```
+
+---
+
+## Post-Bootstrap Verification
+
+```yaml
+sanity_checks_after_step_6:
+  ☐ brand-config.json valid JSON (no trailing commas, no syntax errors)
+  ☐ brand_id matches folder name + git remote
+  ☐ docs/brand-concept.md has at least sections 1-3 filled (vision, mission, positioning)
+  ☐ docs/changelog.md has bootstrap entry
+  ☐ git push successful (visible on github.com/the-gifted-digital/eywa-{brand-id})
+  ☐ eywa_spec_snapshot block has all 5 versions + snapshot_taken_at populated
+  ☐ Memory updated: ~/.claude/projects/-Users-nn-CLAUDE-AI/memory/project_{brand}.md created (or noted in MEMORY.md)
+```
+
+---
+
+## Common Pitfalls
+
+| Pitfall | How to Avoid |
+|---------|-------------|
+| Skip brand-config and start writing content immediately | brand-config is federation contract — empty/wrong = downstream syncs break. Spend the 5 min. |
+| Copy SmileScape's brand-config wholesale | Has SmileScape-specific blocks (SMILE DNA, Founders, Implant Brand Strategy) that don't apply to other brands. Use the **template**, not another brand's config. |
+| Set deal_status="CLOSED" prematurely | Only set CLOSED when contract signed. Use LEAD/NEGOTIATING during sales pipeline. |
+| Pin old spec versions in eywa_spec_snapshot | Always pin **current** versions at bootstrap time. Re-snapshot at each Stage gate, not retroactively. |
+| Treat templates as immutable | Templates are baselines. If a brand needs a new field that 80% of brands would need, propose an update to `templates/brand-config.template.json` via DR. If only this brand needs it, add inline + log in brand DR. |
+
+---
+
+## Reference Examples
+
+- **Full bootstrap (~13 sections, mature):** `eywa-vth-biodent/` — Stage 1 done, Phase 4.5 retrofit pending
+- **Fresh bootstrap (recent):** `eywa-smile-scape/` — Stage 1 Phase E, DR-022 field test
+- **Folder structure spec:** Handover §5.11
+- **Spec snapshot semantics:** Handover §9.3
+- **DR lifecycle:** Handover §9.1 (brand-specific Path 1 vs system-wide Path 2)
+
+---
+
+## When to Update This Template
+
+If you find yourself doing the SAME manual fix on multiple brands during bootstrap, that's a signal to update the template. Open a DR proposal:
+
+```
+Title: Bootstrap Template Update — {what changed}
+Status: Proposed
+Rationale: Observed in 3+ brand bootstraps (list them) — repetition cost > template change cost
+```
+
+---
+
+*Last updated: 2026-05-11 (templates v1.0 — initial release alongside DR-022 Proposed)*
