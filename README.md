@@ -38,8 +38,11 @@ EYWA™ is a registered trademark of **The Gifted Digital Marketing Co., Ltd.** 
 | `Schema_Overview_EYWA_v1_10.md` | Database schema companion | ~2,600 | 🔒 Active |
 | `EYWA_HANDOVER.md` | Operating manual for Claude/AI | ~1,850 | 🔒 Active (v1.6) |
 | `DECISION_RECORDS.md` | Architecture decision log | ~2,250 | 🔒 Active (v1.6) |
-| `PHASE_1_DECISIONS.md` | Phase 1 quick reference | ~390 | 🔒 Active (v1.4) |
-| `Content_Templates_EYWA_v1_0.md` | Universal Content Templates (DR-020 companion, v1.1 internal) | ~1,950 | 🌱 DRAFT — pending DR-020 lock 2026-06-07 |
+| `PHASE_1_DECISIONS.md` | Phase 1 quick reference | ~410 | 🔒 Active (v1.5) |
+| `Content_Templates_EYWA_v1_0.md` | Universal Content Templates (DR-020 companion, v1.3 internal) | ~2,420 | 🌱 DRAFT — pending DR-020 lock 2026-06-07 |
+| `examples/T1-medical-condition-SKELETON.md` | T1 boilerplate (Part 1/2 separation reference) | ~840 | 🌱 DRAFT |
+| `examples/T1-osa-vth-biodent-WORKED-EXAMPLE.md` | T1 OSA filled example (VTH dental sleep angle) | ~1,060 | 🌱 DRAFT |
+| `examples/SECTION-2-PATTERNS-REFERENCE.md` | Section 2 rendered patterns × 25 templates | ~534 | 🌱 DRAFT |
 | `archive/EYWA_PROTOCOL_v3_13.md` | Bible (previous version) | ~25,460 | 📦 Archived |
 | `archive/Schema_Overview_EYWA_v1_9.md` | Schema (previous version) | ~3,985 | 📦 Archived |
 | `archive/EYWA_PROTOCOL_v3_12.md` | Bible (older version) | ~24,800 | 📦 Archived |
@@ -98,7 +101,7 @@ Real-world feedback from VTH BioDent (Naphannop S.) surfaced 4 process gaps in t
 
 **EEAT enforcement phasing:** Soft-warn now → Hard-block 2026-09-01 (prerequisite: ≥80% brand doctor onboarding).
 
-**If LOCKED 2026-06-07:** `Content_Templates_EYWA_v1_0.md` moves to repo root + Bible v3.15 references it + ACF field group refactor + eywa-schema-pipeline plugin update for medical_reviewer injection.
+**If LOCKED 2026-06-07:** `Content_Templates_EYWA_v1_0.md` upgrades from DRAFT → LOCKED status (already at repo root) + Bible v3.15 references it + ACF field group refactor + eywa-schema-pipeline plugin update for medical_reviewer injection.
 
 **If REJECTED:** Document remains as advisory pattern in scratchpad; per-brand customization via existing flexibility.
 
