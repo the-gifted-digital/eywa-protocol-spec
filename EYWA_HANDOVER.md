@@ -1344,7 +1344,7 @@ session_2026_05_10_part_3:  # 🆕 NEW v1.6 (continued — same calendar day)
   
   outcomes:
     - DR-020 (Universal Content Template Standard) — Proposed
-    - Content_Templates_EYWA_v1_0.md DRAFT created (1,456 lines, 25 templates, ~25 blocks)
+    - Content_Templates_EYWA_v1_0.md DRAFT created (1,456 lines initial — now v1.3 ~2,420 lines after part_4 refinements; 25 templates, ~25 blocks)
     - DECISION_RECORDS v1.5 → v1.6
     - PHASE_1_DECISIONS v1.4 → v1.5 (added DR-020 to Open Items)
     - EYWA_HANDOVER v1.6 (companion ref + content template awareness checklist + this entry)
@@ -1381,6 +1381,45 @@ session_2026_05_10_part_3:  # 🆕 NEW v1.6 (continued — same calendar day)
       - Per-brand customization via existing flexibility (no enforcement)
   
   status: "Proposed — review window active until 2026-06-07. No DDL change for v1.0. No Phase 1A blocker."
+
+session_2026_05_10_part_4:  # 🆕 NEW v1.6 (continued same day — DR-020 internal refinements)
+  duration: ~3 hours
+  trigger: "Operator review of T1 OSA worked example surfaced UX + content marketing issues"
+  parallel_workstream: "Within DR-020 DRAFT lifecycle (still Proposed, no governance change)"
+  
+  problems_surfaced:
+    - "Part 1 of worked example mixed annotations / CSS hints / inline 📌 markers — overwhelming content reviewers + risk of copy-paste error"
+    - "Section 2 had 12 rows including ICD/SNOMED/MeSH codes — audience ทั่วไป 99% ไม่รู้จัก, no hook factor"
+    - "Spec lacked per-template Quick Facts variations (was 'one-size-fits-all' which doesn't work — T8/T9/T10 etc. need different boxes)"
+    - "Missing On-Page SEO Brief table at top (writers couldn't see KW + title/meta char count without scrolling to frontmatter)"
+  
+  outcomes:
+    - Content_Templates v1.0 → v1.1 → v1.2 → v1.3 (3 internal version bumps)
+    - examples/T1-medical-condition-SKELETON.md REFACTORED (strict Part 1/Part 2 separation)
+    - examples/T1-osa-vth-biodent-WORKED-EXAMPLE.md REFACTORED (clean Part 1, Citation Map in Part 2)
+    - NEW examples/SECTION-2-PATTERNS-REFERENCE.md (~534 lines, all 25 templates rendered)
+    - README updated (Documents table reflects examples/ files + correct line counts)
+  
+  v1_2_changes_part_1_part_2_separation:
+    - Part 1 = WYSIWYG (no annotations, no CSS, no block codes, no inline citables)
+    - On-Page SEO Brief table at top of Part 1 (focus KW, related KWs, title 50-60 char, meta 120-155 char)
+    - Part 2 = 9 multi-toggle spec (Section Brief / CSS Map / Citation Map / Schema 1-3 / ACF / Links / Images / Predicted Prompts / Dev Notes)
+    - Editorial markers (Pattern A-E) tracked via Citation Map table in Part 2 (NOT inline)
+  
+  v1_3_changes_section_2_pattern:
+    - 5-essential rows + toggle for technical depth (replaces 12-row dump)
+    - Reader-centric question labels with icons (👤 Who / 🔍 How known / 💊 Treatable / ✅ Reviewer)
+    - Toggle label "▶ ข้อมูลทางเทคนิค (สำหรับผู้สนใจเชิงลึก)"
+    - ICD/SNOMED/MeSH codes hidden under toggle (still SEO-indexed, zero penalty per Google 2019+)
+    - Per-template Quick Facts variations documented for ALL 25 templates:
+      - Group A (16 templates): Standard Quick Facts pattern with template-specific fields
+      - Group B (4 templates): T8 patient_profile / T9 credentials / T10 address / T18 branch_hero
+      - Group C (3 templates): T11/T13/T19 skip Section 2 entirely
+    - Universal Icon Taxonomy locked (35+ icons mapped to consistent use cases)
+  
+  governance_milestone: "DR-020 spec refined within Proposed status — no governance review needed (still in DRAFT lifecycle)"
+  
+  status: "Done. Content_Templates_EYWA_v1_0.md now v1.3 internal (~2,420 lines), 3 reference files in examples/. Ready for content writers + production work."
 ```
 
 ---
@@ -1560,8 +1599,13 @@ session_kickoff_checklist:
     ☐ Read latest Schema version (v1.10 as of 2026-05-10)
     ☐ Read brand-config.json
     ☐ Read DECISION_RECORDS.md (v1.6, DR-001..DR-020 — DR-013/014/019/020 Proposed; DR-015..DR-018 Locked)
-    ☐ Read Content_Templates_EYWA_v1_0.md (DRAFT — pending DR-020 lock)
+    ☐ Read Content_Templates_EYWA_v1_0.md (v1.3 internal DRAFT, ~2,420 lines — pending DR-020 lock)
     ☐ Read brand-concept.md (if exists)
+  
+  content_production_references:  # 🆕 v1.6 (added 2026-05-10 part 4)
+    ☐ Read examples/T1-medical-condition-SKELETON.md (Part 1/Part 2 separation reference)
+    ☐ Read examples/T1-osa-vth-biodent-WORKED-EXAMPLE.md (filled example, VTH dental sleep angle)
+    ☐ Read examples/SECTION-2-PATTERNS-REFERENCE.md (all 25 templates' Section 2 + Universal Icon Taxonomy)
   
   infrastructure_verification:
     ☐ GitHub MCP working
@@ -1605,6 +1649,22 @@ session_kickoff_checklist:
     ☐ Citations in schema citation array? (NOT text-only in body)
     ☐ Organization typed as MedicalBusiness? (NOT generic Organization for clinics)
     ☐ medicalAudience declared? ({audienceType: 'Patient'} default)
+  
+  part_1_part_2_separation:  # 🆕 v1.6 (added 2026-05-10 part 4 — DR-020 v1.2)
+    ☐ Part 1 = WYSIWYG content only? (NO annotations, NO CSS hints, NO block codes, NO inline 📌 citables)
+    ☐ Part 1 starts with On-Page SEO Brief table? (Focus KW, Related KWs, Title 50-60 chars, Meta 120-155 chars)
+    ☐ Part 2 has 9 multi-toggle spec? (Section Brief / CSS Map / Citation Map / Schema Tier 1-3 / ACF / Links / Images / Predicted Prompts / Dev Notes)
+    ☐ Citation tracking in Part 2 Citation Map? (NOT inline 📌 markers in Part 1)
+    ☐ Section Brief table in Part 2 replaces inline 📖 Annotation blockquotes
+  
+  section_2_pattern_awareness:  # 🆕 v1.6 (added 2026-05-10 part 4 — DR-020 v1.3)
+    ☐ Section 2 follows 5-essential + toggle pattern? (NOT 12-row dump)
+    ☐ Title row = bold {Disease/Topic} + (English Term)
+    ☐ 4 question-format rows with icons? (👤 Who? / 🔍 How known? / 💊 Treatable? / ✅ Reviewer)
+    ☐ Toggle "▶ ข้อมูลทางเทคนิค (สำหรับผู้สนใจเชิงลึก)" — collapsed default?
+    ☐ ICD/SNOMED/MeSH codes inside toggle (NOT visible by default)?
+    ☐ Icons match Universal Icon Taxonomy? (see examples/SECTION-2-PATTERNS-REFERENCE.md)
+    ☐ Per-template variation correct? (T8 uses patient_profile / T9 credentials / T10 address / T11/T13/T19 skip Section 2 entirely)
 ```
 
 ---
