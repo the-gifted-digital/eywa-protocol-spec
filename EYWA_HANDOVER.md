@@ -592,11 +592,17 @@ both_methods_yield_same_database_result:
 
 ---
 
-### 5.11 Per-Brand Repo Folder Structure (NEW in v1.2)
+### 5.11 Per-Brand Repo Folder Structure (UPDATED v1.6 🆕)
 
 ทุก per-brand repo (`eywa-{brand-slug}`) ต้องใช้โครงสร้างเดียวกัน เพื่อให้ทุก brand work-flow consistent + onboarding ใหม่หา file ไม่หลง.
 
-#### 5.10.1 Standard Folder Tree
+**v1.6 changes** (reflects Stage 1/Stage 2 split + Citation Pool + DR-020 templates):
+- ➕ Added `content-plan/citation-pool-seed.md` (Phase B.2 deliverable per §5.8)
+- 🔄 Restructured `content-drafts/` → per-template subfolders + `_templates/` boilerplate
+- ➕ Added `content-published/` archive folder (Phase G snapshot)
+- ➕ Added `stage-tags.md` log for Stage 1 Gate version tags
+
+#### 5.11.1 Standard Folder Tree
 
 ```
 eywa-{brand-slug}/                       Example: eywa-vth-biodent/
@@ -607,30 +613,85 @@ eywa-{brand-slug}/                       Example: eywa-vth-biodent/
 │
 ├── docs/                               # 📚 Brand documentation (human-authored)
 │   ├── README.md                       # Index of docs/
-│   ├── brand-concept.md                # Brand identity, voice, positioning, USP
+│   ├── brand-concept.md                # Phase A output — brand identity, voice, USP
 │   ├── decision-records.md             # Brand-specific DRs (link global for shared)
 │   ├── changelog.md                    # Brand version history
+│   ├── stage-tags.md                   # 🆕 v1.6 — Log of Stage 1 Gate git tags
+│   │                                   # (e.g., stage-1-approved-vth-biodent-2026-05-10)
 │   └── signature-programs/             # Brand flagship programs (NEW v1.2)
 │       ├── README.md                   # Folder index + flagship designation rules
 │       └── {program-slug}.md           # Per-program full spec
 │
-├── content-plan/                       # 🌳 PLANNING PHASE (markdown — Section 5 schemas)
-│   ├── README.md                       # Index + file purpose
-│   ├── research-notes.md               # Phase B output (DataForSEO, competitors, journey)
+├── content-plan/                       # 🌳 STAGE 1: PLANNING (Phases A-E outputs)
+│   ├── README.md                       # Index + file purpose + Stage 1 Gate checklist
+│   │
+│   │   # Phase B outputs (Research & Discovery)
+│   ├── research-notes.md               # B.1 — DataForSEO, competitors, journey, audit
+│   ├── citation-pool-seed.md           # 🆕 v1.6 B.2 — 13-col schema (§5.8)
+│   │                                   # Phase B.2 breadth-level survey
+│   │                                   # Pool grows in Phase F step 3 (depth)
+│   │
+│   │   # Phase C outputs (Entity Genesis)
 │   ├── entities.md                     # 12-col schema (§5.3) — knowledge graph entities
 │   ├── clusters.md                     # 6-col schema (§5.4) — topic cluster index
-│   ├── sitemap.md                      # 7-col schema (§5.5) — page hierarchy
 │   ├── relationships.md                # 5-col schema (§5.6) — typed edges (10 types)
-│   ├── content-priorities.md           # 7-col schema (§5.7, optional) — calendar
-│   ├── internal-linking-plan.md        # Phase E output — link strategy
+│   ├── egp-output-summary.md           # Entity Genesis Protocol summary (Bible 2.6)
+│   │
+│   │   # Phase E outputs (Sitemap Architecture)
+│   ├── sitemap.md                      # 7-col schema (§5.5) — page hierarchy
+│   ├── internal-linking-plan.md        # Link strategy + cluster connections
 │   ├── audit-report.md                 # Sitemap health audit results
-│   └── egp-output-summary.md           # Entity Genesis Protocol summary (Bible 2.6)
+│   │
+│   │   # Optional planning outputs
+│   └── content-priorities.md           # 7-col schema (§5.7) — editorial calendar
 │
-├── content-drafts/                     # 📝 DRAFTING PHASE (before Notion sync)
-│   ├── README.md
-│   ├── pillar-pages/                   # Layer 4 pillar drafts (cornerstone content)
-│   ├── supporting-pages/               # Layer 5+ supporting drafts
-│   └── citations/                      # Curated citation list (pre-Supabase upload)
+├── content-drafts/                     # 📝 STAGE 2: DRAFTING (Phase F output) 🆕 RESTRUCTURED v1.6
+│   ├── README.md                       # Workflow guide + Part 1/Part 2 + Section 2 patterns
+│   │
+│   ├── _templates/                     # 🆕 Boilerplate skeletons (copy from
+│   │                                   # eywa-protocol-spec/examples/)
+│   │   ├── T1-medical-condition.md     # Copy from examples/T1-medical-condition-SKELETON.md
+│   │   ├── T2-medical-procedure.md     # (when produced)
+│   │   ├── T2a-aesthetic.md
+│   │   ├── T2b-dental.md
+│   │   ├── T6a-guide.md
+│   │   └── ...                         # One per template type brand will use
+│   │
+│   │   # Per-template subfolders — drafts grouped by template_id
+│   ├── T1-medical-condition/           # Disease/condition pages (L4 pillars typically)
+│   │   ├── obstructive-sleep-apnea.md
+│   │   ├── tmj-disorder.md
+│   │   └── ...
+│   ├── T2-medical-procedure/           # Treatment/service detail pages (L2)
+│   ├── T2a-aesthetic-procedure/        # If brand has aesthetic vertical
+│   ├── T2b-dental-procedure/           # If brand is dental
+│   ├── T2c-wellness-program/           # If brand has wellness programs
+│   ├── T2d-physiotherapy/
+│   ├── T2e-genomic/                    # If brand offers genomic testing
+│   ├── T3-diagnostic/
+│   ├── T4-medical-device/              # Technology pages (L3)
+│   ├── T5-service-money-page/
+│   ├── T6-concept/                     # Knowledge concepts (L5)
+│   ├── T6a-guide/                      # Comprehensive guides
+│   ├── T7-comparison/
+│   ├── T8-case-study/                  # L7 patient cases (PDPA-anonymized)
+│   ├── T9-author-profile/              # Doctor/team pages
+│   ├── T10-branch/                     # Branch location pages (L6)
+│   ├── T11-institutional/              # Home/About/Contact/Privacy
+│   ├── T12-hub/                        # Topic hubs (L3 navigational)
+│   ├── T13-pricing/
+│   ├── T14-trending/                   # News/clinical updates
+│   ├── T15-quiz/                       # Self-assessment tools
+│   ├── T16-insurance/
+│   ├── T17-care-instructions/
+│   ├── T18-programmatic-local/         # Hyper-local [service]×[branch]
+│   └── T19-promotion/                  # Time-sensitive offers
+│
+├── content-published/                  # 🆕 v1.6 — Archive of published content
+│   ├── README.md                       # Snapshot rules — what gets archived when
+│   ├── 2026-05/                        # Monthly snapshots (or per-publish-batch)
+│   │   └── (copies from content-drafts/ at publish time)
+│   └── ...
 │
 ├── theme/                              # 🎨 BRAND VISUAL (Elementor stack)
 │   ├── README.md
@@ -651,6 +712,50 @@ eywa-{brand-slug}/                       Example: eywa-vth-biodent/
     ├── README.md
     ├── monthly-kpi/                    # KPI snapshots per month
     └── audit-snapshots/                # Quality audit results over time
+```
+
+#### 5.11.2 Stage Mapping (which folder produces what when)
+
+```yaml
+stage_1_outputs_to_content_plan:
+  phase_A: docs/brand-concept.md
+  phase_B: content-plan/research-notes.md
+  phase_B.2: content-plan/citation-pool-seed.md  # 🆕 v1.6
+  phase_C: content-plan/entities.md, clusters.md, relationships.md, egp-output-summary.md
+  phase_D: (validates entities/clusters — no new file, may update relationships.md)
+  phase_E: content-plan/sitemap.md, internal-linking-plan.md, audit-report.md
+  
+  → STAGE 1 GATE: git tag stage-1-approved-{brand}-{YYYY-MM-DD}
+  → log in docs/stage-tags.md
+
+stage_2_outputs_to_content_drafts:
+  phase_F: content-drafts/{template_id}/{slug}.md (per-template subfolders)
+  phase_F_intensive_research: extends content-plan/citation-pool-seed.md (pool grows)
+  phase_G: content-published/{YYYY-MM}/* (snapshot at publish time)
+
+backloop_workflow:
+  if_stage_2_triggers_stage_1_revisit:
+    - update relevant content-plan/ file(s)
+    - bump version in file frontmatter
+    - new tag: stage-1-revised-{brand}-{date}-{reason}
+    - log in docs/stage-tags.md
+```
+
+#### 5.11.3 Naming Conventions
+
+```yaml
+file_naming:
+  draft_files: "{slug}.md" (kebab-case, matches page_slug column in seo_website_page_master)
+  template_files: "T{##}{-suffix}.md" (matches template_id from Content_Templates)
+  
+folder_naming:
+  template_folders: "T{##}-{descriptive-slug}/" (e.g., T1-medical-condition/)
+  rationale: "T## prefix sorts naturally; descriptive slug aids discovery"
+
+git_tag_naming:
+  stage_1_approved: "stage-1-approved-{brand}-{YYYY-MM-DD}"
+  stage_1_revised: "stage-1-revised-{brand}-{YYYY-MM-DD}-{reason-slug}"
+  publish_snapshot: "publish-{YYYY-MM-DD}-{batch-id}" (optional, per Phase G batch)
 ```
 
 #### 5.10.2 Folder Purpose Quick Reference
