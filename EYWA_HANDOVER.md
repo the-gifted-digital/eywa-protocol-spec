@@ -1427,17 +1427,44 @@ session_2026_05_10_part_4:  # 🆕 NEW v1.6 (continued same day — DR-020 inter
 
 ## 🛠️ Section 7 — Workflow Phases for New Brand
 
-### 7.1 Overview — 7 Phases
+### 7.1 Overview — 2 Stages, 7 Phases (🆕 v1.6 restructured)
 
 ```
-PHASE A: Brand Understanding       ← Before any technical work
-PHASE B: Research & Discovery      ← Data gathering
-PHASE C: Entity Genesis            ← Knowledge graph building
-PHASE D: Cluster & Domain Mapping  ← Topical organization
-PHASE E: Sitemap Architecture      ← Page structure
-PHASE F: Content Production        ← Writing & validation
-PHASE G: Deployment                ← Schema + publish
+╔═══════════════════════════════════════════════════════════════════╗
+║ STAGE 1 — Foundation & Architecture                               ║
+║   PHASE A: Brand Understanding                                    ║
+║   PHASE B: Research & Discovery + Citation Pool Seeding 🆕        ║
+║   PHASE C: Entity Genesis + Citation-Entity Linking 🆕            ║
+║   PHASE D: Cluster & Domain Mapping                               ║
+║   PHASE E: Sitemap Architecture (incl. Phase 4.5 Quality Gates)   ║
+║                                                                   ║
+║   ▶ STAGE 1 GATE: Sitemap Approval ← MUST PASS BEFORE STAGE 2    ║
+╚═══════════════════════════════════════════════════════════════════╝
+                              ↓
+                    [operator approval]
+                              ↓
+╔═══════════════════════════════════════════════════════════════════╗
+║ STAGE 2 — Production & Deployment                                 ║
+║   PHASE F: Content Production (uses Stage 1 outputs)              ║
+║   PHASE G: Deployment                                             ║
+║                                                                   ║
+║   ⤴ Backloop allowed: revisit Stage 1 if needed (brand pivot,    ║
+║     market reality changes, KW data updates, new entity surfaces) ║
+╚═══════════════════════════════════════════════════════════════════╝
 ```
+
+**Stage discipline:**
+- Stage 1 must reach `sitemap-approved` status before Stage 2 begins
+- Stage 1 outputs are LOCKED at gate (snapshot version-tagged in git)
+- Stage 2 may surface need to revisit Stage 1 — when it happens:
+  - Document the trigger (brand change / market data / new entity)
+  - Update Stage 1 file → bump version
+  - Re-run downstream Stage 1 phases as needed
+  - Re-pass Stage 1 Gate before resuming Stage 2
+
+---
+
+## 📦 STAGE 1 — Foundation & Architecture
 
 ### 7.2 Phase A — Brand Understanding
 
@@ -1449,18 +1476,49 @@ PHASE G: Deployment                ← Schema + publish
 
 **Output:** `eywa-{brand}/docs/brand-concept.md` — get operator approval.
 
-### 7.3 Phase B — Research & Discovery
+### 7.3 Phase B — Research & Discovery + Citation Pool Seeding 🆕 v1.6
 
+**Part B.1 — Market & Audience Research:**
 - **Competitor analysis** (DataForSEO + manual)
 - **Keyword research** (DataForSEO Labs + Google Keyword Planner)
 - **Patient journey mapping** (interviews + reviews)
 - **Existing content audit** (if migration scenario)
 
-**Output:** `eywa-{brand}/content-plan/research-notes.md`
+**Part B.2 — Citation Pool Seeding 🆕 (Bible Part 23.1 — 6-tier hierarchy):**
 
-### 7.4 Phase C — Entity Genesis (EGP — Bible Part 2.6)
+For each main pillar topic identified in Phase A/B.1, research authoritative sources BEFORE entity creation. This builds the universal citation pool that downstream phases (C, F) will draw from.
 
-**5 Steps:**
+```yaml
+citation_research_per_pillar:
+  for_each_topic:
+    - identify 5-15 authoritative sources covering this topic
+    - tier_classification (1-6 per Bible Part 23.1):
+        1: Clinical guidelines, government health bodies (AASM, WHO, CDC, FDA, ทันตแพทยสภา)
+        2: Peer-reviewed journals (NEJM, JCSM, Cochrane, A&D Journal)
+        3: Authoritative medical org publications
+        4: Expert-authored books/textbooks
+        5: Brand internal data (clinic reports, surveys) — brand_scope=['{brand}']
+        6: Reputable secondary sources (medical news, etc.)
+    - freshness_check: within tier-specific freshness threshold
+    - capture metadata: doi, pmid, pmc_id, isbn, publication_year, url
+    - mark brand_scope: ['*'] for universal vs ['{brand}'] for brand-specific
+    - check for duplicates against existing seo_citations pool (federation reuse)
+
+priority_targets:
+  - L4 pillar topics (need 5-10 Tier 1-3 citations each)
+  - L5 knowledge topics (need 3-5 Tier 1-3 each)
+  - Brand stance topics (Pattern E backing — need ≥1 Tier 1-2 + brand internal data)
+```
+
+**Output Files:**
+- `eywa-{brand}/content-plan/research-notes.md` — competitor + KW + audience
+- `eywa-{brand}/content-plan/citation-pool-seed.md` 🆕 — citation candidates per pillar with tier + freshness + source URL
+  - Schema: matches `seo_citations` table fields (tier, schema_evidence_level, doi, authors, journal, year, url, brand_scope)
+  - On Phase G deployment, this file syncs to Supabase `seo_citations`
+
+### 7.4 Phase C — Entity Genesis (EGP — Bible Part 2.6) + Citation Linking 🆕
+
+**Core 5 Steps:**
 
 0. Brand profile validation
 1. Domain mapping (3-9 domains: anatomical + methodological + cross-cutting)
@@ -1469,13 +1527,21 @@ PHASE G: Deployment                ← Schema + publish
 4. Relationship wiring (10-edge vocabulary)
 5. Validation (4 health checks)
 
+**Citation-to-Entity Linking 🆕 v1.6 (during Step 3-4):**
+
+As entities are created, attach authoritative citations from Phase B.2 pool:
+- Each entity may reference 1-5 anchoring citations (e.g., disease entity → ICD definition source + epidemiology source + clinical guideline)
+- Citation_id captured in entity metadata (for federation reuse)
+- New citations discovered during entity research → add to `citation-pool-seed.md` (pool grows)
+
 > 🆕 **v1.4 Note — EUG enforces Step 3:** Once Phase 1A migration `006_create_entity_uniqueness_guard.sql` deploys, Step 3 ("Search before create") becomes algorithmically enforced. n8n entity creation flow calls `eug_preflight_check()` before INSERT. See Bible Section 2.6.6.1 for operator decision matrix when collision detected.
 
 **Output Files (per Section 5 schemas):**
 - `clusters.md` — cluster index (6 columns)
-- `entities.md` (or `entities/{cluster}.md`) — 12 columns per entity
+- `entities.md` (or `entities/{cluster}.md`) — 12 columns per entity (incl. anchoring citation_ids)
 - `relationships.md` — 5 columns per edge
 - `egp-output-summary.md` — overall stats
+- `citation-pool-seed.md` (updated from Phase B with entity-discovery additions)
 
 ### 7.5 Phase D — Cluster & Domain Mapping
 
@@ -1493,17 +1559,114 @@ Validate: pillar-supporting ratio (8-25), domain balance, cross-brand overlap wi
 
 **Output:** `sitemap.md` (now 11 columns including `content_brief`, `marketplace_proposal_status`, `reconciliation_notes`, `viability_assessment`), `internal-linking-plan.md`, `audit-report.md`
 
+---
+
+### 🛑 STAGE 1 GATE — Sitemap Approval (🆕 v1.6)
+
+Before proceeding to Stage 2, ALL of the following must be approved by operator:
+
+```yaml
+stage_1_gate_checklist:
+  
+  brand_understanding:
+    ☐ brand-concept.md operator-approved
+  
+  research_complete:
+    ☐ research-notes.md (KW + competitor + audience)
+    ☐ citation-pool-seed.md (≥5 Tier 1-3 citations per main pillar)
+  
+  entity_graph_health:
+    ☐ entities.md complete (Tier 1 mandatory entities present)
+    ☐ relationships.md (10-edge vocabulary, no orphans)
+    ☐ EUG preflight clean (no duplicates)
+    ☐ 4 health checks passed
+    ☐ citation-to-entity linking done (key entities have anchoring citations)
+  
+  cluster_balance:
+    ☐ pillar-supporting ratio 8-25
+    ☐ domain balance verified
+    ☐ brand_scope[] assigned correctly
+  
+  sitemap_quality:
+    ☐ Phase 4.5 Quality Gates ALL passed (Market Reconciliation + Viability + Content Brief)
+    ☐ sitemap.md operator-approved
+    ☐ internal-linking-plan.md mapped
+    ☐ audit-report.md clean (no orphans, depth OK)
+  
+  → ✅ ALL CHECKED → Lock Stage 1, version-tag in git, proceed to Stage 2
+  → ❌ ANY UNCHECKED → resolve before Stage 2
+```
+
+**Lock convention:** `git tag stage-1-approved-{brand}-{YYYY-MM-DD}` to mark approval point. Future Stage 1 revisits create new tags.
+
+---
+
+## 🚀 STAGE 2 — Production & Deployment
+
 ### 7.7 Phase F — Content Production
 
-Per-page requirements: schema planned, citations ≥layer minimum, author+reviewer assigned, multilingual fields, WCAG AA, internal links per plan, citable patterns used.
+Per-page requirements: schema planned, citations from Phase B.2 pool linked via `seo_page_citations`, author+reviewer assigned, multilingual fields, WCAG AA, internal links per plan, citable patterns used.
 
-5-stage editorial workflow: Medical → SEO → Brand Voice → Legal/PDPA → Final Sign-off.
+**Citation Workflow in Stage 2 🆕 v1.6:**
+- Writer pulls from `citation-pool-seed.md` (Phase B.2 output) when writing each page
+- Each citation used → row in `seo_page_citations` junction (page_id × citation_id)
+- New citations discovered during writing → ADD to pool (new row in `seo_citations`) — pool keeps growing
+- Pattern E Brand Stance — backed by Tier 5 brand internal data + ≥1 Tier 1-2 supporting citation
+
+**Template-driven workflow (DR-020):**
+- Each page selects template_id (T1-T19) — see `Content_Templates_EYWA_v1_0.md` + `examples/`
+- Part 1 = WYSIWYG content (review-ready)
+- Part 2 = 9 multi-toggle technical + editorial spec
+
+**5-stage editorial workflow:** Medical → SEO → Brand Voice → Legal/PDPA → Final Sign-off (Bible Part 23.4)
 
 ### 7.8 Phase G — Deployment
 
 Pre-launch checklist (entities pushed, schema active, ACF imported, CPTs activated, sitemap.xml, robots.txt, hreflang).
 
-**Two-Phase Sync execution:** Planning files → Phase 1 (Supabase flat) → Phase 2 (Notion backfill) → Live.
+**Two-Phase Sync execution:** Planning files → Phase 1 (Supabase flat — incl. citation pool sync to `seo_citations`) → Phase 2 (Notion backfill) → Live.
+
+---
+
+### 🔄 Stage 1 Backloop Triggers (Stage 2 → Stage 1) 🆕 v1.6
+
+When Stage 2 work surfaces issues requiring Stage 1 changes:
+
+```yaml
+common_backloop_triggers:
+  
+  brand_pivot:
+    example: "Operator decides VTH adds Wellness vertical mid-production"
+    affects: [Phase A brand-concept, Phase D cluster mapping, Phase E sitemap]
+    action: "Re-do A/D/E partial pass; preserve completed Stage 2 pages where possible"
+  
+  market_data_update:
+    example: "KW research returns surprising volume numbers post-launch"
+    affects: [Phase B research, Phase E sitemap (viability assessment may flip)]
+    action: "Re-run Phase E §4.14 Page Viability for affected pages"
+  
+  new_entity_surfaces:
+    example: "Patient feedback reveals condition we didn't have in Phase C"
+    affects: [Phase C entities, Phase D clusters, Phase E sitemap]
+    action: "Add entity → check cluster placement → add page if needed"
+  
+  citation_freshness_expired:
+    example: "Tier 1 citation became >5 years old, no replacement found"
+    affects: [Phase B.2 citation pool, Phase F pages using that citation]
+    action: "Re-research citation alternative → update pool → re-link affected pages"
+  
+  competitive_response:
+    example: "Competitor launches superior content on our pillar topic"
+    affects: [Phase B competitor analysis, Phase E sitemap (may need new pages)]
+    action: "Refresh Phase B → assess Phase E gap → adjust"
+
+backloop_discipline:
+  - Document trigger reason in DECISION_RECORDS or session log
+  - Bump version of affected Stage 1 files
+  - Create new git tag: `stage-1-revised-{brand}-{YYYY-MM-DD}-{reason-slug}`
+  - Notify content team if their in-progress Stage 2 work is affected
+  - Re-pass relevant Stage 1 Gate checks before resuming Stage 2
+```
 
 ---
 
