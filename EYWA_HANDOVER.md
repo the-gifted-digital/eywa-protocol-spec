@@ -245,6 +245,12 @@ required_planning_files:
     purpose: "Editorial calendar + production sequence"
     pattern: Sprint-based grouping
     columns: 7 (see 5.7)
+  
+  6_citation-pool-seed.md (🆕 v1.6 — Phase B.2 deliverable):
+    purpose: "Authoritative citations seeded during research, before entity creation"
+    pattern: Group by pillar topic, table per pillar
+    columns: 13 (see 5.8 — mirrors seo_citations table for direct DB sync)
+    grows_during: Phase B.2 (breadth) + Phase F step 3 (per-page depth)
 ```
 
 ### 5.3 Schema — Entities Planning File
@@ -426,7 +432,93 @@ required_planning_files:
 | `Status` | Yes | Planned / Drafting / Reviewing / Published |
 | `Owner` | Yes | Writer/team assigned |
 
-### 5.8 Why "Parent" is Text (Not Notion ID) at Planning
+### 5.8 Schema — Citation Pool Planning File 🆕 v1.6
+
+**File:** `citation-pool-seed.md`
+
+**Phase ที่สร้าง:** B.2 (breadth survey) → ขยายต่อใน F step 3 (per-page depth)
+
+**Structure:**
+
+```markdown
+# {Brand Name} — Citation Pool Seed (Planning File)
+
+## Pool Distribution
+| Tier | Count | % |
+| 1 (Clinical guidelines) | ... | ... |
+| 2 (Peer-reviewed) | ... | ... |
+| 3 (Authoritative org) | ... | ... |
+| 4 (Books/textbooks) | ... | ... |
+| 5 (Brand internal) | ... | ... |
+| 6 (Reputable secondary) | ... | ... |
+
+## Pillar Topic Index
+(reference to clusters.md for pillar mapping)
+
+---
+
+## {pillar-topic-id}: {Pillar Topic Name}
+**Cluster:** {cluster-id}
+**Phase B.2 minimum:** ≥5 Tier 1-3 citations
+**Brand Scope:** ['*'] for universal, ['{brand}'] for brand-specific data
+
+| # | Cite ID | Type | Tier | Schema Evidence | Title | Authors | Journal/Pub | Year | DOI/PMID | URL | Brand Scope | Freshness | Notes |
+|---|---------|------|------|-----------------|-------|---------|-------------|------|----------|-----|-------------|-----------|-------|
+| 1 | cite_PLACEHOLDER_001 | clinical_guideline | 1 | EvidenceLevelA | Clinical Practice Guideline for Diagnostic Testing for Adult OSA | Kapur et al. | AASM | 2022 | 10.5664/jcsm.6506 | https://aasm.org/... | ['*'] | fresh | Primary OSA diagnosis source |
+| 2 | cite_PLACEHOLDER_002 | journal_article | 1 | EvidenceLevelA | Clinical Practice Guideline for OSA Treatment with Oral Appliance | Ramar et al. | JCSM | 2015 | 10.5664/jcsm.4858 | https://jcsm.aasm.org/... | ['*'] | aging | Tier 1 but >10y — flag for refresh check |
+| 3 | cite_VTH_INTERNAL_001 | website | 5 | EvidenceLevelC | VTH BioDent OAT 2-Year Outcomes | VTH Clinical Team | VTH | 2025 | — | https://vthbiodent.com/clinical-data/ | ['vth-biodent'] | fresh | Internal data — Pattern A backing |
+```
+
+**Column specs (13 columns):**
+
+| Column | Required | Description | Maps to seo_citations field |
+|--------|----------|-------------|----------------------------|
+| `#` | Yes | Sequential numbering within pillar | — |
+| `Cite ID` | Yes | Placeholder ID (`cite_PLACEHOLDER_NNN`) — DB assigns real `cite_{ULID16}` on sync | `fingerprint` |
+| `Type` | Yes | journal_article / clinical_guideline / government_report / textbook / website / press_release | `citation_type` |
+| `Tier` | Yes | 1-6 (Bible Part 23.1) | `evidence_tier` |
+| `Schema Evidence` | Yes | EvidenceLevelA / EvidenceLevelB / EvidenceLevelC | `schema_evidence_level` |
+| `Title` | Yes | Citation title | `title` |
+| `Authors` | Yes | Comma-separated last names with year | `authors` (text[]) |
+| `Journal/Pub` | Optional | Journal name OR publisher | `journal` / `publisher` |
+| `Year` | Yes | Publication year (integer) | `publication_year` |
+| `DOI/PMID` | Recommended | DOI preferred, PMID/PMC_ID OK; "—" if unavailable | `doi` / `pmid` / `pmc_id` |
+| `URL` | Yes | Authoritative URL (publisher/journal site) | `url` |
+| `Brand Scope` | Yes | `['*']` (universal — reusable across brands) or `['{brand}']` (brand-internal data) | (federation logic) |
+| `Freshness` | Yes | fresh / aging / stale (per Bible Part 23.1 tier-specific thresholds) | `citation_freshness_status` |
+| `Notes` | Optional | Context, e.g., "Primary OSA diagnosis source" / "Pattern A backing for VTH stance" | — |
+
+**Cite ID convention:**
+- `cite_PLACEHOLDER_NNN` during planning
+- On Phase G publish, n8n flow generates real `cite_{ULID16}` from `seo_citations` trigger
+- Maintain mapping in this file for backtracking
+
+**Tier classification rules (Bible Part 23.1):**
+
+| Tier | Source Type | Examples | Freshness Threshold |
+|------|-------------|----------|---------------------|
+| 1 | Clinical guidelines / gov health bodies | AASM, WHO, CDC, FDA, ทันตแพทยสภา | 5 years |
+| 2 | Peer-reviewed journals | NEJM, JCSM, Cochrane, A&D Journal | 5 years (3 for emerging fields) |
+| 3 | Authoritative medical org publications | Specialty associations (AADSM, AAOMS, etc.) | 5 years |
+| 4 | Expert-authored books/textbooks | Standard textbooks | 7 years |
+| 5 | Brand internal data | Clinic outcomes report, surveys | 2 years (data ages quickly) |
+| 6 | Reputable secondary sources | Medical news (NYT Health, BBC Health) | 2 years |
+
+**Federation reuse rule:**
+- Before adding new citation: check if same DOI/PMID exists in pool already
+- If exists with `brand_scope=['*']` → REUSE (just reference cite_id, don't duplicate)
+- If exists with different brand_scope → expand brand_scope[] array
+- Only add NEW row if completely new citation
+
+**Editorial discipline:**
+- Phase B.2 Goal: ≥5 Tier 1-3 citations per main pillar topic (breadth)
+- Phase F Goal: per-page intensive — gap-fill specific claims (depth)
+- Pattern E (Brand Stance) requires: ≥1 Tier 1-2 supporting + Tier 5 brand internal data
+- Refresh rotation: stale citations get flagged for replacement at editorial review (Bible Part 23.4 stage 2)
+
+> **Important:** Citation pool grows organically across brands and phases. First brand to research a pillar (e.g., OSA) does heavy lifting (10-15 sources). Subsequent brands writing OSA reuse via brand_scope=['*'] + add their edge cases. Federation = compounding research investment over time.
+
+### 5.9 Why "Parent" is Text (Not Notion ID) at Planning
 
 > **Critical principle:** ที่ planning phase, **เราไม่มี Notion ID** เพราะยังไม่ได้ sync เข้า Notion. ทุก parent reference ต้องเป็น **text-based** (entity slug, sitemap_node_id, cluster_id).
 
@@ -472,7 +564,7 @@ how_it_becomes_native_relation:
 
 → **See Bible Part 18.8** for complete Two-Phase Hierarchy Sync Pattern
 
-### 5.9 Hierarchy Encoding — Two Methods
+### 5.10 Hierarchy Encoding — Two Methods
 
 ```yaml
 method_1_explicit_parent_column:
@@ -500,7 +592,7 @@ both_methods_yield_same_database_result:
 
 ---
 
-### 5.10 Per-Brand Repo Folder Structure (NEW in v1.2)
+### 5.11 Per-Brand Repo Folder Structure (NEW in v1.2)
 
 ทุก per-brand repo (`eywa-{brand-slug}`) ต้องใช้โครงสร้างเดียวกัน เพื่อให้ทุก brand work-flow consistent + onboarding ใหม่หา file ไม่หลง.
 
