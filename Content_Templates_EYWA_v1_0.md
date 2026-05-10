@@ -5,7 +5,7 @@
 
 **Version:** v1.3 (DRAFT 2026-05-10)
 **Status:** Proposed — pending DR-020 lock
-**Companion to:** Bible v3.14 + Schema Overview v1.10 + DECISION_RECORDS v1.6
+**Companion to:** Bible v3.14 + Schema Overview v1.10 + DECISION_RECORDS v1.7
 **Format:** Append-only with semantic versioning (v1.0 → v1.1 → v1.2 → v1.3 backward compatible)
 
 ## v1.3 Changelog (2026-05-10) — Section 2 Pattern Lock + Icon Taxonomy

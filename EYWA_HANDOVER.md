@@ -5,7 +5,7 @@
 
 **Document Version:** 1.6  
 **Last Updated:** 2026-05-10  
-**Companion to:** EYWA Bible v3.14 + Schema Overview v1.10 + DECISION_RECORDS v1.6 + Content_Templates_EYWA_v1_0.md (DRAFT)  
+**Companion to:** EYWA Bible v3.14 + Schema Overview v1.10 + DECISION_RECORDS v1.7 + Content_Templates_EYWA_v1_0.md (DRAFT)  
 **Created by:** The Gifted Digital Marketing Co., Ltd.
 
 ---
@@ -1617,6 +1617,60 @@ session_2026_05_10_part_4:  # 🆕 NEW v1.6 (continued same day — DR-020 inter
   governance_milestone: "DR-020 spec refined within Proposed status — no governance review needed (still in DRAFT lifecycle)"
   
   status: "Done. Content_Templates_EYWA_v1_0.md now v1.3 internal (~2,420 lines), 3 reference files in examples/. Ready for content writers + production work."
+
+session_2026_05_10_part_5:  # 🆕 NEW v1.6 (continued same day — Stage 1.5 + DR-021)
+  duration: ~3 hours
+  trigger: |
+    Operator question 1: "After sitemap confirmed → push to Supabase → 
+    sync Notion → fill columns → THEN start content writing — correct?"
+    Operator question 2: "Internal linking — does spec already have a table?"
+  parallel_workstream: "Stage 1.5 architecture + DR-021 (paired with DR-019/020 lock cycle)"
+  
+  problems_surfaced:
+    - "Section 7 had NO explicit phase between Sitemap Approved (Phase E) and Content Writing (Phase F) — Two-Phase Sync was implied at Phase G but should run earlier"
+    - "Internal linking storage in DB undefined — implicit only via cluster + entities + sitemap hierarchy, no per-edge fidelity"
+    - "Operator's pre-EYWA Notion DB ('Website & SEO Page Intelligent Master') had rich page-level linking strategy fields EYWA spec was missing (Authority Weight, Anchor Strategy Mode, Cross-Brand governance, etc.)"
+  
+  outcomes:
+    - Q1 confirmed: ใช่ workflow ที่ถูกคือ markdown → Supabase flat → Notion sync → column completion → Stage 2
+    - Q2 verdict: ไม่มีตารางเฉพาะใน Schema v1.10 — ต้องเพิ่ม
+    - Stage 1.5 added to Section 7 (between Stage 1 Gate and Stage 2)
+    - DR-021 (Internal Linking Architecture HYBRID) drafted + applied as Proposed
+    - DECISION_RECORDS v1.6 → v1.7
+    - 4 sub-decisions in DR-021:
+      1. 12 page-level strategy cols added to seo_website_page_master
+      2. New seo_page_internal_links junction table (~22 cols, per-edge)
+      3. Bidirectional consistency validation (reciprocal/anchor diversity/orphan/depth)
+      4. Cross-brand link governance (justification + approved flag required)
+    - Universal Pattern: Page-level strategy + Junction = HYBRID (best of both worlds)
+  
+  scope_clarification:
+    - Stage 1.5 is BEFORE content production (not after)
+    - Markdown planning files become audit snapshots after Stage 1.5
+    - Content writers query DB, not markdown
+    - Citation pool grows in Phase B.2 (breadth) AND Phase F step 3 (depth)
+    - Internal linking planned in Stage 1.5 step 3 (junction table)
+  
+  governance_milestone: "Fourth Proposed-status DR (DR-013/014 + DR-019 + DR-020 + DR-021) all in 2026-06-07 review cycle"
+  
+  pending_actions:
+    review_window:
+      - DR-021 review until 2026-06-07 (paired with DR-019/020)
+      - Schema v1.11 design (12 + 22 cols) for review
+      - n8n flow update planning (sync seo_page_internal_links)
+    
+    if_locked_2026_06_07:
+      - Schema v1.11 migrations 009 + 010 (Phase 1A.3)
+      - ACF field group additions (~3 hours)
+      - n8n flow update for new table sync (~6 hours)
+      - Bible v3.15 cross-references to DR-021 (Part 4 + Part 13)
+      - Content_Templates v1.4 update (Part 2 §6 Internal Link Checklist references DB)
+    
+    if_rejected:
+      - Document workaround: continue using implicit linking (cluster + entities + sitemap hierarchy)
+      - Re-evaluate when Stage 2 surfaces concrete pain points
+  
+  status: "Stage 1.5 documented. DR-021 Proposed. Schema v1.11 design pending lock 2026-06-07."
 ```
 
 ---
@@ -1628,22 +1682,34 @@ session_2026_05_10_part_4:  # 🆕 NEW v1.6 (continued same day — DR-020 inter
 
 ```
 ╔═══════════════════════════════════════════════════════════════════╗
-║ STAGE 1 — Foundation & Architecture                               ║
+║ STAGE 1 — Foundation & Architecture (Markdown planning)           ║
 ║   PHASE A: Brand Understanding                                    ║
 ║   PHASE B: Research & Discovery + Citation Pool Seeding 🆕        ║
 ║   PHASE C: Entity Genesis + Citation-Entity Linking 🆕            ║
 ║   PHASE D: Cluster & Domain Mapping                               ║
 ║   PHASE E: Sitemap Architecture (incl. Phase 4.5 Quality Gates)   ║
 ║                                                                   ║
-║   ▶ STAGE 1 GATE: Sitemap Approval ← MUST PASS BEFORE STAGE 2    ║
+║   ▶ STAGE 1 GATE: Sitemap Approval                               ║
 ╚═══════════════════════════════════════════════════════════════════╝
                               ↓
                     [operator approval]
                               ↓
 ╔═══════════════════════════════════════════════════════════════════╗
-║ STAGE 2 — Production & Deployment                                 ║
-║   PHASE F: Content Production (uses Stage 1 outputs)              ║
-║   PHASE G: Deployment                                             ║
+║ STAGE 1.5 — Supabase Migration & Linking 🆕 v1.6                 ║
+║   STEP 1: Flat load to Supabase (DR-006 Phase 1)                 ║
+║   STEP 2: Two-way sync Supabase ↔ Notion (DR-006 Phase 2)        ║
+║   STEP 3: Column completion + internal linking (DR-021) ⭐         ║
+║   STEP 4: Validation (FK, EUG, orphan, reciprocal, depth)        ║
+║                                                                   ║
+║   ▶ STAGE 1.5 GATE: DB Ready ← MUST PASS BEFORE STAGE 2          ║
+╚═══════════════════════════════════════════════════════════════════╝
+                              ↓
+                  [DB validation passed]
+                              ↓
+╔═══════════════════════════════════════════════════════════════════╗
+║ STAGE 2 — Production & Deployment (DB-driven)                     ║
+║   PHASE F: Content Production (queries DB, NOT markdown)          ║
+║   PHASE G: Deployment (publish from DB → WP, simpler post-v1.6)   ║
 ║                                                                   ║
 ║   ⤴ Backloop allowed: revisit Stage 1 if needed (brand pivot,    ║
 ║     market reality changes, KW data updates, new entity surfaces) ║
@@ -1797,6 +1863,110 @@ stage_1_gate_checklist:
 ```
 
 **Lock convention:** `git tag stage-1-approved-{brand}-{YYYY-MM-DD}` to mark approval point. Future Stage 1 revisits create new tags.
+
+---
+
+## 🔄 STAGE 1.5 — Supabase Migration & Linking 🆕 v1.6
+
+**Purpose:** ระหว่าง Stage 1 Gate (sitemap approved) และ Stage 2 (content writing) — ทุก planning data ต้อง migrate เข้า Supabase + ครบทุก auxiliary columns + internal linking planned ใน DB ก่อนเริ่มเขียน content
+
+**ทำไมต้องมี Stage 1.5:**
+- Stage 2 writers ต้อง query DB (citations, entities, sitemap, related pages, internal links) — ไม่ใช่ markdown
+- Federation reuse (cross-brand citation pool, link templates) ต้องการ DB
+- Two-Phase Sync (DR-006) — Phase 1 flat load + Phase 2 Notion sync ต้องเสร็จก่อน column completion
+- Internal linking planning (DR-021 — Proposed) ต้องเก็บใน junction table
+
+```yaml
+stage_1_5_workflow:
+  
+  step_1_flat_load_to_supabase:  # = DR-006 Phase 1
+    duration: "~1-2 hours per brand"
+    actions:
+      - Markdown files → Supabase flat (rows = rows in markdown)
+      - entities.md → seo_entity_graph
+      - clusters.md → seo_topic_cluster_master
+      - relationships.md → seo_entity_relationships
+      - sitemap.md → seo_website_page_master (sync_state='flat_loaded')
+      - citation-pool-seed.md → seo_citations
+    state: parent_notion_id NULL, sync_state='flat_loaded'
+    eug_check: ทุก entity ผ่าน eug_preflight_check() — หา duplicates ก่อน insert
+    via: n8n flow (markdown → Notion → Supabase) หรือ direct CSV import
+  
+  step_2_two_way_sync_supabase_notion:  # = DR-006 Phase 2 ⭐
+    duration: "~30 mins per brand (after Notion DBs configured)"
+    actions:
+      - Notion ดึงจาก Supabase → สร้าง pages ใน Notion DBs
+      - Notion-side parent assignment (drag-drop hierarchy)
+      - notion_id generated ที่ Notion → sync กลับมา Supabase
+      - sync_state advances to 'notion_synced'
+      - parent_notion_id resolved
+    via: existing n8n flows (Entity Graph 2-way ✅, Website Master Notion→SB ✅, SB→Notion pending)
+  
+  step_3_column_completion_in_supabase:  # ⭐ heart of Stage 1.5
+    duration: "~3-5 hours per brand"
+    
+    auxiliary_cols_not_in_planning_markdown:
+      - schema_markup_planned (jsonb — design JSON-LD per page)
+      - secondary_entities_fps[] (related entities per page beyond primary)
+      - author_fp + medical_reviewer_fp (assign reviewers to pages — required for YMYL)
+      - target_keyword_fp (link to keyword_master row)
+      - viability_assessment.predicted_volume (final post-KW data)
+      - schema_org_type per page (must match seo_layer mapping)
+      - content_brief refinement (DR-017 — may add details after sitemap review)
+    
+    internal_linking_planning:  # 🆕 DR-021 Proposed
+      via_seo_page_internal_links_junction_table:
+        - For each page: list outgoing links (which pages does it link TO?)
+        - Per edge: anchor_text + anchor_variant_type + section_context + link_type + link_role + link_priority
+        - Mark is_reciprocal where bidirectional
+        - Mark is_cross_brand where cross-brand (with cross_brand_justification)
+      
+      via_seo_website_page_master_strategy_cols:  # 🆕 DR-021
+        - Set authority_weight (0-100) per page
+        - Set strategic_page=true for "must rank" pages
+        - Set required_min_inbound + required_min_outbound per Tier
+        - Set link_priority_default + link_role_default + anchor_strategy_mode
+        - Set cross_brand_approved=true on pages allowed cross-brand outbound
+    
+    cross_table_validation:
+      - EUG check ทุก entity ใน DB (no duplicates)
+      - FK validation ทุกตาราง (page.primary_entity_fp exists, etc.)
+      - Citation freshness audit (flag stale Tier 1-3 citations)
+      - Reciprocal link detection trigger (auto-mark is_reciprocal=true)
+      - Anchor diversity check (warn same anchor >3x for different targets)
+      - Orphan detection (pages with required_min_inbound > actual)
+      - Authority depth check (Tier A ≤ 3, Tier B ≤ 4)
+  
+  step_4_stage_1_5_gate:
+    duration: "~30 mins"
+    checklist:
+      ☐ All planning markdown synced to Supabase (sync_state='notion_synced' all rows)
+      ☐ schema_markup_planned populated for all pages (per template)
+      ☐ author_fp + medical_reviewer_fp assigned (YMYL pages)
+      ☐ Internal linking planned in seo_page_internal_links (≥1 outgoing per page)
+      ☐ Page-level linking strategy cols populated (DR-021)
+      ☐ Reciprocal critical-priority links bidirectional ✅
+      ☐ Anchor diversity check passed (no exact-match overuse)
+      ☐ Orphan check passed (all required_min_inbound satisfied)
+      ☐ Cross-brand links: justification + approval present
+      ☐ Authority depth: Tier A ≤ 3, Tier B ≤ 4
+      ☐ Citation freshness audit clean (no Tier 1-3 stale)
+    
+    on_pass:
+      - git tag: stage-1-5-db-ready-{brand}-{YYYY-MM-DD}
+      - Update docs/stage-tags.md
+      - Notify content team: "ready for Stage 2 Phase F content writing"
+    
+    on_fail:
+      - resolve specific check before retry
+      - if Stage 1 file change needed → backloop pattern (re-pass Stage 1 Gate first)
+```
+
+**Lock convention:** `git tag stage-1-5-db-ready-{brand}-{YYYY-MM-DD}` marks DB ready for Stage 2.
+
+**ความสัมพันธ์กับ Phase G:**
+- ก่อน v1.6: Two-Phase Sync รันที่ Phase G (deploy time)
+- ตั้งแต่ v1.6: Two-Phase Sync รันที่ Stage 1.5 → Phase G เรียบง่ายขึ้น (content แค่ publish จาก DB ที่มีอยู่แล้ว → WP)
 
 ---
 
@@ -2031,7 +2201,7 @@ session_kickoff_checklist:
     ☐ Read latest Bible version (v3.14 as of 2026-05-10)
     ☐ Read latest Schema version (v1.10 as of 2026-05-10)
     ☐ Read brand-config.json
-    ☐ Read DECISION_RECORDS.md (v1.6, DR-001..DR-020 — DR-013/014/019/020 Proposed; DR-015..DR-018 Locked)
+    ☐ Read DECISION_RECORDS.md (v1.7, DR-001..DR-021 — DR-013/014/019/020/021 Proposed; DR-015..DR-018 Locked)
     ☐ Read Content_Templates_EYWA_v1_0.md (v1.3 internal DRAFT, ~2,420 lines — pending DR-020 lock)
     ☐ Read brand-concept.md (if exists)
   
@@ -2098,6 +2268,18 @@ session_kickoff_checklist:
     ☐ ICD/SNOMED/MeSH codes inside toggle (NOT visible by default)?
     ☐ Icons match Universal Icon Taxonomy? (see examples/SECTION-2-PATTERNS-REFERENCE.md)
     ☐ Per-template variation correct? (T8 uses patient_profile / T9 credentials / T10 address / T11/T13/T19 skip Section 2 entirely)
+  
+  internal_linking_awareness:  # 🆕 v1.6 (added 2026-05-10 — DR-021 Proposed, soft guidance until lock 2026-06-07)
+    ☐ Page-level strategy assigned? (authority_weight, node_tier_strategy, strategic_page, required_min_inbound/outbound, link_priority_default, anchor_strategy_mode)
+    ☐ Internal links planned in seo_page_internal_links junction (NOT in jsonb)?
+    ☐ Each edge has explicit anchor_text + section_context (NOT inherited from page-level)?
+    ☐ anchor_variant_type set per edge? (exact/partial/branded/generic/topical)
+    ☐ link_type per edge? (contextual/navigational/footer/breadcrumb/related/cta)
+    ☐ Reciprocal critical-priority links → both sides exist + is_reciprocal=true?
+    ☐ Anchor diversity: no from_page uses same anchor >3 times for different targets?
+    ☐ Orphan check: page with required_min_inbound > 0 has actual inbound count satisfied?
+    ☐ Cross-brand links: cross_brand_approved=true on from_page + cross_brand_justification text present?
+    ☐ Authority depth: Tier A pages crawl_depth ≤ 3, Tier B ≤ 4?
 ```
 
 ---

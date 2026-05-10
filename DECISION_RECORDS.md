@@ -2,7 +2,7 @@
 
 > **Append-only architectural decision log.** Each record explains WHY a decision was made — not just WHAT.
 
-**Document Version:** 1.6  
+**Document Version:** 1.7  
 **Last Updated:** 2026-05-10  
 **Format:** Reverse chronological (newest first)
 
@@ -31,6 +31,119 @@
 ---
 
 ## Decisions Log
+
+### [DR-021] — Internal Linking Architecture (HYBRID) (2026-05-10) 🌱
+
+**Status:** Proposed (review until 2026-06-07 — paired with DR-019/020 lock cycle)
+**Bible Reference:** Part 4 (Sitemap), Part 13 (LLMO authority signals), Part 26 (Schema Pipeline)
+**Schema Reference:** v1.10 → v1.11 (adds 12 columns to `seo_website_page_master` + new table `seo_page_internal_links` ~22 cols)
+**Phase 1 Reference:** New migrations `009_add_linking_strategy_cols.sql` + `010_create_seo_page_internal_links.sql` (Phase 1A.3)
+**Companion DRs:** DR-001 (Federation), DR-006 (Two-Phase Sync), DR-017 (content_brief), DR-019 (schema), DR-020 (templates)
+**Trigger:** Operator review surfaced gap — current spec has implicit linking (cluster + entities + sitemap hierarchy) but no per-edge fidelity (anchor text, section context, link type)
+
+**Context:**
+
+```yaml
+gap_in_v1_10:
+  implicit_linking_only:
+    - same topical_cluster_id → "related" pages
+    - secondary_entities_fps[] overlap → topical
+    - sitemap_node_id prefix → parent-child
+  
+  missing_for_production_seo:
+    - Anchor text per-edge (Google ranks anchor diversity)
+    - Section context (link from §7.2 ≠ link from §14)
+    - Link type taxonomy (contextual / navigational / footer / breadcrumb)
+    - Bidirectional consistency check (A→B planned but B↛A?)
+    - Cross-brand link governance
+    - Authority flow + orphan detection
+    - Anchor diversity tracking
+
+operator_notion_db_precedent:
+  source: "Website & SEO Page Intelligent Master" (collection 496810b9-aac2-4409-94d0-540ae0cbdda8)
+  page_level_strategy_present:
+    - Authority Weight, Link Equity Score, Orphan Risk Score, Crawl Depth
+    - Required Min Inbound/Outbound, Link Priority, Link Role
+    - Anchor Strategy Mode, Anchor Diversity Score
+    - Cross-Brand: Approved/Justification/Type/Role/Risk/Ratio
+  limitation: |
+    Links stored as "page-set relations" (JSON array of page URLs).
+    Anchor text DERIVED via rollup from target's Target Keyword.
+    Per-edge metadata (anchor variant per link, section context, link type) NOT captured.
+```
+
+**Decision (4 sub-decisions to lock together):**
+
+1. **Enhance `seo_website_page_master` with 12 page-level linking strategy columns** (port from operator's Notion DB):
+   - Authority management: `authority_weight`, `link_equity_score`, `orphan_risk_score`, `crawl_depth`, `strategic_page`, `node_tier_strategy`
+   - Strategy defaults: `required_min_inbound`, `required_min_outbound`, `link_priority_default`, `link_role_default`, `anchor_strategy_mode`
+   - Cross-brand: `cross_brand_approved`, `cross_brand_role`
+
+2. **New junction table `seo_page_internal_links`** (per-edge fidelity):
+   - Endpoints: `from_page_fp`, `to_page_fp`, `to_external_url`
+   - Link metadata: `link_type`, `link_role`, `link_priority`
+   - Anchor + context: `anchor_text`, `anchor_variant_type` (exact/partial/branded/generic/topical), `section_context`, `surrounding_text_snippet` (200 chars)
+   - Lifecycle: `planned`, `implemented`, `status` (planned/live/broken/deprecated)
+   - Quality: `is_reciprocal`, `is_cross_brand`, `cross_brand_justification`
+   - Audit: timestamps + `first_planned_at`, `last_verified_at`
+
+3. **Bidirectional Consistency Validation**:
+   - Reciprocal detection trigger (auto-mark `is_reciprocal=true` when A→B and B→A both exist)
+   - Anchor diversity warning (same anchor used >3 times for different targets → flag in editorial review)
+   - Orphan detection (pages with `actual_inbound < required_min_inbound` flagged at Stage 1.5 Gate)
+   - Authority depth check (Tier A pages crawl_depth ≤ 3, Tier B ≤ 4)
+
+4. **Cross-Brand Link Governance**:
+   - `is_cross_brand=true` REQUIRES `cross_brand_justification IS NOT NULL` AND `from_page.cross_brand_approved=true` (DB CHECK constraint)
+   - Cross-brand role tracked: 'exporter' / 'importer' / 'balanced'
+   - Editorial review (Bible Part 23.4 stage 4 brand voice) checks justification quality
+
+**Rationale:**
+
+- **Why HYBRID:** Page-level alone (Notion DB approach) lacks per-edge fidelity. Junction alone lacks page-level strategy fields. Both layers needed for production-grade SEO.
+- **Why port from Notion DB:** Operator field-tested fields work — Authority Weight, Link Equity Score, Anchor Strategy Mode are proven SEO concepts.
+- **Why junction table (not jsonb on page_master):** Bidirectional queries free with junction (`WHERE to_page_fp = X`). Per-edge metadata structured + indexable. Anchor diversity SQL aggregations possible. jsonb at scale (5K+ pages × 10+ links each = 50K+ edges) = poor performance.
+- **Why now (DR-021 in current cycle):** Stage 1.5 (Handover v1.6) NEEDS internal linking storage. Without `seo_page_internal_links`, content writers cannot consult planned link strategy. Federation reuse (cross-brand link templates) requires query-able junction.
+- **Why paired with DR-019/020 cycle:** Operator already in review mode 2026-06-07; bundle saves governance overhead.
+
+**Consequences:**
+
+- ✅ **SEO benefits:** anchor diversity per-edge (avoids Penguin penalty), link equity flow trackable, orphan detection automated, authority depth enforced, cross-brand governance prevents toxic patterns
+- ✅ **Content production:** writers see explicit link instructions per section, AI/Claude queries DB for precise anchor + context, bidirectional consistency check catches drift
+- ✅ **Federation:** link strategy templates reusable across brands (VTH defines OSA pattern → Deezy/VitalSleep reuse)
+- ✅ **Quality automation:** Stage 1.5 Gate validates orphan + reciprocal + anchor diversity at DB level
+- ⚠️ Schema v1.11 migration (~4 hours dev)
+- ⚠️ ACF field group additions (~3 hours)
+- ⚠️ n8n flow updates (~6 hours)
+- ⚠️ Initial population per brand (~2-3 hours per brand)
+- ⚠️ Total: ~15-20 hours one-time + ~2-3 hours per brand
+- 🚧 Follow-up: DR-022 candidate (External Authoritative Link Tracking — extend to_external_url usage)
+- 🚧 Follow-up: DR-023 candidate (Anchor Diversity Algorithm — formal scoring formula)
+
+**Open Questions for Review:**
+
+1. anchor_variant_type enum scope — 5 enough or add 'cta'? *(Recommend: keep 5, add later if practice surfaces need)*
+2. surrounding_text_snippet — 80 → 200 chars? *(Recommend: 200 — captures full sentence)*
+3. is_reciprocal — auto-trigger or manual? *(Recommend: auto-trigger AFTER INSERT/UPDATE)*
+4. Status enum — add 'pending_review'? *(Recommend: yes, for editorial workflow)*
+5. external_url scope — replace seo_page_citations? *(Recommend: keep separate — citations are different model; external links here = nav external only)*
+6. Authority Weight — manual vs computed? *(Recommend: manual baseline + computed link_equity_score)*
+7. Crawl depth computation frequency — nightly cron acceptable? *(Recommend: yes + on-demand at Stage 1.5 Gate)*
+
+**References:**
+
+- DR-001 (Federation Pattern) — brand_scope foundation
+- DR-006 (Two-Phase Hierarchy Sync) — informs Stage 1.5 timing
+- DR-019 (Schema Strategy) — link role for AI-only schemas
+- DR-020 (Universal Content Template) — Part 2 §6 Internal Link Checklist references this
+- Bible Part 4.X (Sitemap Architecture)
+- Bible Part 13 (LLMO authority signals)
+- Schema v1.10 §5.1 — page_master expansion target
+- External: Notion DB "Website & SEO Page Intelligent Master" (operator's pre-EYWA precedent — collection 496810b9-aac2-4409-94d0-540ae0cbdda8)
+- Companion: `Content_Templates_EYWA_v1_0.md` — Part 2 §6 Internal Link Checklist
+- Draft: `scratchpad/drafts/DR-021-internal-linking-architecture.md`
+
+---
 
 ### [DR-020] — Universal Content Template Standard (2026-05-10) 🌱
 
@@ -1995,6 +2108,17 @@ decision_record_governance:
 ---
 
 ## Changelog
+
+### v1.7 (2026-05-10) — DR-021 Proposed (Internal Linking Architecture HYBRID) 🌱
+
+Triggered by operator review of pre-EYWA Notion DB "Website & SEO Page Intelligent Master" + Stage 1.5 (Handover v1.6) needing internal linking storage. Surfaces a gap in v1.10 (implicit linking only via cluster/entities/sitemap hierarchy — no per-edge fidelity).
+
+- ➕ **DR-021 (NEW, Proposed):** Internal Linking Architecture (HYBRID). 4 sub-decisions: (1) 12 page-level strategy cols added to page_master, (2) new `seo_page_internal_links` junction (~22 cols, per-edge), (3) bidirectional consistency validation (reciprocal detection, anchor diversity, orphan check, depth), (4) cross-brand link governance.
+- 📝 **Review cycle:** 4 weeks (until 2026-06-07) — paired with DR-019/020 cycle.
+- 📝 **Schema impact:** v1.11 migration — 12 new page_master columns + new `seo_page_internal_links` table. 2 new migrations (009 + 010, Phase 1A.3).
+- 📝 **Operator Notion DB precedent:** Page-level fields ported (Authority Weight, Link Equity Score, Anchor Strategy Mode, Cross-Brand governance). Junction adds per-edge fidelity Notion lacked.
+- 📝 **Independent of DR-013/014** — different governance scope. Complements DR-019 (schema emission) + DR-020 (content composition) — together form complete content production stack: composition + emission + linking.
+- 📝 **Stage 1.5 dependency:** Handover Stage 1.5 step 3 references this for internal linking planning step.
 
 ### v1.6 (2026-05-10) — DR-020 Proposed (Universal Content Template Standard) 🌱
 

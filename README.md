@@ -80,6 +80,38 @@ Real-world feedback from VTH BioDent (Naphannop S.) surfaced 4 process gaps in t
 
 ---
 
+## 🌱 Governance Update — DR-021 Proposed (2026-05-10)
+
+**Trigger:** Stage 1.5 (Handover v1.6) needs internal linking storage. Operator's pre-EYWA Notion DB ("Website & SEO Page Intelligent Master") had rich page-level linking strategy. Current Schema v1.10 has implicit linking only (cluster + entities + sitemap hierarchy) — no per-edge fidelity.
+
+- 🌱 **DR-021 (Proposed):** Internal Linking Architecture HYBRID — review until **2026-06-07** (paired with DR-019/020 cycle)
+
+**4 sub-decisions to lock together:**
+1. **12 Page-Level Strategy Columns** — port from Notion DB to `seo_website_page_master` (Authority Weight, Strategic Page, Required Min In/Out, Link Priority Default, Anchor Strategy Mode, Cross-Brand governance, etc.)
+2. **New Junction Table `seo_page_internal_links`** — ~22 cols per-edge (anchor_text, anchor_variant_type, section_context, link_type, link_role, link_priority, is_reciprocal, is_cross_brand, etc.)
+3. **Bidirectional Consistency Validation** — reciprocal detection trigger, anchor diversity warning, orphan detection, authority depth check
+4. **Cross-Brand Link Governance** — `is_cross_brand=true` REQUIRES `cross_brand_justification` + `from_page.cross_brand_approved=true`
+
+**Schema v1.11 deferred additions:**
+- 12 new columns on `seo_website_page_master`
+- New table `seo_page_internal_links` (~22 columns)
+- New migrations: `009_add_linking_strategy_cols.sql` + `010_create_seo_page_internal_links.sql` (Phase 1A.3)
+
+**HYBRID rationale:**
+- Page-level alone (Notion DB approach) → lacks per-edge fidelity (anchor text, section context per edge)
+- Junction alone → lacks page-level strategy (Authority Weight, Mode, Required Min)
+- HYBRID = best of both worlds for production-grade SEO + content production fidelity
+
+**Effort estimate (if locked):** ~15-20 hours one-time + ~2-3 hours per brand for population.
+
+**If LOCKED 2026-06-07:** Schema v1.11 migrations + ACF field updates + n8n flow updates + Bible v3.15 cross-references (Part 4 + Part 13) + Content_Templates v1.4 (Part 2 §6 Internal Link Checklist references DB)
+
+**If REJECTED:** Continue with implicit linking via cluster + entities + sitemap hierarchy; re-evaluate when Stage 2 surfaces concrete pain points
+
+> **Note:** DR-021 complements DR-019 (schema emission) + DR-020 (content composition) — together form complete content production stack: composition + emission + linking.
+
+---
+
 ## 🌱 Governance Update — DR-020 Proposed (2026-05-10)
 
 **Trigger:** VTH BioDent /mouth-biomapping/ EEAT audit (visual EEAT good, structured EEAT broken — 6 failures) + Deezy sitemap gap analysis (13 distinct page types, no universal template framework).
@@ -367,7 +399,8 @@ See `EYWA_HANDOVER.md` Section 6 + `PHASE_1_DECISIONS.md` for details.
 | **DR-018** | **Page Content Length Standards** | 🔒 **Locked (NEW v1.4)** |
 | **DR-019** | **Schema Strategy for Post-Rich-Results Era (FAQ/HowTo/AggregateRating)** | 🌱 **Proposed (NEW v1.5 — review until 2026-06-07)** |
 | **DR-020** | **Universal Content Template Standard (25 templates × ~25 blocks)** | 🌱 **Proposed (NEW v1.6 — review until 2026-06-07)** |
-| DR-021..026 | Various (WordPress hosting, Supabase tier, migration repo, Notion sync scope, branch testing, etc.) | ⏳ Placeholder |
+| **DR-021** | **Internal Linking Architecture (HYBRID — page strategy + junction)** | 🌱 **Proposed (NEW v1.7 — review until 2026-06-07)** |
+| DR-022..026 | Various (WordPress hosting, Supabase tier, migration repo, Notion sync scope, branch testing, etc.) | ⏳ Placeholder |
 
 See `DECISION_RECORDS.md` for full rationale.
 
@@ -432,7 +465,8 @@ The EYWA database schema (v1.10) consists of **28 tables organized into 9 groups
 - v1.0 (2026-05-07) — Initial release
 
 **Decision Records:**
-- **v1.6 (2026-05-10)** — DR-020 (Universal Content Template Standard) Proposed 🌱 *(current)*
+- **v1.7 (2026-05-10)** — DR-021 (Internal Linking Architecture HYBRID) Proposed 🌱 *(current)*
+- v1.6 (2026-05-10) — DR-020 (Universal Content Template Standard) Proposed 🌱
 - v1.5 (2026-05-10) — DR-019 (Schema Strategy Post-Rich-Results) Proposed 🌱
 - v1.4 (2026-05-10) — DR-015..018 (Market Reconciliation + Viability + Brief + Length Standards) 🔒
 - v1.3 (2026-05-09) — DR-013 (Edge v3.5 Expansion) + DR-014 (Concept Subtype Lock) Proposed 🌱
@@ -445,14 +479,19 @@ The EYWA database schema (v1.10) consists of **28 tables organized into 9 groups
   - DR-013/014 lock → Edge vocabulary 10 → 12 + typed edge_note + concept subtype lock
   - DR-019 lock → Part 26 restructure (3-purpose schema taxonomy) + Part 9 Featured Snippet pattern + Part 20 KPI replacement
   - DR-020 lock → Part 6 + Part 9 reference new companion file (Content_Templates_EYWA_v1_0.md)
-- 🔮 **Schema v1.11** (DR-013/014 only, no DDL from DR-019/020 v1.0):
-  - edge_evidence_citation + medical_reviewer_signoff fields + Phase 1E migrations
+  - DR-021 lock → Part 4 + Part 13 reference internal linking architecture
+- 🔮 **Schema v1.11** (combined DDL from DR-013/014 + DR-021):
+  - DR-013/014: edge_evidence_citation + medical_reviewer_signoff fields
+  - DR-021: 12 page-level linking strategy cols + new `seo_page_internal_links` junction table
   - Future v1.1 of DR-020 may add `template_id` + `template_version` columns to page_master
+  - Phase 1A.3 migrations: 009_add_linking_strategy_cols.sql + 010_create_seo_page_internal_links.sql
+  - Phase 1E migrations (if DR-013/014 locked): edge vocabulary expansion
 - 🔮 **New canonical companion file** (post DR-020 lock):
   - `Content_Templates_EYWA_v1_0.md` upgrades from DRAFT to LOCKED status (already in repo root)
 - ⚠️ DR-013/014 review 2026-05-15 (lock or reject)
 - ⚠️ DR-019 review 2026-06-07 (lock 1 week after Google June 2026 effective date)
 - ⚠️ DR-020 review 2026-06-07 (paired with DR-019 cycle)
+- ⚠️ DR-021 review 2026-06-07 (paired with DR-019/020 cycle — together = full content production stack)
 
 ---
 

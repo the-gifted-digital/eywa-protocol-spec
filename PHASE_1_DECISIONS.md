@@ -1,11 +1,11 @@
 # EYWA™ Protocol — Phase 1 Decisions Summary
 
-**Document Version**: 1.5
+**Document Version**: 1.6
 **Date**: 2026-05-10
-**Status**: 🔒 Locked (Phase 1A specs + DR-015..018) + 🌱 DR-013/014 + DR-019 + DR-020 Proposed
+**Status**: 🔒 Locked (Phase 1A specs + DR-015..018) + 🌱 DR-013/014 + DR-019 + DR-020 + DR-021 Proposed
 **Phase**: 1 — Supabase Database Foundation
 **Project**: GTGT (in-place upgrade)
-**Companion to**: Bible v3.14 + Schema Overview v1.10 + Handover v1.6 + DECISION_RECORDS v1.6 + Content_Templates_EYWA_v1_0.md (DRAFT)
+**Companion to**: Bible v3.14 + Schema Overview v1.10 + Handover v1.6 + DECISION_RECORDS v1.7 + Content_Templates_EYWA_v1_0.md (DRAFT)
 
 ---
 
@@ -357,6 +357,19 @@ These items emerged from real EGP work (Naphannop S.) and are now in Proposed st
   - Future v1.1 Schema may add `template_id` + `template_version` columns (deferred)
   - Independent of DR-013/014; complements DR-017/018/019
 
+- 🌱 **DR-021 — Internal Linking Architecture (HYBRID)**: Triggered by Stage 1.5 (Handover v1.6) needing internal linking storage + operator's pre-EYWA Notion DB precedent.
+  - Status: Proposed (review until 2026-06-07 — paired with DR-019/020 cycle)
+  - Blocking: NO for Phase 1A migrations (deferred to v1.11/Phase 1A.3 if locked)
+  - 4 sub-decisions:
+    1. 12 page-level linking strategy cols added to `seo_website_page_master` (port from Notion DB)
+    2. New `seo_page_internal_links` junction table (~22 cols per-edge)
+    3. Bidirectional consistency validation (reciprocal/anchor diversity/orphan/depth)
+    4. Cross-brand link governance (justification + approved flag required)
+  - Schema v1.11 migrations: 009_add_linking_strategy_cols.sql + 010_create_seo_page_internal_links.sql
+  - HYBRID rationale: page-level alone (Notion) lacks per-edge fidelity; junction alone lacks page-level strategy
+  - Total effort if locked: ~15-20 hours one-time + ~2-3 hours per brand
+  - Independent of DR-013/014; complements DR-019/020 — together = full content production stack (composition + emission + linking)
+
 ### Phase 1 Operational Items (renumbered from v1.1)
 
 These items will become DR-022+ when decided:
@@ -423,4 +436,4 @@ These items will become DR-022+ when decided:
 
 ---
 
-**End of Phase 1 Decisions Summary v1.5**
+**End of Phase 1 Decisions Summary v1.6**
