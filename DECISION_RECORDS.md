@@ -2,8 +2,8 @@
 
 > **Append-only architectural decision log.** Each record explains WHY a decision was made — not just WHAT.
 
-**Document Version:** 1.8  
-**Last Updated:** 2026-05-11  
+**Document Version:** 1.9  
+**Last Updated:** 2026-05-12  
 **Format:** Reverse chronological (newest first)
 
 ---
@@ -31,6 +31,208 @@
 ---
 
 ## Decisions Log
+
+### [DR-025] — Restore Local SEO Tables + Consolidate `seo_locations` → `seo_branches` (2026-05-12) 🔒🏥
+
+**Status:** Locked 2026-05-12
+**Bible Reference:** Part 4.4 (Type B Branch Landing), Part 10.5 (Local SEO), Part 17.6 (n8n GROUP E Flows), Appendix B.5
+**Schema Reference:** v1.11 (Group 1 — Brand & Organization)
+
+**Context:**
+
+Bible v3.14 Appendix B.5 specifies a **5-table Local SEO subsystem** (Category D, Phase 1 Day 1 for clinic verticals): `seo_locations`, `seo_reviews`, `seo_directory_listings`, `seo_gbp_posts`, `seo_local_rankings`. Bible Part 17.6 (n8n GROUP E) defines 4 operational flows (E1 GBP Reviews sync 6h, E2 GBP Posts publish, E3 NAP audit weekly, E4 GBP Posts metrics) that depend on these tables.
+
+Schema_Overview v1.10 silently dropped 3 of these tables (`seo_reviews`, `seo_directory_listings`, `seo_gbp_posts`) — never explained, never DR'd. Only `seo_local_rankings` survived (Group 5) and `seo_locations` was renamed to `seo_branches` (Group 1, Section 3.2) with a **minimal schema (~25 cols)** missing ~15 columns specified in Bible Table 24 (multi-directory IDs, GBP categories/rating, photos, compliance, staff assignment, special hours).
+
+Without these tables: Bible n8n Group E flows are non-implementable; clinic brands (VTH BioDent, Deezy, TC Smile, SmileScape, Dr. Trin) cannot deliver Local SEO at Day 1 (Bible Part 10.5 promise).
+
+**Decision:**
+
+**A. Restore all 5 Local SEO tables in Schema v1.11.** Three are net-new (reviews, directory_listings, gbp_posts), one is enhanced (branches), one already exists (local_rankings — only FK rename needed).
+
+**B. Consolidate `seo_locations` → `seo_branches`** as the canonical name. Reasons:
+- `seo_branches` already exists in Schema v1.10 with real `branch_*` fingerprint columns + Notion sync state
+- Bible Part 4.4 already uses "Branch Landing" terminology
+- Thai operator context: "สาขา" (branch) is the established business term
+- Semantically 1 brand → N branches, 1 branch = 1 physical location (1:1 mapping) — no need for 2 tables
+- Renaming in Bible (~8 references) is cheaper than renaming in Schema + Notion + n8n flows
+
+**C. Enhance `seo_branches` to full Bible Table 24 spec** — add ~15 columns:
+- NAP completeness: `business_name_legal`, `business_name_brand`, `district`, `formatted_address`, `plus_code`
+- Contact: `line_id`, `special_hours jsonb`
+- Staff/Equipment: `doctors_at_branch_fps text[]` (→ seo_authors_reviewers), `equipment_at_branch_fps text[]`, `specialties_at_branch text[]`
+- GBP completeness: `gbp_account_id`, `gbp_categories text[]`, `gbp_review_count int`, `gbp_avg_rating numeric(3,2)`, `gbp_last_synced_at timestamptz`
+- Other directories: `apple_maps_id`, `facebook_page_url`, `wongnai_url`, `wongnai_id`
+- Schema/Photos: `local_business_schema_type`, `primary_photo_url`, `exterior_photos text[]`, `interior_photos text[]`
+- Status/Compliance: `status` (active/closed/temp-closed), `opened_date`, `closed_date`, `business_registration_no`, `medical_license_no`
+- NEW FK: `organization_entity_id uuid FK→seo_entity_graph(id)` — links branch to its organization entity for KG
+
+**D. Three new tables (full schemas in Schema v1.11 §3.5/3.6/3.7):**
+
+```yaml
+seo_reviews:
+  purpose: Multi-platform review aggregation + PDPA-safe response workflow
+  fk: branch_id→seo_branches, brand_id→brands, responded_by_fp→seo_authors_reviewers, mentioned_entities_fps[]→seo_entity_graph
+  sources: GBP, Wongnai, Facebook, Google Maps, Pantip mentions
+  unique: (source_platform, source_review_id) — dedupe
+  pdpa_critical: response_legal_reviewed, pdpa_risk_flag, reviewer_anonymized
+  flow: E1 (GBP Reviews sync every 6h)
+
+seo_directory_listings:
+  purpose: Track NAP citations across ~50 directories per branch + auto-detect inconsistency
+  fk: branch_id→seo_branches, brand_id→brands
+  distinct_from: seo_citations (academic/PubMed — these are Local SEO directory listings)
+  key_fields: directory_name, citation_url, status, claim_status, business_name_listed, address_listed, phone_listed, nap_match_score (GENERATED), has_inconsistency
+  flow: E3 (NAP audit weekly)
+
+seo_gbp_posts:
+  purpose: GBP Posts management + local archive (GBP posts disappear after 6 months)
+  fk: branch_id→seo_branches, brand_id→brands, approved_by_fp→seo_authors_reviewers
+  multi_location: batch_id, parent_post_id (cross-branch campaigns)
+  flows: E2 (publish), E4 (metrics sync daily)
+```
+
+**E. `seo_local_rankings` FK rename:** `location_id` → `branch_id` (FK → `seo_branches`). Already in Schema v1.10 Group 5 — Bible Table 28 referenced `location_id` which never matched the actual schema.
+
+**F. Bible Appendix B.5 + Part 17.6 + Part 4.4 rename:** All 8 references to `seo_locations` in Bible v3.14 become `seo_branches`. Bumps Bible v3.14 → v3.15.
+
+**Rationale:**
+
+- **Why now (not deferred):** Clinic brands are in active Stage 1 work (VTH BioDent done, SmileScape Phase E, 3 others queuing). Phase 5 of any clinic deployment requires Local SEO — postponing forces architecture rework later.
+- **Why Locked immediately (no Proposed soak):** This is a *restore of forgotten spec*, not new design. Bible v3.14 already documented these tables (Appendix B.5 unchanged since v2.3 / 2026-05-01); Schema simply fell behind. The DR formalizes catch-up, doesn't propose new ideas.
+- **Why consolidate to `seo_branches` (not `seo_locations`):** See §B above. Lower total churn (rename Bible once vs rename Schema + Notion + n8n + downstream brand docs).
+
+**Consequences:**
+
+- ✅ Bible n8n GROUP E flows (E1/E2/E3/E4) become implementable
+- ✅ Clinic brand Phase 5 (Local SEO) unblocked
+- ✅ NAP consistency monitoring + PDPA-safe review responses operational
+- ✅ Schema v1.11 ships with Group 1 = 7 tables (was 4), Group 5 unchanged
+- ⚠️ Migration files needed: `009_enhance_seo_branches.sql`, `010_create_seo_reviews.sql`, `011_create_seo_directory_listings.sql`, `012_create_seo_gbp_posts.sql`, `013_rename_local_rankings_fk.sql`
+- ⚠️ Existing brands with `seo_branches` rows: backfill new columns as available (NULL allowed initially)
+- ⚠️ Bible v3.15 ships paired with Schema v1.11 — coordinated bump
+- ⚠️ Brand snapshot blocks (`eywa_spec_snapshot`) need refresh at next Stage gate for brands currently on bible_version 3.14
+
+**References:**
+- Bible Part 4.4 (Type B Branch Landing) — naming origin
+- Bible Part 10.5 (Local SEO) — strategic rationale
+- Bible Part 17.6 GROUP E (n8n Flows E1-E4) — operational dependencies
+- Bible Appendix B.5 (5-table Local SEO subsystem)
+- Schema v1.11 §3.2 (enhanced seo_branches), §3.5 (seo_reviews), §3.6 (seo_directory_listings), §3.7 (seo_gbp_posts), §7.2 (seo_local_rankings FK rename)
+- DR-024 (paired — Restore 9 Extension Tables, same v1.11 release)
+
+---
+
+### [DR-024] — Restore 9 Entity Extension Tables (2026-05-12) 🔒🧬
+
+**Status:** Locked 2026-05-12
+**Bible Reference:** Part 2.5 (Entity Polymorphism), Part 5.11 (Group 9), Part 14 (Vertical Profiles), Appendix B.3
+**Schema Reference:** v1.11 (Group 9 — Entity Extensions & Templates)
+
+**Context:**
+
+Bible v3.14 Appendix B.3 specifies **9 type-specific extension tables** (Category B, 1:1 FK to `seo_entity_graph` ON DELETE CASCADE, populate trigger when `entity_type` matches):
+
+```
+11. seo_entity_ingredient   (entity_type='ingredient')
+12. seo_entity_product      (entity_type='product')
+13. seo_entity_procedure    (entity_type='procedure')
+14. seo_entity_condition    (entity_type='condition')
+15. seo_entity_drug         (entity_type='drug')
+16. seo_entity_anatomy      (entity_type='anatomy')
+17. seo_entity_organization (entity_type='organization')
+18. seo_entity_lab_test     (entity_type='lab_test')
+19. seo_entity_device       (entity_type='device')
+```
+
+This was introduced in Bible v2.0 (2026-04-30) as the universal core + extension pattern (`#`universal entity_graph` + 1:1 type-specific extension`) and has not changed in strategy since.
+
+Schema_Overview v1.10 documents only 3 of 9 extensions (`ingredient`, `procedure`, `device`) in Group 9 (§11.1-11.3) plus `seo_programmatic_templates` (§11.4 — unrelated to entity polymorphism). The remaining 6 extensions (product, condition, drug, anatomy, organization, lab_test) silently disappeared between Schema v1.0 (which Bible §5.11 line 6918 references for "Full schemas + all 22-24 columns per extension table") and v1.10. No DR explained the removal.
+
+Without these tables: T1 medical-condition template (Bible Part 4.1.1) has no condition extension to bind ACF fields; drug monograph pages have no monograph store; anatomy entities can't carry FMA/UBERON IDs for knowledge graph; external orgs collapse into either `brands` (wrong scope) or generic `entity_graph` (loses typed columns).
+
+**Decision:**
+
+**A. Restore 6 missing extension tables in Schema v1.11 Group 9.** All 1:1 FK to `seo_entity_graph(id)` via `entity_fp text FK→seo_entity_graph.fingerprint` (matches pattern of `seo_entity_ingredients` v1.10 §11.1).
+
+```yaml
+seo_entity_product:
+  entity_type: product
+  schema_org: Product, MedicalDevice (overlap)
+  key_fields: gtin, sku, brand_owner_fp, product_category, ingredients_fps[]→seo_entity_ingredient, thai_fda_reg_no, regulatory_status, pregnancy_safe, certifications[], price_range
+  used_by: the brand (skincare), Dr. Trin (supplement), any brand selling product
+  template: T-product, T-comparison, T-listicle
+
+seo_entity_condition:
+  entity_type: condition
+  schema_org: MedicalCondition
+  key_fields: icd10_code, snomed_ct_id, mesh_id, prevalence_thailand, severity_levels[], symptoms[], related_anatomy_fps[]→seo_entity_anatomy, treatment_drugs_fps[]→seo_entity_drug, treatment_procedures_fps[]→seo_entity_procedure, affected_age_groups[]
+  used_by: ALL medical brands (VTH, Deezy, SmileScape, Dr. Trin, the brand)
+  template: T1-medical-condition (primary Bible Part 4.1.1)
+
+seo_entity_drug:
+  entity_type: drug
+  schema_org: Drug
+  key_fields: rxnorm_code, atc_code, thai_fda_reg_no, prescription_required, indications_fps[]→seo_entity_condition, contraindications_fps[]→seo_entity_condition, side_effects[], pregnancy_category, breastfeeding_category, controlled_substance_class
+  used_by: VTH (post-surgery antibiotics), Dr. Trin (TRT/vitamins), the brand (cosmeceuticals borderline)
+  template: T-drug-monograph
+
+seo_entity_anatomy:
+  entity_type: anatomy
+  schema_org: AnatomicalStructure
+  key_fields: fma_id (Foundational Model of Anatomy), uberon_id, body_system, parent_anatomy_fp (self-FK hierarchy), child_anatomy_fps[], affected_by_conditions_fps[]→seo_entity_condition
+  used_by: ALL medical brands (anatomy → condition → procedure knowledge graph)
+  template: T-anatomy-reference (mostly supporting entity, rarely standalone page)
+
+seo_entity_organization:
+  entity_type: organization
+  schema_org: Organization, MedicalOrganization
+  key_fields: wikidata_qid, legal_name, founding_date, headquarters_location, parent_organization_fp (self-FK), organization_type (clinic/hospital/professional_association/regulator/manufacturer/accreditation_body)
+  used_by: ALL brands — external orgs (Thai Dental Association, Thai FDA, ADA, Wikidata Q-entities, manufacturers)
+  scope_note: SEPARATE from `brands` table — brands = own brands (~10-50); seo_entity_organization = external refs (~100-500)
+  template: About pages, citation source attribution, accreditation refs
+
+seo_entity_lab_test:
+  entity_type: lab_test
+  schema_org: MedicalTest
+  key_fields: loinc_code, cpt_code, test_category (imaging/blood/biopsy), sample_type, preparation_instructions, reference_ranges[], related_conditions_fps[]→seo_entity_condition
+  used_by: VTH (x-ray, CBCT, blood test pre-surgery), Dr. Trin (hormone panel), future hospitals
+  template: T-diagnostic-service, T-test-info
+```
+
+**B. Keep existing 3 extensions** (`seo_entity_ingredients`, `seo_entity_devices`, `seo_entity_procedures`) — already in §11.1-11.3. Plural form (`ingredients` not `ingredient`) preserved for backward compat; Bible Appendix B singular form treated as informal.
+
+**C. Keep `seo_programmatic_templates`** as §11.10 (was §11.4) — not an entity extension, but logically Group 9 (template registry for Type C programmatic pages, Bible Part 9).
+
+**D. Group 9 count update:** 4 → 10 tables (9 extensions + 1 template registry).
+
+**Rationale:**
+
+- **Why Locked immediately (no Proposed soak):** Bible v2.0 strategy unchanged for 13+ days; Bible Appendix B.3 has been authoritative since 2026-04-30; Schema v1.10 drop was undocumented (no DR, no changelog note) — clearly oversight, not deliberate design change. Restoring known-good spec doesn't warrant 2-week soak.
+- **Why all 9 (not subset):** Bible Vertical Profiles (Part 14) explicitly maps 6 verticals to extension table usage (dental → procedure/condition/drug; skincare → ingredient/product/condition; etc.). Partial restoration creates per-vertical gaps.
+- **Why `entity_fp` (text FK) not `entity_id` (uuid FK):** Matches existing §11.1 pattern (`entity_fp text FK→seo_entity_graph.fingerprint`). Fingerprint-based FKs align with DR-008 Two-Column Identity (immutable machine ID). Bible Appendix B.3 says "1:1 FK to `seo_entity_graph.id`" but Schema v1.10 §11.1 uses `entity_fp` — sticking with Schema convention; updating Bible to match.
+
+**Consequences:**
+
+- ✅ T1 medical-condition template binding becomes implementable (ACF field group ↔ seo_entity_condition columns)
+- ✅ Knowledge graph cross-refs (condition ↔ anatomy ↔ drug ↔ procedure) become typed FKs not text matches
+- ✅ External organization citation source attribution becomes schema-clean (separate from `brands`)
+- ✅ All clinic, dental, dermatology, hospital, skincare-media verticals (Bible Part 14) become Day-1 schema-complete
+- ⚠️ Migration files needed: `014_restore_entity_product.sql`, `015_restore_entity_condition.sql`, `016_restore_entity_drug.sql`, `017_restore_entity_anatomy.sql`, `018_restore_entity_organization.sql`, `019_restore_entity_lab_test.sql`
+- ⚠️ Each extension table needs populate trigger: `trg_populate_entity_{type}_on_insert` (fires when `entity_graph.entity_type = '{type}'`)
+- ⚠️ Bible Appendix B.3 column hints (2026-04-30 era) need cross-check against current Schema v1.11 column definitions; minor field rename per current naming convention possible
+- ⚠️ Brands actively building T1 medical-condition pages (VTH BioDent OSA, etc.) gain schema binding at next Stage 1.5 gate
+
+**References:**
+- Bible Part 2.5 (Entity Polymorphism — universal core + extension pattern)
+- Bible Part 5.11 (Group 9 — Entity Extensions & Templates)
+- Bible Part 14 (Vertical Profiles — per-vertical extension usage)
+- Bible Appendix B.3 (Tables 11-19, schema summaries)
+- Schema v1.11 §11.1-11.9 (extensions) + §11.10 (programmatic_templates)
+- DR-025 (paired — Restore 5 Local SEO Tables, same v1.11 release)
+- DR-008 (Two-Column Identity — fingerprint FK pattern)
+
+---
 
 ### [DR-022] — Lean Phase B + Two-Layer Sitemap + Iterative Refinement (2026-05-11) 🌱
 
@@ -2261,11 +2463,13 @@ Decisions to be documented as they emerge:
 - [ ] **DR-020:** CDN strategy (Cloudflare, BunnyCDN, etc.) *(was DR-018)*
 - [ ] **DR-021:** Image optimization pipeline *(was DR-019)*
 - [ ] **DR-023:** External Authoritative Link Tracking (extend `to_external_url` usage from seo_page_internal_links) *(claimed 2026-05-11 from DR-021 follow-up)*
-- [ ] **DR-024:** Analytics stack (GA4 + custom + ?) *(was DR-022)*
-- [ ] **DR-025:** Backup + disaster recovery strategy *(was DR-023)*
-- [ ] **DR-026:** Migration repo strategy (separate vs subfolder) *(was DR-024)*
-- [ ] **DR-027:** Notion database sync scope (which tables sync) *(was DR-025)*
-- [ ] **DR-028:** Branch testing protocol for migrations *(was DR-026)*
+- [ ] **DR-026:** Analytics stack (GA4 + custom + ?) *(was DR-024 in v1.8)*
+- [ ] **DR-027:** Backup + disaster recovery strategy *(was DR-025 in v1.8)*
+- [ ] **DR-028:** Migration repo strategy (separate vs subfolder) *(was DR-026 in v1.8)*
+- [ ] **DR-029:** Notion database sync scope (which tables sync) *(was DR-027 in v1.8)*
+- [ ] **DR-030:** Branch testing protocol for migrations *(was DR-028 in v1.8)*
+
+> **Note on renumbering (v1.9):** DR-024 (Restore 9 Entity Extension Tables) and DR-025 (Restore Local SEO Tables + Consolidate Branches) became Locked in v1.9. Future placeholders shifted from DR-024..DR-028 to DR-026..DR-030. Future placeholders preserve their previous topic context.
 
 > **Note on renumbering (v1.8):** DR-022 (Lean Phase B + Two-Layer Sitemap + Iterative Refinement) became Proposed in v1.8. Future placeholders shifted from DR-022..DR-026 to DR-024..DR-028 (DR-023 newly claimed for External Link Tracking). Future placeholders preserve their previous topic context.
 
@@ -2311,6 +2515,61 @@ decision_record_governance:
 ---
 
 ## Changelog
+
+### v1.9 (2026-05-12) — DR-024 + DR-025 Locked (Restore Forgotten Schema) 🔒🧬🏥
+
+Spec catch-up: Bible v3.14 Appendix B.3 (9 entity extension tables) and Appendix B.5 (5 Local SEO tables) silently fell out of Schema_Overview between v1.0 and v1.10 — no DR, no changelog explanation. Operator confirmed forgotten, not deliberate; strategy unchanged. Two paired Locked DRs restore parity; ships paired with Schema v1.11 + Bible v3.15.
+
+**Headline Changes:**
+
+- ➕ **DR-024 (NEW, Locked):** Restore 9 Entity Extension Tables. 6 missing extensions added back to Schema Group 9 (`seo_entity_product`, `seo_entity_condition`, `seo_entity_drug`, `seo_entity_anatomy`, `seo_entity_organization`, `seo_entity_lab_test`). Existing 3 (`ingredients`, `procedures`, `devices`) preserved. `seo_programmatic_templates` reclassified as §11.10 (template registry, not entity extension). Group 9 count: 4 → 10 tables.
+
+- ➕ **DR-025 (NEW, Locked):** Restore Local SEO Tables + Consolidate `seo_locations` → `seo_branches`.
+  - 3 new tables: `seo_reviews`, `seo_directory_listings`, `seo_gbp_posts`
+  - 1 enhanced: `seo_branches` gains ~15 columns to match Bible Table 24 spec (multi-directory IDs, GBP categories/rating, photos, compliance, staff assignment, special hours, organization entity FK)
+  - 1 FK rename: `seo_local_rankings.location_id` → `branch_id`
+  - Bible-side rename: all 8 `seo_locations` references in Bible v3.14 → `seo_branches` (Bible bumps v3.14 → v3.15)
+  - Group 1 count: 4 → 7 tables
+
+- 🎯 **Why this matters:**
+  - T1 medical-condition template (Bible Part 4.1.1) gains its schema binding — was implementable-on-paper but not in DB
+  - Clinic vertical Phase 5 (Local SEO + GBP) unblocked — n8n GROUP E flows (E1/E2/E3/E4) become implementable
+  - NAP consistency monitoring + PDPA-safe review responses operational at Day 1 (Bible Part 10.5 promise honored)
+  - Knowledge graph typed FKs (condition ↔ anatomy ↔ drug ↔ procedure) instead of text matches
+  - External org citations gain proper entity store (was conflating with `brands` or generic `entity_graph`)
+
+- 🔄 **Renumbering:**
+  - Future placeholders DR-024..DR-028 → DR-026..DR-030 (preserves topic context per maintenance rules)
+  - DR-023 (External Authoritative Link Tracking) unchanged — still claimed from 2026-05-11
+
+- 🚧 **Paired releases (same day):**
+  - Schema_Overview v1.10 → v1.11 (Group 1 +3 tables, §3.2 enhanced; Group 9 +6 tables; architecture overview 28 → 37 tables)
+  - Bible v3.14 → v3.15 (rename `seo_locations` → `seo_branches` × 8 refs; changelog entry only; no structural change)
+  - EYWA_HANDOVER v1.8 → v1.9 (spec snapshot reference + Pre-Flight Checklist refresh)
+
+- ✅ **Backward compatible (within EYWA spec stack):**
+  - Existing 3 extensions + existing `seo_branches` rows preserved
+  - New columns NULL-allowed for backfill
+  - Existing brand snapshots (`bible_version: 3.14`, `schema_version: 1.10`) remain valid for their snapshot point; brands refresh at next Stage gate per Handover §9.3
+
+- 📦 **Migration files to author (eywa-supabase-migrations or in-spec subfolder):**
+  - `009_enhance_seo_branches.sql`
+  - `010_create_seo_reviews.sql`
+  - `011_create_seo_directory_listings.sql`
+  - `012_create_seo_gbp_posts.sql`
+  - `013_rename_local_rankings_fk.sql`
+  - `014_restore_entity_product.sql`
+  - `015_restore_entity_condition.sql`
+  - `016_restore_entity_drug.sql`
+  - `017_restore_entity_anatomy.sql`
+  - `018_restore_entity_organization.sql`
+  - `019_restore_entity_lab_test.sql`
+
+- 🚧 **Pending brand work (post-spec-bump):**
+  - All in-flight clinic brands refresh `eywa_spec_snapshot` at next Stage gate (typically Stage 1 → 1.5 transition)
+  - Stage 1.5 step 3 (column completion) now includes 3 Local SEO tables + 6 new extension tables for clinics
+  - VTH BioDent (Stage 1.5 blocked on DR-021 lock — also note new DR-024/025 to incorporate)
+  - SmileScape (Stage 1 Phase E in progress — adopt DR-024/025 at Stage 1 → 1.5 gate)
 
 ### v1.8 (2026-05-11) — DR-022 Proposed (Lean Phase B + Two-Layer Sitemap + Iterative Refinement) 🌱
 

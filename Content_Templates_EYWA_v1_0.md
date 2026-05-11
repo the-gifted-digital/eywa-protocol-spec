@@ -1,11 +1,11 @@
 # 📝 Content Templates — EYWA™ PROTOCOL
 
-> **Companion document to** EYWA Bible v3.14 + Schema Overview v1.10
+> **Companion document to** EYWA Bible v3.15 + Schema Overview v1.11
 > **Universal Content Production Standards across 13 brands × 6 verticals**
 
-**Version:** v1.3 (DRAFT 2026-05-10)
+**Version:** v1.3 (DRAFT 2026-05-10 — companion refs bumped 2026-05-12 per DR-024/025 spec catch-up; content unchanged, still pending DR-020 lock 2026-06-07)
 **Status:** Proposed — pending DR-020 lock
-**Companion to:** Bible v3.14 + Schema Overview v1.10 + DECISION_RECORDS v1.7
+**Companion to:** Bible v3.15 + Schema Overview v1.11 + DECISION_RECORDS v1.9
 **Format:** Append-only with semantic versioning (v1.0 → v1.1 → v1.2 → v1.3 backward compatible)
 
 ## v1.3 Changelog (2026-05-10) — Section 2 Pattern Lock + Icon Taxonomy

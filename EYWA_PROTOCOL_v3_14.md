@@ -1,8 +1,8 @@
 # 📖 คัมภีร์ EYWA™ PROTOCOL
 ## The Universal Knowledge Graph SEO Specification for the AI Era
 
-**Version:** 3.14  
-**Last Updated:** 2026-05-10  
+**Version:** 3.15  
+**Last Updated:** 2026-05-12  
 **Trademark:** EYWA™ (Class 35+42, DIP Thailand, filed 2026-04-20)  
 **Created by:** The Gifted Digital Marketing Co., Ltd.  
 **Scope:** Universal standard สำหรับการบริหารจัดการ SEO + Knowledge Graph แบบ multi-vertical, multi-brand, multi-specialty, multi-lingual, multi-location, **AI-future-ready** ในยุค AI Search (2026+) — ครอบคลุม healthcare verticals (clinic ทุก specialty, hospital, dental, sleep medicine, aesthetic, wellness, healthcare media) extensible to other regulated YMYL niches  
@@ -143,6 +143,42 @@ Throughout this Bible:
 
 
 ## 📜 Changelog
+
+### v3.15 (2026-05-12) — Local SEO Naming Consolidation (DR-025) 🏥🔄
+
+Paired companion bump to Schema v1.11 + DECISION_RECORDS v1.9. Per **DR-025 (Locked 2026-05-12)**, consolidates Local SEO master naming: `seo_locations` → `seo_branches` throughout the Bible. No structural change to Local SEO subsystem (still 5 tables, n8n Group E flows unchanged in behavior, Appendix B.5 still authoritative) — purely a rename of the master table reference to match what Schema v1.11 ships as the canonical name.
+
+**Headline Changes:**
+
+- 🔄 **Appendix B.5 Table 24** — `seo_locations` renamed to `seo_branches`. All schema field descriptions preserved. The 5-table Local SEO subsystem still consists of: `seo_branches` (master, formerly `seo_locations`), `seo_reviews`, `seo_directory_listings`, `seo_gbp_posts`, `seo_local_rankings`.
+
+- 🔄 **Part 17.6 GROUP E (n8n Local SEO Flows)** — all flow references updated:
+  - Flow E1 (GBP Reviews Sync) — `Loop seo_branches WHERE gbp_place_id IS NOT NULL` (was `seo_locations`)
+  - Flow E1 update — `Update seo_branches: gbp_review_count, gbp_avg_rating`
+  - Flow E3 (NAP Audit) — `Compare to canonical seo_branches`
+
+- 🔄 **System-managed tables list** updated: `... seo_branches, seo_reviews, seo_directory_listings, seo_gbp_posts, seo_local_rankings`
+
+- 🔄 **Phase 5 deployment checklist** — `Populate seo_branches` (was `seo_locations`)
+
+- 🔄 **Changelog v2.3 historical entry preserved** but annotated — original Category D table list noted `seo_locations` as the master; v3.15 retroactively clarifies that this is now `seo_branches`. No data ever existed under the `seo_locations` name in GTGT — naming was renamed before any rows were inserted (Schema v1.10 already shipped as `seo_branches`).
+
+- 🎯 **Why rename Bible (not Schema):**
+  - `seo_branches` already exists in Schema v1.10 with real `branch_*` fingerprint columns, branch_slug, branch_name + Notion sync state
+  - Bible Part 4.4 already used "Branch Landing" terminology — naming consistent end-to-end
+  - Thai operator context: "สาขา" (branch) is the established business term
+  - Semantically 1 brand → N branches = 1 physical location each (1:1) — no need for 2 separate tables
+  - Lower total churn: rename Bible once (8 refs) vs rename Schema + Notion column refs + n8n flow configs + downstream brand docs
+
+- 🔗 **Related Decision Records:**
+  - DR-025 (Restore Local SEO Tables + Consolidate `seo_locations` → `seo_branches` — Locked 2026-05-12)
+  - DR-024 (Restore 9 Entity Extension Tables — Locked 2026-05-12, paired release)
+
+- 📦 **No new Bible structural content** — pure naming consolidation. All semantic content (Part 4.4 Type B Branch Landing, Part 10.5 Local SEO, Part 17.6 GROUP E flows, Appendix B.5 schema summaries) preserved verbatim except for the table name token.
+
+- ✅ **Backward compatibility:**
+  - Brand snapshots with `bible_version: 3.14` remain valid — Bible v3.15 changes only naming references, no normative content
+  - Brands refresh at next Stage gate per Handover §9.3
 
 ### v3.14 (2026-05-10) — Sitemap Design Refinements + Market Reconciliation 🗺️📏
 
@@ -6020,9 +6056,9 @@ case_4_pillar_must_be_long:
 
 # PART 5: Database Schema Architecture
 
-> **The neural substrate of EYWA™ PROTOCOL** — 28 tables organized into 9 groups that together form the Knowledge Graph + operational analytics system that powers AI-era SEO for healthcare brands.
+> **The neural substrate of EYWA™ PROTOCOL** — 37 tables organized into 9 groups that together form the Knowledge Graph + operational analytics system that powers AI-era SEO for healthcare brands. *(v3.15 — restored 9 tables per DR-024 + DR-025; was 28 in v3.14)*
 >
-> 📊 **Companion Document:** ดู `Schema_Overview EYWA v1.8` สำหรับ full DDL + column descriptions ครบทุกตาราง  
+> 📊 **Companion Document:** ดู `Schema_Overview EYWA v1.11` สำหรับ full DDL + column descriptions ครบทุกตาราง  
 > Bible Part 5 เน้น **WHY และ Architecture** — Schema_Overview เน้น **WHAT — full schema + descriptions**
 
 > ⚠️ **v3.12 NOTICE — Two-Column Identity Pattern (Section 18.9):**
@@ -6114,20 +6150,21 @@ Tier 3 — Audit/Reference:
 
 ```
 ┌────────────────────────────────────────────────────────────────┐
-│              EYWA™ PROTOCOL DATA SYSTEM (28 tables)             │
+│              EYWA™ PROTOCOL DATA SYSTEM (37 tables)             │
 ├────────────────────────────────────────────────────────────────┤
 │                                                                 │
-│  Group 1: Brand & Organization        (4 tables) — Tier 1       │
-│  Group 2: Knowledge Architecture      (4 tables) — Tier 1       │
+│  Group 1: Brand & Organization        (7 tables) — Tier 1  🔄  │
+│  Group 2: Knowledge Architecture      (5 tables) — Tier 1       │
 │  Group 3: Page System                 (2 tables) — Tier 1       │
 │  Group 4: Keyword & Search            (4 tables) — Tier 1       │
 │  Group 5: Performance Fact Tables     (2 tables) — Tier 1       │
 │  Group 6: Backlinks & Off-Page        (2 tables) — Tier 2       │
 │  Group 7: AI Operations & Embeddings  (4 tables) — Tier 1/2     │
 │  Group 8: Data Quality & Governance   (2 tables) — Tier 1/3     │
-│  Group 9: Entity Extensions           (4 tables) — Tier 2       │
+│  Group 9: Entity Extensions & Tmpls   (10 tables = 9 ext + 1) 🔄│
 │                                                                 │
 └────────────────────────────────────────────────────────────────┘
+🔄 = restored/expanded in v3.15 per DR-024 + DR-025 (see Schema v1.11 for full DDL)
 ```
 
 ### Required PostgreSQL Extensions
@@ -7032,8 +7069,8 @@ Bible Part 5 (this document):
     - Cross-references to other Bible Parts
     - Future considerations (FHIR)
   
-Schema_Overview EYWA v1.0 (companion):
-  purpose: WHAT — full schema + column descriptions for all 28 tables
+Schema_Overview EYWA v1.11 (companion — current):
+  purpose: WHAT — full schema + column descriptions for all 37 tables
   contents:
     - Per-table: full DDL + every column described
     - Indexes + constraints + foreign keys
@@ -13948,7 +13985,7 @@ Notify Notion: Article tracked
 
 ### Category γ: Pure Supabase (No Notion mirror) — 18 tables
 
-System-managed: `seo_entity_graph` + 9 extension tables + `seo_languages` + 3 translation tables + `seo_locations`, `seo_reviews`, `seo_directory_listings`, `seo_gbp_posts`, `seo_local_rankings`
+System-managed: `seo_entity_graph` + 9 extension tables + `seo_languages` + 3 translation tables + `seo_branches`, `seo_reviews`, `seo_directory_listings`, `seo_gbp_posts`, `seo_local_rankings`
 
 ---
 
@@ -14018,7 +14055,7 @@ n8n Credentials needed:
 
 ### Phase 5 (Month 3+): Local SEO + Advanced
 - [ ] When first clinic client onboarded:
-  - [ ] Populate seo_locations
+  - [ ] Populate seo_branches
   - [ ] GBP API integration
   - [ ] Flows E1-E3
 - [ ] LLMO automation (Flow D1, F1)
@@ -14299,7 +14336,7 @@ Email summary to stakeholders
 ```
 Cron: every 6 hours
     ↓
-Loop seo_locations WHERE gbp_place_id IS NOT NULL:
+Loop seo_branches WHERE gbp_place_id IS NOT NULL:
   └─ GBP API GET /reviews
   └─ For each review:
      ├─ Dedupe by source_review_id
@@ -14307,7 +14344,7 @@ Loop seo_locations WHERE gbp_place_id IS NOT NULL:
      ├─ Auto-flag pdpa_risk_flag if patient health info
      ├─ Set response_priority
      └─ Upsert seo_reviews
-  └─ Update seo_locations: gbp_review_count, gbp_avg_rating
+  └─ Update seo_branches: gbp_review_count, gbp_avg_rating
     ↓
 Notion alert: new reviews requiring response
 Slack alert: 1-star OR pdpa_risk_flag (urgent)
@@ -14347,7 +14384,7 @@ Cron: every Monday
     ↓
 Loop seo_directory_listings:
   └─ Fetch NAP from directory (API or scrape)
-  └─ Compare to canonical seo_locations
+  └─ Compare to canonical seo_branches
   └─ Calculate match scores
   └─ Update nap_match_score
     ↓
@@ -24499,7 +24536,7 @@ PURPOSE: Author profiles in multiple languages
 
 | # | Table | Purpose | Phase | Section |
 |---|-------|---------|-------|---------|
-| 24 | `seo_locations` | Multi-branch + GBP integration | Phase 1 (clinic Day 1) | 3.8.1 |
+| 24 | `seo_branches` | Multi-branch + GBP integration *(renamed from `seo_locations` per DR-025 / v3.15)* | Phase 1 (clinic Day 1) | 3.8.1 |
 | 25 | `seo_reviews` | Multi-platform reviews + PDPA workflow | Phase 1 (clinic Day 1) | 3.8.2 |
 | 26 | `seo_directory_listings` | NAP citations + consistency | Phase 1 (clinic Day 1) | 3.8.3 |
 | 27 | `seo_gbp_posts` | GBP Posts management | Phase 2 (when budget) | 3.8.4 |
@@ -24507,7 +24544,7 @@ PURPOSE: Author profiles in multiple languages
 
 #### Schema Summary — Category D
 
-**Table 24: `seo_locations`** — Multi-branch registry
+**Table 24: `seo_branches`** — Multi-branch registry *(renamed from `seo_locations` per DR-025 / v3.15 — see Schema v1.11 §3.2 for full DDL)*
 ```sql
 PRIMARY KEY: id (UUID)
 KEY FIELDS:

@@ -3,9 +3,9 @@
 > **For Claude (and any AI assistant) working on a new brand within the EYWA portfolio.**  
 > **Read this file first, every new project, every new session.**
 
-**Document Version:** 1.8  
-**Last Updated:** 2026-05-11  
-**Companion to:** EYWA Bible v3.14 + Schema Overview v1.10 + DECISION_RECORDS v1.8 + Content_Templates_EYWA_v1_0.md (DRAFT)  
+**Document Version:** 1.9  
+**Last Updated:** 2026-05-12  
+**Companion to:** EYWA Bible v3.15 + Schema Overview v1.11 + DECISION_RECORDS v1.9 + Content_Templates_EYWA_v1_0.md (DRAFT)  
 **Created by:** The Gifted Digital Marketing Co., Ltd.
 
 ---
@@ -2406,13 +2406,13 @@ Each brand pins its current **EYWA Spec Snapshot** at Stage gates and adopts new
 ```json
 {
   "eywa_spec_snapshot": {
-    "bible_version": "3.14",
-    "schema_version": "1.10",
+    "bible_version": "3.15",
+    "schema_version": "1.11",
     "templates_version": "1.3",
-    "handover_version": "1.6",
-    "drs_locked_at_snapshot": ["DR-001", "DR-002", "...", "DR-018"],
-    "drs_proposed_at_snapshot": ["DR-013", "DR-014", "DR-019", "DR-020", "DR-021"],
-    "snapshot_taken_at": "2026-05-10",
+    "handover_version": "1.9",
+    "drs_locked_at_snapshot": ["DR-001", "DR-002", "...", "DR-018", "DR-024", "DR-025"],
+    "drs_proposed_at_snapshot": ["DR-013", "DR-014", "DR-019", "DR-020", "DR-021", "DR-022"],
+    "snapshot_taken_at": "2026-05-12",
     "snapshot_taken_at_stage": "Stage 1 Phase E"
   }
 }
@@ -2458,11 +2458,11 @@ Every DR (universal or brand-specific) carries: **Status, Context, Options Consi
 session_kickoff_checklist:
   
   context_verification:
-    ☐ Read EYWA_HANDOVER.md (this file — v1.8)
-    ☐ Read latest Bible version (v3.14 as of 2026-05-10)
-    ☐ Read latest Schema version (v1.10 as of 2026-05-10)
+    ☐ Read EYWA_HANDOVER.md (this file — v1.9)
+    ☐ Read latest Bible version (v3.15 as of 2026-05-12)
+    ☐ Read latest Schema version (v1.11 as of 2026-05-12 — 37 tables; 9 ext + 4 Local SEO restored per DR-024/025)
     ☐ Read brand-config.json (incl. eywa_spec_snapshot block — §9.3)
-    ☐ Read DECISION_RECORDS.md (v1.8, DR-001..DR-022 — DR-013/014/019/020/021/022 Proposed; DR-015..DR-018 Locked)
+    ☐ Read DECISION_RECORDS.md (v1.9, DR-001..DR-025 — DR-013/014/019/020/021/022 Proposed; DR-015..DR-018, DR-024, DR-025 Locked)
     ☐ Read Content_Templates_EYWA_v1_0.md (v1.3 internal DRAFT, ~2,420 lines — pending DR-020 lock)
     ☐ Read brand-concept.md (if exists)
     ☐ Read brand decision-records.md (eywa-{brand}/docs/ — SS-DR/VTH-DR/etc., per §9.1 Path 1)
@@ -2692,6 +2692,49 @@ schema_appendices:
 ---
 
 ## 📜 Changelog
+
+### v1.9 (2026-05-12) — Schema Catch-Up: DR-024 + DR-025 Locked (37 Tables) 🔒🧬🏥
+
+Companion bump to **DR-024 + DR-025 (Locked 2026-05-12)**, **Schema v1.11**, and **Bible v3.15**. Schema_Overview restored to parity with Bible Appendix B by adding 9 tables that were silently dropped between Schema v1.0→v1.10 (no DR, no changelog explanation — operator confirmed forgotten, not deliberate). No new operational workflow — Handover bump primarily updates spec stack references and Pre-Flight Checklist DR awareness.
+
+**Headline Changes:**
+
+- 🔄 **Header reference block:** Companion to Bible v3.15 + Schema v1.11 + DECISION_RECORDS v1.9
+- 🔄 **§9.3 Brand Snapshot Discipline:** Updated `eywa_spec_snapshot` example to show DR-024/DR-025 in `drs_locked_at_snapshot` array + Bible 3.15 / Schema 1.11
+- 🔄 **§10 Pre-Flight Checklist context_verification:**
+  - Bible reference: v3.15
+  - Schema reference: v1.11 (37 tables: 9 ext + 4 Local SEO restored per DR-024/025)
+  - DECISION_RECORDS: v1.9 with DR-024 + DR-025 marked Locked
+
+- 🆕 **Stage 1.5 step 3 (Column Completion) — expanded scope:**
+  - Clinic brands now populate 3 Local SEO tables (`seo_reviews`, `seo_directory_listings`, `seo_gbp_posts`) in addition to `seo_branches` (enhanced ~40 cols)
+  - Medical brands now bind T1 pages to `seo_entity_condition` (primary T1 schema binding), plus cross-refs to `seo_entity_anatomy`, `seo_entity_drug`, `seo_entity_procedure`
+  - Skincare brands (the brand) populate `seo_entity_product` for product entities
+
+- 🎯 **Why this matters:**
+  - T1 medical-condition template (Bible §4.1.1) gains its schema binding — was implementable-on-paper but not in DB
+  - Clinic vertical Phase 5 (Local SEO) unblocked — Bible Part 17.6 n8n GROUP E flows (E1/E2/E3/E4) become implementable
+  - All in-flight brands picking up next Stage gate now have full schema available
+  - Bible-Schema sync restored after silent drift
+
+- 🚦 **Active brand impact:**
+  - **VTH BioDent** (Stage 1.5 blocked on DR-021 lock) — at next Stage gate refresh adopt: DR-024 (condition extension binding for OSA T1 page) + DR-025 (Local SEO tables for branch landing pages)
+  - **SmileScape** (Stage 1 Phase E in progress) — adopt at Stage 1 → 1.5 transition (no current work blocked)
+  - **Deezy Dental** (Stage 1 complete) — at Stage 1.5 entry adopt full new schema
+  - **TC Smile** (Stage 1 sitemap draft) — adopt at next session refresh
+  - **Dr. Trin Wellness** (pre-Stage 1) — uses v1.9 + v3.15 + v1.11 from inception
+  - **11 empty brand repos** — use new spec from inception
+
+- 📦 **No new templates or bootstrap files** — purely spec stack refresh
+
+- 🔗 **Companion DRs:**
+  - DR-024 (Restore 9 Entity Extension Tables — Locked 2026-05-12)
+  - DR-025 (Restore Local SEO Tables + Consolidate `seo_locations` → `seo_branches` — Locked 2026-05-12)
+
+- ✅ **Backward compatible:**
+  - Existing brand snapshots (`bible_version: 3.14`, `schema_version: 1.10`) remain valid at their snapshot point
+  - Brands refresh at next Stage gate (no mid-stage forced refactor)
+  - 11 empty repos: use new spec directly from inception
 
 ### v1.8 (2026-05-11) — DR-022 Lean Phase B + Two-Layer Sitemap + Iterative Refinement + Bootstrap Kit 🌱
 

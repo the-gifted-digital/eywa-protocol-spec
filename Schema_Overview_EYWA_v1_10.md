@@ -1,17 +1,75 @@
 # 📊 Schema Overview — EYWA™ PROTOCOL Database
 
-> **Companion document to** คัมภีร์ EYWA™ PROTOCOL v3.14  
-> **Reference for full DDL + column descriptions of all 28 tables**
+> **Companion document to** คัมภีร์ EYWA™ PROTOCOL v3.15  
+> **Reference for full DDL + column descriptions of all 37 tables**
 
-**Version:** v1.10  
-**Date:** 2026-05-10  
+**Version:** v1.11  
+**Date:** 2026-05-12  
 **Status:** Day 1 Specification (production roadmap reference)  
-**Total Tables:** 28 organized into 9 groups  
-**Companion to:** Bible v3.14
+**Total Tables:** 37 organized into 9 groups  
+**Companion to:** Bible v3.15
 
 ---
 
 ## Changelog
+
+### v1.11 (2026-05-12) — Restore Forgotten Schema (DR-024 + DR-025) 🔒🧬🏥
+
+Schema catch-up release per **DR-024 + DR-025 (Locked 2026-05-12)**. Restores 9 tables that were specified in Bible Appendix B (current since v2.0 / 2026-04-30 and v2.3 / 2026-05-01 respectively) but silently dropped from Schema between v1.0 and v1.10. Strategy unchanged; no Proposed soak (restore of forgotten spec, not new design). Ships paired with Bible v3.15 (rename `seo_locations` → `seo_branches`) + EYWA_HANDOVER v1.9.
+
+**Headline Changes:**
+
+- ➕ **Section 3 — Group 1 (Brand & Organization): 4 → 7 tables**
+  - 🔄 §3.2 `seo_branches` — enhanced from ~25 cols to ~40 cols (DR-025). Added: `business_name_legal`, `business_name_brand`, `district`, `formatted_address`, `plus_code`, `line_id`, `special_hours jsonb`, `doctors_at_branch_fps text[]` (→ seo_authors_reviewers), `equipment_at_branch_fps text[]`, `specialties_at_branch text[]`, `gbp_account_id`, `gbp_categories text[]`, `gbp_review_count int`, `gbp_avg_rating numeric(3,2)`, `gbp_last_synced_at timestamptz`, `apple_maps_id`, `facebook_page_url`, `wongnai_url`, `wongnai_id`, `local_business_schema_type`, `primary_photo_url`, `exterior_photos text[]`, `interior_photos text[]`, `status` (active/closed/temp-closed), `opened_date`, `closed_date`, `business_registration_no`, `medical_license_no`, `organization_entity_id uuid FK→seo_entity_graph(id)`
+  - 🆕 §3.5 `seo_reviews` (NEW) — Multi-platform review aggregation + PDPA-safe response workflow
+  - 🆕 §3.6 `seo_directory_listings` (NEW) — NAP citations across ~50 directories + auto-detect inconsistency
+  - 🆕 §3.7 `seo_gbp_posts` (NEW) — GBP Posts management + local archive (posts disappear after 6 months)
+
+- ➕ **Section 11 — Group 9 (Entity Extensions & Templates): 4 → 10 tables (DR-024)**
+  - 🆕 §11.4 `seo_entity_product` — Commercial product (skincare/supplement/device); FK to ingredients via `ingredients_fps[]`
+  - 🆕 §11.5 `seo_entity_condition` — Diseases & medical conditions; ICD-10 + SNOMED + MeSH codes; **primary binding for T1 medical-condition template**
+  - 🆕 §11.6 `seo_entity_drug` — Rx/OTC pharmaceuticals; RxNorm + ATC codes + Thai FDA reg
+  - 🆕 §11.7 `seo_entity_anatomy` — Body anatomy; FMA + UBERON codes; self-FK hierarchy
+  - 🆕 §11.8 `seo_entity_organization` — External orgs (Thai FDA, ADA, manufacturers, accreditation bodies); separate from `brands` (own brands)
+  - 🆕 §11.9 `seo_entity_lab_test` — Lab tests, imaging, biopsies; LOINC + CPT codes
+  - 🔄 §11.10 `seo_programmatic_templates` (was §11.4) — renumbered; reclassified as template registry (not entity extension)
+
+- 🔄 **Section 7 — Group 5 Performance Facts:**
+  - 🔄 §7.2 `seo_local_rankings` — FK rename `location_id` → `branch_id` (DR-025 alignment)
+
+- 🔄 **Section 2 — Architecture Overview:**
+  - Group counts updated: 9-group organization 28 → **37 tables**
+  - Group 1: 4 → 7; Group 9: 4 → 10; others unchanged
+
+- 🎯 **Why this matters:**
+  - **T1 medical-condition template (Bible Part 4.1.1)** gains its schema binding — was implementable-on-paper but not in DB
+  - **Clinic vertical Phase 5 (Local SEO)** unblocked — Bible Part 17.6 n8n GROUP E flows (E1/E2/E3/E4) become implementable
+  - **Knowledge graph typed FKs** (condition ↔ anatomy ↔ drug ↔ procedure) instead of text matches
+  - **NAP consistency monitoring + PDPA-safe review responses** operational at Day 1 (Bible Part 10.5 promise honored)
+  - **External org citations** gain proper entity store (was conflating with `brands` or generic `entity_graph`)
+
+- 📦 **Phase 1A migrations to author (11 new files):**
+  - `009_enhance_seo_branches.sql` (DR-025)
+  - `010_create_seo_reviews.sql` (DR-025)
+  - `011_create_seo_directory_listings.sql` (DR-025)
+  - `012_create_seo_gbp_posts.sql` (DR-025)
+  - `013_rename_local_rankings_fk.sql` (DR-025)
+  - `014_restore_entity_product.sql` (DR-024)
+  - `015_restore_entity_condition.sql` (DR-024)
+  - `016_restore_entity_drug.sql` (DR-024)
+  - `017_restore_entity_anatomy.sql` (DR-024)
+  - `018_restore_entity_organization.sql` (DR-024)
+  - `019_restore_entity_lab_test.sql` (DR-024)
+
+- ✅ **Backward compatible (within EYWA spec stack):**
+  - Existing `seo_branches` rows preserved — new columns NULL-allowed for backfill
+  - Existing 3 extensions (`ingredients`, `procedures`, `devices`) preserved
+  - Existing `seo_programmatic_templates` preserved (only renumbered §11.4 → §11.10)
+  - Existing brand snapshots (`schema_version: 1.10`) remain valid at their snapshot point; brands refresh at next Stage gate per Handover §9.3
+
+- 🔗 **Related Decision Records:**
+  - DR-024 (Restore 9 Entity Extension Tables — Locked 2026-05-12)
+  - DR-025 (Restore Local SEO Tables + Consolidate `seo_locations` → `seo_branches` — Locked 2026-05-12)
 
 ### v1.10 (2026-05-10) — Sitemap Design Refinements + Page Brief 🗺️📝
 
@@ -172,12 +230,12 @@ This document describes the **complete EYWA™ PROTOCOL data architecture** as a
 ### Document Status
 
 ```yaml
-version: v1.10
-date: 2026-05-10
+version: v1.11
+date: 2026-05-12
 status: Day 1 Specification (production roadmap reference)
-total_tables: 28
+total_tables: 37
 total_groups: 9
-companion_to: คัมภีร์ EYWA™ PROTOCOL v3.14
+companion_to: คัมภีร์ EYWA™ PROTOCOL v3.15
 maintenance:
   - Update when tables added/changed (sync with Bible Part 5)
   - Cross-reference Bible sections always
@@ -205,7 +263,7 @@ maintenance:
 │                  EYWA™ PROTOCOL DATA SYSTEM                     │
 │                  ─────────────────────────                      │
 │                                                                 │
-│  Group 1: Brand & Organization        (4 tables) — Tier 1       │
+│  Group 1: Brand & Organization        (7 tables) — Tier 1       │
 │  Group 2: Knowledge Architecture      (5 tables) — Tier 1       │
 │  Group 3: Page System                 (2 tables) — Tier 1       │
 │  Group 4: Keyword & Search            (4 tables) — Tier 1       │
@@ -213,9 +271,9 @@ maintenance:
 │  Group 6: Backlinks & Off-Page        (2 tables) — Tier 2       │
 │  Group 7: AI Operations & Embeddings  (4 tables) — Tier 1/2     │
 │  Group 8: Data Quality & Governance   (2 tables) — Tier 1/3     │
-│  Group 9: Entity Extensions           (4 tables) — Tier 2       │
+│  Group 9: Entity Extensions & Tmpls   (9 ext + 1 tmpl = 10)     │
 │                                       ─────────                 │
-│                                       28 tables                 │
+│                                       37 tables                 │
 └────────────────────────────────────────────────────────────────┘
 ```
 
@@ -244,15 +302,15 @@ maintenance:
 
 | Group | Tables | Sync Pattern |
 |-------|--------|--------------|
-| 1. Brand & Organization | brands, branches, authors, doctor_assignments | N↔S |
+| 1. Brand & Organization | brands, branches, authors_reviewers, doctor_assignments, **reviews, directory_listings, gbp_posts** 🆕 v1.11 | N↔S (master), S only (reviews/gbp_posts via API ingest) |
 | 2. Knowledge Architecture | entity_graph, topic_cluster, citations, page_citations, entity_relationships | N↔S |
 | 3. Page System | page_master, editorial_reviews | N↔S |
 | 4. Keyword & Search | keywords_master, market_snapshot, serp_competitors, voice_search | N↔S (master), S only (snapshots) |
-| 5. Performance Facts | daily_logs, local_rankings | S only (high volume) |
+| 5. Performance Facts | daily_logs, local_rankings *(FK: branch_id 🔄 v1.11)* | S only (high volume) |
 | 6. Backlinks | backlinks_data, backlinks_links | S only (DataForSEO ingest) |
 | 7. AI Operations | brand_mentions, llm_citations, query_sims, embeddings | S only |
 | 8. Data Quality | quality_metrics, schema_changes | S only (system-generated) |
-| 9. Entity Extensions | ingredients, devices, procedures, templates | N↔S |
+| 9. Entity Extensions & Templates | ingredients, **product** 🆕, procedures, **condition** 🆕, **drug** 🆕, **anatomy** 🆕, **organization** 🆕, **lab_test** 🆕, devices, programmatic_templates | N↔S |
 
 ### Required PostgreSQL Extensions
 
@@ -271,10 +329,10 @@ maintenance:
 
 ---
 
-## 3. Group 1 — Brand & Organization (4 tables)
+## 3. Group 1 — Brand & Organization (7 tables)
 
-> **Role:** กำหนดตัวตนของ brand, สาขา, แพทย์/ผู้ตรวจสอบ และความสัมพันธ์ระหว่างกัน  
-> **Bible Reference:** Part 1 (Core Philosophy), Part 10 (Multi-Brand Strategy), Part 23.3 (Authority Validation)
+> **Role:** กำหนดตัวตนของ brand, สาขา, แพทย์/ผู้ตรวจสอบ, รีวิว, NAP citations, GBP posts  
+> **Bible Reference:** Part 1 (Core Philosophy), Part 10 (Multi-Brand Strategy), Part 10.5 (Local SEO), Part 17.6 GROUP E (n8n Local SEO Flows), Part 23.3 (Authority Validation)
 
 ### 3.1 `brands`
 
@@ -380,13 +438,16 @@ CONSTRAINT valid_brand_slug CHECK (
 
 ### 3.2 `seo_branches`
 
-> **Purpose:** สาขาทางกายภาพของแบรนด์ — สำหรับ Local SEO, Google Business Profile integration, schema:LocalBusiness markup  
+> **Purpose:** สาขาทางกายภาพของแบรนด์ — Local SEO master, Google Business Profile integration, NAP canonical source, schema:LocalBusiness markup  
 > **Tier:** 1 (Critical Operational)  
 > **Sync:** N↔S  
-> **Bible Reference:** Part 4.4 (Type B Branch Landing), Part 10.5 (Local SEO), Part 14.6 (Hospital format)  
+> **Bible Reference:** Part 4.4 (Type B Branch Landing), Part 10.5 (Local SEO), Part 14.6 (Hospital format), Part 17.6 GROUP E (n8n Local SEO Flows E1-E4), Appendix B.5 (formerly `seo_locations` — renamed per DR-025)  
 > **Volume:** ~50-200 records (multiple branches per brand)
 
-#### Schema (Key Columns)
+> **v1.11 NOTE (DR-025 Locked 2026-05-12):**
+> `seo_branches` is the **canonical Local SEO master** (replaces what Bible Appendix B.5 v2.3 originally called `seo_locations`). Per DR-025, the consolidated naming is `seo_branches` — Bible v3.15 renames all `seo_locations` references throughout. Schema expanded from ~25 cols (v1.10) → ~40 cols (v1.11) to match full Bible Table 24 spec. All 4 Local SEO child tables (`seo_reviews`, `seo_directory_listings`, `seo_gbp_posts`, `seo_local_rankings`) FK to `seo_branches.id` via `branch_id`.
+
+#### Schema
 
 | Column | Type | Description |
 |--------|------|-------------|
@@ -397,27 +458,97 @@ CONSTRAINT valid_brand_slug CHECK (
 | `branch_slug` | `text` | URL-safe branch identifier |
 | `brand_id` | `uuid FK→brands.id` | Brand owner |
 | `brand_slug` | `text NOT NULL` | **v1.8** — Denormalized brand_slug |
-| `branch_name` | `text NOT NULL` | Display name |
-| `address` | `text` | Full street address |
-| `city` | `text` | City |
+| `branch_name` | `text NOT NULL` | Display name (operational name, e.g., "VTH BioDent Asoke") |
+| `organization_entity_id` | `uuid FK→seo_entity_graph(id)` | 🆕 **v1.11 DR-025** — Links to the org's entity in knowledge graph (Schema.org `Organization`/`MedicalOrganization`). Enables Wikidata Q-number + sameAs cross-ref |
+| `is_primary` | `boolean DEFAULT false` | 🆕 **v1.11** — Primary/HQ branch flag for the brand |
+| **— NAP (Bible Part 10.5 NAP Canonical) —** | | |
+| `business_name_legal` | `text` | 🆕 **v1.11** — Legal registered business name (Thai DBD registration) |
+| `business_name_brand` | `text` | 🆕 **v1.11** — Brand/marketing name (may differ from legal) |
+| `address` | `text` | Full street address (free-form) |
+| `street_address` | `text` | 🆕 **v1.11** — Structured street + number (Schema.org streetAddress) |
+| `district` | `text` | 🆕 **v1.11** — แขวง/ตำบล (Schema.org `addressDistrict`) |
+| `city` | `text` | จังหวัด/อำเภอ (Schema.org addressLocality) |
+| `region` | `text` | 🆕 **v1.11** — Province/region (Schema.org addressRegion) |
 | `country_code` | `text` | ISO 3166-1 alpha-2 |
 | `postal_code` | `text` | |
+| `formatted_address` | `text` | 🆕 **v1.11** — Single-line full formatted address (Google geocoding result) |
+| **— Geo —** | | |
 | `latitude` | `numeric(10,7)` | GPS latitude |
 | `longitude` | `numeric(10,7)` | GPS longitude |
-| `geo_point` | `geography(POINT)` | PostGIS computed point (recommended) |
-| `phone` | `text` | Primary contact |
+| `geo_point` | `geography(POINT)` | PostGIS computed point (PostGIS extension required) |
+| `plus_code` | `text` | 🆕 **v1.11** — Google Plus Code (open location code) |
+| **— Contact —** | | |
+| `phone` | `text` | Primary contact (E.164 format recommended) |
 | `email` | `text` | Branch email |
+| `line_id` | `text` | 🆕 **v1.11** — LINE Official Account ID (TH market critical) |
+| `website_url` | `text` | 🆕 **v1.11** — Branch-specific landing URL (FK alternative for page_master integration) |
+| **— Hours —** | | |
+| `opening_hours` | `jsonb` | OpeningHoursSpecification format (regular weekly hours) |
+| `special_hours` | `jsonb` | 🆕 **v1.11** — Holiday/exception hours (Schema.org specialOpeningHoursSpecification) |
+| **— Services / Staff / Equipment —** | | |
+| `services_at_branch` | `text[]` | Array of services available (text, deprecated in favor of fps[] when entities ready) |
+| `services_offered_fps` | `text[]` | 🆕 **v1.11** — FK array → `seo_entity_graph.fingerprint` (entities of type='procedure' or 'service') |
+| `specialties_at_branch` | `text[]` | 🆕 **v1.11** — Medical specialty codes (general / ortho / OMS / etc.) |
+| `doctors_at_branch_fps` | `text[]` | 🆕 **v1.11** — FK array → `seo_authors_reviewers.fingerprint` (resident doctors at this branch) |
+| `equipment_at_branch_fps` | `text[]` | 🆕 **v1.11** — FK array → `seo_entity_graph.fingerprint` (entities of type='device') |
+| **— GBP (Google Business Profile) —** | | |
 | `gbp_place_id` | `text` | Google Business Profile place ID |
-| `opening_hours` | `jsonb` | OpeningHoursSpecification format |
-| `services_at_branch` | `text[]` | Array of services available |
-| `canonical_names` | `jsonb DEFAULT '{}'` | **v1.8** — Multilingual branch names |
-| `parent_notion_id` | `text` | **v1.7** — Notion page ID of parent (for hierarchy) |
+| `gbp_account_id` | `text` | 🆕 **v1.11** — GBP account ID (for API access via Flow E1/E2/E4) |
+| `gbp_categories` | `text[]` | 🆕 **v1.11** — Primary + additional GBP categories |
+| `gbp_review_count` | `integer DEFAULT 0` | 🆕 **v1.11** — Cached review count (updated by Flow E1) |
+| `gbp_avg_rating` | `numeric(3,2)` | 🆕 **v1.11** — Cached avg rating 1.00-5.00 (updated by Flow E1) |
+| `gbp_last_synced_at` | `timestamptz` | 🆕 **v1.11** — Last GBP API sync (Flow E1/E2/E4) |
+| **— Other Directories —** | | |
+| `apple_maps_id` | `text` | 🆕 **v1.11** — Apple Business Connect ID |
+| `facebook_page_url` | `text` | 🆕 **v1.11** — Facebook Page URL |
+| `wongnai_url` | `text` | 🆕 **v1.11** — Wongnai listing URL (TH critical) |
+| `wongnai_id` | `text` | 🆕 **v1.11** — Wongnai venue ID |
+| **— Schema.org —** | | |
+| `local_business_schema_type` | `text` | 🆕 **v1.11** — Schema.org subtype: 'MedicalClinic' / 'DentalClinic' / 'Hospital' / 'BeautySalon' / 'HealthAndBeautyBusiness' |
+| **— Photos —** | | |
+| `primary_photo_url` | `text` | 🆕 **v1.11** — Primary branch photo (used in Schema.org image) |
+| `exterior_photos` | `text[]` | 🆕 **v1.11** — Exterior photo URLs |
+| `interior_photos` | `text[]` | 🆕 **v1.11** — Interior photo URLs |
+| **— Status / Compliance —** | | |
+| `status` | `text DEFAULT 'active'` | 🆕 **v1.11** — CHECK: 'active' / 'closed' / 'temp_closed' / 'pending_opening' |
+| `opened_date` | `date` | 🆕 **v1.11** — Branch opening date |
+| `closed_date` | `date` | 🆕 **v1.11** — Branch closure date (NULL if active) |
+| `business_registration_no` | `text` | 🆕 **v1.11** — เลขทะเบียนนิติบุคคล (Thai DBD reg) |
+| `medical_license_no` | `text` | 🆕 **v1.11** — เลขใบอนุญาตประกอบกิจการสถานพยาบาล (กรมสนับสนุนบริการสุขภาพ) |
+| **— Multilingual / Sync —** | | |
+| `canonical_names` | `jsonb DEFAULT '{}'` | **v1.8** — Multilingual branch names per language code |
+| `parent_notion_id` | `text` | **v1.7** — Notion page ID of parent (hierarchy) |
 | `sync_state` | `text DEFAULT 'flat_loaded'` | **v1.7** — Two-Phase Sync state |
 | `created_at` | `timestamptz DEFAULT now()` | |
 | `updated_at` | `timestamptz DEFAULT now()` | |
 | `notion_synced_at` | `timestamptz` | |
 
-→ **Full schema** : preserved from v1.8, no v1.9 changes
+#### Indexes & Constraints
+
+```sql
+CREATE INDEX idx_branches_brand ON seo_branches(brand_id);
+CREATE INDEX idx_branches_org_entity ON seo_branches(organization_entity_id);
+CREATE INDEX idx_branches_geo ON seo_branches USING GIST(geo_point);
+CREATE INDEX idx_branches_gbp_place_id ON seo_branches(gbp_place_id) WHERE gbp_place_id IS NOT NULL;
+CREATE INDEX idx_branches_status ON seo_branches(status) WHERE status != 'active';
+CREATE UNIQUE INDEX idx_branches_brand_primary ON seo_branches(brand_id) WHERE is_primary = true;
+
+ALTER TABLE seo_branches ADD CONSTRAINT check_status CHECK (status IN ('active', 'closed', 'temp_closed', 'pending_opening'));
+ALTER TABLE seo_branches ADD CONSTRAINT check_schema_type CHECK (local_business_schema_type IN ('LocalBusiness', 'MedicalClinic', 'DentalClinic', 'Hospital', 'BeautySalon', 'HealthAndBeautyBusiness', 'MedicalBusiness', 'Physician'));
+```
+
+#### Used By
+
+- `seo_reviews` (FK `branch_id`) — multi-platform review aggregation (Flow E1)
+- `seo_directory_listings` (FK `branch_id`) — NAP citation tracking (Flow E3)
+- `seo_gbp_posts` (FK `branch_id`) — GBP Posts management (Flow E2/E4)
+- `seo_local_rankings` (FK `branch_id`) — Local Pack rank tracking
+- `seo_website_page_master` — branch landing pages reference `seo_branches.fingerprint`
+- `seo_doctor_assignments` — author × brand × branch junction
+
+#### Migration Files
+
+- `009_enhance_seo_branches.sql` (DR-025 — adds 23 new columns + indexes)
 
 ---
 
@@ -478,6 +609,286 @@ CONSTRAINT valid_brand_slug CHECK (
 | `updated_at` | `timestamptz DEFAULT now()` | |
 
 → **Full schema** : preserved from v1.8
+
+---
+
+### 3.5 `seo_reviews` 🆕 v1.11
+
+> **Purpose:** Multi-platform review aggregation + PDPA-safe response workflow. Centralizes reviews from GBP, Wongnai, Facebook, Google Maps, Pantip mentions into a single store for sentiment analysis, response coordination, and quality monitoring.
+> **Tier:** 1 (Critical Operational — clinic Day 1)
+> **Sync:** S only (API ingest via n8n Flow E1 every 6h); Notion notifications optional
+> **Bible Reference:** Part 10.5 (Local SEO), Part 17.6 GROUP E Flow E1 (GBP Reviews Sync), Part 23.4 (Editorial Review), Appendix B.5 Table 25
+> **Volume:** ~100-1000 records per branch per year (TH clinic avg ~50-200/yr)
+> **PDPA Critical:** Reviews may contain personal data (names, medical conditions) — `pdpa_risk_flag` + legal review required before public response per PDPA B.E. 2562 (2019)
+
+> **DR Reference:** DR-025 Locked 2026-05-12 (Restore Local SEO Tables). Originally specified in Bible Appendix B.5 Table 25 (v2.3 / 2026-05-01); dropped from Schema_Overview v1.0→v1.10 silently; restored in v1.11.
+
+#### Schema
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `id` | `uuid PK` | Primary key |
+| `fingerprint` | `text UNIQUE NOT NULL` | Format: `rev_{ULID16}` |
+| `fingerprint_display_name` | `text NOT NULL` | Format: `{fp_last_6}::{source_platform}::{rating}::{date}` |
+| `branch_id` | `uuid FK→seo_branches(id) ON DELETE CASCADE` | Branch being reviewed |
+| `brand_id` | `uuid FK→brands(id)` | Denormalized for query speed |
+| **— Source —** | | |
+| `source_platform` | `text NOT NULL` | CHECK: 'gbp' / 'wongnai' / 'facebook' / 'google_maps' / 'pantip' / 'apple_maps' / 'tripadvisor' / 'manual' |
+| `source_review_id` | `text` | Platform-native review ID (for dedupe) |
+| `source_url` | `text` | Direct URL to review on source platform |
+| **— Reviewer —** | | |
+| `reviewer_name` | `text` | Raw name from platform (for internal use) |
+| `reviewer_anonymized` | `text` | Public-safe pseudonym for response/display (PDPA-safe) |
+| `reviewer_profile_url` | `text` | Reviewer's platform profile URL |
+| `is_local_guide` | `boolean DEFAULT false` | GBP Local Guide status (weight signal) |
+| **— Review Content —** | | |
+| `rating` | `numeric(2,1) NOT NULL` | 1.0-5.0 (CHECK: rating BETWEEN 1.0 AND 5.0) |
+| `review_title` | `text` | Title (if platform supports, e.g., Wongnai) |
+| `review_text` | `text` | Full review body |
+| `review_language` | `text DEFAULT 'th'` | ISO 639-1 |
+| `review_photos` | `text[]` | URLs to reviewer-uploaded photos |
+| `review_videos` | `text[]` | URLs to reviewer-uploaded videos |
+| `posted_at` | `timestamptz NOT NULL` | Original review timestamp |
+| **— Response Workflow —** | | |
+| `response_required` | `boolean DEFAULT true` | Auto-set true for ratings ≤ 3.0 or flagged content |
+| `response_priority` | `text DEFAULT 'normal'` | CHECK: 'urgent' / 'high' / 'normal' / 'low' |
+| `response_status` | `text DEFAULT 'pending'` | CHECK: 'pending' / 'drafted' / 'legal_review' / 'approved' / 'published' / 'declined' |
+| `response_text` | `text` | Public response body |
+| `response_language` | `text` | ISO 639-1 |
+| `response_drafted_by_fp` | `text FK→seo_authors_reviewers(fingerprint)` | Who drafted |
+| `response_legal_reviewed` | `boolean DEFAULT false` | PDPA legal review checkpoint |
+| `responded_by_fp` | `text FK→seo_authors_reviewers(fingerprint)` | Who published the response |
+| `responded_at` | `timestamptz` | Response publish time |
+| `pdpa_risk_flag` | `boolean DEFAULT false` | Flagged for PDPA risk (reviewer mentioned medical condition, specific staff names, etc.) |
+| `pdpa_notes` | `text` | Legal review notes |
+| **— NLP / Analytics —** | | |
+| `detected_topics` | `text[]` | Auto-extracted topics (service mentioned, staff praised, complaint category) |
+| `sentiment` | `text` | CHECK: 'positive' / 'neutral' / 'negative' / 'mixed' |
+| `sentiment_score` | `numeric(4,3)` | -1.000 to 1.000 (NLP confidence) |
+| `mentioned_entities_fps` | `text[]` | FK array → `seo_entity_graph(fingerprint)` — auto-detected entity mentions |
+| `mentioned_doctors_fps` | `text[]` | FK array → `seo_authors_reviewers(fingerprint)` — auto-detected doctor mentions |
+| **— Verification —** | | |
+| `is_verified_customer` | `boolean DEFAULT false` | Cross-checked against CRM (if available) |
+| `is_flagged` | `boolean DEFAULT false` | Internal flag for fake/spam/competitor review |
+| `flag_reason` | `text` | Why flagged |
+| `flag_reported_at` | `timestamptz` | When reported to platform |
+| **— Sync Metadata —** | | |
+| `last_synced_at` | `timestamptz` | Last Flow E1 sync |
+| `created_at` | `timestamptz DEFAULT now()` | |
+| `updated_at` | `timestamptz DEFAULT now()` | |
+
+#### Indexes & Constraints
+
+```sql
+CREATE UNIQUE INDEX idx_reviews_source_dedupe ON seo_reviews(source_platform, source_review_id) WHERE source_review_id IS NOT NULL;
+CREATE INDEX idx_reviews_branch ON seo_reviews(branch_id);
+CREATE INDEX idx_reviews_brand ON seo_reviews(brand_id);
+CREATE INDEX idx_reviews_rating ON seo_reviews(rating);
+CREATE INDEX idx_reviews_response_pending ON seo_reviews(response_status) WHERE response_status IN ('pending', 'drafted', 'legal_review');
+CREATE INDEX idx_reviews_pdpa_flagged ON seo_reviews(pdpa_risk_flag) WHERE pdpa_risk_flag = true;
+CREATE INDEX idx_reviews_posted ON seo_reviews(posted_at DESC);
+CREATE INDEX idx_reviews_sentiment ON seo_reviews(sentiment) WHERE sentiment IN ('negative', 'mixed');
+
+ALTER TABLE seo_reviews ADD CONSTRAINT check_rating_range CHECK (rating BETWEEN 1.0 AND 5.0);
+ALTER TABLE seo_reviews ADD CONSTRAINT check_source_platform CHECK (source_platform IN ('gbp', 'wongnai', 'facebook', 'google_maps', 'pantip', 'apple_maps', 'tripadvisor', 'manual'));
+ALTER TABLE seo_reviews ADD CONSTRAINT check_response_status CHECK (response_status IN ('pending', 'drafted', 'legal_review', 'approved', 'published', 'declined'));
+```
+
+#### Used By
+
+- n8n Flow E1 (GBP Reviews Sync every 6h) — INSERTs new reviews, UPDATEs `gbp_review_count`/`gbp_avg_rating` on parent `seo_branches`
+- Response approval workflow (Notion UI → n8n → seo_reviews update → platform publish)
+- NLP sentiment dashboard (Supabase view)
+- KPI tracking (Bible Part 16 — Local SEO Health Metrics)
+
+#### Migration Files
+
+- `010_create_seo_reviews.sql` (DR-025)
+
+---
+
+### 3.6 `seo_directory_listings` 🆕 v1.11
+
+> **Purpose:** NAP (Name/Address/Phone) citation tracker across ~50 local directories per branch + auto-detect inconsistency. **Distinct from `seo_citations`** (which is academic citations like PubMed DOI) — this table is Local SEO directory listings (GBP, Wongnai, Apple Maps, Foursquare, etc.).
+> **Tier:** 1 (Critical Operational — clinic Day 1)
+> **Sync:** S only (audit via n8n Flow E3 weekly); Notion notifications for inconsistency
+> **Bible Reference:** Part 10.5 (Local SEO), Part 17.6 GROUP E Flow E3 (NAP Audit), Appendix B.5 Table 26
+> **Volume:** ~30-100 records per branch (avg ~50 directories tracked)
+
+> **DR Reference:** DR-025 Locked 2026-05-12 (Restore Local SEO Tables). Bible Appendix B.5 Table 26 explicit warning: "distinct from `seo_citations` (academic) — these are 'directory listings' / 'NAP citations' in Local SEO".
+
+#### Schema
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `id` | `uuid PK` | Primary key |
+| `fingerprint` | `text UNIQUE NOT NULL` | Format: `dirl_{ULID16}` |
+| `fingerprint_display_name` | `text NOT NULL` | Format: `{fp_last_6}::{branch_slug}::{directory_name}` |
+| `branch_id` | `uuid FK→seo_branches(id) ON DELETE CASCADE` | Branch being listed |
+| `brand_id` | `uuid FK→brands(id)` | Denormalized for query speed |
+| **— Directory Info —** | | |
+| `directory_name` | `text NOT NULL` | e.g., 'Google Business Profile', 'Wongnai', 'Apple Maps', 'Foursquare', 'Bing Places', 'LINE OA', 'Yellow Pages TH', 'Pantip' |
+| `directory_slug` | `text NOT NULL` | URL-safe identifier ('gbp', 'wongnai', 'apple-maps') |
+| `directory_category` | `text` | 'major_search' / 'thai_local' / 'industry_specific' / 'social' / 'mapping' |
+| `directory_authority_score` | `integer` | 1-100 SEO authority weight (DA-equivalent) |
+| `is_thai_specific` | `boolean DEFAULT false` | TH-market-only directory (Wongnai, Pantip) |
+| `is_industry_specific` | `boolean DEFAULT false` | Industry-specific (e.g., RateMDs for medical) |
+| `industry_focus` | `text` | If industry_specific: 'medical' / 'dental' / 'beauty' / 'wellness' |
+| **— Listing —** | | |
+| `citation_url` | `text` | Direct URL to the listing |
+| `status` | `text DEFAULT 'pending'` | CHECK: 'live' / 'pending' / 'rejected' / 'duplicate' / 'unlisted' |
+| `claim_status` | `text DEFAULT 'unclaimed'` | CHECK: 'claimed' / 'unclaimed' / 'in_progress' / 'verification_failed' |
+| `claimed_at` | `timestamptz` | When claim verified |
+| `claimed_by_fp` | `text FK→seo_authors_reviewers(fingerprint)` | Who claimed it |
+| **— NAP As Listed (snapshot from directory) —** | | |
+| `business_name_listed` | `text` | Name as appears on directory |
+| `address_listed` | `text` | Address as appears |
+| `phone_listed` | `text` | Phone as appears |
+| `website_listed` | `text` | Website URL as appears |
+| `hours_listed` | `jsonb` | Hours as appears |
+| `categories_listed` | `text[]` | Categories as appears |
+| **— Consistency Scoring (auto-computed) —** | | |
+| `name_match_score` | `numeric(4,3)` | 0.000-1.000 fuzzy match vs `seo_branches.business_name_brand` |
+| `address_match_score` | `numeric(4,3)` | vs `seo_branches.formatted_address` |
+| `phone_match_score` | `numeric(4,3)` | vs `seo_branches.phone` (normalized) |
+| `website_match_score` | `numeric(4,3)` | vs `seo_branches.website_url` |
+| `nap_match_score` | `numeric(4,3) GENERATED ALWAYS AS ((name_match_score + address_match_score + phone_match_score) / 3.0) STORED` | Overall NAP consistency |
+| `has_inconsistency` | `boolean GENERATED ALWAYS AS (nap_match_score < 0.95) STORED` | Auto-flag |
+| `inconsistency_notes` | `text` | Operator notes |
+| `inconsistency_severity` | `text` | 'critical' (wrong phone/address) / 'moderate' (name variation) / 'minor' (formatting only) |
+| **— Discovery & Verification —** | | |
+| `found_via` | `text` | 'manual_audit' / 'gbp_insights' / 'whitespark' / 'brightlocal' / 'discovered_search' |
+| `discovered_at` | `timestamptz` | When first added to tracking |
+| `last_verified_at` | `timestamptz` | Last Flow E3 check |
+| `next_verification_due` | `timestamptz` | Next scheduled check |
+| **— Sync —** | | |
+| `created_at` | `timestamptz DEFAULT now()` | |
+| `updated_at` | `timestamptz DEFAULT now()` | |
+
+#### Indexes & Constraints
+
+```sql
+CREATE UNIQUE INDEX idx_dirl_branch_directory ON seo_directory_listings(branch_id, directory_slug);
+CREATE INDEX idx_dirl_brand ON seo_directory_listings(brand_id);
+CREATE INDEX idx_dirl_status ON seo_directory_listings(status);
+CREATE INDEX idx_dirl_inconsistency ON seo_directory_listings(has_inconsistency) WHERE has_inconsistency = true;
+CREATE INDEX idx_dirl_unclaimed ON seo_directory_listings(claim_status) WHERE claim_status = 'unclaimed';
+CREATE INDEX idx_dirl_next_check ON seo_directory_listings(next_verification_due) WHERE status = 'live';
+
+ALTER TABLE seo_directory_listings ADD CONSTRAINT check_status CHECK (status IN ('live', 'pending', 'rejected', 'duplicate', 'unlisted'));
+ALTER TABLE seo_directory_listings ADD CONSTRAINT check_claim_status CHECK (claim_status IN ('claimed', 'unclaimed', 'in_progress', 'verification_failed'));
+ALTER TABLE seo_directory_listings ADD CONSTRAINT check_severity CHECK (inconsistency_severity IS NULL OR inconsistency_severity IN ('critical', 'moderate', 'minor'));
+```
+
+#### Used By
+
+- n8n Flow E3 (NAP Audit weekly) — fetches each directory, compares against `seo_branches` canonical NAP, computes match scores
+- Local SEO health dashboard — count of inconsistencies per branch
+- Citation acquisition workflow — Notion task auto-create when `claim_status = 'unclaimed'` on high-authority directory
+
+#### Migration Files
+
+- `011_create_seo_directory_listings.sql` (DR-025)
+
+---
+
+### 3.7 `seo_gbp_posts` 🆕 v1.11
+
+> **Purpose:** Google Business Profile Posts management + **local archive critical** (GBP posts disappear after 6 months — without local archive, historical campaign data is lost). Supports multi-branch campaigns via `batch_id` for cross-branch publishing.
+> **Tier:** 1 (Critical Operational — clinic Day 1 if GBP active)
+> **Sync:** S only (publish via n8n Flow E2, metrics sync via Flow E4)
+> **Bible Reference:** Part 10.5 (Local SEO), Part 17.6 GROUP E Flow E2 (GBP Posts Publish), Flow E4 (GBP Posts Metrics Sync), Appendix B.5 Table 27
+> **Volume:** ~10-100 records per branch per year (1-4 posts/month avg)
+
+> **DR Reference:** DR-025 Locked 2026-05-12 (Restore Local SEO Tables).
+
+#### Schema
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `id` | `uuid PK` | Primary key |
+| `fingerprint` | `text UNIQUE NOT NULL` | Format: `gbpp_{ULID16}` |
+| `fingerprint_display_name` | `text NOT NULL` | Format: `{fp_last_6}::{branch_slug}::{post_type}::{date}` |
+| `branch_id` | `uuid FK→seo_branches(id) ON DELETE CASCADE` | Target branch |
+| `brand_id` | `uuid FK→brands(id)` | Denormalized for query speed |
+| **— Post Type & Campaign —** | | |
+| `post_type` | `text NOT NULL` | CHECK: 'standard' / 'event' / 'offer' / 'product' / 'covid_update' |
+| `campaign_id` | `text` | Multi-branch campaign grouping |
+| `campaign_name` | `text` | Human-readable campaign label |
+| `batch_id` | `uuid` | Multi-location publish batch (same content across N branches) |
+| `parent_post_id` | `uuid FK→seo_gbp_posts(id)` | If reposting/duplicating from a master post |
+| **— Content —** | | |
+| `title` | `text` | Post title (max 58 chars per GBP spec) |
+| `body` | `text NOT NULL` | Post body (max 1500 chars) |
+| `language_code` | `text DEFAULT 'th'` | ISO 639-1 |
+| `photo_url` | `text` | Primary photo (recommended for engagement) |
+| `video_url` | `text` | Optional video |
+| `cta_type` | `text` | CHECK: 'book' / 'order' / 'shop' / 'learn_more' / 'sign_up' / 'call' / 'none' |
+| `cta_url` | `text` | Where CTA leads |
+| **— Event/Offer-specific —** | | |
+| `event_start_at` | `timestamptz` | For post_type='event' |
+| `event_end_at` | `timestamptz` | For post_type='event' |
+| `offer_coupon_code` | `text` | For post_type='offer' |
+| `offer_terms` | `text` | For post_type='offer' |
+| `offer_redeem_url` | `text` | For post_type='offer' |
+| **— Product-specific (if post_type='product') —** | | |
+| `product_name` | `text` | |
+| `product_price_min` | `numeric(10,2)` | |
+| `product_price_max` | `numeric(10,2)` | |
+| `product_currency` | `text DEFAULT 'THB'` | ISO 4217 |
+| **— Schedule —** | | |
+| `scheduled_for` | `timestamptz` | When to auto-publish |
+| `published_at` | `timestamptz` | Actual publish time |
+| `expires_at` | `timestamptz` | When post auto-expires (GBP 6-month default for non-event) |
+| **— Status / Approval —** | | |
+| `status` | `text DEFAULT 'draft'` | CHECK: 'draft' / 'scheduled' / 'publishing' / 'published' / 'expired' / 'failed' / 'archived' |
+| `approval_status` | `text DEFAULT 'pending'` | CHECK: 'pending' / 'approved' / 'rejected' |
+| `approved_by_fp` | `text FK→seo_authors_reviewers(fingerprint)` | Who approved |
+| `approved_at` | `timestamptz` | |
+| `rejection_reason` | `text` | If rejected |
+| **— GBP API Response —** | | |
+| `gbp_post_id` | `text` | GBP-assigned post ID (after publish) |
+| `gbp_post_url` | `text` | Public URL on GBP |
+| `gbp_published_at` | `timestamptz` | GBP-side publish timestamp |
+| `gbp_api_response` | `jsonb` | Raw API response (for debugging) |
+| `gbp_last_synced_at` | `timestamptz` | Last Flow E4 metrics sync |
+| **— Performance Metrics (synced via Flow E4) —** | | |
+| `views_count` | `integer DEFAULT 0` | |
+| `clicks_count` | `integer DEFAULT 0` | CTA clicks |
+| `conversions_count` | `integer DEFAULT 0` | If tracked via GA4/conversion API |
+| `engagement_rate` | `numeric(5,4) GENERATED ALWAYS AS (CASE WHEN views_count > 0 THEN clicks_count::numeric / views_count ELSE 0 END) STORED` | CTR equivalent |
+| **— Sync —** | | |
+| `created_at` | `timestamptz DEFAULT now()` | |
+| `updated_at` | `timestamptz DEFAULT now()` | |
+
+#### Indexes & Constraints
+
+```sql
+CREATE INDEX idx_gbpp_branch ON seo_gbp_posts(branch_id);
+CREATE INDEX idx_gbpp_brand ON seo_gbp_posts(brand_id);
+CREATE INDEX idx_gbpp_campaign ON seo_gbp_posts(campaign_id) WHERE campaign_id IS NOT NULL;
+CREATE INDEX idx_gbpp_batch ON seo_gbp_posts(batch_id) WHERE batch_id IS NOT NULL;
+CREATE INDEX idx_gbpp_scheduled ON seo_gbp_posts(scheduled_for) WHERE status = 'scheduled';
+CREATE INDEX idx_gbpp_published ON seo_gbp_posts(published_at DESC) WHERE status = 'published';
+CREATE INDEX idx_gbpp_approval ON seo_gbp_posts(approval_status) WHERE approval_status = 'pending';
+
+ALTER TABLE seo_gbp_posts ADD CONSTRAINT check_post_type CHECK (post_type IN ('standard', 'event', 'offer', 'product', 'covid_update'));
+ALTER TABLE seo_gbp_posts ADD CONSTRAINT check_cta_type CHECK (cta_type IS NULL OR cta_type IN ('book', 'order', 'shop', 'learn_more', 'sign_up', 'call', 'none'));
+ALTER TABLE seo_gbp_posts ADD CONSTRAINT check_status CHECK (status IN ('draft', 'scheduled', 'publishing', 'published', 'expired', 'failed', 'archived'));
+ALTER TABLE seo_gbp_posts ADD CONSTRAINT check_approval CHECK (approval_status IN ('pending', 'approved', 'rejected'));
+ALTER TABLE seo_gbp_posts ADD CONSTRAINT check_event_dates CHECK (post_type != 'event' OR (event_start_at IS NOT NULL AND event_end_at IS NOT NULL AND event_end_at >= event_start_at));
+```
+
+#### Used By
+
+- n8n Flow E2 (GBP Posts Publish) — picks `status='scheduled' AND scheduled_for <= NOW()`, publishes to GBP API, updates `gbp_post_id`/`status='published'`
+- n8n Flow E4 (GBP Posts Metrics Sync daily) — for each `status='published' AND last_synced < 1d ago`, fetches views/clicks
+- Multi-branch campaign workflow — operator creates 1 master post in Notion, n8n duplicates to N branches with shared `batch_id`
+- Campaign performance dashboard
+
+#### Migration Files
+
+- `012_create_seo_gbp_posts.sql` (DR-025)
 
 ---
 
@@ -1093,26 +1504,48 @@ Layer_7_Evidence_Pages:     LCP ≤ 2.8s, INP ≤ 200ms, CLS ≤ 0.1
 
 ### 7.2 `seo_local_rankings`
 
-> **Purpose:** Local SERP rankings per (keyword × location × branch)  
-> **Tier:** 1  
-> **Sync:** S only  
-> **Volume:** ~10,000-50,000 records/month
+> **Purpose:** Local SERP / Map Pack rankings per (keyword × search point × branch). Tracks Local Pack position, Maps position, and competitor presence at various search points around each branch.
+> **Tier:** 1
+> **Sync:** S only
+> **Bible Reference:** Part 10.5 (Local SEO), Part 16 (KPIs — Local Pack metric), Appendix B.5 Table 28
+> **Volume:** ~10,000-50,000 records/month (keyword × branch × search_point × snapshot)
+> **Cost note:** Auto-tracking requires paid tool ($24-99/mo per location); manual sampling is free but lower frequency
+
+> **v1.11 NOTE (DR-025):** FK column is `branch_id` (FK → `seo_branches.id`). Bible Appendix B.5 Table 28 previously referenced `location_id` — that label is now consistently `branch_id` across Schema + Bible v3.15. No data migration needed in this table (column was already named `branch_id` in Schema v1.10).
 
 #### Schema (Key Columns)
 
 | Column | Type | Description |
 |--------|------|-------------|
 | `id` | `uuid PK` | |
-| `keyword_fp` | `text FK→keywords_master.fingerprint` | |
-| `branch_id` | `uuid FK→seo_branches.id` | |
-| `location_lat` | `numeric` | |
-| `location_lon` | `numeric` | |
-| `snapshot_at` | `date NOT NULL` | |
-| `map_pack_position` | `integer` | 1-3 visible in map pack |
-| `is_in_local_pack_three` | `boolean` | |
-| `competitors_in_map_pack` | `jsonb` | |
-| `distance_to_branch_km` | `numeric` | |
+| `keyword_fp` | `text FK→keywords_master.fingerprint` | Keyword being ranked |
+| `branch_id` | `uuid FK→seo_branches(id)` | Branch whose ranking is measured (🔄 v1.11 — formerly `location_id` per Bible Appendix B.5 Table 28; consolidated naming per DR-025) |
+| `brand_id` | `uuid FK→brands(id)` | Denormalized for query speed |
+| `search_location_lat` | `numeric(10,7)` | GPS lat of search simulation point |
+| `search_location_lng` | `numeric(10,7)` | GPS lng of search simulation point |
+| `search_location_name` | `text` | Human label ('1km north of branch', 'BTS Asoke', etc.) |
+| `search_radius_km` | `numeric(5,2)` | Search radius from point |
+| `device_type` | `text` | 'mobile' / 'desktop' / 'tablet' |
+| `snapshot_at` | `date NOT NULL` | Date of measurement |
+| `local_pack_position` | `integer` | 1-3 visible in map pack (NULL if not in pack) |
+| `local_pack_total_results` | `integer` | Total Local Pack listings shown |
+| `local_finder_position` | `integer` | Position in Local Finder (after "More places") |
+| `maps_position` | `integer` | Position in Google Maps result |
+| `maps_total_results` | `integer` | |
+| `is_in_local_pack_three` | `boolean GENERATED ALWAYS AS (local_pack_position BETWEEN 1 AND 3) STORED` | Convenience flag |
+| `organic_position` | `integer` | Position in organic results (blue links) |
+| `featured_in_snippet` | `boolean DEFAULT false` | |
+| `ai_overview_cited` | `boolean DEFAULT false` | Cited in Google AI Overview |
+| `competitors_in_map_pack` | `jsonb` | Top 3 competitors at this query/location |
+| `distance_to_branch_km` | `numeric(6,2)` | Distance from search point to branch |
+| `previous_position` | `integer` | Previous snapshot's local_pack_position |
+| `position_change` | `integer GENERATED ALWAYS AS (COALESCE(previous_position, 0) - COALESCE(local_pack_position, 0)) STORED` | + improvement / − decline |
+| `data_source` | `text` | 'brightlocal' / 'whitespark' / 'manual' / 'dataforseo' / 'gbp_insights' |
 | `created_at` | `timestamptz DEFAULT now()` | |
+
+#### Migration Files
+
+- `013_rename_local_rankings_fk.sql` (DR-025 — descriptive rename + new columns; no destructive migration since column already named `branch_id`)
 
 ---
 
@@ -1360,16 +1793,20 @@ INDEX idx_embeddings_hnsw ON seo_entity_embeddings USING hnsw (embedding vector_
 
 ---
 
-## 11. Group 9 — Entity Extensions & Templates (4 tables)
+## 11. Group 9 — Entity Extensions & Templates (10 tables = 9 extensions + 1 template registry)
 
-> **Role:** Type-specific entity extensions (polymorphism per Bible Part 2.5)  
-> **Bible Reference:** Part 2.5 (Entity Polymorphism), Part 14 (Vertical Profiles)
+> **Role:** Type-specific entity extensions (polymorphism per Bible Part 2.5) + programmatic template registry  
+> **Pattern:** Extensions are 1:1 FK to `seo_entity_graph` via `entity_fp` (text FK to `seo_entity_graph.fingerprint`); populated by trigger when `seo_entity_graph.entity_type` matches  
+> **Bible Reference:** Part 2.5 (Entity Polymorphism), Part 5.11 (Group 9), Part 9 (Programmatic Templates), Part 14 (Vertical Profiles), Appendix B.3 (9 Extension Tables)  
+> **Restored in v1.11 per DR-024 (Locked 2026-05-12):** 6 missing extensions added back (product, condition, drug, anatomy, organization, lab_test). `seo_programmatic_templates` renumbered §11.4 → §11.10 and reclassified as template registry (not entity extension).
 
-### 11.1 `seo_entity_ingredients`
+### 11.1 `seo_entity_ingredients` *(entity_type='ingredient')*
 
-> **Purpose:** Extension table for entities of type='ingredient' — INCI name, allergens, regulatory status  
-> **Tier:** 2  
-> **Sync:** N↔S  
+> **Purpose:** Extension table for entities of type='ingredient' — INCI name, allergens, regulatory status. Primarily used by skincare/cosmetic verticals (the brand) and supplements (Dr. Trin).
+> **Tier:** 2
+> **Sync:** N↔S
+> **Schema.org:** Substance / ChemicalSubstance
+> **Bible Reference:** Part 5.11, Part 14.4 (Skincare-Media), Appendix B.3 Table 11
 > **Volume:** ~500-2000 records
 
 #### Schema (Key Columns)
@@ -1377,23 +1814,54 @@ INDEX idx_embeddings_hnsw ON seo_entity_embeddings USING hnsw (embedding vector_
 | Column | Type | Description |
 |--------|------|-------------|
 | `id` | `uuid PK` | |
-| `entity_fp` | `text FK→seo_entity_graph.fingerprint` | |
+| `entity_fp` | `text FK→seo_entity_graph.fingerprint UNIQUE NOT NULL` | 1:1 link to entity (CASCADE) |
 | `inci_name` | `text` | International Nomenclature of Cosmetic Ingredients |
+| `inci_aliases` | `text[]` | Alternative INCI names |
 | `cas_number` | `text` | Chemical Abstracts Service number |
-| `allergen_status` | `text` | 'safe' / 'restricted' / 'allergen' / 'restricted_concentration' |
+| `ec_number` | `text` | European Community number |
+| `ewg_id` | `text` | Environmental Working Group ID |
+| `cosing_ref_no` | `text` | EU CosIng database ref |
+| `allergen_status` | `text` | CHECK: 'safe' / 'restricted' / 'allergen' / 'restricted_concentration' |
+| `comedogenic_rating` | `integer` | 0-5 scale |
+| `irritancy_rating` | `integer` | 0-5 scale |
+| `pregnancy_safe` | `boolean` | |
+| `breastfeeding_safe` | `boolean` | |
+| `fungal_acne_safe` | `boolean` | |
+| `photosensitivity` | `boolean` | |
+| `function_categories` | `text[]` | 'humectant', 'emollient', 'antioxidant', etc. |
 | `concentration_range_typical` | `text` | e.g., '0.5-2%' |
+| `typical_concentration_min` | `numeric(5,3)` | |
+| `typical_concentration_max` | `numeric(5,3)` | |
+| `effective_concentration_min` | `numeric(5,3)` | Minimum to be effective per research |
 | `regulatory_status` | `jsonb` | Per-region: `{"FDA": "approved", "EU": "restricted"}` |
+| `thai_fda_classification` | `text` | |
+| `thai_fda_max_concentration` | `numeric(5,3)` | |
+| `eu_annex_restriction` | `text` | EU Cosmetic Regulation Annex II/III/IV/V/VI |
+| `us_fda_status` | `text` | |
 | `mechanism_of_action` | `text` | |
-| `evidence_level` | `text` | |
+| `evidence_level` | `text` | 'strong' / 'moderate' / 'weak' / 'anecdotal' |
 | `created_at` | `timestamptz DEFAULT now()` | |
+| `updated_at` | `timestamptz DEFAULT now()` | |
+
+#### Used By
+
+- Skincare product pages (T-product) — list ingredients
+- Comparison pages (T-comparison) — ingredient profile compare
+- Listicle pages — "best Vitamin C serums" requires ingredient entity
+
+#### Migration Files
+
+- Pre-existing (Phase 1A baseline)
 
 ---
 
-### 11.2 `seo_entity_devices`
+### 11.2 `seo_entity_devices` *(entity_type='device')*
 
-> **Purpose:** Extension for entities of type='device' — FDA/CE mark, manufacturer, technology  
-> **Tier:** 2  
-> **Sync:** N↔S  
+> **Purpose:** Extension for entities of type='device' — FDA/CE mark, manufacturer, technology category. Used by medical/aesthetic devices (Fotona LightWalker for VTH BioDent NightLase, CBCT scanners, etc.).
+> **Tier:** 2
+> **Sync:** N↔S
+> **Schema.org:** MedicalDevice
+> **Bible Reference:** Part 5.11, Part 14.6 (Hospital), Appendix B.3 Table 19
 > **Volume:** ~50-500 records
 
 #### Schema (Key Columns)
@@ -1401,23 +1869,47 @@ INDEX idx_embeddings_hnsw ON seo_entity_embeddings USING hnsw (embedding vector_
 | Column | Type | Description |
 |--------|------|-------------|
 | `id` | `uuid PK` | |
-| `entity_fp` | `text FK→seo_entity_graph.fingerprint` | |
-| `manufacturer` | `text` | |
-| `model_number` | `text` | |
-| `fda_clearance` | `text` | |
+| `entity_fp` | `text FK→seo_entity_graph.fingerprint UNIQUE NOT NULL` | 1:1 link |
+| `manufacturer` | `text` | e.g., 'Fotona' |
+| `manufacturer_org_fp` | `text FK→seo_entity_graph.fingerprint` | 🆕 **v1.11** — Link to manufacturer's organization entity |
+| `model_number` | `text` | e.g., 'LightWalker' |
+| `device_family` | `text` | Product family grouping |
+| `fda_clearance` | `text` | 510(k) number |
+| `fda_clearance_date` | `date` | |
 | `ce_mark` | `boolean` | |
-| `regulatory_class` | `text` | 'I' / 'II' / 'III' |
-| `technology_category` | `text` | |
-| `clinical_indications` | `text[]` | |
+| `ce_mark_class` | `text` | CHECK: 'I' / 'IIa' / 'IIb' / 'III' |
+| `thai_fda_reg_no` | `text` | 🆕 **v1.11** — Thai FDA medical device registration |
+| `regulatory_class` | `text` | CHECK: 'I' / 'II' / 'III' (US FDA classification) |
+| `technology_category` | `text` | 'laser' / 'IPL' / 'RF' / 'ultrasound' / 'cryolipolysis' / 'imaging' / 'surgical' |
+| `wavelength_nm` | `numeric(6,2)` | For laser/IPL devices |
+| `clinical_indications` | `text[]` | What it treats |
+| `contraindications` | `text[]` | When NOT to use |
+| `treatment_areas` | `text[]` | Body areas |
+| `typical_session_duration_min` | `integer` | |
+| `typical_sessions_required` | `text` | e.g., '4-6 sessions' |
+| `downtime_days` | `numeric(3,1)` | Recovery time |
 | `created_at` | `timestamptz DEFAULT now()` | |
+| `updated_at` | `timestamptz DEFAULT now()` | |
+
+#### Used By
+
+- T-device pages (Fotona LightWalker page, NightLase pages)
+- `seo_branches.equipment_at_branch_fps[]` — which devices each branch has
+- Procedure pages that use specific devices
+
+#### Migration Files
+
+- Pre-existing (Phase 1A baseline)
 
 ---
 
-### 11.3 `seo_entity_procedures`
+### 11.3 `seo_entity_procedures` *(entity_type='procedure')*
 
-> **Purpose:** Extension for entities of type='procedure' — CPT codes, contraindications, recovery time  
-> **Tier:** 2  
-> **Sync:** N↔S  
+> **Purpose:** Extension for entities of type='procedure' — CPT codes, contraindications, recovery time, technique details. Used by medical/dental/aesthetic procedures (caries treatment, NightLase, root canal, hair transplant, etc.).
+> **Tier:** 2
+> **Sync:** N↔S
+> **Schema.org:** MedicalProcedure / SurgicalProcedure / TherapeuticProcedure / DiagnosticProcedure
+> **Bible Reference:** Part 5.11, Part 14 (all medical verticals), Appendix B.3 Table 13
 > **Volume:** ~100-1000 records
 
 #### Schema (Key Columns)
@@ -1425,22 +1917,598 @@ INDEX idx_embeddings_hnsw ON seo_entity_embeddings USING hnsw (embedding vector_
 | Column | Type | Description |
 |--------|------|-------------|
 | `id` | `uuid PK` | |
-| `entity_fp` | `text FK→seo_entity_graph.fingerprint` | |
-| `cpt_code` | `text` | Current Procedural Terminology |
-| `procedure_duration_minutes` | `integer` | |
+| `entity_fp` | `text FK→seo_entity_graph.fingerprint UNIQUE NOT NULL` | 1:1 link |
+| `cpt_code` | `text` | Current Procedural Terminology (US billing) |
+| `cpt_alternate_codes` | `text[]` | 🆕 **v1.11** — TH-specific or institutional billing codes |
+| `procedure_type` | `text` | CHECK: 'surgical' / 'non_surgical' / 'minimally_invasive' / 'diagnostic' / 'therapeutic' |
+| `invasiveness_level` | `text` | CHECK: 'non_invasive' / 'minimally_invasive' / 'invasive' |
+| `procedure_duration_min` | `integer` | Minimum duration in minutes |
+| `procedure_duration_max` | `integer` | Maximum duration in minutes |
+| `procedure_duration_typical` | `integer` | Typical duration |
 | `recovery_time_days` | `integer` | |
-| `anesthesia_type` | `text` | 'local' / 'general' / 'sedation' |
+| `recovery_back_to_work_days` | `integer` | 🆕 **v1.11** — Back-to-work timing |
+| `recovery_full_recovery_days` | `integer` | 🆕 **v1.11** — Full recovery timing |
+| `anesthesia_type` | `text` | CHECK: 'none' / 'topical' / 'local' / 'sedation' / 'general' |
+| `anesthesia_required` | `boolean DEFAULT false` | |
+| `treats_conditions_fps` | `text[]` | 🆕 **v1.11** — FK array → `seo_entity_graph.fingerprint` (conditions this procedure treats) |
+| `affects_anatomy_fps` | `text[]` | 🆕 **v1.11** — FK array → `seo_entity_graph.fingerprint` (anatomy involved) |
+| `uses_devices_fps` | `text[]` | 🆕 **v1.11** — FK array → `seo_entity_graph.fingerprint` (devices used in procedure) |
 | `contraindications` | `text[]` | |
-| `complications_common` | `jsonb` | |
+| `contraindication_entities_fps` | `text[]` | 🆕 **v1.11** — Structured FK to condition entities |
+| `complications_common` | `jsonb` | `[{name, frequency_pct, severity}]` |
+| `success_rate_pct` | `numeric(5,2)` | Published success rate |
+| `requires_followup` | `boolean DEFAULT false` | |
+| `followup_visits_typical` | `integer` | |
 | `created_at` | `timestamptz DEFAULT now()` | |
+| `updated_at` | `timestamptz DEFAULT now()` | |
+
+#### Used By
+
+- T2-medical-procedure template (Bible §4.1.2 — primary)
+- T-comparison pages (treatment-A vs treatment-B)
+- Service page on branch landing (Bible Part 4.4)
+
+#### Migration Files
+
+- Pre-existing (Phase 1A baseline)
 
 ---
 
-### 11.4 `seo_programmatic_templates`
+### 11.4 `seo_entity_product` *(entity_type='product')* 🆕 v1.11
 
-> **Purpose:** Type C programmatic page templates (Bible Part 9)  
-> **Tier:** 2  
-> **Sync:** N↔S  
+> **Purpose:** Extension for entities of type='product' — commercial products including skincare, supplements, devices-as-products, OTC medical products. Distinct from `seo_entity_drug` (Rx) and `seo_entity_device` (capital equipment).
+> **Tier:** 2
+> **Sync:** N↔S
+> **Schema.org:** Product (Schema.org core type)
+> **Bible Reference:** Part 5.11, Part 14.4 (Skincare-Media), Part 14.5 (Wellness-Media), Appendix B.3 Table 12
+> **Volume:** ~200-2000 records (heavy for skincare brand, light for clinic)
+> **Used by brands:** the brand (skincare line), Dr. Trin (supplements), any brand selling product
+
+> **DR Reference:** DR-024 Locked 2026-05-12 (Restore 9 Entity Extension Tables).
+
+#### Schema
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `id` | `uuid PK` | |
+| `entity_fp` | `text FK→seo_entity_graph(fingerprint) UNIQUE NOT NULL` | 1:1 link (CASCADE) |
+| **— Identification —** | | |
+| `gtin` | `text` | Global Trade Item Number (UPC/EAN/ISBN) |
+| `sku` | `text` | Internal SKU |
+| `manufacturer_part_number` | `text` | MPN |
+| `product_name` | `text NOT NULL` | Display name (canonical) |
+| `product_slug` | `text` | URL-safe slug |
+| **— Brand & Owner —** | | |
+| `brand_owner_name` | `text` | Brand owner (may be external) |
+| `brand_owner_org_fp` | `text FK→seo_entity_graph(fingerprint)` | Link to brand owner's organization entity |
+| `is_own_brand_product` | `boolean DEFAULT false` | true if this brand owns the product |
+| **— Categorization —** | | |
+| `product_category` | `text NOT NULL` | 'skincare' / 'supplement' / 'medical_device_otc' / 'cosmetic' / 'wellness_product' |
+| `product_subcategory` | `text` | 'serum' / 'cleanser' / 'moisturizer' / 'multivitamin' / etc. |
+| `product_form` | `text` | 'cream' / 'serum' / 'capsule' / 'tablet' / 'powder' / 'liquid' / 'patch' |
+| **— Composition —** | | |
+| `ingredients_fps` | `text[]` | FK array → `seo_entity_ingredients` via entity_fp |
+| `key_active_ingredients` | `text[]` | Marketing-facing actives (subset of ingredients) |
+| `inactive_ingredients` | `text[]` | Excipients |
+| `allergen_warnings` | `text[]` | Common allergens present |
+| `free_from_claims` | `text[]` | 'paraben-free' / 'fragrance-free' / 'vegan' / 'cruelty-free' |
+| **— Sizing & Variants —** | | |
+| `size_value` | `numeric(8,2)` | Quantity value |
+| `size_unit` | `text` | 'ml' / 'g' / 'oz' / 'capsules' / 'tablets' |
+| `variants` | `jsonb` | `[{size, color, flavor, price}]` |
+| **— Pricing —** | | |
+| `price_min` | `numeric(10,2)` | |
+| `price_max` | `numeric(10,2)` | |
+| `price_typical` | `numeric(10,2)` | |
+| `currency` | `text DEFAULT 'THB'` | ISO 4217 |
+| `price_per_unit` | `numeric(10,4) GENERATED ALWAYS AS (CASE WHEN size_value > 0 THEN price_typical / size_value ELSE NULL END) STORED` | Auto-computed |
+| **— Regulatory —** | | |
+| `thai_fda_reg_no` | `text` | เลขจดแจ้ง อย. |
+| `thai_fda_type` | `text` | 'เครื่องสำอาง' / 'ผลิตภัณฑ์เสริมอาหาร' / 'เครื่องมือแพทย์' |
+| `regulatory_status` | `jsonb` | Per-region status |
+| `requires_prescription` | `boolean DEFAULT false` | |
+| **— Safety —** | | |
+| `pregnancy_safe` | `boolean` | |
+| `breastfeeding_safe` | `boolean` | |
+| `pediatric_safe` | `boolean` | |
+| `pediatric_min_age_years` | `numeric(4,1)` | |
+| `contraindications` | `text[]` | |
+| **— Certifications —** | | |
+| `certifications` | `text[]` | 'GMP' / 'ISO22716' / 'COSMOS' / 'Halal' / 'HACCP' / 'organic' |
+| **— Schema.org —** | | |
+| `schema_product_type` | `text DEFAULT 'Product'` | 'Product' / 'Drug' (OTC) / 'DietarySupplement' |
+| **— Metadata —** | | |
+| `is_discontinued` | `boolean DEFAULT false` | |
+| `launch_date` | `date` | |
+| `discontinued_date` | `date` | |
+| `created_at` | `timestamptz DEFAULT now()` | |
+| `updated_at` | `timestamptz DEFAULT now()` | |
+
+#### Indexes & Constraints
+
+```sql
+CREATE INDEX idx_prod_entity ON seo_entity_product(entity_fp);
+CREATE INDEX idx_prod_category ON seo_entity_product(product_category);
+CREATE INDEX idx_prod_brand_owner ON seo_entity_product(brand_owner_org_fp);
+CREATE INDEX idx_prod_thai_fda ON seo_entity_product(thai_fda_reg_no) WHERE thai_fda_reg_no IS NOT NULL;
+CREATE INDEX idx_prod_active_ingredients ON seo_entity_product USING GIN(key_active_ingredients);
+CREATE INDEX idx_prod_ingredients_fps ON seo_entity_product USING GIN(ingredients_fps);
+
+ALTER TABLE seo_entity_product ADD CONSTRAINT check_category CHECK (product_category IN ('skincare', 'supplement', 'medical_device_otc', 'cosmetic', 'wellness_product', 'food_drink', 'medical_food'));
+ALTER TABLE seo_entity_product ADD CONSTRAINT check_schema_type CHECK (schema_product_type IN ('Product', 'Drug', 'DietarySupplement', 'IndividualProduct', 'ProductModel'));
+```
+
+#### Populate Trigger
+
+```sql
+CREATE TRIGGER trg_populate_entity_product
+  AFTER INSERT OR UPDATE OF entity_type ON seo_entity_graph
+  FOR EACH ROW
+  WHEN (NEW.entity_type = 'product')
+  EXECUTE FUNCTION populate_entity_extension('product');
+```
+
+#### Used By
+
+- T-product page template
+- T-comparison page template
+- T-listicle page template
+- `seo_page_master` for product-focused pages (skincare brand)
+
+#### Migration Files
+
+- `014_restore_entity_product.sql` (DR-024)
+
+---
+
+### 11.5 `seo_entity_condition` *(entity_type='condition')* 🆕 v1.11
+
+> **Purpose:** Extension for entities of type='condition' — diseases and medical conditions with ICD-10, SNOMED-CT, MeSH coding. **Primary schema binding for T1 medical-condition template** (Bible §4.1.1). Cross-referenced extensively with anatomy, drug, and procedure entities to form the medical knowledge graph.
+> **Tier:** 1 (Critical — T1 template binding)
+> **Sync:** N↔S
+> **Schema.org:** MedicalCondition
+> **Bible Reference:** Part 4.1.1 (T1 Medical Condition template), Part 5.11, Part 14 (all medical verticals), Appendix B.3 Table 14
+> **Volume:** ~200-1500 records
+> **Used by brands:** ALL medical brands — VTH BioDent (caries, periodontitis, OSA), Deezy (malocclusion), SmileScape (aesthetic concerns), Dr. Trin (men's vitality conditions), the brand (skin conditions)
+
+> **DR Reference:** DR-024 Locked 2026-05-12 (Restore 9 Entity Extension Tables).
+
+#### Schema
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `id` | `uuid PK` | |
+| `entity_fp` | `text FK→seo_entity_graph(fingerprint) UNIQUE NOT NULL` | 1:1 link (CASCADE) |
+| **— Medical Coding —** | | |
+| `icd10_code` | `text` | ICD-10-CM diagnosis code (e.g., 'K05.3' for chronic periodontitis) |
+| `icd10_codes_related` | `text[]` | Additional ICD-10 codes for severity/progression |
+| `snomed_ct_id` | `text` | SNOMED-CT concept ID |
+| `mesh_id` | `text` | MeSH (Medical Subject Headings) identifier |
+| `umls_cui` | `text` | UMLS Concept Unique Identifier |
+| `wikidata_qid` | `text` | Wikidata Q-number (e.g., 'Q31796') |
+| **— Classification —** | | |
+| `condition_category` | `text` | 'infectious' / 'neoplastic' / 'metabolic' / 'genetic' / 'autoimmune' / 'degenerative' / 'traumatic' / 'congenital' / 'functional' / 'psychiatric' / 'unknown' |
+| `body_system` | `text[]` | Affected systems: 'cardiovascular' / 'respiratory' / 'digestive' / 'oral' / 'integumentary' / etc. |
+| `is_chronic` | `boolean` | |
+| `is_acute` | `boolean` | |
+| `is_recurrent` | `boolean` | |
+| `is_lifestyle_related` | `boolean` | Smoking / diet / sleep / stress-related |
+| **— Clinical Profile —** | | |
+| `prevalence_global_pct` | `numeric(5,3)` | % of global population |
+| `prevalence_thailand_pct` | `numeric(5,3)` | % of Thai population |
+| `prevalence_source` | `text` | Citation source for prevalence |
+| `incidence_per_100k_yearly` | `numeric(8,2)` | Annual incidence |
+| `mortality_rate_pct` | `numeric(5,3)` | Untreated mortality |
+| `severity_levels` | `text[]` | 'mild' / 'moderate' / 'severe' / 'critical' |
+| **— Symptoms —** | | |
+| `symptoms` | `text[]` | Common symptoms (text descriptions) |
+| `symptom_entities_fps` | `text[]` | 🆕 — FK array → `seo_entity_graph` (symptom entities if modeled) |
+| `early_warning_signs` | `text[]` | Patient-facing early signs |
+| **— Anatomy Affected —** | | |
+| `related_anatomy_fps` | `text[]` | FK array → `seo_entity_graph` (anatomy entities affected) |
+| **— Treatment Cross-Refs —** | | |
+| `treatment_drugs_fps` | `text[]` | FK array → `seo_entity_graph` (drug entities used in treatment) |
+| `treatment_procedures_fps` | `text[]` | FK array → `seo_entity_graph` (procedure entities for treatment) |
+| `prevention_strategies` | `text[]` | Free-text prevention guidance |
+| **— Demographics —** | | |
+| `affected_age_groups` | `text[]` | 'infant' / 'child' / 'adolescent' / 'adult' / 'elderly' |
+| `gender_predominance` | `text` | CHECK: 'male' / 'female' / 'equal' / 'unknown' |
+| `risk_factors` | `text[]` | |
+| **— Diagnosis —** | | |
+| `diagnostic_methods` | `text[]` | 'clinical_exam' / 'imaging' / 'blood_test' / 'biopsy' / 'genetic_test' |
+| `diagnostic_tests_fps` | `text[]` | FK array → `seo_entity_lab_test` |
+| **— Patient Communication —** | | |
+| `patient_explanation_th` | `text` | Layperson explanation in Thai |
+| `patient_explanation_en` | `text` | Layperson explanation in English |
+| `common_misconceptions` | `text[]` | Myth-busting content seeds |
+| **— SEO Metadata —** | | |
+| `search_volume_proxy` | `text` | 'high' / 'medium' / 'low' (qualitative if no DFS data yet) |
+| **— Metadata —** | | |
+| `created_at` | `timestamptz DEFAULT now()` | |
+| `updated_at` | `timestamptz DEFAULT now()` | |
+
+#### Indexes & Constraints
+
+```sql
+CREATE INDEX idx_cond_entity ON seo_entity_condition(entity_fp);
+CREATE INDEX idx_cond_icd10 ON seo_entity_condition(icd10_code) WHERE icd10_code IS NOT NULL;
+CREATE INDEX idx_cond_snomed ON seo_entity_condition(snomed_ct_id) WHERE snomed_ct_id IS NOT NULL;
+CREATE INDEX idx_cond_category ON seo_entity_condition(condition_category);
+CREATE INDEX idx_cond_body_system ON seo_entity_condition USING GIN(body_system);
+CREATE INDEX idx_cond_treatment_procs ON seo_entity_condition USING GIN(treatment_procedures_fps);
+CREATE INDEX idx_cond_treatment_drugs ON seo_entity_condition USING GIN(treatment_drugs_fps);
+
+ALTER TABLE seo_entity_condition ADD CONSTRAINT check_gender CHECK (gender_predominance IS NULL OR gender_predominance IN ('male', 'female', 'equal', 'unknown'));
+ALTER TABLE seo_entity_condition ADD CONSTRAINT check_chronicity CHECK (NOT (is_chronic AND is_acute));
+```
+
+#### Used By
+
+- **T1-medical-condition template (PRIMARY BINDING)** — Bible §4.1.1
+- Knowledge graph cross-refs (condition → anatomy → drug → procedure)
+- Patient-facing content (Bible Part 23.4 — patient communication tier)
+- Schema.org MedicalCondition emission (DR-019 schema strategy)
+
+#### Migration Files
+
+- `015_restore_entity_condition.sql` (DR-024)
+
+---
+
+### 11.6 `seo_entity_drug` *(entity_type='drug')* 🆕 v1.11
+
+> **Purpose:** Extension for entities of type='drug' — Rx/OTC pharmaceuticals with RxNorm, ATC, Thai FDA registration. Used for post-procedure medications (VTH BioDent antibiotics), supplements at Rx level (Dr. Trin TRT), cosmeceuticals borderline (the brand).
+> **Tier:** 2
+> **Sync:** N↔S
+> **Schema.org:** Drug
+> **Bible Reference:** Part 5.11, Part 14.6 (Hospital), Appendix B.3 Table 15
+> **Volume:** ~100-500 records
+> **PDPA Note:** Drug entity pages cannot mention real patient cases (PDPA + medical advertising law)
+
+> **DR Reference:** DR-024 Locked 2026-05-12 (Restore 9 Entity Extension Tables).
+
+#### Schema
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `id` | `uuid PK` | |
+| `entity_fp` | `text FK→seo_entity_graph(fingerprint) UNIQUE NOT NULL` | 1:1 link |
+| **— Drug Coding —** | | |
+| `rxnorm_code` | `text` | RxNorm concept code |
+| `atc_code` | `text` | WHO ATC (Anatomical Therapeutic Chemical) classification |
+| `mesh_id` | `text` | MeSH ID |
+| `wikidata_qid` | `text` | Wikidata Q-number |
+| **— Drug Identity —** | | |
+| `generic_name` | `text NOT NULL` | International nonproprietary name (INN) |
+| `brand_names` | `text[]` | Common brand names in market |
+| `chemical_name` | `text` | IUPAC or systematic name |
+| `drug_class` | `text` | 'antibiotic' / 'NSAID' / 'corticosteroid' / 'statin' / etc. |
+| `drug_subclass` | `text` | More specific class |
+| **— Forms & Routes —** | | |
+| `dosage_forms` | `text[]` | 'tablet' / 'capsule' / 'injection' / 'topical' / 'inhaler' / 'syrup' |
+| `routes_of_administration` | `text[]` | 'oral' / 'IV' / 'IM' / 'topical' / 'sublingual' / 'inhalation' |
+| `available_strengths` | `text[]` | '500mg', '1000mg/5ml', etc. |
+| **— Regulatory —** | | |
+| `thai_fda_reg_no` | `text` | เลขทะเบียนยา |
+| `thai_fda_status` | `text` | 'approved' / 'restricted' / 'withdrawn' |
+| `prescription_required` | `boolean DEFAULT true` | |
+| `controlled_substance_class` | `text` | TH Narcotics Act classification (วัตถุออกฤทธิ์ ประเภท 1-4 / ยาเสพติด) |
+| `requires_special_program` | `boolean DEFAULT false` | E.g., isotretinoin program |
+| **— Clinical Use —** | | |
+| `indications_fps` | `text[]` | FK array → `seo_entity_condition` (what it treats) |
+| `indications_text` | `text[]` | Indications descriptions |
+| `off_label_uses` | `text[]` | Documented off-label uses |
+| `contraindications_fps` | `text[]` | FK array → `seo_entity_condition` (when NOT to use) |
+| `contraindications_text` | `text[]` | Free-text contraindications |
+| **— Safety —** | | |
+| `side_effects_common` | `text[]` | |
+| `side_effects_serious` | `text[]` | |
+| `pregnancy_category` | `text` | FDA: 'A' / 'B' / 'C' / 'D' / 'X' (legacy) or modern Pregnancy and Lactation Labeling |
+| `breastfeeding_category` | `text` | |
+| `pediatric_use` | `text` | Approval status for pediatric |
+| `pediatric_min_age_years` | `numeric(4,1)` | |
+| `geriatric_considerations` | `text` | |
+| **— Interactions —** | | |
+| `drug_interactions_fps` | `text[]` | FK array → other `seo_entity_drug` entities (interacts with) |
+| `food_interactions` | `text[]` | |
+| **— Dosing —** | | |
+| `typical_dosing_adult` | `text` | |
+| `max_daily_dose` | `text` | |
+| `duration_typical` | `text` | e.g., '7-10 days for acute infection' |
+| **— Pharmacology —** | | |
+| `mechanism_of_action` | `text` | |
+| `half_life_hours` | `numeric(6,2)` | |
+| `bioavailability_pct` | `numeric(5,2)` | |
+| **— Metadata —** | | |
+| `is_generic_available` | `boolean DEFAULT false` | |
+| `created_at` | `timestamptz DEFAULT now()` | |
+| `updated_at` | `timestamptz DEFAULT now()` | |
+
+#### Indexes & Constraints
+
+```sql
+CREATE INDEX idx_drug_entity ON seo_entity_drug(entity_fp);
+CREATE INDEX idx_drug_rxnorm ON seo_entity_drug(rxnorm_code) WHERE rxnorm_code IS NOT NULL;
+CREATE INDEX idx_drug_atc ON seo_entity_drug(atc_code) WHERE atc_code IS NOT NULL;
+CREATE INDEX idx_drug_thai_fda ON seo_entity_drug(thai_fda_reg_no) WHERE thai_fda_reg_no IS NOT NULL;
+CREATE INDEX idx_drug_class ON seo_entity_drug(drug_class);
+CREATE INDEX idx_drug_indications ON seo_entity_drug USING GIN(indications_fps);
+CREATE INDEX idx_drug_controlled ON seo_entity_drug(controlled_substance_class) WHERE controlled_substance_class IS NOT NULL;
+```
+
+#### Used By
+
+- T-drug-monograph template
+- Post-procedure care content (linked from procedure pages)
+- T1-medical-condition treatment section (cross-refs treatment_drugs_fps)
+
+#### Migration Files
+
+- `016_restore_entity_drug.sql` (DR-024)
+
+---
+
+### 11.7 `seo_entity_anatomy` *(entity_type='anatomy')* 🆕 v1.11
+
+> **Purpose:** Extension for entities of type='anatomy' — body anatomy entities (jaw, gum, tooth, TMJ, skin, hair follicle, etc.). Mostly a **supporting entity** for condition/procedure pages rather than standalone, but central to knowledge graph cross-refs. Self-FK hierarchy (TMJ ⊂ jaw ⊂ skull).
+> **Tier:** 2
+> **Sync:** N↔S
+> **Schema.org:** AnatomicalStructure
+> **Bible Reference:** Part 5.11, Part 14 (all medical verticals), Appendix B.3 Table 16
+> **Volume:** ~100-500 records
+
+> **DR Reference:** DR-024 Locked 2026-05-12 (Restore 9 Entity Extension Tables).
+
+#### Schema
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `id` | `uuid PK` | |
+| `entity_fp` | `text FK→seo_entity_graph(fingerprint) UNIQUE NOT NULL` | 1:1 link |
+| **— Coding —** | | |
+| `fma_id` | `text` | Foundational Model of Anatomy ID |
+| `uberon_id` | `text` | Uber-anatomy ontology ID (cross-species) |
+| `terminologia_anatomica` | `text` | TA98 code |
+| `mesh_id` | `text` | MeSH (anatomy branch) |
+| `wikidata_qid` | `text` | |
+| **— Identity —** | | |
+| `anatomical_name_latin` | `text` | Latin canonical name |
+| `anatomical_name_th` | `text` | Thai medical term |
+| `common_name_th` | `text` | Layperson Thai term |
+| **— Classification —** | | |
+| `body_system` | `text` | 'cardiovascular' / 'respiratory' / 'digestive' / 'musculoskeletal' / 'oral' / 'integumentary' / 'nervous' / 'endocrine' / 'reproductive' / 'urinary' / 'lymphatic' / 'sensory' |
+| `anatomical_region` | `text` | 'head_neck' / 'thorax' / 'abdomen' / 'upper_limb' / 'lower_limb' / 'spine' / 'pelvis' |
+| `anatomy_type` | `text` | CHECK: 'organ' / 'tissue' / 'bone' / 'muscle' / 'vessel' / 'nerve' / 'gland' / 'cavity' / 'region' / 'structure' / 'cell' |
+| **— Hierarchy (self-FK) —** | | |
+| `parent_anatomy_fp` | `text FK→seo_entity_graph(fingerprint)` | Parent anatomy (e.g., TMJ → jaw) |
+| `parent_anatomy_relation` | `text` | 'part_of' / 'attached_to' / 'innervated_by' / 'supplied_by' |
+| `child_anatomy_fps` | `text[]` | Child anatomies (reverse, denormalized) |
+| **— Functional Relationships —** | | |
+| `connected_to_fps` | `text[]` | Anatomically connected structures |
+| `innervated_by_fps` | `text[]` | Nerves supplying this anatomy |
+| `vascularized_by_fps` | `text[]` | Blood vessels supplying this anatomy |
+| **— Clinical Relevance —** | | |
+| `affected_by_conditions_fps` | `text[]` | FK array → `seo_entity_condition` (conditions affecting this anatomy) |
+| `target_of_procedures_fps` | `text[]` | FK array → `seo_entity_procedure` (procedures targeting this anatomy) |
+| **— Visualization —** | | |
+| `illustration_url` | `text` | Reference image URL |
+| `3d_model_url` | `text` | Optional 3D model |
+| **— Metadata —** | | |
+| `created_at` | `timestamptz DEFAULT now()` | |
+| `updated_at` | `timestamptz DEFAULT now()` | |
+
+#### Indexes & Constraints
+
+```sql
+CREATE INDEX idx_anat_entity ON seo_entity_anatomy(entity_fp);
+CREATE INDEX idx_anat_parent ON seo_entity_anatomy(parent_anatomy_fp);
+CREATE INDEX idx_anat_body_system ON seo_entity_anatomy(body_system);
+CREATE INDEX idx_anat_fma ON seo_entity_anatomy(fma_id) WHERE fma_id IS NOT NULL;
+CREATE INDEX idx_anat_uberon ON seo_entity_anatomy(uberon_id) WHERE uberon_id IS NOT NULL;
+CREATE INDEX idx_anat_affected_by ON seo_entity_anatomy USING GIN(affected_by_conditions_fps);
+
+ALTER TABLE seo_entity_anatomy ADD CONSTRAINT check_anatomy_type CHECK (anatomy_type IN ('organ', 'tissue', 'bone', 'muscle', 'vessel', 'nerve', 'gland', 'cavity', 'region', 'structure', 'cell'));
+ALTER TABLE seo_entity_anatomy ADD CONSTRAINT check_no_self_parent CHECK (parent_anatomy_fp != entity_fp);
+```
+
+#### Used By
+
+- T-anatomy-reference (rare standalone page)
+- T1-medical-condition (cross-ref via related_anatomy_fps)
+- T2-medical-procedure (cross-ref via affects_anatomy_fps)
+- Knowledge graph foundation
+
+#### Migration Files
+
+- `017_restore_entity_anatomy.sql` (DR-024)
+
+---
+
+### 11.8 `seo_entity_organization` *(entity_type='organization')* 🆕 v1.11
+
+> **Purpose:** Extension for entities of type='organization' — **external organizations** referenced in content (Thai FDA, ADA, Wikidata Q-entities, manufacturers, accreditation bodies, professional associations). **Distinct from `brands` table** which represents own brands.
+> **Tier:** 2
+> **Sync:** N↔S
+> **Schema.org:** Organization / MedicalOrganization / Hospital / Corporation / NGO / GovernmentOrganization
+> **Bible Reference:** Part 5.11, Part 23.3 (Authority Validation), Part 24 (External Citations), Appendix B.3 Table 17
+> **Volume:** ~100-500 records
+> **Scope clarification:** `brands` (own brands ~10-50) vs `seo_entity_organization` (external orgs ~100-500). Owned-brand companies may ALSO have an entity_organization row for KG cross-ref purposes.
+
+> **DR Reference:** DR-024 Locked 2026-05-12 (Restore 9 Entity Extension Tables).
+
+#### Schema
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `id` | `uuid PK` | |
+| `entity_fp` | `text FK→seo_entity_graph(fingerprint) UNIQUE NOT NULL` | 1:1 link |
+| **— Identity —** | | |
+| `legal_name` | `text NOT NULL` | Legal registered name |
+| `common_name` | `text` | Display name |
+| `aliases` | `text[]` | Alternative names |
+| `wikidata_qid` | `text` | Wikidata Q-number (KG critical) |
+| `ringgold_id` | `text` | Ringgold institutional ID (academic citation use) |
+| `ror_id` | `text` | Research Organization Registry ID |
+| **— Classification —** | | |
+| `organization_type` | `text NOT NULL` | CHECK: 'clinic' / 'hospital' / 'professional_association' / 'regulator' / 'manufacturer' / 'accreditation_body' / 'university' / 'research_institute' / 'NGO' / 'government_agency' / 'media_publisher' / 'company' |
+| `organization_subtype` | `text` | More specific classification |
+| `industry_focus` | `text[]` | 'medical' / 'dental' / 'beauty' / 'wellness' / 'pharma' / 'medical_devices' |
+| `is_for_profit` | `boolean` | |
+| **— Geography —** | | |
+| `headquarters_country_code` | `text` | ISO 3166-1 alpha-2 |
+| `headquarters_city` | `text` | |
+| `headquarters_address` | `text` | |
+| `operates_in_countries` | `text[]` | ISO codes |
+| **— Founding —** | | |
+| `founding_date` | `date` | |
+| `founders` | `text[]` | Notable founders |
+| **— Hierarchy —** | | |
+| `parent_organization_fp` | `text FK→seo_entity_graph(fingerprint)` | Parent org |
+| `subsidiaries_fps` | `text[]` | Known subsidiaries |
+| **— Authority Signals (Bible Part 23.3) —** | | |
+| `authority_tier` | `text` | CHECK: 'tier_1_regulatory' / 'tier_2_professional_assoc' / 'tier_3_accreditation' / 'tier_4_university' / 'tier_5_industry' / 'tier_6_media' / 'tier_7_other' |
+| `is_government_authority` | `boolean DEFAULT false` | |
+| `is_who_recognized` | `boolean DEFAULT false` | WHO recognition |
+| `accredits` | `text[]` | What this org accredits (if accreditation_body) |
+| **— Web Presence —** | | |
+| `official_website` | `text` | |
+| `wikipedia_url_en` | `text` | |
+| `wikipedia_url_th` | `text` | |
+| `same_as_urls` | `text[]` | Schema.org sameAs (LinkedIn, Twitter, Facebook official) |
+| **— Brand-Owned Companies —** | | |
+| `is_own_brand_org` | `boolean DEFAULT false` | true if this org represents one of our brands (KG cross-ref) |
+| `linked_brand_id` | `uuid FK→brands(id)` | If `is_own_brand_org = true`, link to brands row |
+| **— Citation Use —** | | |
+| `used_as_citation_source` | `boolean DEFAULT false` | Used in `seo_citations.source_org_fp` |
+| `citation_count_in_corpus` | `integer DEFAULT 0` | Cached count for authority weighting |
+| **— Metadata —** | | |
+| `created_at` | `timestamptz DEFAULT now()` | |
+| `updated_at` | `timestamptz DEFAULT now()` | |
+
+#### Indexes & Constraints
+
+```sql
+CREATE INDEX idx_org_entity ON seo_entity_organization(entity_fp);
+CREATE INDEX idx_org_wikidata ON seo_entity_organization(wikidata_qid) WHERE wikidata_qid IS NOT NULL;
+CREATE INDEX idx_org_type ON seo_entity_organization(organization_type);
+CREATE INDEX idx_org_authority_tier ON seo_entity_organization(authority_tier);
+CREATE INDEX idx_org_own_brand ON seo_entity_organization(linked_brand_id) WHERE is_own_brand_org = true;
+CREATE INDEX idx_org_country ON seo_entity_organization(headquarters_country_code);
+
+ALTER TABLE seo_entity_organization ADD CONSTRAINT check_org_type CHECK (organization_type IN ('clinic', 'hospital', 'professional_association', 'regulator', 'manufacturer', 'accreditation_body', 'university', 'research_institute', 'NGO', 'government_agency', 'media_publisher', 'company'));
+ALTER TABLE seo_entity_organization ADD CONSTRAINT check_authority_tier CHECK (authority_tier IS NULL OR authority_tier IN ('tier_1_regulatory', 'tier_2_professional_assoc', 'tier_3_accreditation', 'tier_4_university', 'tier_5_industry', 'tier_6_media', 'tier_7_other'));
+ALTER TABLE seo_entity_organization ADD CONSTRAINT check_own_brand_link CHECK (NOT is_own_brand_org OR linked_brand_id IS NOT NULL);
+```
+
+#### Used By
+
+- `seo_citations.source_org_fp` — citation source attribution
+- `seo_branches.organization_entity_id` — own-brand org cross-ref
+- `seo_entity_product.brand_owner_org_fp` — product manufacturer
+- `seo_entity_device.manufacturer_org_fp` — device manufacturer
+- About pages, accreditation references
+- Schema.org Organization emission with sameAs URLs
+
+#### Migration Files
+
+- `018_restore_entity_organization.sql` (DR-024)
+
+---
+
+### 11.9 `seo_entity_lab_test` *(entity_type='lab_test')* 🆕 v1.11
+
+> **Purpose:** Extension for entities of type='lab_test' — lab tests, imaging studies, biopsies, diagnostic procedures with LOINC + CPT coding. Used by VTH BioDent (x-ray, CBCT, blood work pre-surgery), Dr. Trin (hormone panels), future hospital brands.
+> **Tier:** 2
+> **Sync:** N↔S
+> **Schema.org:** MedicalTest (parent: MedicalIntangible)
+> **Bible Reference:** Part 5.11, Part 14.6 (Hospital), Appendix B.3 Table 18
+> **Volume:** ~100-500 records
+
+> **DR Reference:** DR-024 Locked 2026-05-12 (Restore 9 Entity Extension Tables).
+
+#### Schema
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `id` | `uuid PK` | |
+| `entity_fp` | `text FK→seo_entity_graph(fingerprint) UNIQUE NOT NULL` | 1:1 link |
+| **— Coding —** | | |
+| `loinc_code` | `text` | LOINC code (lab test identifier) |
+| `cpt_code` | `text` | CPT code (procedure billing) |
+| `snomed_ct_id` | `text` | |
+| `mesh_id` | `text` | |
+| `wikidata_qid` | `text` | |
+| **— Identity —** | | |
+| `test_name` | `text NOT NULL` | Display name |
+| `test_aliases` | `text[]` | Alternative names |
+| `test_acronym` | `text` | 'CBC', 'BMP', 'CBCT', 'MRI', 'CT', etc. |
+| **— Classification —** | | |
+| `test_category` | `text NOT NULL` | CHECK: 'blood' / 'urine' / 'imaging_radiology' / 'imaging_mri' / 'imaging_ct' / 'imaging_ultrasound' / 'imaging_dental' / 'biopsy' / 'pathology' / 'genetic' / 'microbiology' / 'cardiology_test' / 'pulmonary_test' / 'sleep_study' / 'allergy_test' / 'other' |
+| `test_subcategory` | `text` | More specific |
+| `test_type` | `text` | CHECK: 'diagnostic' / 'screening' / 'monitoring' / 'prognostic' |
+| **— Sample / Procedure —** | | |
+| `sample_type` | `text` | 'venous_blood' / 'capillary_blood' / 'urine_random' / 'urine_24h' / 'tissue_biopsy' / 'swab' / 'imaging_no_sample' / 'saliva' |
+| `sample_volume` | `text` | e.g., '5ml blood' |
+| `is_invasive` | `boolean DEFAULT false` | |
+| `requires_fasting` | `boolean DEFAULT false` | |
+| `fasting_hours_required` | `numeric(4,1)` | |
+| `preparation_instructions` | `text` | Patient prep |
+| **— Performance —** | | |
+| `typical_duration_minutes` | `integer` | Procedure duration |
+| `results_turnaround_hours` | `numeric(6,1)` | When results available |
+| `requires_appointment` | `boolean DEFAULT true` | |
+| **— Clinical Use —** | | |
+| `indications` | `text[]` | When to order |
+| `related_conditions_fps` | `text[]` | FK array → `seo_entity_condition` |
+| `related_anatomy_fps` | `text[]` | FK array → `seo_entity_anatomy` |
+| `screens_for_conditions_fps` | `text[]` | If screening test |
+| **— Interpretation —** | | |
+| `reference_ranges` | `jsonb` | `[{parameter, sex, age_min, age_max, range_low, range_high, unit, source}]` |
+| `result_unit` | `text` | Primary unit of measurement |
+| **— Equipment —** | | |
+| `requires_devices_fps` | `text[]` | FK array → `seo_entity_device` (CBCT machine, MRI scanner) |
+| **— Safety —** | | |
+| `radiation_dose_msv` | `numeric(6,3)` | For radiology tests |
+| `contraindications` | `text[]` | |
+| `pregnancy_safety` | `text` | 'safe' / 'caution' / 'contraindicated' |
+| **— Cost —** | | |
+| `typical_cost_thb` | `numeric(10,2)` | Reference cost in Thailand |
+| `insurance_typical_coverage` | `text` | 'covered' / 'partial' / 'not_covered' / 'varies' |
+| **— Metadata —** | | |
+| `created_at` | `timestamptz DEFAULT now()` | |
+| `updated_at` | `timestamptz DEFAULT now()` | |
+
+#### Indexes & Constraints
+
+```sql
+CREATE INDEX idx_test_entity ON seo_entity_lab_test(entity_fp);
+CREATE INDEX idx_test_loinc ON seo_entity_lab_test(loinc_code) WHERE loinc_code IS NOT NULL;
+CREATE INDEX idx_test_cpt ON seo_entity_lab_test(cpt_code) WHERE cpt_code IS NOT NULL;
+CREATE INDEX idx_test_category ON seo_entity_lab_test(test_category);
+CREATE INDEX idx_test_conditions ON seo_entity_lab_test USING GIN(related_conditions_fps);
+
+ALTER TABLE seo_entity_lab_test ADD CONSTRAINT check_test_category CHECK (test_category IN ('blood', 'urine', 'imaging_radiology', 'imaging_mri', 'imaging_ct', 'imaging_ultrasound', 'imaging_dental', 'biopsy', 'pathology', 'genetic', 'microbiology', 'cardiology_test', 'pulmonary_test', 'sleep_study', 'allergy_test', 'other'));
+ALTER TABLE seo_entity_lab_test ADD CONSTRAINT check_test_type CHECK (test_type IS NULL OR test_type IN ('diagnostic', 'screening', 'monitoring', 'prognostic'));
+```
+
+#### Used By
+
+- T-diagnostic-service template
+- T-test-info template
+- T1-medical-condition diagnosis section (cross-ref via diagnostic_tests_fps)
+
+#### Migration Files
+
+- `019_restore_entity_lab_test.sql` (DR-024)
+
+---
+
+### 11.10 `seo_programmatic_templates` *(template registry — not entity extension)*
+
+> **Purpose:** Type C programmatic page templates (Bible Part 9). **Renumbered from §11.4 → §11.10 in v1.11** to keep all 9 entity extensions contiguous (§11.1-11.9) and template registry separately at end.
+> **Tier:** 2
+> **Sync:** N↔S
+> **Bible Reference:** Part 9 (Programmatic Templates)
 > **Volume:** ~10-50 templates
 
 #### Schema (Key Columns)
@@ -1448,13 +2516,16 @@ INDEX idx_embeddings_hnsw ON seo_entity_embeddings USING hnsw (embedding vector_
 | Column | Type | Description |
 |--------|------|-------------|
 | `id` | `uuid PK` | |
-| `fingerprint` | `text UNIQUE` | |
+| `fingerprint` | `text UNIQUE` | Format: `tmpl_{ULID16}` |
 | `template_name` | `text NOT NULL` | |
-| `target_layer` | `text` | L4 / L5 / L6 |
+| `template_id` | `text` | 'T1' / 'T2' / 'T6a' / etc. (Bible §4.1.X reference) |
+| `target_layer` | `text` | L4 / L5 / L6 / L7 |
 | `url_pattern` | `text NOT NULL` | e.g., '/services/{service-slug}/at-{branch-slug}' |
-| `page_template_blueprint` | `jsonb` | Section structure |
-| `applicable_brands` | `text[]` | |
+| `page_template_blueprint` | `jsonb` | Section structure (25 blocks per Bible Content_Templates v1.3) |
+| `applicable_brands` | `text[]` | brand_scope[] pattern |
+| `entity_type_required` | `text` | Which entity_type binds (e.g., 'condition' for T1) |
 | `created_at` | `timestamptz DEFAULT now()` | |
+| `updated_at` | `timestamptz DEFAULT now()` | |
 
 ---
 
