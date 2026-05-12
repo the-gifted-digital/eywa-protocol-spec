@@ -1,11 +1,11 @@
 # EYWA™ Protocol — Phase 1 Decisions Summary
 
-**Document Version**: 1.7
+**Document Version**: 1.8
 **Date**: 2026-05-12
-**Status**: 🔒 Locked (Phase 1A specs + DR-015..018, DR-024, DR-025) + 🌱 DR-013/014 + DR-019 + DR-020 + DR-021 + DR-022 Proposed
+**Status**: 🔒 Locked (Phase 1A specs + DR-013, DR-014, DR-015..018, DR-019, DR-020, DR-021, DR-022, DR-024, DR-025) + 🌱 DR-026 Proposed (review 2026-06-21) + DR-027 Reserved (Future Phase 1)
 **Phase**: 1 — Supabase Database Foundation
 **Project**: GTGT (in-place upgrade)
-**Companion to**: Bible v3.15 + Schema Overview v1.11 + Handover v1.9 + DECISION_RECORDS v1.9 + Content_Templates_EYWA_v1_0.md (DRAFT v1.3)
+**Companion to**: Bible v3.19 + Schema Overview v1.15 + Handover v1.13 + DECISION_RECORDS v1.13 + Content_Templates_EYWA_v1_0.md v1.5 (LOCKED per DR-020)
 
 ---
 
