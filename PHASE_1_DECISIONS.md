@@ -1,11 +1,11 @@
 # EYWA™ Protocol — Phase 1 Decisions Summary
 
-**Document Version**: 1.8
-**Date**: 2026-05-12
-**Status**: 🔒 Locked (Phase 1A specs + DR-013, DR-014, DR-015..018, DR-019, DR-020, DR-021, DR-022, DR-024, DR-025) + 🌱 DR-026 Proposed (review 2026-06-21) + DR-027 Reserved (Future Phase 1)
-**Phase**: 1 — Supabase Database Foundation
+**Document Version**: 1.9
+**Date**: 2026-05-12 PM
+**Status**: 🏗️ Phase 1A BUILD COMPLETE — all 39 tables live in GTGT. 🔒 Locked DRs: 013/014/015..018/019/020/021/022/024/025/008 propagated. 🌱 DR-026 Proposed (review 2026-06-21). 🔮 DR-027 Reserved (Future Phase 1).
+**Phase**: 1 — Supabase Database Foundation **(1A complete; 1B = n8n flow wire-up next)**
 **Project**: GTGT (in-place upgrade)
-**Companion to**: Bible v3.19 + Schema Overview v1.15 + Handover v1.13 + DECISION_RECORDS v1.13 + Content_Templates_EYWA_v1_0.md v1.5 (LOCKED per DR-020)
+**Companion to**: Bible v3.19 + Schema Overview v1.16 + Handover v1.13 + DECISION_RECORDS v1.13 + Content_Templates_EYWA_v1_0.md v1.5 (LOCKED per DR-020) + `migrations/README.md`
 
 ---
 

@@ -58,6 +58,12 @@ Phase 1A baseline complete: **39 EYWA tables across 9 groups** (per Schema v1.15
 21. `eywa_w7_02_governance_group8.sql` — `seo_data_quality_metrics`, `seo_schema_changes`
     *(Group 6 backlinks `seo_backlinks_data` + `seo_backlinks_links` — already in production from earlier work)*
 
+### Wave 10 — DR-008 propagation (3 migrations)
+25. `eywa_w10_01_dr008_entity_graph_page_master_setup.sql` — ADD nullable `fingerprint` + `fingerprint_display_name` on `seo_entity_graph` + `seo_website_page_master`; CREATE 4 trigger fns (set + refresh × 2 tables)
+26. *(execute_sql backfill)* — 466 entity rows + 1,376 page rows assigned `ent_{ULID16}` / `page_{ULID16}` fingerprints
+27. `eywa_w10_02_dr008_finalize_entity_graph_page_master.sql` — NOT NULL + UNIQUE + CHECK format + 6 triggers attached (set/prevent/refresh × 2 tables) + 2 indexes; legacy `entity_fingerprint`/`page_fingerprint` cols preserved per v1.9 Transition State
+28. `eywa_w10_03_dr008_generic_triggers_new_tables.sql` — Generic `fn_set_fingerprint_generic(prefix, slug_col, name_col)` (hstore-based) + attached to 17 new tables (Groups 1/2/3/4/7/9); each gets table-specific prefix (clst/cite/erel/auth/docasg/brch/rev/dirl/gbpp/pil/edrv/vsr/bmnt/llmc/lqs/tmpl) + reuses generic `fn_prevent_fingerprint_change`. Test verified: INSERT without fingerprint auto-sets with correct prefix + display_name.
+
 ### Wave 9 — Remove Notion FDW + wrappers extension (1 migration, operator decision 2026-05-12)
 24. `eywa_w9_01_remove_notion_fdw_wrappers.sql` — Clean removal:
     - `DROP SCHEMA notion_vt_intelligence_space CASCADE` (removes 2 foreign tables: databases, pages)

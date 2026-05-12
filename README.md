@@ -4,11 +4,12 @@
 
 | 📖 Bible | 📊 Schema | 🏗️ Phase | ⚖️ License |
 |----------|-----------|-----------|-------------|
-| **v3.19** | **v1.15** | **1 — Foundation** | Proprietary |
+| **v3.19** | **v1.16** | **1A Built ✅** | Proprietary |
 
 <!-- Badges (render on GitHub.com): -->
 [![Bible](https://img.shields.io/badge/Bible-v3.19-blue?style=flat-square)](./EYWA_PROTOCOL_v3_14.md)
-[![Schema](https://img.shields.io/badge/Schema-v1.15-green?style=flat-square)](./Schema_Overview_EYWA_v1_10.md)
+[![Schema](https://img.shields.io/badge/Schema-v1.16-green?style=flat-square)](./Schema_Overview_EYWA_v1_10.md)
+[![Migrations](https://img.shields.io/badge/Migrations-Phase%201A%20Built-success?style=flat-square)](./migrations/README.md)
 [![Phase](https://img.shields.io/badge/Phase-1%20Foundation-orange?style=flat-square)](./PHASE_1_DECISIONS.md)
 [![License](https://img.shields.io/badge/License-Proprietary-red?style=flat-square)]()
 

@@ -1,17 +1,79 @@
 # 📊 Schema Overview — EYWA™ PROTOCOL Database
 
 > **Companion document to** คัมภีร์ EYWA™ PROTOCOL v3.19  
-> **Reference for full DDL + column descriptions of 38 tables + Group 10 Ads Track column extensions + Edge Vocabulary v3.5 (12 edges) + Concept Entity Subtype Lock + Internal Linking HYBRID**
+> **Reference for full DDL + column descriptions of 39 tables + Group 10 Ads Track column extensions + Edge Vocabulary v3.5 (12 edges) + Concept Entity Subtype Lock + Internal Linking HYBRID**
+>
+> **🟢 BUILD STATUS (2026-05-12 PM):** All 39 EYWA tables built in GTGT Supabase via Wave 0-10 migrations. DR-008 Two-Column Identity propagated to brands + entity_graph + page_master + all 17 new tables (generic trigger pattern). See `migrations/README.md` for manifest.
 
-**Version:** v1.15  
+**Version:** v1.16  
 **Date:** 2026-05-12  
-**Status:** Day 1 Specification (production roadmap reference)  
-**Total Tables:** 38 organized into 9 groups + Group 10 (column additions only)  
+**Status:** Day 1 Specification + **Phase 1A BUILD COMPLETE** in GTGT  
+**Total Tables:** 39 organized into 9 groups + Group 10 (column additions only)  
 **Companion to:** Bible v3.19
 
 ---
 
 ## Changelog
+
+### v1.16 (2026-05-12 PM) — Phase 1A BUILD COMPLETE + DR-008 Propagation 🏗️🔒
+
+Companion bump to migrations Wave 0-10 applied to GTGT Supabase. All 39 spec tables now exist in production with RLS, indexes, CHECK constraints, GENERATED columns, and DR-008 Two-Column Identity triggers wired up. No new tables vs v1.15 — this is a **build-completion + propagation** release.
+
+**Headline Changes:**
+
+- 🏗️ **All 39 tables BUILT** — Wave 0-10 migrations applied via Supabase MCP `apply_migration`. Manifest: `migrations/README.md` (commits 80c0a1e, cfdc14e, 5fd4d84, + Wave 10 pending). Schema now matches spec 1:1.
+
+- 🔒 **DR-008 Two-Column Identity propagated to 3 populated tables** (Wave 8 + Wave 10):
+  - `brands` (15 rows) — `brnd_{ULID16}` + brand_slug kebab-case + 3 triggers
+  - `seo_entity_graph` (466 rows) — `ent_{ULID16}` added alongside legacy `entity_fingerprint` (Transition State per v1.9 NOTE)
+  - `seo_website_page_master` (1,376 rows) — `page_{ULID16}` added alongside legacy `page_fingerprint`
+
+- 🔒 **Generic DR-008 trigger applied to 17 new tables** (Wave 10b):
+  - Pattern: `fn_set_fingerprint_generic(prefix, slug_col, name_col)` + `fn_prevent_fingerprint_change` (reused)
+  - Prefixes assigned: `clst`/`cite`/`erel` (Group 2); `auth`/`docasg`/`brch`/`rev`/`dirl`/`gbpp` (Group 1); `pil`/`edrv` (Group 3); `vsr` (Group 4); `bmnt`/`llmc`/`lqs` (Group 7); `tmpl` (Group 9)
+  - Auto-fingerprint on INSERT, immutability enforced on UPDATE
+
+- 🆕 **Helper functions (production-ready, reusable)**:
+  - `public.generate_ulid16()` — 16-char uppercase hex
+  - `public.slugify(text)` — kebab-case slug
+  - `public.fn_prevent_fingerprint_change()` — generic UPDATE-OF-fingerprint trigger fn
+  - `public.fn_set_fingerprint_generic()` — generic INSERT trigger fn (hstore-based)
+  - Plus per-table: `fn_set_fingerprint_brand/entity_graph/page_master()` + their `fn_refresh_display_name_*` counterparts
+
+- 🆕 **Geo helper** (Wave 3): `public.fn_branches_sync_geo_point()` — auto-sync `geo_point` from `latitude`/`longitude` on `seo_branches`
+
+- 🧬 **DR-013 triggers active** (Wave 1): `fn_validate_edge_evidence_requirement` + `fn_validate_medical_signoff_for_contraindication` on `seo_entity_relationships`
+
+- 🔗 **DR-021 reciprocal trigger active** (Wave 4): `fn_check_reciprocal_link` on `seo_page_internal_links`
+
+- 🗑️ **Removed (Wave 9, operator decision):**
+  - `wrappers` extension (Foreign Data Wrapper for Notion) — vestigial (7 invocations / 2 months); fully replaced by n8n flows
+  - `notion_vt_intelligence_space` schema + 2 foreign tables (databases, pages)
+  - `wrappers_fdw_stats` system table
+  - **Result:** Security advisor `rls_disabled` critical: 1 → **0** ✅
+
+- 🔌 **PostgreSQL extensions installed** (Wave 0a):
+  - `pg_trgm` (extensions schema) — fuzzy text search + EUG Layer 3b
+  - `vector` (pgvector) — Group 7 embeddings
+  - `postgis` — Group 1 branches geo + Group 5 local_rankings geo
+  - `hstore` (Wave 10b) — required by `fn_set_fingerprint_generic` dynamic record manipulation
+  - Pre-existing: pgcrypto, uuid-ossp, plpgsql, pg_stat_statements, supabase_vault
+
+- ✅ **All 41 EYWA-related tables RLS-enabled** with permissive `eywa_authenticated_full_access` policy (service_role bypasses RLS for n8n integrations)
+
+- 📦 **Migration files** committed to `migrations/README.md` manifest (per-Wave summary). Source-of-truth = Supabase `supabase_migrations.schema_migrations` table.
+
+- 🚧 **Deferred to future waves** (not blocking Phase 1A):
+  - `brands` full PK migration (currently PK on `brand_name`; spec target `id`/`fingerprint` — needs legacy FK migration first)
+  - HNSW index on `seo_entity_embeddings` (defer until bulk-loaded)
+  - `seo_local_rankings` partitioning (defer until >10M rows)
+  - `seo_x_ads_keywords_x_url_daily_logs` column audit vs §7.1 spec (table exists with partitions; 130+ cols spec — verify)
+  - Legacy `entity_fingerprint` + `page_fingerprint` columns will drop in v2.0 (per v1.9 Transition State NOTE)
+
+- 🔗 **Related Decision Records:**
+  - DR-008 (Two-Column Identity Pattern — propagated to entity_graph + page_master + all new tables)
+  - DR-013/014/019/020/021/022/024/025 (Locked — fully implemented in DDL)
+  - DR-026 (Proposed — columns ready for lock decision 2026-06-21)
 
 ### v1.15 (2026-05-12) — Internal Linking HYBRID Architecture (DR-021 Locked) 🔒🔗
 
@@ -349,12 +411,12 @@ This document describes the **complete EYWA™ PROTOCOL data architecture** as a
 ### Document Status
 
 ```yaml
-version: v1.11
-date: 2026-05-12
-status: Day 1 Specification (production roadmap reference)
-total_tables: 37
+version: v1.16
+date: 2026-05-12 PM
+status: Day 1 Specification + Phase 1A BUILD COMPLETE in GTGT
+total_tables: 39
 total_groups: 9
-companion_to: คัมภีร์ EYWA™ PROTOCOL v3.15
+companion_to: คัมภีร์ EYWA™ PROTOCOL v3.19
 maintenance:
   - Update when tables added/changed (sync with Bible Part 5)
   - Cross-reference Bible sections always
