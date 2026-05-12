@@ -3,10 +3,24 @@
 > **For Claude (and any AI assistant) working on a new brand within the EYWA portfolio.**  
 > **Read this file first, every new project, every new session.**
 
-**Document Version:** 1.10  
+**Document Version:** 1.11  
 **Last Updated:** 2026-05-12  
-**Companion to:** EYWA Bible v3.16 + Schema Overview v1.12 + DECISION_RECORDS v1.10 + Content_Templates_EYWA_v1_0.md v1.4 (DRAFT)  
+**Companion to:** EYWA Bible v3.17 + Schema Overview v1.13 + DECISION_RECORDS v1.11 + Content_Templates_EYWA_v1_0.md v1.4 (DRAFT)  
 **Created by:** The Gifted Digital Marketing Co., Ltd.
+
+---
+
+## 🆕 v1.11 Note (2026-05-12) — Edge Vocabulary v3.5 LOCKED (DR-013)
+
+Bible v3.17 + Schema v1.13 ship with **DR-013 Locked** — vocabulary expanded 10 → 12 edges. Brands creating entity relationships must now use:
+
+- **Edge 11 `causes / caused_by`** (paired, directional) — etiological relationships (X → causes → Y). Required `edge_evidence_citation` when `edge_strength ≥ 2`. Use typed `edge_note` (direct / contributing / developmental / hypothesized).
+- **Edge 12 `contraindicates`** (symmetric, undirected) — safety hard-block (X ↔ Y must not combine). Required `medical_reviewer_signoff_at` + `medical_reviewer_fp` when `edge_strength = 3` (absolute contraindication). Use typed `edge_note` (absolute / relative-controllable / relative-temporal / interferes-outcome).
+- **Typed `edge_note` sub-vocabulary** (Bible §2.7.11) — formalized values per edge type. Free-text still allowed for structural edges (parent_of, subtype_of, etc.) but MANDATORY typed values on causes/caused_by/contraindicates and recommended on related_to, treats, alternative_to, requires_assessment, evidenced_by.
+
+**Existing brand work impact:** Brands currently mid-Stage 1 (Trin Wellness, SmileScape, etc.) gain new edge capacity at next entity graph revision. No retroactive backfill required — existing 10-edge data is preserved. Add new edges as content needs surface.
+
+**Companion DR-014 (Concept Entity Subtype Lock)** remains Proposed — locks separately.
 
 ---
 

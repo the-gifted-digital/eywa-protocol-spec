@@ -1,17 +1,48 @@
 # 📊 Schema Overview — EYWA™ PROTOCOL Database
 
-> **Companion document to** คัมภีร์ EYWA™ PROTOCOL v3.16  
-> **Reference for full DDL + column descriptions of all 37 tables + Ads Track Phase 0 column extensions**
+> **Companion document to** คัมภีร์ EYWA™ PROTOCOL v3.17  
+> **Reference for full DDL + column descriptions of all 37 tables + Ads Track Phase 0 column extensions + Edge Vocabulary v3.5 (12 edges)**
 
-**Version:** v1.12  
+**Version:** v1.13  
 **Date:** 2026-05-12  
 **Status:** Day 1 Specification (production roadmap reference)  
-**Total Tables:** 37 organized into 9 groups + Group 10 (column additions only, no new tables in v1.12)  
-**Companion to:** Bible v3.16
+**Total Tables:** 37 organized into 9 groups + Group 10 (column additions only, no new tables in v1.13)  
+**Companion to:** Bible v3.17
 
 ---
 
 ## Changelog
+
+### v1.13 (2026-05-12) — Edge Vocabulary v3.5 Expansion (DR-013 Locked) 🔒🧬
+
+Schema catch-up per **DR-013 Locked 2026-05-12**. Vocabulary expanded from 10 → 12 edges; CHECK constraint enum 14 → 16 values; 3 new governance columns + 2 trigger functions added on `seo_entity_relationships` (§4.5). Zero downtime — all new columns nullable, CHECK additive.
+
+**Headline Changes:**
+
+- 🔒 **§4.5 `seo_entity_relationships`:**
+  - CHECK constraint expanded 14 → 16 enum values (added `causes`, `caused_by`, `contraindicates`)
+  - ➕ `edge_evidence_citation text FK→seo_citations(fingerprint) ON DELETE SET NULL` — MANDATORY when edge_type IN ('causes','caused_by','contraindicates') AND edge_strength ≥ 2
+  - ➕ `medical_reviewer_signoff_at timestamptz` — MANDATORY when edge_type='contraindicates' AND edge_strength=3
+  - ➕ `medical_reviewer_fp text FK→seo_authors_reviewers(fingerprint) ON DELETE SET NULL` — paired with signoff timestamp
+  - 🔄 `edge_note text` semantic upgraded: for causes/caused_by/contraindicates MUST be a typed value per Bible §2.7.11; free-text retained for other edges
+  - ➕ Trigger function `fn_validate_edge_evidence_requirement()` + `trg_validate_edge_evidence`
+  - ➕ Trigger function `fn_validate_medical_signoff_for_contraindication()` + `trg_validate_medical_signoff`
+
+- 📌 Companion Bible: Part 2.7.2 (12 edges), 2.7.3 (CHECK enum), 2.7.4 (Edge 11 + 12 specs), 2.7.5 (rules 8 + 9), 2.7.11 NEW (Edge Note Typed Sub-Vocabulary)
+
+- ⚠️ **Migration files needed (Phase 1E):**
+  - `030_dr013_expand_edge_type_check.sql` — drop+recreate CHECK constraint
+  - `031_dr013_add_edge_evidence_citation.sql` — FK column + index
+  - `032_dr013_add_medical_reviewer_fields.sql` — timestamp + FK
+  - `033_dr013_add_edge_validation_triggers.sql` — both trigger functions
+  - Optional `034_dr013_audit_existing_edge_notes.sql` — flag pre-v1.13 rows for operator review
+
+- ✅ **Backward compatible** — existing rows with `edge_type` in 14-value set unaffected; new columns nullable
+
+- 🔄 Schema v1.12 → v1.13 ships paired with Bible v3.17 + DECISION_RECORDS v1.11 + EYWA_HANDOVER v1.11
+
+- 📣 DR-013 Status: **Locked 2026-05-12** (cross-brand evidence confirmed ≥5 medical brands)
+- 📣 DR-014 (Concept Entity Subtype Lock) remains **Proposed** — locks separately
 
 ### v1.12 (2026-05-12) — Ads Landing Page Track Phase 0 (DR-026 Proposed) 🌱📣
 
@@ -1190,12 +1221,16 @@ INDEX idx_page_citations_pattern (citation_pattern);
 | `fingerprint_display_name` | `text NOT NULL` | **v1.8** — Format: `{fp_last_6}::{from_entity}::{edge_type}::{to_entity}` |
 | `from_entity_fp` | `text FK→seo_entity_graph.fingerprint` | Source entity |
 | `to_entity_fp` | `text FK→seo_entity_graph.fingerprint` | Target entity |
-| `edge_type` | `text NOT NULL` | One of 10 LOCKED edges: 'parent_of' / 'child_of' / 'subtype_of' / 'treats' / 'treated_by' / 'symptom_of' / 'uses' / 'used_by' / 'alternative_to' / 'part_of' / 'contains' / 'requires_assessment' / 'evidenced_by' / 'related_to' (Bible Part 2.7). **v1.9: Locked per DR-012** |
-| `is_bidirectional` | `boolean DEFAULT false` | true = symmetric edge (e.g., related_to, alternative_to) |
-| `edge_strength` | `integer` | **v1.3** — 0-100, signal strength (formula Bible Part 27.3) |
+| `edge_type` | `text NOT NULL` | One of 12 LOCKED edges (CHECK 16 enum values): 'parent_of' / 'child_of' / 'subtype_of' / 'treats' / 'treated_by' / 'symptom_of' / 'uses' / 'used_by' / 'alternative_to' / 'part_of' / 'contains' / 'requires_assessment' / 'evidenced_by' / 'related_to' / **'causes'** / **'caused_by'** / **'contraindicates'** (Bible Part 2.7). **v1.13: 10→12 edges per DR-013 Locked 2026-05-12** |
+| `is_bidirectional` | `boolean DEFAULT false` | true = symmetric edge (e.g., related_to, alternative_to, contraindicates) |
+| `edge_strength` | `integer` | **v1.3** — 0-100, signal strength (formula Bible Part 27.3). 🆕 v1.13: For causes/caused_by/contraindicates, normalized 1-3 semantic mapping (1=hypothesized/interferes, 2=peer-reviewed/relative, 3=clinical-consensus/absolute) |
 | `edge_evidence_score` | `integer` | **v1.3** — Score 0-100 |
-| `notes` | `text` | Free-text editorial note |
+| `edge_note` | `text` | 🆕 v1.13: For causes/caused_by/contraindicates — MUST be typed value per Bible §2.7.11 (e.g., `direct`/`contributing`/`absolute`/`relative-controllable`). Free-text allowed for other edges. |
+| `notes` | `text` | Free-text editorial note (use `edge_note` for typed values on safety-critical edges) |
 | `evidence_citation_fp` | `text FK→seo_citations.fingerprint` | Optional citation backing this edge |
+| `edge_evidence_citation` | `text FK→seo_citations.fingerprint ON DELETE SET NULL` | 🆕 v1.13 (DR-013) — MANDATORY when edge_type IN ('causes','caused_by','contraindicates') AND edge_strength ≥ 2 |
+| `medical_reviewer_signoff_at` | `timestamptz` | 🆕 v1.13 (DR-013) — MANDATORY when edge_type='contraindicates' AND edge_strength=3 (absolute contraindication) |
+| `medical_reviewer_fp` | `text FK→seo_authors_reviewers.fingerprint ON DELETE SET NULL` | 🆕 v1.13 (DR-013) — paired with medical_reviewer_signoff_at; reviewer must be MD or DDS with active license per Bible Part 23.4 |
 | `brand_scope` | `text[] DEFAULT ARRAY['*']` | Federation scope |
 | `created_at` | `timestamptz DEFAULT now()` | |
 | `updated_at` | `timestamptz DEFAULT now()` | |
@@ -1209,17 +1244,55 @@ INDEX idx_relationship_from (from_entity_fp);
 INDEX idx_relationship_to (to_entity_fp);
 INDEX idx_relationship_edge_type (edge_type);
 
--- v1.9 — Edge Vocabulary CHECK constraint (DR-012 enforcement)
+-- v1.13 — Edge Vocabulary CHECK constraint (DR-012 + DR-013 enforcement: 14 → 16 enum values)
 CONSTRAINT valid_edge_type CHECK (edge_type IN (
   'parent_of', 'child_of', 'subtype_of', 'part_of', 'contains',
   'treats', 'treated_by', 'symptom_of', 'requires_assessment',
-  'uses', 'used_by', 'alternative_to', 'evidenced_by', 'related_to'
+  'uses', 'used_by', 'alternative_to', 'evidenced_by', 'related_to',
+  'causes', 'caused_by', 'contraindicates'   -- 🆕 v1.13 (DR-013)
 ));
+
+-- 🆕 v1.13 (DR-013) — Validation triggers for evidence + medical signoff
+CREATE OR REPLACE FUNCTION fn_validate_edge_evidence_requirement()
+RETURNS TRIGGER AS $$
+BEGIN
+  -- causes/caused_by/contraindicates with strength ≥ 2 MUST have evidence citation
+  IF NEW.edge_type IN ('causes', 'caused_by', 'contraindicates')
+     AND NEW.edge_strength >= 2
+     AND NEW.edge_evidence_citation IS NULL THEN
+    RAISE EXCEPTION 'Edge type % at strength >= 2 requires edge_evidence_citation (DR-013 §2.7.5 rule_8)', NEW.edge_type;
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_validate_edge_evidence
+  BEFORE INSERT OR UPDATE ON seo_entity_relationships
+  FOR EACH ROW EXECUTE FUNCTION fn_validate_edge_evidence_requirement();
+
+CREATE OR REPLACE FUNCTION fn_validate_medical_signoff_for_contraindication()
+RETURNS TRIGGER AS $$
+BEGIN
+  -- contraindicates at strength=3 (absolute) MUST have medical reviewer signoff
+  IF NEW.edge_type = 'contraindicates'
+     AND NEW.edge_strength = 3
+     AND (NEW.medical_reviewer_signoff_at IS NULL OR NEW.medical_reviewer_fp IS NULL) THEN
+    RAISE EXCEPTION 'Absolute contraindication (strength=3) requires medical_reviewer_signoff_at + medical_reviewer_fp (DR-013 §2.7.5 rule_9)';
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_validate_medical_signoff
+  BEFORE INSERT OR UPDATE ON seo_entity_relationships
+  FOR EACH ROW EXECUTE FUNCTION fn_validate_medical_signoff_for_contraindication();
 ```
 
 #### Used By
-- **Part 2.7 (Edge Vocabulary)** — typed edges
-- **Part 26.4 (Schema Generation)** — edge → JSON-LD
+- **Part 2.7 (Edge Vocabulary, 12 edges)** — typed edges
+- **Part 2.7.11 (Edge Note Typed Sub-Vocabulary)** — 🆕 v1.13 typed edge_note values
+- **Part 26.4 (Schema Generation)** — edge → JSON-LD (causeOf, contraindication, riskFactor)
+- **Part 23.4 (Medical Editorial Review)** — medical_reviewer_signoff gate for absolute contraindications
 - **WordPress ACF eywa_relationships** — frontend rendering
 
 ---
@@ -3981,9 +4054,9 @@ v2_schema_additions_when_activated:
 
 ---
 
-**END OF DOCUMENT — Schema_Overview EYWA v1.12**
+**END OF DOCUMENT — Schema_Overview EYWA v1.13**
 
 *🌿 EYWA™ PROTOCOL Database Architecture • May 2026*  
-*Companion to คัมภีร์ EYWA™ PROTOCOL v3.16*  
+*Companion to คัมภีร์ EYWA™ PROTOCOL v3.17*  
 *EYWA™ is a registered service mark — Class 35+42, DIP Thailand (filed 2026-04-20)*  
-*Source of Truth: Bible Part 5 (Architecture) + Bible Part 29 (Ads Track) + this document (Reference)*
+*Source of Truth: Bible Part 5 (Architecture) + Bible Part 29 (Ads Track) + Bible Part 2.7 (12-Edge Vocabulary) + this document (Reference)*

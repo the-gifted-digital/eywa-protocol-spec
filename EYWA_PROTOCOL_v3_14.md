@@ -1,7 +1,7 @@
 # 📖 คัมภีร์ EYWA™ PROTOCOL
 ## The Universal Knowledge Graph SEO Specification for the AI Era
 
-**Version:** 3.16  
+**Version:** 3.17  
 **Last Updated:** 2026-05-12  
 **Trademark:** EYWA™ (Class 35+42, DIP Thailand, filed 2026-04-20)  
 **Created by:** The Gifted Digital Marketing Co., Ltd.  
@@ -2290,12 +2290,12 @@ triggers_partial_rerun:
 
 → Edge typing = **เปลี่ยน knowledge graph จาก "list of nodes" เป็น "directed labeled graph"**
 
-### 2.7.2 The 10 Edges (Master Vocabulary)
+### 2.7.2 The 12 Edges (Master Vocabulary) 🆕 v3.5 (DR-013 Locked 2026-05-12)
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│  Locked Edge Vocabulary v3.4 — ห้ามเพิ่มใหม่นอกรายการนี้             │
-│  ถ้าจำเป็นจริง → RFC + Schema Review Board (Part 15.3)            │
+│  Locked Edge Vocabulary v3.5 — ห้ามเพิ่มใหม่นอกรายการนี้             │
+│  ถ้าจำเป็นจริง → DR-012 4-criteria + Schema Review Board (Part 15.3) │
 ├─────────────────────────────────────────────────────────────────┤
 │  #   Edge Name           Type             Direction               │
 ├─────────────────────────────────────────────────────────────────┤
@@ -2309,8 +2309,12 @@ triggers_partial_rerun:
 │  8   requires_assessment Clinical         directional             │
 │  9   evidenced_by        Documentary      directional             │
 │  10  related_to          Generic          undirected (symmetric)  │
+│  11  causes              Etiological      paired (causes↔caused_by)│ 🆕 v3.5
+│  12  contraindicates     Safety           undirected (symmetric)  │ 🆕 v3.5
 └─────────────────────────────────────────────────────────────────┘
 ```
+
+**v3.5 Expansion (per DR-013 Locked 2026-05-12):** Edges 11–12 added based on field-tested gaps from VTH BioDent EGP work + cross-brand canvass confirming applicability across Trin Wellness (vascular/ED causality), VTH Biodental Wellness (inflammation chains), SmileScape (periodontal causality), Relaxia Dental (sedation contraindications), and 5+ other medical brands.
 
 ### 2.7.3 Storage Pattern (Database)
 
@@ -2327,7 +2331,7 @@ CREATE TABLE seo_entity_relationships (
   to_entity_fp text NOT NULL 
     REFERENCES seo_entity_graph(entity_fingerprint) ON DELETE CASCADE,
   
-  -- Edge type (controlled vocabulary — 10 values + inverses)
+  -- Edge type (controlled vocabulary — 12 values + inverses, 16 CHECK enum total) 🆕 v3.5
   edge_type text NOT NULL 
     CHECK (edge_type IN (
       'parent_of', 'child_of',           -- pair 1
@@ -2339,13 +2343,25 @@ CREATE TABLE seo_entity_relationships (
       'part_of', 'contains',              -- pair 7
       'requires_assessment',              -- 8
       'evidenced_by',                     -- 9
-      'related_to'                        -- 10 (undirected)
+      'related_to',                       -- 10 (undirected)
+      'causes', 'caused_by',              -- pair 11 🆕 v3.5 (DR-013)
+      'contraindicates'                   -- 12 (undirected, symmetric) 🆕 v3.5 (DR-013)
     )),
   
   -- Edge metadata (optional)
   edge_strength numeric DEFAULT 1.0,     -- 0-1, สำหรับ ranking
-  edge_note text,                         -- "off-label", "comorbidity" detail
+  edge_note text,                         -- typed sub-vocabulary per §2.7.11 🆕 v3.5
   bidirectional_synced boolean DEFAULT false,
+  
+  -- Evidence + governance fields 🆕 v3.5 (DR-013)
+  edge_evidence_citation text 
+    REFERENCES seo_citations(fingerprint) ON DELETE SET NULL,
+    -- MANDATORY when edge_type IN ('causes','caused_by','contraindicates') AND edge_strength ≥ 2
+  medical_reviewer_signoff_at timestamptz,
+    -- MANDATORY when edge_type='contraindicates' AND edge_strength = 3 (absolute)
+  medical_reviewer_fp text 
+    REFERENCES seo_authors_reviewers(fingerprint) ON DELETE SET NULL,
+    -- MANDATORY paired with medical_reviewer_signoff_at
   
   -- Brand scoping (edge อาจ apply เฉพาะบาง brand)
   brand_scope text[] DEFAULT '{*}',
@@ -2825,13 +2841,119 @@ usage_rule:
     7. Component of larger system? → part_of
     8. Pre-requisite assessment? → requires_assessment
     9. Evidence support? → evidenced_by
-    10. None of above → related_to (last resort)
+    10. X causes/contributes-to Y (etiological)? → causes/caused_by 🆕 v3.5
+    11. X must NOT combine with Y (safety)? → contraindicates 🆕 v3.5
+    12. None of above → related_to (last resort)
 
 editorial_metadata:
   เมื่อใช้ related_to — ใส่ edge_note บอกธรรมชาติของความสัมพันธ์:
     edge_note: "comorbidity"
     edge_note: "shared mechanism"
     edge_note: "common patient overlap"
+```
+
+#### Edge 11 — `causes` / `caused_by` (Etiological Pair) 🆕 v3.5 (DR-013)
+
+```yaml
+edge_pair: causes <→> caused_by
+direction: paired (auto-sync inverse)
+cardinality:
+  causes: 1 entity → N caused conditions
+  caused_by: 1 entity → N causal factors (multifactorial allowed)
+
+from_to_constraints:
+  ✓ Typical: cause = (condition | concept | drug | ingredient | device | symptom);
+            effect = (condition | symptom)
+  ✓ Concept-as-cause allowed (e.g., "bruxism" concept → causes → "TMJ disorder" condition)
+  ✓ Drug-as-cause allowed (adverse effect modeling)
+  ✗ Avoid concept-of-no-mechanism (e.g., "ageing" → causes → "wrinkles" needs subtype refinement, not raw causes)
+
+schema_org_mapping:
+  causes: "schema:causeOf"
+  caused_by: emit as inverse relationship (no direct schema property — use itemReviewed pattern)
+
+semantics:
+  Etiological link: cause CONTRIBUTES TO or PRODUCES effect
+  Distinct from `symptom_of` (manifestation), `treats` (therapeutic direction)
+
+edge_note_typed_values (per §2.7.11):
+  direct: "X is direct mechanistic cause"
+  contributing: "X is one of multiple causes"
+  developmental: "X causes Y over time/development"
+  hypothesized: "Causal link proposed but not proven (REQUIRES strength=1)"
+
+governance:
+  edge_evidence_citation:
+    required_when: edge_strength ≥ 2
+    purpose: pin causal claims to peer-reviewed source
+  edge_strength_semantics:
+    1 = hypothesized / weak association
+    2 = peer-reviewed evidence (≥1 systematic review OR ≥3 RCTs)
+    3 = clinical guideline consensus (Cochrane / WHO / national medical body)
+
+use_cases:
+  vth_biodent: "Bruxism → causes → TMJ disorder" (direct, strength=2)
+  trin_wellness: "Atherosclerosis → causes → ED" (direct, strength=3, AHA/AUA)
+  biodental_wellness: "Periodontal disease → causes → Systemic inflammation" (developmental, strength=2)
+  smilescape: "Untreated periodontitis → causes → Implant failure" (contributing, strength=2)
+```
+
+#### Edge 12 — `contraindicates` (Safety, Symmetric) 🆕 v3.5 (DR-013)
+
+```yaml
+edge_pair: contraindicates (symmetric — same edge_type for both directions)
+direction: undirected (auto-sync reverse with same edge_type)
+cardinality:
+  contraindicates: 1 entity → N contraindicated entities (bidirectional)
+
+from_to_constraints:
+  ✓ Typical: procedure ↔ (drug | condition | device);
+            drug ↔ (drug | condition);
+            device ↔ (anatomy | condition)
+  ✓ Allowed combinations:
+      procedure ↔ drug (e.g., implant surgery ↔ anticoagulants)
+      procedure ↔ condition (e.g., sedation ↔ uncontrolled OSA)
+      drug ↔ drug (interaction)
+      drug ↔ condition (e.g., TRT ↔ prostate cancer history)
+  ✗ Avoid concept ↔ concept (use related_to + edge_note='safety-overlap' instead)
+
+schema_org_mapping:
+  contraindicates: "schema:contraindication"
+  emit_on: Drug + MedicalProcedure + MedicalTherapy JSON-LD
+
+semantics:
+  Safety hard block — "do not combine" or "screen before combine"
+  Distinct from `alternative_to` (preference choice, not safety)
+  Distinct from `related_to + safety-note` (loses queryable safety semantics)
+
+edge_note_typed_values (per §2.7.11):
+  absolute: "Must never combine (strength=3, REQUIRES medical signoff)"
+  relative-controllable: "Can combine with monitoring (strength=2)"
+  relative-temporal: "Time-based contraindication (e.g., post-surgery window)"
+  interferes-outcome: "Reduces efficacy without safety risk (strength=1)"
+
+governance:
+  edge_evidence_citation:
+    required_when: edge_strength ≥ 2
+    purpose: pin safety claim to clinical guideline / RCT / FDA labeling
+  medical_reviewer_signoff:
+    required_when: edge_strength = 3 (absolute contraindication)
+    fields_required: medical_reviewer_signoff_at + medical_reviewer_fp
+    reviewer_qualification: must be MD or DDS with active license
+  edge_strength_semantics:
+    1 = interferes-outcome / interaction concern
+    2 = relative contraindication (clinical monitoring required)
+    3 = absolute contraindication (NEVER combine — signoff mandatory)
+
+use_cases:
+  trin_wellness: "TRT ↔ contraindicates ↔ Prostate cancer history" (absolute, strength=3)
+  smilescape: "Dental implant surgery ↔ contraindicates ↔ Bisphosphonate therapy" (relative-controllable, strength=2)
+  relaxia_dental: "IV sedation ↔ contraindicates ↔ Severe OSA without CPAP" (absolute, strength=3)
+  vth_biodent: "Bruxism appliance ↔ contraindicates ↔ Active TMJ inflammation" (relative-temporal, strength=2)
+
+ymyl_critical_path:
+  All `contraindicates` edges with strength=3 BLOCK page publication until medical signoff
+  Bible Part 23.4 editorial workflow enforces this gate
 ```
 
 ### 2.7.5 Cross-Edge Validation Rules
@@ -2851,12 +2973,14 @@ rule_3_paired_edge_sync:
     - treats <→> treated_by
     - uses <→> used_by
     - part_of <→> contains
+    - causes <→> caused_by  # 🆕 v3.5 (DR-013)
   enforcement: DB trigger (auto-insert inverse)
 
 rule_4_undirected_edge_sync:
   undirected_edges:
     - alternative_to (symmetric)
     - related_to (symmetric)
+    - contraindicates (symmetric)  # 🆕 v3.5 (DR-013)
   enforcement: DB trigger (auto-insert reverse)
 
 rule_5_type_constraints:
@@ -2872,6 +2996,22 @@ rule_6_cycle_detection:
 rule_7_cardinality_limits:
   alternative_to: ≤6 warn, ≤8 hard
   related_to: ≤10 warn, ≤20 hard
+  contraindicates: ≤8 warn, ≤15 hard  # 🆕 v3.5 — procedures can have many contraindications
+
+rule_8_evidence_required:  # 🆕 v3.5 (DR-013)
+  applicable_to: causes, caused_by, contraindicates
+  rule: edge_evidence_citation MANDATORY when edge_strength ≥ 2
+  enforcement: 
+    DB trigger fn_validate_edge_evidence_requirement()
+    Application-level pre-insert check
+
+rule_9_medical_signoff_required:  # 🆕 v3.5 (DR-013)
+  applicable_to: contraindicates (strength=3 only — absolute contraindication)
+  rule: medical_reviewer_signoff_at + medical_reviewer_fp MANDATORY
+  reviewer_qualification: MD or DDS with active license (Bible Part 23.4 §reviewer-tier)
+  enforcement:
+    DB trigger fn_validate_medical_signoff_for_contraindication()
+    Editorial workflow gate (Part 23.4 stage 4 blocks publication)
 ```
 
 ### 2.7.6 How Edges Power Other Systems
@@ -3194,11 +3334,190 @@ related_to_use_pattern:
 
 | Topic | See Also |
 |-------|----------|
-| Edge Vocabulary (10 edges) | Section 2.7.2 |
+| Edge Vocabulary (12 edges) | Section 2.7.2 |
 | EUG v1.0 (entity uniqueness) | Section 2.6.6.1 |
 | Schema Generation (edge → JSON-LD) | Part 26.4 |
-| seo_entity_relationships table | Schema v1.9 §4.5 |
-| Decision rationale | DECISION_RECORDS DR-012 |
+| seo_entity_relationships table | Schema v1.13 §4.5 |
+| Decision rationale | DECISION_RECORDS DR-012 + DR-013 |
+| Typed edge_note sub-vocabulary | Section 2.7.11 🆕 v3.5 |
+
+### 2.7.11 Edge Note Typed Sub-Vocabulary 🆕 v3.5 (DR-013 Locked 2026-05-12)
+
+> **Why this exists:** Pre-v3.5, `edge_note` was free-text — operators wrote prose like "off-label" or "comorbidity" without controlled vocabulary. DR-013 formalizes per-edge-type allowed values so the schema generation pipeline (Part 26) can emit different schema.org markup based on the `edge_note` semantic. This is a Category 2 change (lighter than adding a new edge) — adding new typed values doesn't require full DR-012 4-criteria review.
+
+#### Why Typed `edge_note` Matters
+
+```yaml
+without_typed_note:
+  edge: "X causes Y, edge_note='this is a direct mechanism'"
+  problem: 
+    - Free-text prose — not queryable
+    - Schema pipeline can't emit different markup
+    - Editorial drift across brands (5 different phrasings of "direct cause")
+
+with_typed_note:
+  edge: "X causes Y, edge_note='direct'"
+  benefit:
+    - Queryable: WHERE edge_note='direct' → all direct causal claims
+    - Schema pipeline emits schema:causeOf with specific subtypes
+    - Editorial consistency portfolio-wide
+    - n8n classifier auto-flags strength=2+ claims missing evidence_citation
+```
+
+#### Allowed Values Per Edge Type
+
+```yaml
+causes:
+  direct: "X is direct mechanistic cause (single-step chain)"
+  contributing: "X is one of multiple causes (multifactorial)"
+  developmental: "X causes Y over time/progression (chronic disease pathway)"
+  hypothesized: "Causal link proposed but not proven — MUST have edge_strength=1"
+
+caused_by:
+  # Inverse of causes — same values apply
+  direct | contributing | developmental | hypothesized
+
+contraindicates:
+  absolute: "Must NEVER combine — requires edge_strength=3 + medical signoff"
+  relative-controllable: "Can combine with monitoring (edge_strength=2)"
+  relative-temporal: "Time-based contraindication (e.g., post-surgery 6-week window)"
+  interferes-outcome: "Reduces efficacy without safety risk (edge_strength=1)"
+
+related_to:
+  comorbidity: "Conditions frequently co-occur in same patients"
+  bidirectional-influence: "Mutual reinforcement (each worsens the other)"
+  historical-association: "Documented in literature but mechanism unclear"
+  shared-mechanism: "Same underlying biology but distinct manifestations"
+  cross-cluster-link: "Semantic link bridging two topic clusters"
+
+requires_assessment:
+  diagnostic-gold-standard: "Primary diagnostic test (Schema: schema:primaryDiagnosis)"
+  diagnostic-supportive: "Supporting/confirmatory test"
+  pre-procedure-required: "Mandatory clearance before procedure"
+  screening-routine: "Routine screening recommendation"
+
+treats:
+  first-line: "First-line therapy per clinical guideline"
+  second-line: "Second-line / alternative therapy"
+  adjunctive: "Used alongside primary treatment"
+  experimental: "Investigational use (off-label / not yet guideline)"
+
+alternative_to:
+  equivalent-efficacy: "Comparable outcomes, different mechanism"
+  cost-alternative: "Cheaper option for similar outcome"
+  contraindication-alternative: "Use when primary option contraindicated"
+  patient-preference: "Choice driven by patient values, not clinical superiority"
+
+evidenced_by:
+  systematic-review: "Cochrane / equivalent systematic review"
+  rct: "Randomized controlled trial"
+  observational: "Cohort or case-control study"
+  expert-consensus: "Clinical guideline / professional body recommendation"
+  case-series: "Case series or case report (weakest tier)"
+
+# Edges WITHOUT typed sub-vocabulary (use plain edge_note free-text):
+#   parent_of / child_of, subtype_of, symptom_of, uses / used_by, part_of / contains
+#   Rationale: structural edges don't carry semantic variation that needs schema differentiation
+```
+
+#### Governance for `edge_note` Evolution
+
+```yaml
+adding_new_edge_note_value:
+  classification: Category 2 change (Bible Part 15.2 — Medium)
+  requires:
+    - 2+ real cases where existing values insufficient
+    - Schema.org mapping (if schema generation differs)
+    - Mini-DR or DR amendment (lighter than full DR for new edge)
+  timeline: 1-week review
+
+removing_an_edge_note_value:
+  classification: Category 3 change (Breaking)
+  requires: Full DR + migration plan for existing rows using that value
+
+schema_pipeline_integration:
+  rule: "Schema generation pipeline (Part 26) MAY emit different JSON-LD based on edge_note"
+  example:
+    edge: causes
+    edge_note: hypothesized
+    emit: |
+      "@type": "MedicalCondition"
+      "causeOf": [{
+        "@type": "MedicalEntity",
+        "name": "X",
+        "study": "preliminary"   # ← reflects 'hypothesized' edge_note
+      }]
+  vs:
+    edge_note: direct
+    emit: |
+      "causeOf": "X"   # plain causal relationship, no qualifier
+```
+
+#### Validation Rules
+
+```yaml
+rule_evidence_citation_per_edge_note:
+  causes (direct | contributing | developmental):
+    edge_strength_required: ≥2
+    edge_evidence_citation: MANDATORY
+  
+  causes (hypothesized):
+    edge_strength_required: must equal 1
+    edge_evidence_citation: OPTIONAL (typically working paper / preprint)
+  
+  contraindicates (absolute):
+    edge_strength_required: must equal 3
+    edge_evidence_citation: MANDATORY (clinical guideline citation)
+    medical_reviewer_signoff: MANDATORY
+  
+  contraindicates (relative-controllable | relative-temporal):
+    edge_strength_required: ≥2
+    edge_evidence_citation: MANDATORY
+  
+  contraindicates (interferes-outcome):
+    edge_strength_required: ≥1
+    edge_evidence_citation: RECOMMENDED (efficacy reduction data)
+
+rule_edge_note_required_for_safety_critical:
+  applies_to: causes, caused_by, contraindicates
+  rule: edge_note MUST be set to a typed value (cannot remain NULL)
+  enforcement: 
+    DB trigger fn_validate_edge_note_typed()
+    n8n classifier flags violations
+```
+
+#### Migration from Free-Text edge_note (Phase 1E)
+
+```sql
+-- For pre-v3.5 rows with free-text edge_note:
+-- 1. Audit existing values
+SELECT DISTINCT edge_type, edge_note, COUNT(*)
+FROM seo_entity_relationships
+WHERE edge_note IS NOT NULL
+GROUP BY 1, 2
+ORDER BY 1, 3 DESC;
+
+-- 2. Operator maps free-text → typed value (manual one-time pass)
+--    Examples:
+--      "off-label use" → 'experimental' (for treats edges)
+--      "common comorbidity" → 'comorbidity' (for related_to)
+--      "post-surgery window" → 'relative-temporal' (for contraindicates)
+--      Unmappable free-text remains as-is (NOT auto-converted)
+
+-- 3. Going forward, all new rows on causes/caused_by/contraindicates
+--    MUST use typed values (enforced by trigger)
+```
+
+#### Cross-References
+
+| Topic | See Also |
+|-------|----------|
+| Edge 11 causes spec | Section 2.7.4 — Edge 11 |
+| Edge 12 contraindicates spec | Section 2.7.4 — Edge 12 |
+| Validation rules 8 + 9 | Section 2.7.5 |
+| Schema pipeline emission | Part 26.4 |
+| Helper functions | Schema v1.13 Appendix F |
+| Decision rationale | DECISION_RECORDS DR-013 |
 
 ---
 
@@ -26188,10 +26507,10 @@ add_action('save_post', function ($post_id) {
 
 ---
 
-**END OF DOCUMENT v3.16 — คัมภีร์ EYWA™ PROTOCOL**
+**END OF DOCUMENT v3.17 — คัมภีร์ EYWA™ PROTOCOL**
 
 
-*🌿 EYWA™ PROTOCOL Bible v3.16 • May 2026*
+*🌿 EYWA™ PROTOCOL Bible v3.17 • May 2026*
 *The Universal Knowledge Graph SEO Specification for the AI Era*
 *Multi-vertical, multi-brand, multi-specialty, multi-lingual, multi-location, AI-future-ready*
 
@@ -26200,6 +26519,23 @@ add_action('save_post', function ($post_id) {
 *Implementation: Notion + Supabase + n8n + WordPress (loose-coupled via automation)*
 
 **Service Suite:** Audit · Graph · Stack · Vital · Forge · Score · Atlas
+
+**v3.17 Changelog (2026-05-12) — Edge Vocabulary v3.5 Expansion (DR-013 Locked):**
+
+- ➕ **§2.7.2** — Master vocabulary 10 → 12 edges (added `causes/caused_by`, `contraindicates`)
+- ➕ **§2.7.3** — `seo_entity_relationships` CHECK constraint expanded 14 → 16 enum values; added 3 governance fields (`edge_evidence_citation`, `medical_reviewer_signoff_at`, `medical_reviewer_fp`)
+- ➕ **§2.7.4** — Full per-edge specs added for Edge 11 (`causes/caused_by`) + Edge 12 (`contraindicates`) with use cases from Trin Wellness, VTH BioDent, SmileScape, Relaxia Dental
+- ➕ **§2.7.5** — Rule 8 (evidence_citation required for causes/caused_by/contraindicates at strength≥2) + Rule 9 (medical_reviewer_signoff required for contraindicates strength=3)
+- ➕ **§2.7.11 NEW — Edge Note Typed Sub-Vocabulary** — formalizes per-edge-type allowed values for `edge_note` (e.g., causes: direct/contributing/developmental/hypothesized; contraindicates: absolute/relative-controllable/relative-temporal/interferes-outcome). Free-text `edge_note` deprecated for safety-critical edges; structural edges still allow free-text.
+- 🔄 Decision flow updated (§2.7.4 fallback ordering) — causes/contraindicates inserted at slots 10/11; related_to moves to slot 12 (last resort)
+- 🔒 DR-013 **Locked 2026-05-12** — cross-brand evidence confirmed across ≥5 medical brands (C2 verification passed)
+- 🔄 Bible v3.16 → v3.17 ships paired with Schema v1.12 → v1.13 + DECISION_RECORDS v1.10 → v1.11 + EYWA_HANDOVER v1.10 → v1.11
+- ⚠️ Migration files needed (Phase 1E):
+  - `030_dr013_expand_edge_type_check.sql` — CHECK enum 14 → 16
+  - `031_dr013_add_edge_evidence_citation.sql` — FK to seo_citations
+  - `032_dr013_add_medical_reviewer_fields.sql` — signoff timestamp + reviewer FK
+  - `033_dr013_add_edge_validation_triggers.sql` — trigger functions
+- ⚠️ Companion DR-014 (Concept Entity Subtype Lock) remains Proposed — locks separately
 
 **v3.16 Changelog (2026-05-12) — Ads Landing Page Track (DR-026 Proposed):**
 

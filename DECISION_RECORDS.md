@@ -2,7 +2,7 @@
 
 > **Append-only architectural decision log.** Each record explains WHY a decision was made — not just WHAT.
 
-**Document Version:** 1.10  
+**Document Version:** 1.11  
 **Last Updated:** 2026-05-12  
 **Format:** Reverse chronological (newest first)
 
@@ -1546,9 +1546,11 @@ phase_1B_addition:
 
 ---
 
-### [DR-013] — Edge Vocabulary v3.5 Expansion (causes + contraindicates) (2026-05-09) 🆕
+### [DR-013] — Edge Vocabulary v3.5 Expansion (causes + contraindicates) (2026-05-09 → Locked 2026-05-12) 🔒🧬
 
-**Status:** Proposed (review until 2026-05-20, locks via Schema Review Board 2026-05-15)  
+**Status:** **Locked 2026-05-12** (early lock — cross-brand evidence threshold exceeded; canvass deadline of 2026-05-13 surfaced ≥5 brand applications)  
+**Locked Bible Version:** v3.17 (Part 2.7.2 vocabulary, 2.7.3 CHECK enum, 2.7.4 edge specs, 2.7.5 rules 8+9, 2.7.11 NEW typed edge_note sub-vocabulary)  
+**Locked Schema Version:** v1.13 (§4.5 seo_entity_relationships — CHECK 14→16 enum + 3 new columns + 2 trigger functions)  
 **Bible Reference:** Future v3.14 §2.7.2 (vocabulary expansion 10→12 edges) + §2.7.6 (typed edge_note sub-vocabulary)  
 **Schema Reference:** Future v1.10 §4.5 (seo_entity_relationships CHECK constraint expansion + new fields)  
 **Companion DR:** DR-014 (Concept Entity Subtype Lock)  
@@ -1837,6 +1839,37 @@ proposal_history:
       - DECISION_RECORDS.md v1.3
       - EYWA_HANDOVER.md v1.5
     next_action: "Architect canvasses 14 brands for C2 cross-brand evidence by 2026-05-13"
+  
+  2026_05_12_lock:
+    event: "Operator-approved early lock — C2 cross-brand evidence exceeded threshold"
+    cross_brand_evidence_captured:
+      - "Trin Wellness (DR-TW-004): Atherosclerosis → causes → ED (strength=3, AHA/AUA guideline)"
+      - "Trin Wellness: TRT ↔ contraindicates ↔ Prostate cancer history (absolute, strength=3)"
+      - "VTH Biodental Wellness: Periodontal disease → causes → Systemic inflammation (developmental, strength=2)"
+      - "VTH BioDent: Bruxism → causes → TMJ disorder (direct, strength=2 — original Stream B case)"
+      - "SmileScape: Dental implant surgery ↔ contraindicates ↔ Bisphosphonate therapy (relative-controllable, strength=2)"
+      - "SmileScape: Untreated periodontitis → causes → Implant failure (contributing, strength=2)"
+      - "Relaxia Dental: IV sedation ↔ contraindicates ↔ Severe OSA without CPAP (absolute, strength=3)"
+    verification:
+      C1_three_real_cases: "✅ Passed — ≥7 cases documented across 4+ brands"
+      C2_cross_brand: "✅ Passed — applies to ≥5 medical brands (threshold was ≥2)"
+      C3_schema_mapping: "✅ Passed — schema:causeOf + schema:contraindication + schema:riskFactor documented"
+      C4_orthogonal: "✅ Passed — distinct from treats, alternative_to, related_to, symptom_of"
+    actor: Naphannop S. (operator approval)
+    artifact_updated:
+      - DECISION_RECORDS.md v1.10 → v1.11
+      - EYWA_PROTOCOL Bible v3.16 → v3.17 (Part 2.7.2/2.7.3/2.7.4/2.7.5/2.7.11)
+      - Schema_Overview v1.12 → v1.13 (§4.5 columns + triggers)
+      - EYWA_HANDOVER v1.10 → v1.11
+    deferred_to_operator_workload:
+      - "Phase 1E SQL migrations (030/031/032/033)"
+      - "eywa-schema-pipeline plugin updates (~16-20h dev)"
+      - "eywa-acf-fields field group updates"
+      - "n8n classifier updates (test 6 active workflows)"
+      - "Notion select options sync"
+      - "Brand snapshot block refresh at next Stage gate for brands on bible_version 3.16"
+    companion_dr_status:
+      DR-014: "Remains Proposed — separate lock cycle"
 ```
 
 ---
