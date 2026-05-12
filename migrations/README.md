@@ -58,6 +58,14 @@ Phase 1A baseline complete: **39 EYWA tables across 9 groups** (per Schema v1.15
 21. `eywa_w7_02_governance_group8.sql` — `seo_data_quality_metrics`, `seo_schema_changes`
     *(Group 6 backlinks `seo_backlinks_data` + `seo_backlinks_links` — already in production from earlier work)*
 
+### Wave 9 — Remove Notion FDW + wrappers extension (1 migration, operator decision 2026-05-12)
+24. `eywa_w9_01_remove_notion_fdw_wrappers.sql` — Clean removal:
+    - `DROP SCHEMA notion_vt_intelligence_space CASCADE` (removes 2 foreign tables: databases, pages)
+    - `DROP SERVER notion_server_vt_intelligence_space CASCADE`
+    - `DROP EXTENSION wrappers CASCADE` (removes wasm_wrapper FDW + wrappers_fdw_stats system table)
+    - Rationale: Notion sync fully via n8n; FDW had 7 invocations across 2 months = vestigial. No views/functions depended on it.
+    - Reversibility: re-install via original `setup_notion_wrapper_workspace_a_v2` migration (~5 min)
+
 ### Wave 8 — DR-008 brands Two-Column Identity (2 migrations)
 22. `eywa_w8_01_dr008_brands_two_column_identity_setup.sql` — ADD 3 cols (`fingerprint`, `fingerprint_display_name`, `brand_slug`) + 5 helper functions:
     - `generate_ulid16()` — 16-char hex identifier
