@@ -3,10 +3,61 @@
 > **For Claude (and any AI assistant) working on a new brand within the EYWA portfolio.**  
 > **Read this file first, every new project, every new session.**
 
-**Document Version:** 1.12  
+**Document Version:** 1.13  
 **Last Updated:** 2026-05-12  
-**Companion to:** EYWA Bible v3.18 + Schema Overview v1.14 + DECISION_RECORDS v1.12 + Content_Templates_EYWA_v1_0.md v1.4 (DRAFT)  
+**Companion to:** EYWA Bible v3.19 + Schema Overview v1.15 + DECISION_RECORDS v1.13 + Content_Templates_EYWA_v1_0.md v1.5 (LOCKED)  
 **Created by:** The Gifted Digital Marketing Co., Ltd.
+
+---
+
+## 🆕 v1.13 Note (2026-05-12) — Paired Batch Lock: 4 DRs (DR-019/020/021/022)
+
+Operator-approved early lock of 4 paired-cluster DRs originally scheduled for 2026-06-07 review. Justification: 99.99% Google-principle aligned, field-tested across 5 brands, marginal value of waiting < operational cost. Locked together as one coherent governance batch.
+
+### DR-022 LOCKED — Lean Phase B + Two-Layer Sitemap
+
+- **Workflow now canonical** — brands follow lean Phase B (single human-blocking phase, async DFS enrichment, iterative refinement)
+- **Two-Layer Sitemap pattern**: Layer 1 (brand-immune services/uniqueness/tech/branches) + Layer 2 (volume-driven concerns/knowledge)
+- Currently active: Deezy Dental, Classy Clinic, VTH BioDent, SmileScape, Trin Wellness
+- New brands inherit pattern from inception (Bootstrap Kit §1.0 already incorporates)
+
+### DR-021 LOCKED — Internal Linking HYBRID Architecture
+
+- **Schema v1.15** adds: 12 page-level strategy columns on `seo_website_page_master` + new junction table `seo_page_internal_links` (~22 cols) with auto-reciprocal trigger
+- **Content_Templates §6 Internal Link Checklist** binds to junction table
+- **Brands must declare** per page: `authority_weight`, `node_tier_strategy`, `required_min_inbound/outbound`, `anchor_strategy_mode`
+- Cross-brand links require `cross_brand_approved=true` + `cross_brand_justification` (CHECK constraint)
+
+### DR-020 LOCKED — Universal Content Template Standard
+
+- **Content_Templates_EYWA_v1_0.md v1.5 LOCKED** — T1-T22 SEO template family canonical
+- T-ADS-X family (DR-026 Proposed) remains pending lock 2026-06-21
+- Editorial review now requires `template_id` selection (Bible Part 23.4 stage 1 step)
+
+### DR-019 LOCKED (with Insurance Review Clause)
+
+- **Two-Purpose Schema Taxonomy** locked: `serp_rich_result` / `ai_citation` / `forbidden`
+- **7 forbidden schemas**: CourseInfo, ClaimReview, EstimatedSalary, LearningVideo, SpecialAnnouncement, VehicleListing, PracticeProblem — `eywa-schema-pipeline` must block emission
+- **Featured Snippet Pattern** mandatory for question-intent pages (Bible Part 9 new sub-section)
+- **KPI metrics replaced**: drop FAQ/HowTo rich result impressions; add `ai_citation_rate` per platform + `featured_snippet_capture_rate` + `zero_click_vs_click_ratio`
+- **AggregateRating tightening**: min 5 verifiable reviews + crawler-accessible source
+- **Insurance Review 2026-06-30** — post-Google-effective-date verification; file Category 2 amendment if needed (Bible §15.2, ~1 hour cost)
+
+### Operator Workload Queue (Phase 1E)
+
+| Migration | DR | Effort |
+|-----------|-----|--------|
+| 040_add_page_linking_cols.sql | DR-021 | < 5 min |
+| 041_create_seo_page_internal_links.sql | DR-021 | < 5 min |
+| 042_reciprocal_trigger_fn.sql | DR-021 | < 5 min |
+| `eywa-schema-pipeline` plugin update | DR-019 | ~4 hours dev |
+| `eywa-acf-fields` plugin update | DR-021 | ~3 hours dev |
+| n8n flow updates (orphan + reciprocal + anchor diversity) | DR-021 | ~6 hours |
+| Initial brand population × 13 | DR-021 | ~26-39 hours total |
+
+### Brand Snapshot Refresh
+
+All brands currently on `bible_version: 3.18` should refresh `eywa_spec_snapshot` at next Stage gate to pick up v3.19 + Schema v1.15 + Templates v1.5 (LOCKED). No retroactive work required — additive changes only.
 
 ---
 

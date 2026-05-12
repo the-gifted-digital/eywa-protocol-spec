@@ -1,17 +1,52 @@
 # 📊 Schema Overview — EYWA™ PROTOCOL Database
 
-> **Companion document to** คัมภีร์ EYWA™ PROTOCOL v3.18  
-> **Reference for full DDL + column descriptions of all 37 tables + Ads Track Phase 0 column extensions + Edge Vocabulary v3.5 (12 edges) + Concept Entity Subtype Lock**
+> **Companion document to** คัมภีร์ EYWA™ PROTOCOL v3.19  
+> **Reference for full DDL + column descriptions of 38 tables + Group 10 Ads Track column extensions + Edge Vocabulary v3.5 (12 edges) + Concept Entity Subtype Lock + Internal Linking HYBRID**
 
-**Version:** v1.14  
+**Version:** v1.15  
 **Date:** 2026-05-12  
 **Status:** Day 1 Specification (production roadmap reference)  
-**Total Tables:** 37 organized into 9 groups + Group 10 (column additions only)  
-**Companion to:** Bible v3.18
+**Total Tables:** 38 organized into 9 groups + Group 10 (column additions only)  
+**Companion to:** Bible v3.19
 
 ---
 
 ## Changelog
+
+### v1.15 (2026-05-12) — Internal Linking HYBRID Architecture (DR-021 Locked) 🔒🔗
+
+Schema additions per **DR-021 Locked 2026-05-12** (paired batch lock with DR-019/020/022). Adds 12 page-level linking strategy columns on `seo_website_page_master` + new junction table `seo_page_internal_links` (~22 cols) for per-edge fidelity. Plus reciprocal-detection trigger.
+
+**Headline Changes:**
+
+- 🔒 **§5.1 `seo_website_page_master`** — 12 columns added:
+  - Authority: `authority_weight` (1-100), `link_equity_score` (0-100 computed), `orphan_risk_score` (0-100 computed), `crawl_depth`, `strategic_page` (bool), `node_tier_strategy` (hub/spoke/pillar/supporting/leaf)
+  - Strategy defaults: `required_min_inbound`, `required_min_outbound`, `link_priority_default` (1-10), `link_role_default` (primary_hub/cluster_spoke/supporting/reference/cross_cluster), `anchor_strategy_mode` (diverse/exact_match/topical/generic_safe)
+  - Cross-brand governance: `cross_brand_approved` (bool gate), `cross_brand_role` (exporter/importer/balanced/none)
+
+- 🆕 **§5.3 NEW `seo_page_internal_links`** — ~22 col junction table:
+  - Endpoints: `from_page_fp` (FK), `to_page_fp` (FK, internal) OR `to_external_url` (mutually exclusive via CHECK)
+  - Link metadata: `link_type` (contextual/navigational/footer/breadcrumb/sidebar/related), `link_role`, `link_priority`
+  - Anchor + context: `anchor_text`, `anchor_variant_type` (exact/partial/branded/generic/topical), `section_context`, `surrounding_text_snippet` (200 chars)
+  - Lifecycle: `status` (planned/live/broken/deprecated/pending_review/archived), `planned`, `implemented`, `first_planned_at`, `last_verified_at`
+  - Quality + governance: `is_reciprocal` (auto-trigger), `is_cross_brand`, `cross_brand_justification` (REQUIRED via CHECK when is_cross_brand=true), `cross_brand_role`
+  - Federation: `brand_scope text[]`
+
+- ➕ Trigger function `fn_check_reciprocal_link()` + `trg_internal_link_reciprocal` — auto-sets `is_reciprocal=true` on both rows when A→B and B→A both exist
+
+- 📌 Companion Bible: Part 4 (Sitemap) + Part 13 (LLMO authority signals) already authoritative; DR-021 lock formalizes the data model
+
+- ⚠️ **Migration files needed:**
+  - `040_dr021_add_page_linking_cols.sql` — 12 columns + 3 partial indexes
+  - `041_dr021_create_seo_page_internal_links.sql` — table + 6 indexes + 2 CHECK constraints
+  - `042_dr021_reciprocal_trigger_fn.sql` — function + trigger
+
+- ✅ **Backward compatible** — all new page_master columns nullable; new table additive
+
+- 🔄 Schema v1.14 → v1.15 ships paired with Bible v3.18 → v3.19 + Content_Templates v1.4 → v1.5 (LOCKED) + DECISION_RECORDS v1.12 → v1.13 + EYWA_HANDOVER v1.12 → v1.13
+
+- 📣 DR-021 Status: **Locked 2026-05-12** (early lock with paired batch DR-019/020/022)
+- 📣 Follow-up DR-028 + DR-029 candidates flagged: External Authoritative Link Tracking + Anchor Diversity Algorithm
 
 ### v1.14 (2026-05-12) — Concept Entity Subtype Lock (DR-014 Locked) 🔒💠
 
@@ -1489,6 +1524,154 @@ COMMENT ON COLUMN seo_website_page_master.viability_assessment IS
 | `sla_deadline` | `timestamptz` | SLA enforcement |
 | `created_at` | `timestamptz DEFAULT now()` | |
 | `updated_at` | `timestamptz DEFAULT now()` | |
+
+---
+
+### 5.3 `seo_page_internal_links` 🆕 v1.15 (DR-021 Locked)
+
+> **Purpose:** Junction table for **per-edge fidelity** internal linking — anchor text, section context, link type, lifecycle status per link instance. Complements the 12 page-level linking strategy columns on `seo_website_page_master` (HYBRID architecture per DR-021).  
+> **Tier:** 1 (Critical Operational)  
+> **Sync:** N↔S  
+> **Bible Reference:** Part 4 (Sitemap), Part 13 (LLMO authority signals)  
+> **Volume:** ~5-20 outbound links per page × total pages per brand (~5K-50K rows typical)
+
+#### Schema
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `id` | `uuid PK DEFAULT gen_random_uuid()` | |
+| `fingerprint` | `text UNIQUE NOT NULL` | Format: `lnk_{ULID16}` |
+| **Endpoints** | | |
+| `from_page_fp` | `text NOT NULL FK→seo_website_page_master(fingerprint) ON DELETE CASCADE` | Source page |
+| `to_page_fp` | `text FK→seo_website_page_master(fingerprint) ON DELETE SET NULL` | Internal target page (nullable if external) |
+| `to_external_url` | `text` | External URL (mutually exclusive with `to_page_fp` — CHECK constraint) |
+| **Link Metadata** | | |
+| `link_type` | `text NOT NULL` | CHECK IN `'contextual'` / `'navigational'` / `'footer'` / `'breadcrumb'` / `'sidebar'` / `'related'` |
+| `link_role` | `text` | CHECK IN `'primary_hub'` / `'cluster_spoke'` / `'supporting'` / `'reference'` / `'cross_cluster'` |
+| `link_priority` | `smallint` | 1-10 (operator strategic priority — feeds editorial ordering) |
+| **Anchor + Context** | | |
+| `anchor_text` | `text NOT NULL` | Actual anchor text used in the link |
+| `anchor_variant_type` | `text` | CHECK IN `'exact'` / `'partial'` / `'branded'` / `'generic'` / `'topical'` (per Bible §13 anchor diversity strategy) |
+| `section_context` | `text` | e.g., `"hero"`, `"§7.2 treatment"`, `"FAQ"`, `"footer"` |
+| `surrounding_text_snippet` | `text` | 200-char context snippet (captures full sentence for AI/audit) |
+| **Lifecycle** | | |
+| `status` | `text NOT NULL DEFAULT 'planned'` | CHECK IN `'planned'` / `'live'` / `'broken'` / `'deprecated'` / `'pending_review'` / `'archived'` |
+| `planned` | `boolean DEFAULT true` | Strategy-declared in planning phase |
+| `implemented` | `boolean DEFAULT false` | Confirmed live in production |
+| `first_planned_at` | `timestamptz` | When operator first added planned link |
+| `last_verified_at` | `timestamptz` | Last crawler/manual verification of live status |
+| **Quality + Governance** | | |
+| `is_reciprocal` | `boolean DEFAULT false` | Auto-set TRUE when A→B and B→A both exist (trigger) |
+| `is_cross_brand` | `boolean DEFAULT false` | TRUE when source + target brands differ |
+| `cross_brand_justification` | `text` | MANDATORY when `is_cross_brand=true` (CHECK constraint) |
+| `cross_brand_role` | `text` | CHECK IN `'exporter'` / `'importer'` / `'balanced'` |
+| **Federation** | | |
+| `brand_scope` | `text[] DEFAULT ARRAY['*']` | Inherits source page brand_scope |
+| **Timestamps** | | |
+| `created_at` | `timestamptz DEFAULT now()` | |
+| `updated_at` | `timestamptz DEFAULT now()` | |
+
+#### Indexes & Constraints
+
+```sql
+PRIMARY KEY (id);
+UNIQUE INDEX idx_internal_link_fp ON seo_page_internal_links(fingerprint);
+INDEX idx_internal_link_from ON seo_page_internal_links(from_page_fp);
+INDEX idx_internal_link_to ON seo_page_internal_links(to_page_fp) WHERE to_page_fp IS NOT NULL;
+INDEX idx_internal_link_to_external ON seo_page_internal_links(to_external_url) WHERE to_external_url IS NOT NULL;
+INDEX idx_internal_link_status ON seo_page_internal_links(status);
+INDEX idx_internal_link_brand_scope ON seo_page_internal_links USING gin(brand_scope);
+
+-- Mutual exclusion: must have exactly one of to_page_fp OR to_external_url
+CONSTRAINT chk_link_target_exclusive CHECK (
+  (to_page_fp IS NOT NULL AND to_external_url IS NULL)
+  OR (to_page_fp IS NULL AND to_external_url IS NOT NULL)
+);
+
+-- Cross-brand governance: justification required when is_cross_brand=true
+CONSTRAINT chk_cross_brand_justification CHECK (
+  is_cross_brand = false OR cross_brand_justification IS NOT NULL
+);
+
+-- Auto-set is_reciprocal trigger (DR-021 §3)
+CREATE OR REPLACE FUNCTION fn_check_reciprocal_link()
+RETURNS TRIGGER AS $$
+BEGIN
+  IF EXISTS (
+    SELECT 1 FROM seo_page_internal_links
+    WHERE from_page_fp = NEW.to_page_fp
+      AND to_page_fp = NEW.from_page_fp
+      AND status IN ('planned', 'live')
+  ) THEN
+    NEW.is_reciprocal := true;
+    -- Also mark the inverse row reciprocal
+    UPDATE seo_page_internal_links
+    SET is_reciprocal = true
+    WHERE from_page_fp = NEW.to_page_fp AND to_page_fp = NEW.from_page_fp;
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_internal_link_reciprocal
+  AFTER INSERT OR UPDATE OF status ON seo_page_internal_links
+  FOR EACH ROW EXECUTE FUNCTION fn_check_reciprocal_link();
+```
+
+#### Page-Level Linking Strategy Columns (added to §5.1 `seo_website_page_master` 🆕 v1.15)
+
+Per DR-021 §1, the following 12 columns are added to `seo_website_page_master` for page-level linking strategy (complements per-edge `seo_page_internal_links`):
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `authority_weight` | `smallint` | 1-100 — operator-set strategic authority weight |
+| `link_equity_score` | `numeric(6,2)` | 0-100 — system-computed from inbound link equity (nightly cron) |
+| `orphan_risk_score` | `numeric(6,2)` | 0-100 — risk flag when `actual_inbound < required_min_inbound` |
+| `crawl_depth` | `smallint` | Click-depth from homepage (computed nightly) |
+| `strategic_page` | `boolean DEFAULT false` | Operator flag — tier-A strategic content |
+| `node_tier_strategy` | `text` | CHECK IN `'hub'` / `'spoke'` / `'pillar'` / `'supporting'` / `'leaf'` |
+| `required_min_inbound` | `smallint` | Minimum inbound links required (per template / tier — feeds orphan detection) |
+| `required_min_outbound` | `smallint` | Minimum outbound links required |
+| `link_priority_default` | `smallint` | Default `link_priority` for outbound links from this page |
+| `link_role_default` | `text` | Default `link_role` for outbound links |
+| `anchor_strategy_mode` | `text` | CHECK IN `'diverse'` / `'exact_match'` / `'topical'` / `'generic_safe'` |
+| `cross_brand_approved` | `boolean DEFAULT false` | Gate: cross-brand links from this page require this flag (DR-021 §4) |
+| `cross_brand_role` | `text` | CHECK IN `'exporter'` / `'importer'` / `'balanced'` / `'none'` |
+
+```sql
+-- Migration 040_dr021_add_page_linking_cols.sql (12 columns + indexes)
+ALTER TABLE seo_website_page_master
+  ADD COLUMN authority_weight smallint CHECK (authority_weight IS NULL OR authority_weight BETWEEN 1 AND 100),
+  ADD COLUMN link_equity_score numeric(6,2) CHECK (link_equity_score IS NULL OR link_equity_score BETWEEN 0 AND 100),
+  ADD COLUMN orphan_risk_score numeric(6,2) CHECK (orphan_risk_score IS NULL OR orphan_risk_score BETWEEN 0 AND 100),
+  ADD COLUMN crawl_depth smallint,
+  ADD COLUMN strategic_page boolean NOT NULL DEFAULT false,
+  ADD COLUMN node_tier_strategy text
+    CHECK (node_tier_strategy IS NULL OR node_tier_strategy IN ('hub', 'spoke', 'pillar', 'supporting', 'leaf')),
+  ADD COLUMN required_min_inbound smallint,
+  ADD COLUMN required_min_outbound smallint,
+  ADD COLUMN link_priority_default smallint CHECK (link_priority_default IS NULL OR link_priority_default BETWEEN 1 AND 10),
+  ADD COLUMN link_role_default text
+    CHECK (link_role_default IS NULL OR link_role_default IN ('primary_hub', 'cluster_spoke', 'supporting', 'reference', 'cross_cluster')),
+  ADD COLUMN anchor_strategy_mode text
+    CHECK (anchor_strategy_mode IS NULL OR anchor_strategy_mode IN ('diverse', 'exact_match', 'topical', 'generic_safe')),
+  ADD COLUMN cross_brand_approved boolean NOT NULL DEFAULT false,
+  ADD COLUMN cross_brand_role text
+    CHECK (cross_brand_role IS NULL OR cross_brand_role IN ('exporter', 'importer', 'balanced', 'none'));
+
+CREATE INDEX idx_page_master_strategic ON seo_website_page_master(strategic_page) WHERE strategic_page = true;
+CREATE INDEX idx_page_master_orphan_risk ON seo_website_page_master(orphan_risk_score) WHERE orphan_risk_score > 0;
+CREATE INDEX idx_page_master_crawl_depth ON seo_website_page_master(crawl_depth);
+```
+
+#### Used By
+
+- **Part 4 (Sitemap)** — internal linking strategy feeds Layer 1/2 authority flow
+- **Part 13 (LLMO Authority Signals)** — anchor diversity + reciprocal patterns
+- **Part 26 (Schema Pipeline)** — link relationships inform schema emission
+- **Stage 1.5 Gate validation** — orphan + reciprocal + anchor diversity checked at DB level
+- **n8n GROUP F flows (future)** — internal linking automation pipeline
+- **WordPress ACF eywa_internal_links** — frontend rendering per page
 
 ---
 
@@ -4094,9 +4277,9 @@ v2_schema_additions_when_activated:
 
 ---
 
-**END OF DOCUMENT — Schema_Overview EYWA v1.14**
+**END OF DOCUMENT — Schema_Overview EYWA v1.15**
 
 *🌿 EYWA™ PROTOCOL Database Architecture • May 2026*  
-*Companion to คัมภีร์ EYWA™ PROTOCOL v3.18*  
+*Companion to คัมภีร์ EYWA™ PROTOCOL v3.19*  
 *EYWA™ is a registered service mark — Class 35+42, DIP Thailand (filed 2026-04-20)*  
-*Source of Truth: Bible Part 5 (Architecture) + Bible Part 29 (Ads Track) + Bible Part 2.7 (12-Edge Vocabulary) + Bible Part 2.6.10 (Concept Subtype Lock) + this document (Reference)*
+*Source of Truth: Bible Part 5 (Architecture) + Bible Part 29 (Ads Track) + Bible Part 2.7 (12-Edge Vocabulary) + Bible Part 2.6.10 (Concept Subtype Lock) + Bible Part 4 (Internal Linking HYBRID) + this document (Reference)*

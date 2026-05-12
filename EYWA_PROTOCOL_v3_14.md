@@ -1,7 +1,7 @@
 # 📖 คัมภีร์ EYWA™ PROTOCOL
 ## The Universal Knowledge Graph SEO Specification for the AI Era
 
-**Version:** 3.18  
+**Version:** 3.19  
 **Last Updated:** 2026-05-12  
 **Trademark:** EYWA™ (Class 35+42, DIP Thailand, filed 2026-04-20)  
 **Created by:** The Gifted Digital Marketing Co., Ltd.  
@@ -26660,10 +26660,10 @@ add_action('save_post', function ($post_id) {
 
 ---
 
-**END OF DOCUMENT v3.18 — คัมภีร์ EYWA™ PROTOCOL**
+**END OF DOCUMENT v3.19 — คัมภีร์ EYWA™ PROTOCOL**
 
 
-*🌿 EYWA™ PROTOCOL Bible v3.18 • May 2026*
+*🌿 EYWA™ PROTOCOL Bible v3.19 • May 2026*
 *The Universal Knowledge Graph SEO Specification for the AI Era*
 *Multi-vertical, multi-brand, multi-specialty, multi-lingual, multi-location, AI-future-ready*
 
@@ -26672,6 +26672,44 @@ add_action('save_post', function ($post_id) {
 *Implementation: Notion + Supabase + n8n + WordPress (loose-coupled via automation)*
 
 **Service Suite:** Audit · Graph · Stack · Vital · Forge · Score · Atlas
+
+**v3.19 Changelog (2026-05-12) — Paired Batch Lock: DR-019/020/021/022:**
+
+Operator-approved early lock of 4 paired-cluster DRs (originally scheduled review 2026-06-07). Justification: 99.99% Google-principle aligned, field-tested across 5 brands, marginal value of 3-week wait < operational cost of stalled decisions.
+
+- 🔒 **DR-022 Locked** — Lean Phase B + Two-Layer Sitemap + Iterative Refinement
+  - Pattern already in operational use: Deezy Dental, Classy Clinic, VTH BioDent, SmileScape, Trin Wellness
+  - No Bible content changes (Part 4 already authoritative for the pattern); status seal only
+- 🔒 **DR-021 Locked** — Internal Linking Architecture (HYBRID)
+  - Schema v1.15 adds: 12 columns on `seo_website_page_master` (authority_weight, link_equity_score, orphan_risk_score, crawl_depth, strategic_page, node_tier_strategy, required_min_inbound, required_min_outbound, link_priority_default, link_role_default, anchor_strategy_mode, cross_brand_approved, cross_brand_role) + new table `seo_page_internal_links` (~22 cols) with reciprocal-detection trigger
+  - Schema §5.3 NEW table documented
+  - 7 Open Questions resolved at lock (see DR-021)
+- 🔒 **DR-020 Locked** — Universal Content Template Standard
+  - Content_Templates_EYWA_v1_0.md v1.4 → v1.5 — header status DRAFT → Locked 2026-05-12
+  - T1-T22 SEO templates + T-ADS-1/2/3/4/5 Ads templates sealed
+  - Bible Part 6 + Part 9 cross-references updated
+- 🔒 **DR-019 Locked** — Schema Strategy for Post-Rich-Results Era
+  - Two-Purpose Schema Taxonomy (serp_rich_result / ai_citation / forbidden) locked
+  - 7 schemas forbidden: CourseInfo, ClaimReview, EstimatedSalary, LearningVideo, SpecialAnnouncement, VehicleListing, PracticeProblem
+  - Featured Snippet pattern locked (H2/H3 = literal question; first paragraph 40-60 word answer)
+  - KPI replacement locked (drop FAQ/HowTo rich result metrics; add ai_citation_rate per platform + featured_snippet_capture_rate)
+  - AggregateRating tightening (min 5 reviews + crawler-accessible)
+  - **Insurance Review Clause:** 2026-06-30 re-review post-Google-effective-date — file Category 2 amendment per Bible §15.2 if Google's actual behavior contradicts
+  - 6 Open Questions resolved at lock (see DR-019)
+
+- 🔄 Bible v3.18 → v3.19 ships paired with Schema v1.14 → v1.15 + Content_Templates v1.4 → v1.5 (now LOCKED) + DECISION_RECORDS v1.12 → v1.13 + EYWA_HANDOVER v1.12 → v1.13
+
+- ⚠️ Migration files needed (Phase 1E):
+  - `040_dr021_add_page_linking_cols.sql` — 12 columns on seo_website_page_master
+  - `041_dr021_create_seo_page_internal_links.sql` — new table + indexes + trigger
+  - `042_dr021_reciprocal_trigger_fn.sql` — reciprocal detection function
+
+- ⚠️ Plugin updates (operator workload):
+  - `eywa-schema-pipeline` — Two-Purpose Schema Taxonomy emission logic + 7 forbidden schemas blocker (DR-019, ~4 hours dev)
+  - `eywa-acf-fields` — 12 page-level linking strategy fields + internal_links repeater (DR-021, ~3 hours)
+  - n8n flows — DR-021 anchor diversity check + orphan detection (~6 hours)
+
+- ⚠️ Brand snapshot block refresh at next Stage gate for brands currently on bible_version 3.18
 
 **v3.18 Changelog (2026-05-12) — Concept Entity Subtype Lock (DR-014 Locked):**
 

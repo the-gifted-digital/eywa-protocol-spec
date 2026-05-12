@@ -1,12 +1,23 @@
 # 📝 Content Templates — EYWA™ PROTOCOL
 
-> **Companion document to** EYWA Bible v3.16 + Schema Overview v1.12
+> **Companion document to** EYWA Bible v3.19 + Schema Overview v1.15
 > **Universal Content Production Standards across 13 brands × 6 verticals**
 
-**Version:** v1.4 (DRAFT 2026-05-12 — companion refs bumped to Bible v3.16 + Schema v1.12 per DR-026; T-ADS-X family added §3.4; backward compatible with v1.3)
-**Status:** Proposed — pending DR-020 lock (T1-T22 SEO templates) + DR-026 lock (T-ADS-X family)
-**Companion to:** Bible v3.16 + Schema Overview v1.12 + DECISION_RECORDS v1.10
-**Format:** Append-only with semantic versioning (v1.0 → v1.4 backward compatible)
+**Version:** v1.5 (LOCKED 2026-05-12 — T1-T22 SEO template family LOCKED per DR-020; T-ADS-X family Proposed per DR-026 still pending lock 2026-06-21)
+**Status:** **LOCKED 2026-05-12** for T1-T22 (Universal Content Template Standard per DR-020); T-ADS-X (DR-026) Proposed status retained until 2026-06-21 lock
+**Companion to:** Bible v3.19 + Schema Overview v1.15 + DECISION_RECORDS v1.13
+**Format:** Append-only with semantic versioning (v1.0 → v1.5 backward compatible)
+
+## v1.5 Changelog (2026-05-12) — Status Lock (DR-020 Locked)
+
+Operator-approved batch lock with DR-019/021/022. Content_Templates v1.4 already in field active use across portfolio planning; v1.5 formalizes the seal:
+
+- 🔒 **T1-T22 SEO template family LOCKED** — Universal Content Template Standard per DR-020
+- 🔄 Status header DRAFT → LOCKED
+- 🔄 Companion refs bumped: Bible v3.16 → v3.19, Schema v1.12 → v1.15, DR v1.10 → v1.13
+- 📌 T-ADS-X family (5 templates added in v1.4 §3.4) retains **Proposed** status per DR-026 — target lock 2026-06-21 post-VTH BioDent Ads pilot validation
+- 📌 Future template additions follow Section 12 governance (semantic versioning v1.5 → v1.6 → v2.0 path established)
+- 🎯 Editorial review checklist: `template_id` selection now MANDATORY step per Bible Part 23.4
 
 ## v1.4 Changelog (2026-05-12) — Ads Landing Page Family (DR-026 Proposed)
 

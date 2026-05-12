@@ -2,7 +2,7 @@
 
 > **Append-only architectural decision log.** Each record explains WHY a decision was made — not just WHAT.
 
-**Document Version:** 1.12  
+**Document Version:** 1.13  
 **Last Updated:** 2026-05-12  
 **Format:** Reverse chronological (newest first)
 
@@ -594,11 +594,38 @@ seo_entity_lab_test:
 
 ---
 
-### [DR-022] — Lean Phase B + Two-Layer Sitemap + Iterative Refinement (2026-05-11) 🌱
+### [DR-022] — Lean Phase B + Two-Layer Sitemap + Iterative Refinement (2026-05-11 → Locked 2026-05-12) 🔒🌳
 
-**Status:** Proposed (review 2026-06-07, paired with DR-019/020/021)
+**Status:** **Locked 2026-05-12** (early lock — field-tested across 5 brands; review board fast-tracked per operator approval; ≥99.99% Google-principle aligned per Bible Part 1.5 + industry consensus 2026)
+**Locked Bible Version:** v3.19 (Part 4 Two-Layer Sitemap pattern already authoritative; lock formalizes status)
+**Locked Schema Version:** v1.15 (no DDL change — uses existing 4 KW tables)
 **Bible Reference:** Part 4 (Sitemap Architecture), Part 23.1 (Citation), Part 25.6 (Brand Config)
 **Schema Reference:** No schema changes — uses existing 4 KW tables (`seo_x_ads_keywords_contextual_master`, `seo_x_ads_keywords_monthly_market_snapshot`, `seo_x_ads_keyword_serp_competitors`, `seo_x_ads_keywords_x_url_daily_logs`)
+
+**Lock Audit Trail (2026-05-12):**
+
+```yaml
+field_test_evidence:
+  - "Deezy Dental: Sitemap 764p + Entity 251 + Keywords 2,103 done using Layer 1/Layer 2 split"
+  - "Classy Clinic: Phase B+C+D complete (808p v18, 279 entities, 28 clusters) per Lean Phase B pattern"
+  - "VTH BioDent: Stage 1 done using brand-immune Layer 1 + volume-driven Layer 2"
+  - "SmileScape: Phase E in progress (414p WIP) per Two-Layer pattern"
+  - "Trin Wellness: Phase B keyword research + competitor scan + patient journey + citations all per DR-022 lean template"
+operator_approval:
+  date: 2026-05-12
+  rationale: |
+    Cross-brand field test depth (5 brands × 2-3 months) exceeds typical Proposed soak.
+    Two-Layer Sitemap principle is industry consensus 2026 (HubSpot, Ahrefs, SEMrush
+    confirm volume-immune topical authority Layer 1 + volume-driven Layer 2 pattern).
+    Brand-immune E-E-A-T topical authority IS Google's stated March 2026 Core Update
+    priority. Waiting until 2026-06-07 review provides marginal certainty at
+    meaningful operational cost (5 brands × 3 weeks stalled decision-making).
+follow_up_workload:
+  - "Companion DRs lock together (DR-019/020/021) — paired batch"
+  - "DR-016 Page Viability §4.14 amendment for Layer 1 exemption (already locked)"
+  - "Brand snapshot block refresh at next Stage gate for brands on bible_version 3.18"
+```
+
 
 **Context:**
 
@@ -794,11 +821,51 @@ content-plan/
 
 ---
 
-### [DR-021] — Internal Linking Architecture (HYBRID) (2026-05-10) 🌱
+### [DR-021] — Internal Linking Architecture (HYBRID) (2026-05-10 → Locked 2026-05-12) 🔒🔗
 
-**Status:** Proposed (review until 2026-06-07 — paired with DR-019/020 lock cycle)
+**Status:** **Locked 2026-05-12** (early lock — paired companion lock with DR-019/020/022; operator-approved per 99.99%-Google-aligned assessment)
+**Locked Bible Version:** v3.19 (Part 4 internal linking strategy + Part 13 authority signals already authoritative)
+**Locked Schema Version:** v1.15 (§5.3 NEW `seo_page_internal_links` table + 12 columns added to `seo_website_page_master`)
 **Bible Reference:** Part 4 (Sitemap), Part 13 (LLMO authority signals), Part 26 (Schema Pipeline)
-**Schema Reference:** v1.10 → v1.11 (adds 12 columns to `seo_website_page_master` + new table `seo_page_internal_links` ~22 cols)
+**Schema Reference:** v1.10 → v1.15 (adds 12 columns to `seo_website_page_master` + new table `seo_page_internal_links` ~22 cols)
+
+**Open Questions resolved at lock (per operator approval):**
+
+1. anchor_variant_type enum: **5 values** (exact/partial/branded/generic/topical) — add 'cta' later if practice surfaces need
+2. surrounding_text_snippet: **200 chars** (captures full sentence context)
+3. is_reciprocal: **auto-trigger** AFTER INSERT/UPDATE via DB function
+4. Status enum: **6 values** (planned/live/broken/deprecated/pending_review/archived)
+5. external_url scope: **keep separate** from seo_page_citations (citations are different model; external links here = nav external only)
+6. Authority Weight: **manual baseline + computed link_equity_score** (operator sets weight; system computes equity flow)
+7. Crawl depth: **nightly cron** + on-demand at Stage 1.5 Gate
+
+**Lock Audit Trail (2026-05-12):**
+
+```yaml
+field_validation:
+  - "Operator Notion DB pre-EYWA precedent ('Website & SEO Page Intelligent Master') — 6 brands' worth of field-tested fields ported"
+  - "Authority Weight + Link Equity Score + Orphan Risk Score = proven SEO concepts (industry consensus)"
+  - "Anchor diversity tracking aligns with Google Penguin avoidance"
+operator_approval:
+  date: 2026-05-12
+  rationale: |
+    Hybrid model (page-level strategy + junction-level per-edge fidelity) is the
+    only architecture that scales to 13 brands × ~500-5000 pages each. JSONB-only
+    cannot support bidirectional queries at scale; junction-only loses page-level
+    strategy fields. HYBRID was the considered choice from start.
+follow_up_workload:
+  - "Schema migration 040_dr021_add_page_linking_cols.sql (12 cols on page_master)"
+  - "Schema migration 041_dr021_create_seo_page_internal_links.sql (~22 cols)"
+  - "Schema migration 042_dr021_reciprocal_trigger_fn.sql"
+  - "eywa-acf-fields plugin updates (~3 hours dev)"
+  - "n8n flow updates (~6 hours)"
+  - "Initial population per brand (~2-3 hours per brand × 13 = 26-39 hours total)"
+  - "Stage 1.5 Gate validation pipeline reference seo_page_internal_links"
+deferred_to_follow_up_drs:
+  - "DR-028 candidate: External Authoritative Link Tracking (extend to_external_url usage)"
+  - "DR-029 candidate: Anchor Diversity Algorithm (formal scoring formula)"
+```
+
 **Phase 1 Reference:** New migrations `009_add_linking_strategy_cols.sql` + `010_create_seo_page_internal_links.sql` (Phase 1A.3)
 **Companion DRs:** DR-001 (Federation), DR-006 (Two-Phase Sync), DR-017 (content_brief), DR-019 (schema), DR-020 (templates)
 **Trigger:** Operator review surfaced gap — current spec has implicit linking (cluster + entities + sitemap hierarchy) but no per-edge fidelity (anchor text, section context, link type)
@@ -907,10 +974,11 @@ operator_notion_db_precedent:
 
 ---
 
-### [DR-020] — Universal Content Template Standard (2026-05-10) 🌱
+### [DR-020] — Universal Content Template Standard (2026-05-10 → Locked 2026-05-12) 🔒📝
 
-**Status:** Proposed (review until 2026-06-07 — paired with DR-019 lock cycle)
-**Bible Reference:** Part 6 (Content Standard) — references new companion file; Part 9 (Templates) — references new companion file
+**Status:** **Locked 2026-05-12** (early lock — Content_Templates v1.4 already field-active across portfolio planning; operator-approved batch lock with DR-019/021/022)
+**Locked Bible Version:** v3.19 (Part 6 + Part 9 reference Content_Templates_EYWA_v1_0.md — companion file gains LOCKED status)
+**Locked Companion File:** `Content_Templates_EYWA_v1_0.md` v1.5 — header status updated from "DRAFT — Proposed pending DR-020 lock" to "Locked 2026-05-12"
 **Schema Reference:** v1.10 — no DDL change for v1.0 of standard; future v1.1+ may add `template_id text` + `template_version jsonb` columns to page_master
 **Phase 1 Reference:** No migration required for spec lock; ACF field group updates per template (operational)
 **Companion File:** `Content_Templates_EYWA_v1_0.md` (in repo root with DRAFT status header — formal lock + Bible reference upon DR-020 approval)
@@ -1021,11 +1089,45 @@ Lock the following 4 sub-decisions together (final lock 2026-06-07):
 - Live audit reference: https://www.vthbiodent.com/mouth-biomapping/ (audited 2026-05-10 — visual EEAT good, structured EEAT 6 failures)
 - Sitemap gap analysis source: `/legacy/Sitemap Deezy/Deezy Dental/deezy-sitemap.md` (13 page types observed)
 
+**Lock Audit Trail (2026-05-12):**
+
+```yaml
+field_validation:
+  - "Content_Templates v1.4 already in field active use across portfolio planning"
+  - "T1-T22 templates referenced by VTH BioDent, SmileScape, Trin Wellness, Classy Clinic content briefs"
+  - "v1.4 added T-ADS-X family (DR-026) — T1-T22 baseline mature enough to extend"
+operator_approval:
+  date: 2026-05-12
+  rationale: |
+    Template family field-tested. Industry-validated patterns (HubSpot, Brafton,
+    Whitehat consensus 2026 per Bible §3.5). Block-composition + per-template
+    schema mapping + length standards are settled. Locking now seals existing
+    practice; future template additions follow Section 12 governance (semantic
+    versioning v1.4 → v1.5 → v2.0 path established).
+follow_up_workload:
+  - "Content_Templates_EYWA_v1_0.md header status: DRAFT → Locked 2026-05-12 (v1.5)"
+  - "Bible Part 6 + Part 9 cross-references updated to reflect locked status"
+  - "ACF field group registration per template (Phase 1F operational work)"
+  - "Editorial review checklist update — template_id selection becomes mandatory step"
+```
+
 ---
 
-### [DR-019] — Schema Strategy for Post-Rich-Results Era (2026-05-10) 🌱
+### [DR-019] — Schema Strategy for Post-Rich-Results Era (2026-05-10 → Locked 2026-05-12) 🔒🔬
 
-**Status:** Proposed (review until 2026-06-07 — final lock targeted after Google June 2026 effective date)
+**Status:** **Locked 2026-05-12** (early lock with **Insurance Review Clause** — operator-approved batch lock with DR-020/021/022; spec-level decisions all aligned with Google's publicly-announced position. Re-review trigger 2026-06-30 post-Google-effective-date for last-mile reconciliation.)
+**Locked Bible Version:** v3.19 (Part 26 schema strategy taxonomy; Part 9 Featured Snippet pattern; Part 20 KPI metrics — all formalized at lock)
+**Locked Schema Version:** v1.15 (no DDL change — strategy is spec + plugin layer)
+**Insurance Review Clause:** Re-review window 2026-06-30 (post-Google-effective-date). If Google's actual behavior at June 2026 effective date contradicts DR-019 framing (FAQPage/HowTo/MedicalCondition AI consumption behavior, AggregateRating min-5 review enforcement), file Category 2 amendment per Bible §15.2.
+**Open Questions resolved at lock:**
+
+1. Plugin enforcement timing: **warn-only first 2 weeks** then escalate to hard-block
+2. Existing pages cleanup: **opportunistic** (most brands don't use the 7 deprecated schemas anyway)
+3. Featured Snippet pattern enforcement: **WARN v1**, BLOCK for L4/L5 only after 6 months measurement
+4. AI citation tracking ETL: **accept lag** — DR specifies metric, ETL is Phase 3 task
+5. `QAPage` schema for single-question Knowledge L5 pages: **YES**
+6. SpeakableSpecification rollout: **only pages following Decision 2 Featured Snippet pattern**
+
 **Bible Reference:** Part 26 (Schema Pipeline) — major refactor pending lock; Part 9 (Templates) — new Featured Snippet section pending lock; Part 20 (KPIs) — metric replacement pending lock
 **Schema Reference:** v1.10 — **no DDL change** (decision is spec-level + plugin-level)
 **Phase 1 Reference:** Updates `eywa-schema-pipeline` plugin emission logic (no migration)
@@ -1114,6 +1216,36 @@ EYWA Bible v3.14 currently embeds FAQPage and HowTo across Part 6, 9, 25, 26 + L
 - External: Google March 2026 Core Update — 7 schema deprecations
 - Multi-source verification 2026-05-10: Search Engine Land, Schema App, ALM Corp, Frase.io, WebFX, Engagecoders, Stanventures, Wildnet, faqjsonld.com, Leapd, Stackmatix, Over The Top SEO (12+ sources confirmed convergent narrative)
 - Trigger: BIO DADDY infographic 2026-05-09 → operator request 2026-05-10 → multi-source verification → DR-019 draft
+
+**Lock Audit Trail (2026-05-12):**
+
+```yaml
+operator_approval:
+  date: 2026-05-12
+  rationale: |
+    99.99%-Google-aligned assessment confirmed by operator. EYWA's two-purpose
+    schema taxonomy (serp_rich_result vs ai_citation vs forbidden) matches
+    Google's communicated post-Rich-Results-era position. The 7 forbidden
+    schemas list is final per Google's March 2026 announcement. FAQPage/HowTo/
+    MedicalCondition AI consumption pattern (67% citation rate, 3.2x more
+    likely in AI Overviews) is empirically observed.
+  insurance_clause:
+    re_review_window: 2026-06-30 (post-Google-effective-date)
+    trigger: |
+      If Google's actual behavior at June 2026 effective date contradicts
+      DR-019 framing — file Category 2 amendment per Bible §15.2 (low cost,
+      ~1 hour work).
+    expected_outcome: "No amendment needed — DR-019 framing matches Google's
+                       publicly-announced direction. Re-review is insurance,
+                       not expected change."
+follow_up_workload:
+  - "Bible Part 26 schema strategy restructure (~3 hours dev)"
+  - "Bible Part 9 NEW Featured Snippet sub-section (~2 hours dev)"
+  - "Bible Part 20 KPI replacement (~1 hour dev)"
+  - "eywa-schema-pipeline plugin update (~4 hours dev)"
+  - "Audit 13 brand sites for 7 deprecated schemas in production (operator-driven, opportunistic)"
+  - "Re-review check 2026-06-30 (15-minute Google effective-date verification)"
+```
 
 ---
 
