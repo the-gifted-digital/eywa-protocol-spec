@@ -1,17 +1,46 @@
 # 📊 Schema Overview — EYWA™ PROTOCOL Database
 
-> **Companion document to** คัมภีร์ EYWA™ PROTOCOL v3.17  
-> **Reference for full DDL + column descriptions of all 37 tables + Ads Track Phase 0 column extensions + Edge Vocabulary v3.5 (12 edges)**
+> **Companion document to** คัมภีร์ EYWA™ PROTOCOL v3.18  
+> **Reference for full DDL + column descriptions of all 37 tables + Ads Track Phase 0 column extensions + Edge Vocabulary v3.5 (12 edges) + Concept Entity Subtype Lock**
 
-**Version:** v1.13  
+**Version:** v1.14  
 **Date:** 2026-05-12  
 **Status:** Day 1 Specification (production roadmap reference)  
-**Total Tables:** 37 organized into 9 groups + Group 10 (column additions only, no new tables in v1.13)  
-**Companion to:** Bible v3.17
+**Total Tables:** 37 organized into 9 groups + Group 10 (column additions only)  
+**Companion to:** Bible v3.18
 
 ---
 
 ## Changelog
+
+### v1.14 (2026-05-12) — Concept Entity Subtype Lock (DR-014 Locked) 🔒💠
+
+Schema catch-up per **DR-014 Locked 2026-05-12**. Adds CHECK constraint on `seo_entity_graph.entity_subtype` for concept-type entities. Trivial migration, fully backward compatible.
+
+**Headline Changes:**
+
+- 🔒 **§4.1 `seo_entity_graph`:**
+  - `entity_subtype` column annotation updated — when `entity_type='concept'`, MUST be `'framework'` | `'axis'` | `'general'` | NULL
+  - ➕ NEW CHECK constraint `chk_concept_subtype` — enforces controlled vocab for concept entities only; other entity types retain free-text
+  - Pre-v1.14 concept entities with free-text `entity_subtype` are PRESERVED (NULL-allowed clause keeps existing rows valid)
+
+- 📌 Companion Bible: Part §2.6.10 NEW — Concept Entity Subtype Controlled Vocabulary (full spec + decision flow + cluster pattern + schema emission rules)
+
+- ⚠️ **Migration files needed:**
+  - `034_dr014_add_concept_subtype_check.sql` — single ALTER TABLE ADD CONSTRAINT
+  - Runtime: < 1 minute on existing data (NULL-allowed clause prevents failures)
+  - Rollback: `ALTER TABLE seo_entity_graph DROP CONSTRAINT chk_concept_subtype;`
+
+- ✅ **Backward compatible** — existing rows preserved; only NEW concept entities at framework/axis level need explicit subtype declaration
+
+- 🎯 **Schema emission impact** (Part 26 pipeline):
+  - `framework` → `additionalType="ClinicalFramework"` (branded methodology signal)
+  - `axis` → `additionalType="BiologicalAxis"` (causal/relational chain signal)
+  - `general` → `schema:DefinedTerm` (default)
+
+- 🔄 Schema v1.13 → v1.14 ships paired with Bible v3.18 + DECISION_RECORDS v1.12 + EYWA_HANDOVER v1.12
+
+- 📣 DR-014 Status: **Locked 2026-05-12** — paired companion to DR-013 (Edge Vocabulary v3.5); cross-brand evidence confirmed ≥5 medical brands (framework + axis usage)
 
 ### v1.13 (2026-05-12) — Edge Vocabulary v3.5 Expansion (DR-013 Locked) 🔒🧬
 
@@ -1003,7 +1032,7 @@ ALTER TABLE seo_gbp_posts ADD CONSTRAINT check_event_dates CHECK (post_type != '
 | `canonical_names` | `jsonb DEFAULT '{}'` | **v1.6+** — Multilingual entity names per language. Schema: `{"en": "Sleep Apnea", "th": "ภาวะหยุดหายใจขณะหลับ", "ja": "睡眠時無呼吸"}`. **Used by EUG Layer 3a** 🆕 v1.9 |
 | `descriptions` | `jsonb DEFAULT '{}'` | **v1.6+** — Multilingual entity descriptions per language |
 | `brand_display_names` | `jsonb DEFAULT '{}'` | **v1.6+** — Brand-specific marketing names per language. Schema: `{"vth-biodent": {"th": "การรักษา TMJ", "en": "TMJ Programme"}}` |
-| `entity_subtype` | `text` | Optional subtype (e.g., 'autoimmune' for condition) |
+| `entity_subtype` | `text` | Optional subtype. **🆕 v1.14 (DR-014):** When `entity_type='concept'`, MUST be one of `'framework'` / `'axis'` / `'general'` / NULL (CHECK constraint enforced). Other entity types retain free-text (e.g., 'autoimmune' for condition). See Bible §2.6.10 |
 | `icd_10_code` | `text` | ICD-10 code (if condition/symptom) |
 | `icd_11_code` | `text` | ICD-11 code |
 | `snomed_ct_id` | `text` | SNOMED CT identifier |
@@ -1065,6 +1094,17 @@ CREATE TRIGGER refresh_display_name_entity
 CREATE TRIGGER normalize_slug_before_write
   BEFORE INSERT OR UPDATE OF entity_slug ON seo_entity_graph
   FOR EACH ROW EXECUTE FUNCTION trg_normalize_entity_slug();
+
+-- 🆕 v1.14 (DR-014) — Concept entity_subtype controlled vocabulary
+ALTER TABLE seo_entity_graph
+  ADD CONSTRAINT chk_concept_subtype CHECK (
+    entity_type != 'concept'
+    OR entity_subtype IS NULL
+    OR entity_subtype IN ('framework', 'axis', 'general')
+  );
+-- Backward compat: NULL allowed; pre-v1.14 free-text rows preserved (NOT auto-converted)
+-- Schema emission per subtype: framework → additionalType="ClinicalFramework"; axis → additionalType="BiologicalAxis"; general → schema:DefinedTerm
+-- See Bible §2.6.10 for full spec
 ```
 
 #### Used By
@@ -4054,9 +4094,9 @@ v2_schema_additions_when_activated:
 
 ---
 
-**END OF DOCUMENT — Schema_Overview EYWA v1.13**
+**END OF DOCUMENT — Schema_Overview EYWA v1.14**
 
 *🌿 EYWA™ PROTOCOL Database Architecture • May 2026*  
-*Companion to คัมภีร์ EYWA™ PROTOCOL v3.17*  
+*Companion to คัมภีร์ EYWA™ PROTOCOL v3.18*  
 *EYWA™ is a registered service mark — Class 35+42, DIP Thailand (filed 2026-04-20)*  
-*Source of Truth: Bible Part 5 (Architecture) + Bible Part 29 (Ads Track) + Bible Part 2.7 (12-Edge Vocabulary) + this document (Reference)*
+*Source of Truth: Bible Part 5 (Architecture) + Bible Part 29 (Ads Track) + Bible Part 2.7 (12-Edge Vocabulary) + Bible Part 2.6.10 (Concept Subtype Lock) + this document (Reference)*

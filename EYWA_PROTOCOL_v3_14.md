@@ -1,7 +1,7 @@
 # 📖 คัมภีร์ EYWA™ PROTOCOL
 ## The Universal Knowledge Graph SEO Specification for the AI Era
 
-**Version:** 3.17  
+**Version:** 3.18  
 **Last Updated:** 2026-05-12  
 **Trademark:** EYWA™ (Class 35+42, DIP Thailand, filed 2026-04-20)  
 **Created by:** The Gifted Digital Marketing Co., Ltd.  
@@ -2241,6 +2241,159 @@ triggers_partial_rerun:
 | Relationship Edge Vocabulary | Part 2.7 |
 | Schema mapping (Step 3 output → schema_org_type) | Part 26.3 |
 | Notion workspace bootstrap | Part 18.6 |
+| Concept entity_subtype controlled vocabulary | Section 2.6.10 🆕 v3.5 |
+
+### 2.6.10 Concept Entity Subtype — Controlled Vocabulary 🆕 v3.5 (DR-014 Locked 2026-05-12)
+
+> **Why this exists:** Pre-v3.5, `entity_subtype` was free-text for all entity types. Concept entities (`entity_type='concept'`) representing **branded methodologies** or **causal/relational dimensions** had no controlled labeling — operators wrote `methodology`, `paradigm`, `system`, `framework`, etc. inconsistently. DR-014 formalizes 3 controlled values for the `concept` entity_type only. Other entity types retain free-text `entity_subtype` (no change).
+
+#### The 3 Locked Values
+
+```yaml
+framework:
+  description: |
+    Overarching methodology / paradigm / clinical protocol that ORGANIZES other concepts.
+    Typically becomes parent_of multiple axes or member concepts.
+  schema_org_emission: 'additionalType="ClinicalFramework"'
+  cluster_role: "Hub — parent_of multiple axes/clusters"
+  cross_brand_examples:
+    vth_biodent: "pncl-medicine" (Personalized Neural-Cognitive Lifestyle Medicine)
+    vth_biodent: "mouth-bio-mapping" (BioMapping diagnostic framework)
+    vth_biodental_wellness: "biodental-longevity-protocol"
+    vth_biodental_wellness: "ceramic-first-implant-pathway"
+    trin_wellness: "root-cause-medicine"
+    classy_clinic: "classy-design-protocol", "classy-face-blueprint"
+    relaxia_dental: "fear-free-sleep-dentistry"
+  identification_test: "Does this concept have its own sub-protocols / steps / phases / member concepts?"
+
+axis:
+  description: |
+    Causal / relational dimension that spans multiple body systems or domains.
+    Typically part_of frameworks; contains member entities via part_of edge.
+  schema_org_emission: 'additionalType="BiologicalAxis"'
+  cluster_role: "Spoke — part_of frameworks; contains member conditions/anatomy/concepts"
+  cross_brand_examples:
+    vth_biodent: "bjgml-axis" (Bio-Joint-Gut-Mouth-Lung)
+    vth_biodental_wellness: "oral-systemic-axis" (mouth-body inflammation)
+    trin_wellness: "vascular-sexual-axis" (ED-cardiovascular link, DR-TW-004 pillar)
+    trin_wellness: "hpg-axis" (hypothalamic-pituitary-gonadal hormone cascade)
+    future_vital_mind: "gut-brain-axis"
+    future_vital_sleep: "neuroinflammation-axis"
+  identification_test: "Does this concept describe a directional/relational chain across systems?"
+
+general:
+  description: "Concept that is neither framework nor axis — single idea/principle/term"
+  schema_org_emission: 'schema:DefinedTerm (default)'
+  cluster_role: "Leaf — typically related_to other concepts; no organizing hierarchy"
+  examples:
+    - "Periodontal pocket depth" (concept term)
+    - "Anti-aging" (umbrella term, generic)
+    - "Mindfulness" (lifestyle concept)
+  identification_test: "Does this concept stand alone as a single idea, NOT organizing other concepts?"
+
+NULL (backward compat):
+  meaning: "Pre-v3.5 concept entity OR concept that doesn't need categorization"
+  policy: "Allowed — DR-014 does NOT force migration of existing rows"
+  recommendation: "Promote to framework/axis/general on next EGP touch when convenient"
+```
+
+#### Decision Flow for Concept Entity Creation
+
+```yaml
+when_creating_concept_entity:
+  step_1: 
+    question: "Does this concept ORGANIZE other concepts (has sub-steps, phases, members)?"
+    yes: → entity_subtype = 'framework'
+    no: → step_2
+  
+  step_2:
+    question: "Does this concept describe a CAUSAL/RELATIONAL chain across systems/domains?"
+    yes: → entity_subtype = 'axis'
+    no: → step_3
+  
+  step_3:
+    question: "Is this a standalone idea/term?"
+    yes: → entity_subtype = 'general'
+    unclear: → entity_subtype = NULL (defer categorization)
+```
+
+#### Cluster Relationship Pattern (works with DR-013 edges)
+
+```yaml
+typical_framework_axis_relationship:
+  framework_entity: "biodental-longevity-protocol" (entity_subtype='framework')
+    parent_of:
+      - "oral-systemic-axis" (entity_subtype='axis')
+      - "ceramic-first-implant-pathway" (entity_subtype='framework' — nested sub-framework)
+    contains:
+      - "smart-plus" (entity_subtype='framework' — methodology sub-step)
+      - "oral-inflammation-index" (entity_subtype='framework' — proprietary diagnostic)
+  
+  axis_entity: "oral-systemic-axis" (entity_subtype='axis')
+    part_of: "biodental-longevity-protocol"
+    contains (via part_of edges):
+      - "periodontal-disease" (entity_type='condition')
+      - "systemic-inflammation" (entity_type='concept', subtype='general')
+      - "hscrp-biomarker" (entity_type='biomarker')
+    causes (via DR-013 edge): 
+      - "Periodontal disease → causes → Cardiovascular disease" (developmental)
+```
+
+#### Migration & Backward Compatibility
+
+```yaml
+existing_concept_entities:
+  policy: "entity_subtype remains as-is (NULL or free-text). NO forced migration."
+  upgrade_path: "Operator promotes to framework/axis/general on next EGP touch"
+
+new_concept_entities (post-v3.5):
+  policy: "MUST use framework | axis | general | NULL — CHECK constraint enforced"
+  default: NULL (operator declares explicitly)
+
+audit_query:
+  purpose: "Find concept entities with free-text entity_subtype values for cleanup"
+  sql: |
+    SELECT fingerprint, entity_name, entity_subtype
+    FROM seo_entity_graph
+    WHERE entity_type = 'concept'
+      AND entity_subtype IS NOT NULL
+      AND entity_subtype NOT IN ('framework', 'axis', 'general');
+```
+
+#### Schema Generation Impact (Part 26)
+
+```yaml
+emission_rules_per_subtype:
+  framework:
+    json_ld_emit:
+      "@type": "DefinedTerm"
+      "additionalType": "ClinicalFramework"
+      "inDefinedTermSet": "https://[brand]/methodology"
+    seo_benefit: "Branded methodology gets schema:additionalType signal — AI engines + Google Health Knowledge Panel weight"
+  
+  axis:
+    json_ld_emit:
+      "@type": "DefinedTerm"
+      "additionalType": "BiologicalAxis"
+      "subjectOf": [linked member entities]
+    seo_benefit: "Causal axis becomes queryable as structured entity"
+  
+  general:
+    json_ld_emit:
+      "@type": "DefinedTerm"
+    seo_benefit: "Standard term markup (no upgrade vs pre-v3.5)"
+```
+
+#### Cross-References
+
+| Topic | See Also |
+|-------|----------|
+| Entity Polymorphism (storage) | Part 2.5 |
+| Entity Genesis Protocol (Step 4 subtype population) | Part 2.6.2 |
+| Relationship Edges (parent_of/contains/part_of) | Part 2.7 |
+| Edge Vocabulary v3.5 (causes/contraindicates) | Part 2.7.2 + DR-013 |
+| Schema Generation emission rules | Part 26.3 + 26.4 |
+| Decision rationale | DECISION_RECORDS DR-014 |
 
 ---
 
@@ -26507,10 +26660,10 @@ add_action('save_post', function ($post_id) {
 
 ---
 
-**END OF DOCUMENT v3.17 — คัมภีร์ EYWA™ PROTOCOL**
+**END OF DOCUMENT v3.18 — คัมภีร์ EYWA™ PROTOCOL**
 
 
-*🌿 EYWA™ PROTOCOL Bible v3.17 • May 2026*
+*🌿 EYWA™ PROTOCOL Bible v3.18 • May 2026*
 *The Universal Knowledge Graph SEO Specification for the AI Era*
 *Multi-vertical, multi-brand, multi-specialty, multi-lingual, multi-location, AI-future-ready*
 
@@ -26519,6 +26672,19 @@ add_action('save_post', function ($post_id) {
 *Implementation: Notion + Supabase + n8n + WordPress (loose-coupled via automation)*
 
 **Service Suite:** Audit · Graph · Stack · Vital · Forge · Score · Atlas
+
+**v3.18 Changelog (2026-05-12) — Concept Entity Subtype Lock (DR-014 Locked):**
+
+- ➕ **§2.6.10 NEW — Concept Entity Subtype Controlled Vocabulary** — locks 3 values (`framework` | `axis` | `general`) for `entity_subtype` when `entity_type='concept'`. NULL allowed for backward compat.
+- 🎯 `framework` emits `additionalType="ClinicalFramework"` — for branded methodologies (PNCL-Medicine, Biodental Longevity Protocol™, Classy Design Protocol™, Root-Cause Medicine™)
+- 🎯 `axis` emits `additionalType="BiologicalAxis"` — for causal/relational chains (BJGML axis, oral-systemic axis, vascular-sexual axis, HPG axis)
+- 🎯 `general` emits `schema:DefinedTerm` (default) — for standalone concept terms
+- 🔄 Decision flow + cluster relationship pattern documented (works with DR-013 paired edges)
+- 🔒 DR-014 **Locked 2026-05-12** — paired companion to DR-013; cross-brand evidence confirmed across ≥5 medical brands (framework + axis usage)
+- 🔄 Bible v3.17 → v3.18 ships paired with Schema v1.13 → v1.14 + DECISION_RECORDS v1.11 → v1.12 + EYWA_HANDOVER v1.11 → v1.12
+- ⚠️ Migration files needed:
+  - `034_dr014_add_concept_subtype_check.sql` — CHECK constraint on seo_entity_graph
+- ✅ Backward compatible — existing rows preserved (NULL or free-text allowed); only NEW concept entities at framework/axis level required to declare subtype
 
 **v3.17 Changelog (2026-05-12) — Edge Vocabulary v3.5 Expansion (DR-013 Locked):**
 

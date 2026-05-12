@@ -2,7 +2,7 @@
 
 > **Append-only architectural decision log.** Each record explains WHY a decision was made — not just WHAT.
 
-**Document Version:** 1.11  
+**Document Version:** 1.12  
 **Last Updated:** 2026-05-12  
 **Format:** Reverse chronological (newest first)
 
@@ -1423,12 +1423,14 @@ emergency_dental:
 
 ---
 
-### [DR-014] — Concept Entity Subtype Lock (framework + axis) (2026-05-09) 🆕
+### [DR-014] — Concept Entity Subtype Lock (framework + axis) (2026-05-09 → Locked 2026-05-12) 🔒💠
 
-**Status:** Proposed (review until 2026-05-20, locks via Schema Review Board 2026-05-15)  
-**Bible Reference:** Future v3.14 §2.6 (entity_subtype controlled vocabulary)  
-**Schema Reference:** Future v1.10 §4.1 (CHECK constraint on entity_subtype for concept type)  
-**Companion DR:** DR-013 (Edge Vocabulary v3.5 Expansion)
+**Status:** **Locked 2026-05-12** (paired companion lock with DR-013; cross-brand evidence ≥5 medical brands)  
+**Locked Bible Version:** v3.18 (Part §2.6.10 NEW — Concept Entity Subtype Controlled Vocabulary)  
+**Locked Schema Version:** v1.14 (§4.1 seo_entity_graph — CHECK chk_concept_subtype)  
+**Bible Reference:** v3.18 §2.6.10 (entity_subtype controlled vocabulary for concept type)  
+**Schema Reference:** v1.14 §4.1 (CHECK constraint on entity_subtype for concept type)  
+**Companion DR:** DR-013 (Edge Vocabulary v3.5 Expansion — Locked 2026-05-12)
 
 **Context:**
 
@@ -1538,11 +1540,52 @@ phase_1B_addition:
 
 **References:**
 - Stream B work order (2026-05-09)
-- DR-013 (companion — Edge Vocabulary v3.5 Expansion)
+- DR-013 (companion — Edge Vocabulary v3.5 Expansion — Locked 2026-05-12)
 - DR-012 (governance: 4 criteria + 2-week review)
-- Bible v3.13 §2.5 (Entity Polymorphism — 15 entity_types)
-- Bible v3.13 §2.6 (Entity Genesis Protocol — subtype population)
-- Schema v1.9 §4.1 (entity_graph entity_subtype field)
+- Bible v3.18 §2.5 (Entity Polymorphism — 15 entity_types)
+- Bible v3.18 §2.6 (Entity Genesis Protocol — subtype population)
+- Bible v3.18 §2.6.10 NEW (Concept Entity Subtype Controlled Vocabulary — full spec)
+- Schema v1.14 §4.1 (entity_graph entity_subtype field + chk_concept_subtype CHECK constraint)
+
+**Audit Trail:**
+
+```yaml
+proposal_history:
+  
+  2026_05_09:
+    event: "DR-014 set to Proposed alongside DR-013 (Stream B work order)"
+    next_action: "Cross-brand canvass for C2 evidence by 2026-05-13"
+  
+  2026_05_12_lock:
+    event: "Operator-approved early lock — paired companion lock with DR-013; cross-brand evidence threshold exceeded"
+    cross_brand_framework_evidence:
+      - "VTH BioDent: pncl-medicine, mouth-bio-mapping"
+      - "VTH Biodental Wellness: biodental-longevity-protocol, ceramic-first-implant-pathway, smart-plus, oral-inflammation-index"
+      - "Trin Wellness: root-cause-medicine"
+      - "Classy Clinic: classy-design-protocol, classy-face-blueprint"
+      - "Relaxia Dental: fear-free-sleep-dentistry"
+    cross_brand_axis_evidence:
+      - "VTH BioDent: bjgml-axis (Bio-Joint-Gut-Mouth-Lung)"
+      - "VTH Biodental Wellness: oral-systemic-axis"
+      - "Trin Wellness: vascular-sexual-axis (DR-TW-004 pillar), hpg-axis (hormone cascade)"
+      - "Future Vital Mind/Sleep brands: gut-brain-axis, neuroinflammation-axis"
+    verification:
+      C1_three_real_cases: "✅ Passed — ≥10 framework cases + ≥6 axis cases documented"
+      C2_cross_brand: "✅ Passed — applies to ≥5 medical brands"
+      C3_schema_mapping: "✅ Passed — additionalType=ClinicalFramework + BiologicalAxis"
+      C4_orthogonal: "✅ Passed — no existing entity_subtype value covers organizational concepts"
+    actor: Naphannop S. (operator approval)
+    artifact_updated:
+      - DECISION_RECORDS.md v1.11 → v1.12
+      - EYWA_PROTOCOL Bible v3.17 → v3.18 (NEW §2.6.10)
+      - Schema_Overview v1.13 → v1.14 (§4.1 chk_concept_subtype CHECK)
+      - EYWA_HANDOVER v1.11 → v1.12
+    deferred_to_operator_workload:
+      - "Phase 1B migration 034_dr014_add_concept_subtype_check.sql"
+      - "eywa-schema-pipeline plugin updates (emission rules per subtype)"
+      - "eywa-acf-fields radio control (framework/axis/general) for concept entities"
+      - "Audit query run to flag pre-v1.14 concept rows with non-standard entity_subtype values"
+```
 
 ---
 

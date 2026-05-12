@@ -3,10 +3,27 @@
 > **For Claude (and any AI assistant) working on a new brand within the EYWA portfolio.**  
 > **Read this file first, every new project, every new session.**
 
-**Document Version:** 1.11  
+**Document Version:** 1.12  
 **Last Updated:** 2026-05-12  
-**Companion to:** EYWA Bible v3.17 + Schema Overview v1.13 + DECISION_RECORDS v1.11 + Content_Templates_EYWA_v1_0.md v1.4 (DRAFT)  
+**Companion to:** EYWA Bible v3.18 + Schema Overview v1.14 + DECISION_RECORDS v1.12 + Content_Templates_EYWA_v1_0.md v1.4 (DRAFT)  
 **Created by:** The Gifted Digital Marketing Co., Ltd.
+
+---
+
+## 🆕 v1.12 Note (2026-05-12) — Concept Entity Subtype LOCKED (DR-014)
+
+Bible v3.18 + Schema v1.14 ship with **DR-014 Locked** — paired companion to DR-013. When creating new concept entities (`entity_type='concept'`), `entity_subtype` must now be one of:
+
+- **`framework`** — branded methodology / paradigm / clinical protocol (e.g., PNCL-Medicine, Biodental Longevity Protocol™, Classy Design Protocol™, Root-Cause Medicine™). Emits `additionalType="ClinicalFramework"`.
+- **`axis`** — causal/relational dimension across systems (e.g., BJGML axis, oral-systemic axis, vascular-sexual axis, HPG axis). Emits `additionalType="BiologicalAxis"`.
+- **`general`** — standalone concept term (default fallback). Emits `schema:DefinedTerm`.
+- **`NULL`** — backward compat (existing rows preserved; operator can promote later)
+
+**Decision flow:** Does the concept ORGANIZE other concepts? → `framework`. Does it describe a CAUSAL chain across systems? → `axis`. Otherwise → `general` or NULL.
+
+**Pairs with DR-013:** Framework concepts naturally become `parent_of` axes (via Edge 1); axes naturally contain member entities via `part_of` (Edge 7); causal chains across axis members use `causes` (Edge 11) and `contraindicates` (Edge 12). Full cluster pattern in Bible §2.6.10.
+
+**Existing brand work impact:** Brands mid-Stage 1 (Trin Wellness, SmileScape, VTH Biodental Wellness etc.) gain cleaner branded-methodology + axis schema markup at next entity graph revision. No retroactive backfill required.
 
 ---
 
