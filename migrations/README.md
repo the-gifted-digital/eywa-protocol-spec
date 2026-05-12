@@ -58,6 +58,19 @@ Phase 1A baseline complete: **39 EYWA tables across 9 groups** (per Schema v1.15
 21. `eywa_w7_02_governance_group8.sql` — `seo_data_quality_metrics`, `seo_schema_changes`
     *(Group 6 backlinks `seo_backlinks_data` + `seo_backlinks_links` — already in production from earlier work)*
 
+### Wave 8 — DR-008 brands Two-Column Identity (2 migrations)
+22. `eywa_w8_01_dr008_brands_two_column_identity_setup.sql` — ADD 3 cols (`fingerprint`, `fingerprint_display_name`, `brand_slug`) + 5 helper functions:
+    - `generate_ulid16()` — 16-char hex identifier
+    - `slugify(text)` — kebab-case slug from arbitrary text
+    - `fn_set_fingerprint_brand()` — INSERT trigger fn (auto-set fingerprint/slug/display_name)
+    - `fn_prevent_fingerprint_change()` — UPDATE trigger fn (immutability enforcement)
+    - `fn_refresh_display_name_brand()` — UPDATE trigger fn (auto-refresh on brand_name/slug change)
+    - Backfill of 15 existing brand rows via `execute_sql` (between migrations 01 and 02)
+23. `eywa_w8_02_dr008_brands_finalize.sql` — NOT NULL + UNIQUE + CHECK constraints + 3 triggers attached + 2 indexes
+    - Verification tests passed: ✅ fingerprint immutability rejected forbidden UPDATE; ✅ brand_name change → brand_slug + display_name auto-refresh; ✅ all 15 backfilled rows have valid `brnd_{16hex}` format
+
+**Note on PK migration:** brands.brand_name retains its PK status for backwards compatibility with legacy FK references. The `id` column has UNIQUE constraint (from Wave 3 preflight), and `fingerprint` now has UNIQUE constraint. Future migration could DROP PK on brand_name + ADD PK on id when legacy FK references have all migrated.
+
 ## Final State
 
 ```
@@ -93,10 +106,11 @@ GENERATED columns:           5 (nap_match_score, has_inconsistency, engagement_r
 - ⚠️ `wrappers_fdw_stats` RLS disabled — **Supabase system table managed by `wrappers` extension**. Enabling RLS here may break Foreign Data Wrapper functionality. Recommend leaving as-is unless wrappers usage stops.
 
 ### Schema Refinements (Future)
-- **brands DR-008 full migration** — currently PK is on `brand_name` (legacy). Spec says PK should move to `id` (uuid) + add `fingerprint`, `brand_slug`, `fingerprint_display_name`. Deferred from this batch.
+- ~~**brands DR-008 full migration**~~ ✅ Completed in Wave 8 (2026-05-12). PK still on `brand_name` for legacy FK compat; full PK migration to `id` deferred until legacy FKs migrated.
 - **HNSW index on seo_entity_embeddings** — defer until bulk-loaded with embeddings.
 - **Partition strategy for seo_local_rankings** — when growth approaches >10M rows, partition by `snapshot_at` (monthly), similar to daily_logs.
 - **seo_x_ads_keywords_x_url_daily_logs schema audit** — table exists with 0 rows in main + 90k in `logs_2026` partition. Verify columns match Schema v1.15 §7.1 (~130 cols spec).
+- **DR-008 propagation to other tables** — Apply Two-Column Identity pattern (fingerprint+display_name+slug) to remaining tables that don't yet have it: `seo_entity_graph` uses legacy `entity_fingerprint` format (slug-based, e.g., `entity:slug`); should migrate to `ent_{ULID16}` per spec. Same for `seo_website_page_master.page_fingerprint`.
 
 ### Notion Sync (n8n)
 - Tables in N↔S sync pattern (per Schema v1.15 §2 sync direction) need n8n flows wired up:
