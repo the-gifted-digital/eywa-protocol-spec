@@ -1,7 +1,7 @@
 # 📖 คัมภีร์ EYWA™ PROTOCOL
 ## The Universal Knowledge Graph SEO Specification for the AI Era
 
-**Version:** 3.15  
+**Version:** 3.16  
 **Last Updated:** 2026-05-12  
 **Trademark:** EYWA™ (Class 35+42, DIP Thailand, filed 2026-04-20)  
 **Created by:** The Gifted Digital Marketing Co., Ltd.  
@@ -24142,6 +24142,336 @@ per_brand_multilingual_costs:
 
 ---
 
+# PART 29: Ads Landing Page Track 🆕 v3.16
+
+> **Per DR-026 (Proposed 2026-05-12)** — parallel implementation track to SEO. Same dimensional backbone (`seo_page_master` + `seo_x_ads_keywords_contextual_master` + `seo_entity_graph`); additive columns; dedicated template family `T-ADS-X`.
+>
+> **Companion DRs:** DR-026 (this Part), DR-027 (Future Phase 1: `seo_campaigns` Universal Master)
+> **Companion Schema:** v1.12 (additive columns; no new tables in Phase 0)
+> **Companion Templates:** v1.4 (T-ADS-1 through T-ADS-5)
+
+## 29.1 Why Ads-LP Is a Parallel Track (not a substitute for SEO)
+
+EYWA's SEO track (Parts 1-28) optimizes for organic discoverability, topical authority, E-E-A-T signals, and AI citation. The Ads track optimizes for **paid acquisition conversion** — a different objective with different page-level constraints.
+
+| Dimension | SEO Track (T1-T22) | Ads Track (T-ADS-1 to T-ADS-5) |
+|-----------|--------------------|---------------------------------|
+| **Goal** | Rank + authority + topical depth + AI citation | Maximize CVR from paid click |
+| **Audience** | Cold/warm — researching | Hot — clicked Ad with specific promise |
+| **Structure** | Hub-spoke, internal links, schema depth | Single CTA, scannable, focused offer |
+| **Content depth** | 1,500-4,000+ words (per Part 19/Bible §6) | 200-900 words (per template) |
+| **CTA pattern** | Multiple soft CTAs (subscribe, read more, related) | ONE primary CTA, repeated 2-3x |
+| **Navigation** | Full site nav | Stripped or minimal nav |
+| **Index policy** | indexed permanent | `noindex_lp` default (configurable) |
+| **Quality Score** | not applicable | critical (Google Ads CPC driver) |
+| **Schema markup** | MedicalProcedure / FAQPage / Article / etc. | Organization + Offer + LocalBusiness |
+| **Lifecycle** | long-lived, refresh-via-DR-022 cycle | campaign-bound, often shorter-lived |
+
+**Some pages can do both** — see §29.6 Dual-Use Eligibility Criteria.
+
+## 29.2 Page Purpose Taxonomy
+
+DR-026 introduces the `page_purpose` enum on `seo_page_master`:
+
+```yaml
+page_purpose:
+  seo_organic:
+    description: Pure SEO page — indexed, hub-spoke, topical authority
+    template_family: T1-T22
+    index_directive: index
+    nav_treatment: full site nav
+    cta_count: multiple soft
+
+  ads_lp:
+    description: Pure Ads landing page — conversion-optimized
+    template_family: T-ADS-1 to T-ADS-5
+    index_directive: noindex_lp (default; operator can override)
+    nav_treatment: stripped or minimal
+    cta_count: ONE primary, repeated 2-3x
+
+  dual_use:
+    description: Page serves both SEO + Ads
+    template_family: hybrid (see §29.6)
+    index_directive: index
+    nav_treatment: full site nav
+    cta_count: dominant primary + supporting SEO depth
+    eligibility_gate: §29.6 (6 criteria)
+```
+
+## 29.3 URL Convention
+
+```yaml
+seo_organic: /{vertical-slug}/{topic-slug}/   # Part 4 convention unchanged
+ads_lp:      /lp/{campaign-or-offer-slug}/    # NEW — `/lp/` marks Ads track
+dual_use:    existing SEO URL (no change — flagged via page_purpose)
+```
+
+**Why `/lp/` prefix:**
+
+- Visual signal to operators + legal + analytics teams
+- Easy regex for Quality Score audits + robots.txt directives
+- Report segmentation (organic traffic vs paid traffic by URL pattern)
+- Optional bulk `noindex` via single rule when needed
+
+**Naming convention for `{campaign-or-offer-slug}`:** kebab-case, brand-scoped enough to be self-explanatory, with optional date suffix for time-bound offers.
+
+```
+/lp/dental-implant-free-consult/             ✅ generic offer LP
+/lp/blue-diamond-29900-may-2026/             ✅ time-bound promo
+/lp/men-vitality-package-bangkok/             ✅ geo-targeted LP
+/lp/lp-1/                                    ❌ non-descriptive
+/lp/test-page-final-v2/                       ❌ temporary scratchpad name
+```
+
+## 29.4 Index Directive
+
+`index_directive` enum on `seo_page_master`:
+
+| Value | `<meta robots>` | Sitemap.xml | Use case |
+|-------|----------------|------------|----------|
+| `index` | `index, follow` | included | Default for `seo_organic` + `dual_use` |
+| `noindex_lp` | `noindex, follow` | EXCLUDED | Default for `ads_lp` — link equity flows |
+| `noindex_nofollow` | `noindex, nofollow` | EXCLUDED | A/B variants, ephemeral test pages |
+| `dual` | `index, follow` | included | Rare — `dual_use` confirmed dual-serving |
+
+**Default policy:** `ads_lp` pages with `index_directive=noindex_lp` are EXCLUDED from XML sitemap. Operator can override for evergreen LPs that should compete in organic SERP as well.
+
+## 29.5 Conversion Event Taxonomy
+
+`conversion_event_primary` enum + `conversion_event_secondary text[]`:
+
+```yaml
+lead_form:    form submission (incl. Typeform, native, etc.)
+call_click:   phone CTA tap
+line_follow:  LINE Add Friend / chat-initiate
+booking:      appointment booking submitted
+download:     lead magnet download (T-ADS-5)
+package_view: pricing/package PDF view (high-intent intermediate)
+add_to_cart:  e-commerce (rare in EYWA portfolio)
+```
+
+Maps to:
+- **Google Ads Conversion Actions** (Primary + Secondary classification)
+- **Meta Pixel Standard Events** (Lead, Contact, Subscribe, CompleteRegistration, Purchase)
+- **GA4 events** (`generate_lead`, `contact`, `add_to_cart`, custom names per brand)
+
+Every `ads_lp` page MUST declare `conversion_event_primary` at page-master row creation. `conversion_event_secondary` is optional (max 3 — discourage over-tracking).
+
+## 29.6 Dual-Use Eligibility Criteria
+
+A page can be marked `page_purpose='dual_use'` ONLY when ALL 6 criteria are satisfied:
+
+| # | Criterion | Measurement |
+|---|-----------|-------------|
+| 1 | **Intent match** | Page targets commercial/transactional KW (not informational) — see `ad_intent_score ≥ 7` per §29.7 |
+| 2 | **CTA prominence** | Primary CTA visible above mobile fold + repeated at 1-2 mid-page positions |
+| 3 | **Conversion infra** | Conversion tracking pixel/event installed; all CTAs wired (form/phone/LINE) to GTM |
+| 4 | **CWV pass** | LCP < 2.5s mobile, CLS < 0.1, INP < 200ms (Part 19 standards) |
+| 5 | **Content focus** | Single dominant offer — NOT a hub page listing 10 services |
+| 6 | **Quality Score viability** | Google Ads QS ≥ 7 after 2-week stabilization; if < 7 for 4+ weeks → demote to `seo_organic`, build parallel `/lp/` version |
+
+Operator MUST document the dual-use justification in `viability_assessment` column (Part 4.14 column reused) at the time of marking. Demotion (criterion 6 fails) is operator workflow, not auto.
+
+## 29.7 Keyword Schema Extensions (per DR-026)
+
+Additive columns on `seo_x_ads_keywords_contextual_master`:
+
+```yaml
+seo_active boolean default true
+  description: Keyword is in SEO content strategy
+
+ad_active boolean default false
+  description: Keyword is in active Ads bidding
+
+ad_intent_score smallint
+  range: 1-10
+  semantic:
+    10 = transactional/commercial — buyer-ready
+    7  = strong commercial intent (research-with-purchase-mode)
+    5  = mixed informational/commercial
+    3  = informational research
+    1  = pure educational, no commercial intent
+  default: NULL (operator scores during KW research; required before ad_active=true)
+
+ad_match_type_preferred enum (exact | phrase | broad | broad_modified)
+  description: Planning-time preference; actual platform match enforced at campaign level
+
+ad_landing_page_fp text nullable
+  description: FK → seo_page_master.fingerprint — the LP intended for this KW (Phase 0; Phase 1 moves to seo_campaign_keywords M2M)
+
+ad_priority_tier enum (t1 | t2 | t3 | none)
+  semantic:
+    t1 = always-on hero KW (top budget priority)
+    t2 = supporting (sustained budget)
+    t3 = exploratory / testing
+    none = SEO-only (no ad)
+```
+
+**Dual-flag pattern:** A keyword can have `seo_active=true` AND `ad_active=true` simultaneously — that is the canonical "shared use" case. `seo_active` should default true (most KWs in EYWA are SEO-led). `ad_active` defaults false (Ads is opt-in per KW).
+
+## 29.8 Page Schema Extensions (per DR-026)
+
+Additive columns on `seo_page_master`:
+
+```yaml
+page_purpose enum (seo_organic | ads_lp | dual_use)
+  default: seo_organic
+
+ads_template_id text nullable
+  values: T-ADS-1 | T-ADS-2 | T-ADS-3 | T-ADS-4 | T-ADS-5 | T-DUAL-{N} (future hybrid)
+  required_when: page_purpose IN (ads_lp, dual_use)
+
+index_directive enum (index | noindex_lp | noindex_nofollow | dual)
+  default: index
+
+conversion_event_primary enum (lead_form | call_click | line_follow | booking | download | package_view | add_to_cart)
+  required_when: page_purpose IN (ads_lp, dual_use)
+
+conversion_event_secondary text[] nullable
+  constraint: max 3 entries
+
+campaign_id text nullable
+  description: TRANSITIONAL STUB — Phase 0 placeholder for campaign association
+  format: "{brand-id}-{purpose}-{date-suffix}" recommended (e.g., "vth-biodent-launch-2026-q2")
+  future_state: per DR-027, this column becomes campaign_fp text FK → seo_campaigns when DR-027 ships
+  migration_safety: parse distinct values, create seo_campaigns rows, populate junction
+```
+
+## 29.9 T-ADS Template Family (overview — full specs in Content_Templates v1.4)
+
+5 templates ship Phase 0:
+
+| Template | Purpose | Word target | Schema |
+|----------|---------|-------------|--------|
+| **T-ADS-1** Hero Service LP | Single-service conversion | 400-800 | Org + LocalBusiness + Offer + MedicalBusiness (medical) |
+| **T-ADS-2** Booking / Consultation LP | Drive appointment booking | 300-600 | Org + Offer + Person (doctor) |
+| **T-ADS-3** Promo / Limited Offer LP | Time-bound offer (countdown, scarcity) | 350-700 | Org + Offer (`priceValidUntil`) |
+| **T-ADS-4** Comparison / Alternative LP | Win clicks from competitor / alt-seeking | 500-900 | Org (no Offer if pure positioning) |
+| **T-ADS-5** Lead Magnet / Download LP | Email/LINE capture for downloadable | 200-400 | Org + CreativeWork/ImageObject |
+
+**Block-structure details, render examples, and ACF mappings:** see `Content_Templates_EYWA_v1_0.md` §T-ADS-X.
+
+## 29.10 YMYL Evidence Rules — UNCHANGED for Ads LPs
+
+> **CRITICAL:** Bible Part 23 (Medical Content Excellence) citation tier rules + editorial review workflow apply IDENTICALLY to Ads LPs that make medical claims.
+
+Ads LPs do NOT get a YMYL exemption. Rationale:
+
+- **PDPA + medical advertising law** (พรบ. การโฆษณาทางการแพทย์) applies regardless of URL pattern
+- **Google Ads medical claim policies** enforce accuracy on landing pages, not just ad copy
+- **Brand legal exposure** is per-claim, not per-URL — moving a claim to `/lp/` does not reduce risk
+
+**Operational implication:**
+
+- Tier 1-3 citation requirement (Bible Part 23.1) applies to every medical claim on T-ADS-1/2/3/4
+- Editorial review (Bible Part 23.4) required before Ads LP goes live
+- Comparative claims on T-ADS-4 must comply with Bible Part 23.5 (no disparagement, use public factual info only)
+- PDPA consent banner (Bible Part 23.6) MANDATORY on T-ADS-5 (lead capture) and T-ADS-2 (booking form)
+
+## 29.11 Future: Campaign Master Track (Phase 1 — DR-027 placeholder)
+
+Phase 0 (this Part) is sufficient for a brand to launch Google Ads with structured LP + KW tracking. Phase 0 is NOT sufficient for:
+
+1. **Multi-platform campaign orchestration** — Google Ads + Meta Ads + YouTube + LINE + TikTok with shared budget envelope
+2. **Cross-platform consolidated reporting** — performance snapshot per platform aggregated to campaign level
+3. **Junction between campaigns ↔ pages ↔ keywords** — 1 campaign : N LPs : M keywords
+4. **Historical performance archival** — Supabase-hosted daily snapshot rows
+
+**DR-027 reserves architecture for Phase 1:**
+
+```yaml
+seo_campaigns:
+  identity: campaign_fp text PK
+  brand: brand_id FK → brands.id
+  classification: platforms text[], objective enum, audience_tier enum
+  financial: budget_total_thb, budget_per_platform jsonb, budget_pacing enum
+  schedule: date_start, date_end, status enum
+  governance: approved_by_fp, approval_date
+
+seo_campaign_pages (M2M):    campaign_fp × page_fp + role enum
+seo_campaign_keywords (M2M): campaign_fp × keyword_fp + platform + match_type + bid_strategy
+seo_campaign_performance_snapshot: daily per campaign per platform (mirrors keyword_daily_logs)
+```
+
+**Migration path from Phase 0 → Phase 1:**
+
+When DR-027 ships:
+
+1. Parse distinct values of `seo_page_master.campaign_id` (TEXT stub) across all brand rows
+2. Create `seo_campaigns` rows for each distinct campaign label
+3. Populate `seo_campaign_pages` junction from existing `page_master` rows where `campaign_id IS NOT NULL`
+4. Populate `seo_campaign_keywords` from any KW rows already flagged `ad_active=true` with `ad_landing_page_fp` set
+5. Replace `seo_page_master.campaign_id text` with `campaign_fp text FK → seo_campaigns` (alter column type with mapping)
+
+**Naming convention for Phase 0 `campaign_id` (CRITICAL for clean migration):**
+
+```
+{brand-id}-{purpose}-{date-suffix}
+
+Examples:
+  vth-biodent-launch-2026-q2
+  smilescape-blue-diamond-promo-2026-may
+  trin-wellness-vital-core-evergreen
+```
+
+Brands MUST adopt this naming convention from day 1. Free-form labels make Phase 1 migration painful.
+
+## 29.12 Brand Implementation Workflow (Phase 0)
+
+When a brand decides to launch Google Ads:
+
+```yaml
+step_1_planning:
+  scope: identify hero offer + 2-5 LPs needed
+  outputs:
+    - LP page rows in Notion (page_purpose=ads_lp, ads_template_id=T-ADS-X, campaign_id set)
+    - Keyword rows flagged (ad_active=true, ad_intent_score, ad_priority_tier, ad_landing_page_fp)
+  dependencies:
+    - Brand Stage 1 Phase A complete (brand-concept.md)
+    - KW research done (at least Layer 1 brand-immune KWs known)
+    - At least 1 doctor profile published (Person schema source for T-ADS-2)
+
+step_2_content_production:
+  scope: write LP content per T-ADS template
+  YMYL_gate: Part 23 review for medical claims
+  PDPA_gate: consent banner mandatory if LP has form/booking
+  outputs:
+    - Content brief per LP (T-ADS section of Content_Templates v1.4)
+    - Reviewed + approved content (editorial workflow)
+
+step_3_deployment:
+  scope: build LP in CMS, install conversion tracking, configure index_directive
+  CWV_gate: must pass Part 19 standards (LCP/CLS/INP)
+  outputs:
+    - Live LP at /lp/{slug}/
+    - Conversion events firing (Google Ads Conv API + Meta Pixel + GA4)
+    - Quality Score baseline established after 1 week
+
+step_4_optimization:
+  scope: monitor QS, CVR, CPA per LP
+  duration: minimum 2-week stabilization before optimization edits
+  outputs:
+    - per-LP performance baseline (manual until DR-027 ships)
+    - dual_use promotion candidate flag (if seo_organic page eligible per §29.6)
+```
+
+## 29.13 Cross-References
+
+| Topic | See Also |
+|-------|----------|
+| Two-Layer Sitemap (Layer 1/2 unchanged by Ads) | Part 4 + DR-022 |
+| Page Viability (criterion for dual_use) | Part 4.14 + DR-016 |
+| Medical content + Citation tiers | Part 23 (UNCHANGED for Ads LPs) |
+| CWV standards (dual_use gate) | Part 19 |
+| KW master table | Schema v1.12 §6 (current location of `seo_x_ads_keywords_contextual_master`) |
+| Page master table | Schema v1.12 §5.1 |
+| Future Campaign Master | DR-027 (Proposed) + Part 29.11 |
+| Schema additions ship together | Schema v1.12 §29 (Ads-LP additive columns) |
+| Templates T-ADS-1 to T-ADS-5 | Content_Templates v1.4 §T-ADS |
+| Federation: Ads track shares brand_scope[] pattern | Part 10 (Multi-Brand Strategy) |
+
+---
+
 ## Appendix A: Quick Reference Cards
 
 ### A.1 Entity Type Quick Selector (reconciled to 15 types)
@@ -25858,10 +26188,10 @@ add_action('save_post', function ($post_id) {
 
 ---
 
-**END OF DOCUMENT v3.3 — คัมภีร์ EYWA™ PROTOCOL**
+**END OF DOCUMENT v3.16 — คัมภีร์ EYWA™ PROTOCOL**
 
 
-*🌿 EYWA™ PROTOCOL Bible v3.3 • May 2026*
+*🌿 EYWA™ PROTOCOL Bible v3.16 • May 2026*
 *The Universal Knowledge Graph SEO Specification for the AI Era*
 *Multi-vertical, multi-brand, multi-specialty, multi-lingual, multi-location, AI-future-ready*
 
@@ -25870,6 +26200,30 @@ add_action('save_post', function ($post_id) {
 *Implementation: Notion + Supabase + n8n + WordPress (loose-coupled via automation)*
 
 **Service Suite:** Audit · Graph · Stack · Vital · Forge · Score · Atlas
+
+**v3.16 Changelog (2026-05-12) — Ads Landing Page Track (DR-026 Proposed):**
+
+- ➕ **Part 29 (NEW) — Ads Landing Page Track** (parallel implementation track to SEO; same dimensional backbone, additive columns, dedicated T-ADS template family)
+- ➕ §29.2 `page_purpose` taxonomy (`seo_organic` | `ads_lp` | `dual_use`)
+- ➕ §29.3 URL convention `/lp/{campaign-or-offer-slug}/`
+- ➕ §29.4 `index_directive` enum (`index` | `noindex_lp` | `noindex_nofollow` | `dual`)
+- ➕ §29.5 Conversion event taxonomy (`lead_form` | `call_click` | `line_follow` | `booking` | `download` | `package_view` | `add_to_cart`)
+- ➕ §29.6 Dual-use eligibility criteria (6-gate check incl. CWV + Quality Score viability)
+- ➕ §29.7 Keyword schema extensions hint (`seo_active`, `ad_active`, `ad_intent_score`, `ad_match_type_preferred`, `ad_landing_page_fp`, `ad_priority_tier`)
+- ➕ §29.8 Page schema extensions hint (`page_purpose`, `ads_template_id`, `index_directive`, `conversion_event_primary/secondary`, `campaign_id` TEXT stub)
+- ➕ §29.9 T-ADS template family overview (T-ADS-1 Hero Service LP, T-ADS-2 Booking LP, T-ADS-3 Promo LP, T-ADS-4 Comparison LP, T-ADS-5 Lead Magnet LP)
+- ➕ §29.10 YMYL evidence rules UNCHANGED for Ads LPs (Part 23 applies)
+- ➕ §29.11 Future Campaign Master Track hint (DR-027 placeholder) + naming convention for Phase 0 `campaign_id` stub
+- ➕ §29.12 Brand implementation workflow (Phase 0)
+- 🔄 Bible v3.15 → v3.16 ships paired with Schema v1.12 + Content_Templates v1.4 + DECISION_RECORDS v1.10 + EYWA_HANDOVER v1.10
+- 📣 DR-026 Status: **Proposed** — review window opens 2026-05-12, target lock 2026-06-21 after VTH BioDent Ads pilot validation
+- 📣 DR-027 reserved: Campaign Universal Master Table (Phase 1, future Schema v1.13+)
+
+**v3.15 Changelog (2026-05-12) — Restore Forgotten Schema (DR-024 + DR-025):**
+
+- 🔄 Bible Appendix B.5 + Part 17.6 + Part 4.4: `seo_locations` → `seo_branches` (all 8 references) per DR-025
+- 🔄 Bible Appendix B.3 entity extension table count: 3 → 9 + 1 programmatic registry per DR-024
+- 🔄 Bible v3.15 ships paired with Schema v1.11
 
 **v3.3 Changelog (Implementation Restoration):**
 - 🔧 Restored actionable implementation guides from v1.1 source

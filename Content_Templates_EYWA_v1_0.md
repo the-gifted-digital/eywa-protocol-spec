@@ -1,12 +1,30 @@
 # 📝 Content Templates — EYWA™ PROTOCOL
 
-> **Companion document to** EYWA Bible v3.15 + Schema Overview v1.11
+> **Companion document to** EYWA Bible v3.16 + Schema Overview v1.12
 > **Universal Content Production Standards across 13 brands × 6 verticals**
 
-**Version:** v1.3 (DRAFT 2026-05-10 — companion refs bumped 2026-05-12 per DR-024/025 spec catch-up; content unchanged, still pending DR-020 lock 2026-06-07)
-**Status:** Proposed — pending DR-020 lock
-**Companion to:** Bible v3.15 + Schema Overview v1.11 + DECISION_RECORDS v1.9
-**Format:** Append-only with semantic versioning (v1.0 → v1.1 → v1.2 → v1.3 backward compatible)
+**Version:** v1.4 (DRAFT 2026-05-12 — companion refs bumped to Bible v3.16 + Schema v1.12 per DR-026; T-ADS-X family added §3.4; backward compatible with v1.3)
+**Status:** Proposed — pending DR-020 lock (T1-T22 SEO templates) + DR-026 lock (T-ADS-X family)
+**Companion to:** Bible v3.16 + Schema Overview v1.12 + DECISION_RECORDS v1.10
+**Format:** Append-only with semantic versioning (v1.0 → v1.4 backward compatible)
+
+## v1.4 Changelog (2026-05-12) — Ads Landing Page Family (DR-026 Proposed)
+
+Operator decision: adopt EYWA portfolio-wide Ads Landing Page Track parallel to SEO Track. Pilot launch at VTH BioDent ~2026-05-15 needs spec; rest of portfolio inherits naturally.
+
+- ➕ **§3.4 NEW — Ads Landing Page Family (T-ADS-X)** — 5 templates for Phase 0:
+  - **T-ADS-1** Hero Service LP (400-800 words, single offer, lead/call/LINE)
+  - **T-ADS-2** Booking / Consultation LP (300-600 words, calendar widget above fold)
+  - **T-ADS-3** Promo / Limited Offer LP (350-700 words, countdown/quantity, `priceValidUntil`)
+  - **T-ADS-4** Comparison / Alternative LP (500-900 words, comparison table with neutrality rules)
+  - **T-ADS-5** Lead Magnet / Download LP (200-400 words, capture form, PDPA mandatory)
+- ➕ §3.5 placeholder for T-DUAL-X future hybrid templates (Phase 1)
+- 🔒 YMYL evidence rules **UNCHANGED** for Ads LPs (Bible Part 23 applies identically)
+- 🔒 PDPA consent banner **MANDATORY** on T-ADS-2/3/5 (any LP with form/booking/capture)
+- 🔒 Editorial review (Bible Part 23.4) **MANDATORY** before go-live for medical-claim LPs
+- 🔒 Default `index_directive: noindex_lp` on all T-ADS templates (operator can override)
+- 🔄 Companion refs bumped: Bible v3.15 → v3.16, Schema v1.11 → v1.12, DR v1.9 → v1.10
+- 📣 DR-026 Status: **Proposed** — review window 2026-05-12, target lock 2026-06-21
 
 ## v1.3 Changelog (2026-05-10) — Section 2 Pattern Lock + Icon Taxonomy
 
@@ -1617,6 +1635,341 @@ schema_emit_offer:
   - availability
   - url
 ```
+
+---
+
+### 3.4 Ads Landing Page Family (T-ADS — 5 templates) 🆕 v1.4
+
+> **Per DR-026 (Proposed 2026-05-12) + Bible Part 29** — parallel implementation track to SEO templates (T1-T22). Same dimensional backbone but conversion-optimized blocks, single primary CTA, minimal navigation.
+>
+> **CRITICAL — YMYL evidence rules UNCHANGED:** Bible Part 23 (Medical Content Excellence) citation tiers + editorial review workflow apply IDENTICALLY to T-ADS-1/2/3/4 when medical claims are present. Moving a claim to `/lp/` does NOT reduce legal/regulatory exposure.
+
+**Family characteristics (all T-ADS templates):**
+
+```yaml
+url_convention: /lp/{campaign-or-offer-slug}/
+default_index_directive: noindex_lp  # operator override allowed
+nav_treatment: stripped or minimal — no full site nav
+cta_count: ONE primary CTA, repeated 2-3x
+required_columns_on_page_master:
+  - page_purpose: ads_lp
+  - ads_template_id: T-ADS-{N}
+  - index_directive: noindex_lp (default)
+  - conversion_event_primary: (see §29.5)
+  - campaign_id: TEXT stub per §29.11 naming convention
+ymyl_gate: Part 23 review for medical claims (UNCHANGED)
+pdpa_gate: consent banner mandatory when form/booking present (Bible Part 23.6)
+cwv_target: LCP < 2.5s mobile, CLS < 0.1, INP < 200ms (Part 19)
+```
+
+---
+
+#### T-ADS-1 — Hero Service Landing Page
+
+```yaml
+purpose: "Single-service conversion focus — drive primary action for one hero offer"
+typical_use: "Dental Implant Free Consultation / Men's Vitality Diagnostic / Anti-Aging Consultation"
+schema_org_type: Organization + LocalBusiness + Offer
+secondary_schemas: [MedicalBusiness if clinic-vertical]
+length_target: 400-800 words
+eeat_required: YES if medical claims present (Part 23)
+conversion_event_primary: lead_form | call_click | line_follow
+
+required_blocks:
+  - B01-LP hero (offer headline + sub-headline + primary CTA above mobile fold)
+  - B02-LP trust_strip (clinic logo + 3-5 credentials in one row — board cert, masterclass, awards)
+  - B03-LP benefits_list (3-5 outcome-focused bullets — patient benefit, NOT feature-list)
+  - B04-LP social_proof_compact (2-3 review snippets with patient first-name + anonymized photo OR 1 case study summary)
+  - B05-LP process_3_step (how the consultation/treatment unfolds — sets expectation)
+  - B18-FAQ_lp (max 5 questions, focused on anxiety/cost/process — NOT full T1 FAQ depth)
+  - B20-CTA_repeat (booking widget OR phone tap OR LINE @ — same primary action as hero)
+
+recommended_blocks:
+  - B16-before_after_gallery_compact (when visual outcome relevant — 2-4 images max, not full T2 gallery)
+  - B19-doctor_review_block (1 doctor, photo + 2-line credential — drives YMYL trust)
+
+forbidden_blocks:
+  - B07-diagnostic_section (too long for LP — defer to dual_use SEO page)
+  - B22-related_links_cluster (defeats single-CTA focus)
+  - any block with internal links to OTHER service pages (steals conversion focus)
+
+mandatory_properties:
+  - hero offer must include EITHER price OR free-consultation framing (no vague "premium care")
+  - primary CTA visible above mobile fold (375px width baseline)
+  - CTA repeated minimum 2x (hero + bottom); recommended 3x (hero + mid + bottom)
+  - PDPA consent banner if form present (Part 23.6)
+
+schema_emit:
+  Organization:
+    "@type": "Organization" or "MedicalBusiness"
+    name, url, logo, sameAs[]
+  LocalBusiness:
+    "@type": "LocalBusiness" or vertical-specific (Dentist, MedicalClinic)
+    address, telephone, openingHours, geo
+  Offer:
+    "@type": "Offer"
+    name, description, price OR availability="https://schema.org/InStock"
+    url (canonical of this LP)
+    seller (→ Organization)
+
+ymyl_gate:
+  - Medical claims (efficacy, success rate, treatment outcome) require Tier 1-3 citation (Part 23.1)
+  - Editorial review (Part 23.4) BEFORE go-live
+  - Doctor credential displayed if treatment claims made
+
+example_brands:
+  - SmileScape: "/lp/blue-diamond-implant-consult/" (Blue Diamond Implant hero, 29,900 baht + lifetime warranty)
+  - Trin Wellness: "/lp/men-vitality-diagnostic/" (Men's Vitality Diagnostic package, Trin Vital Core)
+  - VTH BioDent: "/lp/longevity-dentistry-consult/" (Longevity Dentistry consultation)
+```
+
+---
+
+#### T-ADS-2 — Booking / Consultation Landing Page
+
+```yaml
+purpose: "Drive appointment booking — calendar widget above-fold, friction minimized"
+typical_use: "Free dental check-up booking / Vitality consultation booking / Aesthetic consultation"
+schema_org_type: Organization + Offer + Person (the doctor)
+secondary_schemas: [LocalBusiness, MedicalBusiness]
+length_target: 300-600 words
+eeat_required: YES if medical (Part 23)
+conversion_event_primary: booking | line_follow
+
+required_blocks:
+  - B01-LP hero_booking (offer + booking widget OR LINE Add Friend QR ABOVE FOLD on mobile)
+  - B03-LP benefits_compact (3 bullets max — what patient receives, "what you get")
+  - B19-LP doctor_intro_1 (ONE doctor, photo + 2-line credential — primary consulting physician)
+  - B04-LP social_proof_paragraph (1 paragraph synthesizing review themes, NOT individual snippets)
+  - B18-FAQ_lp (max 3 questions — booking-related: cost-of-consult, what-to-bring, duration)
+  - B20-CTA_repeat (booking widget repeat)
+
+recommended_blocks:
+  - B10-LP credential_strip (3-5 logos: board cert, hospital affiliation, masterclass) inline with doctor intro
+
+forbidden_blocks:
+  - B05-LP process_3_step (booking IS the process — don't add another)
+  - any educational deep-dive blocks (defeats booking momentum)
+
+mandatory_properties:
+  - Booking widget loaded with < 500ms time-to-interactive
+  - LINE Add Friend OR calendar widget (NOT form-only — Thai market prefers LINE-first)
+  - Doctor "About" link present (full credential page) — do NOT inline full bio (kills LP focus)
+  - PDPA consent on booking widget (Part 23.6)
+
+schema_emit:
+  Organization + LocalBusiness (as T-ADS-1)
+  Offer:
+    "@type": "Offer"
+    name: "[Service] Consultation"
+    price OR availability
+  Person (doctor):
+    "@type": "Person" or "Physician"
+    name, image, jobTitle, alumniOf (training institutions)
+    medicalSpecialty[]
+    affiliation (→ Organization, this brand)
+
+thai_market_variant:
+  recommended_capture_priority:
+    1: LINE Add Friend QR (highest CVR for Thai clinics)
+    2: Calendar widget (booking direct)
+    3: Phone tap (older demographics)
+    4: Email form (last resort — Thai patients rarely email-first)
+
+example_brands:
+  - SmileScape: "/lp/free-implant-consultation-rattanathibet/" (LINE @smilescape booking)
+  - Trin Wellness: "/lp/dr-trin-vitality-consult/" (Dr. Trin Bangkok booking)
+```
+
+---
+
+#### T-ADS-3 — Promo / Limited Offer Landing Page
+
+```yaml
+purpose: "Time-bound or quantity-bound offer — urgency-driven conversion"
+typical_use: "Founding 100 patients only / May 2026 promo / Anniversary sale / Founder-rate close-out"
+schema_org_type: Organization + Offer (priceValidUntil mandatory)
+secondary_schemas: [LocalBusiness]
+length_target: 350-700 words
+eeat_required: YES if medical (Part 23) — DO NOT relax for promo urgency
+conversion_event_primary: lead_form | call_click | line_follow | booking
+
+required_blocks:
+  - B01-LP hero_promo (offer + countdown timer OR limited-quantity counter + primary CTA)
+  - B11-LP whats_included (price stack — list each item + value, sum total, show discount)
+  - B13-LP urgency_rationale (1 paragraph — WHY this offer exists, WHY now, NOT "act fast or miss out" alone)
+  - B14-LP eligibility (who qualifies — new patients only? specific service? age/condition gate?)
+  - B05-LP how_to_claim (3-step: register → confirm → redeem)
+  - B20-CTA_repeat (primary action repeated)
+  - B15-LP terms_compact (T&C in readable format — NOT fine-print legalese)
+
+recommended_blocks:
+  - B16-before_after_gallery_compact (if applicable — 2 images max)
+  - B19-LP doctor_endorsement (1 doctor quote endorsing the offer's clinical appropriateness)
+
+forbidden_blocks:
+  - false scarcity (fake countdown that resets, fake "only X left" counter) — Part 23.5 disparagement-adjacent risk
+  - undisclosed terms (must list eligibility + expiry + refund policy)
+
+mandatory_properties:
+  - Countdown OR quantity counter MUST reflect real expiry/inventory — auto-archive on expiry
+  - `priceValidUntil` Schema.org Offer property required
+  - Editorial review (Part 23.4) before go-live — promo claims = high-risk content
+  - Operator-verified price + included items (no "AI-generated" pricing)
+  - Thai medical advertising law (พรบ. การโฆษณาทางการแพทย์) compliance — discount/promo on medical services has restrictions
+
+schema_emit:
+  Offer:
+    "@type": "Offer"
+    name, description, price, priceCurrency: "THB"
+    validFrom: ISO date
+    validThrough: ISO date  # REQUIRED for T-ADS-3
+    availability: "https://schema.org/InStock" OR "LimitedAvailability"
+    eligibleQuantity (if quantity-bound):
+      "@type": "QuantitativeValue"
+      maxValue: 100
+
+ymyl_promo_guardrails:
+  - Discount on medical service: comply with Part 23 + advertising law
+  - "เริ่ม X บาท" framing safer than "ลด 50%" framing (price-anchor vs discount-framing)
+  - "Founding members rate" framing is operator-vetted before publication
+  - Editor sign-off mandatory (Bible Part 23.4 stage 4)
+
+example_brands:
+  - SmileScape: "/lp/founding-partner-rate-2026/" (Founding partner rate, time-bound)
+  - Genowell: "/lp/may-2026-genomic-screening-promo/" (monthly promo cadence)
+```
+
+---
+
+#### T-ADS-4 — Comparison / Alternative Landing Page
+
+```yaml
+purpose: "Win clicks from competitor brand keywords OR alternative-seeking intent"
+typical_use: "Why us vs [generic alternative] / [our methodology] vs traditional approach / premium tier vs commodity"
+schema_org_type: Organization (no Offer if pure positioning)
+secondary_schemas: [Article, MedicalBusiness if medical]
+length_target: 500-900 words
+eeat_required: YES if medical claims present (Part 23)
+conversion_event_primary: lead_form | call_click | booking
+
+required_blocks:
+  - B01-LP hero_positioning (positioning statement — our differentiation in 1 sentence)
+  - B09-LP comparison_table (us vs alternative — 5-8 rows, NEUTRAL framing, factual)
+  - B03-LP differentiation_bullets (3-5 — WHY this difference matters to patient outcome)
+  - B19-LP doctor_credential_trust (drives expertise signal that backs comparison claims)
+  - B04-LP social_proof_paragraph (1 paragraph — patients who chose us over alternative)
+  - B20-CTA (consultation booking)
+
+recommended_blocks:
+  - B12-LP clinical_insight (1 paragraph — why our methodology delivers better outcomes, evidence-backed)
+  - B21-LP references_compact (3-5 Tier 1-3 citations for any comparative claims)
+
+forbidden_blocks:
+  - explicit competitor brand naming WITHOUT public factual basis (defamation risk + Part 23.5 + Thai consumer law)
+  - disparagement (Part 23.5) — "they are bad" framing forbidden
+  - cherry-picked metrics ("we win on X but ignore Y where competitor wins")
+
+mandatory_properties:
+  - Comparative claims MUST use factual, publicly-verifiable data (their published pricing, their published methodology, their public credentials)
+  - Editorial review BEFORE go-live (Part 23.4) — high legal-risk content
+  - Brand legal/operator sign-off on competitor mentions (if any)
+  - Citations mandatory for any clinical-superiority claim (Part 23.1 Tier 1-3)
+  - If competitor not named, use generic framing ("traditional approach" / "commodity providers")
+
+comparison_table_neutrality_rules:
+  - Headers: "Our [methodology]" vs "Traditional approach" (NOT "Us" vs "Them" or "Good" vs "Bad")
+  - Cell content: factual descriptors, not subjective judgment
+  - Equal weight per row — don't pad comparison toward our favor
+  - Footnote citations on differentiating rows
+
+schema_emit:
+  Organization (as T-ADS-1)
+  No Offer (positioning page)
+  Article (optional):
+    "@type": "Article"
+    headline, author (→ Person, copywriter or doctor)
+    datePublished, dateModified
+    citation (→ for any cited research)
+
+thai_legal_note:
+  - พรบ. คุ้มครองผู้บริโภค (Consumer Protection Act) — comparative advertising allowed if factual + non-misleading
+  - พรบ. การโฆษณาทางการแพทย์ — comparative medical claims have heightened scrutiny
+  - Brand legal review recommended for first comparison LP in a brand portfolio
+
+example_brands:
+  - Trin Wellness: "/lp/root-cause-vs-symptom-based-ed/" (Trin's diagnostic depth vs commodity ED clinics — generic framing)
+  - VTH BioDent: "/lp/longevity-dentistry-vs-traditional/" (whole-body dentistry vs traditional dentistry)
+```
+
+---
+
+#### T-ADS-5 — Lead Magnet / Download Landing Page
+
+```yaml
+purpose: "Email/LINE capture in exchange for downloadable resource (e-book, guide, checklist, assessment)"
+typical_use: "ดาวน์โหลดคู่มือ Implant 2026 / Men's Vitality Self-Assessment / Sleep Quality Checklist"
+schema_org_type: Organization + CreativeWork OR ImageObject (the resource)
+secondary_schemas: []
+length_target: 200-400 words
+eeat_required: YES if downloaded resource makes medical claims (Part 23)
+conversion_event_primary: download | lead_form | line_follow
+
+required_blocks:
+  - B01-LP hero_magnet (resource preview image + capture form OR LINE Add Friend trigger)
+  - B11-LP whats_inside (3-5 bullets — content overview of the resource)
+  - B17-LP who_its_for (1-2 sentences — target reader, sets expectation)
+  - B19-LP author_credential_1line (who authored the resource — drives trust)
+  - B23-LP capture_form (MINIMAL FIELDS — name + email/LINE max; phone optional)
+  - B24-LP privacy_note (PDPA compliance — what data, how stored, opt-out)
+
+recommended_blocks:
+  - B04-LP social_proof_compact (1-2 testimonials about the resource OR clinic)
+
+forbidden_blocks:
+  - long-form content here (defeats lead-magnet model — depth lives INSIDE the resource)
+  - multiple CTAs (single download/capture is THE conversion)
+  - data-collection beyond what's needed (form ask = friction; fewer fields = higher CVR)
+
+mandatory_properties:
+  - PDPA consent CHECKBOX (mandatory under Thai law, Bible Part 23.6)
+  - Resource preview image visible above mobile fold
+  - Form fields minimal: name + (email OR LINE OR phone — pick ONE primary)
+  - Explicit data usage statement ("เราจะใช้ข้อมูลของคุณสำหรับ X เท่านั้น...")
+  - Auto-deliver mechanism: email auto-responder OR LINE bot OR direct download (no manual delivery)
+
+schema_emit:
+  Organization (as T-ADS-1)
+  CreativeWork (the resource):
+    "@type": "CreativeWork" or "Book" or "DigitalDocument"
+    name, description, author (→ Person, doctor or clinic)
+    inLanguage: "th-TH" or "en-US"
+    image (resource cover preview)
+  Offer:
+    "@type": "Offer"
+    price: "0"  # free download
+    availability: "https://schema.org/InStock"
+
+pdpa_pattern:
+  consent_text_th: "ข้าพเจ้ายินยอมให้ {ชื่อแบรนด์} เก็บข้อมูลและติดต่อกลับเกี่ยวกับ {ขอบเขต} เท่านั้น"
+  consent_checkbox: required, default OFF (opt-in not opt-out)
+  privacy_link: link to full Privacy Policy page
+  data_minimization: collect only what's needed for resource delivery + agreed follow-up
+  retention_period: state how long data is kept (e.g., 12 months) + how to request deletion
+
+example_brands:
+  - Trin Wellness: "/lp/mens-vitality-self-assessment/" (downloadable assessment, returns score + LINE follow-up)
+  - VTH BioDent: "/lp/longevity-dentistry-guide-2026/" (e-book with biodental wellness framework)
+  - Genowell: "/lp/family-genomic-checklist/" (PDF checklist for family genetic screening readiness)
+```
+
+---
+
+### 3.5 Future Hybrid Templates (T-DUAL-X) — Reserved Phase 1
+
+Reserved for dual-use pages that satisfy §29.6 Eligibility Criteria. T-DUAL-X templates will hybridize a SEO template (e.g., T2 service-page) with a T-ADS-X conversion overlay. Full specs ship in Content_Templates v1.5+ after DR-026 lock + Phase 0 pilot learnings.
+
+**Phase 0 workaround:** brands needing dual-use can use T2 (or other SEO template) + manually add T-ADS-1 hero structure as a custom block via Layer 3 customization hook §4.
 
 ---
 

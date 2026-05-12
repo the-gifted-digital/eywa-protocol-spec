@@ -3,10 +3,23 @@
 > **For Claude (and any AI assistant) working on a new brand within the EYWA portfolio.**  
 > **Read this file first, every new project, every new session.**
 
-**Document Version:** 1.9  
+**Document Version:** 1.10  
 **Last Updated:** 2026-05-12  
-**Companion to:** EYWA Bible v3.15 + Schema Overview v1.11 + DECISION_RECORDS v1.9 + Content_Templates_EYWA_v1_0.md (DRAFT)  
+**Companion to:** EYWA Bible v3.16 + Schema Overview v1.12 + DECISION_RECORDS v1.10 + Content_Templates_EYWA_v1_0.md v1.4 (DRAFT)  
 **Created by:** The Gifted Digital Marketing Co., Ltd.
+
+---
+
+## 🆕 v1.10 Note (2026-05-12) — Ads Landing Page Track Proposed
+
+Bible v3.16 ships with **Part 29 — Ads Landing Page Track** per DR-026 (Proposed, target lock 2026-06-21). Brands launching Google Ads should follow:
+
+- **Page rows:** set `page_purpose='ads_lp'`, `ads_template_id='T-ADS-{1-5}'`, `index_directive='noindex_lp'`, `conversion_event_primary`, `campaign_id` (TEXT stub per §29.11 naming convention)
+- **Keyword rows:** flag `ad_active=true`, set `ad_intent_score` (1-10), `ad_priority_tier` (t1/t2/t3), `ad_landing_page_fp`
+- **Templates:** T-ADS-1 (Hero) / T-ADS-2 (Booking) / T-ADS-3 (Promo) / T-ADS-4 (Comparison) / T-ADS-5 (Lead Magnet) — see Content_Templates v1.4 §3.4
+- **YMYL evidence rules UNCHANGED** — Bible Part 23 applies to Ads LPs identically
+- **PDPA consent banner MANDATORY** on T-ADS-2/3/5 (any LP with form/booking/capture)
+- **Campaign Master Table (DR-027)** = Phase 1, future Schema v1.13+ — Phase 0 brands use `campaign_id` TEXT stub with `{brand-id}-{purpose}-{date-suffix}` naming for migration safety
 
 ---
 

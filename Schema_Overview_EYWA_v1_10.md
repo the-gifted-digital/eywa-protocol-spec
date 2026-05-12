@@ -1,17 +1,41 @@
 # 📊 Schema Overview — EYWA™ PROTOCOL Database
 
-> **Companion document to** คัมภีร์ EYWA™ PROTOCOL v3.15  
-> **Reference for full DDL + column descriptions of all 37 tables**
+> **Companion document to** คัมภีร์ EYWA™ PROTOCOL v3.16  
+> **Reference for full DDL + column descriptions of all 37 tables + Ads Track Phase 0 column extensions**
 
-**Version:** v1.11  
+**Version:** v1.12  
 **Date:** 2026-05-12  
 **Status:** Day 1 Specification (production roadmap reference)  
-**Total Tables:** 37 organized into 9 groups  
-**Companion to:** Bible v3.15
+**Total Tables:** 37 organized into 9 groups + Group 10 (column additions only, no new tables in v1.12)  
+**Companion to:** Bible v3.16
 
 ---
 
 ## Changelog
+
+### v1.12 (2026-05-12) — Ads Landing Page Track Phase 0 (DR-026 Proposed) 🌱📣
+
+Additive-only release per **DR-026 (Proposed 2026-05-12)** — no new tables, only nullable column additions on `seo_website_page_master` (5 cols) and `seo_x_ads_keywords_contextual_master` (6 cols). Phase 1 (`seo_campaigns` Universal Master Table per DR-027) is hinted in §12.3 for migration-friendly Phase 0 adoption but DOES NOT SHIP in v1.12.
+
+**Headline Changes:**
+
+- ➕ **§12 NEW — Group 10 Ads Landing Page Track**:
+  - 📌 §12.1 — `seo_website_page_master` adds: `page_purpose` (enum), `ads_template_id` (text), `index_directive` (enum), `conversion_event_primary` (enum), `conversion_event_secondary` (text[]), `campaign_id` (TEXT stub — transitional, becomes FK in v1.13+ per DR-027)
+  - 📌 §12.2 — `seo_x_ads_keywords_contextual_master` adds: `seo_active` (bool, default true), `ad_active` (bool, default false), `ad_intent_score` (smallint 1-10), `ad_match_type_preferred` (enum), `ad_landing_page_fp` (text FK → page_master), `ad_priority_tier` (enum)
+  - 📌 §12.3 — NON-NORMATIVE architecture sketch for future `seo_campaigns` + 3 junction tables (`seo_campaign_pages`, `seo_campaign_keywords`, `seo_campaign_performance_snapshot`) — Phase 1 reference only
+  - 📌 §12.4 — Phase 0 → Phase 1 migration path documented (when DR-027 ships)
+  - 📌 §12.5 — Cross-references to Bible Part 29 + Content_Templates v1.4 §3.4
+
+- ⚠️ **Migration files needed:**
+  - `020_dr026_ads_lp_page_columns.sql` — page_master column additions + partial indexes
+  - `021_dr026_ads_lp_keyword_columns.sql` — keyword_master column additions + partial indexes
+
+- ✅ **Zero downtime, fully backward compatible** — all new columns nullable or DEFAULT'd; existing rows auto-set `page_purpose='seo_organic'`, `seo_active=true`, `ad_active=false`, `index_directive='index'`, `ad_priority_tier='none'`
+
+- 🔄 Schema v1.11 → v1.12 ships paired with Bible v3.16 + Content_Templates v1.4 + DECISION_RECORDS v1.10 + EYWA_HANDOVER v1.10
+
+- 📣 DR-026 Status: **Proposed** — review window 2026-05-12, target lock 2026-06-21 after VTH BioDent Ads pilot validation
+- 📣 DR-027 reserved: Campaign Universal Master Table (Phase 1, future Schema v1.13+)
 
 ### v1.11 (2026-05-12) — Restore Forgotten Schema (DR-024 + DR-025) 🔒🧬🏥
 
@@ -2529,6 +2553,305 @@ ALTER TABLE seo_entity_lab_test ADD CONSTRAINT check_test_type CHECK (test_type 
 
 ---
 
+## 12. Group 10 — Ads Landing Page Track 🆕 v1.12 (DR-026 Proposed)
+
+> **Per DR-026 (Proposed 2026-05-12) + Bible Part 29** — parallel implementation track to SEO.
+>
+> **Phase 0 (this v1.12 release):** additive columns on `seo_website_page_master` + `seo_x_ads_keywords_contextual_master`. NO new tables ship in v1.12. The `seo_campaigns` table is hinted only (Phase 1, DR-027) — full DDL ships in Schema v1.13+ when DR-027 locks.
+>
+> **Companion Bible:** Part 29 (Ads Landing Page Track). **Companion Templates:** v1.4 (T-ADS-1 through T-ADS-5).
+
+### 12.1 Phase 0 Column Additions — `seo_website_page_master` (extends §5.1)
+
+5 new nullable columns added to the canonical page master table. All additive — zero downtime migration, no existing row breakage. Backfill optional (default to `page_purpose='seo_organic'` for pre-existing rows).
+
+| Column | Type | Constraint | Description |
+|--------|------|-----------|-------------|
+| `page_purpose` | `text` | DEFAULT `'seo_organic'`, CHECK IN (`'seo_organic'`, `'ads_lp'`, `'dual_use'`) | Page role in the SEO/Ads track |
+| `ads_template_id` | `text` | nullable, CHECK regex `^T-ADS-[1-5]$` OR matches future `T-DUAL-{N}` | Required when `page_purpose IN ('ads_lp', 'dual_use')` |
+| `index_directive` | `text` | DEFAULT `'index'`, CHECK IN (`'index'`, `'noindex_lp'`, `'noindex_nofollow'`, `'dual'`) | Controls `<meta robots>` + sitemap.xml inclusion |
+| `conversion_event_primary` | `text` | nullable, CHECK IN (`'lead_form'`, `'call_click'`, `'line_follow'`, `'booking'`, `'download'`, `'package_view'`, `'add_to_cart'`) | Required when `page_purpose IN ('ads_lp', 'dual_use')` |
+| `conversion_event_secondary` | `text[]` | nullable, max 3 elements | Optional secondary events tracked but not primary KPI |
+| `campaign_id` | `text` | nullable | **TRANSITIONAL STUB** — Phase 0 placeholder; becomes `campaign_fp text FK → seo_campaigns` in Schema v1.13+ when DR-027 locks |
+
+**Constraint additions (migration `020_dr026_ads_lp_page_columns.sql`):**
+
+```sql
+ALTER TABLE seo_website_page_master
+  ADD COLUMN page_purpose text NOT NULL DEFAULT 'seo_organic'
+    CHECK (page_purpose IN ('seo_organic', 'ads_lp', 'dual_use')),
+  ADD COLUMN ads_template_id text
+    CHECK (ads_template_id IS NULL OR ads_template_id ~ '^T-ADS-[1-5]$' OR ads_template_id ~ '^T-DUAL-[0-9]+$'),
+  ADD COLUMN index_directive text NOT NULL DEFAULT 'index'
+    CHECK (index_directive IN ('index', 'noindex_lp', 'noindex_nofollow', 'dual')),
+  ADD COLUMN conversion_event_primary text
+    CHECK (conversion_event_primary IS NULL OR conversion_event_primary IN
+      ('lead_form', 'call_click', 'line_follow', 'booking', 'download', 'package_view', 'add_to_cart')),
+  ADD COLUMN conversion_event_secondary text[]
+    CHECK (conversion_event_secondary IS NULL OR cardinality(conversion_event_secondary) <= 3),
+  ADD COLUMN campaign_id text;
+
+-- Conditional NOT NULL constraint enforced via trigger or app layer:
+-- ads_template_id NOT NULL when page_purpose IN ('ads_lp', 'dual_use')
+-- conversion_event_primary NOT NULL when page_purpose IN ('ads_lp', 'dual_use')
+-- (CHECK constraints can't reference other columns in standard SQL — enforce in app/trigger layer)
+
+CREATE INDEX idx_page_master_purpose ON seo_website_page_master(page_purpose) WHERE page_purpose != 'seo_organic';
+CREATE INDEX idx_page_master_campaign ON seo_website_page_master(campaign_id) WHERE campaign_id IS NOT NULL;
+```
+
+**Index rationale:** Most rows are `seo_organic` (default) — partial index on non-default values yields tiny index with high query selectivity for Ads-track audits. `campaign_id` partial index supports operator dashboards filtering by campaign without scanning full table.
+
+### 12.2 Phase 0 Column Additions — `seo_x_ads_keywords_contextual_master` (extends §6.1)
+
+6 new columns on the canonical keyword master table.
+
+| Column | Type | Constraint | Description |
+|--------|------|-----------|-------------|
+| `seo_active` | `boolean` | DEFAULT `true`, NOT NULL | Keyword is in SEO content strategy (default true — most KWs in EYWA are SEO-led) |
+| `ad_active` | `boolean` | DEFAULT `false`, NOT NULL | Keyword is in active Ads bidding (opt-in per KW) |
+| `ad_intent_score` | `smallint` | nullable, CHECK `BETWEEN 1 AND 10` | 1=informational, 10=transactional/buyer-ready (operator scores) |
+| `ad_match_type_preferred` | `text` | nullable, CHECK IN (`'exact'`, `'phrase'`, `'broad'`, `'broad_modified'`) | Planning-time preference; actual platform match enforced at campaign level |
+| `ad_landing_page_fp` | `text` | nullable, FK → `seo_website_page_master(fingerprint)` ON DELETE SET NULL | Primary LP for this KW (Phase 0; Phase 1 moves to `seo_campaign_keywords` M2M) |
+| `ad_priority_tier` | `text` | DEFAULT `'none'`, CHECK IN (`'t1'`, `'t2'`, `'t3'`, `'none'`) | Budget priority: t1=always-on hero, t2=supporting, t3=exploratory, none=SEO-only |
+
+**Constraint additions (migration `021_dr026_ads_lp_keyword_columns.sql`):**
+
+```sql
+ALTER TABLE seo_x_ads_keywords_contextual_master
+  ADD COLUMN seo_active boolean NOT NULL DEFAULT true,
+  ADD COLUMN ad_active boolean NOT NULL DEFAULT false,
+  ADD COLUMN ad_intent_score smallint
+    CHECK (ad_intent_score IS NULL OR ad_intent_score BETWEEN 1 AND 10),
+  ADD COLUMN ad_match_type_preferred text
+    CHECK (ad_match_type_preferred IS NULL OR ad_match_type_preferred IN
+      ('exact', 'phrase', 'broad', 'broad_modified')),
+  ADD COLUMN ad_landing_page_fp text
+    REFERENCES seo_website_page_master(fingerprint) ON DELETE SET NULL,
+  ADD COLUMN ad_priority_tier text NOT NULL DEFAULT 'none'
+    CHECK (ad_priority_tier IN ('t1', 't2', 't3', 'none'));
+
+-- Conditional NOT NULL enforced via trigger or app layer:
+-- ad_intent_score NOT NULL when ad_active=true
+-- ad_landing_page_fp NOT NULL when ad_active=true (operator workflow requirement)
+
+CREATE INDEX idx_keyword_master_ad_active ON seo_x_ads_keywords_contextual_master(ad_active) WHERE ad_active = true;
+CREATE INDEX idx_keyword_master_ad_priority ON seo_x_ads_keywords_contextual_master(ad_priority_tier) WHERE ad_priority_tier != 'none';
+```
+
+**Dual-flag pattern explained:** A keyword CAN have `seo_active=true` AND `ad_active=true` simultaneously — that's the canonical "shared use" case the operator vision predicted. `seo_active` defaults true (SEO-led portfolio); `ad_active` defaults false (Ads is opt-in per KW with explicit operator scoring).
+
+### 12.3 Future: `seo_campaigns` Universal Master Table (HINT ONLY — Phase 1, DR-027)
+
+> **THIS SECTION IS NON-NORMATIVE.** No DDL ships in Schema v1.12. The architecture sketch below documents Phase 1 direction so operators can adopt the Phase 0 `campaign_id` TEXT stub with migration-friendly naming. Full DDL ships in Schema v1.13+ when DR-027 locks.
+
+**Architecture sketch (per DR-027):**
+
+```sql
+-- ⚠️ PHASE 1 — DOES NOT SHIP IN v1.12 — for reference only ⚠️
+
+CREATE TABLE seo_campaigns (
+  -- Identity
+  campaign_fp text PRIMARY KEY,           -- hash of (brand_id, campaign_id, date_start)
+  campaign_id text NOT NULL UNIQUE,       -- short slug, e.g., "vth-biodent-launch-2026-q2"
+  campaign_name text NOT NULL,            -- human label
+  notion_page_id text,                    -- Notion sync state
+
+  -- Brand scope
+  brand_id text NOT NULL REFERENCES brands(id),
+
+  -- Entity focus (optional)
+  entity_focus_fp text REFERENCES seo_entity_graph(fingerprint),
+
+  -- Classification
+  platforms text[] NOT NULL,              -- enum elements: google_ads, meta_ads, youtube_ads, line_ads, tiktok_ads, other
+  objective text NOT NULL                 -- lead_gen | awareness | conversion | retargeting | reactivation | launch | promo
+    CHECK (objective IN ('lead_gen', 'awareness', 'conversion', 'retargeting', 'reactivation', 'launch', 'promo')),
+  audience_tier text                      -- cold | warm | hot | mixed
+    CHECK (audience_tier IS NULL OR audience_tier IN ('cold', 'warm', 'hot', 'mixed')),
+
+  -- Financial
+  budget_total_thb numeric(12,2),
+  budget_currency text NOT NULL DEFAULT 'THB',
+  budget_per_platform jsonb,              -- {"google_ads": 50000, "meta_ads": 30000}
+  budget_pacing text                      -- front_loaded | even | back_loaded | accelerated
+    CHECK (budget_pacing IS NULL OR budget_pacing IN ('front_loaded', 'even', 'back_loaded', 'accelerated')),
+
+  -- Schedule
+  date_start date NOT NULL,
+  date_end date,                          -- nullable for ongoing
+  status text NOT NULL DEFAULT 'planning' -- planning | active | paused | completed | archived
+    CHECK (status IN ('planning', 'active', 'paused', 'completed', 'archived')),
+
+  -- Governance
+  approved_by_fp text REFERENCES seo_authors_reviewers(fingerprint),
+  approval_date date,
+  notes text,
+
+  -- Timestamps
+  created_at timestamptz NOT NULL DEFAULT now(),
+  updated_at timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE TABLE seo_campaign_pages (        -- M2M junction
+  campaign_fp text REFERENCES seo_campaigns ON DELETE CASCADE,
+  page_fp text REFERENCES seo_website_page_master(fingerprint) ON DELETE CASCADE,
+  role text NOT NULL                     -- primary_lp | secondary_lp | thank_you | followup | dual_use_seo_page
+    CHECK (role IN ('primary_lp', 'secondary_lp', 'thank_you', 'followup', 'dual_use_seo_page')),
+  active boolean NOT NULL DEFAULT true,
+  added_at timestamptz NOT NULL DEFAULT now(),
+  PRIMARY KEY (campaign_fp, page_fp)
+);
+
+CREATE TABLE seo_campaign_keywords (     -- M2M junction
+  campaign_fp text REFERENCES seo_campaigns ON DELETE CASCADE,
+  keyword_fp text REFERENCES seo_x_ads_keywords_contextual_master(fingerprint) ON DELETE CASCADE,
+  platform text NOT NULL                 -- google_ads | meta_ads | youtube_ads | line_ads | tiktok_ads | other
+    CHECK (platform IN ('google_ads', 'meta_ads', 'youtube_ads', 'line_ads', 'tiktok_ads', 'other')),
+  match_type text                        -- exact | phrase | broad | broad_modified | negative
+    CHECK (match_type IS NULL OR match_type IN ('exact', 'phrase', 'broad', 'broad_modified', 'negative')),
+  bid_strategy text                      -- manual_cpc | enhanced_cpc | maximize_clicks | maximize_conversions | target_cpa | target_roas
+    CHECK (bid_strategy IS NULL OR bid_strategy IN
+      ('manual_cpc', 'enhanced_cpc', 'maximize_clicks', 'maximize_conversions', 'target_cpa', 'target_roas')),
+  bid_amount_thb numeric(10,2),
+  budget_share_pct numeric(5,2),
+  active boolean NOT NULL DEFAULT true,
+  PRIMARY KEY (campaign_fp, keyword_fp, platform)
+);
+
+CREATE TABLE seo_campaign_performance_snapshot (
+  campaign_fp text NOT NULL REFERENCES seo_campaigns ON DELETE CASCADE,
+  platform text NOT NULL
+    CHECK (platform IN ('google_ads', 'meta_ads', 'youtube_ads', 'line_ads', 'tiktok_ads', 'other')),
+  snapshot_date date NOT NULL,
+
+  -- Volume metrics
+  impressions int NOT NULL DEFAULT 0,
+  clicks int NOT NULL DEFAULT 0,
+
+  -- Spend
+  spend_thb numeric(10,2) NOT NULL DEFAULT 0,
+
+  -- Outcome
+  conversions int NOT NULL DEFAULT 0,
+  conversion_value_thb numeric(12,2) NOT NULL DEFAULT 0,
+
+  -- Derived metrics (GENERATED)
+  ctr numeric(7,4) GENERATED ALWAYS AS (
+    CASE WHEN impressions > 0 THEN clicks::numeric / impressions ELSE NULL END
+  ) STORED,
+  cpc numeric(8,2) GENERATED ALWAYS AS (
+    CASE WHEN clicks > 0 THEN spend_thb / clicks ELSE NULL END
+  ) STORED,
+  cpm numeric(8,2) GENERATED ALWAYS AS (
+    CASE WHEN impressions > 0 THEN spend_thb * 1000 / impressions ELSE NULL END
+  ) STORED,
+  conv_rate numeric(7,4) GENERATED ALWAYS AS (
+    CASE WHEN clicks > 0 THEN conversions::numeric / clicks ELSE NULL END
+  ) STORED,
+  cpa_thb numeric(10,2) GENERATED ALWAYS AS (
+    CASE WHEN conversions > 0 THEN spend_thb / conversions ELSE NULL END
+  ) STORED,
+  roas numeric(8,4) GENERATED ALWAYS AS (
+    CASE WHEN spend_thb > 0 THEN conversion_value_thb / spend_thb ELSE NULL END
+  ) STORED,
+
+  -- Quality layer (platform-specific)
+  quality_layer jsonb,                   -- e.g., {"quality_score": 8, "relevance_score": 7}
+
+  created_at timestamptz NOT NULL DEFAULT now(),
+  PRIMARY KEY (campaign_fp, platform, snapshot_date)
+);
+
+-- ⚠️ END OF PHASE 1 REFERENCE — NOT SHIPPED IN v1.12 ⚠️
+```
+
+### 12.4 Phase 0 → Phase 1 Migration Path
+
+When DR-027 ships and `seo_campaigns` is created (Schema v1.13+):
+
+1. **Parse distinct campaign_id values** from `seo_website_page_master`:
+   ```sql
+   SELECT DISTINCT campaign_id FROM seo_website_page_master WHERE campaign_id IS NOT NULL;
+   ```
+
+2. **Create `seo_campaigns` rows** for each — operator fills in `campaign_name`, `platforms`, `objective`, `date_start`, etc.
+
+3. **Populate `seo_campaign_pages` junction** from existing `page_master` rows:
+   ```sql
+   INSERT INTO seo_campaign_pages (campaign_fp, page_fp, role)
+   SELECT
+     (SELECT campaign_fp FROM seo_campaigns WHERE campaign_id = pm.campaign_id),
+     pm.fingerprint,
+     CASE pm.page_purpose
+       WHEN 'ads_lp' THEN 'primary_lp'
+       WHEN 'dual_use' THEN 'dual_use_seo_page'
+     END
+   FROM seo_website_page_master pm
+   WHERE pm.campaign_id IS NOT NULL
+     AND pm.page_purpose IN ('ads_lp', 'dual_use');
+   ```
+
+4. **Populate `seo_campaign_keywords` junction** from KW rows already flagged `ad_active=true` with `ad_landing_page_fp` set:
+   ```sql
+   INSERT INTO seo_campaign_keywords (campaign_fp, keyword_fp, platform, match_type)
+   SELECT
+     (SELECT cp.campaign_fp FROM seo_campaign_pages cp WHERE cp.page_fp = km.ad_landing_page_fp LIMIT 1),
+     km.fingerprint,
+     'google_ads',                          -- Phase 0 assumption: all Phase 0 ad work is Google Ads
+     km.ad_match_type_preferred
+   FROM seo_x_ads_keywords_contextual_master km
+   WHERE km.ad_active = true AND km.ad_landing_page_fp IS NOT NULL;
+   ```
+
+5. **Replace `campaign_id text` with FK column** on `seo_website_page_master`:
+   ```sql
+   ALTER TABLE seo_website_page_master
+     ADD COLUMN campaign_fp text REFERENCES seo_campaigns(campaign_fp) ON DELETE SET NULL;
+
+   UPDATE seo_website_page_master pm
+   SET campaign_fp = (SELECT c.campaign_fp FROM seo_campaigns c WHERE c.campaign_id = pm.campaign_id);
+
+   ALTER TABLE seo_website_page_master DROP COLUMN campaign_id;
+   ```
+
+6. **Validation queries** post-migration:
+   - Every page with `page_purpose='ads_lp'` should have at least one row in `seo_campaign_pages`
+   - Every `ad_active=true` KW should have at least one row in `seo_campaign_keywords`
+
+**Naming convention for Phase 0 `campaign_id` (CRITICAL for clean migration):**
+
+```
+{brand-id}-{purpose}-{date-suffix}
+
+✅  vth-biodent-launch-2026-q2
+✅  smilescape-blue-diamond-promo-2026-may
+✅  trin-wellness-vital-core-evergreen
+❌  test-1
+❌  promo
+❌  ads-2026
+```
+
+Brands MUST adopt this convention from day 1. Free-form labels make Phase 1 migration painful.
+
+### 12.5 Cross-References
+
+| Topic | See Also |
+|-------|----------|
+| Page Purpose taxonomy | Bible Part 29.2 |
+| URL convention `/lp/{slug}/` | Bible Part 29.3 |
+| Index directive enum | Bible Part 29.4 |
+| Conversion event taxonomy | Bible Part 29.5 |
+| Dual-use eligibility (6 gates) | Bible Part 29.6 |
+| Keyword schema extensions detail | Bible Part 29.7 |
+| Page schema extensions detail | Bible Part 29.8 |
+| T-ADS template family | Content_Templates v1.4 §3.4 |
+| YMYL evidence rules (unchanged) | Bible Part 23 + Part 29.10 |
+| Future Campaign Master architecture | DR-027 + Bible Part 29.11 |
+| Phase 0 → Phase 1 migration | This document §12.4 |
+
+---
+
 ## Appendix A — Required PostgreSQL Extensions
 
 ### Installation Order
@@ -3658,9 +3981,9 @@ v2_schema_additions_when_activated:
 
 ---
 
-**END OF DOCUMENT — Schema_Overview EYWA v1.10**
+**END OF DOCUMENT — Schema_Overview EYWA v1.12**
 
 *🌿 EYWA™ PROTOCOL Database Architecture • May 2026*  
-*Companion to คัมภีร์ EYWA™ PROTOCOL v3.14*  
+*Companion to คัมภีร์ EYWA™ PROTOCOL v3.16*  
 *EYWA™ is a registered service mark — Class 35+42, DIP Thailand (filed 2026-04-20)*  
-*Source of Truth: Bible Part 5 (Architecture) + this document (Reference)*
+*Source of Truth: Bible Part 5 (Architecture) + Bible Part 29 (Ads Track) + this document (Reference)*
