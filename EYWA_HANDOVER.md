@@ -3,10 +3,72 @@
 > **For Claude (and any AI assistant) working on a new brand within the EYWA portfolio.**  
 > **Read this file first, every new project, every new session.**
 
-**Document Version:** 1.13  
-**Last Updated:** 2026-05-12  
-**Companion to:** EYWA Bible v3.19 + Schema Overview v1.15 + DECISION_RECORDS v1.13 + Content_Templates_EYWA_v1_0.md v1.5 (LOCKED)  
+**Document Version:** 1.14  
+**Last Updated:** 2026-05-17  
+**Companion to:** EYWA Bible v3.20 + Schema Overview v1.16 + DECISION_RECORDS v1.14 + Content_Templates_EYWA_v1_0.md v1.6 (LOCKED)  
 **Created by:** The Gifted Digital Marketing Co., Ltd.
+
+---
+
+## 🆕 v1.14 Note (2026-05-17) — Brand Genesis Protocol Universal (DR-028 LOCKED)
+
+Bible v3.20 ships with **Part 30 — Brand Genesis Protocol (BGP)** per DR-028 Locked 2026-05-17. **Universal scope** — applies to all 13 brand repos AND eywa-marketing (EYWA dogfoods its own protocol).
+
+### What changes for brand onboarding
+
+**Phase A (was: unstructured `brand-concept.md`) is now 5 sub-phases:**
+
+| Sub-phase | Duration | Deliverable | Output file |
+|-----------|----------|-------------|-------------|
+| **A.0** Pre-Engagement Discovery | 1-2 hr kickoff | Business goals + stakeholders + constraints | `docs/brand-genesis/business-context.md` |
+| **A.1** EYWA DNA Graph | 4-6 hr workshop | 10-field brand identity (Brand Key + Compliance Boundaries) | `docs/brand-genesis/eywa-dna-graph.md` |
+| **A.2** EYWA Framework Synapse | 2-3 hr | Golden Circle + EYWA Intent Roots (JTBD) + EYWA Journey Map (CDJ) | `docs/brand-genesis/framework-synapse.md` |
+| **A.3** EYWA TRUST Rubric Baseline | 3-5 hr audit | 5-pillar audit (Trust/Results/Understanding/Safety/Transparency) | `docs/brand-genesis/eywa-trust-rubric.md` |
+| **A.4** Brand-Business-SEO Alignment Map | 2-3 hr | Proves every SEO move serves brand promise + business goal | `docs/brand-genesis/alignment-map.md` |
+
+**Total Phase A:** ~3 weeks (vs prior ~1 week). Phase B-E becomes faster because foundation is clearer.
+
+### EYWA Naming Lexicon (Locked DR-028)
+
+| Concept | EYWA Name | Bible reference |
+|---------|-----------|----------------|
+| Brand Key (Unilever-adapted) | **EYWA DNA Graph** | §30.4 + §30.11.1 |
+| Consumer Decision Journey | **EYWA Journey Map** | §30.5 + §30.11.2 |
+| Jobs-to-be-Done | **EYWA Intent Roots** | §30.5 + §30.11.3 |
+| Healthcare rubric | **EYWA TRUST Rubric** | §30.6 + §30.11.4 |
+| OKR / KPI tracker | **EYWA Compound Growth** | §30.9 + §30.11.5 |
+| AI brand-consistency check | **EYWA DNAi Diagnostic** | §30.8 + §30.11.6 |
+
+See Bible §30.11 for full naming definitions (canonical lexicon — do not lose meaning over time).
+
+### EYWA DNAi Diagnostic — TWO touchpoints
+
+1. **Draft-time awareness** (lightweight) — content author references DNA Graph + voice ID during writing. AI co-author prompt includes brand context. Goal: draft enters review 80-90% on-brand.
+2. **Pre-publish formal gate** (serious) — Stage 2 in editorial workflow. Claude API check via n8n. Pass/fail + revision suggestions. Block publish on fail.
+
+### Service Suite mapping (productized deliverables)
+
+| Service Tier | BGP Phase Output |
+|--------------|------------------|
+| **EYWA™ Audit** | Phase A.0-A.3 deliverable package (business-context + DNA Graph + Framework Synapse + TRUST baseline) |
+| **EYWA™ Graph** | Phase B-D (Entity Genesis + Knowledge Graph build) |
+| **EYWA™ Stack** | Schema implementation + WP/Astro stack setup |
+| **EYWA™ Vital** | Phase F content production retainer |
+| **EYWA™ Forge** | Phase G growth + iteration retainer |
+| **EYWA™ Score** | EYWA Compound Growth dashboard + quarterly reporting |
+| **EYWA™ Atlas** | Enterprise multi-brand orchestration |
+
+### Existing 8 brands — backfill required
+
+VTH BioDent · SmileScape · Trin Wellness · Classy Clinic · Deezy · Biodental Wellness · Relaxia · TC Smile — all need Phase A.0-A.4 retrofit at next Stage gate. Estimated 1-2 sessions per brand to backfill.
+
+### Operator workload from DR-028
+
+- [ ] Phase A.1-A.4 sessions per new brand (~10-15 hours)
+- [ ] n8n DNAi Diagnostic flow build (one-time ~6-8 hours dev)
+- [ ] eywa-marketing pilot — run BGP Phase A on EYWA itself (immediate, dogfood)
+- [ ] Retrofit 8 bootstrapped brands at next Stage gate (1-2 sessions each)
+- [ ] Per-brand `deployment/dnai-config.yaml` setup (tuning DNAi per brand voice)
 
 ---
 

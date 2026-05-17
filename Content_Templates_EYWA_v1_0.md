@@ -3,10 +3,21 @@
 > **Companion document to** EYWA Bible v3.19 + Schema Overview v1.15
 > **Universal Content Production Standards across 13 brands × 6 verticals**
 
-**Version:** v1.5 (LOCKED 2026-05-12 — T1-T22 SEO template family LOCKED per DR-020; T-ADS-X family Proposed per DR-026 still pending lock 2026-06-21)
+**Version:** v1.6 (LOCKED 2026-05-17 — adds DNAi Diagnostic Stage 2 to §7 Editorial Workflow per DR-028; T1-T22 + T-ADS-X unchanged)
 **Status:** **LOCKED 2026-05-12** for T1-T22 (Universal Content Template Standard per DR-020); T-ADS-X (DR-026) Proposed status retained until 2026-06-21 lock
 **Companion to:** Bible v3.19 + Schema Overview v1.15 + DECISION_RECORDS v1.13
 **Format:** Append-only with semantic versioning (v1.0 → v1.5 backward compatible)
+
+## v1.6 Changelog (2026-05-17) — Editorial Workflow + DNAi Diagnostic (DR-028 Locked)
+
+Per DR-028 (Brand Genesis Protocol — BGP) — Editorial workflow gains two new touchpoints for brand alignment enforcement:
+
+- ➕ **§7 Editorial Workflow updated** — Stage 0 (draft) now includes brand-awareness reminder; Stage 2 NEW = EYWA DNAi Diagnostic formal AI gate before final approval
+- ➕ Content brief checklist (DR-017) gains `intent_root` + `cdj_stage` + `brand_promise` + `alignment_map_row_id` fields per DR-028 §30.7 Phase F integration
+- 🔗 Cross-reference Bible Part 30 (Brand Genesis Protocol) — every content brief must trace to alignment-map.md row
+- 📌 T1-T22 SEO templates: NO structural change — only metadata field additions per content brief
+- 📌 T-ADS-1..5 Ads templates: NO change — Ads pipeline runs same DNAi gate before publish
+- 🔄 Companion refs: Bible v3.19 → v3.20, DECISION_RECORDS v1.13 → v1.14, EYWA_HANDOVER v1.13 → v1.14
 
 ## v1.5 Changelog (2026-05-12) — Status Lock (DR-020 Locked)
 

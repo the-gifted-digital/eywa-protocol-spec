@@ -1,8 +1,8 @@
 # 📖 คัมภีร์ EYWA™ PROTOCOL
 ## The Universal Knowledge Graph SEO Specification for the AI Era
 
-**Version:** 3.19  
-**Last Updated:** 2026-05-12  
+**Version:** 3.20  
+**Last Updated:** 2026-05-17  
 **Trademark:** EYWA™ (Class 35+42, DIP Thailand, filed 2026-04-20)  
 **Created by:** The Gifted Digital Marketing Co., Ltd.  
 **Scope:** Universal standard สำหรับการบริหารจัดการ SEO + Knowledge Graph แบบ multi-vertical, multi-brand, multi-specialty, multi-lingual, multi-location, **AI-future-ready** ในยุค AI Search (2026+) — ครอบคลุม healthcare verticals (clinic ทุก specialty, hospital, dental, sleep medicine, aesthetic, wellness, healthcare media) extensible to other regulated YMYL niches  
@@ -24927,7 +24927,7 @@ step_4_optimization:
     - dual_use promotion candidate flag (if seo_organic page eligible per §29.6)
 ```
 
-## 29.13 Cross-References
+## 29.13 Cross-References — Ads Track
 
 | Topic | See Also |
 |-------|----------|
@@ -24941,6 +24941,670 @@ step_4_optimization:
 | Schema additions ship together | Schema v1.12 §29 (Ads-LP additive columns) |
 | Templates T-ADS-1 to T-ADS-5 | Content_Templates v1.4 §T-ADS |
 | Federation: Ads track shares brand_scope[] pattern | Part 10 (Multi-Brand Strategy) |
+
+---
+
+# PART 30: Brand Genesis Protocol (BGP) 🆕 v3.20
+
+> **Per DR-028 (Locked 2026-05-17)** — Universal Brand onboarding methodology, parallel to EGP (Entity Genesis Protocol, Part 2.6). Replaces unstructured `brand-concept.md` with 5-deliverable structured Phase A. Ensures every brand engagement starts with brand+business+SEO triple-fit foundation.
+>
+> **Scope:** UNIVERSAL — applies to all brand repos AND eywa-marketing (EYWA dogfoods its own protocol)
+> **Companion Bootstrap Kit:** `templates/folder-skeleton/docs/brand-genesis/` (5 template files)
+> **Companion DR:** DR-028 (this Part's formalization)
+
+## 30.1 Why BGP Exists (Parallel to EGP)
+
+EGP (Part 2.6) operates on the **entity-knowledge layer** — produces structured entities, edges, taxonomies. BGP operates on the **brand-business layer** — produces structured brand DNA, business goals, alignment proof.
+
+```
+EGP (Entity Genesis Protocol)        BGP (Brand Genesis Protocol)
+├── Operates on: entities + edges    ├── Operates on: brand DNA + business goals
+├── Output: seo_entity_graph rows    ├── Output: 5 markdown deliverables
+├── Question: "What concepts exist?" ├── Question: "What brand promise + business goal?"
+└── Phase: B (post brand-concept)    └── Phase: A (the FOUNDATION for everything else)
+```
+
+**EGP feeds Knowledge Graph layer; BGP feeds Strategy + Editorial + Reporting layers.**
+
+Without BGP, SEO drifts away from brand (voice violations, off-brand content) and from business (no ROI proof). With BGP, every SEO move traces back to alignment-map.md → business goal → brand promise → success metric.
+
+## 30.2 The 5 Sub-Phases (Phase A.0 → A.4)
+
+```
+Phase A.0  ─→  Pre-Engagement Discovery     (1-2 hours)  →  business-context.md
+   ↓
+Phase A.1  ─→  EYWA DNA Graph workshop      (4-6 hours)  →  eywa-dna-graph.md
+   ↓
+Phase A.2  ─→  EYWA Framework Synapse       (2-3 hours)  →  framework-synapse.md
+   ↓
+Phase A.3  ─→  EYWA TRUST Rubric Baseline   (3-5 hours)  →  eywa-trust-rubric.md
+   ↓
+Phase A.4  ─→  Brand-Business-SEO Alignment (2-3 hours)  →  alignment-map.md
+   ↓
+Phase B-E  ─→  Existing EYWA flow (KW research → Entity Genesis → Sitemap → Content Plan)
+                  ↑ now enriched by Phase A foundation; every page justified by alignment-map
+```
+
+**Total Phase A enhanced:** ~3 weeks (vs prior ~1 week). Phase B-E becomes faster because foundation is clearer.
+
+## 30.3 Phase A.0 — Pre-Engagement Discovery
+
+**Goal:** Capture context BEFORE bootstrap. Avoids assumptions later in Phase B-E.
+
+**Deliverable:** `docs/brand-genesis/business-context.md`
+
+**Outputs (template-driven):**
+
+```yaml
+business_goals:
+  revenue_target_12mo: { value, currency, baseline }
+  market_position_target: { competitor benchmark, desired rank }
+  growth_horizon: { year-1, year-3, year-5 trajectory }
+
+stakeholder_map:
+  decision_makers: [name, role, decision_scope]
+  gatekeepers: [name, role, gate_type]  # CFO controlling budget, MD controlling clinical claims
+  end_users: [persona, primary_need]
+
+constraints:
+  budget: { monthly_marketing, one_time_setup, content_production_hours }
+  timeline: { phase_b_deadline, first_content_live_target, full_launch_target }
+  compliance: [PDPA, medical_advertising_law, brand-specific regulatory]
+  technical: { existing_stack, migration_constraints, integration_points }
+
+success_metrics:
+  primary: "What does 'win' look like in 12 months?" (specific + measurable)
+  secondary: [3-5 supporting metrics]
+  reporting_cadence: { monthly | quarterly }
+```
+
+## 30.4 Phase A.1 — EYWA DNA Graph (Brand Key adapted)
+
+**Goal:** Structured brand DNA in 10 fields. Single source of truth for all brand decisions downstream.
+
+**Deliverable:** `docs/brand-genesis/eywa-dna-graph.md`
+
+**10 Fields:**
+
+| # | Field | Description | Example (Trin Wellness) |
+|---|-------|-------------|------------------------|
+| 1 | **Target Patient** | Demographic + psychographic | Thai men 30-60, mid-to-upper income, BKK metro, digitally savvy, health-conscious post-ED scare |
+| 2 | **Patient Insight** | Deep truth / pain / unmet need | "ED is a symptom of something bigger but my GP just prescribed Viagra and sent me away" |
+| 3 | **Clinical Benefits** | Functional outcomes — measurable | Root-cause diagnostic (vascular + hormone + metabolic) → treatment plan addressing systemic issue, not just symptom |
+| 4 | **Emotional Benefits** | How patient feels after engagement | "Finally understood my body. Took charge instead of being prescribed away" |
+| 5 | **Reasons to Trust (RTBs)** | Credentials, evidence, track record, social proof | Dr. Trin: vascular specialty + 20yr experience; 7 branded centers; ABI standalone tech; published outcomes |
+| 6 | **Brand Personality** | 5-7 traits + 3-5 anti-traits | Trin = Diagnostic + Authoritative + Patient + Direct + Caring. Anti = Salesy, Quick-fix, Device-flashy |
+| 7 | **Discriminator** | Single point of differentiation vs key competitors | "We don't sell shockwave. We find why ED happened, then treat the cause" |
+| 8 | **Brand Essence** | One-line distilled identity | "The clinic that treats men by understanding men" |
+| 9 | **Competitive Frame** | Which playing field we choose | Vs commodity ED clinics (HE/Menhance) → root-cause depth. Vs hospital wellness (BDMS/Vitallife) → male-specialty focus |
+| 10 | **Compliance Boundaries** | What we CAN'T claim — healthcare YMYL discipline | No "cure" language for chronic conditions. No guaranteed outcomes. Must cite Tier 1-3 source for ED-CVD causality claims. No before/after without consent + anonymization |
+
+**Field 10 is healthcare-specific** — adapted from Unilever Brand Key for YMYL discipline. Acts as published-content guardrail.
+
+## 30.5 Phase A.2 — EYWA Framework Synapse
+
+**Goal:** Document framework inputs that compose into EYWA's specific methodology. Makes implicit reasoning explicit.
+
+**Deliverable:** `docs/brand-genesis/framework-synapse.md`
+
+**Contains 3 inputs:**
+
+### A.2.1 Golden Circle (Sinek, no rename)
+
+```yaml
+WHY: {brand purpose — single sentence why brand exists beyond making money}
+HOW: {methodology — what's the unique way brand delivers}
+WHAT: {services — concrete offerings}
+```
+
+### A.2.2 EYWA Intent Roots (Jobs-to-be-Done adapted)
+
+```yaml
+jobs_patient_hires_clinic_to_do:
+  functional:
+    - "fix this ED symptom"
+    - "find a doctor who actually listens"
+  emotional:
+    - "feel in control of my body again"
+    - "stop being embarrassed about a topic"
+  social:
+    - "be a better husband / partner"
+    - "not be 'the guy who needs Viagra'"
+```
+
+### A.2.3 EYWA Journey Map (McKinsey CDJ adapted)
+
+```yaml
+stages:
+  initial_consideration:
+    triggers: [first ED episode, doctor mentions cardiovascular link, friend recommendation]
+    touchpoints: [Google search, Pantip thread, friend talk, doctor referral]
+    content_needs: [educational pillar — "Why ED happens", awareness — "Vascular link to ED"]
+
+  active_evaluation:
+    triggers: [comparing 2-3 clinics, reading reviews, checking credentials]
+    touchpoints: [clinic websites, Google Maps reviews, Facebook posts, doctor profiles]
+    content_needs: [credentials page, doctor profile depth, treatment comparison, pricing transparency]
+
+  moment_of_purchase:
+    triggers: [contact form filled, LINE Add Friend, phone call]
+    touchpoints: [booking form, branch info, response speed, first-visit prep]
+    content_needs: [booking CTA, branch info, FAQ on first visit, what to bring]
+
+  post_purchase:
+    triggers: [first visit done, treatment started, follow-up scheduled]
+    touchpoints: [follow-up calls, LINE messages, treatment tracking]
+    content_needs: [aftercare guides, progress tracking, what to expect]
+
+  loyalty_loop:
+    triggers: [outcomes achieved, referring friends, maintenance care]
+    touchpoints: [periodic check-ins, alumni community, referral program]
+    content_needs: [maintenance content, success stories, referral mechanism]
+```
+
+**Why this matters in Phase E (Content Plan):** Every page tagged with `cdj_stage` field. Sitemap audit ensures all stages have content coverage. Content Templates (Part 9) align with CDJ stage (e.g., T1 pillar → initial consideration; T2 service → active evaluation).
+
+## 30.6 Phase A.3 — EYWA TRUST Rubric Baseline
+
+**Goal:** Audit brand's current state across 5 pillars to identify SEO content gaps. First commercial deliverable of EYWA™ Audit tier.
+
+**Deliverable:** `docs/brand-genesis/eywa-trust-rubric.md`
+
+**5 Pillars:**
+
+```yaml
+T_trust:
+  meaning: Medical authority + credentials + evidence-backed claims + citations
+  scoring_signals:
+    - Doctor credentials displayed with verifiable links
+    - Tier 1-3 citations on medical claims (Bible Part 23.1)
+    - Reviewed-by signoff on YMYL pages
+    - Wikidata/sameAs/organization schema completeness
+    - Years of experience + specialty depth visible
+  score_band:
+    0-3: Generic clinic, no credential depth
+    4-6: Doctor names + basic credentials, some citations
+    7-9: Specialist profiles + Tier 1-3 evidence per claim + sameAs schema
+    10: Award-grade — recognized authority status (industry awards, published research)
+
+R_results:
+  meaning: Clinical outcomes + case studies + measurable success rates
+  scoring_signals:
+    - Documented patient outcomes (with PDPA-compliant anonymization)
+    - Success rate statistics + sample size
+    - Before/after evidence (visual or measurable)
+    - Long-term outcome tracking
+    - Peer-reviewed methodology where applicable
+  score_band:
+    0-3: No outcome documentation
+    4-6: Generic testimonials, no measurable data
+    7-9: Quantified outcomes + case studies + visual evidence (consented)
+    10: Published outcomes data + audited methodology
+
+U_understanding:
+  meaning: Deep patient understanding + journey clarity + accessibility
+  scoring_signals:
+    - Patient persona depth visible in content tone
+    - Journey-stage content coverage (per CDJ map)
+    - Concern-led content (Section 5 Concerns per Part 4)
+    - Accessibility (WCAG 2.1 AA — Bible Part 9)
+    - Language clarity (no jargon barriers, multilingual where relevant)
+  score_band:
+    0-3: Generic content, single-persona
+    4-6: Some persona segmentation, partial accessibility
+    7-9: Full CDJ coverage + WCAG AA + bilingual + concern-led depth
+    10: Adaptive personalization + multiple personas + accessibility audited
+
+S_safety:
+  meaning: Compliance + contraindications + disclosures + YMYL discipline
+  scoring_signals:
+    - Contraindications declared per procedure (per DR-013 edge type)
+    - Safety disclosures on T2 service pages (per Content_Templates B25)
+    - PDPA consent + privacy policy visible
+    - Medical reviewer signoff on absolute contraindications (Bible §2.7.5)
+    - Crisis disclosure on acute YMYL content (T1 with severe risk)
+  score_band:
+    0-3: Missing safety disclosures, regulatory risk
+    4-6: Basic disclaimers, partial contraindication coverage
+    7-9: Full contraindication edges + crisis disclosures + medical signoff workflow
+    10: Comprehensive safety framework + regulatory audit pass
+
+T_transparency:
+  meaning: Pricing transparency + process clarity + data handling + PDPA
+  scoring_signals:
+    - Pricing visible (range OK — "start from X" acceptable per Bible Part 25)
+    - Treatment process documented step-by-step
+    - Data handling policy clear + PDPA compliance visible
+    - Outcomes reporting transparent
+    - Conflict of interest disclosures (e.g., sponsored research)
+  score_band:
+    0-3: No pricing, opaque process, no PDPA
+    4-6: Partial pricing, basic process, PDPA banner
+    7-9: Pricing tiers + full process + PDPA + data handling spec
+    10: Full transparency + outcomes published + COI disclosed
+```
+
+**Per-pillar deliverable structure:**
+
+```yaml
+pillar_audit:
+  pillar: T_trust
+  current_score: 5
+  evidence_of_score:
+    - "Dr. Trin profile exists with ABRAM + A4M certifications visible"
+    - "5 articles have Tier 2 citations (Journal of Sexual Medicine)"
+  gaps_identified:
+    - "No reviewedBy schema emission per YMYL page"
+    - "Wikidata Q-number not claimed for Dr. Trin"
+    - "Only 5/30 articles have Tier 1-3 citations"
+  seo_content_opportunity:
+    - "T9 Doctor profile expansion — add sameAs Wikidata + sameAs LinkedIn + peer review track"
+    - "Citation backfill program — 25 articles need Tier 1-3 citation upgrade"
+    - "ReviewedBy schema rollout — eywa-schema-pipeline plugin update"
+  target_score_6mo: 8
+```
+
+**Total TRUST baseline (5 pillar × 0-10) feeds:**
+- **Phase E Content Plan** — content gaps → sitemap inclusion
+- **Phase G Growth retainer** — improvement targets per quarter
+- **Client reporting** — quarterly TRUST progression as deliverable
+- **EYWA Compound Growth dashboard** (Part 20 KPI integration)
+
+## 30.7 Phase A.4 — Brand-Business-SEO Alignment Map
+
+**Goal:** Prove every SEO move serves a brand promise AND a business goal. Closes the "what's the ROI" question.
+
+**Deliverable:** `docs/brand-genesis/alignment-map.md`
+
+**Structure (table per business goal):**
+
+```markdown
+## Business Goal 1: +30% new patient bookings per quarter
+
+| Brand promise involved | TRUST pillar | SEO tactic | Content cluster | Success metric |
+|------------------------|--------------|------------|-----------------|----------------|
+| "Easy access to expert care" | Trust + Understanding | Local SEO + booking-intent content | Section 3 Services + Section 7 Branches | Branded search vol, booking conversions |
+| "Root-cause depth" | Trust + Results | Concern-led pillar pages with diagnostic depth | Section 5 Concerns + Section 6 Knowledge | KW rankings on concern-cluster, time-on-page |
+
+## Business Goal 2: Establish authority in vascular health
+
+| Brand promise involved | TRUST pillar | SEO tactic | Content cluster | Success metric |
+|------------------------|--------------|------------|-----------------|----------------|
+| "Vascular specialty differentiation" | Trust + Results | Knowledge Hub depth + thought leadership | Section 6 Knowledge (vascular sub-cluster, 11→20 pages) | AI citation rate (ChatGPT/Claude/Perplexity), referring domains |
+```
+
+**Used downstream:**
+- **Phase E sitemap audit** — every Layer 1 + Layer 2 page must trace to an alignment-map row
+- **Phase F content brief** — content_brief field references alignment-map row
+- **EYWA Compound Growth dashboard** — KPI reporting uses success_metric column
+- **Client quarterly review** — table is the agenda
+
+## 30.8 EYWA DNAi Diagnostic — Two-Touchpoint Brand Discipline
+
+Brand alignment is enforced at **two pipeline touchpoints** — light awareness during drafting, formal AI gate before publish. The first prevents drift early; the second catches what humans miss at scale.
+
+### 30.8.1 Touchpoint 1 — Draft-Time Awareness (Lightweight)
+
+**When:** From the moment content drafting starts (T-template chosen, body being written).
+
+**Who:** Content author (operator + AI co-author).
+
+**What's referenced:**
+- `docs/brand-genesis/eywa-dna-graph.md` (10 fields — especially Brand Personality + Anti-traits + Discriminator + Compliance Boundaries)
+- `strategy/messaging.md` voice ID + 5 axes (or equivalent brand voice doc)
+- Brand-specific anti-patterns list
+
+**How enforced (not blocking, instructional):**
+- Content brief (per DR-017) auto-includes top-of-mind summary of voice ID + 3 anti-traits + relevant compliance line
+- AI co-author (Claude Code) prompt template includes brand DNA snippet so first draft already speaks in voice
+- Editorial checklist in template (per Content_Templates v1.6 §7) reminds author to cross-reference DNA Graph before submitting draft
+
+**Goal:** **Draft enters Stage 1 review already 80-90% on-brand.** DNAi Diagnostic at Stage 2 catches the remaining 10-20% drift, not 100% rewrite work.
+
+### 30.8.2 Touchpoint 2 — Pre-Publish Formal Gate (Serious AI Check)
+
+**When:** After human editorial review (Stage 1), before final approval (Stage 4).
+
+**Who:** AI (Claude API via n8n) — operator reviews output.
+
+**What's referenced:** Same brand context as Touchpoint 1, but now applied with strict pass/fail scoring instead of authoring guidance.
+
+**Position in editorial workflow** (extends Bible Part 23.4 multi-stage review):
+
+```
+Stage 0: Content drafting (Touchpoint 1 — brand awareness ACTIVE during writing)
+   ↓
+Stage 1: Human editorial review (accuracy, citations, voice — Part 23.4 existing)
+   ↓
+Stage 2: EYWA DNAi Diagnostic (Touchpoint 2 — formal AI brand alignment gate)  ⭐
+   ↓
+Stage 3: Revise if needed → re-run DNAi
+   ↓
+Stage 4: Final approval gate (human signoff)
+   ↓
+Stage 5: Publish
+```
+
+**Why two touchpoints (not just the end gate):**
+
+- **Cost efficiency** — DNAi API calls are not free; first-pass awareness reduces revision cycles per piece
+- **Author skill compounding** — writers learn the brand voice from in-flow guidance, not post-hoc rejection
+- **Pipeline throughput** — fewer publish-gate failures means content velocity holds
+- **Brand culture** — brand consistency becomes habit during creation, not punishment after-the-fact
+
+**n8n workflow:**
+
+```yaml
+trigger:
+  notion_page_status_change: "ready_for_dnai_check"
+
+n8n_flow:
+  step_1_pull_brand_context:
+    - eywa-dna-graph.md (10 fields)
+    - messaging.md OR strategy/voice (voice ID + 5 axes)
+    - anti-patterns list (per brand)
+    - eywa-dna-graph field 10 (Compliance Boundaries)
+
+  step_2_claude_api_call:
+    prompt: |
+      "Check this content against brand DNA Graph + voice + compliance.
+       Return JSON: { pass: bool, score: 0-100, issues: [{issue, severity, suggestion}],
+       revised_draft: string }"
+    inputs:
+      - content_draft (from Notion page)
+      - brand_context (compiled from step 1)
+
+  step_3_write_back_to_notion:
+    columns_updated:
+      - dnai_check_status: pass | warn | fail
+      - dnai_check_score: 0-100
+      - dnai_check_issues: jsonb
+      - dnai_check_revised_draft: text (operator review)
+      - dnai_check_run_at: timestamptz
+
+publish_gate:
+  - dnai_check_status = 'pass'
+  - AND human_editorial_approved (Stage 1)
+  - AND final_approval_signed_off (Stage 4)
+```
+
+**Per-brand calibration:** Each brand's DNAi prompt template can be tuned by adjusting voice axes weight, severity thresholds, and compliance strictness. Stored in brand repo `deployment/dnai-config.yaml`.
+
+## 30.9 EYWA Compound Growth — KPI Tracking Link
+
+This Part does NOT redefine KPIs (those live in Bible Part 20). Instead establishes flow:
+
+```
+Phase A.4 alignment-map.md
+   success_metric column
+       ↓ (per goal)
+Bible Part 20 KPI Dashboard
+   tracked over time
+       ↓ (compounding)
+EYWA Compound Growth quarterly report
+   per-brand portfolio view
+```
+
+**Naming rationale:** "Compound" reinforces EYWA's value prop — Knowledge Graph + structured brand DNA = asset that compounds over years (vs ad spend that resets monthly). This is the **business-frame** that justifies EYWA's premium tier pricing.
+
+## 30.10 Cross-References — BGP
+
+| Topic | See Also |
+|-------|----------|
+| Entity Genesis Protocol (EGP — parallel sibling) | Part 2.6 |
+| Editorial Review Workflow (DNAi insertion point) | Part 23.4 |
+| KPI Framework (Compound Growth integration) | Part 20 |
+| Brand Config schema (DNA Graph fields may inform) | Part 25.6 |
+| Content Templates (CDJ stage tagging on T1-T22) | Part 9 + Content_Templates v1.6 §7 |
+| Sitemap Architecture (Phase E uses alignment-map for justification) | Part 4 |
+| TRUST citation pillar references | Part 23.1 Citation Hierarchy |
+| Multi-brand federation (DNA Graph per brand) | Part 10 |
+| Universal application — Bootstrap Kit | EYWA_HANDOVER §brand-onboarding |
+| Decision rationale | DECISION_RECORDS DR-028 |
+| Naming definitions per concept | Section 30.11 (Lexicon) below |
+
+## 30.11 EYWA Lexicon — Naming Definitions (do not lose meaning over time)
+
+> **Why this section exists:** Naming locked in DR-028 follows pattern "EYWA + concept". Six months from now, operators (and AI assistants) must still know exactly what each name means, what it does, and how it differs from generic frameworks it adapts from. This section is the canonical glossary — update when meanings drift, not the names.
+
+### 30.11.1 EYWA DNA Graph
+
+```yaml
+name: EYWA DNA Graph
+adapted_from: Unilever Brand Key (10-field rubric for brand identity)
+healthcare_extension: Adds field 10 (Compliance Boundaries) — YMYL discipline
+
+meaning: |
+  The structured 10-field articulation of a brand's identity, audience, promises,
+  proof, personality, differentiation, and compliance constraints. "DNA Graph"
+  because (a) each field encodes inheritable brand traits — like genetic code,
+  and (b) the fields cross-link semantically — like a graph, not a flat checklist.
+  Acts as the single source of truth that all downstream brand work references
+  (content voice, design choices, editorial decisions, even legal review).
+
+how_it_works:
+  1. Produced once in Phase A.1 via 4-6 hour workshop (operator + client)
+  2. Stored as docs/brand-genesis/eywa-dna-graph.md in brand repo
+  3. Referenced by every Phase B-G deliverable (KW research, sitemap, content briefs)
+  4. Referenced by EYWA DNAi Diagnostic during publish gate
+  5. Reviewed at major Stage gates (every 6 months minimum, on brand pivot if sooner)
+
+deliverable_owner: Operator (+ AI co-author) facilitated; client validates
+review_cadence: Stage gate revalidation (typically quarterly + on brand event)
+sample_output: See template/folder-skeleton/docs/brand-genesis/eywa-dna-graph.template.md
+
+distinct_from:
+  brand_concept_md: brand-concept.md was unstructured narrative — superseded by DNA Graph
+  positioning_statement: Field 8 (Brand Essence) is the positioning line; DNA Graph is the full identity
+  brand_voice_guide: Voice ID lives in messaging.md — referenced by but not duplicated in DNA Graph
+```
+
+### 30.11.2 EYWA Journey Map
+
+```yaml
+name: EYWA Journey Map
+adapted_from: McKinsey Consumer Decision Journey (CDJ — 2009)
+healthcare_extension: Patient-specific touchpoints, healthcare-appropriate stage names
+
+meaning: |
+  The 5-stage map of how a patient moves from "first awareness of need" to
+  "loyal advocate" through interactions with the brand. "Journey Map" because
+  it visualizes the path; "EYWA" because the touchpoint-content mapping is
+  EYWA-specific (each touchpoint binds to T-templates from Part 9 and to
+  alignment-map.md goals from Phase A.4).
+
+how_it_works:
+  1. Produced in Phase A.2 (part of framework-synapse.md deliverable)
+  2. 5 stages: Initial Consideration → Active Evaluation → Moment of Purchase →
+     Post-Purchase → Loyalty Loop
+  3. Per stage: triggers + touchpoints + content needs documented
+  4. Phase E sitemap audit verifies every stage has content coverage
+  5. Phase F content brief (per DR-017) cites cdj_stage field on each page
+
+deliverable_owner: Operator (informed by client patient research)
+review_cadence: Annual (or on major service launch / market shift)
+sample_output: See framework-synapse.template.md (section "EYWA Journey Map")
+
+distinct_from:
+  patient_journey_md: pre-DR-028 patient-journey.md (in brand-genesis predecessor) was unstructured —
+    superseded by EYWA Journey Map subsection of framework-synapse.md
+  user_journey: User Journey is product/UX scope; Journey Map is full lifecycle marketing scope
+  funnel: A funnel is linear conversion; Journey Map includes Loyalty Loop (post-conversion)
+```
+
+### 30.11.3 EYWA Intent Roots
+
+```yaml
+name: EYWA Intent Roots
+adapted_from: Jobs-to-be-Done (Christensen, 2005 — "The Innovator's Solution")
+healthcare_extension: 3-tier job framing (functional + emotional + social) tailored to medical context
+
+meaning: |
+  The structured articulation of what "jobs" a patient is hiring the brand
+  to do — distinguishing functional (the task), emotional (the feeling), and
+  social (the identity). "Roots" because these intents are the deepest causes
+  of search behavior — keywords, page visits, conversions all stem from
+  these roots. Get the roots wrong → SEO drifts; get them right → content
+  resonates.
+
+how_it_works:
+  1. Produced in Phase A.2 (part of framework-synapse.md deliverable)
+  2. 3 tiers of jobs: functional / emotional / social
+  3. Each tier: list jobs in patient's own language (verbatim where possible)
+  4. Phase B keyword research uses Intent Roots to validate KW relevance
+     (KW that doesn't serve any root → cut)
+  5. Phase F content brief cites which Intent Root the content serves
+
+deliverable_owner: Operator (validated by patient interviews if available)
+review_cadence: Annual + on new patient persona emergence
+sample_output: See framework-synapse.template.md (section "EYWA Intent Roots")
+
+distinct_from:
+  user_personas: Personas describe WHO; Intent Roots describe WHAT THEY WANT DONE
+  use_cases: Use cases are product-specific; Intent Roots are patient-life-context
+  keywords: KWs are surface expressions; Intent Roots are underlying causes
+```
+
+### 30.11.4 EYWA TRUST Rubric
+
+```yaml
+name: EYWA TRUST Rubric
+inspired_by: Unilever SASSY (5-pillar brand desirability rubric — FMCG, proprietary)
+why_not_use_SASSY: SASSY is FMCG-fit (Science/Aesthetics/Sensorials/Said-by-Others/Young) +
+  Unilever trademark + Sensorials does not apply to medical service
+healthcare_replacement: Built fresh — 5 pillars chosen for YMYL discipline + E-E-A-T alignment
+
+meaning: |
+  Five-pillar evaluation framework for healthcare brand maturity, used as both
+  (a) baseline audit at engagement start and (b) progress tracking over time.
+  TRUST acronym = Trust · Results · Understanding · Safety · Transparency.
+  Each pillar 0-10. Score gaps map directly to SEO content opportunities.
+  "TRUST" because it's the foundational currency of healthcare buying decisions
+  — and because it doubles as Google's stated YMYL priority signal.
+
+how_it_works:
+  1. Baseline audit in Phase A.3 (3-5 hour session per brand)
+  2. Per pillar: score 0-10 + evidence + gaps + content opportunity
+  3. Total TRUST score = portfolio benchmark across brands
+  4. Quarterly re-audit shows progression; client-facing deliverable
+  5. Pillars feed into:
+     - Phase E sitemap (gaps → required pages)
+     - Phase F editorial workflow (per-page TRUST signals check)
+     - EYWA Compound Growth dashboard (Trust over time = compounding asset)
+
+deliverable_owner: Operator audits, client validates evidence
+review_cadence: Quarterly (re-audit) + on regulatory change / major brand event
+sample_output: See template/folder-skeleton/docs/brand-genesis/eywa-trust-rubric.template.md
+
+distinct_from:
+  EEAT: Google's E-E-A-T is signals framework; TRUST is brand-state evaluation
+  brand_audit: Generic brand audit covers all of marketing; TRUST is healthcare-specific
+  SASSY: Different domain (FMCG vs healthcare), different pillars, EYWA-owned (no IP conflict)
+
+trademark_intent: Pursue ™ registration as EYWA proprietary methodology (Phase 2 operator action)
+```
+
+### 30.11.5 EYWA Compound Growth
+
+```yaml
+name: EYWA Compound Growth
+adapted_from: OKR framework (Doerr/Grove — outcome-based goal tracking)
+healthcare_extension: Asset-compounding framing — knowledge graph + brand DNA = asset that
+  grows in value over time, unlike ad spend that resets
+
+meaning: |
+  The ongoing measurement system that tracks how each brand's EYWA investment
+  compounds quarter-over-quarter — across SEO rankings, AI citation rate,
+  TRUST score progression, conversion outcomes, and brand authority signals.
+  "Compound" because EYWA's value proposition rests on the claim that a
+  knowledge graph + structured brand DNA = compounding asset (vs ad spend
+  that depreciates immediately). The dashboard is the proof.
+
+how_it_works:
+  1. Initialized in Phase A.4 — alignment-map.md success_metric column becomes
+     the seed for tracked KPIs
+  2. References Bible Part 20 KPI Framework (does not redefine KPIs)
+  3. Aggregated quarterly per brand + portfolio-wide
+  4. Outputs:
+     - Quarterly client report (per-brand brand-business-SEO progression)
+     - Portfolio dashboard (cross-brand benchmarking)
+     - Compound ROI calculation (cumulative value created)
+
+deliverable_owner: Operator (data engineering) + automated dashboards
+review_cadence: Monthly metric update, quarterly narrative review with client
+sample_output: TBD (dashboard build is Phase 2 — Bible Part 20 has metric definitions)
+
+distinct_from:
+  OKR_tracker: OKRs are generic; Compound Growth specifically tracks EYWA's
+    asset-compounding thesis (brand+graph + content = appreciating asset)
+  vanity_metrics: Compound Growth excludes vanity (impressions alone) —
+    requires conversion + authority + TRUST progression evidence
+  ad_performance: Ad performance resets per campaign; Compound Growth is cumulative
+```
+
+### 30.11.6 EYWA DNAi Diagnostic
+
+```yaml
+name: EYWA DNAi Diagnostic
+new_creation: Not adapted from existing framework — EYWA-original AI workflow
+healthcare_metaphor: "Diagnostic" because it diagnoses brand-alignment health of content
+  before publish (parallel to clinical diagnostic — find issue before treatment failure)
+
+meaning: |
+  The AI-powered brand-alignment check that runs at TWO touchpoints in the
+  editorial pipeline: (1) lightweight awareness during drafting, and
+  (2) formal serious gate before publish. "DNA" because it checks alignment
+  against the brand's DNA Graph (Phase A.1 deliverable). "Diagnostic" because
+  it doesn't auto-fix — it diagnoses issues and suggests revisions for human
+  review. "EYWA" because the prompt template is calibrated per-brand using
+  DNA Graph + voice ID + Compliance Boundaries.
+
+how_it_works:
+  touchpoint_1_draft_time:
+    when: From the moment content drafting starts
+    who: Content author (operator + AI co-author)
+    enforcement: Lightweight — context injection into AI co-author prompt +
+      checklist reminder
+    goal: Draft enters Stage 1 review 80-90% on-brand
+
+  touchpoint_2_pre_publish:
+    when: After human editorial review (Stage 1), before final approval (Stage 4)
+    who: AI (Claude API via n8n workflow)
+    enforcement: Formal — pass/fail with score, revision suggestions
+    goal: Catch remaining 10-20% drift; block publish if fail
+
+  per_brand_calibration:
+    config_file: brand_repo/deployment/dnai-config.yaml
+    tuning: voice axes weight, severity thresholds, compliance strictness
+
+deliverable_owner: Operator builds n8n flow (one-time), runs per-content automatically
+review_cadence: Per-content automated; flow tuning quarterly
+sample_output: TBD (n8n workflow build is operator action, ~6-8 hours dev one-time)
+
+distinct_from:
+  spell_check: Mechanical syntax check; DNAi is brand-semantic check
+  grammarly: Grammar/style; DNAi is brand-DNA-specific
+  human_editorial_review: Human catches accuracy + citations; DNAi catches
+    brand voice drift + compliance violations + DNA Graph misalignment
+  YMYL_review: YMYL review is medical-claim safety; DNAi is brand-alignment
+    — both required, serve different purposes
+```
+
+### 30.11.7 Universal Naming Pattern — "EYWA + concept"
+
+**Rule:** When EYWA adapts or extends an external framework AND productizes the output as a Service Suite deliverable, the output is renamed "EYWA + concept". This:
+
+1. **Attributes IP** — EYWA-specific adaptations carry EYWA naming, not the source framework
+2. **Avoids confusion** — clients won't conflate EYWA TRUST Rubric with Unilever SASSY
+3. **Builds brand vocabulary** — sales conversations + content + handover docs all reference same lexicon
+4. **Enables trademark path** — productized names are candidates for ™ registration
+
+**When NOT to rename:**
+- External framework cited as INPUT (e.g., Golden Circle in framework-synapse) — keep original name
+- Internal technical concepts already locked in spec (e.g., Entity Genesis Protocol — EGP — not "EYWA EGP")
+- Universal standards (E-E-A-T, schema.org, CWV) — keep authoritative names
+
+**Lock list (DR-028):** 6 names listed in sections 30.11.1 through 30.11.6 above. Future additions follow this rule and are appended here.
 
 ---
 
@@ -26660,10 +27324,10 @@ add_action('save_post', function ($post_id) {
 
 ---
 
-**END OF DOCUMENT v3.19 — คัมภีร์ EYWA™ PROTOCOL**
+**END OF DOCUMENT v3.20 — คัมภีร์ EYWA™ PROTOCOL**
 
 
-*🌿 EYWA™ PROTOCOL Bible v3.19 • May 2026*
+*🌿 EYWA™ PROTOCOL Bible v3.20 • May 2026*
 *The Universal Knowledge Graph SEO Specification for the AI Era*
 *Multi-vertical, multi-brand, multi-specialty, multi-lingual, multi-location, AI-future-ready*
 
@@ -26672,6 +27336,27 @@ add_action('save_post', function ($post_id) {
 *Implementation: Notion + Supabase + n8n + WordPress (loose-coupled via automation)*
 
 **Service Suite:** Audit · Graph · Stack · Vital · Forge · Score · Atlas
+
+**v3.20 Changelog (2026-05-17) — Brand Genesis Protocol Universal (DR-028 Locked):**
+
+- ➕ **Part 30 (NEW) — Brand Genesis Protocol (BGP)** — universal parallel to EGP (Entity Genesis Protocol). Replaces unstructured `brand-concept.md` with 5-deliverable structured Phase A
+- ➕ §30.1 Why BGP exists — brand-business-SEO triple-fit foundation
+- ➕ §30.2 5 sub-phases (Phase A.0 → A.4) overview + timeline
+- ➕ §30.3 Phase A.0 Pre-Engagement Discovery → business-context.md
+- ➕ §30.4 Phase A.1 EYWA DNA Graph (10 fields, Brand Key adapted, field 10 healthcare compliance)
+- ➕ §30.5 Phase A.2 EYWA Framework Synapse (Golden Circle + EYWA Intent Roots + EYWA Journey Map)
+- ➕ §30.6 Phase A.3 EYWA TRUST Rubric Baseline (5 pillars: Trust/Results/Understanding/Safety/Transparency)
+- ➕ §30.7 Phase A.4 Brand-Business-SEO Alignment Map (ROI proof structure)
+- ➕ §30.8 EYWA DNAi Diagnostic — TWO TOUCHPOINTS: draft-time lightweight awareness + pre-publish formal AI gate
+- ➕ §30.9 EYWA Compound Growth — KPI tracking link to Part 20
+- ➕ §30.10 Cross-references — BGP
+- ➕ §30.11 NEW — EYWA Lexicon — naming definitions for DNA Graph / Journey Map / Intent Roots / TRUST Rubric / Compound Growth / DNAi Diagnostic + Universal Naming Pattern rule
+- 🔄 Bible v3.19 → v3.20 ships paired with DECISION_RECORDS v1.13 → v1.14 + Content_Templates v1.5 → v1.6 + EYWA_HANDOVER v1.13 → v1.14
+- 📌 Scope: UNIVERSAL — applies to all 13 brand repos AND eywa-marketing (EYWA dogfoods)
+- 📌 Bootstrap Kit update: templates/folder-skeleton/docs/brand-genesis/ with 5 template files
+- ⚠️ Existing 8 bootstrapped brands need Phase A backfill at next Stage gate (1-2 sessions each)
+- ⚠️ n8n DNAi Diagnostic flow needs build (operator workload ~6-8 hours dev)
+- 🔒 DR-028 Status: **Locked 2026-05-17** — operator-approved final on first iteration
 
 **v3.19 Changelog (2026-05-12) — Paired Batch Lock: DR-019/020/021/022:**
 
