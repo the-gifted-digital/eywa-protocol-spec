@@ -1,0 +1,66 @@
+{
+  "$schema": "https://design-tokens.github.io/community-group/format/",
+  "$description": "COMPONENT-level tokens — specific to UI components (buttons, cards, inputs). References semantic.tokens.json + core.tokens.json. Add tokens here when a component needs values that don't fit semantic layer. Per DR-029 + Bible Part 31.",
+
+  "button": {
+    "primary": {
+      "background":        { "$value": "{color.action.primary.default}", "$type": "color" },
+      "background-hover":  { "$value": "{color.action.primary.hover}",   "$type": "color" },
+      "text":              { "$value": "{color.action.primary.text}",    "$type": "color" },
+      "padding-x":         { "$value": "{spacing.6}", "$type": "dimension" },
+      "padding-y":         { "$value": "{spacing.3}", "$type": "dimension" },
+      "border-radius":     { "$value": "{radius.md}", "$type": "dimension" },
+      "font-weight":       { "$value": "{typography.fontWeight.semibold}", "$type": "fontWeight" }
+    },
+    "secondary": {
+      "background":        { "$value": "{color.action.secondary.default}", "$type": "color" },
+      "background-hover":  { "$value": "{color.action.secondary.hover}",   "$type": "color" },
+      "border":            { "$value": "{color.action.secondary.border}",  "$type": "color" },
+      "border-width":      { "$value": "1px", "$type": "dimension" },
+      "text":              { "$value": "{color.action.secondary.text}",    "$type": "color" },
+      "padding-x":         { "$value": "{spacing.6}", "$type": "dimension" },
+      "padding-y":         { "$value": "{spacing.3}", "$type": "dimension" },
+      "border-radius":     { "$value": "{radius.md}", "$type": "dimension" }
+    },
+    "size": {
+      "sm": {
+        "padding-x":  { "$value": "{spacing.3}", "$type": "dimension" },
+        "padding-y":  { "$value": "{spacing.2}", "$type": "dimension" },
+        "font-size":  { "$value": "{typography.fontSize.sm}", "$type": "dimension" }
+      },
+      "lg": {
+        "padding-x":  { "$value": "{spacing.8}", "$type": "dimension" },
+        "padding-y":  { "$value": "{spacing.4}", "$type": "dimension" },
+        "font-size":  { "$value": "{typography.fontSize.lg}", "$type": "dimension" }
+      }
+    }
+  },
+
+  "card": {
+    "background":     { "$value": "{color.surface.card}",   "$type": "color" },
+    "border":         { "$value": "{color.border.subtle}",  "$type": "color" },
+    "border-width":   { "$value": "1px",                    "$type": "dimension" },
+    "border-radius":  { "$value": "{radius.lg}",            "$type": "dimension" },
+    "padding":        { "$value": "{spacing.6}",            "$type": "dimension" },
+    "shadow-default": { "$value": "0 1px 2px rgba(0,0,0,0.04)", "$type": "shadow", "$description": "subtle by default — Apple/Notion restraint" },
+    "shadow-hover":   { "$value": "0 4px 8px rgba(0,0,0,0.08)", "$type": "shadow" }
+  },
+
+  "input": {
+    "background":      { "$value": "{color.surface.page}",   "$type": "color" },
+    "border":          { "$value": "{color.border.default}", "$type": "color" },
+    "border-focus":    { "$value": "{color.action.primary.default}", "$type": "color" },
+    "border-width":    { "$value": "1px",                    "$type": "dimension" },
+    "border-radius":   { "$value": "{radius.md}",            "$type": "dimension" },
+    "padding-x":       { "$value": "{spacing.4}",            "$type": "dimension" },
+    "padding-y":       { "$value": "{spacing.3}",            "$type": "dimension" },
+    "text":            { "$value": "{color.text.primary}",   "$type": "color" },
+    "placeholder":     { "$value": "{color.text.muted}",     "$type": "color" }
+  },
+
+  "link": {
+    "color":         { "$value": "{color.text.link}",       "$type": "color" },
+    "color-hover":   { "$value": "{color.text.link-hover}", "$type": "color" },
+    "underline":     { "$value": "underline",               "$type": "string" }
+  }
+}

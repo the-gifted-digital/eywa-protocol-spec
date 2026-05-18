@@ -1,8 +1,8 @@
 # 📖 คัมภีร์ EYWA™ PROTOCOL
 ## The Universal Knowledge Graph SEO Specification for the AI Era
 
-**Version:** 3.20  
-**Last Updated:** 2026-05-17  
+**Version:** 3.21  
+**Last Updated:** 2026-05-18  
 **Trademark:** EYWA™ (Class 35+42, DIP Thailand, filed 2026-04-20)  
 **Created by:** The Gifted Digital Marketing Co., Ltd.  
 **Scope:** Universal standard สำหรับการบริหารจัดการ SEO + Knowledge Graph แบบ multi-vertical, multi-brand, multi-specialty, multi-lingual, multi-location, **AI-future-ready** ในยุค AI Search (2026+) — ครอบคลุม healthcare verticals (clinic ทุก specialty, hospital, dental, sleep medicine, aesthetic, wellness, healthcare media) extensible to other regulated YMYL niches  
@@ -25347,7 +25347,7 @@ EYWA Compound Growth quarterly report
 
 **Naming rationale:** "Compound" reinforces EYWA's value prop — Knowledge Graph + structured brand DNA = asset that compounds over years (vs ad spend that resets monthly). This is the **business-frame** that justifies EYWA's premium tier pricing.
 
-## 30.10 Cross-References — BGP
+## 30.10 Cross-References — BGP (continued in §30.11 Lexicon below; Universal Brand Design System in Part 31)
 
 | Topic | See Also |
 |-------|----------|
@@ -25605,6 +25605,199 @@ distinct_from:
 - Universal standards (E-E-A-T, schema.org, CWV) — keep authoritative names
 
 **Lock list (DR-028):** 6 names listed in sections 30.11.1 through 30.11.6 above. Future additions follow this rule and are appended here.
+
+---
+
+# PART 31: Universal Brand Design System 🆕 v3.21
+
+> **Per DR-029 (Locked 2026-05-18)** — universal per-brand design layer. Stack-agnostic specifications + W3C DTCG tokens + raw brand assets. Applies to all brand repos regardless of stack (WP+Elementor per DR-002 or Astro per DR-EYWA-MKT-005 or future stacks).
+>
+> **Bootstrap Kit reference:** `templates/folder-skeleton/design/` + `templates/folder-skeleton/brand-assets/`
+> **Companion DR:** DR-029
+
+## 31.1 Why a Universal Design System Exists
+
+Brand visual identity does NOT change when implementation stack changes. The color palette of a clinic is the color palette regardless of whether the site is built with WordPress, Astro, Next.js, or hand-coded HTML.
+
+Pre-DR-029, brand design assets lived in `theme/brand-assets/` with no formalized tokens, no W3C-standard format, no separation between specification and implementation. Each brand reinvented color palette format, typography scale, spacing system. Stack migration meant rebuilding design system from scratch.
+
+DR-029 establishes a universal design layer that:
+
+1. **Captures design specifications once** — tokens + brand-foundation docs live in `design/`
+2. **Consumed by any stack** — WP+Elementor sync script OR Astro tailwind import OR future tooling
+3. **Designer-recognized format** — W3C DTCG is industry standard; designers + tools speak it natively
+4. **Future-proof** — brand can migrate stacks without losing design system
+
+## 31.2 Folder Structure (mandatory per-brand)
+
+```
+brands/eywa-{brand}/
+├── design/                       🎨 Stack-agnostic design layer (NEW per DR-029)
+│   ├── README.md                 ← workflow guide
+│   ├── tokens/                   📐 DTCG-compliant JSON (source of truth)
+│   ├── brand-foundation/         📋 Visual identity specs (6 Markdown files)
+│   ├── component-specs/          📐 Per-component design spec
+│   ├── page-templates/           🗺  Page-level layout specs
+│   ├── wireframes/               🗺  Hand-drawn / lo-fi sketches
+│   └── references/               💡 Mood boards, inspiration
+├── brand-assets/                 🖼  Raw binary sources (NEW root location per DR-029)
+│   ├── logos/
+│   ├── photography/
+│   ├── illustrations/
+│   └── icons/
+└── theme/                        🚀 Stack-specific implementation
+    ├── custom-css/               (WP)
+    ├── elementor-templates-overrides/  (WP)
+    └── (or src/ if Astro — see DR-EYWA-MKT-005)
+```
+
+**Naming note:** `theme/` preserved (not renamed to `implementation/`) — WordPress community recognizes "theme" instantly; avoids cognitive load.
+
+## 31.3 Token File Roles
+
+Four token files in `design/tokens/`, each with distinct purpose. All use W3C DTCG JSON format.
+
+| File | Purpose | Update frequency |
+|------|---------|------------------|
+| `core.tokens.json` | Primitives — palette, type scale, spacing scale | Rare — brand identity locks |
+| `semantic.tokens.json` | Role-based — primary/surface/text/border semantic mappings | Rare — semantic mappings stable |
+| `component.tokens.json` | Component-level — button-bg, card-shadow, input-border | Per new component additions |
+| `brand.tokens.json` | Brand-unique — pillar colors, signature accents | Brand event (pillar add, etc.) |
+
+**Reference pattern:** semantic.tokens.json references core via `{path.to.token}` syntax. component.tokens.json references both. brand.tokens.json may reference core or stand alone.
+
+## 31.4 DTCG Format (W3C standard)
+
+```json
+{
+  "color": {
+    "brand": {
+      "primary": {
+        "$value": "#1E40AF",
+        "$type": "color",
+        "$description": "Primary brand color"
+      }
+    }
+  }
+}
+```
+
+**Mandatory fields:** `$value` (the value), `$type` (recommended for tooling).
+**Optional:** `$description` (encouraged for non-obvious tokens).
+**Reference syntax:** `{path.to.token}` resolves to another token's value.
+
+**Why DTCG over custom:**
+- W3C Design Tokens Community Group spec — emerging industry standard
+- Figma + Tokens Studio plugin enables 2-way sync between Figma and `design/tokens/`
+- Style Dictionary transforms DTCG → CSS/SCSS/JS/Swift/Android output
+- Designers recognize format on first glance — no brand-specific learning curve
+
+## 31.5 Brand-Foundation Markdown Specs
+
+Six markdown files in `design/brand-foundation/` document design decisions in designer-readable prose:
+
+| File | Content |
+|------|---------|
+| `color-system.md` | Palette rationale + semantic mapping + WCAG contrast verification |
+| `typography.md` | Typeface choices + scale rationale + voice extension + Thai/EN pairing |
+| `spacing.md` | Spacing scale + layout grid + breakpoints + radius |
+| `iconography.md` | Icon library + style discipline + size conventions + accessibility |
+| `imagery.md` | Photography style + illustration guidelines + image specs + PDPA |
+| `motion.md` | Animation principles + duration/easing tokens + `prefers-reduced-motion` |
+
+Each .md cross-references the tokens it documents. Tokens are the machine-readable source of truth; markdown is the human-readable explanation.
+
+## 31.6 Stack-Specific Consumption Pipelines
+
+### WordPress + Elementor (DR-002 default stack)
+
+```yaml
+pipeline:
+  1. Designer edits design/tokens/*.tokens.json
+  2. Sync script transforms DTCG tokens → Elementor global colors/fonts JSON
+  3. Import JSON into Elementor (Site Settings → Import Site Kit)
+  4. All Elementor templates using global colors/fonts update automatically
+  5. theme/custom-css/ holds tokens-derived CSS variables that Elementor globals don't cover
+```
+
+**Sync script implementation:** Operator workload (Phase 1F). Recommended: Style Dictionary with custom Elementor format transformer. ~4-6 hours one-time setup, then automated.
+
+### Astro (DR-EYWA-MKT-005 stack profile)
+
+```yaml
+pipeline:
+  1. Designer edits design/tokens/*.tokens.json
+  2. tailwind.config.mjs auto-imports tokens (Style Dictionary or direct require)
+  3. npm run build → CSS regenerates
+  4. Astro components use Tailwind classes generated from tokens
+```
+
+### Figma 2-way sync (when designer uses Figma)
+
+```yaml
+pipeline:
+  1. Tokens Studio plugin in Figma reads design/tokens/*.tokens.json via GitHub
+  2. Designer changes values in Figma using Tokens Studio
+  3. Tokens Studio commits back to design/tokens/ via GitHub API
+  4. Stack-specific pipelines (above) pick up new values on next build
+```
+
+## 31.7 Workflow Examples
+
+### Workflow 1 — Designer onboarding to new brand
+
+```
+1. Designer clones brand repo
+2. Opens design/README.md — understands folder layout (universal pattern)
+3. Reads design/brand-foundation/color-system.md — sees palette rationale
+4. Opens design/tokens/core.tokens.json — recognizes DTCG format
+5. Connects Figma via Tokens Studio if applicable
+→ Designer productive within 1 hour, no per-brand format learning
+```
+
+### Workflow 2 — Designer changes brand primary color
+
+```
+1. Designer edits design/tokens/core.tokens.json — brand-primary.500
+2. Commits + pushes
+3. CI/CD triggers stack-specific pipeline (WP sync OR Astro rebuild)
+4. Brand site reflects new color within build time
+→ One change propagates to entire site automatically
+```
+
+### Workflow 3 — AI co-author (Claude Code) generates new component
+
+```
+1. Operator describes component need (e.g., "Hero with pillar accent")
+2. Claude Code reads design/tokens/ + design/brand-foundation/ + design/component-specs/Hero.md (if exists)
+3. Claude Code generates Astro/WP component referencing tokens
+4. Generated component is consistent with brand by construction
+→ AI-generated work matches brand discipline without per-component re-explanation
+```
+
+## 31.8 Retrofit Policy for Existing Brands
+
+Per DR-029, existing brands (13 brand repos + eywa-marketing) retrofit at their own pace:
+
+- **At next Stage gate** — operator creates `design/` and `brand-assets/` folders per Bootstrap Kit
+- **Minimum viable retrofit** — `design/tokens/core.tokens.json` filled with at least primary palette + body typography + base spacing
+- **Move existing assets** — `git mv theme/brand-assets/ brand-assets/` preserves history
+- **No retroactive deadline** — Pre-Stage 1 brands can fill incrementally; brands in Phase E+ should backfill before Phase F content production starts
+
+## 31.9 Cross-References
+
+| Topic | See Also |
+|-------|----------|
+| Full DR rationale + implications | DECISION_RECORDS DR-029 |
+| WP+Elementor stack consumption | Part 25 — WordPress Universal Kit |
+| Astro stack consumption | DR-EYWA-MKT-005 (eywa-marketing repo `design/` precedent) |
+| Brand identity inputs (DNA Graph drives design decisions) | Part 30.4 BGP Phase A.1 |
+| WCAG AA accessibility (color contrast + motion) | Part 9 — Template Anatomy |
+| Core Web Vitals (image performance) | Part 19 — Data Quality Framework |
+| Bootstrap Kit folder skeleton | `templates/folder-skeleton/design/` + `templates/folder-skeleton/brand-assets/` |
+| W3C DTCG format spec | https://design-tokens.github.io/community-group/format/ |
+| Style Dictionary (transformation tool) | https://amzn.github.io/style-dictionary/ |
+| Tokens Studio (Figma plugin) | https://tokens.studio/ |
 
 ---
 
@@ -27324,10 +27517,10 @@ add_action('save_post', function ($post_id) {
 
 ---
 
-**END OF DOCUMENT v3.20 — คัมภีร์ EYWA™ PROTOCOL**
+**END OF DOCUMENT v3.21 — คัมภีร์ EYWA™ PROTOCOL**
 
 
-*🌿 EYWA™ PROTOCOL Bible v3.20 • May 2026*
+*🌿 EYWA™ PROTOCOL Bible v3.21 • May 2026*
 *The Universal Knowledge Graph SEO Specification for the AI Era*
 *Multi-vertical, multi-brand, multi-specialty, multi-lingual, multi-location, AI-future-ready*
 
@@ -27336,6 +27529,24 @@ add_action('save_post', function ($post_id) {
 *Implementation: Notion + Supabase + n8n + WordPress (loose-coupled via automation)*
 
 **Service Suite:** Audit · Graph · Stack · Vital · Forge · Score · Atlas
+
+**v3.21 Changelog (2026-05-18) — Universal Brand Design System (DR-029 Locked):**
+
+- ➕ **Part 31 NEW — Universal Brand Design System** — stack-agnostic per-brand design layer with W3C DTCG token format adoption
+- ➕ §31.1 Why universal design system (stack-agnostic principle)
+- ➕ §31.2 Folder structure (mandatory per-brand `design/` + `brand-assets/` + `theme/`)
+- ➕ §31.3 Token file roles (4 files: core / semantic / component / brand)
+- ➕ §31.4 DTCG format primer
+- ➕ §31.5 Brand-foundation Markdown specs (6 files)
+- ➕ §31.6 Stack-specific consumption pipelines (WP+Elementor + Astro + Figma 2-way sync)
+- ➕ §31.7 Workflow examples (designer onboarding + color change + AI co-author)
+- ➕ §31.8 Retrofit policy for existing brands
+- ➕ §31.9 Cross-references
+- 📌 Bootstrap Kit additions: `templates/folder-skeleton/design/` (README + 4 tokens.json + 6 brand-foundation .md + placeholders) + `templates/folder-skeleton/brand-assets/` (4 subfolders + README)
+- 📌 Rename: `theme/brand-assets/` → `brand-assets/` (root-level, expanded structure)
+- 📌 `theme/` retained for stack-specific implementation only (operator preference — WP-friendly naming)
+- 🔒 DR-029 Status: **Locked 2026-05-18** — universal scope, all brand repos
+- 🔄 Bible v3.20 → v3.21 ships paired with DECISION_RECORDS v1.14 → v1.15 + Content_Templates v1.6 → v1.7 + EYWA_HANDOVER v1.14 → v1.15
 
 **v3.20 Changelog (2026-05-17) — Brand Genesis Protocol Universal (DR-028 Locked):**
 

@@ -1,0 +1,117 @@
+{
+  "$schema": "https://design-tokens.github.io/community-group/format/",
+  "$description": "SEMANTIC tokens — role-based mappings. References core.tokens.json primitives via {path.to.token} syntax. This layer makes design intent portable: semantic.surface-page is meaningful even when underlying color changes. Per DR-029 + Bible Part 31.",
+
+  "color": {
+    "text": {
+      "primary":   { "$value": "{color.neutral.900}", "$type": "color", "$description": "body text default" },
+      "secondary": { "$value": "{color.neutral.500}", "$type": "color", "$description": "supporting text, captions" },
+      "muted":     { "$value": "{color.neutral.400}", "$type": "color", "$description": "least-emphasized text" },
+      "inverse":   { "$value": "{color.neutral.0}",   "$type": "color", "$description": "text on dark surfaces" },
+      "link":      { "$value": "{color.brand-primary.500}", "$type": "color" },
+      "link-hover":{ "$value": "{color.brand-primary.900}", "$type": "color" }
+    },
+    "surface": {
+      "page":      { "$value": "{color.neutral.0}",   "$type": "color", "$description": "page background default" },
+      "card":      { "$value": "{color.neutral.0}",   "$type": "color", "$description": "card/panel surface" },
+      "subtle":    { "$value": "{color.neutral.50}",  "$type": "color", "$description": "section background subtle tint" },
+      "inverse":   { "$value": "{color.neutral.900}", "$type": "color", "$description": "dark mode equivalent" }
+    },
+    "border": {
+      "subtle":  { "$value": "{color.neutral.100}", "$type": "color" },
+      "default": { "$value": "{color.neutral.200}", "$type": "color" },
+      "strong":  { "$value": "{color.neutral.400}", "$type": "color" }
+    },
+    "action": {
+      "primary": {
+        "default": { "$value": "{color.brand-primary.500}", "$type": "color" },
+        "hover":   { "$value": "{color.brand-primary.900}", "$type": "color" },
+        "active":  { "$value": "{color.brand-primary.900}", "$type": "color" },
+        "text":    { "$value": "{color.text.inverse}", "$type": "color" }
+      },
+      "secondary": {
+        "default": { "$value": "{color.surface.page}",      "$type": "color" },
+        "hover":   { "$value": "{color.surface.subtle}",    "$type": "color" },
+        "border":  { "$value": "{color.border.default}",    "$type": "color" },
+        "text":    { "$value": "{color.text.primary}",      "$type": "color" }
+      }
+    },
+    "feedback": {
+      "success-bg":   { "$value": "{color.semantic-utility.success}", "$type": "color" },
+      "warning-bg":   { "$value": "{color.semantic-utility.warning}", "$type": "color" },
+      "danger-bg":    { "$value": "{color.semantic-utility.danger}",  "$type": "color" },
+      "info-bg":      { "$value": "{color.semantic-utility.info}",    "$type": "color" }
+    }
+  },
+
+  "typography": {
+    "heading-1": {
+      "$value": {
+        "fontFamily": "{typography.fontFamily.display}",
+        "fontSize":   "{typography.fontSize.5xl}",
+        "fontWeight": "{typography.fontWeight.bold}",
+        "lineHeight": "{typography.lineHeight.tight}",
+        "letterSpacing": "{typography.letterSpacing.tight}"
+      },
+      "$type": "typography"
+    },
+    "heading-2": {
+      "$value": {
+        "fontFamily": "{typography.fontFamily.display}",
+        "fontSize":   "{typography.fontSize.4xl}",
+        "fontWeight": "{typography.fontWeight.semibold}",
+        "lineHeight": "{typography.lineHeight.tight}"
+      },
+      "$type": "typography"
+    },
+    "heading-3": {
+      "$value": {
+        "fontFamily": "{typography.fontFamily.display}",
+        "fontSize":   "{typography.fontSize.2xl}",
+        "fontWeight": "{typography.fontWeight.semibold}",
+        "lineHeight": "{typography.lineHeight.snug}"
+      },
+      "$type": "typography"
+    },
+    "body-base": {
+      "$value": {
+        "fontFamily": "{typography.fontFamily.body}",
+        "fontSize":   "{typography.fontSize.base}",
+        "fontWeight": "{typography.fontWeight.regular}",
+        "lineHeight": "{typography.lineHeight.normal}"
+      },
+      "$type": "typography"
+    },
+    "body-large": {
+      "$value": {
+        "fontFamily": "{typography.fontFamily.body}",
+        "fontSize":   "{typography.fontSize.lg}",
+        "fontWeight": "{typography.fontWeight.regular}",
+        "lineHeight": "{typography.lineHeight.normal}"
+      },
+      "$type": "typography"
+    },
+    "caption": {
+      "$value": {
+        "fontFamily": "{typography.fontFamily.body}",
+        "fontSize":   "{typography.fontSize.sm}",
+        "fontWeight": "{typography.fontWeight.regular}",
+        "lineHeight": "{typography.lineHeight.snug}"
+      },
+      "$type": "typography"
+    }
+  },
+
+  "layout": {
+    "section-padding-y": {
+      "mobile":  { "$value": "{spacing.16}", "$type": "dimension", "$description": "64px top/bottom on mobile sections" },
+      "desktop": { "$value": "{spacing.32}", "$type": "dimension", "$description": "128px top/bottom on desktop sections" }
+    },
+    "container-max-width": {
+      "content": { "$value": "65ch",   "$type": "dimension", "$description": "long-form text optimal readability" },
+      "narrow":  { "$value": "640px",  "$type": "dimension" },
+      "normal":  { "$value": "1024px", "$type": "dimension" },
+      "wide":    { "$value": "1280px", "$type": "dimension" }
+    }
+  }
+}

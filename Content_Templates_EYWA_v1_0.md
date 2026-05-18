@@ -3,10 +3,20 @@
 > **Companion document to** EYWA Bible v3.19 + Schema Overview v1.15
 > **Universal Content Production Standards across 13 brands × 6 verticals**
 
-**Version:** v1.6 (LOCKED 2026-05-17 — adds DNAi Diagnostic Stage 2 to §7 Editorial Workflow per DR-028; T1-T22 + T-ADS-X unchanged)
+**Version:** v1.7 (LOCKED 2026-05-18 — companion refs bumped to Bible v3.21 + DR v1.15 per DR-029 Universal Brand Design System; templates now consume design/tokens/ via theme implementation; T1-T22 + T-ADS-X structurally unchanged)
 **Status:** **LOCKED 2026-05-12** for T1-T22 (Universal Content Template Standard per DR-020); T-ADS-X (DR-026) Proposed status retained until 2026-06-21 lock
 **Companion to:** Bible v3.19 + Schema Overview v1.15 + DECISION_RECORDS v1.13
 **Format:** Append-only with semantic versioning (v1.0 → v1.5 backward compatible)
+
+## v1.7 Changelog (2026-05-18) — Design Token Integration (DR-029 Locked)
+
+Per DR-029 (Universal Brand Design System) — templates now consume design tokens via stack-specific theme implementation:
+
+- 🔗 **Block render layer** — every T-template block now renders via tokens from `brands/eywa-{brand}/design/tokens/*.tokens.json` (consumed via theme implementation per stack)
+- 🔗 **Component spec layer** — `design/component-specs/{Name}.md` is the spec for any T-template block that needs brand-specific design (Hero, CTA, ServiceCard, etc.)
+- 📌 No structural change to T1-T22 + T-ADS-X templates — change is in HOW blocks are styled (tokens) not WHAT blocks compose
+- 🔗 Visual identity per brand now lives in `design/brand-foundation/` (color/typography/spacing/iconography/imagery/motion) — operator + AI co-author reference these when writing content
+- 🔄 Companion refs: Bible v3.20 → v3.21, DECISION_RECORDS v1.14 → v1.15, EYWA_HANDOVER v1.14 → v1.15
 
 ## v1.6 Changelog (2026-05-17) — Editorial Workflow + DNAi Diagnostic (DR-028 Locked)
 

@@ -2,8 +2,8 @@
 
 > **Append-only architectural decision log.** Each record explains WHY a decision was made — not just WHAT.
 
-**Document Version:** 1.14  
-**Last Updated:** 2026-05-17  
+**Document Version:** 1.15  
+**Last Updated:** 2026-05-18  
 **Format:** Reverse chronological (newest first)
 
 ---
@@ -31,6 +31,205 @@
 ---
 
 ## Decisions Log
+
+### [DR-029] — Universal Brand Design System (DTCG Tokens + Design Specifications Layer) (2026-05-18) 🔒🎨
+
+**Status:** **Locked 2026-05-18** (operator-approved — universal scope, applies to all brand repos including WP and Astro stacks)
+**Bible Reference:** Part 31 NEW — Universal Brand Design System
+**Schema Reference:** No DDL change — file-system + JSON specification
+**Companion to:** DR-002 (WP+Elementor stack default — consumes from this folder), DR-EYWA-MKT-005 (Astro stack profile — also consumes from this folder)
+**Scope:** **UNIVERSAL** — applies to all 13 brand repos + eywa-marketing + future brands
+
+**Context:**
+
+Pre-DR-029, brand design assets lived in `theme/brand-assets/` with no formalized design tokens, no W3C-standard format, no stack-agnostic separation between specification and implementation. Each brand operator/designer reinvented:
+
+1. **Color palette format** — sometimes CSS variables, sometimes Elementor global colors JSON, sometimes Figma styles export, sometimes nothing
+2. **Typography scale** — operator-determined per brand, no shared modular scale convention
+3. **Spacing system** — ad hoc per page, no token discipline
+4. **Cross-stack portability** — if a brand migrated WP → Astro, design system was rebuilt from scratch
+5. **Designer-readable format** — operators tried to communicate design decisions through long Notion docs; designers expected DTCG-formatted JSON they recognize
+
+Operator increasingly uses coding-augmented workflows even for WP+Elementor stack (per recent practice). Design tokens become essential to keep design discipline + accelerate handoffs to AI co-authors + reduce per-brand reinvention.
+
+**Decision:**
+
+Establish **Universal Brand Design System** as a per-brand folder structure consisting of three layers — design specifications (stack-agnostic), raw brand assets (binary sources), and stack-specific implementation. The design specifications layer adopts W3C DTCG (Design Tokens Community Group) JSON format as the cross-stack standard.
+
+#### 1. Folder structure (mandatory per-brand)
+
+```
+brands/eywa-{brand}/
+├── design/                       🎨 Stack-agnostic design layer
+│   ├── README.md                 ← workflow guide
+│   ├── tokens/                   📐 DTCG-compliant JSON (source of truth)
+│   │   ├── core.tokens.json      (primitives — palette, type scale, spacing)
+│   │   ├── semantic.tokens.json  (role-based — primary/surface/text)
+│   │   ├── component.tokens.json (component-level — button-bg, card-shadow)
+│   │   └── brand.tokens.json     (brand-unique — pillar colors, signature accents)
+│   ├── brand-foundation/         📋 Visual identity specs (Markdown)
+│   │   ├── color-system.md
+│   │   ├── typography.md
+│   │   ├── spacing.md
+│   │   ├── iconography.md
+│   │   ├── imagery.md
+│   │   └── motion.md
+│   ├── component-specs/          📐 Per-component design spec
+│   ├── page-templates/           🗺  Page-level layout specs
+│   ├── wireframes/               🗺  Hand-drawn / lo-fi sketches
+│   └── references/               💡 Mood boards, competitor screens
+├── brand-assets/                 🖼  Raw binary sources
+│   ├── logos/
+│   ├── photography/
+│   ├── illustrations/
+│   └── icons/
+└── theme/                        🚀 Stack-specific implementation
+    ├── custom-css/               (WP — generated from tokens where possible)
+    ├── elementor-templates-overrides/  (WP)
+    └── (or src/ if Astro stack — see DR-EYWA-MKT-005)
+```
+
+**Renames from pre-DR-029 structure:**
+- `theme/brand-assets/` → `brand-assets/` (root-level, expanded to logos/photography/illustrations/icons subfolders)
+- `theme/` keeps remaining stack-specific implementation only (custom-css, elementor-templates-overrides)
+- `design/` is NEW (did not exist universally; eywa-marketing had a partial version)
+
+#### 2. DTCG (W3C Design Tokens Community Group) format adoption
+
+All token files in `design/tokens/` use DTCG JSON format:
+
+```json
+{
+  "color": {
+    "brand": {
+      "primary": {
+        "$value": "#1E40AF",
+        "$type": "color",
+        "$description": "Primary brand color"
+      }
+    }
+  }
+}
+```
+
+Token files reference each other via `{path.to.token}` syntax. semantic.tokens.json references core.tokens.json primitives; component.tokens.json references both.
+
+**Why DTCG (not custom format):**
+- Industry-standard (W3C committee + design tool industry consensus)
+- Figma + Tokens Studio plugin enables 2-way sync between Figma and `design/tokens/`
+- Style Dictionary tool transforms DTCG → any output format (CSS, SCSS, JS, Swift, Android)
+- Any designer hired in the future recognizes format on first glance
+- Tool interoperability — no lock-in
+
+#### 3. Stack-specific consumption pipelines
+
+**WP+Elementor (per DR-002 default stack):**
+
+```yaml
+pipeline:
+  - Designer edits design/tokens/*.tokens.json
+  - Run sync script (operator workload — Phase 1F): transforms tokens → Elementor global colors/fonts JSON
+  - Import JSON into Elementor (Site Settings → Import Site Kit)
+  - All Elementor templates using global colors/fonts update automatically
+  - theme/custom-css/ holds tokens-derived CSS variables for cases Elementor globals don't cover
+```
+
+**Astro (per DR-EYWA-MKT-005 — eywa-marketing + future Astro brands):**
+
+```yaml
+pipeline:
+  - Designer edits design/tokens/*.tokens.json
+  - tailwind.config.mjs imports tokens via Style Dictionary or direct import
+  - npm run build → CSS regenerates
+  - Astro components in src/components/ use Tailwind classes generated from tokens
+```
+
+**Figma 2-way sync (when designer uses Figma):**
+
+```yaml
+pipeline:
+  - Tokens Studio plugin in Figma reads design/tokens/*.tokens.json (via GitHub sync)
+  - Designer changes values in Figma using Tokens Studio
+  - Tokens Studio commits back to design/tokens/ via GitHub API
+  - Stack-specific pipelines (above) pick up new values on next build
+```
+
+#### 4. Bootstrap Kit additions
+
+`templates/folder-skeleton/` updated with:
+- `design/README.md` — workflow guide + DTCG primer
+- `design/tokens/{core,semantic,component,brand}.tokens.json` — 4 DTCG skeleton files with TBD placeholders
+- `design/brand-foundation/{color-system,typography,spacing,iconography,imagery,motion}.md` — 6 markdown templates
+- `design/{component-specs,page-templates,wireframes,references}/` — placeholders with .gitkeep
+- `brand-assets/{logos,photography,illustrations,icons}/` — replaces old `theme/brand-assets/`
+- `brand-assets/README.md` — folder map + cross-reference to imagery.md
+
+#### 5. Retrofit policy for existing brands
+
+Existing brands (13 brand repos + eywa-marketing) follow this rule:
+
+- **At next Stage gate** — operator creates `design/` and `brand-assets/` folders per Bootstrap Kit template
+- **Fill incrementally** — `design/tokens/core.tokens.json` mandatory at minimum; other layers as needed
+- **Move existing assets** from `theme/brand-assets/` → `brand-assets/` (preserve git history via `git mv`)
+- **No retroactive deadline** — brands at Pre-Stage 1 can backfill at their leisure; brands in Phase E+ should backfill before Phase F content production starts
+
+#### 6. eywa-marketing precedent
+
+eywa-marketing repo already has a partial version of this structure (DR-EYWA-MKT-005 era). DR-029 generalizes that pattern + standardizes DTCG format + extends to all brand repos.
+
+### Naming choice — `theme/` preserved
+
+Per operator preference (2026-05-18) — `theme/` naming retained for stack-specific implementation folder. Reasons:
+
+- WordPress developer community recognizes "theme" instantly
+- Avoids invented naming ("implementation/") that adds cognitive load for operator's existing team
+- Brand repos may eventually have multi-stack implementations (e.g., WP + Astro coexisting during migration); `theme/wp-elementor/` and `theme/astro/` subfolder pattern works under one `theme/` umbrella
+
+**Rationale:**
+
+1. **Stack-agnostic by design** — Brand visual identity does not change when implementation stack changes. One brand running WP today and migrating to Astro tomorrow should NOT redesign its color palette. Separating spec layer from implementation layer makes this future-proof.
+2. **W3C DTCG = no lock-in** — Industry standard format ensures tools interoperate. Operator never has to learn a custom EYWA-specific design token format; designers recognize DTCG instantly.
+3. **Designer-friendly entry** — When a new designer joins an EYWA brand engagement, they open `design/` folder and recognize the layout in 30 seconds. Color system, typography, spacing — universal mental model.
+4. **Coding-augmented workflow accelerator** — Operator + Claude Code workflow consumes design tokens to generate consistent components. Without tokens, every component is bespoke; with tokens, components are derivative + consistent.
+5. **WP brand benefit (not just Astro)** — Common misconception: design tokens are only for code-first stacks. False — Elementor accepts global colors/fonts JSON, which is generated from DTCG tokens via sync script. WP brands gain consistency at scale (especially multi-branch sites with shared identity).
+6. **Cross-brand pattern sharing** — When `eywa-portfolio` design language emerges (e.g., shared accent style across Vertex/VT family), tokens make sharing trivial. Per-pixel CSS makes sharing impossible.
+7. **EYWA marketing self-applies** — `eywa-marketing` already partially uses this pattern. DR-029 codifies + extends to all brands. EYWA dogfoods its own protocol.
+
+**Consequences:**
+
+- ✅ Brand visual consistency improves dramatically as tokens propagate via build pipelines
+- ✅ Designer onboarding time drops (universal recognized format vs custom brand format)
+- ✅ AI co-author (Claude Code) consumes tokens reliably — fewer ad-hoc style choices in generated components
+- ✅ Multi-stack migration becomes feasible (Astro POC → broader adoption) without losing design system
+- ✅ Figma 2-way sync option enables designer-driven workflow when applicable
+- ⚠️ Existing 13 brand repos need retrofit at next Stage gate (low effort — folder creation + skeleton + incremental fill)
+- ⚠️ Operator workload: sync script for WP+Elementor stack (~4-6 hours one-time, then automation)
+- ⚠️ Each brand DNA Graph workshop (Phase A.1 per Bible Part 30 BGP) now feeds directly into `design/brand-foundation/color-system.md` + `typography.md` decisions — workshop output more structured
+- ⚠️ Existing `theme/brand-assets/` content must move to root `brand-assets/` — git mv preserves history, but commit + push required per brand
+- ⚠️ Sample tokens.json files have TBD placeholders — brands must fill with actual values; DTCG validators (e.g., w3c/design-tokens) can verify format compliance
+
+**Open Questions (operator decisions over time):**
+
+- Sync script implementation language — Node.js (Style Dictionary) vs operator-preferred tooling? (Recommend: Style Dictionary — widely supported, DTCG-native)
+- Figma sync — adopt Tokens Studio plugin universally or per-brand decision? (Recommend: per-brand — depends on whether designer is hired + uses Figma)
+- Multi-stack `theme/wp-elementor/` vs `theme/astro/` subfolder convention — formalize now or defer until first dual-stack brand emerges? (Recommend: defer — YAGNI)
+- Cross-brand shared token layer (e.g., eywa-portfolio common colors) — future DR if pattern emerges? (Recommend: defer until 2+ brands share visual identity)
+
+**References:**
+
+- Bible Part 31 NEW — Universal Brand Design System (this DR's authoritative spec)
+- Bible Part 30 — Brand Genesis Protocol (BGP) — A.1 DNA Graph informs design tokens via brand-foundation
+- Bible Part 9 — Template Anatomy (consumes tokens via theme implementation)
+- Bible Part 25 — WordPress Universal Kit (WP-specific consumption pipeline)
+- DR-002 — WP+Elementor stack default (consumes from this folder)
+- DR-EYWA-MKT-005 — Astro stack profile (consumes from this folder)
+- DR-028 — BGP Phase A.1 EYWA DNA Graph (Field 6 Brand Personality drives color/typography choices)
+- External: [W3C DTCG Spec](https://design-tokens.github.io/community-group/format/) — format specification
+- External: [Style Dictionary](https://amzn.github.io/style-dictionary/) — DTCG transformation tool
+- External: [Tokens Studio (Figma plugin)](https://tokens.studio/) — Figma 2-way sync tool
+- Bootstrap Kit additions: `templates/folder-skeleton/design/` + `templates/folder-skeleton/brand-assets/`
+
+---
 
 ### [DR-028] — Brand Genesis Protocol (BGP) Universal (2026-05-17) 🔒🌱🧬
 

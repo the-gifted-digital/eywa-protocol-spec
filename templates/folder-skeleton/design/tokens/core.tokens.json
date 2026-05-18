@@ -1,0 +1,112 @@
+{
+  "$schema": "https://design-tokens.github.io/community-group/format/",
+  "$description": "CORE primitive tokens — color palette, type scale, spacing scale. Brand identity foundation. Edit when brand identity locks or evolves at major Stage gate. Per DR-029 + Bible Part 31.",
+
+  "color": {
+    "$description": "Color primitive palette — semantic mapping lives in semantic.tokens.json, not here",
+    "neutral": {
+      "0": { "$value": "#FFFFFF", "$type": "color" },
+      "50": { "$value": "#TBD", "$type": "color", "$description": "fill with brand-specific lightest tint" },
+      "100": { "$value": "#TBD", "$type": "color" },
+      "200": { "$value": "#TBD", "$type": "color" },
+      "300": { "$value": "#TBD", "$type": "color" },
+      "400": { "$value": "#TBD", "$type": "color" },
+      "500": { "$value": "#TBD", "$type": "color", "$description": "mid-grey — typical for secondary text" },
+      "600": { "$value": "#TBD", "$type": "color" },
+      "700": { "$value": "#TBD", "$type": "color" },
+      "800": { "$value": "#TBD", "$type": "color" },
+      "900": { "$value": "#TBD", "$type": "color", "$description": "darkest grey — typical for body text" },
+      "1000": { "$value": "#000000", "$type": "color" }
+    },
+    "brand-primary": {
+      "$description": "Primary brand color scale (10 steps recommended for full design system)",
+      "50": { "$value": "#TBD", "$type": "color" },
+      "500": { "$value": "#TBD", "$type": "color", "$description": "main brand color — most usage" },
+      "900": { "$value": "#TBD", "$type": "color" }
+    },
+    "brand-accent": {
+      "$description": "Accent color scale (secondary brand color for highlights, links, hover states)",
+      "500": { "$value": "#TBD", "$type": "color" }
+    },
+    "semantic-utility": {
+      "$description": "Utility colors with universal meaning (not brand-specific)",
+      "success": { "$value": "#10B981", "$type": "color" },
+      "warning": { "$value": "#F59E0B", "$type": "color" },
+      "danger":  { "$value": "#EF4444", "$type": "color" },
+      "info":    { "$value": "#3B82F6", "$type": "color" }
+    }
+  },
+
+  "typography": {
+    "$description": "Font families, size scale, line heights, letter spacing — primitives only",
+    "fontFamily": {
+      "display": { "$value": "TBD", "$type": "fontFamily", "$description": "headline typeface — pick per brand voice" },
+      "body": { "$value": "TBD", "$type": "fontFamily", "$description": "body text typeface — high readability" },
+      "mono": { "$value": "TBD", "$type": "fontFamily", "$description": "monospace — for code blocks, data" }
+    },
+    "fontSize": {
+      "$description": "Modular scale — recommend 1.25 (major third) or 1.333 (perfect fourth)",
+      "xs":   { "$value": "0.75rem",  "$type": "dimension" },
+      "sm":   { "$value": "0.875rem", "$type": "dimension" },
+      "base": { "$value": "1rem",     "$type": "dimension" },
+      "lg":   { "$value": "1.125rem", "$type": "dimension" },
+      "xl":   { "$value": "1.25rem",  "$type": "dimension" },
+      "2xl":  { "$value": "1.5rem",   "$type": "dimension" },
+      "3xl":  { "$value": "1.875rem", "$type": "dimension" },
+      "4xl":  { "$value": "2.25rem",  "$type": "dimension" },
+      "5xl":  { "$value": "3rem",     "$type": "dimension" },
+      "6xl":  { "$value": "3.75rem",  "$type": "dimension" },
+      "7xl":  { "$value": "4.5rem",   "$type": "dimension" }
+    },
+    "fontWeight": {
+      "regular":  { "$value": "400", "$type": "fontWeight" },
+      "medium":   { "$value": "500", "$type": "fontWeight" },
+      "semibold": { "$value": "600", "$type": "fontWeight" },
+      "bold":     { "$value": "700", "$type": "fontWeight" }
+    },
+    "lineHeight": {
+      "tight":   { "$value": "1.1",  "$type": "number" },
+      "snug":    { "$value": "1.3",  "$type": "number" },
+      "normal":  { "$value": "1.5",  "$type": "number" },
+      "relaxed": { "$value": "1.75", "$type": "number" }
+    },
+    "letterSpacing": {
+      "tight":  { "$value": "-0.02em", "$type": "dimension" },
+      "normal": { "$value": "0",       "$type": "dimension" },
+      "wide":   { "$value": "0.05em",  "$type": "dimension" }
+    }
+  },
+
+  "spacing": {
+    "$description": "Base unit 4px. Use these tokens for ALL padding/margin/gap — do not use raw values in components.",
+    "0":  { "$value": "0",       "$type": "dimension" },
+    "1":  { "$value": "0.25rem", "$type": "dimension", "$description": "4px" },
+    "2":  { "$value": "0.5rem",  "$type": "dimension", "$description": "8px" },
+    "3":  { "$value": "0.75rem", "$type": "dimension", "$description": "12px" },
+    "4":  { "$value": "1rem",    "$type": "dimension", "$description": "16px" },
+    "6":  { "$value": "1.5rem",  "$type": "dimension", "$description": "24px" },
+    "8":  { "$value": "2rem",    "$type": "dimension", "$description": "32px" },
+    "12": { "$value": "3rem",    "$type": "dimension", "$description": "48px" },
+    "16": { "$value": "4rem",    "$type": "dimension", "$description": "64px" },
+    "20": { "$value": "5rem",    "$type": "dimension", "$description": "80px" },
+    "24": { "$value": "6rem",    "$type": "dimension", "$description": "96px" },
+    "32": { "$value": "8rem",    "$type": "dimension", "$description": "128px" }
+  },
+
+  "breakpoint": {
+    "$description": "Responsive breakpoints — mobile-first",
+    "sm":  { "$value": "640px",  "$type": "dimension" },
+    "md":  { "$value": "768px",  "$type": "dimension" },
+    "lg":  { "$value": "1024px", "$type": "dimension" },
+    "xl":  { "$value": "1280px", "$type": "dimension" },
+    "2xl": { "$value": "1536px", "$type": "dimension" }
+  },
+
+  "radius": {
+    "none": { "$value": "0",       "$type": "dimension" },
+    "sm":   { "$value": "0.25rem", "$type": "dimension" },
+    "md":   { "$value": "0.5rem",  "$type": "dimension" },
+    "lg":   { "$value": "1rem",    "$type": "dimension" },
+    "full": { "$value": "9999px",  "$type": "dimension" }
+  }
+}

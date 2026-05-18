@@ -3,10 +3,81 @@
 > **For Claude (and any AI assistant) working on a new brand within the EYWA portfolio.**  
 > **Read this file first, every new project, every new session.**
 
-**Document Version:** 1.14  
-**Last Updated:** 2026-05-17  
-**Companion to:** EYWA Bible v3.20 + Schema Overview v1.16 + DECISION_RECORDS v1.14 + Content_Templates_EYWA_v1_0.md v1.6 (LOCKED)  
+**Document Version:** 1.15  
+**Last Updated:** 2026-05-18  
+**Companion to:** EYWA Bible v3.21 + Schema Overview v1.16 + DECISION_RECORDS v1.15 + Content_Templates_EYWA_v1_0.md v1.7 (LOCKED)  
 **Created by:** The Gifted Digital Marketing Co., Ltd.
+
+---
+
+## 🆕 v1.15 Note (2026-05-18) — Universal Brand Design System LOCKED (DR-029)
+
+Bible v3.21 ships with **Part 31 — Universal Brand Design System** per DR-029 Locked 2026-05-18. **Universal scope** — applies to all 13 brand repos + eywa-marketing + future brands, regardless of stack (WP+Elementor or Astro or future).
+
+### What changes for every brand repo
+
+**Two new mandatory folders at brand repo root:**
+
+```
+brands/eywa-{brand}/
+├── design/                       🎨 Stack-agnostic design layer (NEW)
+│   ├── README.md
+│   ├── tokens/                   📐 W3C DTCG JSON (source of truth)
+│   │   ├── core.tokens.json
+│   │   ├── semantic.tokens.json
+│   │   ├── component.tokens.json
+│   │   └── brand.tokens.json
+│   ├── brand-foundation/         📋 6 markdown specs
+│   │   ├── color-system.md
+│   │   ├── typography.md
+│   │   ├── spacing.md
+│   │   ├── iconography.md
+│   │   ├── imagery.md
+│   │   └── motion.md
+│   ├── component-specs/          (per-component design spec)
+│   ├── page-templates/           (page-level layout spec)
+│   ├── wireframes/
+│   └── references/
+├── brand-assets/                 🖼  Raw binary sources (RELOCATED from theme/brand-assets/)
+│   ├── logos/
+│   ├── photography/
+│   ├── illustrations/
+│   └── icons/
+└── theme/                        🚀 Stack-specific implementation (preserved naming)
+    ├── custom-css/
+    └── elementor-templates-overrides/  (WP — or src/ for Astro)
+```
+
+### Industry-standard format
+
+`design/tokens/` uses **W3C Design Tokens Community Group (DTCG)** JSON format — recognized by Figma + Tokens Studio + Style Dictionary + design system tools industry-wide. Designers + tools speak this format natively — no brand-specific learning curve.
+
+### Stack-specific consumption (same source, different pipelines)
+
+| Stack | Consumption pipeline |
+|-------|----------------------|
+| **WP+Elementor** (DR-002 default) | Sync script transforms DTCG → Elementor global colors/fonts JSON → import into Site Settings |
+| **Astro** (DR-EYWA-MKT-005 profile) | tailwind.config.mjs auto-imports tokens → npm run build → CSS regenerates |
+| **Figma 2-way sync** | Tokens Studio plugin reads/writes design/tokens/ via GitHub |
+
+### Retrofit for existing 13 brands + eywa-marketing
+
+Per DR-029 retrofit policy:
+- **At next Stage gate** — operator creates `design/` and `brand-assets/` per Bootstrap Kit
+- **Minimum viable retrofit** — `design/tokens/core.tokens.json` filled with primary palette + body typography + base spacing
+- **Move existing assets** — `git mv theme/brand-assets/ brand-assets/` preserves history
+- **No retroactive deadline** — Pre-Stage 1 brands fill incrementally; brands in Phase E+ should backfill before Phase F
+
+### Operator workload from DR-029
+
+- [ ] Per-brand retrofit (~2-4 hours each at next Stage gate)
+- [ ] WP sync script implementation — Style Dictionary + custom Elementor transformer (~4-6 hours one-time)
+- [ ] Per-brand DNA Graph (BGP Phase A.1) workshop → fills design/brand-foundation/ + tokens/
+- [ ] Decide per-brand whether to adopt Figma + Tokens Studio (depends on hired designer)
+
+### eywa-marketing precedent
+
+eywa-marketing repo already has partial version of this structure (per DR-EYWA-MKT-005). DR-029 generalizes + standardizes DTCG format + extends to all brand repos.
 
 ---
 
