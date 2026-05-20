@@ -2,8 +2,8 @@
 
 > **Append-only architectural decision log.** Each record explains WHY a decision was made — not just WHAT.
 
-**Document Version:** 1.15  
-**Last Updated:** 2026-05-18  
+**Document Version:** 1.16  
+**Last Updated:** 2026-05-20  
 **Format:** Reverse chronological (newest first)
 
 ---
@@ -31,6 +31,217 @@
 ---
 
 ## Decisions Log
+
+### [DR-030] — Sensitive Topic Compliance Layer (Product Tier × Content Tier Matrix) (2026-05-20) 🔒⚖️🛡️
+
+**Status:** **Locked 2026-05-20** (operator-approved — first triggered by HP100 brand bootstrap, universal scope for all verticals where regulatory + YMYL compliance separation matters)
+**Bible Reference:** Part 32 NEW — Sensitive Topic Compliance Layer
+**Schema Reference:** Schema v1.17 — adds 6 columns to `seo_website_page_master` + 3 columns to `seo_reviews` + 2 columns to `brands` + extends `seo_editorial_reviews.review_type` enum
+**Companion to:** DR-019 (Schema Strategy Two-Purpose Taxonomy — guides what schema is emittable per content tier), DR-021 (Internal Linking — sensitive pages may have linking restrictions), DR-026 (Ads Landing Page Track — ad_active gating intersects with sensitive topic flag)
+**Scope:** **UNIVERSAL** — applies to all brands where product regulatory tier ≠ content topic tier (supplements, cosmetics, B2B health-adjacent, mental wellness, etc.); brands without sensitive content default to baseline (all tiers = 1, no overhead)
+
+**Context:**
+
+Pre-DR-030, EYWA spec assumed brand compliance was a single dimension — "this brand is healthcare, therefore all pages need medical review." Field-tested across brand discussions (notably HP100 post-rehab supplement brand 2026-05-20) revealed:
+
+1. **Product regulatory tier ≠ content topic tier** — A supplement (legally just food, low regulatory bar) can require Tier 3 medical reviewer signoff because its CONTENT discusses YMYL-high topics (e.g., addiction recovery)
+2. **One-size-fits-all medical review = wasteful** — Generic wellness pages don't need addiction-medicine MD signoff; recovery-education pages do. Operator was over-provisioning medical advisor cost across all pages or under-provisioning across critical pages
+3. **Audience segment dimension missing** — Brands targeting sensitive populations (recovery, postpartum, cancer survivors, mental health) need per-page tagging for editorial workflow + analytics; current schema has no field
+4. **Compliance binary too coarse** — `has_medical_review BOOLEAN` doesn't distinguish "reviewer needed at Tier 1 level (nutritionist)" vs "reviewer needed at Tier 3 level (MD specialist)" vs "legal + medical + อย. tri-signoff at Tier 4"
+5. **PDPA on testimonials needs sensitivity tagging** — `seo_reviews` table has `pdpa_risk_flag BOOLEAN` but no granularity for "this testimonial discusses recovery from addiction → max-sensitivity anonymization required"
+6. **Positioning mode is brand-level decision** — No field to record whether brand uses Mode A (open identity) / Mode B (dual-layer) / Mode C (implicit) — affects every downstream content + keyword + analytics choice
+
+**Decision:**
+
+Establish **Sensitive Topic Compliance Layer** — a two-dimensional tier matrix (Product Regulatory × Content Topic) applied at the **page level**, with brand-level metadata for positioning mode and audience segments. Editorial review workflow + claim guardrails + PDPA handling + Ads gating all derive from per-page tier flags.
+
+#### 1. Two-Dimensional Tier Matrix
+
+```
+Product Regulatory Tier:        1  ────  2  ────  3  ────  4
+                          (vitamin)  (functional)  (medical-grade)  (banned/restricted)
+
+Content Topic Sensitivity:      1  ────  2  ────  3  ────  4
+                       (general)  (specific outcome)  (YMYL-high)  (legal-sensitive)
+
+Compliance intensity per page = max(Product Tier, Content Tier)
+```
+
+**Product Regulatory Tier (set at brand level, applies to product pages):**
+- **T1 — Basic:** generic vitamins/minerals, basic cosmetics (lipstick, soap), general food
+- **T2 — Functional:** anti-aging skincare, sleep aids, weight management, whitening, sports supplements, recovery supplements, energy/focus, joint health
+- **T3 — Medical-Adjacent:** drug recovery support, diabetes/blood sugar, cardiovascular, fertility, mental health-adjacent, senior cognitive, pediatric (legally still supplement/cosmetic, but operates near medical category)
+- **T4 — Quasi-Restricted:** cannabis-derived, kratom, anabolic, controlled-detox claims — country-specific bans likely; consult lawyer before scope
+
+**Content Topic Sensitivity Tier (set per page on `seo_website_page_master`):**
+- **T1 — General Lifestyle:** beauty routines, fitness tips, recipe content, decorative product showcase
+- **T2 — Specific Outcome Education:** ingredient deep-dive, skin type guide, sleep improvement tips, exercise advice
+- **T3 — YMYL-High:** addiction recovery education, mental health, cancer-adjacent wellness, post-illness recovery, pediatric advice, pregnancy advice
+- **T4 — Legal-Sensitive:** content touching controlled substances, banned-ingredient comparison, jurisdictional medical claims, harm-reduction guides
+
+#### 2. Schema additions (v1.16 → v1.17)
+
+**Table `seo_website_page_master` — 6 NEW columns:**
+
+```sql
+ALTER TABLE seo_website_page_master
+  ADD COLUMN product_regulatory_tier smallint
+    CHECK (product_regulatory_tier BETWEEN 1 AND 4),
+  ADD COLUMN content_topic_tier smallint
+    CHECK (content_topic_tier BETWEEN 1 AND 4),
+  ADD COLUMN sensitive_topic_flag text
+    CHECK (sensitive_topic_flag IN ('none', 'low', 'medium', 'high', 'critical')),
+  ADD COLUMN target_audience_segment text[],
+  ADD COLUMN legal_review_required boolean DEFAULT false,
+  ADD COLUMN compliance_max_tier smallint
+    GENERATED ALWAYS AS (GREATEST(product_regulatory_tier, content_topic_tier)) STORED;
+```
+
+`compliance_max_tier` is generated column → derives reviewer tier automatically.
+
+**Table `seo_reviews` (testimonials) — 3 NEW columns:**
+
+```sql
+ALTER TABLE seo_reviews
+  ADD COLUMN is_sensitive_recovery_testimonial boolean DEFAULT false,
+  ADD COLUMN consent_record_id text,
+  ADD COLUMN anonymization_status text
+    CHECK (anonymization_status IN ('not_required', 'pending', 'completed', 'verified'));
+```
+
+**Table `brands` — 2 NEW columns (or extend `metadata jsonb` if PK migration in progress):**
+
+```sql
+ALTER TABLE brands
+  ADD COLUMN positioning_mode text
+    CHECK (positioning_mode IN ('A-open-identity', 'B-dual-layer', 'B-weighted-recovery', 'C-implicit', 'baseline')),
+  ADD COLUMN compliance_profile jsonb;
+```
+
+`compliance_profile` jsonb structure:
+```json
+{
+  "product_regulatory_tier_default": 2,
+  "content_topic_tier_default": 3,
+  "sensitive_topic_flag_default": "high",
+  "medical_advisor_required": true,
+  "legitscript_status": "not-applied",
+  "ads_strategy": "organic-first-no-paid-ads-until-legitscript",
+  "forbidden_claims": ["..."],
+  "approved_claims_source": "lawyer-engagement-2026-XX"
+}
+```
+
+**Table `seo_editorial_reviews` — extend `review_type` enum:**
+
+```sql
+ALTER TABLE seo_editorial_reviews
+  DROP CONSTRAINT seo_editorial_reviews_review_type_check;
+ALTER TABLE seo_editorial_reviews
+  ADD CONSTRAINT seo_editorial_reviews_review_type_check
+  CHECK (review_type IN (
+    'medical', 'editorial', 'fact_check', 'seo', 'translation', 'final',
+    'legal_compliance'  -- NEW per DR-030
+  ));
+```
+
+#### 3. Editorial Review Workflow Mapping
+
+| `compliance_max_tier` | Required Reviewers | Citation Tier (Bible 23.1) | Schema.org Type Restrictions |
+|---|---|---|---|
+| **1** | optional pharmacist/nutritionist | 3-4 (popular science OK) | any non-restricted |
+| **2** | pharmacist or nutritionist recommended | 2-3 (peer-reviewed preferred) | `DietarySupplement`, `Product`, no `Drug` |
+| **3** | **MD signoff mandatory** + editorial + fact-check | 1-2 (PubMed, clinical guidelines) | `DietarySupplement` + `Article` only (no `MedicalCondition` schema unless explicit educational angle) |
+| **4** | **MD + legal + อย./regulator signoff** | 1 only (gov + clinical) | strict whitelist per legal review |
+
+**Trigger logic** (per DR-021 reciprocal trigger pattern):
+- When page row inserted/updated with `compliance_max_tier >= 3`, automatically create pending `seo_editorial_reviews` row with `review_type='medical'`
+- When `content_topic_tier=4 OR product_regulatory_tier=4`, also auto-create `review_type='legal_compliance'` row
+- Page cannot move to `status='published'` until all required review rows have `approved=true`
+
+#### 4. Keyword + Ads gating
+
+In `seo_x_ads_keywords_contextual_master`:
+- Add derived check: if landing page has `sensitive_topic_flag IN ('high','critical')` AND `target_audience_segment @> ARRAY['recovery','mental-health-clinical']`, then `ad_active=false` default
+- Operator can manually flip after LegitScript or equivalent certification (lock in `decision_records.md` per brand)
+
+#### 5. PDPA workflow for testimonials
+
+When `seo_reviews.is_sensitive_recovery_testimonial=true`:
+- `anonymization_status` must reach `verified` before `responded_at` can be set
+- `consent_record_id` must point to consent record (operator stores externally — Notion / contract DMS)
+- DPO must sign off on retention policy
+- 30-day deletion-on-request SLA tighter than baseline PDPA
+
+#### 6. Positioning Mode definitions (recorded on `brands.positioning_mode`)
+
+| Mode | Description | When to use |
+|---|---|---|
+| **A-open-identity** | Brand openly addresses sensitive audience as primary | Recovery brand, postpartum brand, cancer-survivor brand where authenticity drives community trust |
+| **B-dual-layer** | 50/50 split — main wellness layer + community section for sensitive audience | Brand wants reach + authenticity but is risk-averse |
+| **B-weighted-recovery** | 70/30 — recovery is primary identity, broad wellness is collateral SEO reach | Brand identity committed to sensitive audience but wants broader keyword reach |
+| **C-implicit** | No explicit sensitive topic mention — symptom/outcome keywords only | Risk-averse brands, banned-Ads categories (T4 products) |
+| **baseline** | No sensitive topic — regular brand operation | All non-sensitive brands (most brands) |
+
+#### 7. Bootstrap Kit additions
+
+- `templates/folder-skeleton/docs/brand-intake.xlsx` — extend with Section 13 "Sensitive Audience Compliance Profile" (14 new questions, brings total to 95)
+- `templates/folder-skeleton/docs/brand-concept.template.md` — add Section 11 "Compliance Profile" + Section 13 "Forbidden Topics & Risk Boundaries"
+- `templates/folder-skeleton/brand-config.template.json` — add `positioning_mode` + `compliance_profile` keys
+
+#### 8. Retrofit policy for existing brands
+
+- **Baseline brands** (non-sensitive — dental, aesthetics, wellness clinics): set `product_regulatory_tier=1`, `content_topic_tier_default=1`, `positioning_mode='baseline'` — zero behavioral change, columns NULLable so no migration risk
+- **Healthcare-adjacent brands** (existing supplements, vitamins): operator audit at next Stage gate — flag content_topic_tier per page if any YMYL pages exist; default `compliance_profile` per brand-config
+- **New sensitive brands** (HP100 onwards): mandatory full profile at Pre-Stage 1 bootstrap before brand-concept.md finalization
+
+**Rationale:**
+
+1. **Separation of concerns** — Product compliance (legal, อย., country regulation) and Content compliance (Google YMYL E-E-A-T, journalistic standards) operate on different timescales and require different expertise. Conflating them produces either over-spending (medical reviewer on lipstick pages) or under-spending (no MD signoff on diabetes-adjacent supplement content).
+2. **Per-page granularity matches reality** — A brand homepage might be T1 commercial; an educational FAQ might be T3 YMYL. Editorial workflow assigns reviewers per-page, not per-brand.
+3. **Generated column reduces operator error** — `compliance_max_tier` derives automatically, can't get out-of-sync with input tiers; UI can validate against it before publish.
+4. **Positioning mode is load-bearing** — Brand strategy decisions (homepage tone, B2B partnership channel, ad strategy, community section) all derive from positioning_mode. Recording it on `brands` table makes it queryable for dashboards + audits.
+5. **PDPA tightening for sensitive testimonials** — Generic `pdpa_risk_flag` boolean was insufficient. Three-state `anonymization_status` enables workflow gates (cannot publish testimonial until verified anonymized).
+6. **Ads gating prevents account bans** — Hard-link `ad_active=false` default for sensitive landing pages prevents accidental ad spend on uncertified categories that would suspend the entire Google Ads account.
+7. **HP100 validates framework** — First brand designed under DR-030 (HP100 supplement for post-rehab recovery) hits all dimensions: Mode A open identity, Product T2 × Content T3 default, sensitive testimonials, ads paused for LegitScript. Real-world validation > theoretical framework.
+
+**Consequences:**
+
+- ✅ Editorial workflow auto-assigns correct reviewer tier per page → cost-efficient + compliance-safe
+- ✅ Sensitive brands launchable without bespoke compliance layer — framework + Bootstrap Kit handles it
+- ✅ Cross-brand analytics can segment by `target_audience_segment` for cohort analysis
+- ✅ Schema additions are backward-compatible (all NULLable, default to baseline behavior for non-sensitive brands)
+- ✅ Brand intake form section 13 captures all sensitive-topic decisions before content production begins
+- ⚠️ Operator workload: 4 migrations (Wave 11) for the 5 column additions (page_master + reviews + brands + editorial_reviews extension)
+- ⚠️ n8n flow update needed — trigger logic for auto-creating pending editorial_reviews rows when `compliance_max_tier >= 3`
+- ⚠️ Existing brand audits at next Stage gate (operator workload — estimated 30 min per brand for tier classification)
+- ⚠️ Bootstrap Kit `brand-intake.xlsx` becomes 95 questions (from 81) — slight intake friction increase
+
+**Open Questions (operator decisions over time):**
+
+- Should `compliance_max_tier` cascade to children pages via `parent_page_fp` automatically (inheritance)? — Defer; explicit per-page is safer for now
+- Should `positioning_mode` evolve over brand lifecycle (e.g., Mode C → Mode A as brand matures)? — Yes, supersede via DR per-brand
+- Should ads gating extend to LINE OA / Meta Ads / TikTok Ads per platform? — Defer until first sensitive brand runs paid ads in any platform
+- Tier 4 jurisdictional differences (cannabis legal in Thailand but not all SE Asia) — handle via `target_market` field on brand + per-market overrides? — Defer until first multi-market T4 brand emerges
+
+**References:**
+
+- Bible Part 32 NEW — Sensitive Topic Compliance Layer (this DR's authoritative spec)
+- Bible Part 23.1 — Citation 6-tier hierarchy (used by Tier 3-4 content pages)
+- Bible Part 23.3 — Authors/Reviewers E-E-A-T (medical advisor signoff workflow)
+- DR-019 — Schema Strategy Two-Purpose Taxonomy (constrains emittable schema types per tier)
+- DR-021 — Internal Linking Architecture (sensitive pages may have anchor/link restrictions)
+- DR-026 — Ads Landing Page Track Phase 0 (intersects with sensitive flag gating)
+- DR-028 — Brand Genesis Protocol (positioning_mode emerges from BGP Phase A.0 intake)
+- DR-029 — Universal Brand Design System (brand-foundation/imagery.md may flag sensitive imagery restrictions)
+- DR-HP100-001..005 — first brand application of DR-030 framework (post-rehab supplement)
+- External: [Google YMYL Quality Rater Guidelines](https://static.googleusercontent.com/media/guidelines.raterhub.com/en//searchqualityevaluatorguidelines.pdf)
+- External: [LegitScript Healthcare Merchant Certification](https://www.legitscript.com/) — required for paid Ads on addiction-treatment-adjacent keywords
+- External: Thai PDPA (พ.ร.บ.คุ้มครองข้อมูลส่วนบุคคล) — sensitive personal data Category Two requires explicit consent
+- External: Thai อย. supplement notification regulations (พ.ร.บ.อาหาร)
+- Bootstrap Kit additions: `templates/folder-skeleton/docs/brand-intake.xlsx` v2 (95 questions)
+
+---
 
 ### [DR-029] — Universal Brand Design System (DTCG Tokens + Design Specifications Layer) (2026-05-18) 🔒🎨
 
@@ -3493,6 +3704,46 @@ decision_record_governance:
 ---
 
 ## Changelog
+
+### v1.16 (2026-05-20) — DR-030 Locked (Sensitive Topic Compliance Layer) 🔒⚖️🛡️
+
+First DR triggered by a brand bootstrap (HP100 — post-rehab recovery supplement). Establishes two-dimensional tier matrix (Product Regulatory × Content Topic) at page level + brand-level positioning_mode + PDPA tightening for sensitive testimonials.
+
+**Headline Changes:**
+
+- ➕ **DR-030 (NEW, Locked):** Sensitive Topic Compliance Layer. Two-dim tier matrix (Product T1-T4 × Content T1-T4), `compliance_max_tier` generated column drives reviewer assignment automatically. Brand positioning_mode (A-open-identity / B-dual-layer / B-weighted-recovery / C-implicit / baseline). PDPA workflow tightens for sensitive testimonials (3-state anonymization). Ads gating prevents account bans on uncertified categories.
+- 📘 Bible v3.21 → v3.22 — adds Part 32 (10 subsections covering matrix, schema, workflow, positioning, PDPA, Ads, retrofit)
+- 📋 EYWA_HANDOVER v1.15 → v1.16 — adds §v1.16 Note documenting DR-030 changes + retrofit policy per brand cohort
+- 🏥 First-apply brand: **HP100** (`the-gifted-digital/eywa-hp100`) — Mode A open-identity, Product T2 × Content T3 default. See DR-HP100-001..005 in brand repo
+- 🗃️ Schema additions deferred to Wave 11 migration: 6 cols on `seo_website_page_master` + 3 cols on `seo_reviews` + 2 cols on `brands` + `seo_editorial_reviews.review_type` enum extension. Schema_Overview v1.16 unchanged in this DR; Wave 11 migration build will bump to v1.17.
+- 📦 Bootstrap Kit extension: `templates/folder-skeleton/docs/brand-intake.xlsx` 81 → 95 questions (Section 13 — 14 new sensitive-audience questions). HP100-specific intake at `brands/eywa-hp100/docs/brand-intake-HP100.xlsx`.
+
+**Retrofit policy:**
+- Baseline brands (dental, aesthetics, wellness clinics) — zero-friction, all tiers default to 1
+- Healthcare-adjacent supplements/vitamins — operator audit at next Stage gate
+- New sensitive brands (HP100+) — mandatory full profile at Pre-Stage 1
+
+**Cross-references:**
+- Bible Part 32 — Sensitive Topic Compliance Layer (authoritative)
+- Bible Part 30 — BGP (positioning_mode emerges from intake)
+- Bible Part 31 — Universal Brand Design System (parallel layer; both retrofit at next Stage gate together)
+- DR-019 — Schema Two-Purpose Taxonomy (constrains emittable types per tier)
+- DR-021 — Internal Linking Architecture (sensitive pages link restrictions)
+- DR-026 — Ads Landing Page Track Phase 0 (intersects with `sensitive_topic_flag` gating)
+- DR-028 — Brand Genesis Protocol (intake feeds compliance_profile)
+- External: Google YMYL Quality Rater Guidelines + LegitScript Healthcare Certification + Thai PDPA + Thai อย. supplement notification regs
+
+### v1.15 (2026-05-18) — DR-029 Locked (Universal Brand Design System) 🔒🎨
+
+Operator-approved universal scope. Establishes stack-agnostic per-brand design layer with W3C DTCG token format adoption. Ships paired with Bible v3.21 + EYWA_HANDOVER v1.15 + Content_Templates v1.7.
+
+**Headline Changes:**
+
+- ➕ **DR-029 (NEW, Locked):** Universal Brand Design System. `design/` (stack-agnostic specs + DTCG tokens) + `brand-assets/` (raw binary sources) + `theme/` (stack-specific implementation, name preserved per operator pref). 4 DTCG token files (core/semantic/component/brand) + 6 brand-foundation Markdown specs (color/typography/spacing/iconography/imagery/motion).
+- 📘 Bible v3.20 → v3.21 — adds Part 31 (9 subsections)
+- 📦 Bootstrap Kit additions: `templates/folder-skeleton/design/` + `templates/folder-skeleton/brand-assets/` + brand-intake.xlsx (81 questions baseline)
+- 📋 Handover §v1.15 Note added; retrofit at next Stage gate per brand
+- 🔄 EYWA marketing self-applies (already partial — DR-029 codifies + extends)
 
 ### v1.9 (2026-05-12) — DR-024 + DR-025 Locked (Restore Forgotten Schema) 🔒🧬🏥
 

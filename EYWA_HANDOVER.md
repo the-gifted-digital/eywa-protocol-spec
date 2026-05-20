@@ -3,10 +3,56 @@
 > **For Claude (and any AI assistant) working on a new brand within the EYWA portfolio.**  
 > **Read this file first, every new project, every new session.**
 
-**Document Version:** 1.15  
-**Last Updated:** 2026-05-18  
-**Companion to:** EYWA Bible v3.21 + Schema Overview v1.16 + DECISION_RECORDS v1.15 + Content_Templates_EYWA_v1_0.md v1.7 (LOCKED)  
+**Document Version:** 1.16  
+**Last Updated:** 2026-05-20  
+**Companion to:** EYWA Bible v3.22 + Schema Overview v1.16 (Wave 11 → v1.17 pending) + DECISION_RECORDS v1.16 + Content_Templates_EYWA_v1_0.md v1.7 (LOCKED)  
 **Created by:** The Gifted Digital Marketing Co., Ltd.
+
+---
+
+## 🆕 v1.16 Note (2026-05-20) — Sensitive Topic Compliance Layer LOCKED (DR-030)
+
+Bible v3.22 ships with **Part 32 — Sensitive Topic Compliance Layer** per DR-030 Locked 2026-05-20. First applied to **HP100** brand (post-rehab recovery supplement, Mode A open-identity).
+
+### What changes for every brand repo
+
+**Two-dimensional tier matrix at the page level:**
+- `product_regulatory_tier` (1-4) — set at brand level for product pages
+- `content_topic_tier` (1-4) — set per-page on `seo_website_page_master`
+- `compliance_max_tier` = max(product, content) — drives reviewer assignment automatically
+
+**Schema additions (v1.17 pending Wave 11 migration):**
+- `seo_website_page_master` — 6 cols (`product_regulatory_tier`, `content_topic_tier`, `sensitive_topic_flag`, `target_audience_segment`, `legal_review_required`, `compliance_max_tier` generated)
+- `seo_reviews` — 3 cols (`is_sensitive_recovery_testimonial`, `consent_record_id`, `anonymization_status`)
+- `brands` — 2 cols (`positioning_mode`, `compliance_profile jsonb`)
+- `seo_editorial_reviews.review_type` enum — adds `legal_compliance`
+
+**Bootstrap Kit update:** `templates/folder-skeleton/docs/brand-intake.xlsx` extended from 81 → 95 questions (Section 13 — Sensitive Audience Compliance Profile, 14 new questions)
+
+**Positioning modes recorded on `brands.positioning_mode`:** A-open-identity / B-dual-layer / B-weighted-recovery / C-implicit / baseline (default for non-sensitive brands)
+
+### Retrofit policy (zero-friction for existing brands)
+
+| Brand cohort | Action |
+|---|---|
+| **Baseline (dental, aesthetics, wellness clinics)** | No change — set `positioning_mode='baseline'`, all tiers default to 1; behavior unchanged |
+| **Healthcare-adjacent supplements/vitamins** | Audit at next Stage gate — flag YMYL pages with `content_topic_tier=3` if any |
+| **New sensitive brands (HP100 onwards)** | Mandatory full profile at Pre-Stage 1 bootstrap |
+
+### Operator workload (Wave 11)
+
+- 4 SQL migrations to add columns
+- 1 n8n flow update — auto-create pending `seo_editorial_reviews` rows when `compliance_max_tier >= 3`
+- Per-brand audit (~30 min each for tier classification) at next Stage gate
+- Brand intake form re-circulation if active brands hit sensitive territory
+
+### First-applied brand: HP100
+
+- Repo: `the-gifted-digital/eywa-hp100`
+- Positioning Mode: **A-open-identity**
+- Product Tier: **2** (dietary supplement, อย. notification)
+- Content Tier (default): **3** (YMYL-high — addiction recovery education)
+- See `brands/eywa-hp100/docs/brand-concept.md` + `docs/decision-records.md` (DR-HP100-001..005)
 
 ---
 
