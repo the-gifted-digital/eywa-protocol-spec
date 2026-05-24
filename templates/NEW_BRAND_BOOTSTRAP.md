@@ -27,6 +27,10 @@ If unsure whether to add or omit, log the decision in `docs/decision-records.md`
 ```yaml
 prerequisites:
   ☐ Brand identified + brand_id chosen (kebab-case, e.g., "tc-smile", "smile-scape")
+  ☐ Brand structure decided 🆕 v1.18 (DR-032): monolithic | multi_center
+                    # monolithic = 1 brand = 1 WP site, no center subdivision (90%+ of portfolio)
+                    # multi_center = 1 brand = umbrella + N productized centers as URL subdirectories
+                    # See Step 1.5 below + EYWA_HANDOVER.md v1.18 Note for decision criteria
   ☐ Repo created on GitHub: github.com/the-gifted-digital/eywa-{brand-id}
   ☐ Local clone exists at /Volumes/SSD NN/CLAUDE AI/repos/brands/eywa-{brand-id}/
   ☐ Operator has access to brand source materials (if any — concept docs, existing site, brand book)
@@ -50,6 +54,58 @@ This creates: `docs/` (with signature-programs/), `content-plan/` (with archive/
 - `theme/elementor-templates-overrides/` — only if brand will customize global Elementor templates
 - `deployment/acf-overrides/` — only if brand needs custom ACF beyond GTGT defaults
 
+### Step 1.5 — Decide `brand_structure` 🆕 v1.8 (DR-032 Locked 2026-05-25)
+
+**Every new brand MUST pick one of two structures at bootstrap time.** This decision drives subsequent Steps 2-6 + sitemap design (Phase E) + WordPress permalink architecture.
+
+```yaml
+choose_monolithic_if:
+  - 1 brand = 1 specialty / 1 audience persona / 1 voice
+  - No need to surface internal divisions as URL subdirectories
+  - DEFAULT for 90%+ of EYWA portfolio (vth-biodent, smile-scape, the-face-by-vertex, hp100, etc.)
+  
+  → Continue with Step 2 baseline (no extra folders needed)
+
+choose_multi_center_if:
+  - Brand is a HOSPITAL with multiple productized centers under one umbrella
+  - "One roof, one record, one team" doctrine (centers share patient record / EHR / MDT)
+  - Locked vocabulary across centers (master glossary; no center invents parallel terms)
+  - URL pattern requires subdirectories per division (e.g., domain.com/center1/, domain.com/center2/)
+  - First adopter: vitality-hospital (7 productized centers under Vitality umbrella)
+  
+  → Continue with Step 2 + add multi-center additions (see below)
+```
+
+**See `EYWA_HANDOVER.md` v1.18 Note + DECISION_RECORDS.md DR-032 for full decision criteria + counter-cases (when NOT to pick multi_center).**
+
+**If multi_center, additional setup required (after Step 4):**
+
+```bash
+# Create per-center folder structure
+mkdir -p docs/centers
+mkdir -p content-plan/sitemap-centers
+
+# For each center, create:
+mkdir -p docs/centers/{NN}-{center-slug}
+# e.g.,
+mkdir -p docs/centers/01-{first-center-slug}
+mkdir -p docs/centers/02-{second-center-slug}
+# ... one per center
+
+# Create per-center concept doc placeholder per center:
+# docs/centers/{NN}-{center-slug}/concept.md
+# Create per-center sitemap placeholder per center:
+# content-plan/sitemap-centers/{center-slug}.md
+```
+
+**Multi-center sitemap split (Phase E):**
+- `content-plan/sitemap.md` becomes the **MASTER INDEX** (not a direct page list) — cross-cutting rules, sub-gate strategy, page count summary
+- `content-plan/sitemap-hospital-wide.md` — pages with `center_slug=NULL` (umbrella pages: Home, About, Concept hubs, Membership, Outcomes, Press, institutional)
+- `content-plan/sitemap-centers/{center-slug}.md` × N — per-center page hierarchies (`center_slug={center}`)
+- `content-plan/internal-linking-plan.md` — cross-center funnels (default approved) + cross-brand network links (DR-021 governed)
+
+**Reference implementation:** see `eywa-vitality-hospital/` (7 centers, single WP site, subdirectory pattern).
+
 ### Step 2 — Copy + customize brand-config.json (~5 min)
 
 ```bash
@@ -63,6 +119,7 @@ required_fields_to_replace:
   ☐ brand_id, brand_name, brand_name_translations.th + en
   ☐ domain
   ☐ vertical_family + healthcare_format + positioning_tier
+  ☐ brand_structure 🆕 v1.18 (DR-032) — 'monolithic' (DEFAULT) or 'multi_center' per Step 1.5 decision
   ☐ brand_concept (tagline_th, tagline_en, core_positioning, tone, persona)
   ☐ signature_offerings[] (at least 1 — hero service)
   ☐ specialty_focus[] (at least 1)
@@ -72,6 +129,11 @@ required_fields_to_replace:
   ☐ deployment.current_site_state
   ☐ metadata.created_at + last_updated_at
   ☐ eywa_spec_snapshot.snapshot_taken_at + snapshot_taken_at_stage
+
+if_brand_structure_is_multi_center_also_required:
+  ☐ centers[] — at least 1 center; populate per template doc (center_slug, center_name_th/en, url_segment, positioning_one_line, flagship_programs[], anchor_outcome, position_order, status='planning')
+  ☐ parent_network (if brand belongs to a network/group like Vertex Hospital) — else leave null
+  ☐ deployment.wordpress_pattern = 'single_site_multi_center_subdirectory'
 
 optional_fields_keep_as_TBD_until_known:
   ☐ founders / clinical_team (if brand has dedicated section)

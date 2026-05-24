@@ -2,7 +2,7 @@
 
 > **Append-only architectural decision log.** Each record explains WHY a decision was made — not just WHAT.
 
-**Document Version:** 1.17  
+**Document Version:** 1.18  
 **Last Updated:** 2026-05-25  
 **Format:** Reverse chronological (newest first)
 
@@ -32,14 +32,15 @@
 
 ## Decisions Log
 
-### [DR-032] — Multi-Center Hospital Brand Pattern (2026-05-25) 🌱🏥🗂️
+### [DR-032] — Multi-Center Hospital Brand Pattern (2026-05-25 → Locked 2026-05-25) 🔒🏥🗂️
 
-**Status:** **🌱 Proposed (review until 2026-06-08, 14-day window per DR-012 standard governance)** — triggered by Vitality Hospital scope (7 productized centers under 1 brand umbrella, single WordPress site with subdirectory routing)
-**Bible Reference:** Proposed new **Section 25.13 — Multi-Center Brand Architecture** (post-lock); extends Part 25 (Multi-Brand Federation), Part 26 (WordPress + Elementor Stack), Part 28 (Multilingual Strategy)
-**Schema Reference:** Target **v1.18** (post-lock; v1.17 Wave 11 already pending separately) — adds 1 new table + 2 new optional columns + 1 brand-level enum field
+**Status:** **🔒 Locked 2026-05-25** — operator-approved same day as proposed (14-day review waived; no other multi-center brand currently in portfolio to canvass; Vitality opt-in early already proved pattern viability through full Phase A authoring + master/hospital-wide sitemap; doctrinal urgency on Vitality timeline)
+**Bible Reference:** New **Section 25.13 — Multi-Center Brand Architecture** (Bible propagation deferred to next Bible release; Handover v1.18 carries the operational guidance in the meantime); extends Part 25 (Multi-Brand Federation), Part 26 (WordPress + Elementor Stack), Part 28 (Multilingual Strategy)
+**Schema Reference:** Target **v1.18** (Wave 11 → v1.17 already pending separately; v1.18 = DR-032 additions) — adds 1 new table + 2 new optional columns + 1 brand-level enum field. **Migration scripts pending** — additive, non-breaking; can land at next Phase 1A.4 wave.
+**Handover Reference:** **v1.18** — Section 1.3 now includes `brand_structure` as upfront brand context (monolithic | multi_center); `NEW_BRAND_BOOTSTRAP.md` Step 1.5 documents the decision; `brand-config.template.json` includes the field with both-option comments
 **Companion to:** DR-001 (Multi-Brand Federation Pattern), DR-004 (URL Structure: Subdirectory + Thai Default), DR-010 (Brand Scope Architecture), DR-021 (Internal Linking Architecture HYBRID)
 **Scope:** **UNIVERSAL** — additive, non-breaking. Existing brands inherit default `brand_structure=monolithic` and operate identically to pre-DR-032 behavior. Only brands explicitly opting into `brand_structure=multi_center` use the new fields.
-**First adopter:** `vitality-hospital` brand (opt-in early at proposal; see `eywa-vitality-hospital/brand-config.json` → `eywa_spec_snapshot.drs_proposed_opted_in_early: ["DR-032"]`)
+**First adopter:** `vitality-hospital` brand (opt-in early at proposal 2026-05-25; on lock same day, forward-looking fields become canonical; `drs_proposed_opted_in_early: ["DR-032"]` cleared at next brand-config bump)
 
 **Context:**
 

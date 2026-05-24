@@ -3,10 +3,126 @@
 > **For Claude (and any AI assistant) working on a new brand within the EYWA portfolio.**  
 > **Read this file first, every new project, every new session.**
 
-**Document Version:** 1.17  
-**Last Updated:** 2026-05-24  
-**Companion to:** EYWA Bible v3.23 + Schema Overview v1.16 (Wave 11 → v1.17 pending) + DECISION_RECORDS v1.17 + Content_Templates_EYWA_v1_0.md v1.7 (LOCKED)  
+**Document Version:** 1.18  
+**Last Updated:** 2026-05-25  
+**Companion to:** EYWA Bible v3.23 (Section 25.13 propagation pending) + Schema Overview v1.16 (Wave 11 → v1.17 pending; DR-032 → v1.18 pending) + DECISION_RECORDS v1.18 + Content_Templates_EYWA_v1_0.md v1.7 (LOCKED)  
 **Created by:** The Gifted Digital Marketing Co., Ltd.
+
+---
+
+## 🆕 v1.18 Note (2026-05-25) — Multi-Center Hospital Brand Pattern LOCKED (DR-032) 🏥🗂️
+
+EYWA spec now supports **two brand structures**. The choice must be made **upfront at brand onboarding** (Section 1.3 below + `NEW_BRAND_BOOTSTRAP.md` Step 1.5). First adopter: **Vitality Hospital** (7 productized centers under one umbrella, single WordPress site with subdirectory routing).
+
+### The two brand structures (every new brand picks one)
+
+```yaml
+brand_structure: monolithic    # DEFAULT — 1 brand = 1 WordPress site, no center subdivision
+                                # Examples: vth-biodent, smile-scape, the-face-by-vertex, hp100, all current brands
+                                # Pattern: vitalityhospital.com/{lang}/{slug}/  (no center segment)
+                                # File layout: standard folder-skeleton baseline; no docs/centers/ or content-plan/sitemap-centers/
+
+brand_structure: multi_center  # OPT-IN — 1 brand = umbrella + N productized centers, surfaced as URL subdirectories
+                                # Examples: vitality-hospital (7 centers); future VTH Hospital / The FACE Hospital candidates
+                                # Pattern: vitalityhospital.com/{lang}/{center_url_segment}/{slug}/
+                                # File layout: standard + docs/centers/{NN-center-slug}/concept.md per center
+                                #              + content-plan/sitemap-centers/{center-slug}.md per center
+                                #              + content-plan/sitemap.md becomes MASTER INDEX + sitemap-hospital-wide.md for umbrella pages
+                                # brand-config.json adds: centers[] array + parent_network (if applicable)
+```
+
+### Decision criteria — which one?
+
+```yaml
+choose_multi_center_if:
+  - Brand is a HOSPITAL (vs single specialty clinic) operating multiple productized centers
+  - "One roof, one record, one team" doctrine — patients flow ACROSS centers within ONE record/EHR
+  - Locked-vocabulary discipline across centers (centers share a master glossary; no center invents parallel terms)
+  - URL pattern requires subdirectories per division while serving from a single domain + single WP site
+  - Centers each have own visual sub-treatment + persona but share umbrella brand identity
+
+choose_monolithic_if:
+  - Brand is a single-specialty clinic or single-purpose venture
+  - Single audience persona OR adjacent personas within one brand voice
+  - No need to surface internal divisions as URL subdirectories
+  - (this is 90%+ of EYWA portfolio — when in doubt, monolithic)
+
+avoid_multi_center_if_just_wanting:
+  - Multi-vertical service menu (use sitemap hub-and-spoke clusters, not centers)
+  - Geographic expansion (use seo_branches table, not centers)
+  - Sub-brand under same WP (use cross-brand federation per DR-001, separate brand_id)
+```
+
+### What changes for every brand-onboarding session
+
+1. **§1.3 Confirm Brand Context** — `brand_structure` is now in the required upfront context (alongside vertical_family, healthcare_format, etc.)
+2. **`NEW_BRAND_BOOTSTRAP.md` Step 1.5** — explicit decision step between folder copy + brand-config edit
+3. **`brand-config.template.json`** — includes `brand_structure` field with both-option comments
+4. **multi_center brands** — copy two additional templates after the standard skeleton:
+   - `docs/centers/` (one subfolder per center)
+   - `content-plan/sitemap-centers/` (one .md per center)
+   - `content-plan/sitemap.md` becomes MASTER INDEX (not direct page list)
+   - Add `content-plan/sitemap-hospital-wide.md` for umbrella pages (`center_slug=NULL`)
+5. **Stage 1 Gate** for multi_center brands uses **per-center sub-gates**: `stage-1-approved-{brand}-hospital-wide-{date}` + `stage-1-approved-{brand}-{center-slug}-{date}` × N → all must close before umbrella `stage-1-approved-{brand}-{date}`
+
+### Schema implications (Wave 11 → v1.17 already pending; v1.18 = DR-032 additions, both deferred to next migration wave)
+
+```sql
+-- brands table:
+ADD COLUMN brand_structure text NOT NULL DEFAULT 'monolithic'
+  CHECK (brand_structure IN ('monolithic', 'multi_center'));
+
+-- New table for multi_center brands:
+CREATE TABLE seo_brand_centers (
+  fingerprint text UNIQUE NOT NULL,    -- 'ctr_{ULID16}' per DR-008
+  fingerprint_display_name text NOT NULL,
+  brand_id text NOT NULL REFERENCES brands(brand_slug) ON DELETE CASCADE,
+  center_slug text NOT NULL,
+  center_name jsonb NOT NULL,           -- Tier 1 multilingual per DR-009
+  url_segment text NOT NULL,
+  positioning_one_line jsonb,
+  signature_methodologies text[],
+  color_treatment_hex text,
+  position_order integer NOT NULL DEFAULT 0,
+  status text NOT NULL DEFAULT 'planning'
+    CHECK (status IN ('planning', 'active', 'paused', 'sunset')),
+  anchor_outcome text,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  updated_at timestamptz NOT NULL DEFAULT now(),
+  UNIQUE (brand_id, center_slug),
+  UNIQUE (brand_id, url_segment)
+);
+
+-- seo_website_page_master:
+ADD COLUMN center_slug text NULL;  -- NULL = umbrella page; populated = belongs to center
+
+-- seo_entity_graph:
+ADD COLUMN center_scope text[] NULL;  -- orthogonal to brand_scope[]; e.g., ['vital-sleep','vital-weight-loss']
+```
+
+### Cross-center internal linking governance (extends DR-021)
+
+- **Intra-center** (within same center) — default approved, no per-link justification
+- **Intra-brand cross-center** (e.g., Vital Sleep → Vital Brain within Vitality) — **default approved per DR-032 §6**, no per-link justification; recorded in `seo_page_internal_links` with `link_type='cross_center_intra_brand'` for analytics
+- **Cross-brand-network** (Vitality ↔ Biodent within Vertex network) — DR-021 governance still applies; `is_cross_brand=true` + `cross_brand_justification` + `cross_brand_approved` required
+
+### Reference implementation: `eywa-vitality-hospital`
+
+Full Phase A authored + Phase E Step 1 (master + hospital-wide sitemap) shipped 2026-05-25 — see commits in `eywa-vitality-hospital` for the canonical worked example of:
+- `brand-config.json` v2.1 with `brand_structure: 'multi_center'` + `centers[]` × 7 + `parent_network: 'vertex-hospital'`
+- `docs/centers/{01-07}-{center-slug}/concept.md` × 7 lightweight per-center concept docs
+- `docs/signature-programs/*.md` × 11 hospital-wide trademark deep-dives
+- `content-plan/sitemap.md` (MASTER INDEX) + `sitemap-hospital-wide.md`
+- Cross-network sister brand references (Genowell, Recov, VTH PRM, Biodent, The FACE) via `brand_scope=['vitality-hospital','vth-biodent']` etc.
+
+### Operator workload
+
+- **For Vitality (already done):** Phase A + Phase E Step 1 authored same session as proposal+lock; no further immediate action
+- **For new multi_center brand:** follow `NEW_BRAND_BOOTSTRAP.md` (now includes Step 1.5)
+- **For existing 17 monolithic brands:** **zero action required** — `brand_structure='monolithic'` is the DEFAULT; no retrofit, no migration, no brand-side change
+- **Bible §25.13 + Schema v1.18 migration:** pending; Handover v1.18 + `brand-config.template.json` + `NEW_BRAND_BOOTSTRAP.md` cover operational needs in the meantime
+
+See DECISION_RECORDS.md DR-032 for full spec + rationale + 7 sub-decisions.
 
 ---
 
@@ -387,9 +503,14 @@ required_context_before_work_starts:
     □ Domain (e.g., vth-biodent.com)
     □ Vertical family (healthcare | media | other)
     □ Healthcare format (single_specialty | multi_specialty | dental | hospital | etc.)
+    □ Brand structure 🆕 v1.18 (DR-032): monolithic | multi_center
+                       # monolithic = 1 brand = 1 WP site (DEFAULT, 90%+ of portfolio)
+                       # multi_center = 1 brand = umbrella + N centers as URL subdirectories
+                       # See v1.18 Note above for decision criteria + Vitality reference impl
     □ Specialty focus (list of services)
     □ Branch count (single | multiple)
     □ Active languages (TH default, others?)
+    □ Centers count (if multi_center): list center slugs + url_segments + flagship programs
   
   brand_unique_value:
     □ Why this brand exists (mission)

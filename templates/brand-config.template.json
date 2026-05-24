@@ -1,8 +1,9 @@
 {
   "$schema": "https://eywa-protocol.thegifteddigital.com/schemas/brand-config-v1.json",
   "_doc": "Brand-level configuration for {BRAND_NAME} — EYWA Protocol implementation. Replace {PLACEHOLDERS} with actual values. Fields with TBD = pending operator info. See Bible §25.6 for field details.",
-  "_template_version": "1.0",
-  "_template_last_updated": "2026-05-11",
+  "_template_version": "1.1",
+  "_template_last_updated": "2026-05-25",
+  "_template_v1_1_changes": "Added brand_structure (DR-032 Locked 2026-05-25) — every brand picks monolithic | multi_center upfront. Added centers[] + parent_network conditional blocks for multi_center brands. See eywa-vitality-hospital/brand-config.json for canonical multi_center example.",
 
   "brand_id": "{brand-id-kebab-case}",
   "brand_name": "{Brand Display Name}",
@@ -20,9 +21,18 @@
   "domain": "{example-domain.com}",
   "domain_alternates": [],
 
-  "vertical_family": "{dental_clinic | aesthetic_clinic | wellness_clinic | medical_specialty | other}",
+  "vertical_family": "{dental_clinic | aesthetic_clinic | wellness_clinic | medical_specialty | hospital | other}",
   "healthcare_format": "{specialty_clinic | hospital | wellness_center | aesthetic_studio | other}",
   "positioning_tier": "{ULTRA_PREMIUM | PREMIUM | MID_PREMIUM | MID_VALUE | VALUE}",
+
+  "brand_structure": "monolithic",
+  "_brand_structure_doc": "Per DR-032 Locked 2026-05-25. Two valid values: 'monolithic' (DEFAULT — 1 brand = 1 WP site, no center subdivision; 90%+ of EYWA portfolio) | 'multi_center' (1 brand = umbrella + N productized centers as URL subdirectories on single WP site; first adopter: vitality-hospital). See EYWA_HANDOVER.md v1.18 Note for decision criteria + NEW_BRAND_BOOTSTRAP.md Step 1.5 for the upfront decision.",
+
+  "centers": [],
+  "_centers_doc": "Required and populated ONLY when brand_structure='multi_center'; leave as [] for monolithic brands. Each center object: { center_slug, center_name_th, center_name_en, url_segment, positioning_one_line, flagship_programs[], indicative_pricing_thb, anchor_outcome, key_devices[], signature_tm[], position_order, status }. See eywa-vitality-hospital/brand-config.json for the canonical 7-center example.",
+
+  "parent_network": null,
+  "_parent_network_doc": "Optional. Populated when this brand belongs to a parent network/group (e.g., Vertex Hospital). Object shape: { network_name, network_role, sister_brands_in_network[], shared_data_spine }. Only relevant for brands inside a federation network (often paired with multi_center). See eywa-vitality-hospital/brand-config.json for example.",
 
   "active_languages": ["th"],
   "default_language": "th",
