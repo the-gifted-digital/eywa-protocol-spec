@@ -3,10 +3,37 @@
 > **For Claude (and any AI assistant) working on a new brand within the EYWA portfolio.**  
 > **Read this file first, every new project, every new session.**
 
-**Document Version:** 1.16  
-**Last Updated:** 2026-05-20  
-**Companion to:** EYWA Bible v3.22 + Schema Overview v1.16 (Wave 11 → v1.17 pending) + DECISION_RECORDS v1.16 + Content_Templates_EYWA_v1_0.md v1.7 (LOCKED)  
+**Document Version:** 1.17  
+**Last Updated:** 2026-05-24  
+**Companion to:** EYWA Bible v3.23 + Schema Overview v1.16 (Wave 11 → v1.17 pending) + DECISION_RECORDS v1.17 + Content_Templates_EYWA_v1_0.md v1.7 (LOCKED)  
 **Created by:** The Gifted Digital Marketing Co., Ltd.
+
+---
+
+## 🆕 v1.17 Note (2026-05-24) — Google Generative AI Search Alignment LOCKED (DR-031) 🔍📐
+
+Bible v3.23 ships with **DR-031 framing updates** per Google Search Central guidance (2026-05). **Zero schema changes, zero migration, zero brand-side action required.** Existing infrastructure continues operating unchanged.
+
+### What changes (5 targeted Bible framing edits)
+
+1. **§1.3 Layer 3 GEO** — `llms.txt` priority split: 🔴 Critical → 🟡 Defensive (non-Google AI engines only). Google does not consume llms.txt. **Files retained at all brands.**
+2. **§1.5 Update Principles** — Added **Principle 6: Audience-first authoring**. Codifies existing practice (Citable Sentences + Perspective Layer serve humans AND AI).
+3. **§13.13 Predicted Prompts** — Cross-reference added: EYWA's Predicted Prompts ≡ Google's "query fan-out" (2026-05 official term). Table name unchanged.
+4. **§13.17 §4 llms.txt enhancement** — Reframed as defensive infrastructure for non-Google AI engines. File pattern preserved.
+5. **§21.2 Chunking Strategy** — Scope clarified: internal RAG embeddings only, NOT page structure. Pillar pages still follow DR-018 word counts (1,500-4,000+ words).
+
+### What does NOT change
+
+- ✅ All EYWA capabilities preserved (RAG stack, llms.txt files, Predicted Prompts, Schema, every table)
+- ✅ Brand snapshots with `bible_version: 3.21` or `3.22` remain semantically valid
+- ✅ Zero migration, zero content rework, zero workflow change for brand operators
+- ✅ Only operator effort change: stop over-investing in elaborate `llms.txt` variants; reallocate to Citable Sentences + Predicted Prompts
+
+### Optional follow-up (non-blocking)
+
+- `COMMENT ON TABLE seo_predicted_prompts IS 'Query fan-out coverage per pillar — see DR-031'` — single DDL, can ride next migration wave
+
+See DECISION_RECORDS.md DR-031 for full spec + rationale + 5 framing edits with before/after diffs.
 
 ---
 

@@ -1,8 +1,8 @@
 # 📖 คัมภีร์ EYWA™ PROTOCOL
 ## The Universal Knowledge Graph SEO Specification for the AI Era
 
-**Version:** 3.21  
-**Last Updated:** 2026-05-18  
+**Version:** 3.23  
+**Last Updated:** 2026-05-24  
 **Trademark:** EYWA™ (Class 35+42, DIP Thailand, filed 2026-04-20)  
 **Created by:** The Gifted Digital Marketing Co., Ltd.  
 **Scope:** Universal standard สำหรับการบริหารจัดการ SEO + Knowledge Graph แบบ multi-vertical, multi-brand, multi-specialty, multi-lingual, multi-location, **AI-future-ready** ในยุค AI Search (2026+) — ครอบคลุม healthcare verticals (clinic ทุก specialty, hospital, dental, sleep medicine, aesthetic, wellness, healthcare media) extensible to other regulated YMYL niches  
@@ -143,6 +143,44 @@ Throughout this Bible:
 
 
 ## 📜 Changelog
+
+### v3.23 (2026-05-24) — Google Generative AI Search Alignment (DR-031) 🔍📐
+
+Paired companion to **DR-031 (Locked 2026-05-24)** in DECISION_RECORDS. Framing/terminology alignment with Google Search Central's official guidance on generative AI search (published 2026-05). **Zero schema changes, zero migration, zero content rework** — pure spec-level reframing that brings Bible into alignment with Google's official position.
+
+**Headline Changes (4 targeted framing edits — content preserved, scope clarified):**
+
+- 📐 **§1.3 SEO 2026 Layer Model** — Split Layer 3 GEO priority badges. Citable content + E-E-A-T + Schema remain 🔴 Load-bearing. `llms.txt` reframed to 🟡 Defensive infrastructure (non-Google AI engines only) per Google's confirmation that it does not consume the file format. **All llms.txt infrastructure preserved.**
+
+- 📐 **§1.5 Update Principles table** — Added **Principle 6: Audience-first authoring** (DR-031). Codifies existing EYWA practice (Citable Sentences + Perspective Layer already serve humans AND AI) as explicit decision heuristic. Light edit to Principle 4 clarifies llms.txt scope; light edit to Principle 5 clarifies `seo_brand_mentions` is passive measurement (never inauthentic-mention seeking).
+
+- 📐 **§13.13 Predicted Prompts Methodology** — Added terminology cross-reference: EYWA's Predicted Prompts Bank ≡ Google's official "query fan-out" (2026-05 term). Coverage mechanism unchanged (≥15 prompts/pillar, 8 intent types). Schema table name `seo_predicted_prompts` preserved for stability; external/agency docs use "query fan-out (Predicted Prompts)" dual-name.
+
+- 📐 **§13.17 §4 AI Agent Era — llms.txt enhancement** — Reframed subsection with clarification statement: keep three-file pattern (llms.txt, llms-full.txt, llms-agent.txt) as defensive infrastructure for non-Google AI engines, **not** as Google ranking factor. All file structure + recommendations preserved.
+
+- 📐 **§21.2 Chunking Strategy** — Added scope clarification at top: chunking applies **exclusively to internal RAG embedding pipelines** (pgvector), NOT to published web page structure. Reinforces that pillar pages follow DR-018 word count standards (1,500-4,000+ words). All chunking implementation details preserved.
+
+- 🎯 **Why this update:**
+  - Google Search Central published "Mythbusting generative AI search" + "Is SEO still relevant for generative AI search?" (2026-05) with explicit positions on llms.txt (not consumed), chunking (not required), query fan-out (official terminology), and AI-first content (counterproductive)
+  - Bible v3.21 framing pre-dated this guidance — operators risked over-investing in llms.txt and misreading chunking strategy as page-structure prescription
+  - Update preserves EYWA's full capability surface (RAG stack, llms.txt files, Predicted Prompts, all schema) while aligning priority signals and terminology to Google's official 2026 position
+
+- 🔗 **Related Decision Records:**
+  - DR-031 (Google Generative AI Search Alignment — Locked 2026-05-24)
+  - DR-018 (Layer-by-Layer Word Count Standards — supports chunking scope clarification)
+  - Bible §10 / Part 1.5 (AEO+GEO+SEO+LLMO Update Principles — extended with Principle 6)
+
+- 📦 **No new schema, no migration, no content rework.** Existing brands continue operating unchanged. Optional follow-up: `COMMENT ON TABLE seo_predicted_prompts IS 'Query fan-out coverage per pillar — see DR-031'` (single DDL, can ride next migration wave, not blocking).
+
+- ✅ **Backward compatibility:**
+  - Brand snapshots with `bible_version: 3.21` or `3.22` remain semantically valid — DR-031 changes framing/priority signals, not normative requirements
+  - All `seo_*` table semantics unchanged
+  - `seo_predicted_prompts` table preserved (dual-naming policy — schema stability + industry terminology alignment)
+  - llms.txt files retained at all brands (no removal); just deprioritized in operator effort allocation
+
+### v3.22 (2026-05-20) — Sensitive Topic Compliance Layer (DR-030) 🔒⚖️🛡️
+
+Implicit version (PART 32 added with v3.22 marker). See **DR-030 (Locked 2026-05-20)** in DECISION_RECORDS.md for full spec. Adds two-dimensional Product Regulatory × Content Topic tier matrix at page level + brand-level positioning_mode + 6 new columns on `seo_website_page_master`. Schema v1.16 → v1.17 pending migration.
 
 ### v3.15 (2026-05-12) — Local SEO Naming Consolidation (DR-025) 🏥🔄
 
@@ -879,7 +917,8 @@ Documentation patch — ปิดช่องว่างเดียวที�
 │  Layer 4: Vector/Embedding (pgvector)               │
 ├─────────────────────────────────────────────────────┤
 │  Layer 3: GEO (Generative Engine Optimization)      │  🔴 Critical 2026
-│    • llms.txt • Citable content • E-E-A-T entity    │
+│    • Citable content • E-E-A-T entity • Schema      │  🔴 Load-bearing
+│    • llms.txt (non-Google AI engines only)          │  🟡 Defensive¹
 ├─────────────────────────────────────────────────────┤
 │  Layer 2: Semantic SEO (Entities + Schema)          │  ✅ Foundation
 │    • Knowledge Graph • Topic Clusters • Schema.org  │
@@ -888,6 +927,8 @@ Documentation patch — ปิดช่องว่างเดียวที�
 │    • Quality content • Internal linking • Keywords  │
 └─────────────────────────────────────────────────────┘
 ```
+
+¹ Per **DR-031 (2026-05-24)**: Google Search has officially confirmed it does **not** consume `llms.txt`. Keep `llms.txt` as defensive infrastructure for non-Google AI engines (ChatGPT browsing, Claude web, Perplexity, future agents) that may opt to honor the format — not as a Google ranking factor. See §13.17 for detailed reframe.
 
 **Super Standard v2.0 = Layer 1+2+3** (Layer 4-5 = future-ready structure)
 
@@ -950,8 +991,21 @@ Documentation patch — ปิดช่องว่างเดียวที�
 | **1. Topical Authority for Small Publishers** (boost up to 30%) | ✅ Full | Hub-and-spoke clusters + entity_graph + cluster_master + max-3-level depth |
 | **2. AI + Human (no pure AI content)** | ✅ Full | Perspective Layer (Part 6.3) + reviewer requirements + freshness governance |
 | **3. E-E-A-T Experience-First** | ✅ Full | `seo_authors_reviewers` + Brand-linked Citables (4 patterns) + reviewer chain |
-| **4. AI Overview Citation** (zero-click defense) | ✅ Full | LLMO Playbook (Part 13) + Citable Sentences + llms.txt + Schema markup |
-| **5. Everywhere SEO** (cross-platform brand mentions) | ✅ via `seo_brand_mentions` table | Track Reddit/TikTok/YouTube/forum/news mentions |
+| **4. AI Overview Citation** (zero-click defense) | ✅ Full | LLMO Playbook (Part 13) + Citable Sentences + Schema markup + llms.txt (non-Google AI only, per DR-031) |
+| **5. Everywhere SEO** (cross-platform brand mentions) | ✅ via `seo_brand_mentions` table | Track Reddit/TikTok/YouTube/forum/news mentions (passive measurement — never seek inauthentic mentions, per Google guidance 2026-05) |
+| **6. Audience-first authoring** 🆕 (DR-031, 2026-05-24) | ✅ Full | Citable Sentence Formula + Perspective Layer serve humans AND AI simultaneously. AI engines do **not** reward content engineered specifically for AI — they surface what already serves humans well. See §1.5.1 below. |
+
+### 1.5.1 Principle 6 — Audience-first, not AI-first (DR-031)
+
+> Per [Google Search Central guidance (2026-05)](https://developers.google.com/search/blog): pages exist for human readers, not for generative AI systems. AI engines are designed to surface content that already serves humans well — they do **not** reward:
+> - Synonym stuffing or AI-targeted keyword variation
+> - Rewriting content "for AI" (long-tail keyword padding)
+> - Inauthentic brand "mentions" engineered across forums/blogs
+> - Special markup files Google doesn't consume (e.g., `llms.txt` — see DR-031)
+>
+> EYWA's load-bearing artifacts (Citable Sentence Formula `[Fact]+[Number]+[Source]+[Year]`, Perspective Layer expert voice, Predicted Prompts coverage) serve **both** human readers AND AI citation simultaneously — they are not AI-optimization tricks.
+>
+> **Decision heuristic:** When evaluating any tactic, ask "Does this serve a human reader?" **before** "Does this serve AI?" If the answer to the first question is no, the tactic fails EYWA standards regardless of theoretical AI benefit.
 
 ### หลักคิดสำหรับ 2026+
 
@@ -12276,6 +12330,12 @@ R=Responsible, A=Accountable, C=Consulted, I=Informed
 
 ## 13.13 Prompt Prediction Methodology
 
+> **Terminology cross-reference (DR-031, 2026-05-24):** What EYWA calls **Predicted Prompts Bank** is functionally identical to what Google Search formalized in 2026-05 as **"query fan-out"** — the set of concurrent related queries that generative AI engines expand from a user's initial query to fetch additional retrieval results.
+>
+> EYWA's coverage target (≥15 prompts per pillar across 8 intent types: informational, navigational, transactional, comparison, decision, troubleshooting, how-to, voice) is our implementation of query fan-out coverage. The mechanism is identical; terminology aligns to industry usage from 2026-05 onward.
+>
+> Use **"query fan-out (Predicted Prompts)"** in external/agency documentation; internal table name `seo_predicted_prompts` is preserved for schema stability.
+
 ### Why predict prompts before writing content
 
 **Old SEO mindset:** "เขียนสำหรับ keyword 'niacinamide ใช้ยังไง'"
@@ -12720,7 +12780,18 @@ User-agent: BadBot
 Disallow: /
 ```
 
-**4. llms.txt enhancement**
+**4. llms.txt enhancement** — Defensive infrastructure for non-Google AI engines
+
+> **Important clarification (DR-031, 2026-05-24):** Google Search Central has officially confirmed (2026-05) that Google does **not** consume `llms.txt` or any "special" AI markup files for generative AI search ranking. Maintain the three-file pattern below as **defensive infrastructure for non-Google AI engines** (ChatGPT browsing, Claude web access, Perplexity, future autonomous agents) that may opt to honor the format.
+>
+> **Treat as:**
+> - ✅ Low-cost ($0 marginal storage), low-priority maintenance
+> - ✅ Defensive surface area for non-Google AI engines (industry adoption still evolving as of 2026-05)
+> - ❌ **Not** a Google ranking factor — do not over-invest operator time generating elaborate variants beyond the three standard files
+> - ❌ **Not** a substitute for the load-bearing artifacts (Citable Sentences, Schema markup, E-E-A-T Authors/Reviewers)
+>
+> Re-elevate priority if/when any major AI engine (or Google) announces load-bearing consumption — track via quarterly Bible §13.17 review.
+
 Beyond basic llms.txt, add:
 ```
 /llms.txt          - basic discovery
@@ -17735,6 +17806,12 @@ never_embed:
 ```
 
 ### Chunking Strategy
+
+> **Scope clarification (DR-031, 2026-05-24):** The chunking strategy below applies **exclusively to internal RAG embedding pipelines** — pgvector storage feeding our own brand chatbots, internal search, and AI agent answer-grounding via our own infrastructure. It does **NOT** prescribe how to structure published web pages.
+>
+> Per [Google Search Central (2026-05)](https://developers.google.com/search/blog): "There's no requirement to break your content into tiny pieces for AI to better understand it." Published pillar pages must be authored at natural length for human audiences per **DR-018 word count standards** (pillar pages 1,500-4,000+ words depending on Layer + topic depth). Do **not** fragment pillar content into micro-pages for SEO or AI-search reasons.
+>
+> The 100-500 token chunk size below is an **embedding implementation detail** for vector storage, not a content authoring guideline. Page authors should ignore these numbers and follow §9.8 word count standards instead.
 
 ```yaml
 semantic_chunking:
