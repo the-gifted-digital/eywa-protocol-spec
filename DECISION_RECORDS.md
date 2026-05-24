@@ -2,8 +2,8 @@
 
 > **Append-only architectural decision log.** Each record explains WHY a decision was made — not just WHAT.
 
-**Document Version:** 1.16  
-**Last Updated:** 2026-05-20  
+**Document Version:** 1.17  
+**Last Updated:** 2026-05-25  
 **Format:** Reverse chronological (newest first)
 
 ---
@@ -31,6 +31,224 @@
 ---
 
 ## Decisions Log
+
+### [DR-032] — Multi-Center Hospital Brand Pattern (2026-05-25) 🌱🏥🗂️
+
+**Status:** **🌱 Proposed (review until 2026-06-08, 14-day window per DR-012 standard governance)** — triggered by Vitality Hospital scope (7 productized centers under 1 brand umbrella, single WordPress site with subdirectory routing)
+**Bible Reference:** Proposed new **Section 25.13 — Multi-Center Brand Architecture** (post-lock); extends Part 25 (Multi-Brand Federation), Part 26 (WordPress + Elementor Stack), Part 28 (Multilingual Strategy)
+**Schema Reference:** Target **v1.18** (post-lock; v1.17 Wave 11 already pending separately) — adds 1 new table + 2 new optional columns + 1 brand-level enum field
+**Companion to:** DR-001 (Multi-Brand Federation Pattern), DR-004 (URL Structure: Subdirectory + Thai Default), DR-010 (Brand Scope Architecture), DR-021 (Internal Linking Architecture HYBRID)
+**Scope:** **UNIVERSAL** — additive, non-breaking. Existing brands inherit default `brand_structure=monolithic` and operate identically to pre-DR-032 behavior. Only brands explicitly opting into `brand_structure=multi_center` use the new fields.
+**First adopter:** `vitality-hospital` brand (opt-in early at proposal; see `eywa-vitality-hospital/brand-config.json` → `eywa_spec_snapshot.drs_proposed_opted_in_early: ["DR-032"]`)
+
+**Context:**
+
+A new brand entered the portfolio on 2026-05-25 — **Vitality Hospital** — positioned as "the first Sleep, Brain & Wellness Hospital." The brand doctrine, verbatim from the operator's Notion master plan, requires architectural unity across 7 productized centers:
+
+> "a **single integrated hospital under one roof, one record, one team**"
+>
+> "**No center invents parallel terms.**" (locked vocabulary across all centers)
+>
+> "Every sister hospital that writes into **the Vital Twin** makes Vitality more valuable to every other patient."
+
+The 7 centers are:
+
+1. Vital Sleep Center
+2. Vital Sleep Intimacy
+3. Vital Breathing & Myofunctional Center
+4. Vital Facial Pain & Teeth Grinding Center
+5. Vital Wellness & Lifestyle Medicine Center
+6. Vital Effortless Weight Loss Center
+7. Vital Brain Center
+
+Each center has its own positioning, hero programs, signature trademarks (™), pricing tier, patient archetypes, and visual sub-treatment. But all 7 share: brand identity (Vitality Hospital), data spine (The Vital Twin™), operating method (The Vital Loop™), vocabulary (locked master glossary), MDT staff (one team), and SEO authority (one domain).
+
+**Operator vision:** `vitalityhospital.com` as the umbrella; each center surfaced as a URL subdirectory (`/vitalsleep/`, `/vitalintimacy/`, `/vitalbreathing/`, etc.) on a single WordPress site — each center "looks like" its own site with own menu and own story, but all under one umbrella shell.
+
+**EYWA Protocol gap:** existing patterns assume each brand = its own frontend (DR-001 Federation, DR-004 URL Structure subdirectory-by-language-only, DR-010 Brand Scope per-brand). Three architectural options were evaluated:
+
+| Option | Description | Verdict |
+|---|---|---|
+| **A** | 1 WP site, "center" as taxonomy/section, no spec change (use brand-config metadata only) | Works, but loses cross-brand governance; no schema-enforced center scoping |
+| **B** | WordPress Multisite (WPMU) — 1 main + 7 subsites | Contradicts "one record one team"; Vital Twin spine becomes a sync problem; 7× ops cost |
+| **C** | 7 separate EYWA brands sharing brand_scope[] for cross-center entities | Architecturally lies about brand reality; every cross-center entity/link triggers DR-021 cross-brand governance; locked-vocabulary discipline becomes cross-brand sync |
+| **D** ⭐ | 1 EYWA brand + center subdivision as a new dimension in schema + URL pattern | Matches brand doctrine; minimal additive schema; preserves all existing federation/governance |
+
+Operator confirmed Option D (Hybrid): *"core ของ eywa protocol ยังเหมือนเดิม เพียงแต่เราขยายวิธีการบริหารจัดการสำหรับแบรนด์ที่จะมีหลาย centers ภายใต้แบรนด์เดียว."*
+
+This DR formalizes Option D as a universal pattern — because Vitality is unlikely to be the only multi-center brand in the portfolio (VTH BioDent → potential VTH Hospital expansion path; `the-face-hospital` is already a hospital; future portfolio additions may follow).
+
+**Decision:**
+
+Introduce a universal **Multi-Center Brand Pattern** via 7 coordinated sub-decisions, all locked together at DR-032 lock event. Pattern is **opt-in per brand**; existing brands unaffected.
+
+#### 1. Add `brand_structure` enum on `brands` table
+
+```sql
+ALTER TABLE brands
+  ADD COLUMN brand_structure text NOT NULL DEFAULT 'monolithic'
+    CHECK (brand_structure IN ('monolithic', 'multi_center'));
+```
+
+- `monolithic` — default; all existing brands inherit. No behavioral change.
+- `multi_center` — opt-in; activates center subdivision schema + URL rewriting + plugin behaviors.
+
+#### 2. New table `seo_brand_centers`
+
+One row per center within a multi-center brand. ~15 columns covering identity, URL routing, positioning, visual treatment, and lifecycle.
+
+```sql
+CREATE TABLE seo_brand_centers (
+  fingerprint              text UNIQUE NOT NULL,    -- 'ctr_{ULID16}' per DR-008
+  fingerprint_display_name text NOT NULL,           -- '{fp_last_6}::{brand_slug}::{center_slug}'
+  brand_id                 text NOT NULL REFERENCES brands(brand_slug) ON DELETE CASCADE,
+  center_slug              text NOT NULL,           -- 'vital-sleep'
+  center_name              jsonb NOT NULL,          -- {"th":"...", "en":"..."} per DR-009 Tier 1 multilingual
+  url_segment              text NOT NULL,           -- 'vitalsleep' (URL-safe, may differ from center_slug)
+  positioning_one_line     jsonb,                   -- {"th":"...", "en":"..."}
+  signature_methodologies  text[],                  -- ['Sleep Restoration Program', 'Couples Sleep Twin']
+  color_treatment_hex      text,                    -- visual signal for header band etc.
+  position_order           integer NOT NULL DEFAULT 0,  -- nav order
+  status                   text NOT NULL DEFAULT 'planning'
+    CHECK (status IN ('planning', 'active', 'paused', 'sunset')),
+  anchor_outcome           text,                    -- "ISI ≥ 7-point reduction; AHI normalization on PAP / oral appliance"
+  created_at               timestamptz NOT NULL DEFAULT now(),
+  updated_at               timestamptz NOT NULL DEFAULT now(),
+  UNIQUE (brand_id, center_slug),
+  UNIQUE (brand_id, url_segment)
+);
+```
+
+Triggers per DR-008 (Two-Column Identity): `trg_set_fingerprint_center` on INSERT; `trg_refresh_display_name_center` on UPDATE; `trg_prevent_fingerprint_change_center` on UPDATE.
+
+#### 3. New column `seo_website_page_master.center_slug text NULL`
+
+```sql
+ALTER TABLE seo_website_page_master
+  ADD COLUMN center_slug text NULL
+    REFERENCES seo_brand_centers(center_slug);  -- soft FK; or use brand_id+center_slug composite
+```
+
+- `NULL` = umbrella/hospital-wide page (Home, About, Concept, Method, Membership, Outcomes Book)
+- `'vital-sleep'` = page belongs to Vital Sleep Center (URL: `/vitalsleep/{slug}/`)
+- Validation trigger: `center_slug` MUST be NULL when `brand.brand_structure='monolithic'`; MAY be NULL when `'multi_center'`.
+
+#### 4. New column `seo_entity_graph.center_scope text[]`
+
+```sql
+ALTER TABLE seo_entity_graph
+  ADD COLUMN center_scope text[] NULL;
+```
+
+Orthogonal to existing `brand_scope text[]`. Examples:
+
+| Entity example | brand_scope | center_scope | Interpretation |
+|---|---|---|---|
+| `obstructive-sleep-apnea` | `['vitality-hospital']` | `['vital-sleep']` | OSA primary entity owned by Vital Sleep Center |
+| `osa-obesity-bundle` | `['vitality-hospital']` | `['vital-sleep','vital-weight-loss']` | Cross-center joint product |
+| `nightlase` | `['vitality-hospital','vth-biodent']` | `['vital-sleep']` (within Vitality) | Cross-brand entity, scoped to Vital Sleep within Vitality |
+| `circadian-hospital-concept` | `['vitality-hospital']` | `NULL` | Hospital-wide umbrella entity |
+| `dental-implant` | `['vth-biodent']` | (N/A — vth-biodent is monolithic) | Pre-DR-032 behavior; center_scope NULL |
+
+#### 5. URL pattern lock (extends DR-004)
+
+When `brand_structure='multi_center'`:
+
+```
+{brand_domain}/{lang}/{center_url_segment}/{page_slug}/
+                    ^                    ^
+                    |                    |- center_slug → url_segment (vitalsleep, vitalintimacy, ...)
+                    |- language (DR-004; th=default, en/zh/ar/etc.)
+```
+
+When `brand_structure='monolithic'`:
+
+```
+{brand_domain}/{lang}/{page_slug}/    (unchanged DR-004 behavior)
+```
+
+`url_segment` is operator-controlled per center (does not need to match `center_slug`); enforced UNIQUE per brand. App-layer routing must reserve known center segments to prevent slug collisions with non-center pages.
+
+#### 6. Internal linking governance (extends DR-021)
+
+| Link type | Governance |
+|---|---|
+| Intra-center (within same center) | Default approved — no per-link justification |
+| Intra-brand cross-center (e.g., Vital Sleep → Vital Brain within Vitality) | **Default approved** — no per-link justification. Recorded in `seo_page_internal_links` with `link_type='cross_center_intra_brand'` for analytics, but not gated. |
+| Cross-brand (Vitality ↔ Biodent within Vertex network) | Existing DR-021 governance applies — `is_cross_brand=true` + `cross_brand_justification` required |
+
+Rationale: per the Notion source, cross-center "Funnels in / Funnels out" are first-class structural elements (e.g., Vital Sleep → Vital Breathing → Vital Brain → Vital Sleep Intimacy → Biodent). Making them exception-gated would force every clinical referral into a justification field.
+
+#### 7. WordPress implementation pattern (Bible Part 26)
+
+Specify in Bible §25.13 (post-lock):
+
+- **Single WordPress site** (NOT WPMU/Multisite)
+- **Custom taxonomy `center`** (attached to existing EYWA CPTs: procedure, treatment, condition, doctor, branch, etc.)
+- **ACF field group** for center config (color, icon, hero image, signature methodologies)
+- **Elementor Theme Builder** conditional templates per `center` taxonomy term (header band color, footer note, etc.)
+- **Permalink rewrites** to map `/{url_segment}/{post_type}/{post_slug}/` to taxonomy-filtered queries
+- **Hospital-wide nav** (top-level) + **center context nav** (secondary, shown when in a center subdirectory)
+- **Schema markup:** `Hospital` (umbrella) + `MedicalSpecialty` (per center) + page-type schema per page
+- **Cross-network sister-brand links:** standard hyperlinks, no canonical issues (different domains)
+
+**Rationale:**
+
+1. **Doctrinal alignment is non-negotiable** — Vitality's "one hospital, one record, one team" mandate cannot be honored by splitting into 7 brands (Option C). Splitting forces every shared entity into cross-brand sync (DR-021 governance overhead per link), every locked vocabulary term into cross-brand dictionary sync, and every Vital Twin write into a multi-brand data federation problem. Doctrine wins.
+
+2. **Pattern is reusable across portfolio** — Hospital-scope brands are a recognizable class (`the-face-hospital` already exists; VTH BioDent's expansion path includes potential hospital status). Formalizing as universal DR pays compounding interest vs brand-specific workaround.
+
+3. **Additive non-breaking design** — Every change defaults to existing behavior. `brand_structure='monolithic'` is the default; `center_slug=NULL` is allowed everywhere; `center_scope=NULL` is allowed everywhere. Existing brands deploy unchanged at next migration wave. Zero data migration required.
+
+4. **Subdirectory beats subdomain for SEO** — `vitalityhospital.com/vitalsleep/` inherits full domain authority; subdomains split it. Operator confirmed subdirectory pattern from the outset.
+
+5. **Subdirectory beats WPMU for ops** — single WP admin, single Elementor license, single GSC property, single analytics, single update cycle, single security surface. WPMU = 7× operational cost for no proportionate benefit when the data spine (Vital Twin) wants to be unified anyway.
+
+6. **Cross-center funnels are first-class** — Notion explicitly structures each center with "Funnels in / Funnels out" sections. The schema must support this as default behavior, not as exception requiring per-link governance.
+
+7. **EYWA core untouched** — Federation pattern (DR-001), brand_scope semantics (DR-010), edge vocabulary (DR-012/013/014), Two-Column Identity (DR-008), Multilingual v2 (DR-009), Internal Linking (DR-021), EUG (DR-011), all unaffected. This is purely additive at the boundary between "1 brand" and "what's inside 1 brand."
+
+8. **Operator's mental model matches** — Quoted verbatim 2026-05-25: *"core ของ eywa protocol ยังเหมือนเดิม เพียงแต่เราขยายวิธีการบริหารจัดการสำหรับแบรนด์ที่จะมีหลาย centers ภายใต้แบรนด์เดียว และต้องยกแต่ละ center ขึ้นเป็น subdirectory สำหรับบริหารจัดการ บน wordpress เดียวกันภายใต้แบรนด์ใหญ่แบรนด์เดียว."*
+
+**Consequences:**
+
+- ✅ Vitality Hospital can author content, plan sitemap, and structure entities under correct architecture from Day 1
+- ✅ Existing brands (`vth-biodent`, `smile-scape`, `the-face-by-vertex`, all 17 brand repos) unaffected — `brand_structure` defaults to `'monolithic'`, all queries continue working
+- ✅ Schema migrations are additive — 1 ALTER TABLE (brand_structure column) + 1 CREATE TABLE (`seo_brand_centers`) + 2 ADD COLUMN (`center_slug`, `center_scope`) + triggers. No data migration; no rollback complexity.
+- ✅ Plugin updates required but scoped: `eywa-schema-pipeline` adds `center_slug` awareness; `eywa-acf-fields` adds `center` taxonomy; new ACF field group for center config. Estimated 8–12 engineering hours total.
+- ✅ WordPress implementation pattern documented in Bible §25.13 — single source of truth for multi-center brand build
+- ⚠️ **Vitality opt-in early creates DR-032-pending state** — `vitality-hospital/brand-config.json` uses forward-looking fields (`brand_structure: multi_center`, `centers[]` array, `parent_network` block) that are advisory metadata until DR-032 locks. Config flagged accordingly with `_brand_structure_doc` notes.
+- ⚠️ **WordPress implementation cannot begin until DR-032 locks** — theme work, ACF field groups, URL rewrites all depend on locked schema. Vitality Phase A (brand-concept, signature-programs, per-center concepts) + Phase B (research, keyword seeds) + Phase C (entity planning at markdown level) can proceed in parallel during review period.
+- ⚠️ **Sister-brand cross-network linking pattern needs documentation** — Vitality references Biodent (NightLase, Waterlase) and other Vertex sister brands. DR-021 already covers cross-brand link governance; DR-032 §6 clarifies the boundary (intra-brand cross-center = default approved; cross-brand-network = DR-021 governance). Sister brands not opt-in early; they remain `monolithic`.
+- ⚠️ **Multilingual interaction with DR-004** — Language segment must come BEFORE center segment in URL (`/th/vitalsleep/`, not `/vitalsleep/th/`). Document explicitly to avoid permalink confusion.
+- ⚠️ **No retro-active migration for existing brands** — If `vth-biodent` later opts in to `multi_center` (e.g., becomes VTH Hospital), that's a brand-level decision logged in `vth-biodent/docs/decision-records.md` as a brand DR; no schema work required.
+
+**Open Questions (resolve before lock):**
+
+1. **Soft FK vs hard FK on `seo_website_page_master.center_slug`** — Hard FK (`REFERENCES seo_brand_centers`) gives integrity but couples migration order; soft FK (text-only) gives flexibility but requires app-layer validation. Lean toward hard FK with composite `(brand_id, center_slug)`.
+2. **Storage decision: separate `seo_brand_centers` table vs jsonb on `brands`** — Table is more SQL-queryable (joins, aggregations, RLS); jsonb is denser. Lean toward table (matches EYWA pattern of breaking concerns into discrete tables).
+3. **`url_segment` length / character constraints** — Reserve a list of forbidden segments (`api`, `wp-admin`, `wp-json`, `feed`, locale codes `th`/`en`/etc., common page slugs `about`/`contact`) to prevent collision.
+4. **Should `seo_brand_doctors` and `seo_brand_branches` also get a `center_slug`?** — A doctor might primarily practice at one center (Dr. Amornpong → Vital Brain); a branch might house multiple centers initially but become center-specific later. Lean toward adding `center_scope text[]` (multi-value, allow doctor across centers) for consistency.
+5. **Cross-network DR follow-up** — Vitality's Vertex network membership (Genowell, Recov, VTH PRM, Biodent, The FACE all share Vital Twin per Notion) hints at a higher-order pattern (network-of-brands, not just brand-of-centers). Out of scope for DR-032; may motivate future DR-033+.
+6. **Backfill timing for `brand_structure` default** — On migration, all existing brands get `brand_structure='monolithic'` automatically via DEFAULT clause. Confirm no brand wants opt-in at migration time (only Vitality currently).
+
+**References:**
+
+- DR-001 — Multi-Brand Federation Pattern (extends, does not supersede)
+- DR-004 — URL Structure: Subdirectory + Thai Default (extends with center segment after language segment)
+- DR-008 — Two-Column Identity Pattern (`seo_brand_centers` follows the same fingerprint pattern)
+- DR-009 — Multilingual Strategy v2 (Tier 1 jsonb for center names + positioning)
+- DR-010 — Brand Scope Architecture (orthogonal to new `center_scope`; brand_scope unchanged)
+- DR-021 — Internal Linking Architecture HYBRID (cross-center intra-brand = no governance; cross-brand still governed)
+- DR-028 — Brand Genesis Protocol Universal (BGP may need a multi-center variant for hospital brands — defer)
+- DR-029 — Universal Brand Design System (per-center color treatment fits in `seo_brand_centers.color_treatment_hex` + DTCG tokens)
+- Bible Part 25 (current) — Multi-Brand Federation
+- Bible Part 26 (current) — WordPress + Elementor Stack (will add §25.13 post-lock)
+- Bible Part 28 (current) — Multilingual Strategy (DR-004 extension documented here)
+- External: [`eywa-vitality-hospital/brand-config.json`](https://github.com/the-gifted-digital/eywa-vitality-hospital/blob/main/brand-config.json) — first opt-in adopter, forward-looking fields flagged
+- External: [Vitality Hospital Notion master](https://www.notion.so/marketing-vt-intelligent/Vitality-Hospital-d85dc4e216898244b8f881d83ffb3ebc) — brand doctrine source ("one roof, one record, one team"; "No center invents parallel terms")
+
+---
 
 ### [DR-031] — Google Generative AI Search Alignment (llms.txt + Chunking + Query Fan-out Framing) (2026-05-24) 🔒🔍📐
 
