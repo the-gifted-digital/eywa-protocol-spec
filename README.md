@@ -8,7 +8,7 @@
 
 <!-- Badges (render on GitHub.com): -->
 [![Bible](https://img.shields.io/badge/Bible-v3.19-blue?style=flat-square)](./EYWA_PROTOCOL_v3_14.md)
-[![Schema](https://img.shields.io/badge/Schema-v1.16-green?style=flat-square)](./Schema_Overview_EYWA_v1_10.md)
+[![Schema](https://img.shields.io/badge/Schema-v1.18-green?style=flat-square)](./Schema_Overview_EYWA_v1_18.md)
 [![Migrations](https://img.shields.io/badge/Migrations-Phase%201A%20Built-success?style=flat-square)](./migrations/README.md)
 [![Phase](https://img.shields.io/badge/Phase-1%20Foundation-orange?style=flat-square)](./PHASE_1_DECISIONS.md)
 [![License](https://img.shields.io/badge/License-Proprietary-red?style=flat-square)]()
@@ -36,7 +36,7 @@ EYWA™ is a registered trademark of **The Gifted Digital Marketing Co., Ltd.** 
 |----------|---------|-------|--------|
 | `PROJECT_MEMORY.md` | Project context for AI sessions + onboarding | ~880 | 🧠 Memory (local-only, gitignored) |
 | `EYWA_PROTOCOL_v3_14.md` | The Bible — full specification | ~27,000 | 🔒 Active (v3.19) |
-| `Schema_Overview_EYWA_v1_10.md` | Database schema companion (38 tables + Group 10 column extensions) | ~4,300 | 🔒 Active (v1.15) |
+| `Schema_Overview_EYWA_v1_18.md` | Database schema companion (40 base tables, full live-audit rewrite) | ~1,700 | 🔒 Active (v1.18) |
 | `EYWA_HANDOVER.md` | Operating manual for Claude/AI | ~3,100 | 🔒 Active (v1.13) |
 | `DECISION_RECORDS.md` | Architecture decision log | ~3,300 | 🔒 Active (v1.13) |
 | `PHASE_1_DECISIONS.md` | Phase 1 quick reference | ~440 | 🔒 Active (v1.8) |
