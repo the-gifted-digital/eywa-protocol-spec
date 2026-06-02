@@ -204,7 +204,7 @@ B02_quick_facts_table:
     toggle_default_state: collapsed
     
     collapsed_under_toggle:  # render inside <details>
-      - ICD-10-CM, ICD-11, SNOMED CT, MeSH codes
+      - ICD-11-MMS, ICD-10 (WHO/TM), ICD-10-CM (US), SNOMED CT, MeSH codes  # DR-033 order
       - prevalence (TH-specific)
       - related medical specialties
       - any other technical/clinical metadata

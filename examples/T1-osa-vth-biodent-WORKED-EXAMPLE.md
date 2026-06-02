@@ -245,8 +245,9 @@ citations_used:
 
 | | |
 |---|---|
-| ICD-10-CM | G47.33 |
-| ICD-11 | 7A41 |
+| ICD-11-MMS | 7A41 |
+| ICD-10 (WHO / ICD-10-TM) | G47.3 |
+| ICD-10-CM (US) | G47.33 |
 | SNOMED CT | 78275009 |
 | MeSH | D020181 |
 | ความชุกในไทย | 4.8% ในผู้ใหญ่ 30-60 ปี, 11.4% ในผู้สูงอายุ ≥60 ปี (Thai Sleep Society, 2019) |
@@ -767,8 +768,9 @@ Executive Medical Director, VTH BioDent — ทันตแพทย์ผู้
   "name": "โรคหยุดหายใจขณะหลับชนิดอุดกั้น",
   "alternateName": "Obstructive Sleep Apnea (OSA)",
   "code": [
+    {"@type": "MedicalCode", "code": "7A41", "codingSystem": "ICD-11-MMS"},
+    {"@type": "MedicalCode", "code": "G47.3", "codingSystem": "ICD-10"},
     {"@type": "MedicalCode", "code": "G47.33", "codingSystem": "ICD-10-CM"},
-    {"@type": "MedicalCode", "code": "7A41", "codingSystem": "ICD-11"},
     {"@type": "MedicalCode", "code": "78275009", "codingSystem": "SNOMED-CT"}
   ],
   "epidemiology": "4.8% in Thai adults 30-60yr; 11.4% in ≥60yr (Thai Sleep Society, 2019)",

@@ -2,8 +2,8 @@
 
 > **Append-only architectural decision log.** Each record explains WHY a decision was made — not just WHAT.
 
-**Document Version:** 1.18  
-**Last Updated:** 2026-05-25  
+**Document Version:** 1.19  
+**Last Updated:** 2026-06-02  
 **Format:** Reverse chronological (newest first)
 
 ---
@@ -31,6 +31,58 @@
 ---
 
 ## Decisions Log
+
+### [DR-033] — ICD Dual-Coding Standard (ICD-11-MMS Primary + ICD-10 / ICD-10-CM Full Coverage) (2026-06-02 → Locked 2026-06-02) 🔒🩺🌐
+
+**Status:** **🔒 Locked 2026-06-02** — operator-approved in working session same day (14-day review waived: additive/non-breaking, no other medical-condition brand mid-build to canvass, and the change *aligns the spec with the existing entity-fingerprint intent*, which already keys on the WHO-base value `g47.3` not the US-CM `g47.33`).
+**Bible Reference:** Entity Graph schema emission (`MedicalCondition.code[]` doctrine) + T1 medical-condition template — codingSystem standardization. Bible-prose propagation deferred to next Bible release; Handover + this DR carry operational guidance meanwhile.
+**Schema Reference:** Declares optional column **`seo_entity_graph.icd_10_cm_code text`** + completes **`icd_11_code text`** on the `seo_entity_graph` DDL. **Additive, non-breaking. Migration deferred to next wave** — Schema_Overview stays **v1.18** until the migration build bumps it (per **DR-030** precedent, changelog v1.16). **NOT added to the entity fingerprint** — fingerprint stays keyed on `icd_10_code` (WHO base), so no reference cascade.
+**Companion to:** DR-031 (Google Generative AI Search Alignment — ICD codes serve AI/LLM entity grounding, not Google rich results), DR-019 (Schema Two-Purpose Taxonomy), DR-009 (Multilingual Strategy — codes are `never_translate` universals)
+**Scope:** **UNIVERSAL** — every brand emitting `MedicalCondition` schema. **Zero brand-side action required.** Existing condition entities retrofit (verify `icd_10_code` = WHO base + optional `icd_10_cm_code` backfill) at next freshness review.
+
+**Context:**
+
+Operator asked (2026-06-02) whether EYWA's ICD-10 references in schema should migrate to ICD-11, stay ICD-10, or carry both during the transition. Research findings (June 2026):
+
+- **WHO ICD-11** has been in effect since **2022-01-01**; WHO **stopped maintaining ICD-10 in 2018**. ~132 member states are at some implementation phase; ~45 have begun transition; 14 already report in ICD-11. ICD-11 is the unambiguous future.
+- **Thailand** (EYWA's home market) is named among the **front-runner ICD-11 adopters** (with Canada, Netherlands, Norway, Finland) — but national reimbursement still runs on **ICD-10-TM** (a WHO-base ICD-10 Thai modification).
+- **United States** still runs **ICD-10-CM**, with no firm ICD-11 date (projected ~2027–2029 for billing). EN/US data + AI consumers still "speak" ICD-10-CM.
+- **schema.org** `MedicalCode.code[]` is an **array**; `codingSystem` is **free-text controlled vocabulary**; Google does **not validate** it and there is **no penalty** for multiple systems. `MedicalCondition` is **not a Google rich-result type** → ICD codes primarily serve **AI/LLM/Knowledge-Graph entity grounding** (ties to DR-031), where broader, accurate coverage is strictly better.
+
+Audit of the spec found the doctrine was **half-implemented and inconsistent**: `codingSystem` written three ways (`"ICD-10"`, `"ICD-10-CM"`, `"ICD-11"` vs `"ICD-11-MMS"`); the PHP renderer mislabeled the base `icd_10_code` field as `"ICD-10-CM"`; the skeleton template emitted no ICD-11 at all; and TH-market examples carried **US-CM codes mislabeled as base ICD-10** (e.g. OSA `G47.33` and TMJ `M26.6`, which are US-CM — the WHO/TH base codes are `G47.3` and `K07.6`).
+
+**Decision:**
+
+1. **Dual / full coverage, not migration.** Emit **all available** codes in `MedicalCondition.code[]`, ordered **ICD-11-MMS → ICD-10 (WHO base) → ICD-10-CM (US) → SNOMED-CT**. ICD-11-MMS leads as the forward-primary; ICD-10 is retained throughout the transition.
+2. **Standardized `codingSystem` strings:** `"ICD-11-MMS"`, `"ICD-10"`, `"ICD-10-CM"`, `"SNOMED-CT"`.
+3. **Column semantics:** `icd_10_code` = **WHO base ICD-10** (= ICD-10-TM aligned, accurate for TH); new optional **`icd_10_cm_code`** = **US ICD-10-CM** clinical modification (more granular; for EN / international SEO). `icd_11_code` = **ICD-11-MMS stem code**.
+4. **Why full coverage for TH brands:** operator confirmed EN + international-market SEO is a near-term goal → "capture everything" is the intent. Because `code[]` is additive with zero downside, carrying ICD-11 + base ICD-10 + US-CM + SNOMED maximizes entity grounding across TH, EN, and international AI/search consumers.
+
+**Rationale:**
+
+- **Transition is real and bidirectional** — can't drop ICD-10 (US + TH reimbursement still consume it) and shouldn't lead with ICD-10 (WHO froze it in 2018; TH is an ICD-11 front-runner). Carrying both, ICD-11 first, is the only forward-correct stance.
+- **Zero technical downside** — array + free-text codingSystem + no Google validation = pure upside to breadth.
+- **Correctness matters more than it looks** — labeling a US-CM code as base `"ICD-10"` on a Thai page is factually wrong. The base-vs-CM split is real: OSA `G47.3` (WHO/TH) vs `G47.33` (US-CM); TMJ `K07.6` (WHO/TH) vs `M26.6` (US-CM) — verified `K07.6` does not exist in ICD-10-CM (US moved it to `M26.6x`). ICD-11 unifies both (OSA `7A41`, TMJ `DA0E.8`).
+- **Aligns with existing intent** — the entity-fingerprint example already uses WHO-base `g47.3`, so this DR ratifies the design rather than redirecting it.
+
+**Consequences:**
+
+- ✅ Additive, non-breaking; migration deferred to next wave; fingerprint unchanged → no reference cascade.
+- ⚠️ **Existing condition entities** — at next freshness review, verify `icd_10_code` holds the **WHO base** value (not a US-CM code) and optionally backfill `icd_10_cm_code`. Same retrofit-at-next-gate posture as DR-029/DR-030.
+- ⚠️ **Migration build to-do (next wave):** `ALTER TABLE seo_entity_graph ADD COLUMN icd_10_cm_code text;` (+ ensure `icd_11_code` present); ACF field `icd_10_cm_code`; then bump Schema_Overview to the build's version.
+- 📋 **Out of scope / follow-ups:** (a) property-name normalization — examples mix non-standard `"code"` with schema.org-canonical `"codeValue"` inside `MedicalCode`; orthogonal to ICD versioning → separate DR. (b) Optional ICD-11 **Foundation URI** as `sameAs` for tighter AI grounding — nice-to-have, future. (c) SNOMED label `"SNOMED-CT"` left as-is (already internally consistent; schema.org prefers `"SNOMED CT"` — defer).
+- 🗂️ **Files updated this commit:** `examples/T1-osa-vth-biodent-WORKED-EXAMPLE.md` (table + JSON-LD), `examples/T1-medical-condition-SKELETON.md` (table + JSON-LD), `EYWA_PROTOCOL_v3_14.md` (`seo_entity_graph` DDL, PHP schema renderer reorder+relabel+`icd_10_cm_code`, entity validation rule, content checklist, ACF Schema tab, `never_translate` list, 3 TMJ JSON-LD snippets), `Content_Templates_EYWA_v1_0.md` (technical-codes toggle order), `EYWA_HANDOVER.md` (entity-register `ICD-11 / ICD-10` column + spec + TMJ examples), `Schema_Overview_EYWA_v1_18.md` (`icd_10_code` semantics clarification — lands when the pending v1.18 reorg commits).
+
+**References:**
+
+- WHO — ICD-11 in effect 2022-01-01; ICD-10 maintenance ceased 2018 ([WHO ICD-11 FAQ](https://www.who.int/standards/classifications/frequently-asked-questions/icd-11-implementation), [WHO ICD-11 fact sheet](https://www.who.int/news-room/fact-sheets/detail/icd-11))
+- Thailand ICD-11 front-runner + ICD-10-TM (WHO-based) — [MedLearn ICD-11 in 2025](https://icd10monitor.medlearn.com/icd-11-in-2025-evolution-global-progress-and-what-to-watch/), [ICD-10-TM (PubMed)](https://pubmed.ncbi.nlm.nih.gov/22935742/)
+- US still ICD-10-CM (~2027–2029 for ICD-11 billing) — [Libman Education US timeline](https://libmaneducation.com/us-timeline-for-icd-11-implementation/)
+- schema.org — [MedicalCode](https://schema.org/MedicalCode), [MedicalCondition](https://schema.org/MedicalCondition)
+- Verified code mappings: OSA `G47.3` (WHO) / `G47.33` (CM, valid) / `7A41` (ICD-11-MMS); TMJ `K07.6` (WHO; not in CM) / `M26.6`·`M26.609` (CM, valid) / `DA0E.8` (ICD-11-MMS)
+- DR-031 (AI search alignment), DR-030 (deferred-migration precedent), DR-019 (schema taxonomy), DR-009 (multilingual `never_translate`)
+
+---
 
 ### [DR-032] — Multi-Center Hospital Brand Pattern (2026-05-25 → Locked 2026-05-25) 🔒🏥🗂️
 
@@ -4042,6 +4094,22 @@ decision_record_governance:
 ---
 
 ## Changelog
+
+### v1.19 (2026-06-02) — DR-033 Locked (ICD Dual-Coding Standard) 🔒🩺🌐
+
+ICD-10 → ICD-11 transition handling for `MedicalCondition` schema. Operator-triggered (June 2026): keep ICD-10, migrate to ICD-11, or carry both? Decision: **full coverage, ICD-11-MMS primary, ICD-10 retained** — codes are additive in `code[]` with zero downside and serve AI/LLM entity grounding (DR-031), not Google rich results.
+
+**Headline Changes:**
+
+- ➕ **DR-033 (NEW, Locked):** ICD Dual-Coding Standard. `MedicalCondition.code[]` emits **ICD-11-MMS → ICD-10 (WHO base) → ICD-10-CM (US) → SNOMED-CT**. Standardized `codingSystem` strings. `icd_10_code` = WHO base (ICD-10-TM aligned, TH-accurate); new optional `icd_10_cm_code` = US clinical-mod (EN/intl SEO); `icd_11_code` = ICD-11-MMS.
+- 🗃️ **Schema (deferred to next migration wave, per DR-030 precedent):** `seo_entity_graph` gains optional `icd_10_cm_code text` + completes `icd_11_code text`. **NOT** added to entity fingerprint (stays keyed on WHO-base `icd_10_code`) → no reference cascade. Schema_Overview stays v1.18 until the migration build bumps it.
+- 🔧 **Spec consistency fixes (this commit):** OSA worked example + skeleton template (table + JSON-LD, ICD-11 lead + base/CM split), PHP schema renderer (reorder + relabel `icd_10_code`→`"ICD-10"` + add `icd_10_cm_code`), entity validation rule, content QA checklist, ACF Schema tab, `never_translate` list, 3 TMJ JSON-LD snippets (`K07.6` WHO / `M26.6` CM / `DA0E.8` ICD-11), Schema_Overview `icd_10_code` semantics note.
+- 🩺 **Verified code mappings:** OSA `G47.3`/`G47.33`/`7A41`; TMJ `K07.6`(not in CM)/`M26.6`·`M26.609`/`DA0E.8`.
+- 📋 **Out of scope (noted for follow-up):** `code` vs schema.org-canonical `codeValue` property normalization; ICD-11 Foundation URI as `sameAs`.
+
+**Retrofit policy:**
+- Existing condition entities — verify `icd_10_code` = WHO base + optional `icd_10_cm_code` backfill at next freshness review (no forced re-code).
+- New condition entities — populate ICD-11-MMS + WHO-base ICD-10 from authoring; add US-CM when more granular.
 
 ### v1.16 (2026-05-20) — DR-030 Locked (Sensitive Topic Compliance Layer) 🔒⚖️🛡️
 

@@ -167,8 +167,9 @@ citations_used:
 
 | | |
 |---|---|
-| ICD-10-CM | {code} |
-| ICD-11 | {code} |
+| ICD-11-MMS | {code — primary, e.g. 7A41} |
+| ICD-10 (WHO / ICD-10-TM) | {WHO-base code, e.g. G47.3} |
+| ICD-10-CM (US) | {US clinical-mod code, e.g. G47.33 — if more granular} |
 | SNOMED CT | {code} |
 | MeSH | {code} |
 | ความชุก (TH) | {prevalence figure} |
@@ -594,7 +595,9 @@ citations_used:
   "name": "{Topic Name (TH)}",
   "alternateName": "{English Term}",
   "code": [
-    {"@type": "MedicalCode", "code": "{ICD-10}", "codingSystem": "ICD-10-CM"},
+    {"@type": "MedicalCode", "code": "{ICD-11-MMS}", "codingSystem": "ICD-11-MMS"},
+    {"@type": "MedicalCode", "code": "{ICD-10 WHO base}", "codingSystem": "ICD-10"},
+    {"@type": "MedicalCode", "code": "{ICD-10-CM if more granular}", "codingSystem": "ICD-10-CM"},
     {"@type": "MedicalCode", "code": "{SNOMED}", "codingSystem": "SNOMED-CT"}
   ],
   "epidemiology": "{prevalence statement}",

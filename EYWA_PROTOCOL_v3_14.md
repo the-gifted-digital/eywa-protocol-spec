@@ -6881,7 +6881,9 @@ CREATE TABLE seo_entity_graph (
   -- External knowledge graph linkage
   wikipedia_url text,
   wikidata_id text,                               -- Q-number
-  icd_10_code text,
+  icd_10_code text,                               -- WHO base ICD-10 (ICD-10-TM aligned for TH); entity fingerprint key
+  icd_10_cm_code text,                            -- US ICD-10-CM clinical mod (granular; EN/intl SEO) — DR-033, migration pending
+  icd_11_code text,                               -- ICD-11-MMS stem code (primary going forward) — DR-033
   mesh_id text,
   snomed_id text,
   cas_number text,                                -- CAS Registry (chemicals)
@@ -8111,11 +8113,11 @@ approach_2_tier_(EYWA):
   "about": { "@id": "https://vth-biodent.com/#organization" },
   
   // Content-specific data
-  "code": {
-    "@type": "MedicalCode",
-    "codeValue": "M26.6",
-    "codingSystem": "ICD-10"
-  }
+  "code": [
+    {"@type": "MedicalCode", "codeValue": "DA0E.8", "codingSystem": "ICD-11-MMS"},
+    {"@type": "MedicalCode", "codeValue": "K07.6", "codingSystem": "ICD-10"},
+    {"@type": "MedicalCode", "codeValue": "M26.6", "codingSystem": "ICD-10-CM"}
+  ]
 }
 </script>
 ```
@@ -9444,6 +9446,7 @@ ACF Field Group: "{CPT Name} Fields"
 │   - schema_type (Select: MedicalCondition / Therapy /...) │
 │   - icd_10_code (Text)                                  │
 │   - icd_11_code (Text)                                  │
+│   - icd_10_cm_code (Text)                               │
 │   - snomed_ct_id (Text)                                 │
 │   - wikidata_id (Text)                                  │
 │   - speakable_selectors (Text — CSS selectors)         │
@@ -9549,7 +9552,9 @@ field_translation_strategy:
   
   never_translate:
     - schema_type             # global value
-    - icd_10_code             # international standard
+    - icd_10_code             # WHO base ICD-10 — international standard
+    - icd_10_cm_code          # US ICD-10-CM — international standard (DR-033)
+    - icd_11_code             # ICD-11-MMS — international standard (DR-033)
     - wikidata_id             # global identifier
     - speakable_selectors     # CSS selectors stable
     - All Tab 2 (Relationships) — translate target post separately
@@ -11883,7 +11888,7 @@ Pillar Page outline (≥3,000 words):
 
 - [ ] Doctor Review Block (name + credentials + date + link)
 - [ ] External References ≥ 5 (PubMed DOI preferred)
-- [ ] ICD-10 + ICD-11 + SNOMED CT codes (medical pages)
+- [ ] ICD-11-MMS + ICD-10 (+ ICD-10-CM for intl/EN) + SNOMED CT codes (medical pages) — DR-033
 - [ ] Year of citations (≥80% from last 5 years)
 - [ ] Reviewer's `worksFor` linked to Org via @id
 
@@ -16610,7 +16615,7 @@ required_fields:
 consistency_rules:
   IF entity_type contains 'condition':
     schema_org_type = 'MedicalCondition'
-    icd_10_code OR icd_11_code IS NOT NULL  # at least one
+    icd_11_code OR icd_10_code IS NOT NULL  # ≥1 required; DR-033: populate BOTH when available (ICD-11-MMS primary; + icd_10_cm_code for intl/EN SEO)
   IF entity_type contains 'procedure':
     schema_org_type IN ('MedicalProcedure', 'MedicalTherapy')
 
@@ -22259,11 +22264,11 @@ class EywaSchemaValidationTest extends WP_UnitTestCase {
           "@type": "MedicalCondition",
           "@id": "https://vth-biodent.com/by-concern/tmj-disorder",
           "name": "TMJ Disorder",
-          "code": {
-            "@type": "MedicalCode",
-            "codeValue": "M26.609",
-            "codingSystem": "ICD-10"
-          }
+          "code": [
+            {"@type": "MedicalCode", "codeValue": "DA0E.8", "codingSystem": "ICD-11-MMS"},
+            {"@type": "MedicalCode", "codeValue": "K07.6", "codingSystem": "ICD-10"},
+            {"@type": "MedicalCode", "codeValue": "M26.609", "codingSystem": "ICD-10-CM"}
+          ]
         }
       ],
       "drug": {
@@ -24074,11 +24079,11 @@ issue_4_rtl_language_(arabic):
   "description": "...",
   
   // Universal identifiers (cross-language)
-  "code": {
-    "@type": "MedicalCode",
-    "codeValue": "M26.6",
-    "codingSystem": "ICD-10"
-  },
+  "code": [
+    {"@type": "MedicalCode", "codeValue": "DA0E.8", "codingSystem": "ICD-11-MMS"},
+    {"@type": "MedicalCode", "codeValue": "K07.6", "codingSystem": "ICD-10"},
+    {"@type": "MedicalCode", "codeValue": "M26.6", "codingSystem": "ICD-10-CM"}
+  ],
   "sameAs": [
     "https://www.wikidata.org/wiki/Q768229",   // Universal identifier
     "https://vth-biodent.com/en/by-concern/tmj-disorder/#condition"  // English version
@@ -26187,7 +26192,7 @@ UNIQUE: fingerprint
 KEY FIELDS:
   - entity_type (CONTROLLED — see Section 3.4)
   - entity_subtype, name, name_local, aliases[]
-  - icd_10_code, icd_11_code, snomed_ct_id, mesh_id, umls_cui
+  - icd_10_code, icd_10_cm_code, icd_11_code, snomed_ct_id, mesh_id, umls_cui
   - schema_org_type, wikidata_id, wikipedia_url, same_as[]
   - parent_entity_fp, related_entities_fps[], hierarchy_path
   - topic_cluster_id (FK)
@@ -27330,20 +27335,27 @@ function eywa_generate_page_schema($post_id) {
         'description' => get_field('hero_summary', $post_id),
     ];
 
-    // -- ICD-10 / ICD-11 / SNOMED CT --
+    // -- ICD-11-MMS (primary) / ICD-10 (WHO base) / ICD-10-CM (US) / SNOMED CT — DR-033 --
     $codes = [];
-    if ($icd10 = get_field('icd_10_code', $post_id)) {
-        $codes[] = [
-            '@type'        => 'MedicalCode',
-            'code'         => $icd10,
-            'codingSystem' => 'ICD-10-CM'
-        ];
-    }
     if ($icd11 = get_field('icd_11_code', $post_id)) {
         $codes[] = [
             '@type'        => 'MedicalCode',
             'code'         => $icd11,
             'codingSystem' => 'ICD-11-MMS'
+        ];
+    }
+    if ($icd10 = get_field('icd_10_code', $post_id)) {
+        $codes[] = [
+            '@type'        => 'MedicalCode',
+            'code'         => $icd10,
+            'codingSystem' => 'ICD-10'
+        ];
+    }
+    if ($icd10cm = get_field('icd_10_cm_code', $post_id)) {
+        $codes[] = [
+            '@type'        => 'MedicalCode',
+            'code'         => $icd10cm,
+            'codingSystem' => 'ICD-10-CM'
         ];
     }
     if ($snomed = get_field('snomed_ct_id', $post_id)) {

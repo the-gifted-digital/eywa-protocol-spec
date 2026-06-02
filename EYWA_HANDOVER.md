@@ -715,10 +715,10 @@ required_planning_files:
 **Pillar Page:** {sitemap_node_id}
 **Domain:** {domain-id}
 
-| # | Entity Name | Slug | Type | Schema.org | Parent (text) | ICD-10 | Lifecycle | Primary Page | Aliases | Brand Scope | Notes |
+| # | Entity Name | Slug | Type | Schema.org | Parent (text) | ICD-11 / ICD-10 | Lifecycle | Primary Page | Aliases | Brand Scope | Notes |
 |---|-------------|------|------|------------|---------------|--------|-----------|--------------|---------|-------------|-------|
-| 1 | TMJ Disorder | tmj-disorder | Condition | MedicalCondition | — | M26.609 | Mature | 5.2 | TMD, ... | ['*'] | (link to cluster anchor) |
-| 2 | TMJ Pain | tmj-pain | Symptom | Symptom | tmj-disorder | M26.629 | Mature | 5.2.1 | ... | ['*'] | symptom_of relationship |
+| 1 | TMJ Disorder | tmj-disorder | Condition | MedicalCondition | — | DA0E.8 / K07.6 | Mature | 5.2 | TMD, ... | ['*'] | M26.6 = US-CM → icd_10_cm_code |
+| 2 | TMJ Pain | tmj-pain | Symptom | Symptom | tmj-disorder | — | Mature | 5.2.1 | ... | ['*'] | symptom_of relationship |
 ```
 
 **Column specs (12 columns):**
@@ -731,7 +731,7 @@ required_planning_files:
 | `Type` | Yes | One of 15 types (Bible Part 2.5) |
 | `Schema.org` | Yes | schema.org type (e.g., MedicalCondition) |
 | `Parent (text)` | Optional | text-based parent reference (entity slug) — for Two-Phase Sync |
-| `ICD-10` | Optional | ICD-10 code (or "—" if N/A) |
+| `ICD-11 / ICD-10` | Optional | Primary **ICD-11-MMS** + **WHO-base ICD-10** (ICD-10-TM aligned); US **ICD-10-CM** → `icd_10_cm_code` / Notes; "—" if N/A — **DR-033** |
 | `Lifecycle` | Yes | emerging / growing / mature / deprecated |
 | `Primary Page` | Yes | sitemap_node_id (e.g., "5.2.1") |
 | `Aliases` | Recommended | Comma-separated alternative names |
