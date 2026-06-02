@@ -2,8 +2,8 @@
 
 > **Append-only architectural decision log.** Each record explains WHY a decision was made — not just WHAT.
 
-**Document Version:** 1.19  
-**Last Updated:** 2026-06-02  
+**Document Version:** 1.20  
+**Last Updated:** 2026-06-03  
 **Format:** Reverse chronological (newest first)
 
 ---
@@ -31,6 +31,55 @@
 ---
 
 ## Decisions Log
+
+### [DR-034] — Intra-Page Answer Routing (PAA × FAQ) (2026-06-03 → Locked 2026-06-03) 🔒🧭
+
+**Status:** **🔒 Locked 2026-06-03** — operator-approved in working session same day (14-day review waived: additive/non-breaking, safe defaults, no brand mid-content-build to canvass, and the design *ratifies the existing §4.5.3 Cannibalization Shield intent* by extending it from between-page to within-page scope).
+**Bible Reference:** Extends Content_Templates **§4.5.3 Cannibalization Shield** → new **§4.5.4 Intra-Page Answer Routing**; updates block **B18 FAQ** floor logic. Bible-prose propagation deferred to next Bible release; Content_Templates v1.8 + this DR carry operational guidance meanwhile.
+**Schema Reference:** **BUILT 2026-06-03** — migration `eywa_w11_05_dr034_v20_page_master_paa_routing` (W11.5) adds **`seo_website_page_master.intent_source_tier text NOT NULL DEFAULT 'template_only'`** (CHECK `paa`/`derived`/`template_only`) + **`seo_website_page_master.paa_checked_at timestamptz`**. **Schema_Overview → v1.20** (file renamed `…v1_19.md` → `…v1_20.md`). Additive; safe default backfills existing 1,376 rows to `template_only`; non-breaking. **NOT added to the page fingerprint** → no reference cascade.
+**Companion to:** DR-020 (Universal Content Template Standard — §4.5.4 extends its §4.5.3; this DR does **not** reopen the locked DR-020), DR-019 (Schema emission AI-only — FAQ floor logic post-rich-results), DR-031 (Audience-first authoring — routing serves human + AI simultaneously).
+**Scope:** **UNIVERSAL** — additive, non-breaking. **Zero brand-side action required.** Every existing page inherits `intent_source_tier='template_only'` + `paa_checked_at=NULL` and behaves identically to pre-DR-034 until a PAA crawl runs.
+
+**Context:**
+
+Operator review (2026-06-03) flagged a **PAA × FAQ overlap concern** before real content production began: People-Also-Ask demand signals and the B18 FAQ block both answer questions, with two failure modes — (a) **tail-wagging-the-dog**, where PAA dictates page structure instead of serving the locked template, and (b) **body/FAQ duplication**, where the same question is answered twice on one page. §4.5.3 (Cannibalization Shield) already governs separation *between* sibling pages but said nothing about separation *within* a single page.
+
+The proposal arrived as a 4-part patch authored against an **older repo snapshot** (targeted "schema v1.11" and treated DR-020 as still-proposed with a 2026-06-07 lock). Reconciliation against the live repo found three stale anchors and three phantom data sources — all corrected before landing (see Consequences → Reconciliation).
+
+**Decision:**
+
+Adopt **§4.5.4 Intra-Page Answer Routing** with five rules + a 2-column page_master extension:
+
+1. **PAA subordination (Q1 = B → separate §4.5.4):** PAA is *demand evidence*, not structure. PAA may not create a top-level H2 absent from the template, may not delete/shrink/replace a REQUIRED block, and need not be answered exhaustively. Relevant PAA lands as H3 inside the nearest required block; cross-intent PAA routes to FAQ + links out per §4.5.3.
+2. **Routing by intent:** understanding-intent PAA (What/Why/How/Can/Is) → **body** (H2/H3 in a required block, 40–60-word direct answer up top, featured-snippet-ready); decision-intent PAA (Cost/Where/Who/Book/vs/How-long) → **FAQ block (B18)**.
+3. **Dedup gate:** one question = one canonical answer location per page. If answered in body, no duplicate FAQ entry — FAQ may reference the body via a short anchor link.
+4. **Coverage floor (Q2 = B + safety floor):** measure intent coverage at **page level (≥8 intents across body PAA-mapped + FAQ combined)**, not at the FAQ block. FAQ keeps a **safety floor of ≥3 Q&A**. Tier-1 (PAA present): FAQ ≥3 (understanding-PAA lives in body); tier-2/3 (no PAA): FAQ ≥8 (FAQ carries all coverage).
+5. **3-tier source fallback (Q3 = A → generic field naming):** `tier_1_paa` (real PAA) → `tier_2_derived` (painpoint / predicted SERP / voice) → `tier_3_template_only` (8-intent baseline; sets `content_gap_flag`). Recorded per page via `intent_source_tier` + `paa_checked_at`.
+
+**Rationale:**
+
+- **PAA subordinate, not sovereign** — the locked T1–T22 template structure (DR-020) is the contract; PAA confirms/prioritizes/surfaces-gaps within it. Letting PAA mint sections would silently erode the Cannibalization Shield and EEAT layout guarantees.
+- **Page-level coverage is the correct unit** — most PAA *confirms* body sections rather than migrating into FAQ. A high FAQ-block floor would force understanding-PAA into FAQ as a duplicate of body. Measuring at page level (with a ≥3 FAQ safety floor) avoids that distortion — this is *why* Q2 = B over a flat FAQ floor.
+- **`paa_checked_at` separates "checked, none found" from "never checked"** — NULL triggers a crawl; SET-with-empty-`paa_questions` legitimately drops to tier-2/3. Collapsing them would either skip real PAA or waste crawls.
+- **Generic field naming (Q3 = A)** — `intent_source_tier` is vocabulary-neutral, so future signal sources slot in without a schema rename.
+
+**Consequences:**
+
+- ✅ **Migration BUILT 2026-06-03 (`eywa_w11_05`):** `ALTER TABLE seo_website_page_master ADD COLUMN intent_source_tier … ADD COLUMN paa_checked_at …` (+ CHECK + bilingual comments). Verified live: 88 → 90 cols; CHECK `seo_website_page_master_intent_source_tier_check` present; 1,376 existing rows default to `template_only`. Schema_Overview bumped → v1.20. Post-DDL security advisors: no new findings tied to the change.
+- ✅ **B18 FAQ floor is now tiered** (Content_Templates §2.5): ≥3 when PAA present (understanding moves to body), ≥8 when no PAA. Page-level ≥8-intent requirement holds across all tiers.
+- 🔧 **Reconciliation from the original proposal (corrected before landing):**
+  - Stale anchors fixed — "schema v1.11" → **v1.20**; "DR-020 pending 2026-06-07" → DR-020 **already Locked 2026-05-12**, so this lands as **new DR-034** (does not reopen the locked DR); "no DDL until v1.11" → DDL built at v1.20.
+  - Phantom columns re-mapped to the audited schema — proposal's `people_also_ask_json` / `paa_ai_content_json` / `related_searches` **do not exist**. Real PAA lives in **`seo_x_ads_keyword_serp_competitors.paa_questions text[]`**; derived signals use **`keyword_painpoint`** + **`predicted_serp_features`** (`seo_x_ads_keywords_contextual_master`) + **`seo_x_voice_search`** (incl. `is_in_pasf` as the related-searches analog); `content_gap_flag` (entity graph) for tier-3.
+- 📋 **Out of scope / follow-ups:** (a) PAA crawl wiring — n8n flow to populate `paa_checked_at` + `paa_questions` and set `intent_source_tier`. (b) Optional AI-generated PAA source (the proposal's `paa_ai_content_json`) — only if/when a PAA-AI ingest is built; not today. (c) Per-page QA automation of the §4.5.4 dedup gate.
+- ⚠️ **No existing content needs rework** — DR-034 governs how *new* pages route PAA; published pages retrofit at next freshness review when a PAA crawl runs.
+
+**References:**
+
+- Content_Templates §4.5.3 (Cannibalization Shield, the between-page parent), §4.5.4 (this DR), §2.5 B18 FAQ block.
+- `seo_x_ads_keyword_serp_competitors.paa_questions text[]` (PAA source, §6.3); `seo_x_ads_keywords_contextual_master.keyword_painpoint` / `predicted_serp_features` (§6.1); `seo_x_voice_search.is_in_pasf` (§6.4); `seo_entity_graph.content_gap_flag`.
+- DR-020 (template standard, locked 2026-05-12), DR-019 (schema emission AI-only), DR-031 (audience-first authoring), DR-030 (deferred-migration / retrofit-at-next-gate precedent).
+
+---
 
 ### [DR-033] — ICD Dual-Coding Standard (ICD-11-MMS Primary + ICD-10 / ICD-10-CM Full Coverage) (2026-06-02 → Locked 2026-06-02) 🔒🩺🌐
 
@@ -4094,6 +4143,15 @@ decision_record_governance:
 ---
 
 ## Changelog
+
+### v1.20 (2026-06-03) — DR-034 Locked (Intra-Page Answer Routing PAA × FAQ) 🔒🧭
+
+PAA × FAQ overlap raised in operator review before content production. Decision: extend §4.5.3 Cannibalization Shield to within-page scope via new §4.5.4 — understanding-PAA → body, decision-PAA → FAQ, dedup gate, page-level ≥8 intent coverage, tiered FAQ floor (≥3 with PAA / ≥8 without). PAA is subordinate to the locked template (no tail-wagging).
+
+- ➕ **DR-034 (NEW, Locked):** Intra-Page Answer Routing. Filed as a fresh DR (not a DR-020 reopen — DR-020 locked 2026-05-12). Decisions: Q1=B (separate §4.5.4), Q2=B + FAQ safety floor ≥3, Q3=A (generic field naming).
+- 🗃️ **Schema (BUILT 2026-06-03, migration `eywa_w11_05` → Schema v1.20):** `seo_website_page_master` gains `intent_source_tier` (text, CHECK paa/derived/template_only, DEFAULT template_only) + `paa_checked_at` (timestamptz). Additive; 1,376 rows default-backfilled; not in fingerprint. File renamed `…v1_19.md` → `…v1_20.md`.
+- 🔧 **Reconciled from a stale proposal:** re-anchored v1.11→v1.20, DR-020-pending→DR-034-new; re-mapped phantom columns (`people_also_ask_json`/`paa_ai_content_json`/`related_searches`) to real `paa_questions` + `keyword_painpoint` + `predicted_serp_features` + `seo_x_voice_search`.
+- 📌 Content_Templates → v1.8 (§4.5.4 added, B18 tiered floor).
 
 ### v1.19 (2026-06-02) — DR-033 Locked (ICD Dual-Coding Standard) 🔒🩺🌐
 

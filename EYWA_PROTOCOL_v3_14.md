@@ -6584,7 +6584,7 @@ case_4_pillar_must_be_long:
 
 > **The neural substrate of EYWA™ PROTOCOL** — 37 tables organized into 9 groups that together form the Knowledge Graph + operational analytics system that powers AI-era SEO for healthcare brands. *(v3.15 — restored 9 tables per DR-024 + DR-025; was 28 in v3.14)*
 >
-> 📊 **Companion Document:** ดู `Schema_Overview EYWA v1.19` สำหรับ full DDL + column descriptions ครบทุกตาราง  
+> 📊 **Companion Document:** ดู `Schema_Overview EYWA v1.20` สำหรับ full DDL + column descriptions ครบทุกตาราง  
 > Bible Part 5 เน้น **WHY และ Architecture** — Schema_Overview เน้น **WHAT — full schema + descriptions**
 
 > ⚠️ **v3.12 NOTICE — Two-Column Identity Pattern (Section 18.9):**
@@ -7595,7 +7595,7 @@ Bible Part 5 (this document):
     - Cross-references to other Bible Parts
     - Future considerations (FHIR)
   
-Schema_Overview EYWA v1.19 (companion — current):
+Schema_Overview EYWA v1.20 (companion — current):
   purpose: WHAT — full schema + column descriptions for all 37 tables
   contents:
     - Per-table: full DDL + every column described

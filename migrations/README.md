@@ -85,11 +85,12 @@ Phase 1A baseline complete: **39 EYWA tables across 9 groups** (per Schema v1.15
 
 **Note on PK migration:** brands.brand_name retains its PK status for backwards compatibility with legacy FK references. The `id` column has UNIQUE constraint (from Wave 3 preflight), and `fingerprint` now has UNIQUE constraint. Future migration could DROP PK on brand_name + ADD PK on id when legacy FK references have all migrated.
 
-### Wave 11 — Post-Phase-1B DR builds (4 migrations)
+### Wave 11 — Post-Phase-1B DR builds (5 migrations)
 24. `eywa_w11_01_dr030_v17_sensitive_topic_compliance` (2026-05-27) — DR-030: Product×Content tier-matrix columns + `compliance_max_tier` generated col + `positioning_mode`. → Schema v1.17
 25. `eywa_w11_02_dr032_v18_multi_center_hospital` (2026-05-27) — DR-032: `seo_brand_centers` table + `center_scope`/`center_slug` cols + `brand_structure` enum. → Schema v1.18
 26. `eywa_w11_03_brand_centers_notion_sync_cols` (2026-05-29) — DR-032 follow-up: `notion_id`/`notion_synced_at`/`sync_state` on `seo_brand_centers`.
 27. `eywa_w11_04_dr033_v19_icd_dual_coding_condition` (2026-06-02) — DR-033: `seo_entity_condition` +`icd11_code` (ICD-11-MMS) +`icd10_cm_code` (US ICD-10-CM) + `icd10_code` comment. Additive/nullable; **not** in fingerprint. → Schema v1.19
+28. `eywa_w11_05_dr034_v20_page_master_paa_routing` (2026-06-03) — DR-034: `seo_website_page_master` +`intent_source_tier` (text, CHECK paa/derived/template_only, DEFAULT template_only) +`paa_checked_at` (timestamptz) + CHECK + comments. Additive; 1,376 rows default-backfilled to `template_only`; **not** in fingerprint. → Schema v1.20
 
 > Source of truth = Supabase `schema_migrations`. This Wave 11 block catches the manifest up from the Phase-1A snapshot below.
 
@@ -124,6 +125,7 @@ GENERATED columns:           5 (nap_match_score, has_inconsistency, engagement_r
 | DR-030 | Locked 2026-05-20 | `eywa_w11_01` (sensitive topic compliance) |
 | DR-032 | Locked 2026-05-25 | `eywa_w11_02` + `eywa_w11_03` (multi-center hospital) |
 | DR-033 | Locked 2026-06-02 | `eywa_w11_04` (ICD dual-coding on `seo_entity_condition`) |
+| DR-034 | Locked 2026-06-03 | `eywa_w11_05` (PAA × FAQ intent routing on `seo_website_page_master`) |
 
 ## Outstanding Items
 

@@ -1,19 +1,30 @@
 # 📊 Schema Overview — EYWA™ PROTOCOL Database
 
-**Version:** v1.19 (2026-06-02) — DR-033 ICD Dual-Coding 🔒🩺🌐
+**Version:** v1.20 (2026-06-03) — DR-034 Intra-Page Answer Routing (PAA × FAQ) 🔒🧭
 **Live database:** Supabase project `lffcbeszjqzioobqfdav` ("GTGT") · region `ap-northeast-1` · Postgres 17
 **Total base tables:** 40 (in `public` schema, excluding `logs_2025`/`logs_2026` and backups)
-**Spec stack:** Bible v3.19 · Handover v1.18 · Decision Records v1.19
+**Spec stack:** Bible v3.23 · Handover v1.18 · Decision Records v1.20
 **Audit method:** Full drift audit vs live `information_schema` performed 2026-05-30. Every column listed below was verified against the live database at audit time.
 
 > **Reader heads-up:** v1.18 is a **full rewrite + audit** of v1.10. Aspirational columns from v1.0–v1.10 that never shipped are dropped (or moved to **Appendix H — Deferred v2.0 Provisions**). Every column under each table reflects the live database. Two new DR waves landed in this version:
 > - **DR-030 Sensitive Topic Compliance** (Schema v1.17, 2026-05-27)
 > - **DR-032 Multi-Center Hospital Brand Pattern** (Schema v1.18, 2026-05-27)
 > - **DR-033 ICD Dual-Coding Standard** (Schema v1.19, 2026-06-02) — `seo_entity_condition` gains `icd11_code` + `icd10_cm_code`
+> - **DR-034 Intra-Page Answer Routing (PAA × FAQ)** (Schema v1.20, 2026-06-03) — `seo_website_page_master` gains `intent_source_tier` + `paa_checked_at`
 
 ---
 
 ## Changelog
+
+### v1.20 (2026-06-03) — DR-034 Intra-Page Answer Routing (PAA × FAQ) 🔒🧭
+
+**Migration:** `eywa_w11_05_dr034_v20_page_master_paa_routing` (W11.5, applied 2026-06-03).
+
+**`seo_website_page_master` 88 → 90 cols** — adds the two columns that record where a page's on-page intent coverage came from and whether PAA has been crawled:
+- `intent_source_tier text NOT NULL DEFAULT 'template_only'` 🆕 — `CHECK IN ('paa','derived','template_only')`. Which signal drove the page's intent map: real PAA, derived (painpoint / predicted SERP features / voice), or the 8-intent template baseline.
+- `paa_checked_at timestamptz` 🆕 — last PAA crawl time. `NULL` = never crawled (trigger a crawl, *not* tier-3). SET + empty `paa_questions` = checked, genuinely no PAA → tier-2/3.
+
+Additive, non-breaking; the NOT NULL column carries a safe default so existing 1,376 rows auto-set to `template_only` (no backfill). **NOT** in the page fingerprint → no reference cascade. Drives **Content_Templates §4.5.4 Intra-Page Answer Routing** (understanding-PAA → body, decision-PAA → FAQ; page-level ≥8 intent coverage; tiered FAQ floor). PAA source is the existing **`seo_x_ads_keyword_serp_competitors.paa_questions text[]`** — the original proposal's `people_also_ask_json` / `paa_ai_content_json` / `related_searches` columns **do not exist** in the audited schema and were re-mapped to `paa_questions` + `keyword_painpoint` + `predicted_serp_features` + `seo_x_voice_search`. See **DR-034**.
 
 ### v1.19 (2026-06-02) — DR-033 ICD Dual-Coding Standard 🔒🩺🌐
 
@@ -104,7 +115,7 @@ Two-dimensional tier matrix (Product Regulatory × Content Topic) applied at the
 
 ### Earlier versions (archived)
 
-v1.10 → v1.0: see `archive/Schema_Overview_EYWA_v1_10.md` for the historical document. **Note:** v1.10 file body actually documented through v1.16 changes; v1.18 is the first version where the filename and body content match; v1.19 (DR-033) keeps them matched (file renamed `…v1_18.md` → `…v1_19.md`).
+v1.10 → v1.0: see `archive/Schema_Overview_EYWA_v1_10.md` for the historical document. **Note:** v1.10 file body actually documented through v1.16 changes; v1.18 is the first version where the filename and body content match; v1.19 (DR-033) keeps them matched (file renamed `…v1_18.md` → `…v1_19.md`); v1.20 (DR-034) likewise (file renamed `…v1_19.md` → `…v1_20.md`).
 
 ---
 
@@ -879,11 +890,11 @@ Preserved in **Appendix H — Deferred v2.0 Provisions**.
 
 > **Purpose:** Canonical URL/page master. Every page that EYWA tracks (planning → published → live) gets one row.
 > **Sync:** N↔S (Notion `🌐 Website & SEO Page Intelligent Master`)
-> **DR:** DR-008 (identity), DR-015 (marketplace reconciliation), DR-016 (viability assessment / thin page risk), DR-017 (content brief field), DR-021 (internal linking HYBRID), DR-026 (Ads LP Phase 0), DR-030 (compliance tiers), DR-032 (center_slug)
+> **DR:** DR-008 (identity), DR-015 (marketplace reconciliation), DR-016 (viability assessment / thin page risk), DR-017 (content brief field), DR-021 (internal linking HYBRID), DR-026 (Ads LP Phase 0), DR-030 (compliance tiers), DR-032 (center_slug), DR-034 (PAA × FAQ intent routing)
 > **Volume:** 100s–10,000s per brand.
 > **Current data:** 1,376 rows (VitalSleep and Wellness only).
 
-#### Columns (88 — canonical full list grouped by domain)
+#### Columns (90 — canonical full list grouped by domain)
 
 **Identity (5):**
 - `id` `uuid` PK DEFAULT `gen_random_uuid()`
@@ -1007,6 +1018,10 @@ Preserved in **Appendix H — Deferred v2.0 Provisions**.
 **Multi-Center (DR-032, 1):** 🆕 v1.18
 - `center_slug` `text` — NULL = umbrella/hospital-wide page (Home/About/Method/Membership). Non-NULL = page belongs to a center (URL: `/{lang}/{url_segment}/{slug}/`). Validated by `trg_validate_page_center_slug`: must be NULL when `brand.brand_structure='monolithic'`; must match a `seo_brand_centers.center_slug` row when `multi_center`.
 
+**Intra-Page Routing (DR-034, 2):** 🆕 v1.20
+- `intent_source_tier` `text` NOT NULL DEFAULT `'template_only'` CHECK IN (`'paa'`,`'derived'`,`'template_only'`) — source of the page's on-page intent coverage: `paa` = real PAA (`seo_x_ads_keyword_serp_competitors.paa_questions`), `derived` = `keyword_painpoint` / `predicted_serp_features` / voice signals, `template_only` = 8-intent baseline. Drives Content_Templates §4.5.4 routing + tiered FAQ floor.
+- `paa_checked_at` `timestamptz` — last PAA crawl time. NULL = never crawled (→ trigger crawl, **not** tier-3). SET + empty `paa_questions` = checked, genuinely no PAA → tier-2/3.
+
 **Sync (3):**
 - `notion_id text`, `notion_synced_at timestamptz`, (`sync_state` carried by other tables; page_master uses `notion_synced_at` only currently)
 
@@ -1027,6 +1042,7 @@ Preserved in **Appendix H — Deferred v2.0 Provisions**.
 | `seo_website_page_master_product_regulatory_tier_check` | `product_regulatory_tier BETWEEN 1 AND 4` |
 | `seo_website_page_master_content_topic_tier_check` | `content_topic_tier BETWEEN 1 AND 4` |
 | `seo_website_page_master_sensitive_topic_flag_check` | `sensitive_topic_flag IN ('none','low','medium','high','critical')` |
+| `seo_website_page_master_intent_source_tier_check` 🆕 v1.20 | `intent_source_tier IN ('paa','derived','template_only')` |
 
 #### Triggers
 

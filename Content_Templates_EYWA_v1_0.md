@@ -3,10 +3,20 @@
 > **Companion document to** EYWA Bible v3.19 + Schema Overview v1.15
 > **Universal Content Production Standards across 13 brands × 6 verticals**
 
-**Version:** v1.7 (LOCKED 2026-05-18 — companion refs bumped to Bible v3.21 + DR v1.15 per DR-029 Universal Brand Design System; templates now consume design/tokens/ via theme implementation; T1-T22 + T-ADS-X structurally unchanged)
+**Version:** v1.8 (2026-06-03 — ➕ §4.5.4 Intra-Page Answer Routing (PAA × FAQ) + B18 tiered FAQ floor per DR-034; additive, T1-T22 + T-ADS-X structurally unchanged. v1.7 LOCKED 2026-05-18 per DR-029 design-token integration remains in force.)
 **Status:** **LOCKED 2026-05-12** for T1-T22 (Universal Content Template Standard per DR-020); T-ADS-X (DR-026) Proposed status retained until 2026-06-21 lock
-**Companion to:** Bible v3.19 + Schema Overview v1.15 + DECISION_RECORDS v1.13
+**Companion to:** Bible v3.23 + Schema Overview v1.20 + DECISION_RECORDS v1.20
 **Format:** Append-only with semantic versioning (v1.0 → v1.5 backward compatible)
+
+## v1.8 Changelog (2026-06-03) — Intra-Page Answer Routing (DR-034 Locked)
+
+Operator review raised a PAA × FAQ overlap concern before content production. DR-034 extends §4.5.3 Cannibalization Shield to within-page scope:
+
+- ➕ **§4.5.4 NEW — Intra-Page Answer Routing (PAA × FAQ)** — understanding-PAA → body (H3 in required block), decision-PAA → FAQ; PAA subordinate to the locked template (no tail-wagging); dedup gate (1 question = 1 canonical location); 3-tier source fallback (paa / derived / template_only).
+- 🔄 **§2.5 B18 FAQ block** — floor is now **tiered by PAA availability**: ≥3 Q&A when PAA present (understanding moves to body), ≥8 when no PAA. Page-level ≥8-intent coverage required across all tiers (replaces the flat ≥8 FAQ floor).
+- 🗃️ **Schema (Schema v1.20, migration `eywa_w11_05`):** `seo_website_page_master.intent_source_tier` + `paa_checked_at`. PAA source = `seo_x_ads_keyword_serp_competitors.paa_questions text[]` (re-mapped from the proposal's non-existent `people_also_ask_json`).
+- 📌 T1-T22 + T-ADS-X: **NO structural change** — §4.5.4 is a cross-cutting editorial standard, not a template edit. v1.7 DR-029 lock remains in force.
+- 🔄 Companion ref: DECISION_RECORDS → v1.20.
 
 ## v1.7 Changelog (2026-05-18) — Design Token Integration (DR-029 Locked)
 
@@ -460,8 +470,13 @@ B18_faq_block:
     8 FAQ Intent Types (Bible Part 6.X):
     [What is X], [Can X], [Is X], [How to X], [How serious is X],
     [Difference between X and Y], [Cost of X], [Who is X for]
-  minimum_floor: "≥8 Q&A across ≥7 of the 8 intent types per pillar (v1.1 🆕)"
-  rationale: "OSA Master Example pattern — ensures full intent coverage for AI extraction"
+  # 🆕 v1.8 (DR-034) — FAQ floor ขึ้นกับ PAA tier (ดู §4.5.4)
+  floor_by_tier:
+    tier_1_paa_present:  "≥3 Q&A (decision-PAA + gaps) — understanding-PAA ไปอยู่ body"
+    tier_2_3_no_paa:     "≥8 Q&A — FAQ แบก intent coverage ทั้งหมด"
+  page_level_requirement: "≥8 intents ครอบคลุมทั้งหน้า (body + FAQ) เสมอทุก tier"
+  routing_dependency: "ดู §4.5.4 — understanding-PAA → body, decision-PAA → FAQ"
+  rationale: "OSA Master Example pattern + DR-034 page-level coverage (เลิก flat ≥8 FAQ floor)"
   schema_emit: FAQPage + Question + Answer (per DR-019: emit but expect zero SERP)
   required_in: T1, T2, T6, T6a, T7, T12
   example_source: sample sleep apnea SECTION 9
@@ -2160,6 +2175,98 @@ cannibalization_shield_principle:
     T6 (L5): "Does this page list PRICES or CASES? If yes → BLOCK. Link to T2/T8 instead."
   
   cross_reference: "Bible §4.13 Market Reconciliation + DR-016 Page Viability §4.14"
+```
+
+#### 4.5.4 Intra-Page Answer Routing (PAA × FAQ) 🆕 v1.8 (DR-034)
+
+Extends §4.5.3 Cannibalization Shield from **between-page** separation to **within-page** separation (body section vs FAQ block). PAA = demand evidence that *serves* the locked template — it does not dictate structure.
+
+```yaml
+# §4.5.3 = separation ระหว่างหน้า (L1/L2/L4/L5/L7)
+# §4.5.4 = separation ภายในหน้าเดียว (body section vs FAQ block)
+# PAA source: seo_x_ads_keyword_serp_competitors.paa_questions (text[])
+#   ⚠️ Audited schema v1.20 — NOT people_also_ask_json (ไม่มี column นั้นจริง).
+
+principle: |
+  1 question = 1 canonical answer location ในหน้า.
+  PAA = demand evidence (signal ว่าคนถามอะไรจริง) → ใช้ route + prioritize.
+  PAA รับใช้โครง template — ไม่ใช่กำหนดโครง (subordination).
+
+# ── PAA Subordination (กัน tail-wagging-the-dog) ──────────────
+paa_subordination_rule:
+  hard_rules:
+    - PAA ห้ามสร้าง top-level section (H2) ใหม่ที่ไม่มีใน template
+      → PAA ที่ relevant ลงเป็น H3 ภายใน required block ที่ใกล้สุด
+    - PAA ห้ามทำให้ลบ ย่อ หรือแทนที่ REQUIRED block (สอดคล้อง Layer 3 HARD RULE)
+    - ไม่จำเป็นต้องตอบ PAA ทุกข้อ — ตอบเฉพาะที่เสริม value ของหน้านี้
+  relevance_gate:
+    keep_if:  "ตรง page primary intent + funnel stage"
+    drop_if:  "ดึงไปคนละ intent (เช่น commercial PAA บน informational page)"
+    cross_intent_paa: "route สั้นๆ ไป FAQ + link out ตาม §4.5.3 (เช่น pricing PAA → link T13)"
+
+# ── PAA Role Taxonomy (เรียงตามความถี่ที่เจอจริง) ─────────────
+paa_roles:
+  confirm:     "ยืนยันว่า block ที่ตั้งใจเขียน ตรง demand จริง (พบบ่อยสุด)"
+  prioritize:  "ภายใน block บอกว่า sub-topic ไหนควรเด่น/ขึ้นก่อน"
+  surface_gap: "PAA ชี้ sub-topic ที่ template ไม่ได้นึกถึง → เพิ่ม H3 ภายใน block ที่เกี่ยวข้อง"
+
+# ── Routing: understanding → body | decision → FAQ ───────────
+routing_rule:
+  understanding_intent:   # What / Why / How / Can / Is — เชิงความเข้าใจ
+    destination: "body (H2/H3 ภายใน required block)"
+    answer_style: "ย่อหน้าเต็ม + direct-answer 40-60 คำ ต้นหัวข้อ (featured-snippet ready)"
+  decision_intent:        # Cost / Where / Who / Book / vs / How-long — เชิงตัดสินใจ
+    destination: "FAQ block (B18)"
+    answer_style: "2-4 ประโยค ตรงประเด็น"
+
+dedup_gate:               # กฎเหล็ก
+  - ถ้าคำถามถูกตอบใน body แล้ว → ห้ามสร้าง FAQ ข้อเดียวกันซ้ำ
+  - FAQ อ้างถึง body ได้ด้วย anchor link สั้น ("ดูรายละเอียด §7") แทนตอบซ้ำ
+
+# ── Coverage Floor (วัดที่ระดับหน้า ไม่ใช่ FAQ block) ─────────
+coverage_floor:
+  page_intent_coverage:   "≥8 intents ครอบคลุมทั้งหน้า (body PAA-mapped + FAQ รวมกัน)"
+  faq_block_safety_floor: "≥3 Q&A เสมอ (กัน FAQ บางเกินจน AEO อ่อน — Q2 decision)"
+  rationale: |
+    PAA ส่วนใหญ่ไป confirm body ไม่ได้ย้ายเข้า FAQ → ถ้าตั้ง FAQ floor สูง
+    จะฝืนยัด understanding-PAA มาเป็น FAQ (ซ้ำ body). วัดที่ page-level จึงถูกต้อง.
+
+# ── Source Fallback Chain (re-mapped to audited schema v1.20) ─
+faq_source_fallback_chain:
+  tier_1_paa_present:        # paa_questions text[] มีข้อมูล
+    source: "seo_x_ads_keyword_serp_competitors.paa_questions (text[])"
+    body: "understanding-PAA → H3 ภายใน required blocks"
+    faq:  "decision-PAA + 8-intent gaps ที่ PAA ไม่ครอบคลุม"
+    floor: "page ≥8 intents | FAQ ≥3 Q&A"
+    intent_source_tier: 'paa'
+  tier_2_derived:            # paa_questions ว่าง แต่มี signal อื่น
+    sources_priority:
+      - "seo_x_ads_keywords_contextual_master.keyword_painpoint"
+      - "seo_x_ads_keywords_contextual_master.predicted_serp_features"
+      - "seo_x_voice_search (voice_query + is_in_pasf = related-search analog)"
+    body: "derive understanding-questions จาก painpoint"
+    faq:  "8-intent template เต็ม"
+    floor: "page ≥8 intents | FAQ ≥8 Q&A"
+    intent_source_tier: 'derived'
+  tier_3_template_only:      # ไม่มี signal เลย
+    body: "เขียนตาม template sections ปกติ (ไม่ force PAA mapping)"
+    faq:  "8-intent template เต็ม = baseline (FAQ เป็นพระเอกแทน PAA)"
+    floor: "page ≥8 intents | FAQ ≥8 Q&A"
+    intent_source_tier: 'template_only'
+    flag: "content_gap_flag = true (seo_entity_graph)"
+
+# ── สถานะ checked vs not-checked (seo_website_page_master.paa_checked_at) ──
+paa_checked_semantics:
+  paa_checked_at_NULL:        "ยังไม่เคย crawl → trigger PAA crawl ก่อน (ไม่ใช่ tier-3)"
+  paa_checked_at_SET_empty:   "ตรวจแล้ว paa_questions ว่าง → ตรวจแล้วไม่มี PAA จริง → tier-2/3"
+  rationale: "แยก 'ตรวจแล้วไม่มี' ออกจาก 'ยังไม่ตรวจ' — คนละ action"
+
+qa_check_per_page:
+  - "ทุก understanding-PAA ที่ keep → อยู่ใน body ไม่ใช่ FAQ?"
+  - "ไม่มี FAQ Q ซ้ำกับ body section? (dedup_gate)"
+  - "page coverage ≥8 intents? FAQ ≥3 Q&A?"
+  - "PAA ที่ drop → คนละ intent จริง + (ถ้า cross-cluster) link out แล้ว?"
+  - "intent_source_tier + paa_checked_at ถูกบันทึก? (seo_website_page_master)"
 ```
 
 ---
