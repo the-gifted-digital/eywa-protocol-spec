@@ -33,13 +33,13 @@ reports/
 **Spec snapshot pinned (per Handover §9.3):**
 
 ```yaml
-bible: v3.14
-schema: v1.10
-templates: v1.3-DRAFT
-handover: v1.8
-decision_records: v1.8
-drs_locked: 16 (DR-001..018 minus 5 Proposed)
-drs_proposed: 6 (DR-013/014/019/020/021/022)
+bible: v3.23
+schema: v1.20
+templates: v1.8
+handover: v1.18
+decision_records: v1.20
+drs_locked: 31 (DR-001..022 + 024/025/028..034)
+drs_proposed: 1 (DR-026)
 drs_opted_in_early: [] (or list if any)
 snapshot_taken_at: {YYYY-MM-DD}
 snapshot_taken_at_stage: Stage 1 Phase A entry

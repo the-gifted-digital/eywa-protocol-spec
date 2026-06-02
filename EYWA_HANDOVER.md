@@ -5,7 +5,7 @@
 
 **Document Version:** 1.18  
 **Last Updated:** 2026-05-25  
-**Companion to:** EYWA Bible v3.23 (Section 25.13 propagation pending) + Schema Overview v1.16 (Wave 11 → v1.17 pending; DR-032 → v1.18 pending) + DECISION_RECORDS v1.18 + Content_Templates_EYWA_v1_0.md v1.7 (LOCKED)  
+**Companion to:** EYWA Bible v3.23 (Part 25.13 + DR-033/034 prose propagation pending) + Schema Overview v1.20 + DECISION_RECORDS v1.20 + Content_Templates_EYWA_v1_0.md v1.8 (LOCKED + §4.5.4 per DR-034)  
 **Created by:** The Gifted Digital Marketing Co., Ltd.
 
 ---

@@ -4,11 +4,11 @@
 
 | 📖 Bible | 📊 Schema | 🏗️ Phase | ⚖️ License |
 |----------|-----------|-----------|-------------|
-| **v3.19** | **v1.16** | **1A Built ✅** | Proprietary |
+| **v3.23** | **v1.20** | **1A Built ✅** | Proprietary |
 
 <!-- Badges (render on GitHub.com): -->
-[![Bible](https://img.shields.io/badge/Bible-v3.19-blue?style=flat-square)](./EYWA_PROTOCOL_v3_14.md)
-[![Schema](https://img.shields.io/badge/Schema-v1.19-green?style=flat-square)](./Schema_Overview_EYWA_v1_19.md)
+[![Bible](https://img.shields.io/badge/Bible-v3.23-blue?style=flat-square)](./EYWA_PROTOCOL_v3_14.md)
+[![Schema](https://img.shields.io/badge/Schema-v1.20-green?style=flat-square)](./Schema_Overview_EYWA_v1_20.md)
 [![Migrations](https://img.shields.io/badge/Migrations-Phase%201A%20Built-success?style=flat-square)](./migrations/README.md)
 [![Phase](https://img.shields.io/badge/Phase-1%20Foundation-orange?style=flat-square)](./PHASE_1_DECISIONS.md)
 [![License](https://img.shields.io/badge/License-Proprietary-red?style=flat-square)]()
@@ -35,12 +35,12 @@ EYWA™ is a registered trademark of **The Gifted Digital Marketing Co., Ltd.** 
 | Document | Purpose | Lines | Status |
 |----------|---------|-------|--------|
 | `PROJECT_MEMORY.md` | Project context for AI sessions + onboarding | ~880 | 🧠 Memory (local-only, gitignored) |
-| `EYWA_PROTOCOL_v3_14.md` | The Bible — full specification | ~27,000 | 🔒 Active (v3.19) |
-| `Schema_Overview_EYWA_v1_19.md` | Database schema companion (40 base tables, full live-audit rewrite) | ~1,700 | 🔒 Active (v1.19) |
-| `EYWA_HANDOVER.md` | Operating manual for Claude/AI | ~3,100 | 🔒 Active (v1.13) |
-| `DECISION_RECORDS.md` | Architecture decision log | ~3,300 | 🔒 Active (v1.13) |
-| `PHASE_1_DECISIONS.md` | Phase 1 quick reference | ~440 | 🔒 Active (v1.8) |
-| `Content_Templates_EYWA_v1_0.md` | Universal Content Templates (DR-020 companion, v1.3 internal) | ~2,420 | 🌱 DRAFT — pending DR-020 lock 2026-06-07 |
+| `EYWA_PROTOCOL_v3_14.md` | The Bible — full specification | ~27,000 | 🔒 Active (v3.23 — filename sticky at v3_14) |
+| `Schema_Overview_EYWA_v1_20.md` | Database schema companion (40 base tables, full live-audit rewrite) | ~1,700 | 🔒 Active (v1.20) |
+| `EYWA_HANDOVER.md` | Operating manual for Claude/AI | ~3,100 | 🔒 Active (v1.18) |
+| `DECISION_RECORDS.md` | Architecture decision log | ~3,300 | 🔒 Active (v1.20) |
+| `PHASE_1_DECISIONS.md` | Phase 1 quick reference | ~440 | 🔒 Active (v1.9) |
+| `Content_Templates_EYWA_v1_0.md` | Universal Content Templates (DR-020 companion, v1.8 internal) | ~2,420 | 🔒 Active (v1.8 — DR-020 locked 2026-05-12 + §4.5.4 per DR-034) |
 | `examples/T1-medical-condition-SKELETON.md` | T1 boilerplate (Part 1/2 separation reference) | ~840 | 🌱 DRAFT |
 | `examples/T1-osa-vth-biodent-WORKED-EXAMPLE.md` | T1 OSA filled example (VTH dental sleep angle) | ~1,060 | 🌱 DRAFT |
 | `examples/SECTION-2-PATTERNS-REFERENCE.md` | Section 2 rendered patterns × 25 templates | ~534 | 🌱 DRAFT |
@@ -51,53 +51,22 @@ EYWA™ is a registered trademark of **The Gifted Digital Marketing Co., Ltd.** 
 
 ---
 
-## 🆕 Latest Update — v3.15 / v1.11 (2026-05-12)
+## 🆕 Latest Update — Bible v3.23 / Schema v1.20 (2026-06-03)
 
-**Schema Catch-Up: Restore Forgotten Tables (DR-024 + DR-025 Locked)**
+**Current spec stack — brands bump to these versions:**
+**Bible v3.23** · **Schema v1.20** · **Handover v1.18** · **Decision Records v1.20** · **Content_Templates v1.8** · **PHASE_1 v1.9**
 
-Schema_Overview restored to parity with Bible Appendix B. **9 tables that were specified in Bible but silently dropped from Schema between v1.0 and v1.10** are now back. Operator confirmed forgotten (not deliberate strategy change); paired locked DRs ship the catch-up.
+Most recent locked decisions (full detail + rationale in [`DECISION_RECORDS.md`](./DECISION_RECORDS.md)):
 
-- ✅ **DR-024 (Locked 2026-05-12)** — Restore 9 Entity Extension Tables
-  - 🆕 `seo_entity_product` (skincare/supplement products)
-  - 🆕 `seo_entity_condition` (**primary T1 medical-condition template binding**)
-  - 🆕 `seo_entity_drug` (Rx/OTC pharma)
-  - 🆕 `seo_entity_anatomy` (FMA/UBERON coded body anatomy)
-  - 🆕 `seo_entity_organization` (external orgs — separate from `brands` for own brands)
-  - 🆕 `seo_entity_lab_test` (LOINC/CPT diagnostic tests)
-  - Existing: `seo_entity_ingredients`, `seo_entity_procedures`, `seo_entity_devices` (preserved)
-  - `seo_programmatic_templates` renumbered §11.4 → §11.10 (reclassified as template registry)
+| DR | Locked | What | Schema |
+|----|--------|------|--------|
+| **DR-034** Intra-Page Answer Routing (PAA × FAQ) | 2026-06-03 | §4.5.4 — understanding-PAA → body, decision-PAA → FAQ; tiered FAQ floor; PAA subordinate to the locked template | **v1.20** — `page_master` +`intent_source_tier`, `paa_checked_at` |
+| **DR-033** ICD Dual-Coding Standard | 2026-06-02 | `MedicalCondition.code[]` = ICD-11-MMS → ICD-10 → ICD-10-CM → SNOMED | v1.19 — `seo_entity_condition` +`icd11_code`, `icd10_cm_code` |
+| **DR-032** Multi-Center Hospital Brand Pattern | 2026-05-25 | `brand_structure: monolithic \| multi_center` chosen upfront at onboarding | v1.18 — `seo_brand_centers` + `center_slug` |
+| **DR-031** Google Generative AI Search Alignment | 2026-05-24 | llms.txt deprioritized; query fan-out + audience-first framing | — (Bible v3.23, no DDL) |
+| **DR-030** Sensitive Topic Compliance | 2026-05-20 | Product × Content tier matrix + `positioning_mode` | v1.17 — `page_master` +6 compliance cols |
 
-- ✅ **DR-025 (Locked 2026-05-12)** — Restore Local SEO Tables + Consolidate Branches
-  - 🆕 `seo_reviews` — multi-platform reviews + PDPA-safe response (Flow E1)
-  - 🆕 `seo_directory_listings` — ~50 directories NAP audit (Flow E3)
-  - 🆕 `seo_gbp_posts` — GBP Posts management + local archive (Flow E2/E4)
-  - 🔄 `seo_branches` enhanced ~25 → ~40 columns (full Bible Table 24 spec)
-  - 🔄 `seo_local_rankings` FK consolidation: `location_id` → `branch_id`
-  - 🔄 **Bible v3.14 → v3.15:** all `seo_locations` refs renamed to `seo_branches` (8 inline refs; semantic content unchanged)
-
-**Schema v1.11 stats:**
-- Group 1 (Brand & Organization): 4 → 7 tables
-- Group 9 (Entity Extensions & Templates): 4 → 10 tables (9 ext + 1 template)
-- **Total: 28 → 37 tables**
-
-**New migrations (Phase 1A.3, 11 files):**
-- `009_enhance_seo_branches.sql` (DR-025)
-- `010_create_seo_reviews.sql` (DR-025)
-- `011_create_seo_directory_listings.sql` (DR-025)
-- `012_create_seo_gbp_posts.sql` (DR-025)
-- `013_rename_local_rankings_fk.sql` (DR-025)
-- `014_restore_entity_product.sql` (DR-024)
-- `015_restore_entity_condition.sql` (DR-024)
-- `016_restore_entity_drug.sql` (DR-024)
-- `017_restore_entity_anatomy.sql` (DR-024)
-- `018_restore_entity_organization.sql` (DR-024)
-- `019_restore_entity_lab_test.sql` (DR-024)
-
-**Brand impact:**
-- Active brands refresh `eywa_spec_snapshot` at next Stage gate (no mid-stage forced refactor)
-- 11 empty brand repos use v3.15 / v1.11 / v1.9 / v1.9 / v1.7 from inception
-- T1 medical-condition template now schema-bindable (was implementable on paper only)
-- Clinic Phase 5 (Local SEO + GBP) unblocked
+> **Brand snapshot:** new brands inherit the current stack via `templates/brand-config.template.json` → `eywa_spec_snapshot` (defaulted to the versions above; locked set = DR-001..022 + 024/025/028..034). Earlier waves — DR-024/025 schema catch-up (v3.15 / v1.11), DR-028 Brand Genesis Protocol, DR-029 Universal Brand Design System — see the `DECISION_RECORDS.md` changelog.
 
 ---
 

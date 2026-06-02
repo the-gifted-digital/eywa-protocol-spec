@@ -89,6 +89,8 @@ Rationale: Observed in 3+ brand bootstraps (list them)
 | Templates Version | Date | Aligns With |
 |------------------|------|-------------|
 | 1.0 | 2026-05-11 | Bible v3.14 / Schema v1.10 / Handover v1.8 / DR v1.8 (incl. DR-022 Proposed) |
+| 1.1 | 2026-05-25 | + `brand_structure` (DR-032) — every brand picks `monolithic \| multi_center` upfront |
+| 1.2 | 2026-06-03 | **Current.** Snapshot defaults refreshed → Bible v3.23 / Schema v1.20 / Templates v1.8 / Handover v1.18 / DR v1.20. Locked set DR-001..022 + 024/025/028..034; Proposed DR-026 |
 
 ---
 
