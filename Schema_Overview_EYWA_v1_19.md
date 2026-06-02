@@ -1,18 +1,30 @@
 # 📊 Schema Overview — EYWA™ PROTOCOL Database
 
-**Version:** v1.18 (2026-05-30) — Phase 1B BUILD COMPLETE 🔒🏥⚖️
+**Version:** v1.19 (2026-06-02) — DR-033 ICD Dual-Coding 🔒🩺🌐
 **Live database:** Supabase project `lffcbeszjqzioobqfdav` ("GTGT") · region `ap-northeast-1` · Postgres 17
 **Total base tables:** 40 (in `public` schema, excluding `logs_2025`/`logs_2026` and backups)
-**Spec stack:** Bible v3.19 · Handover v1.18 · Decision Records v1.16
+**Spec stack:** Bible v3.19 · Handover v1.18 · Decision Records v1.19
 **Audit method:** Full drift audit vs live `information_schema` performed 2026-05-30. Every column listed below was verified against the live database at audit time.
 
 > **Reader heads-up:** v1.18 is a **full rewrite + audit** of v1.10. Aspirational columns from v1.0–v1.10 that never shipped are dropped (or moved to **Appendix H — Deferred v2.0 Provisions**). Every column under each table reflects the live database. Two new DR waves landed in this version:
 > - **DR-030 Sensitive Topic Compliance** (Schema v1.17, 2026-05-27)
 > - **DR-032 Multi-Center Hospital Brand Pattern** (Schema v1.18, 2026-05-27)
+> - **DR-033 ICD Dual-Coding Standard** (Schema v1.19, 2026-06-02) — `seo_entity_condition` gains `icd11_code` + `icd10_cm_code`
 
 ---
 
 ## Changelog
+
+### v1.19 (2026-06-02) — DR-033 ICD Dual-Coding Standard 🔒🩺🌐
+
+**Migration:** `eywa_w11_04_dr033_v19_icd_dual_coding_condition` (W11.4, applied 2026-06-02).
+
+**`seo_entity_condition` 38 → 40 cols** — adds the ICD-11 + US-CM coding fields that the §11.5 spec always intended but the live build omitted:
+- `icd11_code text` 🆕 — ICD-11-MMS stem code (primary going forward). JSON-LD `codingSystem="ICD-11-MMS"`.
+- `icd10_cm_code text` 🆕 — US ICD-10-CM clinical modification (granular; EN/international SEO). `codingSystem="ICD-10-CM"`.
+- `icd10_code` (existing) comment clarified = WHO base ICD-10 (ICD-10-TM aligned for TH). `codingSystem="ICD-10"`.
+
+Additive, nullable, non-breaking. **NOT** added to the entity fingerprint (`seo_entity_graph.icd_10_code`, WHO base, unchanged) → no reference cascade. Column naming follows the table's existing `icd10_code` (no-underscore) convention. See **DR-033**.
 
 ### v1.18 (2026-05-30) — DR-032 Multi-Center Hospital + Full Audit Rewrite 🔒🏥📐
 
@@ -92,7 +104,7 @@ Two-dimensional tier matrix (Product Regulatory × Content Topic) applied at the
 
 ### Earlier versions (archived)
 
-v1.10 → v1.0: see `archive/Schema_Overview_EYWA_v1_10.md` for the historical document. **Note:** v1.10 file body actually documented through v1.16 changes; v1.18 is the first version where the filename and body content match.
+v1.10 → v1.0: see `archive/Schema_Overview_EYWA_v1_10.md` for the historical document. **Note:** v1.10 file body actually documented through v1.16 changes; v1.18 is the first version where the filename and body content match; v1.19 (DR-033) keeps them matched (file renamed `…v1_18.md` → `…v1_19.md`).
 
 ---
 
@@ -660,7 +672,7 @@ When `brand_structure='monolithic'`: unchanged DR-004 behavior `{brand_domain}/{
 | `ai_entity_summary` `text` | AI-generated brief for Schema.org `description` |
 | `hreflang_group` `text` | Multilingual entity grouping |
 | `aliases` `text` ⚠️ | Plain text (NOT jsonb as some legacy docs claim) |
-| `icd_10_code` `text` | WHO base ICD-10 (ICD-10-TM aligned for TH market). Emitted in `MedicalCondition.code[]` as `codingSystem:"ICD-10"`. Per **DR-033**, pairs with `icd_11_code` (ICD-11-MMS, primary) + optional `icd_10_cm_code` (US clinical-mod, EN/intl SEO) — the latter two columns land at the next migration wave (Schema_Overview unbumped until then, per DR-030 precedent). |
+| `icd_10_code` `text` | WHO base ICD-10 (ICD-10-TM aligned for TH market) — **universal entity code + fingerprint key**. Emitted in `MedicalCondition.code[]` as `codingSystem:"ICD-10"`. Per **DR-033**, the full per-condition coding set (`icd11_code` ICD-11-MMS primary + `icd10_cm_code` US clinical-mod) lives on **`seo_entity_condition` §11.5** (built v1.19), not on this universal table. |
 | `content_gap_flag` `boolean` | True = entity surfaces but no canonical page yet |
 | `related_entities_fps` `text[]` | Array of fingerprints (for quick lookup; canonical edges live in seo_entity_relationships) |
 | `center_scope` `text[]` 🆕 v1.18 | DR-032 — orthogonal to `brand_scope[]`. Lists center_slugs within the brand that own/use the entity. GIN-indexed. |
@@ -1337,10 +1349,10 @@ Key fields: `cpt_code`, `hcpcs_code`, `thai_procedure_code`, `procedure_category
 Product master for skincare/supplements/medical devices that are productized offerings. Bridges DR-024.
 Key fields: `product_sku`, `product_brand_id`, `gtin`, `manufacturer_name`, `product_category`, `ingredients_list_inci text[]`, `claims_marketing text[]`, `claims_substantiated text[]`, `price_thb numrange`, `pack_size`, `unit_count`, `storage_conditions`, `shelf_life_months`, `is_prescription_only`, `is_otc`, `is_supplement`, `regulatory_registration_no`, `regulatory_registration_country`.
 
-### 11.5 `seo_entity_condition` 🆕 v1.11 (38 cols) — entity_type='condition' (T1 CRITICAL)
+### 11.5 `seo_entity_condition` 🆕 v1.11 (40 cols, +2 v1.19 DR-033) — entity_type='condition' (T1 CRITICAL)
 
-ICD-10 / SNOMED CT / MeSH. **T1 page template binding** — every condition page pulls from this. CRITICAL for medical content authority.
-Key fields: `icd_10_code`, `icd_11_code`, `snomed_ct_id`, `mesh_id`, `umls_cui`, `condition_category`, `body_system text[]`, `severity_levels jsonb`, `prevalence_estimate text`, `typical_age_onset numrange`, `symptoms_list_fps text[]` (FK → entity_graph), `risk_factors_list_fps text[]`, `diagnosis_methods text[]`, `treatment_options_fps text[]`, `prognosis text`, `is_chronic boolean`, `is_emergency boolean`, `is_contagious boolean`, `is_genetic boolean`, `who_classification`.
+ICD-11 / ICD-10 / ICD-10-CM / SNOMED CT / MeSH. **T1 page template binding** — every condition page pulls from this. CRITICAL for medical content authority. **DR-033 ICD coding set:** `icd11_code` (ICD-11-MMS, primary) · `icd10_code` (WHO base / ICD-10-TM) · `icd10_cm_code` (US clinical-mod) · `icd10_codes_related[]` — emitted together in `MedicalCondition.code[]`, ICD-11 first.
+Key fields: `icd11_code` 🆕 v1.19, `icd10_code` (WHO base), `icd10_cm_code` 🆕 v1.19, `icd10_codes_related[]`, `snomed_ct_id`, `mesh_id`, `umls_cui`, `condition_category`, `body_system text[]`, `severity_levels jsonb`, `prevalence_estimate text`, `typical_age_onset numrange`, `symptoms_list_fps text[]` (FK → entity_graph), `risk_factors_list_fps text[]`, `diagnosis_methods text[]`, `treatment_options_fps text[]`, `prognosis text`, `is_chronic boolean`, `is_emergency boolean`, `is_contagious boolean`, `is_genetic boolean`, `who_classification`.
 
 ### 11.6 `seo_entity_drug` 🆕 v1.11 (42 cols) — entity_type='drug'
 
@@ -1698,12 +1710,13 @@ Recent migration waves applied to live DB (verified via `supabase_migrations.sch
 | **W11.1** | **2026-05-27** | **eywa_w11_01_dr030_v17_sensitive_topic_compliance** | **DR-030** |
 | **W11.2** | **2026-05-27** | **eywa_w11_02_dr032_v18_multi_center_hospital** | **DR-032** |
 | **W11.3** | **2026-05-29** | **eywa_w11_03_brand_centers_notion_sync_cols** (add notion_id/notion_synced_at/sync_state) | **DR-032 follow-up** |
+| **W11.4** | **2026-06-02** | **eywa_w11_04_dr033_v19_icd_dual_coding_condition** (seo_entity_condition +icd11_code +icd10_cm_code) | **DR-033** |
 
 ---
 
-**END OF SCHEMA OVERVIEW v1.18**
+**END OF SCHEMA OVERVIEW v1.19**
 
-> Generated 2026-05-30 from full audit against live Supabase project `lffcbeszjqzioobqfdav`. Cross-referenced against DECISION_RECORDS.md (DR-001 through DR-032), Bible v3.19, and Handover v1.18.
+> Generated 2026-05-30 from full audit against live Supabase project `lffcbeszjqzioobqfdav` (v1.18); v1.19 delta (DR-033, W11.4) verified live 2026-06-02. Cross-referenced against DECISION_RECORDS.md (DR-001 through DR-033), Bible v3.19, and Handover v1.18.
 >
 > For schema corrections: file an issue in the spec repo or amend via DR-NNN process. Direct edits to this document without a DR are discouraged (the doc is meant to mirror live DB; live DB is the source of truth, this doc is the human-readable index).
 

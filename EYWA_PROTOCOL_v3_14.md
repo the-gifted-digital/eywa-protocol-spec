@@ -6584,7 +6584,7 @@ case_4_pillar_must_be_long:
 
 > **The neural substrate of EYWA™ PROTOCOL** — 37 tables organized into 9 groups that together form the Knowledge Graph + operational analytics system that powers AI-era SEO for healthcare brands. *(v3.15 — restored 9 tables per DR-024 + DR-025; was 28 in v3.14)*
 >
-> 📊 **Companion Document:** ดู `Schema_Overview EYWA v1.18` สำหรับ full DDL + column descriptions ครบทุกตาราง  
+> 📊 **Companion Document:** ดู `Schema_Overview EYWA v1.19` สำหรับ full DDL + column descriptions ครบทุกตาราง  
 > Bible Part 5 เน้น **WHY และ Architecture** — Schema_Overview เน้น **WHAT — full schema + descriptions**
 
 > ⚠️ **v3.12 NOTICE — Two-Column Identity Pattern (Section 18.9):**
@@ -6881,9 +6881,7 @@ CREATE TABLE seo_entity_graph (
   -- External knowledge graph linkage
   wikipedia_url text,
   wikidata_id text,                               -- Q-number
-  icd_10_code text,                               -- WHO base ICD-10 (ICD-10-TM aligned for TH); entity fingerprint key
-  icd_10_cm_code text,                            -- US ICD-10-CM clinical mod (granular; EN/intl SEO) — DR-033, migration pending
-  icd_11_code text,                               -- ICD-11-MMS stem code (primary going forward) — DR-033
+  icd_10_code text,                               -- WHO base ICD-10 (ICD-10-TM aligned); universal entity code + fingerprint key. Full per-condition coding set (ICD-11-MMS + ICD-10-CM) lives on seo_entity_condition per DR-033
   mesh_id text,
   snomed_id text,
   cas_number text,                                -- CAS Registry (chemicals)
@@ -7597,7 +7595,7 @@ Bible Part 5 (this document):
     - Cross-references to other Bible Parts
     - Future considerations (FHIR)
   
-Schema_Overview EYWA v1.18 (companion — current):
+Schema_Overview EYWA v1.19 (companion — current):
   purpose: WHAT — full schema + column descriptions for all 37 tables
   contents:
     - Per-table: full DDL + every column described
