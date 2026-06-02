@@ -1,8 +1,8 @@
 # 📖 คัมภีร์ EYWA™ PROTOCOL
 ## The Universal Knowledge Graph SEO Specification for the AI Era
 
-**Version:** 3.23  
-**Last Updated:** 2026-05-24  
+**Version:** 3.24  
+**Last Updated:** 2026-06-03  
 **Trademark:** EYWA™ (Class 35+42, DIP Thailand, filed 2026-04-20)  
 **Created by:** The Gifted Digital Marketing Co., Ltd.  
 **Scope:** Universal standard สำหรับการบริหารจัดการ SEO + Knowledge Graph แบบ multi-vertical, multi-brand, multi-specialty, multi-lingual, multi-location, **AI-future-ready** ในยุค AI Search (2026+) — ครอบคลุม healthcare verticals (clinic ทุก specialty, hospital, dental, sleep medicine, aesthetic, wellness, healthcare media) extensible to other regulated YMYL niches  
@@ -143,6 +143,15 @@ Throughout this Bible:
 
 
 ## 📜 Changelog
+
+### v3.24 (2026-06-03) — Multi-Center Brand Architecture §25.13 (DR-032 propagation) + Intra-Page Routing ref (DR-034) 🏥🧭
+
+**§25.13 Multi-Center Brand Architecture** — propagates **DR-032** (Locked 2026-05-25) into the Bible: the opt-in `monolithic | multi_center` pattern (Option D), data model (`brand_structure`, `seo_brand_centers`, `center_slug`, `center_scope`), URL pattern (extends Part 4.11/DR-004), cross-center linking governance (extends DR-021), WordPress implementation pattern, and schema markup (`Hospital` + `MedicalSpecialty`). Operational onboarding remains in Handover v1.18 §1.3; DDL in Schema Overview §5/§6 (multi-center tables shipped at Schema v1.18).
+
+**DR-034 Intra-Page Answer Routing (PAA × FAQ)** — operationalized in `Content_Templates_EYWA_v1_0.md` §4.5.4 (understanding-PAA → body, decision-PAA → FAQ; tiered FAQ floor) + Schema v1.20 (`seo_website_page_master.intent_source_tier` / `paa_checked_at`). Referenced here; full spec lives in Content_Templates.
+
+- 🔄 Bible v3.23 → v3.24. No DDL in this Bible bump (multi-center schema shipped at v1.18; PAA columns at v1.20).
+- 📌 DR-033 ICD dual-coding prose already landed in the v3.19 era (PHP renderer + entity validation + JSON-LD) — no further Bible propagation needed.
 
 ### v3.23 (2026-05-24) — Google Generative AI Search Alignment (DR-031) 🔍📐
 
@@ -21363,6 +21372,89 @@ optimization_layers:
 | Bootstrap Workflow (template import step) | Part 25.9 |
 | Federation pattern (template distribution) | Part 10.7 |
 | WCAG accessibility (template requirements) | Part 9.7 |
+
+---
+
+## 25.13 Multi-Center Brand Architecture (DR-032)
+
+> **Why this section:** Most EYWA brands are *monolithic* — one brand = one WordPress site. But some brands are **hospitals**: one umbrella identity housing several productized centers, each with its own positioning, hero programs, and trademarks — yet sharing one data spine, one team, one vocabulary, and one domain. Part 25.13 defines the **universal, opt-in pattern** for that shape. It **extends** Part 25's Universal Kit; it does not replace it. Locked in **DR-032**; operational onboarding step-by-step lives in `EYWA_HANDOVER.md` v1.18 §1.3; DDL lives in Schema Overview §5/§6.
+
+### 25.13.1 The two brand structures
+
+Every brand declares `brand_structure` **upfront at onboarding** (Handover §1.3):
+
+- **`monolithic`** (DEFAULT) — 1 brand = 1 WordPress site, no center subdivision. ~90% of the portfolio. Behaves exactly as pre-DR-032; nothing in this section applies.
+- **`multi_center`** (opt-in) — 1 brand = an umbrella + **N productized centers**, each surfaced as a URL subdirectory on a **single** WordPress site. Each center "looks like" its own site (own menu, own story) but all share one shell. First adopter: **Vitality Hospital** (7 centers under `vitalityhospital.com`).
+
+**Decision heuristic:** choose `multi_center` only when brand doctrine genuinely requires *"one hospital, one record, one team"* across distinct, separately-positioned centers — **not** merely to organize services (a monolithic site's taxonomy handles that). Full choose/avoid checklist: Handover §1.3.
+
+### 25.13.2 Why Option D (1 brand + a center dimension)
+
+Four architectures were evaluated against the "one hospital, one record, one team" mandate:
+
+| Option | Description | Verdict |
+|---|---|---|
+| A | 1 site, "center" as plain taxonomy, no spec change | Works but loses cross-brand governance + schema-enforced center scoping |
+| B | WordPress Multisite (1 main + N subsites) | Breaks the shared data spine; N× ops cost; contradicts "one record" |
+| C | N separate EYWA brands sharing `brand_scope[]` | Architecturally lies about brand reality; every shared entity/link/term becomes cross-brand sync + DR-021 governance overhead |
+| **D ⭐** | **1 EYWA brand + center subdivision as a new schema + URL dimension** | **Matches doctrine; minimal additive schema; preserves all existing federation/governance** |
+
+Option D wins because doctrine is non-negotiable, the pattern is reusable (hospital-scope brands are a recognizable class — `the-face-hospital`, VTH BioDent's expansion path), the design is additive/non-breaking, and **subdirectory beats subdomain for SEO** (subdirectories inherit full domain authority). Full rationale + Vitality context: DR-032.
+
+### 25.13.3 Data model (Schema v1.18+)
+
+| Object | Role |
+|---|---|
+| `brands.brand_structure` | enum `monolithic \| multi_center` — gates all center behavior |
+| `seo_brand_centers` | one row per center — identity, `url_segment`, positioning, signature methodologies, color treatment, `position_order`, `status`, `anchor_outcome`. DR-008 Two-Column Identity (`ctr_` fingerprint) |
+| `seo_website_page_master.center_slug` | `NULL` = umbrella/hospital-wide page (Home/About/Method/Membership); set = belongs to a center. Validated: **must** be NULL when brand is `monolithic` |
+| `seo_entity_graph.center_scope text[]` | orthogonal to `brand_scope` — which center(s) own/share an entity; `NULL` = hospital-wide |
+
+Full column lists + constraints + triggers: Schema Overview §5 (`seo_website_page_master`) + §5.x (`seo_brand_centers`) + §6 (entity graph).
+
+### 25.13.4 URL pattern (extends Part 4.11 + DR-004)
+
+```
+multi_center:  {domain}/{lang}/{center_url_segment}/{page_slug}/
+monolithic:    {domain}/{lang}/{page_slug}/          (unchanged DR-004 behavior)
+```
+
+`url_segment` is operator-controlled per center (need not match `center_slug`), enforced **UNIQUE per brand**. App-layer routing must **reserve** known center segments to prevent collisions with non-center page slugs.
+
+### 25.13.5 Internal linking governance (extends Part 25 + DR-021)
+
+| Link type | Governance |
+|---|---|
+| Intra-center | Default approved — no per-link justification |
+| **Intra-brand cross-center** (e.g., Vital Sleep → Vital Brain within Vitality) | **Default approved** — recorded as `link_type='cross_center_intra_brand'` for analytics, **not** gated |
+| Cross-brand (e.g., Vitality ↔ Biodent across the network) | Existing **DR-021** governance — `is_cross_brand=true` + `cross_brand_justification` required |
+
+Rationale: cross-center "funnels in / funnels out" are first-class clinical referrals (Vital Sleep → Vital Breathing → Vital Brain), not exceptions — gating them would force every referral into a justification field.
+
+### 25.13.6 WordPress implementation pattern
+
+- **Single WordPress site** (NOT WPMU/Multisite).
+- **Custom taxonomy `center`** attached to existing EYWA CPTs (procedure, treatment, condition, doctor, branch, …).
+- **ACF field group** for center config (color, icon, hero image, signature methodologies).
+- **Elementor Theme Builder** conditional templates per `center` term (header band color, footer note, context nav).
+- **Permalink rewrites** mapping `/{url_segment}/{post_type}/{post_slug}/` to taxonomy-filtered queries.
+- **Navigation:** hospital-wide top-level nav + center-context secondary nav (shown inside a center subdirectory).
+
+### 25.13.7 Schema markup
+
+`Hospital` (umbrella) + `MedicalSpecialty` (per center) + page-type schema per page. Cross-network sister-brand links are standard hyperlinks across different domains → no canonical issues.
+
+### 25.13.8 Cross-references
+
+| Topic | See Also |
+|---|---|
+| Full rationale + 7 sub-decisions + Vitality 7-center example | DR-032 |
+| Operational onboarding + per-center Stage gates | Handover v1.18 §1.3 |
+| DDL (centers table, center_slug, center_scope) | Schema Overview §5, §6 |
+| URL contract | Part 4.11 + DR-004 |
+| Cross-brand link governance | DR-021 |
+| Schema generation pipeline | Part 26 |
+| Brand config (`centers[]` + `parent_network`) | `templates/brand-config.template.json` |
 
 ---
 

@@ -3,7 +3,7 @@
 **Version:** v1.20 (2026-06-03) — DR-034 Intra-Page Answer Routing (PAA × FAQ) 🔒🧭
 **Live database:** Supabase project `lffcbeszjqzioobqfdav` ("GTGT") · region `ap-northeast-1` · Postgres 17
 **Total base tables:** 40 (in `public` schema, excluding `logs_2025`/`logs_2026` and backups)
-**Spec stack:** Bible v3.23 · Handover v1.18 · Decision Records v1.20
+**Spec stack:** Bible v3.24 · Handover v1.18 · Decision Records v1.20
 **Audit method:** Full drift audit vs live `information_schema` performed 2026-05-30. Every column listed below was verified against the live database at audit time.
 
 > **Reader heads-up:** v1.18 is a **full rewrite + audit** of v1.10. Aspirational columns from v1.0–v1.10 that never shipped are dropped (or moved to **Appendix H — Deferred v2.0 Provisions**). Every column under each table reflects the live database. Two new DR waves landed in this version:

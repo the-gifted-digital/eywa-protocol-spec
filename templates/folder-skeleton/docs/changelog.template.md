@@ -33,7 +33,7 @@ reports/
 **Spec snapshot pinned (per Handover §9.3):**
 
 ```yaml
-bible: v3.23
+bible: v3.24
 schema: v1.20
 templates: v1.8
 handover: v1.18

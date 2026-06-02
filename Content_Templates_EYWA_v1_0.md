@@ -5,7 +5,7 @@
 
 **Version:** v1.8 (2026-06-03 — ➕ §4.5.4 Intra-Page Answer Routing (PAA × FAQ) + B18 tiered FAQ floor per DR-034; additive, T1-T22 + T-ADS-X structurally unchanged. v1.7 LOCKED 2026-05-18 per DR-029 design-token integration remains in force.)
 **Status:** **LOCKED 2026-05-12** for T1-T22 (Universal Content Template Standard per DR-020); T-ADS-X (DR-026) Proposed status retained until 2026-06-21 lock
-**Companion to:** Bible v3.23 + Schema Overview v1.20 + DECISION_RECORDS v1.20
+**Companion to:** Bible v3.24 + Schema Overview v1.20 + DECISION_RECORDS v1.20
 **Format:** Append-only with semantic versioning (v1.0 → v1.5 backward compatible)
 
 ## v1.8 Changelog (2026-06-03) — Intra-Page Answer Routing (DR-034 Locked)

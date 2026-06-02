@@ -5,7 +5,7 @@
 **Status**: 🏗️ Phase 1A BUILD COMPLETE — all 39 tables live in GTGT. 🔒 Locked DRs: 013/014/015..018/019/020/021/022/024/025/008 propagated. 🌱 DR-026 Proposed (review 2026-06-21). 🔮 DR-027 Reserved (Future Phase 1).
 **Phase**: 1 — Supabase Database Foundation **(1A complete; 1B = n8n flow wire-up next)**
 **Project**: GTGT (in-place upgrade)
-**Companion to**: Bible v3.23 + Schema Overview v1.20 + Handover v1.18 + DECISION_RECORDS v1.20 + Content_Templates_EYWA_v1_0.md v1.8 (LOCKED per DR-020) + `migrations/README.md`
+**Companion to**: Bible v3.24 + Schema Overview v1.20 + Handover v1.18 + DECISION_RECORDS v1.20 + Content_Templates_EYWA_v1_0.md v1.8 (LOCKED per DR-020) + `migrations/README.md`
 
 ---
 
@@ -309,7 +309,7 @@ Phase 1 is complete when:
 
 ## 📚 References
 
-- **Bible v3.23** (current): `EYWA_PROTOCOL_v3_14.md`
+- **Bible v3.24** (current): `EYWA_PROTOCOL_v3_24.md`
 - **Schema Overview v1.10** (archived → current is v1.20): `archive/Schema_Overview_EYWA_v1_10.md`
 - **Handover v1.18** (current): `EYWA_HANDOVER.md` (Section 6 — Phase 1 Status)
 - **Decision Records v1.20** (current): `DECISION_RECORDS.md` (DR-001..DR-034)

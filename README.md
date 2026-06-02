@@ -4,10 +4,10 @@
 
 | 📖 Bible | 📊 Schema | 🏗️ Phase | ⚖️ License |
 |----------|-----------|-----------|-------------|
-| **v3.23** | **v1.20** | **1A Built ✅** | Proprietary |
+| **v3.24** | **v1.20** | **1A Built ✅** | Proprietary |
 
 <!-- Badges (render on GitHub.com): -->
-[![Bible](https://img.shields.io/badge/Bible-v3.23-blue?style=flat-square)](./EYWA_PROTOCOL_v3_14.md)
+[![Bible](https://img.shields.io/badge/Bible-v3.24-blue?style=flat-square)](./EYWA_PROTOCOL_v3_24.md)
 [![Schema](https://img.shields.io/badge/Schema-v1.20-green?style=flat-square)](./Schema_Overview_EYWA_v1_20.md)
 [![Migrations](https://img.shields.io/badge/Migrations-Phase%201A%20Built-success?style=flat-square)](./migrations/README.md)
 [![Phase](https://img.shields.io/badge/Phase-1%20Foundation-orange?style=flat-square)](./PHASE_1_DECISIONS.md)
@@ -35,7 +35,7 @@ EYWA™ is a registered trademark of **The Gifted Digital Marketing Co., Ltd.** 
 | Document | Purpose | Lines | Status |
 |----------|---------|-------|--------|
 | `PROJECT_MEMORY.md` | Project context for AI sessions + onboarding | ~880 | 🧠 Memory (local-only, gitignored) |
-| `EYWA_PROTOCOL_v3_14.md` | The Bible — full specification | ~27,000 | 🔒 Active (v3.23 — filename sticky at v3_14) |
+| `EYWA_PROTOCOL_v3_24.md` | The Bible — full specification | ~27,000 | 🔒 Active (v3.24) |
 | `Schema_Overview_EYWA_v1_20.md` | Database schema companion (40 base tables, full live-audit rewrite) | ~1,700 | 🔒 Active (v1.20) |
 | `EYWA_HANDOVER.md` | Operating manual for Claude/AI | ~3,100 | 🔒 Active (v1.18) |
 | `DECISION_RECORDS.md` | Architecture decision log | ~3,300 | 🔒 Active (v1.20) |
@@ -51,10 +51,10 @@ EYWA™ is a registered trademark of **The Gifted Digital Marketing Co., Ltd.** 
 
 ---
 
-## 🆕 Latest Update — Bible v3.23 / Schema v1.20 (2026-06-03)
+## 🆕 Latest Update — Bible v3.24 / Schema v1.20 (2026-06-03)
 
 **Current spec stack — brands bump to these versions:**
-**Bible v3.23** · **Schema v1.20** · **Handover v1.18** · **Decision Records v1.20** · **Content_Templates v1.8** · **PHASE_1 v1.9**
+**Bible v3.24** · **Schema v1.20** · **Handover v1.18** · **Decision Records v1.20** · **Content_Templates v1.8** · **PHASE_1 v1.9**
 
 Most recent locked decisions (full detail + rationale in [`DECISION_RECORDS.md`](./DECISION_RECORDS.md)):
 
@@ -62,7 +62,7 @@ Most recent locked decisions (full detail + rationale in [`DECISION_RECORDS.md`]
 |----|--------|------|--------|
 | **DR-034** Intra-Page Answer Routing (PAA × FAQ) | 2026-06-03 | §4.5.4 — understanding-PAA → body, decision-PAA → FAQ; tiered FAQ floor; PAA subordinate to the locked template | **v1.20** — `page_master` +`intent_source_tier`, `paa_checked_at` |
 | **DR-033** ICD Dual-Coding Standard | 2026-06-02 | `MedicalCondition.code[]` = ICD-11-MMS → ICD-10 → ICD-10-CM → SNOMED | v1.19 — `seo_entity_condition` +`icd11_code`, `icd10_cm_code` |
-| **DR-032** Multi-Center Hospital Brand Pattern | 2026-05-25 | `brand_structure: monolithic \| multi_center` chosen upfront at onboarding | v1.18 — `seo_brand_centers` + `center_slug` |
+| **DR-032** Multi-Center Hospital Brand Pattern | 2026-05-25 | `brand_structure: monolithic \| multi_center` chosen upfront at onboarding | v1.18 — `seo_brand_centers` + `center_slug`; Bible §25.13 (v3.24) |
 | **DR-031** Google Generative AI Search Alignment | 2026-05-24 | llms.txt deprioritized; query fan-out + audience-first framing | — (Bible v3.23, no DDL) |
 | **DR-030** Sensitive Topic Compliance | 2026-05-20 | Product × Content tier matrix + `positioning_mode` | v1.17 — `page_master` +6 compliance cols |
 

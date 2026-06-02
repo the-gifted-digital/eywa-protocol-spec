@@ -4,7 +4,7 @@
   "_template_version": "1.2",
   "_template_last_updated": "2026-06-03",
   "_template_v1_1_changes": "Added brand_structure (DR-032 Locked 2026-05-25) — every brand picks monolithic | multi_center upfront. Added centers[] + parent_network conditional blocks for multi_center brands. See eywa-vitality-hospital/brand-config.json for canonical multi_center example.",
-  "_template_v1_2_changes": "Refreshed eywa_spec_snapshot defaults to the latest stack (Bible 3.23 / Schema 1.20 / Templates 1.8 / Handover 1.18 / DR 1.20) as of 2026-06-03; locked/proposed DR sets updated — DR-001..022 + 024/025/028..034 Locked, DR-026 Proposed (lock target 2026-06-21), DR-023/027 reserved/future.",
+  "_template_v1_2_changes": "Refreshed eywa_spec_snapshot defaults to the latest stack (Bible 3.24 / Schema 1.20 / Templates 1.8 / Handover 1.18 / DR 1.20) as of 2026-06-03; locked/proposed DR sets updated — DR-001..022 + 024/025/028..034 Locked, DR-026 Proposed (lock target 2026-06-21), DR-023/027 reserved/future.",
 
   "brand_id": "{brand-id-kebab-case}",
   "brand_name": "{Brand Display Name}",
@@ -166,7 +166,7 @@
 
   "eywa_spec_snapshot": {
     "_doc": "Per Handover §9.3 — pin spec versions at Stage entry, re-snapshot at each Stage gate. Brands implement Locked DRs as binding; Proposed DRs are preview/informational unless explicitly opted-in.",
-    "bible_version": "3.23",
+    "bible_version": "3.24",
     "schema_version": "1.20",
     "templates_version": "1.8",
     "handover_version": "1.18",
