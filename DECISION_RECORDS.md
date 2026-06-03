@@ -2,8 +2,8 @@
 
 > **Append-only architectural decision log.** Each record explains WHY a decision was made — not just WHAT.
 
-**Document Version:** 1.20  
-**Last Updated:** 2026-06-03  
+**Document Version:** 1.21  
+**Last Updated:** 2026-06-04  
 **Format:** Reverse chronological (newest first)
 
 ---
@@ -31,6 +31,55 @@
 ---
 
 ## Decisions Log
+
+### [DR-035] — Image Storage & Delivery for Astro Brands (Cloudflare R2 + Image Transformations) (2026-06-04 → Locked 2026-06-04) 🔒🖼️☁️
+
+**Status:** **🔒 Locked 2026-06-04** — operator-approved in working session same day (14-day review waived: net-new capability, additive, **no schema change, no migration**; verified that **zero brands wire image binaries in code yet** — greenfield, so locking before the first image-heavy Astro brand build is the cheapest moment; **WordPress brands unaffected**).
+**Bible Reference:** Clarifies **§18.5** (Notion ↔ Supabase Field Mapping — "Files & media") for the **Astro stack profile**. The WordPress media path is unchanged.
+**Schema Reference:** **No change.** The `seo_*` image columns are already URL-typed (`primary_photo_url text`, `interior_photos text[]`, `review_photos text[]`, `media_urls text[]`, `before_after_photos`, etc. — Schema_Overview v1.20). This DR only changes **where the URL points** (Cloudflare R2 / Images instead of Supabase Storage) for Astro brands. No DDL.
+**Companion to:** DR-EYWA-MKT-005 (Astro stack profile — this DR is its image layer), DR-002 (Elementor/WordPress stack — the unaffected legacy media path), DR-EYWA-MKT-006 / DR-EYWA-POLY-004 (Supabase content workflow — Supabase keeps image **metadata/URL**, not the binary).
+**Scope:** **Astro brands only** (today: Polyvex + Deezy Express Dental Unit; all future Astro brands). **WordPress brands: NO action** — images stay in the WordPress media library as today.
+
+**Context:**
+
+The spec's only recorded image-storage statement (§18.5) maps Notion "Files & media" → "Supabase Storage URLs". That was written for the **WordPress** pipeline (Notion → Supabase → WordPress), where WP serves the media. The newer **Astro stack profile** (DR-EYWA-MKT-005) renders static output to the **Cloudflare** edge — which reframes the question. Two legacy placeholder topics ("CDN strategy", "image optimization pipeline") were never resolved, and **no brand has wired image storage in code** (verified 2026-06-04: zero `supabase.storage` / `createClient` usage across all repos). This is greenfield.
+
+Decisive cost fact (verified 2026-06-04): **Supabase Storage runs on Cloudflare R2 under the hood and bills $0.09/GB egress on top; R2 used directly is egress-free.** Storing binaries in Supabase and serving them through the Cloudflare-hosted site means paying an egress markup to bounce through a layer the site does not need.
+
+**Decision:**
+
+For Astro brands, **image binaries live on Cloudflare; Supabase stores only the URL.** Three tiers by image profile:
+
+1. **Brand chrome** (logo, favicon, default OG, icons, proprietary diagrams) → committed to git `web/src/assets/`, optimized at build by **`astro:assets`** (Sharp), emitted as content-hashed static assets on the Cloudflare edge. Cost: **$0**.
+2. **Default for content/marketing + high-volume galleries** (e.g. clinic before/after, case libraries) → binaries in **Cloudflare R2** (egress-free), resized/converted on the fly by **Cloudflare Image Transformations** (`format=auto` → AVIF/WebP), served + cached at the edge. The Supabase row stores the delivered URL/object key in the existing URL columns.
+3. **Optional managed upgrade** → **Cloudflare Images** (all-in-one: upload API + dashboard + variants) when a non-technical team needs a turnkey upload surface and the ~$5/mo base is worth avoiding a custom upload path. Swappable later at near-zero cost because the DB stores only a URL.
+
+**Delivery rule (universal across tiers):** the browser always fetches images from the **Cloudflare edge** — never directly from Supabase Storage.
+
+**Rationale:**
+
+- **Cost** — R2 egress is free; Supabase egress is $0.09/GB on R2-under-the-hood (a markup to bounce). Transformations: first **5,000 unique/mo free**, then $0.50/1,000 — a ~2,000-image clinic at 3 sizes lands ≈ **$0–0.50/mo** all-in. (R2 $0.015/GB-mo + 10GB free; Cloudflare Images $5/100k stored + $1/100k delivered — all confirmed 2026-06-04.)
+- **Locality** — the whole Astro site already lives on Cloudflare; keeping binaries + transforms + delivery on Cloudflare = one control plane, best Core Web Vitals, no cross-vendor hop.
+- **Separation of concerns** — Postgres is the system of record for *which image belongs to which row* (URL + alt + consent metadata); the object store holds *bytes*. The schema already models this (URL columns), so no migration.
+- **WordPress untouched** — WP brands already store + serve media from WP; forcing them onto R2 would be churn for no gain.
+
+**Consequences:**
+
+- ✅ **No schema change, no migration** — URL columns already fit; only the URL host changes for Astro brands.
+- ✅ **§18.5 annotated** in EYWA_PROTOCOL v3.25 with a cross-ref to this DR (WordPress = Supabase/WP path; Astro = Cloudflare R2/Images path).
+- ⚠️ **R2 has no friendly upload UI for non-technical operators.** Resolve per brand via one of: (a) **n8n pushes** Notion-attached images → R2 (S3 API) during sync, URL written to the Supabase row — fits the existing Notion → n8n → Supabase pipeline; (b) a small **upload Worker**; (c) jump to **Tier 3 (Cloudflare Images)** for a built-in dashboard. Chosen at each brand's Phase B, not here.
+- ⚠️ **Consent / PDPA trap for before/after (healthcare).** Anything baked into the static `dist/` or served from a **public** R2 bucket is **permanently public + cacheable** → cannot be revoked. Consented-public before/after → public path OK. Pending-consent / revocable / sensitive → **private R2 bucket + signed URLs via a Worker, never baked**. Consent forms → private store / DMS only (never git, never public bucket) — consistent with the consent-record external-storage note (Schema_Overview) + `imagery.md` (consent-records gitignored).
+- ⚠️ **Originals do not bloat git** — RAW / high-res originals go to a **private R2 bucket** (or cloud drive), not git, not the public bucket; only web-destined derivatives are served. Supersedes the implicit "commit web images to `web/public/`" convention in `brand-assets/README` for image-heavy brands.
+- 📋 **Follow-ups:** per-brand upload-path choice (Phase B); enable Image Transformations on each Astro brand's Cloudflare zone; document the `astro:assets` `image.remotePatterns` / `image.domains` allowlist for the R2 origin; **Polyvex adopts via DR-EYWA-POLY-011**.
+
+**References:**
+
+- §18.5 Notion ↔ Supabase Field Mapping (now annotated).
+- DR-EYWA-MKT-005 (Astro stack profile), DR-002 (WordPress stack), DR-EYWA-POLY-004 (Supabase content workflow).
+- Cloudflare R2 pricing (egress-free; $0.015/GB-mo; 10GB / 1M Class A / 10M Class B free tier); Cloudflare Images + Image Transformations ($0.50/1,000 unique transforms, 5,000/mo free; stored Images $5/100k + $1/100k delivered); Supabase Storage egress $0.09/GB beyond plan allowance (R2 under the hood) — all verified 2026-06-04.
+- `templates/folder-skeleton/design/brand-foundation/imagery.md` (consent + file organization).
+
+---
 
 ### [DR-034] — Intra-Page Answer Routing (PAA × FAQ) (2026-06-03 → Locked 2026-06-03) 🔒🧭
 
@@ -4088,8 +4137,7 @@ Decisions to be documented as they emerge:
 - [ ] **DR-017:** n8n hosting strategy (self-hosted vs cloud) *(was DR-015 in v1.2)*
 - [ ] **DR-018:** Translation provider selection (Claude vs GPT-4 vs DeepL) *(was DR-016)*
 - [ ] **DR-019:** Editorial review workflow tooling *(was DR-017)*
-- [ ] **DR-020:** CDN strategy (Cloudflare, BunnyCDN, etc.) *(was DR-018)*
-- [ ] **DR-021:** Image optimization pipeline *(was DR-019)*
+- [x] ~~**DR-020:** CDN strategy~~ + ~~**DR-021:** Image optimization pipeline~~ → **RESOLVED by [DR-035]** (2026-06-04): Cloudflare for Astro brands (R2 + Image Transformations; CF Images optional), WordPress brands unchanged. *(Legacy placeholder topic-numbers from the v1.2 list — the live DR-020 / DR-021 numbers are now held by Content Template Standard / Internal Linking. The topics are captured under DR-035.)*
 - [ ] **DR-023:** External Authoritative Link Tracking (extend `to_external_url` usage from seo_page_internal_links) *(claimed 2026-05-11 from DR-021 follow-up)*
 - [ ] **DR-026:** Analytics stack (GA4 + custom + ?) *(was DR-024 in v1.8)*
 - [ ] **DR-027:** Backup + disaster recovery strategy *(was DR-025 in v1.8)*

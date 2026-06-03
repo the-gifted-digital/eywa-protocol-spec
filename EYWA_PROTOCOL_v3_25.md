@@ -1,8 +1,8 @@
 # 📖 คัมภีร์ EYWA™ PROTOCOL
 ## The Universal Knowledge Graph SEO Specification for the AI Era
 
-**Version:** 3.24  
-**Last Updated:** 2026-06-03  
+**Version:** 3.25  
+**Last Updated:** 2026-06-04  
 **Trademark:** EYWA™ (Class 35+42, DIP Thailand, filed 2026-04-20)  
 **Created by:** The Gifted Digital Marketing Co., Ltd.  
 **Scope:** Universal standard สำหรับการบริหารจัดการ SEO + Knowledge Graph แบบ multi-vertical, multi-brand, multi-specialty, multi-lingual, multi-location, **AI-future-ready** ในยุค AI Search (2026+) — ครอบคลุม healthcare verticals (clinic ทุก specialty, hospital, dental, sleep medicine, aesthetic, wellness, healthcare media) extensible to other regulated YMYL niches  
@@ -143,6 +143,13 @@ Throughout this Bible:
 
 
 ## 📜 Changelog
+
+### v3.25 (2026-06-04) — Image Storage & Delivery for Astro brands (DR-035) — §18.5 annotation 🖼️☁️
+
+**DR-035 Image Storage & Delivery (Locked 2026-06-04)** — annotates **§18.5** (Notion ↔ Supabase Field Mapping → "Files & media"): the `→ Supabase Storage URLs` mapping is the **WordPress / legacy** path; for **Astro brands**, image *binaries* live on **Cloudflare** (R2 + Image Transformations, or Cloudflare Images) served from the edge, while Supabase stores only the delivered **URL**. Tiered model (brand chrome → `astro:assets` git build; default/galleries → R2 + Transformations; optional → Cloudflare Images). Full spec lives in DECISION_RECORDS → DR-035.
+
+- 🔄 Bible v3.24 → v3.25. **No DDL** — image columns are already URL-typed; only the URL host changes for Astro brands. WordPress brands unaffected.
+- 📌 Scope: Astro stack profile (DR-EYWA-MKT-005). Polyvex adopts via DR-EYWA-POLY-011.
 
 ### v3.24 (2026-06-03) — Multi-Center Brand Architecture §25.13 (DR-032 propagation) + Intra-Page Routing ref (DR-034) 🏥🧭
 
@@ -15484,6 +15491,8 @@ Formula              → DERIVED (don't sync)
 Created time         → IGNORE (use Supabase created_at)
 Last edited time     → updated_at
 ```
+
+> **🖼️ Image binaries — stack-dependent (DR-035, 2026-06-04):** The `Files & media → Supabase Storage URLs` mapping above is the **WordPress / legacy** path (WP serves the media). For **Astro brands**, image *binaries* live on **Cloudflare** — **R2 + Image Transformations** (or Cloudflare Images), served from the Cloudflare edge — while Supabase stores only the delivered **URL** in the same `TEXT` / `TEXT[]` columns. No schema change. See DECISION_RECORDS → **DR-035**.
 
 ### Naming convention
 

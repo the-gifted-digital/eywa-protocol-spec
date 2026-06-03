@@ -309,7 +309,7 @@ Phase 1 is complete when:
 
 ## 📚 References
 
-- **Bible v3.24** (current): `EYWA_PROTOCOL_v3_24.md`
+- **Bible v3.25** (current): `EYWA_PROTOCOL_v3_25.md`
 - **Schema Overview v1.10** (archived → current is v1.20): `archive/Schema_Overview_EYWA_v1_10.md`
 - **Handover v1.18** (current): `EYWA_HANDOVER.md` (Section 6 — Phase 1 Status)
 - **Decision Records v1.20** (current): `DECISION_RECORDS.md` (DR-001..DR-034)
