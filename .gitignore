@@ -90,3 +90,7 @@ data-snapshots/
 
 # AI-only context (read locally by Claude, not for public spec)
 PROJECT_MEMORY.md
+
+# ===== Claude / AI agent local state (not part of the spec) =====
+.claude/
+.understand-anything/
