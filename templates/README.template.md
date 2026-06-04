@@ -4,7 +4,7 @@
 
 **Brand ID:** `{brand-id}`
 **Vertical:** {vertical_family} ({positioning_tier})
-**EYWA Protocol:** v3.24 / Schema v1.20 / Content_Templates v1.8 / Handover v1.18 / DR v1.20
+**EYWA Protocol:** v3.26 / Schema v1.21 / Content_Templates v1.8 / Handover v1.18 / DR v1.22
 **Engagement:** {LEAD | NEGOTIATING | CLOSED} {YYYY-MM-DD if known}
 
 ---

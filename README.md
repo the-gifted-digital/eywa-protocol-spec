@@ -68,7 +68,7 @@ Most recent decisions (full detail + rationale in [`DECISION_RECORDS.md`](./DECI
 | **DR-031** Google Generative AI Search Alignment | 2026-05-24 | llms.txt deprioritized; query fan-out + audience-first framing | — (Bible v3.23, no DDL) |
 | **DR-030** Sensitive Topic Compliance | 2026-05-20 | Product × Content tier matrix + `positioning_mode` | v1.17 — `page_master` +6 compliance cols |
 
-> **Brand snapshot:** new brands inherit the current stack via `templates/brand-config.template.json` → `eywa_spec_snapshot` (defaulted to the versions above; locked set = DR-001..022 + 024/025/028..034). Earlier waves — DR-024/025 schema catch-up (v3.15 / v1.11), DR-028 Brand Genesis Protocol, DR-029 Universal Brand Design System — see the `DECISION_RECORDS.md` changelog.
+> **Brand snapshot:** new brands inherit the current stack via `templates/brand-config.template.json` → `eywa_spec_snapshot` (defaulted to the versions above; locked set = DR-001..022 + 024/025/028..036, DR-026 Proposed). New brands bootstrap with **9 Tier-1 CPTs** (incl. `symptom` per DR-036). Earlier waves — DR-024/025 schema catch-up (v3.15 / v1.11), DR-028 Brand Genesis Protocol, DR-029 Universal Brand Design System — see the `DECISION_RECORDS.md` changelog.
 
 ---
 
