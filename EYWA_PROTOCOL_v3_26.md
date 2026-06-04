@@ -1,7 +1,7 @@
 # 📖 คัมภีร์ EYWA™ PROTOCOL
 ## The Universal Knowledge Graph SEO Specification for the AI Era
 
-**Version:** 3.25  
+**Version:** 3.26  
 **Last Updated:** 2026-06-04  
 **Trademark:** EYWA™ (Class 35+42, DIP Thailand, filed 2026-04-20)  
 **Created by:** The Gifted Digital Marketing Co., Ltd.  
@@ -143,6 +143,15 @@ Throughout this Bible:
 
 
 ## 📜 Changelog
+
+### v3.26 (2026-06-04) — Split `condition` / `symptom` into Separate Tier-1 CPTs (DR-036) 🔒🧬🩺
+
+**DR-036 (Locked 2026-06-04)** — promotes `symptom` to its own **Tier-1 Core CPT**, reversing the §25.3 "`condition` hosts both" merge. Tier-1 Core **8 → 9** (`…technology · condition · symptom · case_study · post`). `symptom` mirrors `condition` exactly as `treatment` mirrors `procedure` (distinct schema.org type `MedicalSignOrSymptom` + own template). **Greenfield, additive, no data migration** — no brand past Stage 1; `seo_entity_symptom` built same day. Full spec in DECISION_RECORDS → DR-036.
+
+- 🔄 Bible v3.25 → v3.26. **§25.2** Tier-1 table 8→9 (split `condition` row; Maximum 14→15, Typical 8-11→9-12). **§25.3** Core CPT 6 `condition` → condition-only + new **Core CPT 7 `symptom`** (`case_study`→8, `post`→9); `condition_vs_symptom_handling` block removed. **§25.5** Group 5 adds `symptom_meta` (29-col list, mirrors built table); Group 1 `icd_10` visibility + Group 2 `symptoms_of`/`treats_concerns` constraints re-keyed from `entity_subtype` → `post_type`. **§25.6** `tier1_symptom` always-on + `eywa_register_cpt_symptom()`. **§25.7** symptom URL row (shared `/by-concern/` base).
+- 🔒 Companion Schema → **v1.21** — new Group-9 `seo_entity_symptom` (29 cols, S-only 1:1 with `entity_graph type='symptom'`) **BUILT 2026-06-04** via migration `eywa_w11_06`.
+- 🔗 Shared `/by-concern/{slug}` base for both CPTs — kit request-filter resolves across post types; EUG/DR-011 guarantees unique slugs. `symptom_of` becomes a cross-CPT edge (vocab unchanged). Schema-type emission keyed off `post_type`.
+- 📌 §4.5 (Page-Branch axis) unaffected — orthogonal to the entity-CPT axis.
 
 ### v3.25 (2026-06-04) — Image Storage & Delivery for Astro brands (DR-035) — §18.5 annotation 🖼️☁️
 
@@ -9157,7 +9166,7 @@ known_conflicts:
 
 ## 8.5 Multi-Vertical CPT Registration
 
-> **Note:** This section provides foundational CPT registration patterns. For the comprehensive WordPress Universal Kit with brand profile-driven auto-activation (8 core + 6 optional CPTs, 8 taxonomies, 7 ACF groups), see **Part 25**. The code below is preserved as a starter reference for understanding CPT-to-entity_type mapping.
+> **Note:** This section provides foundational CPT registration patterns. For the comprehensive WordPress Universal Kit with brand profile-driven auto-activation (9 core + 6 optional CPTs, 8 taxonomies, 7 ACF groups), see **Part 25**. The code below is preserved as a starter reference for understanding CPT-to-entity_type mapping.
 
 ### CPT ตาม entity_type
 
@@ -19740,7 +19749,7 @@ For detailed documentation of each future item, see:
 หลักการ 4 ข้อ:
 
 1. SAME KIT EVERY BRAND
-   → 8 CPTs core + 6 optional + 8 taxonomies + 7 ACF groups = "the kit"
+   → 9 CPTs core + 6 optional + 8 taxonomies + 7 ACF groups = "the kit"
    → ไม่เคยมีแบรนด์ที่ "ไม่ใช้" kit นี้
    → ต่างกันแค่ "เปิด-ปิด" optional ตาม flag
 
@@ -19764,7 +19773,7 @@ For detailed documentation of each future item, see:
 
 ```
 ┌──────────────────────────────────────────────────────────────────┐
-│  TIER 1: CORE — เปิดใช้งานเสมอ ทุกแบรนด์ (8 CPTs)                 │
+│  TIER 1: CORE — เปิดใช้งานเสมอ ทุกแบรนด์ (9 CPTs)                 │
 ├──────────────────────────────────────────────────────────────────┤
 │  CPT name        | Hosts entity_type   | URL pattern              │
 ├──────────────────────────────────────────────────────────────────┤
@@ -19773,7 +19782,8 @@ For detailed documentation of each future item, see:
 │  procedure       | procedure           | /procedures/{slug}       │
 │  treatment       | treatment           | /treatments/{slug}       │
 │  technology      | device              | /technology/{slug}       │
-│  condition       | condition + symptom | /by-concern/{slug}       │
+│  condition       | condition           | /by-concern/{slug}       │
+│  symptom         | symptom             | /by-concern/{slug}       │
 │  case_study      | (none — CPT only)   | /case-studies/{slug}     │
 │  post (built-in) | concept (knowledge) | /knowledge/{slug}        │
 └──────────────────────────────────────────────────────────────────┘
@@ -19814,7 +19824,7 @@ For detailed documentation of each future item, see:
 │                  | ของ service flow)                 |             │
 └──────────────────────────────────────────────────────────────────┘
 
-Maximum: 14 CPTs | Typical activation: 8-11 CPTs
+Maximum: 15 CPTs | Typical activation: 9-12 CPTs
 ```
 
 ## 25.3 CPT Registration Specification
@@ -20001,25 +20011,25 @@ acf_field_groups:
   - technology_meta (FDA class, manufacturer, specs)
 ```
 
-### Core CPT 6 — `condition` (hosts BOTH condition + symptom)
+### Core CPT 6 — `condition`
+
+> **v3.26 (DR-036):** `condition` now hosts **conditions only**; `symptom` is split into its own Core CPT 7 (below). The old `entity_subtype` (`condition` | `symptom`) discriminator is removed — **`post_type` carries the distinction** and drives schema-type emission. URL base `/by-concern/` is **retained and shared** with `symptom`.
 
 ```yaml
 slug: condition
 name: ['Concern', 'Concerns']    # User-facing label = "Concern"
-hosts_entity_type: condition + symptom (via entity_subtype)
-schema_org: 
-  - MedicalCondition (when entity_subtype='condition')
-  - MedicalSignOrSymptom (when entity_subtype='symptom')
+hosts_entity_type: condition
+schema_org: MedicalCondition
 URL: /by-concern/{slug}
 
 register_post_type_args:
   public: true
   has_archive: true
   supports: [title, editor, thumbnail, custom-fields, page-attributes]
-  hierarchical: false           # ใช้ ACF symptom_of edge แทน
+  hierarchical: false           # ใช้ ACF child_of edge แทน (sub-conditions)
   show_in_rest: true
   rewrite:
-    slug: 'by-concern'
+    slug: 'by-concern'            # SHARED base with symptom CPT (DR-036) — kit request-filter resolves /by-concern/{slug} across both post types; EUG/DR-011 guarantees globally-unique slugs
     hierarchical: true            # อนุญาต /by-concern/sleep/snoring/
   menu_position: 24
   menu_icon: 'dashicons-warning'
@@ -20029,30 +20039,96 @@ taxonomies_attached:
   - topic_cluster
   - concern (self-organizing — Section 5 hubs)
   - audience
-  - sitemap_section
+  - sitemap_section             # groups condition + symptom under "Treatment by Concern"
 
 acf_field_groups:
   - eywa_classification
   - eywa_relationships
   - eywa_evidence
-  - condition_meta (ICD-10, prevalence, age_onset, severity)
+  - condition_meta (ICD-11/ICD-10/ICD-10-CM, prevalence, age_onset, severity)
 
-condition_vs_symptom_handling:
-  ACF field: entity_subtype (radio: 'condition' | 'symptom')
-  
-  template_logic:
-    if entity_subtype == 'symptom':
-      → render template: single-condition--symptom.php
-      → schema: MedicalSignOrSymptom
-      → Hero CTA: "ปัญหานี้คืออาการของอะไร?" → link to parent condition
-    
-    if entity_subtype == 'condition':
-      → render template: single-condition.php
-      → schema: MedicalCondition
-      → Hero: ICD code + overview
+template_logic:
+  → render template: single-condition.php
+  → schema: MedicalCondition (emitted by post_type, not entity_subtype)
+  → Hero: ICD code + overview
 ```
 
-### Core CPT 7 — `case_study`
+### Core CPT 7 — `symptom` 🆕 v3.26 (DR-036)
+
+> Split from `condition` per **DR-036** — sibling to `condition` exactly as `treatment` is to `procedure` (both are distinct schema.org types). Tier-1 always-on; brands with zero symptom entities carry an empty (harmless) CPT that generates no pages.
+
+```yaml
+slug: symptom
+name: ['Symptom', 'Symptoms']
+hosts_entity_type: symptom
+schema_org: MedicalSignOrSymptom
+URL: /by-concern/{slug}          # SHARED base with condition (DR-036)
+
+register_post_type_args:
+  public: true
+  has_archive: true
+  supports: [title, editor, thumbnail, custom-fields, page-attributes]
+  hierarchical: false           # ใช้ ACF symptom_of edge → parent condition (cross-CPT)
+  show_in_rest: true
+  rewrite:
+    slug: 'by-concern'            # SHARED with condition — kit request-filter resolves /by-concern/{slug} across condition + symptom (no collision: EUG/DR-011 globally-unique slugs)
+    hierarchical: true
+  menu_position: 24               # adjacent to condition
+  menu_icon: 'dashicons-warning'
+
+taxonomies_attached:
+  - specialty
+  - topic_cluster
+  - concern (self-organizing — Section 5 hubs)
+  - audience
+  - sitemap_section             # groups symptom + condition under "Treatment by Concern"
+
+acf_field_groups:
+  - eywa_classification
+  - eywa_relationships          # symptom_of → parent condition (cross-CPT edge; vocab unchanged)
+  - eywa_evidence
+  - symptom_meta                # CPT-specific — see Part 25.5
+
+template_logic:
+  → render template: single-symptom.php
+  → schema: MedicalSignOrSymptom (emitted by post_type)
+  → Hero CTA: "ปัญหานี้คืออาการของอะไร?" → link to parent condition (symptom_of edge)
+
+symptom_meta:                     # 🔒 v1.21 BUILT — mirrors Schema §11.5a seo_entity_symptom (29 cols, migration eywa_w11_06)
+  # coding
+  - snomed_ct_id (text)           # symptoms lead with SNOMED CT
+  - icd11_code (text)             # ICD-11-MMS (signs/symptoms chapter where applicable)
+  - icd10_code (text)             # WHO base — R-codes where applicable
+  - icd10_codes_related (text[])
+  - mesh_id (text)
+  - umls_cui (text)
+  - wikidata_qid (text)
+  # classification
+  - symptom_category (text)
+  - body_system (text[])
+  - related_anatomy_fps (text[])  # FK → seo_entity_anatomy
+  # character
+  - severity_scale (text)         # CHECK: mild | moderate | severe | variable
+  - typical_onset (text)          # CHECK: acute | sudden | gradual | intermittent | variable
+  - typical_duration (text)
+  - is_emergency_sign (boolean)
+  # relations
+  - associated_conditions_fps (text[])   # FK → seo_entity_condition (parent / related)
+  - accompanying_symptoms_fps (text[])   # FK → seo_entity_symptom (self)
+  - triggers_factors (text[])
+  - relieving_factors (text[])
+  # YMYL safety
+  - red_flag_indicators (text[])  # when to seek urgent care
+  - self_care_guidance (text)
+  - when_to_see_doctor (text)
+  # patient-facing
+  - patient_explanation_th (text)
+  - patient_explanation_en (text)
+  - common_misconceptions (text[])
+  - search_volume_proxy (text)
+```
+
+### Core CPT 8 — `case_study`
 
 ```yaml
 slug: case_study
@@ -20086,7 +20162,7 @@ acf_field_groups:
   - case_study_meta (PDPA-safe pseudonyms, demographics, outcomes)
 ```
 
-### Core CPT 8 — `post` (built-in WordPress, repurposed)
+### Core CPT 9 — `post` (built-in WordPress, repurposed)
 
 ```yaml
 slug: post (default WP)
@@ -20458,7 +20534,7 @@ fields:
   
   icd_10:
     type: text
-    visible_when: entity_subtype='condition' | entity_subtype='symptom'
+    visible_when: post_type IN ['condition','symptom']   # v3.26 (DR-036) — was entity_subtype; post_type now carries the condition/symptom distinction
   
   wikidata_id:
     type: text
@@ -20489,14 +20565,14 @@ fields:
   treats_concerns:
     type: relationship
     edge_type: treats
-    constraint: post_type=condition (entity_subtype='condition' only)
+    constraint: post_type=condition          # v3.26 (DR-036) — entity_subtype clause dropped; condition CPT is condition-only
     visible_when: CPT in [procedure, treatment, drug, technology]
   
   symptoms_of:
     type: post_object
-    edge_type: symptom_of
-    constraint: post_type=condition (entity_subtype='condition')
-    visible_when: CPT=condition AND entity_subtype='symptom'
+    edge_type: symptom_of                     # cross-CPT edge: symptom → parent condition (DR-036)
+    constraint: post_type=condition           # target is the parent condition
+    visible_when: CPT=symptom                 # v3.26 (DR-036) — field now lives on the symptom CPT (was: CPT=condition AND entity_subtype='symptom')
   
   uses_devices:
     type: relationship
@@ -20616,7 +20692,7 @@ fields:
 
 ### Group 5 — `cpt_specific_meta` (per-CPT — see Part 25.3)
 
-แต่ละ CPT มี field group เฉพาะ (procedure_meta, treatment_meta, ingredient_meta, ฯลฯ) — spec อยู่ใน Part 25.3
+แต่ละ CPT มี field group เฉพาะ (procedure_meta, treatment_meta, symptom_meta 🆕 v3.26, ingredient_meta, ฯลฯ) — spec อยู่ใน Part 25.3
 
 ### Group 6 — `eywa_program_meta` (conditional, program CPT only)
 
@@ -20648,6 +20724,7 @@ SELECT
   true AS tier1_treatment,
   true AS tier1_technology,
   true AS tier1_condition,
+  true AS tier1_symptom,          -- 🆕 v3.26 (DR-036) — split from condition
   true AS tier1_case_study,
   true AS tier1_post,
   
@@ -20692,6 +20769,7 @@ function eywa_register_post_types_dynamic() {
     eywa_register_cpt_treatment();
     eywa_register_cpt_technology();
     eywa_register_cpt_condition();
+    eywa_register_cpt_symptom();        // 🆕 v3.26 (DR-036)
     eywa_register_cpt_case_study();
     
     // Tier 2 (conditional)
@@ -20720,6 +20798,7 @@ function eywa_register_post_types_dynamic() {
 │  Hospital department        /departments/{dept}/{slug}            │
 │  Technology                 /technology/{slug}                     │
 │  Concern (Layer 4)          /by-concern/{slug}                     │
+│  Symptom (Layer 4)          /by-concern/{slug}   ← shared (DR-036) │
 │  Knowledge (Layer 5)        /knowledge/{slug}                      │
 │  Case Study (Layer 7)       /case-studies/{slug}                   │
 │  Branch (Type B)            /branches/{slug}                       │
@@ -20753,7 +20832,7 @@ Templates > Theme Builder > Single
   ├─ single-treatment           → treatment CPT
   ├─ single-technology          → technology CPT
   ├─ single-condition           → condition CPT
-  ├─ single-condition--symptom  → condition CPT (filter: entity_subtype='symptom')
+  ├─ single-symptom             → symptom CPT (DR-036 — own CPT, was condition+entity_subtype)
   ├─ single-case_study          → case_study CPT
   ├─ single-post                → post (knowledge L5/L6, conditional by layer)
   ├─ single-program             → program CPT (Tier 2)
@@ -20769,7 +20848,7 @@ Templates > Theme Builder > Archive
   ├─ archive-procedure          → /procedures/
   ├─ archive-treatment          → /treatments/
   ├─ archive-technology         → /technology/
-  ├─ archive-condition          → /by-concern/
+  ├─ archive-condition          → /by-concern/ (condition + symptom — shared base, DR-036)
   ├─ archive-case_study         → /case-studies/
   └─ blog                       → /knowledge/ (post archive)
 
@@ -20831,7 +20910,7 @@ Step 3 (TAXONOMIES — 30 min) — register BEFORE CPTs
 
 Step 4 (CPT REGISTRATION — 30 min)
   □ Read brand activation flags from API
-  □ Register Tier 1 CPTs (8 — always)
+  □ Register Tier 1 CPTs (9 — always; incl. symptom per DR-036)
   □ Conditionally register Tier 2 + Tier 3 CPTs
 
 Step 5 (ACF FIELD GROUPS — 1 hr)
