@@ -2,7 +2,7 @@
 
 > **Append-only architectural decision log.** Each record explains WHY a decision was made — not just WHAT.
 
-**Document Version:** 1.21  
+**Document Version:** 1.22  
 **Last Updated:** 2026-06-04  
 **Format:** Reverse chronological (newest first)
 
@@ -31,6 +31,71 @@
 ---
 
 ## Decisions Log
+
+### [DR-036] — Split `condition` / `symptom` into Separate CPTs (Tier-1 Core, 8 → 9) (2026-06-04 → Locked 2026-06-04) 🔒🧬🩺
+
+**Status:** **🔒 Locked 2026-06-04** — operator-decided **and applied** same working session (14-day review waived per the waiver clause below, mirroring DR-035). Originally drafted **🌱 Proposed 2026-06-04**. **Greenfield, additive, no data migration** (verified: every brand is at Stage 1 / pre-WordPress-build; zero brands have built `condition`/`symptom` pages). Locking before the first WP build is the cheapest moment — same reasoning as DR-035. **Spec propagated to Bible v3.26 + Schema v1.21; `seo_entity_symptom` BUILT 2026-06-04 via migration `eywa_w11_06_dr036_v21_entity_symptom` (29 cols, RLS-enabled `eywa_authenticated_full_access`, additive `CREATE TABLE` — no existing table touched, no data).**
+**Bible Reference:** Amends **§25.2** (CPT Tier Architecture — Tier-1 Core 8 → **9**), **§25.3** (splits "Core CPT 6 — `condition` (hosts BOTH condition + symptom)" into two CPTs: `condition` + new `symptom`), **§25.5** (adds `symptom_meta`; symptom uses the 4 universal ACF groups), **§25.6** (activation: `symptom` Tier-1 always-on). **§4.5** (Page-Branch Relationship A/B/C/D) **unaffected** — this is the entity-CPT axis, orthogonal to the branch axis.
+**Schema Reference:** **Additive.** New extension table **`seo_entity_symptom`** in Group 9 (1:1 with `seo_entity_graph` rows where `type='symptom'`, S-only, mirrors the existing `seo_entity_condition` pattern); Group 9 count **10 → 11**. `seo_entity_condition` now hosts conditions only. **No data migration** (greenfield). Schema_Overview → **v1.21**.
+**Companion to:** §25.3 Core CPT 6 (the original merge this DR reverses), DR-006 (Two-Phase Sync — symptom inherits Group-9 S-only behavior), DR-013/DR-014 (Edge Vocabulary — `symptom_of` semantics unchanged, now realized as a cross-CPT edge), DR-004/DR-010 (URL — `/by-concern/` base retained), DR-035 (greenfield-timing precedent).
+**Scope:** **UNIVERSAL** (Tier-1, all brands). Additive. Brands with zero symptom entities carry an empty always-on CPT (harmless — generates no pages).
+
+**Context:**
+
+§25.3 originally merged `condition` + `symptom` into a single `condition` CPT, discriminated by an ACF `entity_subtype` radio (`condition` | `symptom`). The merge's only real benefit was **URL convenience** — one `/by-concern/{slug}` rewrite base aligned to the near-universal "Treatment by Concern" sitemap section — plus avoiding CPT sprawl. It did **not** give readers a unified experience: the template already branches (`single-condition.php` vs `single-condition--symptom.php`) and schema already differs (`MedicalCondition` vs `MedicalSignOrSymptom`), both keyed off `entity_subtype`.
+
+Operator review (2026-06-04, Deezy planning) found the merge **confusing to maintain long-term** in the WP admin, and **inconsistent** with the already-split `procedure` / `treatment` sibling pair. Crucially, the **planning layer already separates the two**: `seo_entity_graph` carries `type='condition'` vs `type='symptom'` as distinct entity types (Deezy: 50 conditions, 7 symptoms). So the implementation (1 CPT) was *less* granular than the data model (2 types) — the split realigns them.
+
+Because the federation is **greenfield** (no brand past Stage 1; no WP build; no live condition/symptom pages), the split is a pure spec + kit + entity-tagging change with **no data migration, no redirects** — the cheapest possible moment.
+
+**Decision:**
+
+Promote `symptom` to its own **Tier-1 Core CPT**. Tier-1 Core: **8 → 9**:
+`doctor · branch · procedure · treatment · technology · condition · symptom · case_study · post`
+
+Three locked sub-decisions:
+
+1. **URL — shared `/by-concern/{slug}` for BOTH CPTs.** `symptom` registers under the same `/by-concern/` base as `condition`. A custom rewrite/request filter in the kit resolves `/by-concern/{slug}` across both post types. **No collision risk** — EUG (DR-011) already guarantees globally-unique entity slugs (verified: Deezy's 7 symptom slugs are distinct from all condition slugs). The "Treatment by Concern" sitemap-section grouping is preserved via the `sitemap_section` taxonomy (independent of CPT and URL), so both CPTs group together in that section. **No URL change, no redirects, no SEO impact.**
+2. **Tier — Tier-1 always-on** (operator choice). An always-on CPT with zero symptom entities is harmless. *(Alternative considered: Tier-2 common-optional, default-on for clinical verticals — marginally more honest if non-clinical brands genuinely have zero symptoms. Operator chose Tier-1 for model simplicity / no activation-flag branching.)*
+3. **Entity table — add `seo_entity_symptom`** (Group 9), 1:1 with `seo_entity_graph` rows of `type='symptom'`, mirroring the per-type extension pattern (each entity type = its own extension table). `seo_entity_condition` retains conditions only.
+
+Downstream realizations (mechanical, no new vocabulary):
+- `symptom_of` edge becomes a **cross-CPT** edge (`symptom` → parent `condition`) instead of intra-CPT. Edge vocabulary unchanged.
+- `eywa-schema-pipeline` keys schema-type emission off **`post_type`** (`symptom` → `MedicalSignOrSymptom`; `condition` → `MedicalCondition`) instead of `entity_subtype`.
+- The `entity_subtype` ACF field on `condition` becomes **vestigial** → removed (or left dormant; operator to confirm — see Consequences).
+
+**Rationale:**
+
+- **Consistency** — `procedure`/`treatment` are split siblings; `condition`/`symptom` (also distinct schema.org types) should match. One mental model.
+- **Implementation matches planning** — the entity graph already types them separately; the split removes the model/implementation mismatch. CPT assignment becomes a **mechanical derivation** from the existing `type` column (`type=symptom → symptom CPT`), adding **zero** planning-phase complexity.
+- **One clean federation-wide model** — promoting to core (vs a flag-gated optional CPT) avoids permanent **dual-model** branching in the shared kit (no "symptom-as-subtype OR symptom-as-CPT" forks in relationship constraints / schema-pipeline).
+- **No reader regression** — reader UI and schema were already differentiated by template + conditional schema; the split is purely backend/admin clarity.
+- **No URL/SEO impact** — `/by-concern/` retained; section alignment preserved via taxonomy.
+- **Greenfield timing** — additive now, migration-free; deferring to post-WP-build would turn it into a coordinated cross-brand migration.
+
+**Consequences:**
+
+- ✅ **No data migration** — additive DDL only (`CREATE TABLE` + RLS policy); existing tables untouched. Existing 1,376 `seo_website_page_master` rows unaffected (page–branch axis untouched).
+- 🔧 **Schema (v1.21, BUILT 2026-06-04):** `seo_entity_symptom` created in Group 9 — **29 cols**, mirrors `seo_entity_condition` (`entity_fp text NOT NULL UNIQUE` FK → `seo_entity_graph.entity_fingerprint` ON DELETE CASCADE; RLS `eywa_authenticated_full_access`; PK `id uuid`). Dropped condition-only fields; added symptom-specific `severity_scale`/`typical_onset` (CHECK-constrained) + `typical_duration` + YMYL-safety fields (`red_flag_indicators`, `self_care_guidance`, `when_to_see_doctor`, `is_emergency_sign`) + cross-CPT FKs (`associated_conditions_fps` → condition, `accompanying_symptoms_fps` → self, `related_anatomy_fps` → anatomy). Group 9: 10 → 11; base tables 40 → 41. Migration `eywa_w11_06_dr036_v21_entity_symptom` (Wave 11, applied via Supabase).
+- 🔧 **Kit changes:**
+  - `eywa-cpt-activation` — register `symptom` CPT, Tier-1 always-true in `v_brand_cpt_activation`.
+  - `eywa-acf-fields` — `symptom` attaches the 4 universal groups (`eywa_classification`, `eywa_relationships`, `eywa_evidence`, `eywa_llmo_citables`) + new `symptom_meta`. Relationship-field constraints that referenced `post_type=condition` for symptoms (`symptoms_of`) now target `post_type=symptom`; constraints that target conditions (`treats_concerns`) stay `post_type=condition`.
+  - `eywa-schema-pipeline` — emit by `post_type` (see above); drop `entity_subtype` branch.
+  - Custom rewrite — `/by-concern/{slug}` resolves across `condition` + `symptom`.
+- 🔧 **Bible edits:** §25.2 (Tier-1 8→9 table), §25.3 (split Core CPT 6 → `condition` + new `symptom`; renumber subsequent core CPTs; remove `condition_vs_symptom_handling` block from `condition`, add a `symptom` spec with `schema_org: MedicalSignOrSymptom`, `rewrite: by-concern`, `symptom_meta`), §25.5 (add `symptom_meta`), §25.6 (activation flag). Bump Bible v3.25 → **v3.26**.
+- ⚠️ **`entity_subtype` disposition** — operator to confirm: **drop** the field (cleanest, greenfield) vs **leave dormant**. Recommended: drop, since `post_type` now carries the distinction. **Spec-propagation decision (2026-06-04):** the condition/symptom *discriminator* use of `entity_subtype` is removed (Core CPT 6 `condition_vs_symptom_handling` block deleted; `icd_10` visibility + `symptoms_of`/`treats_concerns` constraints re-keyed to `post_type`). The **general-purpose / DR-014 concept-axis** `entity_subtype` field (Group 1 — `framework`/`axis`/`health-belief`, ingredient subtypes) is **retained** (out of this DR's scope).
+- ⚠️ **Other brands** — additive only; no runtime change to any brand's site (no brand is built). Brands with zero symptoms get an empty CPT.
+- 📋 **Deezy follow-up** — 7 symptom entities (`tooth-sensitivity`, `toothache`, `gum-bleeding`, `gum-swelling`, `loose-tooth`, `sensitivity-post-whitening`, `emergency-toothache`) re-tag to the `symptom` CPT at load time (planning only; entities.md already types them `Symptom`). `page-archetypes.md` updated to map `concern → {condition, symptom}`.
+- 📋 **Open follow-ups:** ~~(a) finalize `symptom_meta` field list~~ ✅ **done 2026-06-04** — table built (29 cols); ACF `symptom_meta` mirrors the built columns (Bible §25.3 Core CPT 7). (b) implement the shared-base `/by-concern/` rewrite resolver (kit-level — lands at first WP build). (c) ~~confirm `entity_subtype` drop~~ ✅ done at spec level (condition/symptom discriminator removed; DR-014 concept-axis field retained).
+
+**References:**
+
+- §25.2 (CPT Tier Architecture), §25.3 Core CPT 6 (the merge reversed here), §25.5 (ACF groups), §25.6 (activation flags), §4.5 (Page-Branch Relationship — unaffected).
+- Schema_Overview §11 Group 9 (entity extensions, S-only 1:1 with entity_graph), §11.5a new `seo_entity_symptom`.
+- DR-011 (EUG — slug uniqueness underpins the shared `/by-concern/` base), DR-013/DR-014 (edge vocab — `symptom_of`), DR-035 (greenfield-timing precedent), §25.3 Core CPT 3/4 (procedure/treatment split — the consistency precedent).
+- Deezy evidence: `content-plan/entities.md` (Condition 50 / Symptom 7, typed); `content-plan/page-archetypes.md`.
+
+---
 
 ### [DR-035] — Image Storage & Delivery for Astro Brands (Cloudflare R2 + Image Transformations) (2026-06-04 → Locked 2026-06-04) 🔒🖼️☁️
 
@@ -4191,6 +4256,15 @@ decision_record_governance:
 ---
 
 ## Changelog
+
+### v1.21 (2026-06-04) — DR-036 Locked (Split `condition` / `symptom` into Separate Tier-1 CPTs) 🔒🧬🩺
+
+Operator review (Deezy planning) reversed the §25.3 `condition`-hosts-both merge: `symptom` is promoted to its **own Tier-1 Core CPT**, realigning the WP implementation (was 1 CPT) with the planning layer (`seo_entity_graph` already types `condition` vs `symptom` separately) and with the split `procedure`/`treatment` sibling pair. **Greenfield, additive, no migration** — no brand past Stage 1, no live condition/symptom pages.
+
+- ➕ **DR-036 (NEW, Locked):** Tier-1 Core 8 → 9 (`…technology · condition · symptom · case_study · post`). Shared `/by-concern/{slug}` base for both CPTs (kit request-filter resolves across post types; EUG/DR-011 guarantees unique slugs). `symptom_of` becomes a cross-CPT edge (vocab unchanged). Schema-type emission keyed off `post_type` (not `entity_subtype`).
+- 🗃️ **Schema (BUILT 2026-06-04, migration `eywa_w11_06_dr036_v21_entity_symptom` → Schema v1.21):** new Group-9 extension `seo_entity_symptom` (**29 cols**; 1:1 with `entity_graph type='symptom'`, mirrors `seo_entity_condition` — `entity_fp` FK → `seo_entity_graph.entity_fingerprint`, RLS-enabled). Group 9 10 → 11; base tables 40 → 41. Additive `CREATE TABLE` + RLS policy, no data, no existing table touched.
+- 🔧 **Bible v3.25 → v3.26:** §25.2 (8→9 Tier-1 table, max 15), §25.3 (Core CPT 6 `condition` condition-only + new Core CPT 7 `symptom`; `case_study`→8, `post`→9; `condition_vs_symptom_handling` block removed), §25.5 (Group 5 `symptom_meta`; Group 1 `icd_10` visibility + Group 2 `symptoms_of`/`treats_concerns` constraints re-keyed to `post_type`), §25.6 (`tier1_symptom` always-on + `eywa_register_cpt_symptom()`), §25.7 (symptom URL row).
+- ⚠️ **`entity_subtype`:** condition/symptom *discriminator* use removed; general-purpose / DR-014 concept-axis field retained.
 
 ### v1.20 (2026-06-03) — DR-034 Locked (Intra-Page Answer Routing PAA × FAQ) 🔒🧭
 

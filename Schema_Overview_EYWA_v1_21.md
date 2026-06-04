@@ -1,9 +1,9 @@
 # 📊 Schema Overview — EYWA™ PROTOCOL Database
 
-**Version:** v1.20 (2026-06-03) — DR-034 Intra-Page Answer Routing (PAA × FAQ) 🔒🧭
+**Version:** v1.21 (2026-06-04) — DR-036 Split `condition` / `symptom` CPTs (new `seo_entity_symptom`, BUILT) 🔒🧬🩺
 **Live database:** Supabase project `lffcbeszjqzioobqfdav` ("GTGT") · region `ap-northeast-1` · Postgres 17
-**Total base tables:** 40 (in `public` schema, excluding `logs_2025`/`logs_2026` and backups)
-**Spec stack:** Bible v3.24 · Handover v1.18 · Decision Records v1.20
+**Total base tables:** 41 (in `public` schema, excluding `logs_2025`/`logs_2026` and backups) — `seo_entity_symptom` §11.5a built 2026-06-04 via migration `eywa_w11_06`
+**Spec stack:** Bible v3.26 · Handover v1.18 · Decision Records v1.22
 **Audit method:** Full drift audit vs live `information_schema` performed 2026-05-30. Every column listed below was verified against the live database at audit time.
 
 > **Reader heads-up:** v1.18 is a **full rewrite + audit** of v1.10. Aspirational columns from v1.0–v1.10 that never shipped are dropped (or moved to **Appendix H — Deferred v2.0 Provisions**). Every column under each table reflects the live database. Two new DR waves landed in this version:
@@ -11,10 +11,21 @@
 > - **DR-032 Multi-Center Hospital Brand Pattern** (Schema v1.18, 2026-05-27)
 > - **DR-033 ICD Dual-Coding Standard** (Schema v1.19, 2026-06-02) — `seo_entity_condition` gains `icd11_code` + `icd10_cm_code`
 > - **DR-034 Intra-Page Answer Routing (PAA × FAQ)** (Schema v1.20, 2026-06-03) — `seo_website_page_master` gains `intent_source_tier` + `paa_checked_at`
+> - **DR-036 Split `condition` / `symptom` CPTs** (Schema v1.21, 2026-06-04 🔒) — new Group-9 extension `seo_entity_symptom` (29 cols, S-only, 1:1 with `entity_graph type='symptom'`, mirrors `seo_entity_condition`); **BUILT** via migration `eywa_w11_06`
 
 ---
 
 ## Changelog
+
+### v1.21 (2026-06-04) — DR-036 Split `condition` / `symptom` CPTs 🔒🧬🩺
+
+**Migration:** `eywa_w11_06_dr036_v21_entity_symptom` — **APPLIED 2026-06-04.** Greenfield/additive `CREATE TABLE` + RLS policy; no data, no existing table touched.
+
+**New Group-9 extension `seo_entity_symptom` §11.5a (29 cols)** — sibling to `seo_entity_condition`, 1:1 with `seo_entity_graph` rows where `type='symptom'` (already a valid enum value — see §4.1 `entity_type` CHECK). `entity_fp text NOT NULL UNIQUE` FK → `seo_entity_graph.entity_fingerprint` ON DELETE CASCADE; PK `id uuid`; RLS-enabled (`eywa_authenticated_full_access`). Mirrors the condition extension, dropping condition-only fields (`prevalence_*`, `is_chronic`/`is_acute`, `mortality_rate_pct`) and adding symptom-specific ones (severity/onset CHECK-constrained, YMYL safety, cross-CPT FKs). Group 9 **10 → 11**; base tables **40 → 41**.
+
+- ➕ **DR-036 (NEW, Locked):** realizes the Bible §25.3 `condition`/`symptom` CPT split at the schema layer. `condition` vs `symptom` is carried by `seo_entity_graph.type` (no schema discriminator change needed — both already in the `entity_type` enum). `seo_entity_condition` now hosts conditions only.
+- 🔧 §2 Group-9 list + §11 heading + §4.1 `entity_type` note updated (`symptom` becomes the 10th extension-bound type). `entity_subtype` (DR-014 concept-axis) **unchanged** — it never discriminated condition/symptom at the schema level.
+- 🔒 Companion Bible → **v3.26** (Tier-1 Core 8→9). See **DR-036**.
 
 ### v1.20 (2026-06-03) — DR-034 Intra-Page Answer Routing (PAA × FAQ) 🔒🧭
 
@@ -165,10 +176,10 @@ v1.10 → v1.0: see `archive/Schema_Overview_EYWA_v1_10.md` for the historical d
 | **Group 6** | Backlinks & Off-Page | seo_backlinks_data, seo_backlinks_links (**2**) | S only (Ahrefs/Moz/DFS ingest) |
 | **Group 7** | AI Operations & Embeddings | seo_brand_mentions, seo_llm_citations, seo_llm_query_simulations, seo_entity_embeddings (**4**) | S only |
 | **Group 8** | Data Quality & Governance | seo_data_quality_metrics, seo_schema_changes (**2**) | S only |
-| **Group 9** | Entity Extensions & Templates | seo_entity_ingredients, seo_entity_devices, seo_entity_procedures, seo_entity_product, seo_entity_condition, seo_entity_drug, seo_entity_anatomy, seo_entity_organization, seo_entity_lab_test, seo_programmatic_templates (**10**) | S only (built without notion_id despite spec comment; treat as S-only — see §11 intro) |
+| **Group 9** | Entity Extensions & Templates | seo_entity_ingredients, seo_entity_devices, seo_entity_procedures, seo_entity_product, seo_entity_condition, seo_entity_symptom, seo_entity_drug, seo_entity_anatomy, seo_entity_organization, seo_entity_lab_test, seo_programmatic_templates (**11**) | S only (built without notion_id despite spec comment; treat as S-only — see §11 intro). `seo_entity_symptom` built per DR-036 (§11.5a) |
 | **Group 10** | Ads Landing Page Track (column extensions only) | (no new tables; columns on page_master + keyword master) | — |
 
-**Total: 40 base tables** in `public` schema.
+**Total: 41 base tables** in `public` schema (incl. `seo_entity_symptom` — built 2026-06-04, DR-036).
 
 > **Note on Group 9 vs spec drift:** Spec comments on Group 9 tables mark them `N↔S`, but they were built without `notion_id` columns — practically these function as **S-only** lookup/detail tables (1:1 with entity_graph). v1.18 keeps the historical N↔S label in the spec comment but flags the practical S-only behavior here.
 
@@ -694,7 +705,7 @@ When `brand_structure='monolithic'`: unchanged DR-004 behavior `{brand_domain}/{
 
 #### `entity_type` CHECK enum
 
-Live: `('condition','symptom','treatment','technology','specialty','anatomy','drug','procedure','concept','product','ingredient','device','organization','lab_test')`. The 9 extension types (ingredient/device/procedure/product/condition/drug/anatomy/organization/lab_test) bind to Group 9 detail tables.
+Live: `('condition','symptom','treatment','technology','specialty','anatomy','drug','procedure','concept','product','ingredient','device','organization','lab_test')`. The 10 extension types (ingredient/device/procedure/product/condition/**symptom**/drug/anatomy/organization/lab_test) bind to Group 9 detail tables (`symptom` → `seo_entity_symptom` §11.5a per **DR-036**, built 2026-06-04). The remaining enum values (`treatment`/`technology`/`specialty`/`concept`) bind to CPTs without a dedicated extension table.
 
 #### Indexes
 
@@ -1339,7 +1350,7 @@ Columns: `id`, `change_type` text CHECK IN (`'create_table'`,`'drop_table'`,`'al
 
 ---
 
-## 11. Group 9 — Entity Extensions & Templates (10 tables = 9 extensions + 1 template registry)
+## 11. Group 9 — Entity Extensions & Templates (11 tables = 10 extensions + 1 template registry; `seo_entity_symptom` §11.5a added per DR-036)
 
 > **Pattern:** 1:1 extension to `seo_entity_graph` via `entity_fp text FK→seo_entity_graph.fingerprint`. One row per qualifying entity. Each table adds vocabulary specific to its entity_type (CPT codes for procedures, ATC codes for drugs, FMA terms for anatomy, etc.).
 >
@@ -1369,6 +1380,14 @@ Key fields: `product_sku`, `product_brand_id`, `gtin`, `manufacturer_name`, `pro
 
 ICD-11 / ICD-10 / ICD-10-CM / SNOMED CT / MeSH. **T1 page template binding** — every condition page pulls from this. CRITICAL for medical content authority. **DR-033 ICD coding set:** `icd11_code` (ICD-11-MMS, primary) · `icd10_code` (WHO base / ICD-10-TM) · `icd10_cm_code` (US clinical-mod) · `icd10_codes_related[]` — emitted together in `MedicalCondition.code[]`, ICD-11 first.
 Key fields: `icd11_code` 🆕 v1.19, `icd10_code` (WHO base), `icd10_cm_code` 🆕 v1.19, `icd10_codes_related[]`, `snomed_ct_id`, `mesh_id`, `umls_cui`, `condition_category`, `body_system text[]`, `severity_levels jsonb`, `prevalence_estimate text`, `typical_age_onset numrange`, `symptoms_list_fps text[]` (FK → entity_graph), `risk_factors_list_fps text[]`, `diagnosis_methods text[]`, `treatment_options_fps text[]`, `prognosis text`, `is_chronic boolean`, `is_emergency boolean`, `is_contagious boolean`, `is_genetic boolean`, `who_classification`.
+
+### 11.5a `seo_entity_symptom` 🔒 v1.21 BUILT (DR-036) — entity_type='symptom' (T1) · 29 cols
+
+> **Built 2026-06-04** (migration `eywa_w11_06_dr036_v21_entity_symptom`). Sibling extension to §11.5 `seo_entity_condition`, split out per **DR-036** (Bible §25.3 Core CPT 7 `symptom`). 1:1 with `seo_entity_graph` rows where `type='symptom'` — already a valid `entity_type` enum value (§4.1), so **no enum/discriminator change** was required. Numbered **11.5a** (deliberately *not* folded into the 11.6–11.10 sequence) to preserve the existing cross-references to §11.6–§11.10.
+>
+> **Pattern:** mirrors `seo_entity_condition` — `entity_fp text NOT NULL UNIQUE` FK → `seo_entity_graph.entity_fingerprint` ON DELETE CASCADE, PK `id uuid DEFAULT gen_random_uuid()`, RLS-enabled (`eywa_authenticated_full_access`), S-only, one row per symptom entity. Drops condition-only fields (`prevalence_*`, `incidence_*`, `mortality_rate_pct`, `is_chronic`/`is_acute`/`is_recurrent`/`is_lifestyle_related`); keeps the coding + anatomy fields and adds symptom-specific character + YMYL-safety fields.
+
+**Key fields (29 cols)** — `id`, `entity_fp` (FK). **Coding:** `snomed_ct_id` (symptoms lead with SNOMED CT), `icd11_code` (ICD-11-MMS), `icd10_code` (WHO base — R-codes where applicable), `icd10_codes_related text[]`, `mesh_id`, `umls_cui`, `wikidata_qid`. **Classification:** `symptom_category`, `body_system text[]`, `related_anatomy_fps text[]` (→ `seo_entity_anatomy`). **Character:** `severity_scale` (CHECK `mild|moderate|severe|variable`), `typical_onset` (CHECK `acute|sudden|gradual|intermittent|variable`), `typical_duration`, `is_emergency_sign boolean`. **Relations:** `associated_conditions_fps text[]` (→ `seo_entity_condition`; reciprocal of `seo_entity_condition.symptom_entities_fps`), `accompanying_symptoms_fps text[]` (self-FK), `triggers_factors text[]`, `relieving_factors text[]`. **YMYL safety:** `red_flag_indicators text[]` (when to seek urgent care), `self_care_guidance`, `when_to_see_doctor`. **Patient-facing:** `patient_explanation_th`, `patient_explanation_en`, `common_misconceptions text[]`, `search_volume_proxy`. **Audit:** `created_at`, `updated_at`. **Schema-type emission:** `MedicalSignOrSymptom`, keyed off `post_type` (Bible §25.3, DR-036). **Edge:** `symptom_of` → parent `seo_entity_condition` (cross-CPT; vocab unchanged — DR-013/DR-014).
 
 ### 11.6 `seo_entity_drug` 🆕 v1.11 (42 cols) — entity_type='drug'
 

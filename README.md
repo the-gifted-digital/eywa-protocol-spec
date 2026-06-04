@@ -4,11 +4,11 @@
 
 | 📖 Bible | 📊 Schema | 🏗️ Phase | ⚖️ License |
 |----------|-----------|-----------|-------------|
-| **v3.24** | **v1.20** | **1A Built ✅** | Proprietary |
+| **v3.26** | **v1.21** | **1A Built ✅** | Proprietary |
 
 <!-- Badges (render on GitHub.com): -->
-[![Bible](https://img.shields.io/badge/Bible-v3.25-blue?style=flat-square)](./EYWA_PROTOCOL_v3_25.md)
-[![Schema](https://img.shields.io/badge/Schema-v1.20-green?style=flat-square)](./Schema_Overview_EYWA_v1_20.md)
+[![Bible](https://img.shields.io/badge/Bible-v3.26-blue?style=flat-square)](./EYWA_PROTOCOL_v3_26.md)
+[![Schema](https://img.shields.io/badge/Schema-v1.21-green?style=flat-square)](./Schema_Overview_EYWA_v1_21.md)
 [![Migrations](https://img.shields.io/badge/Migrations-Phase%201A%20Built-success?style=flat-square)](./migrations/README.md)
 [![Phase](https://img.shields.io/badge/Phase-1%20Foundation-orange?style=flat-square)](./PHASE_1_DECISIONS.md)
 [![License](https://img.shields.io/badge/License-Proprietary-red?style=flat-square)]()
@@ -35,10 +35,10 @@ EYWA™ is a registered trademark of **The Gifted Digital Marketing Co., Ltd.** 
 | Document | Purpose | Lines | Status |
 |----------|---------|-------|--------|
 | `PROJECT_MEMORY.md` | Project context for AI sessions + onboarding | ~880 | 🧠 Memory (local-only, gitignored) |
-| `EYWA_PROTOCOL_v3_25.md` | The Bible — full specification | ~27,000 | 🔒 Active (v3.25) |
-| `Schema_Overview_EYWA_v1_20.md` | Database schema companion (40 base tables, full live-audit rewrite) | ~1,700 | 🔒 Active (v1.20) |
+| `EYWA_PROTOCOL_v3_26.md` | The Bible — full specification | ~27,000 | 🔒 Active (v3.26) |
+| `Schema_Overview_EYWA_v1_21.md` | Database schema companion (40 live / 41 spec base tables, full live-audit rewrite) | ~1,700 | 🔒 Active (v1.21) |
 | `EYWA_HANDOVER.md` | Operating manual for Claude/AI | ~3,100 | 🔒 Active (v1.18) |
-| `DECISION_RECORDS.md` | Architecture decision log | ~3,300 | 🔒 Active (v1.20) |
+| `DECISION_RECORDS.md` | Architecture decision log | ~3,300 | 🔒 Active (v1.22) |
 | `PHASE_1_DECISIONS.md` | Phase 1 quick reference | ~440 | 🔒 Active (v1.9) |
 | `Content_Templates_EYWA_v1_0.md` | Universal Content Templates (DR-020 companion, v1.8 internal) | ~2,420 | 🔒 Active (v1.8 — DR-020 locked 2026-05-12 + §4.5.4 per DR-034) |
 | `examples/T1-medical-condition-SKELETON.md` | T1 boilerplate (Part 1/2 separation reference) | ~840 | 🌱 DRAFT |
@@ -51,16 +51,18 @@ EYWA™ is a registered trademark of **The Gifted Digital Marketing Co., Ltd.** 
 
 ---
 
-## 🆕 Latest Update — Bible v3.24 / Schema v1.20 (2026-06-03)
+## 🆕 Latest Update — Bible v3.26 / Schema v1.21 (2026-06-04)
 
 **Current spec stack — brands bump to these versions:**
-**Bible v3.24** · **Schema v1.20** · **Handover v1.18** · **Decision Records v1.20** · **Content_Templates v1.8** · **PHASE_1 v1.9**
+**Bible v3.26** · **Schema v1.21** · **Handover v1.18** · **Decision Records v1.22** · **Content_Templates v1.8** · **PHASE_1 v1.9**
 
-Most recent locked decisions (full detail + rationale in [`DECISION_RECORDS.md`](./DECISION_RECORDS.md)):
+Most recent decisions (full detail + rationale in [`DECISION_RECORDS.md`](./DECISION_RECORDS.md)):
 
-| DR | Locked | What | Schema |
+| DR | Status | What | Schema |
 |----|--------|------|--------|
-| **DR-034** Intra-Page Answer Routing (PAA × FAQ) | 2026-06-03 | §4.5.4 — understanding-PAA → body, decision-PAA → FAQ; tiered FAQ floor; PAA subordinate to the locked template | **v1.20** — `page_master` +`intent_source_tier`, `paa_checked_at` |
+| **DR-036** Split `condition` / `symptom` CPTs 🔒 | 2026-06-04 (Locked) | Tier-1 Core 8→9; `symptom` its own CPT (sibling to `condition`, like `treatment`↔`procedure`); shared `/by-concern/` base; greenfield/additive | **v1.21** — new `seo_entity_symptom` (29 cols, built `eywa_w11_06`); Bible §25 (v3.26) |
+| **DR-035** Image Storage & Delivery (Astro / Cloudflare R2) | 2026-06-04 (Locked) | Astro brands: image binaries on Cloudflare (R2 + Transformations / Images), Supabase stores only the URL | — (Bible v3.25, no DDL) |
+| **DR-034** Intra-Page Answer Routing (PAA × FAQ) | 2026-06-03 (Locked) | §4.5.4 — understanding-PAA → body, decision-PAA → FAQ; tiered FAQ floor; PAA subordinate to the locked template | **v1.20** — `page_master` +`intent_source_tier`, `paa_checked_at` |
 | **DR-033** ICD Dual-Coding Standard | 2026-06-02 | `MedicalCondition.code[]` = ICD-11-MMS → ICD-10 → ICD-10-CM → SNOMED | v1.19 — `seo_entity_condition` +`icd11_code`, `icd10_cm_code` |
 | **DR-032** Multi-Center Hospital Brand Pattern | 2026-05-25 | `brand_structure: monolithic \| multi_center` chosen upfront at onboarding | v1.18 — `seo_brand_centers` + `center_slug`; Bible §25.13 (v3.24) |
 | **DR-031** Google Generative AI Search Alignment | 2026-05-24 | llms.txt deprioritized; query fan-out + audience-first framing | — (Bible v3.23, no DDL) |
