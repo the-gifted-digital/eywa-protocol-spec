@@ -4,11 +4,11 @@
 
 | 📖 Bible | 📊 Schema | 🏗️ Phase | ⚖️ License |
 |----------|-----------|-----------|-------------|
-| **v3.26** | **v1.21** | **1A Built ✅** | Proprietary |
+| **v3.29** | **v1.22** | **1A Built ✅** | Proprietary |
 
 <!-- Badges (render on GitHub.com): -->
-[![Bible](https://img.shields.io/badge/Bible-v3.26-blue?style=flat-square)](./EYWA_PROTOCOL_v3_26.md)
-[![Schema](https://img.shields.io/badge/Schema-v1.21-green?style=flat-square)](./Schema_Overview_EYWA_v1_21.md)
+[![Bible](https://img.shields.io/badge/Bible-v3.29-blue?style=flat-square)](./EYWA_PROTOCOL_v3_29.md)
+[![Schema](https://img.shields.io/badge/Schema-v1.22-green?style=flat-square)](./Schema_Overview_EYWA_v1_22.md)
 [![Migrations](https://img.shields.io/badge/Migrations-Phase%201A%20Built-success?style=flat-square)](./migrations/README.md)
 [![Phase](https://img.shields.io/badge/Phase-1%20Foundation-orange?style=flat-square)](./PHASE_1_DECISIONS.md)
 [![License](https://img.shields.io/badge/License-Proprietary-red?style=flat-square)]()
@@ -35,10 +35,10 @@ EYWA™ is a registered trademark of **The Gifted Digital Marketing Co., Ltd.** 
 | Document | Purpose | Lines | Status |
 |----------|---------|-------|--------|
 | `PROJECT_MEMORY.md` | Project context for AI sessions + onboarding | ~880 | 🧠 Memory (local-only, gitignored) |
-| `EYWA_PROTOCOL_v3_26.md` | The Bible — full specification | ~27,000 | 🔒 Active (v3.26) |
-| `Schema_Overview_EYWA_v1_21.md` | Database schema companion (40 live / 41 spec base tables, full live-audit rewrite) | ~1,700 | 🔒 Active (v1.21) |
+| `EYWA_PROTOCOL_v3_29.md` | The Bible — full specification | ~27,000 | 🔒 Active (v3.29) |
+| `Schema_Overview_EYWA_v1_22.md` | Database schema companion (42 live base tables, full live-audit rewrite) | ~1,700 | 🔒 Active (v1.22) |
 | `EYWA_HANDOVER.md` | Operating manual for Claude/AI | ~3,100 | 🔒 Active (v1.18) |
-| `DECISION_RECORDS.md` | Architecture decision log | ~3,300 | 🔒 Active (v1.22) |
+| `DECISION_RECORDS.md` | Architecture decision log | ~3,300 | 🔒 Active (v1.23) |
 | `PHASE_1_DECISIONS.md` | Phase 1 quick reference | ~440 | 🔒 Active (v1.9) |
 | `Content_Templates_EYWA_v1_0.md` | Universal Content Templates (DR-020 companion, v1.8 internal) | ~2,420 | 🔒 Active (v1.8 — DR-020 locked 2026-05-12 + §4.5.4 per DR-034) |
 | `examples/T1-medical-condition-SKELETON.md` | T1 boilerplate (Part 1/2 separation reference) | ~840 | 🌱 DRAFT |

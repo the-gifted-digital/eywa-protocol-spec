@@ -1,8 +1,8 @@
 # 📖 คัมภีร์ EYWA™ PROTOCOL
 ## The Universal Knowledge Graph SEO Specification for the AI Era
 
-**Version:** 3.26  
-**Last Updated:** 2026-06-04  
+**Version:** 3.29  
+**Last Updated:** 2026-06-08  
 **Trademark:** EYWA™ (Class 35+42, DIP Thailand, filed 2026-04-20)  
 **Created by:** The Gifted Digital Marketing Co., Ltd.  
 **Scope:** Universal standard สำหรับการบริหารจัดการ SEO + Knowledge Graph แบบ multi-vertical, multi-brand, multi-specialty, multi-lingual, multi-location, **AI-future-ready** ในยุค AI Search (2026+) — ครอบคลุม healthcare verticals (clinic ทุก specialty, hospital, dental, sleep medicine, aesthetic, wellness, healthcare media) extensible to other regulated YMYL niches  
@@ -144,6 +144,96 @@ Throughout this Bible:
 
 ## 📜 Changelog
 
+### v3.29 (2026-06-08) — Canonicalize `seo_payer_partners` Federation Table (DR-037) 🔒🏥🧾
+
+Paired companion to **DR-037 (Locked 2026-06-08)** + **Schema v1.22**. Backports Deezy's operator-approved brand-local payer/corporate-welfare directory (**DZ-DR-014**) into the canonical federation schema as a shared **Group-1 Tier-2** table, so every clinic/hospital brand can use it. Governance bump only — full DDL lives in Schema_Overview §3.9 per the standing §5.3 division of labor.
+
+**Headline Changes:**
+
+- ➕ **`seo_payer_partners` — Group 1 (Brand & Organization), 8 → 9 tables** (system diagram 41 → 42). Per-brand directory of commercial payer partners (cashless insurers + corporate-welfare employers). Modelled on the Family-B per-brand-operational pattern (`brand_id uuid` FK → `brands(id)` + DR-008 `payp_{ULID16}` two-column identity, trigger-set, UNIQUE). **Distinct from `seo_entity_organization`** (authority/citation orgs) — payers are operational reference data, not knowledge-graph entities.
+- 🗃️ **Schema v1.21 → v1.22** (migration `eywa_w11_07_dr037_v22_payer_partners_canonical`, applied; 71 Deezy rows migrated, verified). §5.3 Group-1 list + Part 5 system diagram counts updated.
+- 📋 Data verification of Deezy's 71 rows is a separate Deezy-operator track; this bump canonicalizes the schema only. See **DR-037**.
+
+### v3.28 (2026-06-07) — Dynamic Token Implementation Pattern for Multi-Workspace Notion Sync 🔑🔄
+
+Paired companion to **smile-scape brand session 2026-06-07** operational discovery. No new DR — this is a **pattern documentation** bump that fills the "how" gap in §18.7.5 (Brand Scope Validation). The Bible was prescriptive about *what* the architecture must satisfy (env vars per flow, brand scope validation) but silent on *how* to implement multi-Notion-workspace sync in n8n. This bump locks the canonical pattern.
+
+**Headline Changes:**
+
+- ➕ **§18.7.5a NEW — Dynamic Token Implementation Pattern** (~190 lines)
+  - Problem: native n8n Notion node binds credential at config-time → 1 node = 1 workspace
+  - Solution: **HTTP Request node** with `Authorization: Bearer {{ $json.notion_token }}` dynamic expression
+  - 3 storage patterns for the token itself (Pattern A: credential reference, Pattern B: n8n credentials indirect, Pattern C: Supabase Vault direct — recommend A for now, C for v1.23+)
+  - Full reference n8n flow shape (Postgres → enrich → validate → HTTP Request → Postgres update)
+  - Why-this-wins comparison table vs native Notion node × N approach
+  - Implementation checklist (6 items)
+  - Cross-references to §18.7.5, Part 17, Supabase Vault docs, Notion API auth
+
+- 📌 **Operational discovery cited:** session `local_497ba01a-f6f8-45ff-afb7-2187eb4f81ee` ("Cloudflare image upload", eywa-smile-scape, 2026-06-07) — the dynamic-token insight was discovered in this session; v3.28 promotes it from session-only knowledge to canonical spec.
+
+- 🎯 **Why this bump:**
+  - Part 17 Group A flows (A1-A4) assumed native Notion node usage → won't scale to multi-workspace federation
+  - Operators building multi-team setups need a clear blueprint, not "figure it out per workspace"
+  - Supabase Vault path documented but not required immediately — Pattern A unblocks first multi-workspace flow today
+
+- 🔗 **Related artifacts:**
+  - DR-006 (Two-Phase Sync) — sync_state lifecycle this pattern fits into
+  - Part 10.7 (Multi-Brand Federation) — workspace topology this pattern enables
+  - Part 17 Group A (Editorial Sync flows) — will be refactored to use sub-workflow per checklist item 5
+  - Smile-Scape session 2026-06-07 — operational source
+
+- ✅ **No new schema, no migration** (Pattern A is additive when adopted; Pattern C deferred to v1.23+ if needed)
+
+- ⚠️ **Action items spawned** (not blocking this bump):
+  - [ ] Operator decision: Pattern A vs B vs C for token storage
+  - [ ] Implementation: build `_notion_dynamic_call` reusable sub-workflow in n8n
+  - [ ] Refactor: Part 17 Flow A1-A4 specs to use the sub-workflow
+
+### v3.27 (2026-06-05) — Part 5 Table Inventory Refresh + DR-030/032 Status Reconciliation 🔄📊
+
+Paired companion bump to **Schema_Overview v1.18 full audit rewrite** (2026-05-30). No new normative content, no new DR — pure **inventory reconciliation** between Bible Part 5 (Database System) and live Supabase state after Wave 11 migrations landed (2026-05-27).
+
+**Headline Changes (4 surgical edits — all corrective, no semantic drift):**
+
+- 🔄 **§5.2 Architecture Overview diagram** — table counts brought current:
+  - Header: `37 tables` → **`41 tables`** (live `public` base tables, excluding `logs_YYYY` partitions and backups)
+  - Group 1: `7 tables` → **`8 tables`** (added `seo_brand_centers` per DR-032 v1.18)
+  - Group 3: `2 tables` → **`3 tables`** (added `seo_page_internal_links` per DR-021 v1.15)
+  - Group 9: `10 tables` → **`11 tables`** (added `seo_entity_symptom` per DR-036 v3.26)
+  - 🔄 marker note expanded to cover v3.15 (DR-024/025), v3.24 (DR-032), v3.26 (DR-036) waves
+
+- 🔄 **§5.3 Group 1 representative DDL (`brands` table)** — refreshed to **live-verified column list** (20 cols vs the v3.14-era 23-col aspirational stub):
+  - **Removed** 9 columns that were specced in v3.14 but never `ALTER TABLE`'d (`vertical_family`, `healthcare_format`, `medical_specialty[]`, `primary_branch_id`, `accreditations`, `medical_advisory_board_url`, `wikidata_id`, `wikidata_verified_at`, `knowledge_panel_status`) — preserved in `Schema_Overview_EYWA_v1_18.md` Appendix H "Deferred v2.0 Provisions"
+  - **Added** DR-008 identity columns: `fingerprint`, `fingerprint_display_name` (Wave 8, 2026-05-12)
+  - **Added** DR-010 `brand_slug` (was missing from example despite being live since v1.9)
+  - **Added** DR-030 v1.17 columns: `positioning_mode`, `compliance_profile`
+  - **Added** DR-032 v1.18 column: `brand_structure`
+  - Tables-in-group list expanded to include `seo_brand_centers` (cross-ref §25.13)
+
+- 🔄 **v3.22 changelog entry wording correction** — "Schema v1.16 → v1.17 **pending migration**" updated to "**SHIPPED 2026-05-27 via migration `eywa_w11_01_dr030_v17_sensitive_topic_compliance`**". DR-030 Schema v1.17 has been live for 9 days as of this bump; the "pending" wording was correct at write-time but became stale.
+
+- 🔄 **v3.24 changelog entry wording reaffirmation** — "multi-center schema shipped at v1.18" verified correct against migration log (`eywa_w11_02_dr032_v18_multi_center_hospital`, 2026-05-27 + follow-up `eywa_w11_03_brand_centers_notion_sync_cols`, 2026-05-29). No edit needed; flagged for audit completeness.
+
+- 🎯 **Why this bump (no new DR, no new content):**
+  - Operators reading §5.3 for Group 1 brand DDL were getting **v3.14-era aspirational schema** that conflicts with live database — wrote SQL against non-existent columns
+  - Architecture diagram table count drift made it hard to verify "is the table count correct?" — every brand audit got stuck cross-referencing 3 documents
+  - `Schema_Overview_EYWA_v1_18.md` (2026-05-30 rewrite) is the canonical column-level source of truth; Bible §5 must NOT contradict it
+  - Single-source rule: live Supabase = source of truth; Schema_Overview mirrors live; Bible Part 5 references Schema_Overview (does not duplicate)
+
+- 🔗 **Related artifacts:**
+  - `Schema_Overview_EYWA_v1_18.md` — canonical column-level reference (Appendix H lists every aspirational column dropped from Bible §5.3)
+  - DR-030 (Locked 2026-05-20) — Sensitive Topic Compliance Layer
+  - DR-032 (Locked 2026-05-25) — Multi-Center Hospital Brand Pattern
+  - DR-036 (Locked 2026-06-04) — Split `condition`/`symptom` into separate Tier-1 CPTs (Schema v1.21)
+  - Migration log: `supabase_migrations.schema_migrations` rows `eywa_w11_*` (Wave 11)
+
+- ✅ **Backward compatibility:**
+  - Brand snapshots with `bible_version: 3.14` through `3.26` remain valid — no normative content changed
+  - This is a documentation-truth-up update only; no operational or content-production behavior changes
+  - Operators who memorized the v3.14 brand DDL should refresh against §5.3 below
+
+- 📦 **No schema migration, no content rework, no operator action required.** Brands continue operating unchanged. This bump simply tells the truth about what's already in the database.
+
 ### v3.26 (2026-06-04) — Split `condition` / `symptom` into Separate Tier-1 CPTs (DR-036) 🔒🧬🩺
 
 **DR-036 (Locked 2026-06-04)** — promotes `symptom` to its own **Tier-1 Core CPT**, reversing the §25.3 "`condition` hosts both" merge. Tier-1 Core **8 → 9** (`…technology · condition · symptom · case_study · post`). `symptom` mirrors `condition` exactly as `treatment` mirrors `procedure` (distinct schema.org type `MedicalSignOrSymptom` + own template). **Greenfield, additive, no data migration** — no brand past Stage 1; `seo_entity_symptom` built same day. Full spec in DECISION_RECORDS → DR-036.
@@ -205,7 +295,7 @@ Paired companion to **DR-031 (Locked 2026-05-24)** in DECISION_RECORDS. Framing/
 
 ### v3.22 (2026-05-20) — Sensitive Topic Compliance Layer (DR-030) 🔒⚖️🛡️
 
-Implicit version (PART 32 added with v3.22 marker). See **DR-030 (Locked 2026-05-20)** in DECISION_RECORDS.md for full spec. Adds two-dimensional Product Regulatory × Content Topic tier matrix at page level + brand-level positioning_mode + 6 new columns on `seo_website_page_master`. Schema v1.16 → v1.17 pending migration.
+Implicit version (PART 32 added with v3.22 marker). See **DR-030 (Locked 2026-05-20)** in DECISION_RECORDS.md for full spec. Adds two-dimensional Product Regulatory × Content Topic tier matrix at page level + brand-level positioning_mode + 6 new columns on `seo_website_page_master`. **Schema v1.16 → v1.17 SHIPPED 2026-05-27** via migration `eywa_w11_01_dr030_v17_sensitive_topic_compliance` (`seo_website_page_master` +6 cols, `seo_reviews` +3 cols, `brands` +2 cols, `seo_editorial_reviews.review_type` enum extended with `legal_compliance`). [Status note corrected from "pending" by Bible v3.27 inventory reconciliation.]
 
 ### v3.15 (2026-05-12) — Local SEO Naming Consolidation (DR-025) 🏥🔄
 
@@ -6701,21 +6791,26 @@ Tier 3 — Audit/Reference:
 
 ```
 ┌────────────────────────────────────────────────────────────────┐
-│              EYWA™ PROTOCOL DATA SYSTEM (37 tables)             │
+│              EYWA™ PROTOCOL DATA SYSTEM (42 tables)             │
 ├────────────────────────────────────────────────────────────────┤
 │                                                                 │
-│  Group 1: Brand & Organization        (7 tables) — Tier 1  🔄  │
+│  Group 1: Brand & Organization        (9 tables) — Tier 1  🔄  │
 │  Group 2: Knowledge Architecture      (5 tables) — Tier 1       │
-│  Group 3: Page System                 (2 tables) — Tier 1       │
+│  Group 3: Page System                 (3 tables) — Tier 1  🔄  │
 │  Group 4: Keyword & Search            (4 tables) — Tier 1       │
 │  Group 5: Performance Fact Tables     (2 tables) — Tier 1       │
 │  Group 6: Backlinks & Off-Page        (2 tables) — Tier 2       │
 │  Group 7: AI Operations & Embeddings  (4 tables) — Tier 1/2     │
 │  Group 8: Data Quality & Governance   (2 tables) — Tier 1/3     │
-│  Group 9: Entity Extensions & Tmpls   (10 tables = 9 ext + 1) 🔄│
+│  Group 9: Entity Extensions & Tmpls   (11 tables = 10 ext + 1) 🔄│
 │                                                                 │
 └────────────────────────────────────────────────────────────────┘
-🔄 = restored/expanded in v3.15 per DR-024 + DR-025 (see Schema v1.11 for full DDL)
+🔄 = restored/expanded across multiple waves:
+     v3.15 (DR-024 + DR-025) — Group 1 +reviews/directory/gbp_posts; Group 9 +9 entity extensions
+     v3.15 (DR-021) — Group 3 +seo_page_internal_links
+     v3.24 (DR-032) — Group 1 +seo_brand_centers (multi-center hospital pattern)
+     v3.26 (DR-036) — Group 9 +seo_entity_symptom (Tier-1 split from condition)
+     Total live tables verified 2026-06-05 vs Schema_Overview v1.18 + DR-036 Schema v1.21.
 ```
 
 ### Required PostgreSQL Extensions
@@ -6755,76 +6850,117 @@ Optional:
 → ต้องมี 4 ตารางที่ทำงานร่วมกัน
 ```
 
-### Tables in This Group
+### Tables in This Group (8 tables)
 
 ```yaml
 1. brands
-   role: Master ของแบรนด์ — vertical, format, accreditations, Wikidata identity
+   role: Master ของแบรนด์ — identity, slug, sync, positioning, compliance, structure
    sync: N↔S
    
 2. seo_branches
    role: สาขาทางกายภาพ — Local SEO, GBP, schema:LocalBusiness
    sync: N↔S
    
-3. seo_authors_reviewers
+3. seo_brand_centers  🆕 v3.24 (DR-032)
+   role: Center subdivision ของแบรนด์ที่ brand_structure='multi_center'
+         (เช่น vitality-hospital → Vital Sleep / Vital Brain / 7 centers)
+   sync: N↔S
+   ref:  ดู §25.13 Multi-Center Brand Architecture
+   
+4. seo_authors_reviewers
    role: ทะเบียนแพทย์/ผู้เขียน — license verification, board cert, advisory board
    sync: N↔S
    
-4. seo_doctor_assignments
+5. seo_doctor_assignments
    role: Junction (author × brand × branch) — รองรับการแชร์แพทย์ข้าม brand
    sync: N↔S
+
+6. seo_reviews  🆕 v3.15 (DR-025)
+   role: Multi-platform reviews (GBP/Wongnai/Pantip/FB) + PDPA workflow
+         DR-030 v1.17 added 3 cols for sensitive recovery testimonial consent
+   sync: S only (API ingest via n8n flow E1)
+
+7. seo_directory_listings  🆕 v3.15 (DR-025)
+   role: NAP citations + auto-detect inconsistency
+   sync: S only (n8n flow E3)
+
+8. seo_gbp_posts  🆕 v3.15 (DR-025)
+   role: Google Business Profile Posts mgmt + local archive
+   sync: S only (n8n flow E2/E4)
+
+9. seo_payer_partners  🆕 v3.29 (DR-037)
+   role: Payer partner directory — cashless insurers + corporate-welfare employers
+         (per-brand operational; distinct from seo_entity_organization authority orgs)
+   sync: S only (operator-curated / API-ingested reference data)
+   ref:  ดู Schema_Overview §3.9 (full DDL) + DR-037
 ```
 
-### Representative DDL — `brands`
+### Representative DDL — `brands` (live-verified 2026-06-05, 20 cols)
+
+> v3.27 inventory reconciliation: replaced v3.14-era 23-col aspirational stub with the actual live schema. 9 columns from the old example never landed (`vertical_family`, `healthcare_format`, `medical_specialty[]`, `primary_branch_id`, `accreditations`, `medical_advisory_board_url`, `wikidata_id`, `wikidata_verified_at`, `knowledge_panel_status`) — preserved in `Schema_Overview_EYWA_v1_18.md` Appendix H. New columns landed via DR-008 (v1.8), DR-010 (v1.9), DR-030 (v1.17), DR-032 (v1.18).
 
 ```sql
 CREATE TABLE brands (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  brand_name text PRIMARY KEY,                    -- natural unique name
-  notion_id text UNIQUE,                          -- Notion sync
-  notion_workspace text,
-  notion_database_id text,
-  workspace_id text,
-  
-  -- Identity
-  company text,                                   -- legal entity
-  status text DEFAULT 'active',                   -- 'active'/'inactive'/'paused'/'archived'
-  brand_description text,                         -- for schema.org
-  brand_web_url text,                             -- canonical homepage
-  
+  -- Identity (DR-008 Two-Column Identity v1.8 + DR-010 brand_slug v1.9)
+  id                     uuid UNIQUE DEFAULT gen_random_uuid(),
+  brand_name             text PRIMARY KEY,                       -- legacy natural PK (v2.0 migration to id deferred)
+  brand_slug             text UNIQUE NOT NULL,                   -- DR-010 — URL-safe kebab-case
+  fingerprint            text UNIQUE NOT NULL,                   -- DR-008 — brnd_{ULID16} immutable
+  fingerprint_display_name text NOT NULL,                        -- DR-008 — {fp_last_6}::{brand_slug}
+
+  -- Identity metadata
+  company                text,                                   -- legal entity
+  status                 text,                                   -- 'ACTIVE' / 'IN ACTIVE' / 'PENDING'
+  brand_description      text,                                   -- for schema.org
+  brand_web_url          text,                                   -- canonical homepage
+
   -- Analytics integrations
-  gsc_property_url text,                          -- Google Search Console
-  ga4_property_id text,                           -- GA4
-  
-  -- Vertical classification (Bible Part 14)
-  vertical_family text,                           -- 'healthcare'/'media'/'wellness'/'mixed'
-  healthcare_format text,                         -- 'single_specialty'/'multi_specialty'/'dental'/'sleep_medicine'/...
-  medical_specialty text[],                       -- ['dermatology', 'sleep_medicine']
-  
-  -- Branch reference
-  primary_branch_id uuid,                         -- main branch (FK to seo_branches.id)
-  
-  -- Authority signals (Bible Part 23.3)
-  accreditations jsonb DEFAULT '[]',              -- [{name, accredited_at, expires_at, verification_url}]
-  medical_advisory_board_url text,                -- URL of advisory board page
-  
-  -- Brand SERP / Wikidata (Bible Part 13.X)
-  wikidata_id text,                               -- Q-number
-  wikidata_verified_at timestamptz,
-  knowledge_panel_status text,                    -- 'not_yet'/'pending_claim'/'claimed'/'verified'
-  
+  gsc_property_url       text,                                   -- Google Search Console
+  ga4_property_id        text,                                   -- GA4
+
+  -- Notion sync (N↔S)
+  notion_workspace       text,                                   -- 'vt_intelligence' / 'other'
+  notion_database_id     text,                                   -- per-brand workspace DB
+  notion_id              text UNIQUE,                            -- brand's row in [DB 1.1] Brand Database
+  workspace_id           text,                                   -- federation routing
+
+  -- DR-030 v1.17 — Sensitive Topic Compliance Layer (positioning + defaults)
+  positioning_mode       text                                    -- CHECK IN ('A-open-identity','B-dual-layer',
+                                                                 --           'B-weighted-recovery','C-implicit','baseline')
+                         CHECK (positioning_mode IS NULL OR positioning_mode IN
+                           ('A-open-identity','B-dual-layer','B-weighted-recovery','C-implicit','baseline')),
+  compliance_profile     jsonb,                                  -- {product_regulatory_tier_default,
+                                                                 --  content_topic_tier_default, sensitive_topic_flag_default,
+                                                                 --  medical_advisor_required, legitscript_status,
+                                                                 --  ads_strategy, forbidden_claims[], approved_claims_source}
+
+  -- DR-032 v1.18 — Multi-Center Brand Structure
+  brand_structure        text NOT NULL DEFAULT 'monolithic'      -- 'monolithic' (default, all existing brands)
+                         CHECK (brand_structure IN ('monolithic','multi_center')),  -- or 'multi_center' (opt-in for hospitals)
+
   -- Lifecycle
-  created_at timestamptz DEFAULT now(),
-  updated_at timestamptz DEFAULT now(),
-  notion_synced_at timestamptz
+  created_at             timestamptz NOT NULL DEFAULT now(),
+  updated_at             timestamptz NOT NULL DEFAULT now()
 );
 
-CREATE UNIQUE INDEX idx_brands_notion_id ON brands(notion_id) WHERE notion_id IS NOT NULL;
-CREATE INDEX idx_brands_status ON brands(status) WHERE status = 'active';
-CREATE INDEX idx_brands_vertical ON brands(vertical_family, healthcare_format);
+-- DR-008 triggers (Wave 8, 2026-05-12)
+CREATE TRIGGER trg_set_fingerprint_brand BEFORE INSERT ON brands
+  FOR EACH ROW EXECUTE FUNCTION fn_set_fingerprint_brand();
+CREATE TRIGGER trg_refresh_display_name_brand BEFORE UPDATE ON brands
+  FOR EACH ROW EXECUTE FUNCTION fn_refresh_display_name_brand();
+CREATE TRIGGER trg_prevent_fingerprint_change BEFORE UPDATE OF fingerprint ON brands
+  FOR EACH ROW EXECUTE FUNCTION fn_prevent_fingerprint_change();
+
+-- Indexes (live as of 2026-06-05)
+CREATE UNIQUE INDEX brands_id_unique         ON brands(id);
+CREATE UNIQUE INDEX brands_brand_slug_unique ON brands(brand_slug);
+CREATE UNIQUE INDEX brands_fingerprint_unique ON brands(fingerprint);
+CREATE UNIQUE INDEX brands_notion_id_key    ON brands(notion_id) WHERE notion_id IS NOT NULL;
 ```
 
-→ **Full schemas for `seo_branches`, `seo_authors_reviewers`, `seo_doctor_assignments`** : ดู `Schema_Overview v1.0 Section 3`
+→ **Full DDL + indexes + constraints for ALL 9 tables in this group** : ดู `Schema_Overview_EYWA_v1_22.md` §3 (Group 1)
+→ **`seo_brand_centers` rationale + URL pattern + cross-center linking** : ดู §25.13 Multi-Center Brand Architecture (DR-032)
+→ **Vertical/healthcare classification** (vertical_family, healthcare_format, etc.): deferred to v2.0 — see Schema_Overview Appendix H. Brands currently track verticals via `compliance_profile` jsonb + `brand_scope[]` on `seo_entity_graph`
 
 ---
 
@@ -27321,6 +27457,188 @@ operator_setup_steps_for_new_workspace:
   no_user_management_in_db
   team_is_a_concept_in_operator's_head
 ```
+
+### 18.7.5a Dynamic Token Implementation Pattern 🆕 v3.28
+
+> **Why this section:** §18.7.5 establishes that brand-scope validation lives in n8n flow config (env vars), not a Supabase table. **§18.7.5a fills the "how" gap** — the actual n8n implementation pattern for talking to multiple Notion accounts (workspaces) from a single flow without exploding into N parallel Notion nodes. Discovered + locked operationally in the smile-scape session 2026-06-07; documented here as canonical pattern.
+
+#### Problem: native Notion node is single-credential
+
+```yaml
+n8n_native_notion_node:
+  credential_binding: fixed at node-config time (UI-selected once)
+  consequence: one node = one Notion account (workspace)
+  scaling_to_N_workspaces: N parallel Notion nodes (or N copies of flow)
+  problems:
+    ❌ Workflow size explodes with workspace count
+    ❌ Onboarding new workspace = duplicating nodes (manual + error-prone)
+    ❌ Credential rotation = N updates
+    ❌ Single source of "which token for which brand" lives in n8n UI (not queryable)
+```
+
+#### Solution: HTTP Request node + dynamic Bearer token
+
+```yaml
+canonical_pattern:
+  
+  node_type: HTTP Request (NOT native Notion node)
+  
+  http_request_config:
+    method: POST / PATCH / GET / DELETE  # match Notion API operation
+    url: https://api.notion.com/v1/pages    # or databases / blocks / users
+    authentication: None                     # we handle Authorization header ourselves
+    
+    headers:
+      Authorization: "Bearer {{ $json.notion_token }}"   # ← dynamic expression
+      Notion-Version: "2022-06-28"
+      Content-Type: "application/json"
+    
+    body: JSON payload per Notion API spec
+  
+  key_enabler: |
+    The Authorization header uses an n8n expression {{ $json.notion_token }}
+    which resolves at runtime from the upstream item's notion_token field.
+    Different items → different tokens → same node serves N workspaces.
+```
+
+#### Token source-of-truth (where the token comes from)
+
+The token MUST NOT be stored in plaintext in the brands table. Use one of three patterns (in increasing security order):
+
+```yaml
+pattern_A_brands_table_reference_only_RECOMMENDED:
+  brands_table_columns:
+    notion_workspace: text          # 'vt_intelligence' / 'team_smile_scape' / etc.
+    notion_credential_ref: text     # 'cred_smile_scape_v1' — a LOOKUP KEY, not the token
+  
+  n8n_flow_step_resolve_token:
+    1. Read brand row → get notion_credential_ref
+    2. Lookup token from one of:
+       - n8n credential store (referenced by credential_ref)
+       - Supabase Vault (via pgsodium / vault.secrets table)
+       - External secret manager (Doppler, 1Password, AWS Secrets Manager)
+    3. Inject as $json.notion_token for downstream HTTP Request node
+  
+  pros:
+    ✅ Token never lives in regular tables
+    ✅ Rotation = update vault entry, brands table untouched
+    ✅ Audit trail (who accessed which token when)
+  
+  cons:
+    ⚠️ Adds one lookup step per item
+
+pattern_B_n8n_credentials_indirect:
+  approach: Store tokens as n8n credentials, lookup by name at runtime
+  step_1: Create n8n credential per workspace (UI): "notion_smile_scape", "notion_vth_biodent", etc.
+  step_2: Use n8n's $credentials() function in expression:
+          Authorization: "Bearer {{ $credentials($json.notion_credential_name).apiKey }}"
+  pros:
+    ✅ n8n native credential rotation UI
+    ✅ Encrypted at rest by n8n
+  cons:
+    ⚠️ Tokens live inside n8n DB (vendor lock-in)
+    ⚠️ Cannot easily query "who has access to brand X" from Supabase
+
+pattern_C_supabase_vault_DIRECT:
+  approach: Store token in Supabase Vault, query at flow start
+  schema_sketch:
+    -- Phase 1 (future Schema bump):
+    CREATE TABLE seo_notion_workspace_credentials (
+      id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+      workspace_slug text UNIQUE NOT NULL,
+      notion_token_vault_id uuid REFERENCES vault.secrets(id),
+      allowed_brand_slugs text[] NOT NULL,
+      workspace_role text CHECK (workspace_role IN ('editorial','curator','operator')),
+      created_at, updated_at timestamptz
+    );
+  n8n_flow_step:
+    1. Postgres node: SELECT * FROM vault.secrets WHERE id = (brand's vault id)
+    2. Inject decrypted_secret as $json.notion_token
+    3. HTTP Request → Notion API
+  pros:
+    ✅ Single source of truth (Supabase, queryable + auditable)
+    ✅ Aligns with rest of EYWA architecture (Supabase = source)
+    ✅ RLS can lock down who reads vault secrets
+  cons:
+    ⚠️ Requires Phase 1 Schema bump (~v1.23) — net-new table
+    ⚠️ pgsodium / Supabase Vault setup
+```
+
+#### Reference n8n flow shape (Supabase → multi-workspace Notion sync)
+
+```
+┌──────────────────────────────────────────────────────────────────┐
+│  Cron Trigger (every N minutes) — or Webhook from Supabase        │
+└──────────────────────────────────────────────────────────────────┘
+                              ↓
+┌──────────────────────────────────────────────────────────────────┐
+│  Postgres node: SELECT rows to sync                                │
+│  Query: SELECT s.*, b.notion_credential_ref, b.notion_workspace   │
+│         FROM seo_entity_graph s                                    │
+│         JOIN brands b ON s.brand_scope_id = b.brand_slug          │
+│         WHERE s.sync_state = 'flat_loaded'                         │
+│           AND s.notion_id IS NULL                                  │
+│         LIMIT 50;  -- batch size                                   │
+└──────────────────────────────────────────────────────────────────┘
+                              ↓
+┌──────────────────────────────────────────────────────────────────┐
+│  Code node: enrich each row with notion_token                      │
+│  (lookup pattern A/B/C per choice — adds $json.notion_token)      │
+└──────────────────────────────────────────────────────────────────┘
+                              ↓
+┌──────────────────────────────────────────────────────────────────┐
+│  Validation: brand_scope ⊆ ALLOWED_BRANDS env (per §18.7.5)       │
+│  (reject + write back error comment if violation)                 │
+└──────────────────────────────────────────────────────────────────┘
+                              ↓
+┌──────────────────────────────────────────────────────────────────┐
+│  HTTP Request node ← THE PATTERN                                   │
+│  POST https://api.notion.com/v1/pages                              │
+│  Authorization: Bearer {{ $json.notion_token }}  ← dynamic         │
+│  Notion-Version: 2022-06-28                                        │
+│  Body: { parent: { database_id: ... }, properties: { ... } }      │
+│                                                                    │
+│  → Same node handles ALL workspaces; token differs per item       │
+└──────────────────────────────────────────────────────────────────┘
+                              ↓
+┌──────────────────────────────────────────────────────────────────┐
+│  Postgres node: UPDATE Supabase                                    │
+│  SET notion_id = {{ $json.id }}, sync_state = 'notion_synced'     │
+│  WHERE fingerprint = {{ $json.fingerprint }}                       │
+└──────────────────────────────────────────────────────────────────┘
+                              ↓
+┌──────────────────────────────────────────────────────────────────┐
+│  IF error: write back to Notion (workspace-local) as comment      │
+│  OR: log to seo_data_quality_metrics + alert operator             │
+└──────────────────────────────────────────────────────────────────┘
+```
+
+#### Why this pattern wins
+
+| Criterion | Native Notion node × N | HTTP Request + dynamic token |
+|---|---|---|
+| Workflow node count | O(N workspaces) | **O(1)** — single node |
+| Onboarding new workspace | duplicate nodes manually | **add row to brands** + credential vault |
+| Credential rotation | N node-config updates | **1 vault entry update** |
+| Audit "who has access to brand X" | walk n8n UI | **SQL query brands + vault** |
+| Cross-workspace conflict resolution | N parallel branches | **single branch + item-level routing** |
+
+#### Implementation checklist
+
+- [ ] Decide token storage pattern (A / B / C above) — operator decision
+- [ ] If Pattern A: add `notion_credential_ref text` column to `brands` (additive, NULLable)
+- [ ] If Pattern C: ship Schema v1.23 with `seo_notion_workspace_credentials` table + Supabase Vault setup
+- [ ] Build reusable n8n sub-workflow: `_notion_dynamic_call` (input: token + endpoint + payload → output: Notion API response)
+- [ ] Refactor Flow A1-A4 (Bible Part 17) to use the sub-workflow
+- [ ] Document operator runbook: "How to onboard a new Notion workspace" (no longer requires n8n UI edits)
+
+#### Cross-references
+
+- **§18.7.5** — Brand Scope Validation (the "what")
+- **Part 17.2 Group A flows** — A1-A4 will be refactored to use this pattern
+- **Smile-Scape session** (`local_497ba01a-f6f8-45ff-afb7-2187eb4f81ee`, 2026-06-07) — operational discovery
+- **Supabase Vault docs:** https://supabase.com/docs/guides/database/vault
+- **Notion API auth:** https://developers.notion.com/reference/intro#authentication
 
 ### 18.7.6 Universal Resource Curation
 

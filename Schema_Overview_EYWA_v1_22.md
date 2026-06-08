@@ -1,9 +1,9 @@
 # 📊 Schema Overview — EYWA™ PROTOCOL Database
 
-**Version:** v1.21 (2026-06-04) — DR-036 Split `condition` / `symptom` CPTs (new `seo_entity_symptom`, BUILT) 🔒🧬🩺
+**Version:** v1.22 (2026-06-08) — DR-037 Canonicalize `seo_payer_partners` (Group 1 §3.9, BUILT) 🔒🏥🧾
 **Live database:** Supabase project `lffcbeszjqzioobqfdav` ("GTGT") · region `ap-northeast-1` · Postgres 17
-**Total base tables:** 41 (in `public` schema, excluding `logs_2025`/`logs_2026` and backups) — `seo_entity_symptom` §11.5a built 2026-06-04 via migration `eywa_w11_06`
-**Spec stack:** Bible v3.26 · Handover v1.18 · Decision Records v1.22
+**Total base tables:** 42 (in `public` schema, excluding `logs_2025`/`logs_2026` and backups) — `seo_payer_partners` §3.9 canonicalized 2026-06-08 via migration `eywa_w11_07` (DR-037); `seo_entity_symptom` §11.5a built 2026-06-04 via `eywa_w11_06`
+**Spec stack:** Bible v3.29 · Handover v1.18 · Decision Records v1.23
 **Audit method:** Full drift audit vs live `information_schema` performed 2026-05-30. Every column listed below was verified against the live database at audit time.
 
 > **Reader heads-up:** v1.18 is a **full rewrite + audit** of v1.10. Aspirational columns from v1.0–v1.10 that never shipped are dropped (or moved to **Appendix H — Deferred v2.0 Provisions**). Every column under each table reflects the live database. Two new DR waves landed in this version:
@@ -16,6 +16,17 @@
 ---
 
 ## Changelog
+
+### v1.22 (2026-06-08) — DR-037 Canonicalize `seo_payer_partners` Federation Table 🔒🏥🧾
+
+**Migration:** `eywa_w11_07_dr037_v22_payer_partners_canonical` — **APPLIED 2026-06-08.** In-place composite ALTER of the brand-local Deezy table (DZ-DR-014); 71 rows migrated, no data loss.
+
+**New canonical Group-1 table `seo_payer_partners` §3.9 (19 cols)** — per-brand directory of commercial payer partners (cashless insurers + corporate-welfare employers). Backported from Deezy's brand-local table into the canonical federation schema as a **Family-B per-brand-operational** table (sibling of `seo_branches`/`seo_reviews`/`seo_directory_listings`/`seo_gbp_posts`/`seo_doctor_assignments`). Group 1 **8 → 9**; base tables **41 → 42**.
+
+- ➕ **DR-037 (NEW, Locked):** `brand_id` migrated `text`(slug) → `uuid NOT NULL` FK → `brands(id)`; +DR-008 two-column identity (`fingerprint text NOT NULL UNIQUE` `payp_{ULID16}` + `fingerprint_display_name`), trigger-set via `fn_set_fingerprint_generic('payp','partner_name','partner_name')` + `fn_prevent_fingerprint_change`. RLS `eywa_authenticated_full_access` unchanged. Retained CHECKs (`partner_type`/`insurer_category`/`verification_status`), UNIQUE `(brand_id,partner_type,partner_name)`.
+- 🔧 **Distinct from `seo_entity_organization` (§11.8)** — that hosts authority/citation orgs (E-E-A-T graph); payers are operational, per-brand, high-churn reference data. Not a knowledge-graph entity (no `seo_entity_graph` row).
+- 🔧 §2 Group-1 list + §3 heading (8→9) + total base tables (41→42) updated. Verified: 71/71 distinct well-formed fingerprints; FK valid; bare `INSERT` auto-sets fingerprint.
+- 🔒 Companion Bible → **v3.29**. See **DR-037**.
 
 ### v1.21 (2026-06-04) — DR-036 Split `condition` / `symptom` CPTs 🔒🧬🩺
 
@@ -168,7 +179,7 @@ v1.10 → v1.0: see `archive/Schema_Overview_EYWA_v1_10.md` for the historical d
 
 | Group | Theme | Tables (count) | Sync Direction |
 |---|---|---|---|
-| **Group 1** | Brand & Organization | brands, seo_branches, seo_brand_centers 🆕 v1.18, seo_authors_reviewers, seo_doctor_assignments, seo_reviews, seo_directory_listings, seo_gbp_posts (**8**) | N↔S (master) · S only (reviews/directory_listings/gbp_posts via API ingest) |
+| **Group 1** | Brand & Organization | brands, seo_branches, seo_brand_centers 🆕 v1.18, seo_authors_reviewers, seo_doctor_assignments, seo_reviews, seo_directory_listings, seo_gbp_posts, seo_payer_partners 🆕 v1.22 (**9**) | N↔S (master) · S only (reviews/directory_listings/gbp_posts/payer_partners via API ingest / curated) |
 | **Group 2** | Knowledge Architecture | seo_entity_graph, seo_topic_cluster_master, seo_citations, seo_page_citations, seo_entity_relationships (**5**) | N↔S |
 | **Group 3** | Page System | seo_website_page_master, seo_editorial_reviews, seo_page_internal_links (**3**) | N↔S |
 | **Group 4** | Keyword & Search Intelligence | seo_x_ads_keywords_contextual_master, seo_x_ads_keywords_monthly_market_snapshot, seo_x_ads_keyword_serp_competitors, seo_x_voice_search (**4**) | N↔S (master) · S only (monthly_snapshot, serp_competitors) |
@@ -233,7 +244,7 @@ See **Appendix A** for installation order and per-table extension dependencies.
 
 ---
 
-## 3. Group 1 — Brand & Organization (8 tables)
+## 3. Group 1 — Brand & Organization (9 tables)
 
 > Authoritative tables for brand identity, physical/local presence, medical staff, multi-center subdivision, and external reputation signals.
 >
@@ -651,6 +662,64 @@ When `brand_structure='monolithic'`: unchanged DR-004 behavior `{brand_domain}/{
 | Intra-center (same center) | Default approved — no per-link justification |
 | Intra-brand cross-center (Vital Sleep → Vital Brain within Vitality) | **Default approved** — recorded as `link_type='cross_center_intra_brand'` in `seo_page_internal_links` for analytics, NOT gated |
 | Cross-brand (Vitality ↔ Biodent) | Existing DR-021 governance — `is_cross_brand=true` + `cross_brand_justification` required |
+
+---
+
+### 3.9 `seo_payer_partners` 🆕 v1.22 (DR-037)
+
+> **Purpose:** Per-brand directory of **commercial payer partners** — cashless insurers + corporate-welfare employers — rendered on a brand's cashless/partner directory pages (e.g. Deezy sitemap §2.7/§2.8). Operational, per-brand, high-churn reference data.
+> **Distinct from `seo_entity_organization` (§11.8):** that table hosts **authority/citation** orgs for the E-E-A-T graph; payers are commercial partners, **not** knowledge-graph entities (no `seo_entity_graph` row).
+> **Sync:** S only (operator-curated / API-ingested reference data; refresh cadence per brand)
+> **First adopter:** `deezy-dental` (71 rows — 36 insurers [32 TH + 4 foreign] + 35 employers)
+> **DR:** DR-037 (Locked 2026-06-08) — canonicalized from brand-local DZ-DR-014 into the Family-B per-brand-operational shape (sibling of `seo_branches` §3.2 / `seo_reviews` §3.5 / `seo_directory_listings` §3.6).
+> **Bible:** §5.3 Group 1
+
+#### Columns (19)
+
+| Column | Type | Constraint | Description |
+|---|---|---|---|
+| `id` | `uuid` | PRIMARY KEY DEFAULT `gen_random_uuid()` | Surrogate PK. |
+| `fingerprint` | `text` | NOT NULL, UNIQUE | DR-008 — `payp_{ULID16}` immutable. Auto-set by `trg_set_fingerprint`. |
+| `fingerprint_display_name` | `text` | NOT NULL | DR-008 — `{fp_last_6}::{partner_name}` auto-computed. |
+| `brand_id` | `uuid` | NOT NULL, FK → `brands(id)` | Owning brand. uuid FK (matches the Local-SEO operational subsystem), **not** `brand_scope[]`. |
+| `partner_type` | `text` | NOT NULL, CHECK IN (`insurer`,`employer`) | Row discriminator. |
+| `partner_no` | `integer` | nullable | Source/infographic ordering (Deezy used 101–104 for foreign insurers). |
+| `partner_name` | `text` | NOT NULL | TH legal/display name. |
+| `partner_name_en` | `text` | nullable | English name (foreign insurers / english-named corps). |
+| `insurer_category` | `text` | CHECK NULL OR IN (`life`,`non_life`,`tpa`,`foreign`) | Insurer-only classification. |
+| `cashless` | `boolean` | nullable | Insurer = direct-billing / no upfront payment. |
+| `opd_only` | `boolean` | NOT NULL DEFAULT `false` | Coverage limited to OPD. |
+| `affiliates` | `text[]` | nullable | "บริษัทในเครือ" sub-companies. |
+| `affiliate_count` | `integer` | nullable | |
+| `conditions_note` | `text` | nullable | Conditional scope / data-quality note. |
+| `verification_status` | `text` | NOT NULL DEFAULT `unverified`, CHECK IN (`unverified`,`verified`,`needs_review`) | Operator data-validation state (orthogonal to schema canonicalization). |
+| `source` | `text` | nullable | Provenance. |
+| `last_verified_date` | `date` | nullable | |
+| `created_at` | `timestamptz` | NOT NULL DEFAULT `now()` | |
+| `updated_at` | `timestamptz` | NOT NULL DEFAULT `now()` | |
+
+#### Indexes
+
+- PRIMARY KEY (id)
+- UNIQUE (fingerprint) — `seo_payer_partners_fingerprint_key`
+- UNIQUE (brand_id, partner_type, partner_name) — `seo_payer_partners_uniq`
+- `idx_seo_payer_partners_brand` btree (brand_id)
+- `idx_seo_payer_partners_type` btree (brand_id, partner_type)
+
+#### Triggers
+
+- `trg_set_fingerprint` BEFORE INSERT → `fn_set_fingerprint_generic('payp','partner_name','partner_name')` — generates `payp_{ULID16}` if NULL + computes display_name. (Confirmed: a bare `INSERT` of `brand_id`+`partner_type`+`partner_name` auto-populates both identity columns.)
+- `trg_prevent_fingerprint_change` BEFORE UPDATE → `fn_prevent_fingerprint_change()` (shared) — DR-008 immutability.
+
+#### Constraints
+
+- FK `seo_payer_partners_brand_id_fkey` (brand_id) → `brands(id)`
+- CHECK `partner_type ∈ {insurer, employer}`
+- CHECK `insurer_category` NULL or ∈ {life, non_life, tpa, foreign}
+- CHECK `verification_status ∈ {unverified, verified, needs_review}`
+- RLS enabled — policy `eywa_authenticated_full_access` (ALL / authenticated / true)
+
+> **Convention note (DR-037):** no per-table fingerprint **format CHECK** — like every Family-B table, the `payp_` format is enforced by `fn_set_fingerprint_generic` + the UNIQUE index, not a CHECK constraint. `brand_id` is `uuid` FK (matching branches/reviews/directory/gbp/doctor); `seo_brand_centers` and `seo_website_page_master` use `text → brand_slug` instead — a known live split, see DR-037 rationale.
 
 ---
 

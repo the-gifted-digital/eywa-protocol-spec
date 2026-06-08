@@ -2,8 +2,8 @@
 
 > **Append-only architectural decision log.** Each record explains WHY a decision was made — not just WHAT.
 
-**Document Version:** 1.22  
-**Last Updated:** 2026-06-04  
+**Document Version:** 1.23  
+**Last Updated:** 2026-06-08  
 **Format:** Reverse chronological (newest first)
 
 ---
@@ -31,6 +31,51 @@
 ---
 
 ## Decisions Log
+
+### [DR-037] — Canonicalize `seo_payer_partners` as Tier-2 Local-SEO Federation Table (backport of DZ-DR-014) (2026-06-08 → Locked 2026-06-08) 🔒🏥🧾
+
+**Status:** **🔒 Locked 2026-06-08** — operator-directed completion ("finish it so every brand can pick it up"), drafted + applied same working session. **In-place ALTER** of an existing brand-local table (71 Deezy rows migrated, no data loss); applied via migration `eywa_w11_07_dr037_v22_payer_partners_canonical`. Backport of the operator-approved brand-local **DZ-DR-014** (Deezy Dental) into the canonical federation schema.
+**Bible Reference:** **§5.3 Group 1** (Brand & Organization, **8 → 9** tables) + system diagram (41 → 42 tables). Full DDL deferred to Schema_Overview §3.9 per the Bible's standing division of labor. Bump Bible v3.28 → **v3.29**.
+**Schema Reference:** Schema **v1.21 → v1.22**. New canonical table **`seo_payer_partners`** in Group 1 §3.9. Base tables **41 → 42**; Group 1 **8 → 9**. Schema_Overview file renamed `…v1_21.md` → `…v1_22.md`.
+**Companion to:** DZ-DR-014 (the brand-local origin), DR-008 (Two-Column Identity — `payp_{ULID16}`), DR-010 (Brand Scope Architecture — explains why `brand_scope[]` is **not** used here), DR-025 (Local SEO subsystem this table joins).
+**Scope:** **UNIVERSAL** (Tier-2, all clinic/hospital brands). Additive table; brands with zero payer partners simply carry no rows.
+
+**Context:**
+
+Deezy raised **DZ-DR-014** needing a cashless payer + corporate-welfare partner directory (Deezy sitemap §2.7/§2.8). No existing spec table fit: `seo_entity_organization` (§11.8) is built for **authority / citation** orgs (`ror_id`, `is_who_recognized`, `used_as_citation_source`) — loading 70+ insurers/employers there would pollute the E-E-A-T citation graph; and a payer roster is **operational reference data** (churns frequently, per-brand), not a knowledge-graph entity, so modelling it in `seo_entity_graph` would bloat the graph for ~2 directory pages. The table was built **brand-local in GTGT 2026-06-07** (71 rows: 36 insurers + 35 employers) and logged in `seo_schema_changes` flagged `spec_version='v1.15 (backport pending)'`. The hand-off proposal lives at `brands/eywa-deezy/deployment/supabase-load/SPEC-BACKPORT-seo_payer_partners.md`.
+
+**Decision:**
+
+Adopt `seo_payer_partners` as a **canonical Tier-2 Local-SEO federation table** (Group 1, §3.9). Canonical shape = the **Family-B per-brand-operational pattern** (the subsystem of `seo_branches` / `seo_reviews` / `seo_directory_listings` / `seo_gbp_posts` / `seo_doctor_assignments`):
+
+- `brand_id uuid NOT NULL` **FK → `brands(id)`** (was `text` slug with `DEFAULT 'deezy-dental'`).
+- **DR-008 Two-Column Identity:** `fingerprint text NOT NULL UNIQUE` (`payp_{ULID16}`) + `fingerprint_display_name text NOT NULL`, set by `trg_set_fingerprint → fn_set_fingerprint_generic('payp','partner_name','partner_name')` + `trg_prevent_fingerprint_change` (immutability). **No format CHECK** — format is trigger-enforced, matching every Family-B table.
+- RLS `eywa_authenticated_full_access` (already on). Existing CHECKs (`partner_type ∈ {insurer,employer}`, `insurer_category ∈ {life,non_life,tpa,foreign}`, `verification_status ∈ {unverified,verified,needs_review}`), UNIQUE `(brand_id, partner_type, partner_name)`, and `opd_only` / `cashless` / `affiliates[]` columns retained as loaded.
+
+Applied as an **in-place ALTER** of the brand-local table (name already matched) — `eywa_w11_07`.
+
+**Rationale:**
+
+- **New table justified** — by the proposal's own analysis: payers are commercial/operational, not authority/citation orgs, and not graph entities. Cross-brand need: every clinic/hospital brand has cashless insurer + corporate-welfare partners, so this belongs in the shared spec, not as a Deezy fork.
+- **`brand_id uuid` FK, NOT `brand_scope[]` (corrects proposal refinement #2)** — the proposal recommended `brand_scope text[]`, which **contradicts its own "not a knowledge-graph entity" reasoning**. Live convention is a clean split: `brand_scope[]` is for **graph/shared** data (`seo_entity_graph`, `seo_citations`, `seo_topic_cluster_master`, `seo_authors_reviewers`, `seo_entity_relationships`, `seo_page_internal_links`); **per-brand operational** tables use scalar `brand_id uuid` FK → `brands(id)`. `seo_payer_partners` is the 6th member of the Local-SEO operational subsystem → it matches those five. *(Noted: `seo_brand_centers` + `seo_website_page_master` use `text → brand_slug`; uuid was chosen here for consistency with the Local-SEO operational siblings. A future federation-wide brand-key standardization can revisit via DR.)*
+- **Trigger-enforced fingerprint, no CHECK (corrects proposal refinement #1)** — the proposal asked for a `CHECK payp_[0-9A-F]{16}`; live Family-B tables enforce the format via `fn_set_fingerprint_generic` + UNIQUE only, no per-table CHECK. Followed the live convention.
+- **Section §3.9, not §3.8 (corrects stale proposal anchor)** — the proposal targeted "§3.8 near `seo_branches`", but §3.8 has been `seo_brand_centers` since Schema v1.18 (DR-032). New table lands at §3.9.
+
+**Consequences:**
+
+- ✅ **DB (BUILT 2026-06-08, `eywa_w11_07_dr037_v22_payer_partners_canonical`):** in-place ALTER; 71 Deezy rows migrated (`brand_id` slug→uuid, `payp_` fingerprints backfilled). **Verified:** 71/71 distinct, well-formed `payp_[0-9A-F]{16}` fingerprints; FK valid; bare `INSERT` (brand_id + partner_type + partner_name only) auto-sets fingerprint via trigger. `seo_schema_changes`: origin `create_table` row `spec_version` cleared `'v1.15 (backport pending)'` → `'v1.22 (canonical · DR-037)'`; new `other` row records the migration.
+- 🌐 **Federation-ready** — any brand may now insert payer rows keyed by its `brand_id`; RLS unchanged.
+- 📋 **Out of scope (separate Deezy-operator track):** data verification of Deezy's 71 rows (true-cashless vs reimbursement, 7 `needs_review` names, 2 `opd_only` flags, `source` + `last_verified_date`). `verification_status` stays `unverified`/`needs_review` until Deezy validates — this DR canonicalizes the **schema**, not the data.
+- 🔧 **Docs:** Schema_Overview → **v1.22** (§3.9 added; §2 Group-1 list + §3 heading 8→9; total 41→42; file renamed). Bible v3.28 → **v3.29** (§5.3 Group-1 list +`seo_payer_partners`; system diagram counts). migrations/README → Wave 11.07 entry.
+- 🌱 **Deferred refinement (proposal #3):** optional `renders_on_page_fps text[]` link to page master — left to the page→`partner_type` convention for now; revisit if a payer needs multi-page targeting.
+
+**References:**
+
+- DZ-DR-014 origin + full proposal: `brands/eywa-deezy/deployment/supabase-load/SPEC-BACKPORT-seo_payer_partners.md`; reproducible load `11_payer_partners.sql`.
+- DR-008 (Two-Column Identity), DR-010 (Brand Scope Architecture — the `brand_scope[]` vs `brand_id` split), DR-025 (Local SEO subsystem), DR-032 (§3.8 `seo_brand_centers`, the prior Group-1 addition).
+- Schema_Overview §3.9 (`seo_payer_partners` full DDL), §2 Group 1; migration `eywa_w11_07_dr037_v22_payer_partners_canonical`.
+
+---
 
 ### [DR-036] — Split `condition` / `symptom` into Separate CPTs (Tier-1 Core, 8 → 9) (2026-06-04 → Locked 2026-06-04) 🔒🧬🩺
 
@@ -4256,6 +4301,16 @@ decision_record_governance:
 ---
 
 ## Changelog
+
+### v1.22 (2026-06-08) — DR-037 Locked (Canonicalize `seo_payer_partners` Federation Table) 🔒🏥🧾
+
+Backport of the operator-approved brand-local **DZ-DR-014** (Deezy cashless payer + corporate-welfare directory) into the canonical federation schema. The brand-local table (71 rows, flagged `spec_version='v1.15 (backport pending)'`) is promoted to a shared **Tier-2 Local-SEO table** so every clinic/hospital brand can use it. **In-place ALTER, no data loss.**
+
+- ➕ **DR-037 (NEW, Locked):** `seo_payer_partners` canonical in Group 1 (§3.9). Shape aligned to the **Family-B per-brand-operational pattern** (siblings: branches/reviews/directory_listings/gbp_posts/doctor_assignments): `brand_id text(slug) → uuid NOT NULL FK brands(id)` + DR-008 two-column identity (`payp_{ULID16}` fingerprint + display_name, trigger-set, UNIQUE, no format CHECK). RLS `eywa_authenticated_full_access` unchanged.
+- 🗃️ **Schema (BUILT 2026-06-08, migration `eywa_w11_07_dr037_v22_payer_partners_canonical` → Schema v1.22):** Group 1 **8 → 9**; base tables **41 → 42**. 71 Deezy rows migrated (verified: 71 distinct well-formed fingerprints, FK valid, trigger auto-sets on bare insert). `seo_schema_changes` origin row cleared to `'v1.22 (canonical · DR-037)'` + new migration row. Schema_Overview renamed `…v1_21.md → …v1_22.md`.
+- 🔧 **Corrected 3 stale/wrong proposal refinements** vs the live schema: (1) **no** `brand_scope[]` — that pattern is for graph entities, per-brand operational tables use `brand_id uuid` FK; (2) **no** format CHECK — Family-B fingerprints are trigger-enforced; (3) section is **§3.9**, not the proposal's §3.8 (taken by `seo_brand_centers` since v1.18).
+- 🔒 Companion Bible → **v3.29** (Group 1 8→9). See **DR-037**.
+- 📋 **Separate track:** Deezy's 71-row data verification (cashless scope, `needs_review` names, `opd_only`, source/date) remains a Deezy-operator task — this DR locks the **schema**, not the data.
 
 ### v1.21 (2026-06-04) — DR-036 Locked (Split `condition` / `symptom` into Separate Tier-1 CPTs) 🔒🧬🩺
 

@@ -128,6 +128,7 @@ GENERATED columns:           5 (nap_match_score, has_inconsistency, engagement_r
 | DR-033 | Locked 2026-06-02 | `eywa_w11_04` (ICD dual-coding on `seo_entity_condition`) |
 | DR-034 | Locked 2026-06-03 | `eywa_w11_05` (PAA × FAQ intent routing on `seo_website_page_master`) |
 | DR-036 | Locked 2026-06-04 | `eywa_w11_06_dr036_v21_entity_symptom` (additive `seo_entity_symptom`, 29 cols, Group 9) |
+| DR-037 | Locked 2026-06-08 | `eywa_w11_07_dr037_v22_payer_partners_canonical` (canonicalize `seo_payer_partners`, Group 1 8→9: `brand_id` text→uuid FK + DR-008 `payp_` identity; backport of brand-local DZ-DR-014, 71 rows migrated) |
 
 ## Outstanding Items
 
