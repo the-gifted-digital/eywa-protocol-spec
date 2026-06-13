@@ -33,6 +33,8 @@ credentials.json
 supabase-keys.txt
 notion-token.txt
 n8n-credentials.json
+# n8n deploy-flow exports embed live tokens in jsCode nodes — never commit (push-protection block 2026-06-14)
+n8n-flows/.deploy_*.json
 dataforseo-credentials.txt
 
 # ===== Logs =====
