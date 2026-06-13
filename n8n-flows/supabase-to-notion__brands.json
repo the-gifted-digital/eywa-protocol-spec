@@ -1,0 +1,303 @@
+{
+  "name": "EYWA: Supabase \u2192 Notion sync (brands INSERT+UPDATE) [v3.32]",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 5
+            }
+          ]
+        }
+      },
+      "id": "trigger-cron",
+      "name": "Cron: every 5 min",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -1200,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "-- \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\n-- S\u2192N Phase 1 SELECT: brands needing INSERT or UPDATE in Notion\n-- \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\n-- INSERT path: notion_id IS NULL (never synced)\n-- UPDATE path: updated_at > notion_synced_at (Supabase changed since last sync)\n-- \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\nSELECT\n  id, brand_slug, brand_name, fingerprint, fingerprint_display_name,\n  status, brand_structure, notion_workspace,\n  company, brand_description, brand_web_url, gsc_property_url,\n  ga4_property_id, positioning_mode, compliance_profile,\n  cloudflare_account_email, notion_id,\n  CASE WHEN notion_id IS NULL THEN 'insert' ELSE 'update' END AS sync_op\nFROM brands\nWHERE notion_workspace IN ('vt_intelligence', 'the_gifted_synapse')\n  AND (\n    notion_id IS NULL\n    OR (notion_id IS NOT NULL \n        AND notion_synced_at IS NOT NULL \n        AND updated_at > notion_synced_at)\n  )\nLIMIT 20;",
+        "options": {}
+      },
+      "id": "pg-select-pending",
+      "name": "Supabase: SELECT pending brands",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        -1000,
+        0
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "REPLACE_WITH_SUPABASE_CREDENTIAL_ID",
+          "name": "Supabase Postgres (eywa GTGT)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\n// EYWA v3.32 \u2014 brands sync: handles INSERT (new) + UPDATE (changed)\n// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\n// sync_op = 'insert' \u2192 POST /v1/pages with parent.data_source_id\n// sync_op = 'update' \u2192 PATCH /v1/pages/{notion_id} (no parent)\n// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\n\nconst WORKSPACES = {\n  vt_intelligence: {\n    token: $env.NOTION_TOKEN_VT_INTELLIGENCE,\n    brand_ds_id: $env.NOTION_DB_BRANDS_VT_INTELLIGENCE,\n    prop_names: {\n      display_name:     'Display Name',\n      workspace:        'Workspace',\n      website:          'Website',\n      gsc_property:     'GSC Property',\n    },\n  },\n  the_gifted_synapse: {\n    token: $env.NOTION_TOKEN_THE_GIFTED_SYNAPSE,\n    brand_ds_id: $env.NOTION_DB_BRANDS_THE_GIFTED_SYNAPSE,\n    prop_names: {\n      display_name:     'Fingerprint Display Name',\n      workspace:        'Notion Workspace',\n      website:          'Brand Web URL',\n      gsc_property:     'GSC Property URL',\n    },\n  },\n};\n\nfunction mapStatus(s) {\n  if (!s || s === '') return 'PENDING';\n  const t = s.toString().trim().toLowerCase();\n  if (t === 'active') return 'ACTIVE';\n  if (t === 'inactive' || t === 'in_active' || t === 'in active') return 'IN ACTIVE';\n  return 'PENDING';\n}\n\nfunction buildProperties(row, ws) {\n  const config = WORKSPACES[ws];\n  const N = config.prop_names;\n  const props = {\n    'Brand Name': { title: [{ text: { content: row.brand_name || '(unnamed)' } }] },\n    'Brand Slug': { rich_text: [{ text: { content: row.brand_slug || '' } }] },\n    'Fingerprint': { rich_text: [{ text: { content: row.fingerprint || '' } }] },\n    [N.display_name]: { rich_text: [{ text: { content: row.fingerprint_display_name || '' } }] },\n    'Status': { select: { name: mapStatus(row.status) } },\n    'Brand Structure': { select: { name: row.brand_structure || 'monolithic' } },\n    [N.workspace]: { select: { name: ws } },\n  };\n  if (row.company) props['Company'] = { rich_text: [{ text: { content: row.company } }] };\n  if (row.brand_description) props['Brand Description'] = { rich_text: [{ text: { content: row.brand_description } }] };\n  if (row.brand_web_url) props[N.website] = { url: row.brand_web_url };\n  if (row.gsc_property_url) props[N.gsc_property] = { url: row.gsc_property_url };\n  if (row.ga4_property_id) props['GA4 Property ID'] = { rich_text: [{ text: { content: row.ga4_property_id } }] };\n  if (row.positioning_mode) props['Positioning Mode'] = { select: { name: row.positioning_mode } };\n  if (row.compliance_profile) {\n    const cp = typeof row.compliance_profile === 'string'\n      ? row.compliance_profile\n      : JSON.stringify(row.compliance_profile, null, 2);\n    props['Compliance Profile'] = { rich_text: [{ text: { content: cp.substring(0, 2000) } }] };\n  }\n  return props;\n}\n\nconst out = [];\nconst errors = [];\n\nfor (const item of $input.all()) {\n  const row = item.json;\n  const ws = row.notion_workspace;\n  const config = WORKSPACES[ws];\n  if (!config) {\n    errors.push({ brand_slug: row.brand_slug, reason: `unsupported workspace: ${ws}` });\n    continue;\n  }\n  if (!config.token) { errors.push({ brand_slug: row.brand_slug, reason: 'token missing' }); continue; }\n  if (!config.brand_ds_id) { errors.push({ brand_slug: row.brand_slug, reason: 'ds_id missing' }); continue; }\n\n  const isInsert = row.sync_op === 'insert';\n  const dsId = config.brand_ds_id.replace('collection://', '');\n  const properties = buildProperties(row, ws);\n\n  const httpUrl = isInsert\n    ? 'https://api.notion.com/v1/pages'\n    : `https://api.notion.com/v1/pages/${row.notion_id}`;\n  const httpMethod = isInsert ? 'POST' : 'PATCH';\n  const payload = isInsert\n    ? { parent: { type: 'data_source_id', data_source_id: dsId }, properties }\n    : { properties };\n\n  out.push({\n    json: {\n      _supabase_id: row.id,\n      _brand_slug: row.brand_slug,\n      _workspace: ws,\n      _sync_op: row.sync_op,\n      _existing_notion_id: row.notion_id || null,\n      notion_token: config.token,\n      http_url: httpUrl,\n      http_method: httpMethod,\n      payload,\n    },\n  });\n}\n\nif (errors.length) console.log('[S\u2192N] validation errors:', JSON.stringify(errors));\nreturn out;"
+      },
+      "id": "code-resolve-and-build",
+      "name": "Code: resolve workspace + build per-ws payload",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -800,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "={{ $json.http_method }}",
+        "url": "={{ $json.http_url }}",
+        "authentication": "none",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $json.notion_token }}"
+            },
+            {
+              "name": "Notion-Version",
+              "value": "2025-09-03"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.payload) }}",
+        "options": {
+          "batching": {
+            "batch": {
+              "batchSize": 3,
+              "batchInterval": 1000
+            }
+          },
+          "response": {
+            "response": {
+              "neverError": true,
+              "fullResponse": true
+            }
+          },
+          "retry": {
+            "maxTries": 3,
+            "waitBetweenTries": 2000
+          }
+        }
+      },
+      "id": "http-notion-create",
+      "name": "HTTP: Notion POST/PATCH /v1/pages (dynamic)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -600,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\n// Parse Notion API response \u2014 recover upstream via paired items\n// Works for both POST (insert) + PATCH (update) \u2014 both return page object\n// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\n\nconst out = [];\nconst inputs = $input.all();\nconst UPSTREAM = 'Code: resolve workspace + build per-ws payload';\n\nfor (let i = 0; i < inputs.length; i++) {\n  const item = inputs[i];\n  const resp = item.json;\n  const status = resp.statusCode;\n  const body = resp.body;\n\n  let upstream = {};\n  try {\n    const u = $(UPSTREAM).itemMatching(i);\n    upstream = u ? u.json : {};\n  } catch (e) {\n    const arr = $items(UPSTREAM);\n    upstream = arr[i] ? arr[i].json : {};\n  }\n\n  const supabaseId = upstream._supabase_id || null;\n  const brandSlug = upstream._brand_slug || null;\n  const workspace = upstream._workspace || null;\n  const syncOp = upstream._sync_op || null;\n\n  if (status >= 200 && status < 300 && body && body.id) {\n    // Build UPDATE SQL directly (avoid n8n queryReplacement bug)\n    const slugEsc = (brandSlug || '').replace(/'/g, \"''\");\n    const idEsc = (body.id || '').replace(/'/g, \"''\");\n    const updateSql = syncOp === 'insert'\n      ? `UPDATE brands SET notion_id = '${idEsc}', notion_synced_at = NOW(), updated_at = NOW() WHERE brand_slug = '${slugEsc}' RETURNING brand_slug, notion_id, notion_synced_at::time AS synced_at;`\n      : `UPDATE brands SET notion_synced_at = NOW() WHERE brand_slug = '${slugEsc}' RETURNING brand_slug, notion_id, notion_synced_at::time AS synced_at;`;\n    out.push({\n      json: {\n        _supabase_id: supabaseId,\n        _brand_slug: brandSlug,\n        _workspace: workspace,\n        _sync_op: syncOp,\n        notion_id: body.id,\n        _ok: true,\n        update_sql: updateSql,\n      },\n    });\n  } else {\n    out.push({\n      json: {\n        _supabase_id: supabaseId,\n        _brand_slug: brandSlug,\n        _workspace: workspace,\n        _sync_op: syncOp,\n        _ok: false,\n        _error: {\n          status,\n          notion_error_code: body && body.code || null,\n          notion_error_message: body && body.message || 'unknown',\n          notion_request_id: body && body.request_id || null,\n        },\n      },\n    });\n  }\n}\nreturn out;"
+      },
+      "id": "code-parse-response",
+      "name": "Code: parse Notion response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -400,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "ok-check",
+              "leftValue": "={{ $json._ok }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "if-ok",
+      "name": "IF: sync ok?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -200,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "={{ $json.update_sql }}",
+        "options": {}
+      },
+      "id": "pg-update-ok",
+      "name": "Supabase: UPDATE notion_id",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        0,
+        -100
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "REPLACE_WITH_SUPABASE_CREDENTIAL_ID",
+          "name": "Supabase Postgres (eywa GTGT)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "-- Error log \u2192 seo_data_quality_metrics\nINSERT INTO seo_data_quality_metrics\n  (metric_name, metric_category, metric_value_jsonb, status, target_table_name, scope_description, computed_at)\nVALUES\n  ('notion_sync_error', 'sync_lag',\n   $1::jsonb,\n   'red',\n   'brands',\n   $2,\n   NOW())\nRETURNING id;",
+        "options": {
+          "queryReplacement": "={{ JSON.stringify($json._error) }},workspace={{ $json._workspace }}|brand_slug={{ $json._brand_slug }}"
+        }
+      },
+      "id": "pg-log-error",
+      "name": "Supabase: log error to dq_metrics",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        0,
+        100
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "REPLACE_WITH_SUPABASE_CREDENTIAL_ID",
+          "name": "Supabase Postgres (eywa GTGT)"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Cron: every 5 min": {
+      "main": [
+        [
+          {
+            "node": "Supabase: SELECT pending brands",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase: SELECT pending brands": {
+      "main": [
+        [
+          {
+            "node": "Code: resolve workspace + build per-ws payload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code: resolve workspace + build per-ws payload": {
+      "main": [
+        [
+          {
+            "node": "HTTP: Notion POST/PATCH /v1/pages (dynamic)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP: Notion POST/PATCH /v1/pages (dynamic)": {
+      "main": [
+        [
+          {
+            "node": "Code: parse Notion response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code: parse Notion response": {
+      "main": [
+        [
+          {
+            "node": "IF: sync ok?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF: sync ok?": {
+      "main": [
+        [
+          {
+            "node": "Supabase: UPDATE notion_id",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Supabase: log error to dq_metrics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "saveExecutionProgress": true,
+    "saveManualExecutions": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  },
+  "versionId": "brands-v3.32-multi-workspace-dr038",
+  "tags": [
+    {
+      "name": "eywa"
+    },
+    {
+      "name": "supabase-to-notion"
+    },
+    {
+      "name": "brands"
+    },
+    {
+      "name": "v3.32-multi-workspace"
+    },
+    {
+      "name": "dr-038"
+    }
+  ]
+}

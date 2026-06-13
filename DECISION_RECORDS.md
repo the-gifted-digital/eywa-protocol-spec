@@ -2,8 +2,8 @@
 
 > **Append-only architectural decision log.** Each record explains WHY a decision was made — not just WHAT.
 
-**Document Version:** 1.23  
-**Last Updated:** 2026-06-08  
+**Document Version:** 1.24  
+**Last Updated:** 2026-06-11  
 **Format:** Reverse chronological (newest first)
 
 ---
@@ -31,6 +31,87 @@
 ---
 
 ## Decisions Log
+
+### [DR-038] — Canonicalize `seo_media_assets` Multi-Brand Digital Asset Manager + Per-Brand Cloudflare Routing (promotes SS-DR-015/SS-DR-016) (2026-06-11 → Locked 2026-06-11) 🔒🖼️☁️
+
+**Status:** **🔒 Locked 2026-06-11** — operator-directed completion ("Media Library ต้องใช้กับทุกแบรนด์นะ"), drafted + applied same working session. Bible v3.31 flagged `seo_media_assets` as pending; this DR closes the gap. **Greenfield, additive, no data migration** (verified live 2026-06-11: no `%media%`/`%asset%`/`%image%` table existed pre-migration). Promotes SmileScape brand-local **SS-DR-015** (DAM table) + **SS-DR-016** (consent lifecycle) into the canonical federation schema.
+**Bible Reference:** §5.3 **Group 11 NEW (Media Assets), 1 table, 37 cols** + §18.1.2 row 14 (clears v3.31 ⚠️ pending → ✅ canonical) + §18.1.2b NEW (Non-mirror operator reference DBs) + system diagram (42 → 43 tables). Bump Bible v3.31 → **v3.32**.
+**Schema Reference:** Schema **v1.22 → v1.23**. New canonical table **`seo_media_assets`** in Group 11 §13.1; `brands` §3.1 gains **4 Cloudflare config columns**. Base tables **42 → 43**; Groups **10 → 11**. Schema_Overview file renamed `…v1_22.md` → `…v1_23.md`.
+**Companion to:** DR-008 (Two-Column Identity — `mda_{ULID16}`), DR-006 (Two-Phase Sync — Notion master + Supabase mirror), DR-010 (Brand Scope Architecture — explains why scalar `brand_id` not `brand_scope[]`), DR-030 (PDPA / sensitive topic compliance — consent gate semantics), DR-032 (multi-center — `center_scope[]`), DR-035 (Cloudflare R2 + Image Transformations — binary storage path this table tracks), DR-037 (Family-B operational pattern + canonicalization-from-brand-local precedent).
+**Scope:** **UNIVERSAL** (every brand with images — clinic, hospital, dental, aesthetic, wellness, healthcare media). Additive table; brands with zero registered images simply carry no rows.
+
+**Context:**
+
+Media Library (Notion DB) was originally built **2026-06-06 by Naphannop N. for SmileScape's brand-pilot DAM** under SS-DR-015 (DAM table) + SS-DR-016 (consent lifecycle). Bible v3.31 (2026-06-11) promoted the Notion side to canonical N↔S DB #14 + cloned a clean copy into the_gifted workspace — but the **Supabase target `seo_media_assets` was never created**, leaving the sync write-back orphaned (Notion description targets `Supabase ID` / `Synced at` columns referencing a non-existent table).
+
+Same operator session also surfaced: **n8n uploads to Cloudflare R2 need per-brand routing**. Two CF accounts in use across the org (`naphannop.n@gmail.com` personal, `marketing@vplanetgroup.com` work); brand → account assignment varies and needs a queryable source for n8n to consult before upload. Pre-DR-038, no such binding existed.
+
+DR-035 (2026-06-04 🔒) locked the **storage decision** (Astro brands → R2 + Image Transformations; URL in Supabase only) but stopped short of specifying *which* Supabase table holds the URL. DR-038 ships that table.
+
+**Decision:**
+
+**Two coordinated changes, single DR (matches DR-032's coordinated-sub-decisions precedent):**
+
+1. **`seo_media_assets`** — new canonical table, **Group 11 (Media Assets) NEW**. 37 columns:
+   - **Identity:** DR-008 two-column (`fingerprint mda_{ULID16}` + `fingerprint_display_name`, trigger-set + immutable)
+   - **Sync:** DR-006 three-state machine (`flat_loaded → notion_synced → relations_backfilled → live`)
+   - **Asset metadata:** `asset_name`, bilingual captions/alt, dimensions, MIME
+   - **Classification:** 11-option `media_type` enum **mirrors Notion select verbatim** (doctor/branch/brand/treatment/procedure/condition/tech/case/clinic/brand_asset/other)
+   - **Brand/Entity binding (Family-B per DR-037 ruling):** scalar `brand_id uuid NOT NULL FK → brands(id) ON DELETE CASCADE` (NOT `brand_scope[]` — operational reference data, not knowledge-graph), soft `entity_fp text`, DR-032 `center_scope[]`
+   - **PDPA consent lifecycle:** `is_patient_image bool`, `consent_status (Obtained/Pending/Revoked)`, `consent_date`, `consent_doc_url`, **pseudonymized** `patient_ref`, `use_forever`, `use_until`
+   - **Cloudflare R2 (per DR-035):** `r2_account_email`, `r2_bucket`, `r2_object_key`, `r2_uploaded_at`, `cdn_url`
+   - **Lifecycle:** 5-state status enum (`Pending/Active/Expired/Revoked/Archived`)
+   - **DB-layer PDPA gate** (`CHECK pdpa_active_consent_gate`): patient image cannot go `Active` without `consent_status='Obtained'` AND (`use_forever=true` OR `use_until` set). Non-patient categories bypass.
+   - **9 indexes** incl. partial index on `use_until` for **PDPA consent-expiry alerting cron**.
+   - RLS `eywa_authenticated_full_access` (Family-B operational policy).
+
+2. **`brands` +4 Cloudflare config columns:**
+   - `cloudflare_account_email`, `cloudflare_account_id`, `cloudflare_zone_id`, `cloudflare_r2_bucket`
+   - Partial index on `cloudflare_account_email` (queries always filter by account).
+   - **Layer A** of the 2-layer design: canonical, queryable, drives n8n routing.
+   - **Layer B** (operator UI, no Supabase mirror): Notion `☁️ Cloudflare Accounts` reference DB created in both workspaces, seeded with 2 known account emails (Bible §18.1.2b documents the non-mirror pattern).
+
+Applied as **Wave 11.8** (`eywa_w11_08_dr038_v23_media_assets_canonical`) + **Wave 11.9** (`eywa_w11_09_dr038_v23_brands_cloudflare_config`).
+
+**Rationale:**
+
+- **Why Group 11 NEW, not extend an existing group?** — `seo_media_assets` is operationally distinct: not Brand-org (Group 1), not Knowledge (Group 2), not a Page (Group 3), not Keyword (Group 4), not a Fact table (Group 5), not Backlinks (Group 6), not AI ops (Group 7), not Governance (Group 8), not an Entity-CPT extension (Group 9), not Ads (Group 10). It's a **new operational dimension** (binary asset lifecycle). Future media-adjacent tables (e.g. `seo_media_collections`, `seo_media_usage_logs`) would land in this group too.
+- **`brand_id uuid` FK, not `brand_scope[]`** — same ruling as DR-037: per-brand operational data (an image binary belongs to ONE brand, not shared across the graph). Matches `seo_branches`, `seo_doctor_assignments`, `seo_reviews`, `seo_directory_listings`, `seo_gbp_posts`, `seo_payer_partners`.
+- **PDPA gate at DB layer, not application layer** — bypassable in application code under pressure; DB-layer CHECK is the only enforcement strong enough for healthcare compliance. Cost: one CHECK constraint. Benefit: cannot accidentally publish patient image without consent.
+- **R2 metadata in Supabase, binary in R2 (per DR-035 path a)** — pure URL field would lose `r2_object_key` (needed for re-delivery / rename) and `r2_uploaded_at` (drift detection). Five fields balance "lightweight but operable".
+- **Non-canonical `☁️ Cloudflare Accounts` reference DB, not a 15th N↔S table** — pattern matches operator-config registries (login bank, internal contact list): 2 rows total, hand-curated, never mirrored to graph DB, never auto-synced. Lifting it to N↔S adds friction (sync flow, schema parity audits) for zero analytical value.
+- **Promotes SS-DR-015/SS-DR-016 to central** — same precedent as DR-037 promoting DZ-DR-014. Pattern: brand-local solves first; canonicalize when 2nd brand needs it OR when operator confirms universal scope. User said "ต้องใช้กับทุกแบรนด์นะ" — confirmed universal.
+
+**Consequences:**
+
+- ✅ **DB (BUILT 2026-06-11):**
+  - **W11.8** `eywa_w11_08_dr038_v23_media_assets_canonical` — verified: 37 cols, 9 indexes, 3 triggers, RLS enabled, PDPA gate blocks patient-image→Active without consent (test confirmed); fingerprint auto-set with `mda_` prefix (test confirmed); non-patient bypass works (test confirmed). 3 audit rows in `seo_schema_changes` (DR-038, v1.23).
+  - **W11.9** `eywa_w11_09_dr038_v23_brands_cloudflare_config` — 4 cols added on `brands`; partial index on `cloudflare_account_email`. 4 audit rows in `seo_schema_changes` (DR-038, v1.23).
+- ✅ **Notion (BUILT 2026-06-11):**
+  - 🖼️ Media Library descriptions broadened in both workspaces (clarifies universal scope — non-patient images bypass PDPA gate).
+  - ☁️ Cloudflare Accounts reference DB created in both workspaces (vt_intelligence `4bc7291f-…`, the_gifted `c8d63712-…`), 10 properties each, seeded 2 rows × 2 workspaces (4 rows total).
+- 🌐 **Federation-ready** — any brand may now insert media rows keyed by its `brand_id`; sync flow can write back `notion_id` after Notion page creation.
+- ⚠️ **Operator follow-ups (non-blocking):**
+  - Fill in actual `Account ID`, `Default R2 Bucket`, `Default Zone ID`, `Plan`, `Brand Slugs Using` in the 4 seeded ☁️ Cloudflare Accounts rows.
+  - Populate `brands.cloudflare_*` per brand (start with brands that have images today; defer for brands at Stage 1 pre-content).
+  - n8n image-upload workflow needs to be built (Phase 1: Notion → R2 + write `r2_*` + `cdn_url` back to Supabase row; Phase 2: backfill `notion_id` after Notion page write).
+- 🔧 **Docs:** Schema_Overview → **v1.23** (§13 Group 11 NEW; §3.1 brands +4 cols; §2 group count 10→11; Appendix I extends to W11.9; file renamed). Bible v3.31 → **v3.32** (changelog v3.32 entry; §18.1 header updated; §18.1.2 row 14 cleared; §18.1.2b NEW; v3.31 row warning removed). `n8n-flows/notion_db_ids.the_gifted.env.template` extended with `NOTION_DB_CLOUDFLARE_ACCOUNTS_*` + `CLOUDFLARE_ACCOUNT_EMAIL_*` registry vars.
+- 🌱 **Deferred extensions (out of scope for DR-038):**
+  - `seo_media_collections` (image groupings — landing-page hero set, doctor portrait pack, etc.) — future DR if operator need emerges.
+  - `seo_media_usage_logs` (per-page-render audit) — future DR; deferred until cleanup/audit workflow exists.
+  - Image-AI captioning pipeline — separate workflow (existing schema fields support output).
+- 📋 **Out of scope (separate tracks):**
+  - Historical image migration from WordPress brands — operator-driven per brand; `source='wp-migration'` value reserved for this.
+  - Cloudflare API token storage — out of scope (use n8n credential vault or Supabase Vault per DR-038 Layer A note).
+
+**References:**
+
+- Origin: SmileScape brand session SS-DR-015 (DAM table) + SS-DR-016 (consent lifecycle), 2026-06-06.
+- DR-008 (Two-Column Identity), DR-006 (Two-Phase Sync), DR-010 (Brand Scope Architecture — `brand_scope[]` vs `brand_id` split), DR-030 (PDPA / sensitive topic compliance), DR-032 (multi-center `center_scope[]`), DR-035 (Cloudflare R2 + Image Transformations storage decision), DR-037 (Family-B operational pattern + brand-local-to-canonical promotion precedent).
+- Schema_Overview §13.1 (`seo_media_assets` full DDL), §3.1 (`brands` Cloudflare cols); migrations `eywa_w11_08_dr038_v23_media_assets_canonical` + `eywa_w11_09_dr038_v23_brands_cloudflare_config`.
+- Bible §18.1.2 row 14 (cleared to canonical), §18.1.2b NEW (non-mirror operator reference DBs pattern), §18.1.3 structural parity notes.
+
+---
 
 ### [DR-037] — Canonicalize `seo_payer_partners` as Tier-2 Local-SEO Federation Table (backport of DZ-DR-014) (2026-06-08 → Locked 2026-06-08) 🔒🏥🧾
 

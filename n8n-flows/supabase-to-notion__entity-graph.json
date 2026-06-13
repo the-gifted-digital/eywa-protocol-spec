@@ -1,0 +1,305 @@
+{
+  "name": "EYWA: Supabase \u2192 Notion sync (entity_graph) [v3.32 multi-workspace + DR-038]",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 5
+            }
+          ]
+        }
+      },
+      "id": "trigger-cron",
+      "name": "Cron: every 5 min",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -1200,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "-- \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\n-- Phase 1 SELECT: pending rows + brand routing\n-- \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\n-- One row \u2192 ZERO, ONE, or MANY target workspaces:\n--   \u2022 brand_scope=['vth-biodent']             \u2192 1 workspace (vt_intelligence)\n--   \u2022 brand_scope=['classy-clinic']           \u2192 1 workspace (the_gifted_synapse)\n--   \u2022 brand_scope=['vth-biodent','classy-clinic'] \u2192 2 workspaces (fan out)\n--   \u2022 brand_scope=['*']                       \u2192 universal (operator role, ALL workspaces)\n--   \u2022 brand_scope=[] OR all brands have NULL notion_workspace \u2192 SKIP (logged)\n-- \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\nWITH brand_routing AS (\n  SELECT\n    eg.id AS eg_id,\n    -- Map: { brand_slug: notion_workspace } from all brands in this entity's brand_scope\n    jsonb_object_agg(b.brand_slug, b.notion_workspace)\n      FILTER (WHERE b.notion_workspace IS NOT NULL) AS brand_routing_map,\n    -- Map: { brand_slug: cloudflare_account_email } \u2014 used by image-upload sibling flow\n    jsonb_object_agg(b.brand_slug, b.cloudflare_account_email)\n      FILTER (WHERE b.cloudflare_account_email IS NOT NULL) AS cf_routing_map\n  FROM seo_entity_graph eg\n  LEFT JOIN brands b\n    ON b.brand_slug = ANY(eg.brand_scope)\n  WHERE eg.notion_id IS NULL\n  GROUP BY eg.id\n)\nSELECT\n  eg.id,\n  eg.fingerprint,\n  eg.fingerprint_display_name,\n  eg.entity_name,\n  eg.entity_slug,\n  eg.entity_type,\n  eg.entity_subtype,\n  eg.topic_cluster_id,\n  eg.topic_cluster_name,\n  eg.schema_org_type,\n  eg.brand_scope,\n  eg.entity_lifecycle,\n  eg.programmatic_eligible,\n  eg.wikidata_id,\n  eg.icd_10_code,\n  eg.center_scope,\n  eg.search_volume_total,\n  eg.entity_authority_score,\n  eg.aliases,\n  eg.ai_entity_summary,\n  eg.competing_entities,\n  eg.content_gap_flag,\n  eg.hreflang_group,\n  br.brand_routing_map,\n  br.cf_routing_map\nFROM seo_entity_graph eg\nLEFT JOIN brand_routing br ON br.eg_id = eg.id\nWHERE eg.notion_id IS NULL\nLIMIT 50;",
+        "options": {}
+      },
+      "id": "pg-select-pending",
+      "name": "Supabase: SELECT pending rows + routing",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        -1000,
+        0
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "REPLACE_WITH_SUPABASE_CREDENTIAL_ID",
+          "name": "Supabase Postgres (eywa GTGT)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\n// EYWA v3.32 Multi-workspace fan-out + property mapping per workspace\n// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\n// Per Bible \u00a718.7.5a Dynamic Token Pattern. One input row \u2192 N output items\n// (one per target workspace). Each item carries its own (token, ds_id, payload).\n//\n// Env vars (set in n8n Settings \u2192 Environments):\n//   NOTION_TOKEN_VT_INTELLIGENCE         = 'ntn_xxxxxxxxxxxxxxxxxxxxxxxxxx'\n//   NOTION_TOKEN_THE_GIFTED_SYNAPSE      = 'ntn_yyyyyyyyyyyyyyyyyyyyyyyyyy'\n//   NOTION_DB_ENTITY_GRAPH_VT_INTELLIGENCE     = '434d8053-62be-4ff1-8d42-f503f2e07741'  (data_source_id)\n//   NOTION_DB_ENTITY_GRAPH_THE_GIFTED_SYNAPSE  = '37bbe9c6-bf3c-8103-9945-000b1186b63e'  (data_source_id)\n//   ALLOWED_BRANDS_VT_INTELLIGENCE       = 'vth-biodent,bio-dental-wellness,...'\n//   ALLOWED_BRANDS_THE_GIFTED_SYNAPSE    = 'classy-clinic,deezy-dental,...'\n//   WORKSPACE_ROLE_VT_INTELLIGENCE       = 'operator' | 'editorial' | 'curator'\n//   WORKSPACE_ROLE_THE_GIFTED_SYNAPSE    = 'operator' | 'editorial' | 'curator'\n// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\n\nconst WORKSPACES = {\n  vt_intelligence: {\n    token: $env.NOTION_TOKEN_VT_INTELLIGENCE,\n    entity_graph_ds_id: $env.NOTION_DB_ENTITY_GRAPH_VT_INTELLIGENCE,\n    allowed_brands: ($env.ALLOWED_BRANDS_VT_INTELLIGENCE || '')\n      .split(',').map(s => s.trim()).filter(Boolean),\n    role: $env.WORKSPACE_ROLE_VT_INTELLIGENCE || 'operator',\n    // Production workspace \u2014 Brand Scope is type=relation (Phase 2 backfill handles)\n    brand_scope_type: 'relation',\n  },\n  the_gifted_synapse: {\n    token: $env.NOTION_TOKEN_THE_GIFTED_SYNAPSE,\n    entity_graph_ds_id: $env.NOTION_DB_ENTITY_GRAPH_THE_GIFTED_SYNAPSE,\n    allowed_brands: ($env.ALLOWED_BRANDS_THE_GIFTED_SYNAPSE || '')\n      .split(',').map(s => s.trim()).filter(Boolean),\n    role: $env.WORKSPACE_ROLE_THE_GIFTED_SYNAPSE || 'operator',\n    // Canonical-clean workspace \u2014 Brand Scope is type=multi_select (text-based, no Phase 2)\n    brand_scope_type: 'multi_select',\n  },\n};\n\n// Capitalize first letter (used for Entity Type & Schema.org Type select values)\nconst toTitle = s => (s ? s.charAt(0).toUpperCase() + s.slice(1) : '');\n\nfunction buildProperties(row, ws) {\n  const config = WORKSPACES[ws];\n  const props = {\n    'Entity Name': { title: [{ text: { content: row.entity_name || '(untitled)' } }] },\n    'Entity Slug': { rich_text: [{ text: { content: row.entity_slug || '' } }] },\n    'Fingerprint': { rich_text: [{ text: { content: row.fingerprint || '' } }] },\n    'Fingerprint Display Name': { rich_text: [{ text: { content: row.fingerprint_display_name || '' } }] },\n  };\n\n  if (row.entity_type) {\n    const types = Array.isArray(row.entity_type) ? row.entity_type : [row.entity_type];\n    props['Entity Type'] = {\n      multi_select: types.filter(Boolean).map(t => ({ name: toTitle(t) })),\n    };\n  }\n  if (row.entity_subtype) {\n    props['Entity Subtype'] = { select: { name: row.entity_subtype } };\n  }\n  if (row.schema_org_type) {\n    props['Schema.org Type'] = { select: { name: row.schema_org_type } };\n  }\n  if (row.topic_cluster_id) {\n    props['Topic Cluster ID'] = { rich_text: [{ text: { content: row.topic_cluster_id } }] };\n  }\n  if (row.topic_cluster_name) {\n    props['Topic Cluster Name'] = { rich_text: [{ text: { content: row.topic_cluster_name } }] };\n  }\n  if (row.entity_lifecycle) {\n    props['Entity Lifecycle'] = { select: { name: row.entity_lifecycle } };\n  }\n  if (row.programmatic_eligible !== null && row.programmatic_eligible !== undefined) {\n    props['Programmatic Eligible'] = { checkbox: !!row.programmatic_eligible };\n  }\n  if (row.content_gap_flag !== null && row.content_gap_flag !== undefined) {\n    props['Content Gap Flag'] = { checkbox: !!row.content_gap_flag };\n  }\n  if (row.wikidata_id) {\n    props['Wikidata ID'] = { rich_text: [{ text: { content: row.wikidata_id } }] };\n  }\n  if (row.icd_10_code) {\n    props['ICD-10 Code'] = { rich_text: [{ text: { content: row.icd_10_code } }] };\n  }\n  if (Array.isArray(row.center_scope) && row.center_scope.length) {\n    props['Center Scope'] = { multi_select: row.center_scope.map(c => ({ name: c })) };\n  }\n  if (row.search_volume_total !== null && row.search_volume_total !== undefined) {\n    props['Search Volume Total'] = { number: Number(row.search_volume_total) || 0 };\n  }\n  if (row.entity_authority_score !== null && row.entity_authority_score !== undefined) {\n    props['Entity Authority Score'] = { number: Number(row.entity_authority_score) || 0 };\n  }\n  if (row.aliases) {\n    props['Aliases'] = { rich_text: [{ text: { content: row.aliases } }] };\n  }\n  if (row.ai_entity_summary) {\n    props['AI Entity Summary'] = { rich_text: [{ text: { content: row.ai_entity_summary } }] };\n  }\n  if (row.competing_entities) {\n    props['Competing Entities'] = { rich_text: [{ text: { content: row.competing_entities } }] };\n  }\n  if (row.hreflang_group) {\n    props['Hreflang Group'] = { rich_text: [{ text: { content: row.hreflang_group } }] };\n  }\n\n  // \u2500\u2500\u2500 Workspace-conditional: Brand Scope \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n  // Production (vt): Brand Scope is type=relation \u2014 defer to Phase 2 backfill\n  //                  (Phase 2 looks up Brand page_id per brand_slug)\n  // Canonical (the_gifted): Brand Scope is type=multi_select \u2014 write as text now\n  if (config.brand_scope_type === 'multi_select' && Array.isArray(row.brand_scope) && row.brand_scope.length) {\n    props['Brand Scope'] = {\n      multi_select: row.brand_scope.filter(s => s !== '*').map(s => ({ name: s })),\n    };\n  }\n  // For 'relation' workspace, omit Brand Scope here \u2014 Phase 2 backfill workflow handles it\n\n  // Always set Supabase Synced At \u2014 both workspaces have this prop (post-drift-fix)\n  props['Supabase Synced At'] = { date: { start: new Date().toISOString() } };\n\n  return props;\n}\n\nfunction decideTargetWorkspaces(row) {\n  const targets = new Set();\n  const brandScope = Array.isArray(row.brand_scope) ? row.brand_scope : [];\n  const isUniversal = brandScope.includes('*');\n\n  if (isUniversal) {\n    // Universal entity \u2192 fan out to every operator-role workspace\n    for (const [ws, cfg] of Object.entries(WORKSPACES)) {\n      if (cfg.role === 'operator' || cfg.role === 'curator') {\n        targets.add(ws);\n      }\n    }\n    return Array.from(targets);\n  }\n\n  // brand_routing_map: { brand_slug: notion_workspace } \u2014 built by SELECT query\n  const routingMap = row.brand_routing_map || {};\n  for (const [slug, ws] of Object.entries(routingMap)) {\n    const cfg = WORKSPACES[ws];\n    if (!cfg) continue;\n    if (!cfg.allowed_brands.includes(slug)) continue;\n    targets.add(ws);\n  }\n  return Array.from(targets);\n}\n\nconst out = [];\nconst errors = [];\n\nfor (const item of $input.all()) {\n  const row = item.json;\n  const targets = decideTargetWorkspaces(row);\n\n  if (targets.length === 0) {\n    errors.push({\n      fingerprint: row.fingerprint,\n      entity_name: row.entity_name,\n      brand_scope: row.brand_scope,\n      routing_map: row.brand_routing_map,\n      reason: 'no_target_workspace: no brand in brand_scope has notion_workspace mapping OR not in any workspace allowed_brands list',\n    });\n    continue;\n  }\n\n  for (const ws of targets) {\n    const config = WORKSPACES[ws];\n\n    if (!config.token) {\n      errors.push({\n        fingerprint: row.fingerprint,\n        workspace: ws,\n        reason: `NOTION_TOKEN_${ws.toUpperCase()} env var not set`,\n      });\n      continue;\n    }\n    if (!config.entity_graph_ds_id) {\n      errors.push({\n        fingerprint: row.fingerprint,\n        workspace: ws,\n        reason: `NOTION_DB_ENTITY_GRAPH_${ws.toUpperCase()} env var not set`,\n      });\n      continue;\n    }\n\n    const dsId = config.entity_graph_ds_id.replace('collection://', '');\n    const properties = buildProperties(row, ws);\n\n    out.push({\n      json: {\n        // Metadata carried to downstream nodes\n        _supabase_id: row.id,\n        _fingerprint: row.fingerprint,\n        _entity_name: row.entity_name,\n        _workspace: ws,\n        _brand_scope_type: config.brand_scope_type,\n        // Authorization fields \u2014 used by HTTP Request node Bearer token expression\n        notion_token: config.token,\n        notion_ds_id: dsId,\n        // Notion API 2025-09-03 payload \u2014 parent uses data_source_id (not database_id)\n        payload: {\n          parent: { type: 'data_source_id', data_source_id: dsId },\n          properties,\n        },\n      },\n    });\n  }\n}\n\nif (errors.length) {\n  console.log('[v3.32] Routing/validation errors:', JSON.stringify(errors, null, 2));\n  // Errors are intentionally NOT emitted as workflow items \u2014 they're logged.\n  // To send them to a 2nd Postgres LOG branch, restructure this node's outputs.\n}\nreturn out;"
+      },
+      "id": "code-resolve-and-fanout",
+      "name": "Code: resolve workspaces + fan-out + build payload",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -800,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.notion.com/v1/pages",
+        "authentication": "none",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $json.notion_token }}"
+            },
+            {
+              "name": "Notion-Version",
+              "value": "2025-09-03"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.payload) }}",
+        "options": {
+          "batching": {
+            "batch": {
+              "batchSize": 3,
+              "batchInterval": 1000
+            }
+          },
+          "response": {
+            "response": {
+              "neverError": true,
+              "fullResponse": true
+            }
+          },
+          "retry": {
+            "maxTries": 3,
+            "waitBetweenTries": 2000
+          }
+        }
+      },
+      "id": "http-notion-create",
+      "name": "HTTP Request: POST Notion /v1/pages (2025-09-03)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -600,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\n// Parse Notion API response \u2014 recover upstream metadata via paired items\n// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\n// HTTP Request strips non-body fields, so _supabase_id/_fingerprint/_workspace\n// must be pulled from the upstream Code node via $('NodeName').itemMatching(i).\n// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\n\nconst out = [];\nconst inputs = $input.all();\nconst UPSTREAM = 'Code: resolve workspaces + fan-out + build payload';\n\nfor (let i = 0; i < inputs.length; i++) {\n  const item = inputs[i];\n  const resp = item.json;\n  const status = resp.statusCode;\n  const body = resp.body;\n\n  let upstream = {};\n  try {\n    const upItem = $(UPSTREAM).itemMatching(i);\n    upstream = upItem ? upItem.json : {};\n  } catch (e) {\n    const arr = $items(UPSTREAM);\n    upstream = arr[i] ? arr[i].json : {};\n  }\n\n  const supabaseId = upstream._supabase_id || null;\n  const fingerprint = upstream._fingerprint || null;\n  const workspace = upstream._workspace || null;\n  const brandScopeType = upstream._brand_scope_type || null;\n\n  if (status >= 200 && status < 300 && body && body.id) {\n    out.push({\n      json: {\n        _supabase_id: supabaseId,\n        _fingerprint: fingerprint,\n        _workspace: workspace,\n        _brand_scope_type: brandScopeType,\n        notion_id: body.id,\n        sync_state: brandScopeType === 'relation' ? 'notion_synced' : 'relations_backfilled',\n        notion_synced_at: new Date().toISOString(),\n        _needs_phase2_backfill: brandScopeType === 'relation',\n        _ok: true,\n      },\n    });\n  } else {\n    out.push({\n      json: {\n        _supabase_id: supabaseId,\n        _fingerprint: fingerprint,\n        _workspace: workspace,\n        _ok: false,\n        _error: {\n          status,\n          notion_error_code: body && body.code || null,\n          notion_error_message: body && body.message || 'unknown',\n          notion_request_id: body && body.request_id || null,\n        },\n      },\n    });\n  }\n}\n\nreturn out;"
+      },
+      "id": "code-parse-response",
+      "name": "Code: parse Notion response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -400,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "ok-check",
+              "leftValue": "={{ $json._ok }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "if-ok",
+      "name": "IF: sync ok?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -200,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "-- \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\n-- Phase 1 UPDATE \u2014 single notion_id column shared across workspaces\n-- \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\n-- NOTE: Current seo_entity_graph has only ONE notion_id column.\n-- For multi-workspace, last-write-wins on this column. If/when we need\n-- per-workspace notion_id tracking, add seo_entity_notion_mirrors table\n-- (entity_fp, workspace, notion_id, synced_at) and switch this UPDATE\n-- to an UPSERT on that table.\n--\n-- sync_state:\n--   'notion_synced'         = Phase 1 done, Phase 2 backfill pending (vt \u2014 has relations)\n--   'relations_backfilled'  = no Phase 2 needed (the_gifted \u2014 text-FP only)\n-- \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\nUPDATE seo_entity_graph\nSET\n  notion_id = $1,\n  notion_synced_at = NOW(),\n  sync_state = $2\nWHERE fingerprint = $3\nRETURNING fingerprint, notion_id, sync_state, notion_synced_at;",
+        "options": {
+          "queryReplacement": "={{ $json.notion_id }},{{ $json.sync_state }},{{ $json._fingerprint }}"
+        }
+      },
+      "id": "pg-update-ok",
+      "name": "Supabase: UPDATE notion_id + sync_state",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        0,
+        -100
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "REPLACE_WITH_SUPABASE_CREDENTIAL_ID",
+          "name": "Supabase Postgres (eywa GTGT)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "-- \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\n-- Error log \u2192 seo_data_quality_metrics\n-- \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\nINSERT INTO seo_data_quality_metrics\n  (metric_name, metric_category, metric_value_jsonb, status, target_table_name, scope_description, computed_at)\nVALUES\n  ('notion_sync_error', 'sync_lag',\n   $1::jsonb,\n   'red',\n   'seo_entity_graph',\n   $2,\n   NOW())\nRETURNING id;",
+        "options": {
+          "queryReplacement": "={{ JSON.stringify($json._error) }},workspace={{ $json._workspace }}|entity_fp={{ $json._fingerprint }}"
+        }
+      },
+      "id": "pg-log-error",
+      "name": "Supabase: log error to dq_metrics",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        0,
+        100
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "REPLACE_WITH_SUPABASE_CREDENTIAL_ID",
+          "name": "Supabase Postgres (eywa GTGT)"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Cron: every 5 min": {
+      "main": [
+        [
+          {
+            "node": "Supabase: SELECT pending rows + routing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase: SELECT pending rows + routing": {
+      "main": [
+        [
+          {
+            "node": "Code: resolve workspaces + fan-out + build payload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code: resolve workspaces + fan-out + build payload": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request: POST Notion /v1/pages (2025-09-03)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request: POST Notion /v1/pages (2025-09-03)": {
+      "main": [
+        [
+          {
+            "node": "Code: parse Notion response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code: parse Notion response": {
+      "main": [
+        [
+          {
+            "node": "IF: sync ok?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF: sync ok?": {
+      "main": [
+        [
+          {
+            "node": "Supabase: UPDATE notion_id + sync_state",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Supabase: log error to dq_metrics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "saveExecutionProgress": true,
+    "saveManualExecutions": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  },
+  "versionId": "v3.32-multi-workspace-dr038",
+  "tags": [
+    {
+      "name": "eywa"
+    },
+    {
+      "name": "supabase-to-notion"
+    },
+    {
+      "name": "entity-graph"
+    },
+    {
+      "name": "v3.32-multi-workspace"
+    },
+    {
+      "name": "dr-038"
+    }
+  ]
+}

@@ -1,0 +1,220 @@
+{
+  "name": "EYWA: Notion \u2192 Supabase sync (brands) [v3.32 N\u2192S two-way close]",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 5
+            }
+          ]
+        }
+      },
+      "id": "trigger-cron",
+      "name": "Cron: every 5 min",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -1200,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "-- \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\n-- N\u2192S Phase 1 SELECT: per-workspace last-synced timestamp\n-- \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\n-- Returns 2 rows (one per active workspace). Each row carries the\n-- MAX(notion_synced_at) for brands in that workspace \u2014 used as the\n-- after-filter cutoff when querying Notion for changes.\n-- \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\nSELECT\n  notion_workspace AS workspace,\n  COALESCE(MAX(notion_synced_at), NOW() - INTERVAL '7 days') AS last_synced,\n  COUNT(*) AS brand_count\nFROM brands\nWHERE notion_id IS NOT NULL\n  AND notion_workspace IN ('vt_intelligence', 'the_gifted_synapse')\nGROUP BY notion_workspace\nORDER BY notion_workspace;",
+        "options": {}
+      },
+      "id": "pg-select-cursors",
+      "name": "Supabase: SELECT per-workspace cursors",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        -1000,
+        0
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "REPLACE_WITH_SUPABASE_CREDENTIAL_ID",
+          "name": "Supabase Postgres (eywa GTGT)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\n// Build per-workspace Notion query payload\n// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\n// Input: N rows (one per workspace) with workspace + last_synced timestamp\n// Output: N items, each carrying token + ds_id + URL + body for HTTP node\n// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\n\nconst WORKSPACES = {\n  vt_intelligence: {\n    token: $env.NOTION_TOKEN_VT_INTELLIGENCE,\n    brand_ds_id: $env.NOTION_DB_BRANDS_VT_INTELLIGENCE,\n  },\n  the_gifted_synapse: {\n    token: $env.NOTION_TOKEN_THE_GIFTED_SYNAPSE,\n    brand_ds_id: $env.NOTION_DB_BRANDS_THE_GIFTED_SYNAPSE,\n  },\n};\n\nconst out = [];\nfor (const item of $input.all()) {\n  const row = item.json;\n  const ws = row.workspace;\n  const config = WORKSPACES[ws];\n  if (!config) continue;\n\n  const lastSynced = row.last_synced || (new Date(Date.now() - 7 * 86400 * 1000).toISOString());\n  const dsId = (config.brand_ds_id || '').replace('collection://', '');\n\n  out.push({\n    json: {\n      _workspace: ws,\n      _last_synced: lastSynced,\n      _brand_count: row.brand_count,\n      notion_token: config.token,\n      notion_ds_id: dsId,\n      query_url: `https://api.notion.com/v1/data_sources/${dsId}/query`,\n      query_body: {\n        filter: {\n          timestamp: 'last_edited_time',\n          last_edited_time: { after: lastSynced },\n        },\n        page_size: 100,\n      },\n    },\n  });\n}\nreturn out;"
+      },
+      "id": "code-build-query",
+      "name": "Code: build per-workspace Notion query",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -800,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $json.query_url }}",
+        "authentication": "none",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $json.notion_token }}"
+            },
+            {
+              "name": "Notion-Version",
+              "value": "2025-09-03"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.query_body) }}",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true,
+              "fullResponse": true
+            }
+          },
+          "retry": {
+            "maxTries": 3,
+            "waitBetweenTries": 2000
+          }
+        }
+      },
+      "id": "http-notion-query",
+      "name": "HTTP: POST Notion /v1/data_sources/{ds}/query",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -600,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\n// Parse Notion query responses \u2192 flatten + build full UPDATE SQL per page\n// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\n// n8n's queryReplacement quietly drops empty params, breaking positional\n// $1..$N matching. Solution: build the full UPDATE statement as a single\n// SQL string here (with SQL-quoted values), then Postgres just executes it.\n// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\n\nconst PROP_MAP = {\n  vt_intelligence: {\n    brand_name:       'Brand Name',\n    status:           'Status',\n    brand_structure:  'Brand Structure',\n    positioning_mode: 'Positioning Mode',\n    brand_description: 'Brand Description',\n    company:          'Company',\n    brand_web_url:    'Website',\n    gsc_property_url: 'GSC Property',\n    ga4_property_id:  'GA4 Property ID',\n  },\n  the_gifted_synapse: {\n    brand_name:       'Brand Name',\n    status:           'Status',\n    brand_structure:  'Brand Structure',\n    positioning_mode: 'Positioning Mode',\n    brand_description: 'Brand Description',\n    company:          'Company',\n    brand_web_url:    'Brand Web URL',\n    gsc_property_url: 'GSC Property URL',\n    ga4_property_id:  'GA4 Property ID',\n  },\n};\n\nconst STATUS_NOTION_TO_PG = {\n  'ACTIVE': 'active',\n  'IN ACTIVE': 'inactive',\n  'PENDING': 'pending',\n};\n\nfunction s(v) { return v == null ? '' : String(v); }\nfunction extractTitle(prop)  { if (!prop || !prop.title || !prop.title.length) return ''; return s(prop.title[0].plain_text); }\nfunction extractText(prop)   { if (!prop || !prop.rich_text || !prop.rich_text.length) return ''; return s(prop.rich_text.map(t => t.plain_text).join('')); }\nfunction extractSelect(prop) { if (!prop || !prop.select) return ''; return s(prop.select.name); }\nfunction extractUrl(prop)    { if (!prop || !prop.url) return ''; return s(prop.url); }\n\n// SQL-quote: 'value' or NULL if empty\nfunction sql(v) {\n  if (v == null || v === '') return 'NULL';\n  return \"'\" + String(v).replace(/'/g, \"''\") + \"'\";\n}\n\nconst out = [];\nconst inputs = $input.all();\nconst UPSTREAM = 'Code: build per-workspace Notion query';\n\nfor (let i = 0; i < inputs.length; i++) {\n  const item = inputs[i];\n  const resp = item.json;\n  const status = resp.statusCode;\n  const body = resp.body || {};\n\n  let workspace = '';\n  try {\n    const up = $(UPSTREAM).itemMatching(i);\n    workspace = up ? up.json._workspace : '';\n  } catch (e) {\n    const arr = $items(UPSTREAM);\n    workspace = arr[i] ? arr[i].json._workspace : '';\n  }\n\n  if (status < 200 || status >= 300) {\n    console.log('[N\u2192S] Notion query failed for ' + workspace + ': status=' + status);\n    continue;\n  }\n\n  const pages = body.results || [];\n  const mapping = PROP_MAP[workspace];\n  if (!mapping) continue;\n\n  for (const page of pages) {\n    const props = page.properties || {};\n    const status_notion = extractSelect(props[mapping.status]);\n    const status_pg = status_notion ? (STATUS_NOTION_TO_PG[status_notion] || '') : '';\n\n    const vals = {\n      brand_name:         extractTitle(props[mapping.brand_name]),\n      brand_description:  extractText(props[mapping.brand_description]),\n      company:            extractText(props[mapping.company]),\n      brand_web_url:      extractUrl(props[mapping.brand_web_url]),\n      gsc_property_url:   extractUrl(props[mapping.gsc_property_url]),\n      ga4_property_id:    extractText(props[mapping.ga4_property_id]),\n      brand_structure:    extractSelect(props[mapping.brand_structure]),\n      positioning_mode:   extractSelect(props[mapping.positioning_mode]),\n      status:             status_pg,\n    };\n\n    // Build full UPDATE \u2014 each field uses COALESCE so empty strings (\u2192 SQL NULL) preserve existing\n    const updateSql = `UPDATE brands SET\n  brand_name         = COALESCE(${sql(vals.brand_name)}, brand_name),\n  brand_description  = COALESCE(${sql(vals.brand_description)}, brand_description),\n  company            = COALESCE(${sql(vals.company)}, company),\n  brand_web_url      = COALESCE(${sql(vals.brand_web_url)}, brand_web_url),\n  gsc_property_url   = COALESCE(${sql(vals.gsc_property_url)}, gsc_property_url),\n  ga4_property_id    = COALESCE(${sql(vals.ga4_property_id)}, ga4_property_id),\n  brand_structure    = COALESCE(${sql(vals.brand_structure)}, brand_structure),\n  positioning_mode   = COALESCE(${sql(vals.positioning_mode)}, positioning_mode),\n  status             = COALESCE(${sql(vals.status)}, status),\n  notion_synced_at   = NOW(),\n  updated_at         = NOW()\nWHERE notion_id = ${sql(page.id)}\nRETURNING brand_slug, brand_name, status, positioning_mode, notion_synced_at::time AS synced_at;`;\n\n    out.push({\n      json: {\n        _notion_id: s(page.id),\n        _workspace: s(workspace),\n        _last_edited_time: s(page.last_edited_time),\n        ...vals,\n        update_sql: updateSql,\n      },\n    });\n  }\n}\n\nif (out.length > 0) {\n  console.log('[N\u2192S] ' + out.length + ' UPDATE statements ready');\n}\nreturn out;"
+      },
+      "id": "code-parse-and-normalize",
+      "name": "Code: parse + normalize per-workspace fields",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -400,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "={{ $json.update_sql }}",
+        "options": {}
+      },
+      "id": "pg-update",
+      "name": "Supabase: UPDATE brand by notion_id",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        -200,
+        0
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "REPLACE_WITH_SUPABASE_CREDENTIAL_ID",
+          "name": "Supabase Postgres (eywa GTGT)"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Cron: every 5 min": {
+      "main": [
+        [
+          {
+            "node": "Supabase: SELECT per-workspace cursors",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase: SELECT per-workspace cursors": {
+      "main": [
+        [
+          {
+            "node": "Code: build per-workspace Notion query",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code: build per-workspace Notion query": {
+      "main": [
+        [
+          {
+            "node": "HTTP: POST Notion /v1/data_sources/{ds}/query",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP: POST Notion /v1/data_sources/{ds}/query": {
+      "main": [
+        [
+          {
+            "node": "Code: parse + normalize per-workspace fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code: parse + normalize per-workspace fields": {
+      "main": [
+        [
+          {
+            "node": "Supabase: UPDATE brand by notion_id",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "saveExecutionProgress": true,
+    "saveManualExecutions": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  },
+  "versionId": "n2s-brands-v3.32-two-way-close",
+  "tags": [
+    {
+      "name": "eywa"
+    },
+    {
+      "name": "notion-to-supabase"
+    },
+    {
+      "name": "brands"
+    },
+    {
+      "name": "v3.32-two-way"
+    }
+  ]
+}

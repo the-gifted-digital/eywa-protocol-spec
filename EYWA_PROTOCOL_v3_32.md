@@ -1,8 +1,8 @@
 # 📖 คัมภีร์ EYWA™ PROTOCOL
 ## The Universal Knowledge Graph SEO Specification for the AI Era
 
-**Version:** 3.29  
-**Last Updated:** 2026-06-08  
+**Version:** 3.32  
+**Last Updated:** 2026-06-11  
 **Trademark:** EYWA™ (Class 35+42, DIP Thailand, filed 2026-04-20)  
 **Created by:** The Gifted Digital Marketing Co., Ltd.  
 **Scope:** Universal standard สำหรับการบริหารจัดการ SEO + Knowledge Graph แบบ multi-vertical, multi-brand, multi-specialty, multi-lingual, multi-location, **AI-future-ready** ในยุค AI Search (2026+) — ครอบคลุม healthcare verticals (clinic ทุก specialty, hospital, dental, sleep medicine, aesthetic, wellness, healthcare media) extensible to other regulated YMYL niches  
@@ -143,6 +143,86 @@ Throughout this Bible:
 
 
 ## 📜 Changelog
+
+### v3.32 (2026-06-11) — DR-038 `seo_media_assets` Canonical + Cloudflare Config on `brands` (Schema v1.23) 🖼️☁️🔒
+
+Paired companion to **DR-038 (Locked 2026-06-11)** + **Schema v1.23**. Closes the Supabase-side gap flagged in v3.31: `seo_media_assets` is now shipped as the **canonical federation DAM table** mirroring Notion 🖼️ Media Library DB #14. Adds per-brand Cloudflare account routing on `brands` so n8n knows which CF account/zone/R2 bucket to upload to per brand.
+
+**Headline Changes:**
+
+- 🆕 **`seo_media_assets` SHIPPED — Group 11 NEW (Media Assets), 1 table, 37 columns** (Wave 11.8 migration `eywa_w11_08_dr038_v23_media_assets_canonical`). DR-008 two-column identity (`mda_{ULID16}`), DR-006 two-phase sync, 11-option `media_type` enum matching Notion select, Family-B `brand_id uuid` FK with `ON DELETE CASCADE`, soft entity binding via `entity_fp` text, DR-032 multi-center `center_scope[]`, PDPA consent gate via `CHECK pdpa_active_consent_gate` (patient image cannot go Active without Obtained consent + use window), DR-035 Cloudflare R2 fields (`r2_account_email/r2_bucket/r2_object_key/r2_uploaded_at/cdn_url`), 6 indexes incl. partial index on `use_until` for consent-expiry alerting, RLS `eywa_authenticated_full_access`, 3 triggers (fingerprint set + immutability + updated_at).
+- 🆕 **`brands` Cloudflare config columns** (Wave 11.9 migration `eywa_w11_09_dr038_v23_brands_cloudflare_config`): `cloudflare_account_email`, `cloudflare_account_id`, `cloudflare_zone_id`, `cloudflare_r2_bucket` + partial index on `cloudflare_account_email`. n8n queries `brands` row per `brand_slug` to resolve CF routing before R2 upload (Layer A of DR-038's 2-layer design).
+- 🆕 **☁️ Cloudflare Accounts Notion reference DB created in both workspaces** (Layer B):
+  - vt_intelligence: `4bc7291f-e7de-4d69-9ede-5b1158043bb0`
+  - the_gifted: `c8d63712-9dba-4bdc-8656-88ce0355356a`
+  - 10 properties: Account Email (title) / Account ID / Default R2 Bucket / Default Zone ID / Status (Active/Disabled) / Plan (Free/Pro/Business/Enterprise/TBD) / Owner Name / Brand Slugs Using / Notes / Created At
+  - **Seeded 2 rows in each workspace** (4 total): `naphannop.n@gmail.com` (personal Gmail) + `marketing@vplanetgroup.com` (work email)
+  - **Non-canonical operator UI** — no Supabase mirror, no N↔S sync. Canonical brand→account mapping lives in `brands.cloudflare_account_email`.
+- 🗃️ **Schema v1.22 → v1.23** (base tables 42 → 43; Groups 1–10 → Groups 1–11 NEW). Schema_Overview file renamed `…v1_22.md` → `…v1_23.md`; §11 Media Assets section added; §3.1 brands DDL refreshed with 4 new CF columns.
+- 🔄 **§18.1.2 row 14 cleared** — `seo_media_assets` no longer "⚠️ pending"; warning block removed. Row 14 labeled "✅ canonical (DR-038, Schema v1.23)".
+- 🆕 **§18.1.2b NEW — Non-mirror operator reference DBs** — documents ☁️ Cloudflare Accounts as the canonical pattern for operator-only Notion DBs (no Supabase mirror, no sync flow).
+- 📌 **Companion artifacts:**
+  - `DECISION_RECORDS.md` — DR-038 entry added at top of Decisions Log.
+  - `Schema_Overview_EYWA_v1_23.md` — §11 Media Assets + §3.1 brands cols.
+  - `n8n-flows/notion_db_ids.the_gifted.env.template` — `NOTION_DB_CLOUDFLARE_ACCOUNTS_*` + `CLOUDFLARE_ACCOUNT_*` registry.
+
+### v3.31 (2026-06-11) — Media Library Canonicalized as 14th N↔S DB Across Both Workspaces 🖼️🗂️
+
+Operator clarification 2026-06-11 (post-v3.30): the **Media Library** DB — originally built for SmileScape brand on 2026-06-06 (vt_intelligence side only) — is **federation-canonical infrastructure for ALL brands**, not a brand-tier extension. v3.31 promotes it to canonical N↔S DB #14.
+
+**Headline Changes:**
+
+- 🆕 **Media Library promoted to N↔S DB #14** (federation-canonical):
+  - vt_intelligence: existing DB `656514e1-274f-4ea5-8aab-576d66858a27` (created 2026-06-06 by Naphannop N. for SmileScape brand DAM pilot)
+  - the_gifted: NEW DB `37cbe9c6-bf3c-8130-b636-d7e1c0cf874a` (created 2026-06-11 via this bump; canonical clean mirror, 26 properties, text-based Brand ID + Entity FP fields per the_gifted philosophy)
+  - Both icons unified to 🖼️
+  - 26 properties: Name (title), Image (files), bilingual Caption/Alt (TH/EN), dimensions (Width/Height/File size/MIME), Media Type (11-option select: doctor/branch/brand/treatment/procedure/condition/tech/case/clinic/brand_asset/other), Brand/Entity binding (relation in vt_intelligence; text FP in the_gifted), PDPA consent lifecycle (Patient image? / Consent status / Consent date / Consent doc / Patient ref / Use forever? / Use until), Cloudflare R2 sync fields (R2 Key / CDN URL / Source), Supabase sync fields (Supabase ID / Synced at), Status lifecycle (Pending/Active/Expired/Revoked/Archived)
+
+- 🔄 **§18.1.2 expanded** — table row count 13 → 14 (Media Library added)
+
+- 🔄 **§18.1.3 structural notes** — Media Library mirrors the same vt vs the_gifted philosophy delta:
+  - vt_intelligence: native `relation` to Brand + Entity Graph + has `Consent Check` and `Days Left` formulas
+  - the_gifted: text-based `Brand ID` + `Entity FP` rich_text fields (matches canonical philosophy); formulas omitted (operator can add later via API update)
+
+- 📌 **DR-035 alignment** — Media Library is the canonical Notion-side DAM that lands binaries in **Cloudflare R2 + Image Transformations** (or Cloudflare Images) and writes back R2 Key + CDN URL. Aligns with DR-035 path (a): "n8n pushes Notion-attached images → R2 (S3 API) during sync, URL written to the Supabase row".
+
+- ⚠️ **Outstanding follow-up — Supabase `seo_media_assets` table NOT YET SHIPPED.** Verified live 2026-06-11: `SELECT * FROM information_schema.tables WHERE table_name ILIKE '%media%' OR '%asset%' OR '%image%'` returns 0 rows. n8n sync targets (`Supabase ID`, `Synced at`) reference a Supabase table that doesn't exist. **Recommended next step:** create DR canonicalizing `seo_media_assets` table → Schema v1.23+ migration. Until then, Media Library is Notion-side operational; Supabase sync is blocked.
+
+- 📌 **Operational source:** vt_intelligence Media Library description verbatim — "SmileScape/multi-brand DAM. Source images + bilingual alt + entity/brand links + patient-consent lifecycle. n8n syncs rows → R2 + Supabase media_assets. See docs/SESSION-A-MEDIA-PIPELINE.md (SS-DR-015/016)." Per operator clarification, SS-DR-015/016 will be promoted to central DRs at next Bible bump.
+
+- 📌 **Companion artifact:** `Schema_Overview_EYWA_v1_22.md` Appendix J updated — table row 14 added.
+- 📌 **Env template:** `n8n-flows/notion_db_ids.the_gifted.env.template` — `NOTION_DB_MEDIA_LIBRARY_*` env vars added.
+
+### v3.30 (2026-06-11) — Multi-Workspace Notion DB IDs Reference + The Gifted Synapse Operational 🗂️🌐
+
+Pure inventory documentation bump. Records the EYWA N↔S federation is now operational across **two Notion workspaces** with 13 mirror DBs each. No new DR, no schema migration, no content rework.
+
+**Headline Changes:**
+
+- ➕ **§18.1 fully rewritten** (~80 lines) — replaces v1.x-era placeholder names (Brand Registry / SEO Clusters / Citation Library) with actual operational state:
+  - **§18.1.1** Active workspaces table — VT Intelligence Space + The Gifted Synapse (each with workspace_id, bot integration, role)
+  - **§18.1.2** Database IDs reference matrix — 13 tables × 2 workspaces = 26 canonical IDs
+  - **§18.1.3** Structural parity notes — vt_intelligence carries production-era relations + rollups + formulas + legacy custom fields; the_gifted_synapse is the cleaner canonical 1:1 Supabase mirror
+  - **§18.1.4** Legacy name deprecation note
+
+- ➕ **§18.7.5b NEW — Operational State** (~20 lines):
+  - Per-workspace env var setup ready for n8n consumption
+  - Guidance: greenfield federation brands start at The Gifted Synapse (clean canonical schema)
+  - References `n8n-flows/notion_db_ids.the_gifted.env.template`
+
+- 🔍 **3 drift items flagged for follow-up (do not block operations):**
+  1. `seo_entity_graph.entity_subtype` enum drift — vt_intelligence Notion side has `health-belief` (INVALID per Supabase `chk_concept_subtype` which allows `framework / axis / general` only); the_gifted side already uses the correct enum
+  2. `[DB 1.1] Brand Database` Workspace select option missing — vt_intelligence side has only `vt_intelligence / other`; needs `the_gifted_synapse` added
+  3. Symmetry gap — the_gifted Entity Graph missing `Supabase Synced At` date + drift-detection formula (vt_intelligence has both)
+
+- 🛠️ **Operational source:** The Gifted Synapse 13 DBs created 2026-06-11 via:
+  - `n8n-flows/create_notion_dbs_the_gifted.sh` (curl-based, bypassed MCP server `Invalid request URL` bug — see §18.7.5a)
+  - Icon PATCH batch (🏢🏥🏨👨‍⚕️👥🧬🗂️📚🕸️🌐✍️🔗🔑)
+  - Results saved to `n8n-flows/notion_db_ids.the_gifted.env.template` (env vars template for n8n flows)
+
+- 📌 **Companion artifact:** `Schema_Overview_EYWA_v1_18.md` Appendix J — column-level Notion mirror cross-reference per N↔S table.
+
+- ✅ **No content rework, no schema migration, no operator action required.** The 3 drift items above are optional cleanups that don't block sync workflow construction (Part 17 Group A flows can be built today against either workspace).
 
 ### v3.29 (2026-06-08) — Canonicalize `seo_payer_partners` Federation Table (DR-037) 🔒🏥🧾
 
@@ -6958,7 +7038,7 @@ CREATE UNIQUE INDEX brands_fingerprint_unique ON brands(fingerprint);
 CREATE UNIQUE INDEX brands_notion_id_key    ON brands(notion_id) WHERE notion_id IS NOT NULL;
 ```
 
-→ **Full DDL + indexes + constraints for ALL 9 tables in this group** : ดู `Schema_Overview_EYWA_v1_22.md` §3 (Group 1)
+→ **Full DDL + indexes + constraints for ALL 9 tables in this group** : ดู `Schema_Overview_EYWA_v1_23.md` §3 (Group 1) — incl. v1.23 Cloudflare cols on §3.1 `brands`
 → **`seo_brand_centers` rationale + URL pattern + cross-center linking** : ดู §25.13 Multi-Center Brand Architecture (DR-032)
 → **Vertical/healthcare classification** (vertical_family, healthcare_format, etc.): deferred to v2.0 — see Schema_Overview Appendix H. Brands currently track verticals via `compliance_profile` jsonb + `brand_scope[]` on `seo_entity_graph`
 
@@ -15341,26 +15421,98 @@ PHASE 2 (first clinic client):
 
 # PART 18: Notion Database Specifications
 
-## 18.1 Notion DB List
+## 18.1 Notion DB List — Multi-Workspace Reference 🆕 v3.30 · 🔄 v3.32
 
-| Notion DB Name | Workspace | Maps to Supabase | Sync direction |
-|---|---|---|---|
-| Brand Registry | Knowledge | brands | Two-way |
-| SEO Clusters | Knowledge | seo_cluster_master | Two-way |
-| Authors & Reviewers | Knowledge | seo_authors_reviewers | Two-way |
-| Citation Library | Knowledge | seo_citations | Two-way |
-| Keywords | Operations | seo_keyword_master | Two-way |
-| Content Pipeline | Operations | seo_website_page_master (status) | Two-way |
-| Schema Governance | Knowledge | seo_schema_changes | Notion → Supabase |
-| AI Citation Health | Operations | (aggregated views) | Read-only |
-| Brand Mention Monitor | Operations | (aggregated views) | Read-only |
-| Link Coverage Report | Operations | (aggregated views) | Read-only |
-| Monthly SEO KPIs | Operations | (aggregated views) | Read-only |
-| GBP Posts | Operations | seo_gbp_posts | Two-way (Phase 2) |
-| Sync Issues | Knowledge | (conflict log) | Auto-populated |
-| **AI Prompt Bank** | Knowledge | seo_predicted_prompts | Two-way |
-| **AI Platform Health** | Operations | seo_ai_platforms + analytics | Read-only + config |
-| **AI Agent Visits Log** | Operations | seo_ai_agent_visits (aggregated) | Read-only |
+> **Operational state as of 2026-06-11:** Two Notion workspaces house the same **14-DB EYWA mirror schema** for federated multi-team operations per §18.7. Row 14 (`seo_media_assets`) ships canonical in v3.32 (DR-038, Schema v1.23). Plus 1 non-mirror operator reference DB (☁️ Cloudflare Accounts) — see §18.1.2b.
+
+### 18.1.1 Active Notion Workspaces
+
+| Workspace | Notion Workspace ID | Bot Integration (id) | Role | Purpose |
+|---|---|---|---|---|
+| **VT Intelligence Space** | `f81dc4e2-1689-816a-99dd-000319960445` | `VTVT X CLAUDE` (`36cdc4e2-1689-81f4-ad66-002752b4575c`) | `operator` (production) | Long-standing operational workspace — carries production-era relations + formulas + rollups + legacy custom fields |
+| **The Gifted Synapse** | `b3bbe9c6-bf3c-8156-9f09-0003c0a8b9ff` | `GIFTED X CLAUDE` (`36dbe9c6-bf3c-8187-8a52-0027f9e284bd`) | `operator` (clean canonical mirror) | Greenfield workspace created 2026-06-11 — 1:1 with Supabase columns, no legacy carryover |
+
+> 💡 **Sharing:** Both workspaces house their respective 13 DBs under a `🕸️ Knowledge Graph` page. Pages must be `Connections → Connect to → <bot>` before integrations can read/write. Plan tier: both workspaces on **Plus/Business+** (5 GB upload, no block limit).
+
+### 18.1.2 Database IDs per N↔S Mirror Table
+
+| # | Supabase Table | Icon | Notion DB Name | VT Intelligence Space | The Gifted Synapse |
+|---|---|:---:|---|---|---|
+| 1 | `brands` | 🏢 | [DB 1.1] Brand Database | `2a3dc4e2-1689-80e4-926f-ecad4224f591` | `37bbe9c6-bf3c-817c-954b-e9e09c0d3f0e` |
+| 2 | `seo_branches` | 🏥 | Branches Database | `67f9363b-cfc9-46fe-a0c0-f8bb5977e528` | `37bbe9c6-bf3c-81f8-984c-e916dae3793e` |
+| 3 | `seo_brand_centers` | 🏨 | Brand Centers | `e5710988-c87b-45eb-9e01-d28a4059abcf` | `37bbe9c6-bf3c-813c-a96b-e88f8817337a` |
+| 4 | `seo_authors_reviewers` | 👨‍⚕️ | Medical Team Database | `822cf154-651a-4e36-a932-3cb4d4e59162` | `37bbe9c6-bf3c-81be-b5f8-c3849830149d` |
+| 5 | `seo_doctor_assignments` | 👥 | Doctor Assignments Database | `dfc6a0d9-a8cc-4ed0-8b73-a443673f225d` | `37bbe9c6-bf3c-81ba-9cbd-df7111af977e` |
+| 6 | `seo_entity_graph` | 🧬 | Entity Graph | `42d08624-0d4c-440b-94aa-91f49c8343fa` | `37bbe9c6-bf3c-8158-9ad9-feb3b29d81c4` |
+| 7 | `seo_topic_cluster_master` | 🗂️ | Topic Cluster Master | `da1fd987-f729-4f55-8dd0-11395da1d009` | `37bbe9c6-bf3c-81e5-b314-ebb9ff229216` |
+| 8 | `seo_citations` | 📚 | Citations Pool | `5f73703c-234b-4743-a77b-000b83899093` | `37bbe9c6-bf3c-81c5-b513-d091f22c7721` |
+| 9 | `seo_entity_relationships` | 🕸️ | Entity Relationships | `6c026bb0-e4e0-47de-b448-e4fd31839630` | `37bbe9c6-bf3c-8189-919f-e3ca2e80a043` |
+| 10 | `seo_website_page_master` | 🌐 | Website & SEO Page Intelligent Master (W&SPIM) | `4d316588-ff7c-4207-896e-cda45a358994` | `37bbe9c6-bf3c-81dd-92a8-ccb5ba936360` |
+| 11 | `seo_editorial_reviews` | ✍️ | Editorial Reviews | `eed92b9e-f0f0-4b70-8380-9797dd438808` | `37bbe9c6-bf3c-8157-8a50-c2523930dddf` |
+| 12 | `seo_page_internal_links` | 🔗 | Page Internal Links | `553c5000-84e1-429d-8715-262892649ab9` | `37bbe9c6-bf3c-81c8-9740-dccb0f432c95` |
+| 13 | `seo_x_ads_keywords_contextual_master` | 🔑 | Keyword Hub | `325dc4e2-1689-80b4-ad0b-ef69e2499d0b` | `37bbe9c6-bf3c-81cf-9ad3-c98c48c70cae` |
+| 14 ✅ v3.32 | `seo_media_assets` | 🖼️ | Media Library (multi-brand DAM) | `656514e1-274f-4ea5-8aab-576d66858a27` | `37cbe9c6-bf3c-8130-b636-d7e1c0cf874a` |
+
+All 14 IDs are also kept in canonical env var form at `n8n-flows/notion_db_ids.the_gifted.env.template` — source for n8n flow configuration.
+
+> ✅ **Row 14 SHIPPED (v3.32):** `seo_media_assets` canonical via DR-038 (Schema v1.23). Wave 11.8 migration applied 2026-06-11 — 37 columns, PDPA consent gate, Cloudflare R2 fields. n8n sync ready; see Schema_Overview §11 for DDL.
+
+### 18.1.2b Non-Mirror Operator Reference DBs 🆕 v3.32
+
+DBs that exist only in Notion as **operator UI** for cross-workspace operational config. They are deliberately **NOT mirrored to Supabase** (no `seo_*` table, no N↔S sync flow). Canonical data binding lives elsewhere (e.g. `brands.cloudflare_account_email` columns).
+
+| # | Notion DB Name | Icon | Purpose | VT Intelligence Space | The Gifted Synapse | Canonical Binding |
+|---|---|:---:|---|---|---|---|
+| R1 | ☁️ Cloudflare Accounts | ☁️ | Registry of CF accounts owned by org. Drives n8n image-upload routing (per DR-035 / DR-038). 1 row = 1 CF account. | `4bc7291f-e7de-4d69-9ede-5b1158043bb0` | `c8d63712-9dba-4bdc-8656-88ce0355356a` | `brands.cloudflare_account_email` (Supabase) |
+
+Properties (R1): Account Email (title) · Account ID · Default R2 Bucket · Default Zone ID · Status (Active/Disabled) · Plan (Free/Pro/Business/Enterprise/TBD) · Owner Name · Brand Slugs Using · Notes · Created At.
+
+Seed state (both workspaces, 2026-06-11): `naphannop.n@gmail.com` + `marketing@vplanetgroup.com` (Status: Active; Plan: TBD; brand assignments to be filled by operator in next operational step).
+
+### 18.1.3 Structural Parity Notes
+
+VT Intelligence Space (older "production" workspace) carries **production complexity** that The Gifted Synapse (greenfield) does not:
+
+| Feature | VT Intelligence | The Gifted Synapse |
+|---|---|---|
+| Cross-DB relations (native Notion `relation`) | ✅ rich graph (Brand ↔ Doctors/Branches, Entity ↔ Pages/Keywords, etc.) | ❌ text-based FP fields only |
+| Rollups (e.g. Related Keywords) | ✅ exists | ❌ none |
+| Formulas (Brand UUID, Entity UUID, "Notion → Supabase Needs Sync" drift flag) | ✅ multiple | ❌ none |
+| Denorm property "Display Name" | ✅ legacy (DR-008 era) | Renamed to `Fingerprint Display Name` |
+| Legacy custom fields | ✅ Clarity Project ID, PB_Brand_ID, "temp brand", "no", "note" | ❌ pure Supabase mirror |
+| Workspace select option `the_gifted_synapse` | ❌ MISSING (DRIFT) | ✅ present |
+
+**Known schema drift to resolve (non-blocking):**
+
+| # | Item | VT Intelligence | The Gifted | Supabase Live | Recommended Fix |
+|---|---|---|---|---|---|
+| 1 | Entity Graph `Entity Subtype` enum | `framework / axis / health-belief` ⚠️ | `framework / axis / general` ✅ | `framework / axis / general` (`chk_concept_subtype`) | Map `health-belief` → `general` in sync code OR migrate vt rows + ALTER enum |
+| 2 | Brand DB `Workspace` select | `vt_intelligence / other` | `vt_intelligence / the_gifted_synapse / other` | n/a (jsonb-only on Supabase) | Add `the_gifted_synapse` option to vt workspace via `API-update-a-data-source` |
+| 3 | Entity Graph `Supabase Synced At` + drift formula | exists ✅ | missing ❌ | n/a (computed in Notion) | Add equivalent date + formula to the_gifted for symmetry + drift detection |
+
+For Phase 1 sync workflow (Bible §18.8.2), write to **text-based FP fields on both workspaces** — pattern works identically. Phase 2 backfill resolves relations **only on vt_intelligence** (the_gifted has none, by design).
+
+→ For column-level mapping per N↔S table see **`Schema_Overview_EYWA_v1_18.md` Appendix J**.
+
+### 18.1.4 Legacy Notion DB Names (pre-v3.30) — DEPRECATED
+
+Earlier Bible revisions referred to N↔S DBs by **planning placeholder names**:
+
+| Legacy name | Actual canonical name | Status |
+|---|---|---|
+| Brand Registry | [DB 1.1] Brand Database | superseded |
+| SEO Clusters | Topic Cluster Master | superseded |
+| Authors & Reviewers | Medical Team Database | superseded |
+| Citation Library | Citations Pool | superseded |
+| Keywords | Keyword Hub | superseded |
+| Content Pipeline | Website & SEO Page Intelligent Master | superseded |
+| Schema Governance | (no Notion mirror — `seo_schema_changes` is S-only) | retired |
+| Sync Issues | (no Notion mirror — drift logged to `seo_data_quality_metrics` instead) | retired |
+| AI Citation Health / Brand Mention Monitor / Link Coverage Report / Monthly SEO KPIs | (Notion aggregate VIEWS, not standalone DBs) | kept as supplementary views in §18.1b |
+| GBP Posts | (Supabase `seo_gbp_posts` is **S-only**, not mirrored) | retired |
+| AI Prompt Bank / AI Platform Health / AI Agent Visits Log | (LLMO surfaces — kept in §18.1b) | retained |
+
+→ Authoritative DB IDs live in §18.1.2.
 
 ---
 
@@ -27639,6 +27791,59 @@ pattern_C_supabase_vault_DIRECT:
 - **Smile-Scape session** (`local_497ba01a-f6f8-45ff-afb7-2187eb4f81ee`, 2026-06-07) — operational discovery
 - **Supabase Vault docs:** https://supabase.com/docs/guides/database/vault
 - **Notion API auth:** https://developers.notion.com/reference/intro#authentication
+
+### 18.7.5b Operational State (Multi-Workspace Live) 🆕 v3.30
+
+Following §18.7.5a, the dynamic-token pattern is operational across **both Notion workspaces** as of 2026-06-11. This section captures the live env-var contract for n8n flow authors.
+
+#### Per-workspace env vars (n8n / .env)
+
+```bash
+# ─────────────────────────────────────────────────────────
+# VT Intelligence Space (production)
+# ─────────────────────────────────────────────────────────
+NOTION_WORKSPACE_VT_INTELLIGENCE_ID=f81dc4e2-1689-816a-99dd-000319960445
+NOTION_INTEGRATION_VT_INTELLIGENCE_ID=36cdc4e2-1689-81f4-ad66-002752b4575c
+NOTION_TOKEN_VT_INTELLIGENCE=<rotate; never check into git>
+ALLOWED_BRANDS_VT_INTELLIGENCE=<comma-separated brand_slug list of brands hosted here>
+WORKSPACE_ROLE_VT_INTELLIGENCE=operator
+
+# ─────────────────────────────────────────────────────────
+# The Gifted Synapse (canonical clean mirror — created 2026-06-11)
+# ─────────────────────────────────────────────────────────
+NOTION_WORKSPACE_THE_GIFTED_SYNAPSE_ID=b3bbe9c6-bf3c-8156-9f09-0003c0a8b9ff
+NOTION_INTEGRATION_THE_GIFTED_ID=36dbe9c6-bf3c-8187-8a52-0027f9e284bd
+NOTION_TOKEN_THE_GIFTED_SYNAPSE=<rotate; never check into git>
+ALLOWED_BRANDS_THE_GIFTED_SYNAPSE=<TBD operator assignment>
+WORKSPACE_ROLE_THE_GIFTED_SYNAPSE=operator
+```
+
+Source-of-truth template: `n8n-flows/notion_db_ids.the_gifted.env.template` (extends to vt_intelligence with the same pattern). Database IDs for both workspaces live in §18.1.2.
+
+#### Workspace selection guidance for new brands
+
+| Scenario | Target Workspace |
+|---|---|
+| **Greenfield federation brand** (e.g. new HP100, smile-scape Mk II) | **The Gifted Synapse** — start fresh on canonical clean schema; no production drift |
+| **Brand already operating with vt_intelligence data** | Stay in **VT Intelligence Space** until migration plan locks; preserve relations + history |
+| **Multi-team setup** (separate editorial team workspace) | Either — create a fresh workspace per §18.7.8, mirror the 13-DB schema via `n8n-flows/create_notion_dbs_the_gifted.sh` template |
+
+#### Two-Phase Sync compatibility
+
+Per §18.8.2:
+
+- **Phase 1 (flat load) — works identically on both workspaces.** All 13 the_gifted DBs have text-based FP fields (`Fingerprint`, `Brand Scope`, `Center Scope`, `Primary Entity FP`, etc.). vt_intelligence has the same text fields PLUS native Notion `relation` properties bound to other DBs.
+- **Phase 2 (relation backfill) — vt_intelligence only.** Only vt_intelligence has graph relations (Brand ↔ Doctors, Entity ↔ Pages, etc.) to populate. the_gifted is canonical-flat by design.
+- **Drift detection — vt_intelligence has formula-based `Notion → Supabase Needs Sync`**; the_gifted needs equivalent symmetric setup (drift item #3 in §18.1.3).
+
+#### Cross-references
+
+- §18.1.2 — DB IDs reference matrix per workspace
+- §18.1.3 — Structural parity notes + 3 drift items
+- §18.7.5a — Dynamic Token pattern (the "how")
+- §18.7.5 — Brand Scope Validation (the "what")
+- §18.7.8 — Onboarding New Team Workspace
+- `Schema_Overview_EYWA_v1_18.md` Appendix J — column-level cross-reference
 
 ### 18.7.6 Universal Resource Curation
 
