@@ -1,8 +1,8 @@
 # 📖 คัมภีร์ EYWA™ PROTOCOL
 ## The Universal Knowledge Graph SEO Specification for the AI Era
 
-**Version:** 3.32  
-**Last Updated:** 2026-06-11  
+**Version:** 3.33  
+**Last Updated:** 2026-06-14  
 **Trademark:** EYWA™ (Class 35+42, DIP Thailand, filed 2026-04-20)  
 **Created by:** The Gifted Digital Marketing Co., Ltd.  
 **Scope:** Universal standard สำหรับการบริหารจัดการ SEO + Knowledge Graph แบบ multi-vertical, multi-brand, multi-specialty, multi-lingual, multi-location, **AI-future-ready** ในยุค AI Search (2026+) — ครอบคลุม healthcare verticals (clinic ทุก specialty, hospital, dental, sleep medicine, aesthetic, wellness, healthcare media) extensible to other regulated YMYL niches  
@@ -143,6 +143,19 @@ Throughout this Bible:
 
 
 ## 📜 Changelog
+
+### v3.33 (2026-06-14) — DR-040 R2 Media Bucket: Strict Per-Brand Isolation + Key/Folder Naming 🖼️☁️🔒
+
+Companion to **DR-040 (Locked 2026-06-14)**. **Convention-only — no schema change (stays v1.23).** Settles two things DR-035 + DR-038 left open: *which* R2 bucket holds a brand's media, and *how* objects are named inside it.
+
+**Headline Changes:**
+
+- 🆕 **§18.5b NEW — R2 Media Bucket Governance** (companion to §18.5 Files & media / DR-035 and §18.1.2b / DR-038): **one bucket per brand (`{brand-slug}-media`), no cross-brand sharing, ever** — stock / reusable imagery is copied per brand. Rationale: SEO + blast-radius + clean handover; reinforced by R2's bucket-level access model (no durable per-folder ACL).
+- 🔄 **Supersedes the loose "one bucket may serve multiple brands" note** that shipped with DR-038 — `Schema_Overview §3.1` `brands.cloudflare_r2_bucket` annotation corrected to per-brand isolation (no schema version bump).
+- 🆕 **Object key / folder convention** — archetype folders + kebab English slug (= page/entity slug) + no Thai filenames/spaces + prefer `.webp` + optional role suffix + versioned keys for mutable assets. Documents the format of `seo_media_assets.r2_object_key`.
+- 🆕 **Delivery convention** — `r2.dev` (preview only) → `cdn.{brand-domain}` (prod, per-bucket custom domain) or Worker R2 binding; base URL in one module per brand for one-line cutover.
+- 🧹 **Retires the unapplied Deezy-side "DR-038" staging draft** (2026-06-09): its number collided with canonical DR-038; valid parts re-filed as DR-040, corrected to the shipped schema (`storage_key` → `r2_object_key`).
+- 📌 **Companion artifacts:** `DECISION_RECORDS.md` — DR-040 entry (doc v1.25 → v1.26); `Schema_Overview_EYWA_v1_23.md` — §3.1 `cloudflare_r2_bucket` note corrected.
 
 ### v3.32 (2026-06-11) — DR-038 `seo_media_assets` Canonical + Cloudflare Config on `brands` (Schema v1.23) 🖼️☁️🔒
 
@@ -15808,6 +15821,45 @@ Each sync flow:
 - No data type mismatches
 
 If validation fails → don't sync, comment in Notion with error
+
+---
+
+## 18.5b R2 Media Bucket Governance 🆕 v3.33 (DR-040)
+
+> **Companion to §18.5 "Files & media" (DR-035) and §18.1.2b (☁️ Cloudflare Accounts).** DR-035 settled *where* binaries live (Cloudflare R2; Supabase stores the URL). DR-038 shipped the metadata table (`seo_media_assets`) + per-brand routing (`brands.cloudflare_r2_bucket`). **DR-040 (🔒 2026-06-14)** settles *which* bucket holds a brand's media and *how* objects are named inside it. **Convention-only — no schema change.**
+
+### One bucket per brand — no cross-brand sharing (mandatory)
+
+- **One R2 bucket = one brand**, named **`{brand-slug}-media`** (`smilescape-media`, `deezy-media`, …). Location hint `apac`.
+- **A brand never reads another brand's bucket.** Reusable / stock imagery is **copied into each consuming brand's bucket** — never shared across brands.
+- **Why (operator decision 2026-06-14 — "ฉันจะไม่มีวันข้าม"):**
+  1. **SEO** — keeps each brand's media graph on its own domain / CDN; no cross-domain hotlink or entity-signal dilution.
+  2. **Blast radius** — deleting an asset in a shared bucket would break the binary for *every* site referencing it; per-brand buckets contain the damage to one brand.
+  3. **Portability / handover** — selling or handing a brand site to a client = hand over one self-contained bucket; no untangling shared objects.
+- **Enforced by R2's model:** access control is **bucket-level** (API tokens scoped to account/bucket; public delivery via a per-bucket custom domain) — there is **no durable per-folder ACL**, so a shared public bucket cannot isolate brand reads. This is also the healthcare/PHI multi-tenant consensus (isolate at the tenant boundary; query-time/prefix filters do not prevent storage-level co-mingling).
+- **Supersedes** the loose "one bucket may serve multiple brands" note that shipped with DR-038 (`brands.cloudflare_r2_bucket`).
+
+### Object key & folder convention
+
+Folder by content archetype (object keys map 1:1 to sitemap entity types):
+
+```
+brand/              logo.png, logo-white.png, favicon.*, og-default.jpg
+services/{slug}/     branches/{slug}/     doctors/{slug}/
+promos/{YYYY-MM}/    cases/{slug}/         articles/{slug}/     og/
+```
+
+- **Key naming:** lowercase **kebab-case**, English slug **matching the page/entity slug**; **no Thai filenames, no spaces**; prefer **`.webp`**; optional role suffix (`hero` / `thumb` / `og` / `exterior` / `before-after`); **never repeat the brand name** inside the key (the bucket is already brand-scoped).
+- This is the documented format of **`seo_media_assets.r2_object_key`**; `r2_bucket = {brand-slug}-media`. (The 2026-06-09 staging draft's `storage_key` was a mis-name — the shipped column is `r2_object_key`.)
+- **Mutable assets** (e.g. promos) use **versioned / dated keys** instead of overwriting (avoids edge-cache staleness).
+
+### Delivery
+
+- **Preview:** `r2.dev` managed domain (rate-limited; non-production only).
+- **Production:** **`cdn.{brand-domain}`** (per-bucket custom domain — the zone must be on the same Cloudflare account) **or** a Worker R2 binding (`/media/*`).
+- Keep the R2 base URL in **one module** per brand (e.g. Deezy `web/src/lib/media.ts`) so the r2.dev → cdn cutover is a one-line swap.
+
+Full rationale + supersession of the 2026-06-09 staging draft: DECISION_RECORDS → **DR-040**.
 
 ---
 

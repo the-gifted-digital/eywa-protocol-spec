@@ -2,8 +2,8 @@
 
 > **Append-only architectural decision log.** Each record explains WHY a decision was made — not just WHAT.
 
-**Document Version:** 1.25  
-**Last Updated:** 2026-06-13  
+**Document Version:** 1.26  
+**Last Updated:** 2026-06-14  
 **Format:** Reverse chronological (newest first)
 
 ---
@@ -31,6 +31,71 @@
 ---
 
 ## Decisions Log
+
+### [DR-040] — R2 Media Bucket: Strict Per-Brand Isolation + Object-Key / Folder Naming Convention (Universal) (2026-06-14 → Locked 2026-06-14) 🔒🖼️☁️
+
+**Status:** **🔒 Locked 2026-06-14** — operator-directed ("ฉันจะไม่มีวันข้าม", 2026-06-14), drafted + applied same working session. **Convention-only — no schema migration, no DDL change** (it standardizes *how* R2 objects are named/foldered and *which* bucket holds them; the columns that record this — `seo_media_assets.r2_bucket` / `r2_object_key` / `cdn_url` and `brands.cloudflare_r2_bucket` — already shipped in DR-038 / Schema v1.23). **Supersedes the unapplied Deezy-side "DR-038" staging draft** (2026-06-09, *"R2 Media Bucket Structure & Naming Convention"*): its number collided with the canonical DR-038 (locked 2026-06-11, `seo_media_assets` DAM), and its premise (a still-"proposed" `seo_media_assets` table + a `storage_key` column) was overtaken by that lock. This DR re-files the still-valid parts (key/folder convention, delivery cutover) under a free number, corrected to the shipped schema.
+
+**Scope:** **UNIVERSAL** — every brand storing media on Cloudflare R2 per DR-035. WP-stack brands adopt at media-to-R2 migration.
+
+**Bible Reference:** Additive — proposes a short **"R2 Media Bucket Governance" block** companion to §18.5 (Files & media — annotated by DR-035) and §18.1.2b (☁️ Cloudflare Accounts reference DB — DR-038). **Exact § slot reserved to operator** (per the staging-draft note "operator to slot the exact §"); bump Bible v3.32 → v3.33 when slotted.
+
+**Schema Reference:** **No version change — stays v1.23.** No new/altered columns. One annotation correction in §3.1: `brands.cloudflare_r2_bucket` note changes from *"One bucket may serve multiple brands (operator convention)"* → *"One bucket per brand — no cross-brand sharing (DR-040)."*
+
+**Companion to:** DR-035 (R2 + Image Transformations storage decision — WHERE binaries live), DR-038 (`seo_media_assets` DAM table + per-brand Cloudflare routing — the columns this DR gives a bucket/key contract to), DR-029 (universal brand design system — brand assets), DR-030 (PDPA / sensitive-topic compliance — patient-image isolation is a compliance driver).
+
+**Context:**
+
+DR-035 (🔒 2026-06-04) settled WHERE binaries live (Cloudflare R2; Supabase stores the delivered URL only). DR-038 (🔒 2026-06-11) shipped the metadata table (`seo_media_assets` with `r2_bucket` / `r2_object_key` / `cdn_url`) + per-brand Cloudflare routing on `brands`. **Neither specified (a) whether one R2 bucket may hold more than one brand's media, nor (b) how objects inside a bucket are named/foldered.** DR-038's `cloudflare_r2_bucket` note left bucket-sharing as a loose *"one bucket may serve multiple brands (operator convention)"* — under-specified. The 2026-06-09 Deezy staging draft proposed the opposite (one bucket per brand) plus a key-naming convention, but was never applied (number collision + stale premise). With hundreds of assets per brand across an 858-page build, an unstandardized key space cannot be wired programmatically, and the legacy WordPress Thai-filename URL fragility (`…/อินวิสะไลน์.png` → brittle percent-encoding) recurs.
+
+**Decision:**
+
+1. **Strict per-brand bucket isolation — `{brand-slug}-media`, NO cross-brand sharing, ever.** One bucket = one brand. Even reusable / stock imagery is **copied into each consuming brand's bucket** — a brand never reads another brand's bucket. Location hint `apac`. **This overrides DR-038's "one bucket may serve multiple brands" note.**
+   - **Operator rationale (2026-06-14):**
+     1. **SEO** — a brand's assets served from another brand's domain/CDN cross-pollinates hotlink/entity signals and dilutes per-domain authority; isolation keeps each brand's media graph clean.
+     2. **Blast radius** — in a shared bucket, deleting an image for one page deletes the binary for *every* site referencing it → silent multi-brand breakage. Per-brand buckets contain the damage to one brand.
+     3. **Portability / handover** — selling or handing a brand site to a client = hand over one self-contained bucket; no untangling shared objects.
+   - **Reinforced by R2's access model:** R2 access control is **bucket-level** (API tokens scoped to account/bucket; public delivery via a per-bucket custom domain) — there is **no durable per-folder ACL**, so a shared public bucket cannot enforce "brand B may not read brand A's folder." Per-brand buckets are the only way to get per-brand access, deletion, quota, and PDPA breach-scope boundaries. Matches the healthcare/PHI multi-tenant consensus (isolate at the tenant boundary; query-time/prefix filters do not prevent storage-level co-mingling).
+
+2. **Folder by content archetype** (object keys map 1:1 to sitemap entity types):
+   ```
+   brand/              logo.png, logo-white.png, favicon.*, og-default.jpg
+   services/{slug}/     branches/{slug}/     doctors/{slug}/
+   promos/{YYYY-MM}/    cases/{slug}/         articles/{slug}/     og/
+   ```
+
+3. **Key naming:** lowercase **kebab-case**, English slug **matching the page/entity slug**; **no Thai filenames, no spaces**; prefer **`.webp`**; optional role suffix (`hero` / `thumb` / `og` / `exterior` / `before-after`); **never repeat the brand name** inside the key (the bucket is already brand-scoped). This is the documented format of **`seo_media_assets.r2_object_key`** (the staging draft's `storage_key` was a mis-name — the shipped column is `r2_object_key`).
+
+4. **Mutable assets** (e.g. promos) use **versioned / dated keys** instead of overwriting, to avoid edge-cache staleness.
+
+5. **Delivery:** `r2.dev` managed domain for **preview only** (rate-limited); **production** uses **`cdn.{brand-domain}`** (per-bucket custom domain — needs the zone on the same CF account) **or** a Worker R2 binding (`/media/*`). Keep the base URL in **one module** per brand (e.g. Deezy `web/src/lib/media.ts`) so the r2.dev → cdn cutover is a one-line swap.
+
+**Rationale:**
+
+- **Why hard isolation, not a tiered (shared-for-stock) model** — a tier rule was considered (PHI isolated, generic/stock shared) and **rejected by operator** on the three grounds above. The marginal storage saved by sharing stock is trivial next to the blast-radius and handover risk, and R2 cannot ACL a shared bucket per-brand anyway. Copying stock per-brand is cheap and preserves a simple invariant: **a brand's bucket is the brand's — whole, isolated, and portable.**
+- **Predictable, programmatic keys** — slug-based archetype folders let the 858-page build resolve image URLs deterministically (no per-asset lookup).
+- **One mental model across 15 brands** → shared tooling, one n8n media-sync, shared docs.
+- **Avoids URL/caching breakage** — kebab English keys fix the WordPress Thai-filename fragility.
+- **Clean prod cutover** — base-URL-in-one-place decouples the convention from the r2.dev → cdn swap.
+
+**Consequences:**
+
+- ✅ **No migration** — convention-only. Existing `smilescape-media` / `deezy-media` already conform at bucket-name + top-folder level; adopt the folder/key naming going forward.
+- 🔧 **Schema note corrected** — `Schema_Overview §3.1` `brands.cloudflare_r2_bucket` annotation updated (multi-brand → per-brand isolation). No version bump (annotation only).
+- 🔧 **n8n media-sync** (DR-038 Phase 1 upload flow) must **generate object keys per this convention** and target `{brand-slug}-media`; `r2_object_key` stores the archetype-folder key.
+- 🔧 **Per-brand code:** keep the R2 base URL in one module; switch r2.dev → `cdn.{brand}` (or Worker binding) at cutover.
+- 📋 **Bible:** add "R2 Media Bucket Governance" block — operator to slot the §; bump Bible v3.32 → v3.33 at that point.
+- ⚠️ **Stock / reusable imagery is duplicated per brand by design** — accept the redundancy as the price of isolation + portability.
+- ⚠️ **WP-stack brands** unaffected until they migrate media to R2; the convention binds at that point.
+
+**References:**
+
+- **Supersedes:** Deezy-side "DR-038" staging draft (2026-06-09) — `deployment/cloudflare/r2-media.md`, `web/src/lib/media.ts`, bucket `deezy-media` (created 2026-06-09). Number collided with canonical DR-038; re-filed here as DR-040.
+- DR-035 (R2 + Image Transformations storage decision), DR-038 (`seo_media_assets` DAM + Cloudflare routing), DR-029 (brand assets), DR-030 (PDPA).
+- Industry grounding: dedicated-bucket-per-tenant is the healthcare/PHI multi-tenant consensus (storage-level isolation > prefix/RLS filters); Cloudflare R2 access control is bucket-level (tokens scoped to account/bucket; per-bucket custom domain) with no durable per-folder ACL.
+- Operator decision 2026-06-14: "ฉันจะไม่มีวันข้าม" — SEO + blast-radius + clean handover.
+
+---
 
 ### [DR-039] — Content Tension Model + Block Data-Readiness/Fallback Framework + T5 Service Skeleton + Trust-Footer Order (Content_Templates v1.8 → v1.9) (2026-06-13 → Locked 2026-06-13) 🔒✍️🧩
 

@@ -296,7 +296,7 @@ See **Appendix A** for installation order and per-table extension dependencies.
 | `cloudflare_account_email` 🆕 v1.23 | `text` | nullable | DR-038 Layer A — which Cloudflare account hosts this brand's assets (e.g. `marketing@vplanetgroup.com`). Drives n8n image-upload routing decision. Operator-curated; canonical registry in Notion `☁️ Cloudflare Accounts` reference DB. |
 | `cloudflare_account_id` 🆕 v1.23 | `text` | nullable | DR-038 — Cloudflare numeric account ID (optional; used for account-scoped API endpoints). |
 | `cloudflare_zone_id` 🆕 v1.23 | `text` | nullable | DR-038 — Cloudflare DNS zone ID for this brand's primary domain; used by Image Transformations (per DR-035). |
-| `cloudflare_r2_bucket` 🆕 v1.23 | `text` | nullable | DR-038 — R2 bucket name that holds this brand's images. One bucket may serve multiple brands (operator convention). |
+| `cloudflare_r2_bucket` 🆕 v1.23 | `text` | nullable | DR-038 — R2 bucket name that holds this brand's images (`{brand-slug}-media`). **One bucket per brand — no cross-brand sharing (DR-040, 2026-06-14).** |
 | `created_at` | `timestamptz` | NOT NULL DEFAULT `now()` | |
 | `updated_at` | `timestamptz` | NOT NULL DEFAULT `now()` | |
 
