@@ -2,8 +2,8 @@
 
 > **Append-only architectural decision log.** Each record explains WHY a decision was made — not just WHAT.
 
-**Document Version:** 1.24  
-**Last Updated:** 2026-06-11  
+**Document Version:** 1.25  
+**Last Updated:** 2026-06-13  
 **Format:** Reverse chronological (newest first)
 
 ---
@@ -31,6 +31,63 @@
 ---
 
 ## Decisions Log
+
+### [DR-039] — Content Tension Model + Block Data-Readiness/Fallback Framework + T5 Service Skeleton + Trust-Footer Order (Content_Templates v1.8 → v1.9) (2026-06-13 → Locked 2026-06-13) 🔒✍️🧩
+
+**Status:** **🔒 Locked 2026-06-13** — operator-directed during the SmileScape T5/T1 content-template build session (operator: "ทำคู่ได้เลย ใช้ทั้งของ smilescape และเขียนกลับ spec"). Drafted + applied same working session. **Additive** — no change to the LOCKED T1-T22 block taxonomy or composition (DR-020); this DR adds two cross-cutting editorial frameworks (§4.6, §4.7), one new worked skeleton (T5), and one example-order correction (T1). Promotes patterns proven in the SmileScape Astro reference build.
+**Spec Reference:** Content_Templates **v1.8 → v1.9** — NEW §4.6 (Content Tension Model) + §4.7 (Block Data-Readiness & Fallback Framework); `examples/` gains **T5-service-SKELETON.md**; `examples/T1-medical-condition-SKELETON.md` §13–16 reordered.
+**Schema Reference:** proposes `seo_website_page_master.content_gaps jsonb` (Schema Overview follow-up migration) for static-stack brands stored equivalently in page frontmatter `content_gaps[]`. Generalizes DR-034's FAQ-only `content_gap_flag` to ALL blocks.
+**Companion to:** DR-034 (Intra-Page Answer Routing — §4.6 builds directly on its understanding→body / decision→FAQ split), DR-020 (T1-T22 template lock — unchanged), DR-019 (schema deprecations — Speakable retained), DR-029 (design tokens — block render layer), DR-017 (content brief), DR-030 (PDPA — patient-journey/before-after consent gate interacts with 🟠 readiness tier).
+**Scope:** **UNIVERSAL** (all 14 brands × 6 verticals — every SEO content template inherits §4.6 + §4.7; T5 skeleton seeds all commercial/service pages).
+
+**Context:**
+
+Two production gaps surfaced while building SmileScape's T5 (Service/Money) and T1 (Concern) Astro reference templates:
+
+1. **Answer-first vs engagement-hook was never reconciled in writing.** The spec optimizes hard for AEO/Speakable "give the answer in line 1" (B01 40-60 words; §4.5.4 understanding-PAA → body direct answer), yet good CRO copy opens sections with the reader's pain/question to build tension. These appear to conflict. The spec handled it only *implicitly* (§4.5.4 routing) — no named principle, so writers risk either (a) burying the AI answer behind a preamble, or (b) writing dry label-headings with no pull. SmileScape needed an explicit rule before scaling content.
+
+2. **No fallback when a block's first-party DATA is not ready.** Templates compose blocks like B10/B11a Brand Stance, B12 Clinical Insight, §10 Patient Journey, and Pattern A clinic-data citables — all of which require *real first-party clinic data that a young brand may not have yet*. The spec had NO guidance: it implicitly assumes all data is ready at publish (T1 skeleton line 1007 "B12 placeholder OK on launch" is the only hint; DR-034's `content_gap_flag` covers FAQ only). Brands need a deterministic "skip + flag to backfill, or fallback" rule — never fabricate first-party stats, never silently drop a trust/compliance block.
+
+Also surfaced: only **T1 has a worked skeleton** in `examples/` (T2-T19 carry block-lists only), and the T1 example placed **References after the final CTA**, diverging from the production E-E-A-T-footer-before-CTA pattern.
+
+**Decision:**
+
+**Four coordinated parts (matches DR-038's coordinated-sub-decisions precedent):**
+
+**1 — §4.6 Content Tension Model (answer-first ↔ hook).** Formalizes the implicit reconciliation. Two layers coexist when *zoned*:
+- **Answer-first zones — sacred, never delay the answer:** B01 Hero Summary, B02 Quick Facts, B04 Definition (first sentence), B18 FAQ answers, and every §4.5.4 understanding-PAA body answer. 40-60-word direct answers; these are the AI / Speakable / featured-snippet extraction targets.
+- **Hook zones — tension/engagement permitted:** the visual hero (where a template has one distinct from B01), section H2/H3 **headings**, B20 CTA copy, inter-section transitions.
+- **The unifier = Question-style headings.** A heading phrased as the reader's own question ("{topic} คืออะไร?", "เลือกแบบไหนดี?", "เหมาะกับใครบ้าง?") is *simultaneously* an engagement hook AND an AEO query-match; the answer-first body follows in the next line. A "micro-hook" is therefore **never** preamble before the answer — it is framing-with-the-reader's-question, then answering immediately. This aligns 1:1 with §4.5.4 (understanding-intent → body answer-first; decision-intent → FAQ/hook).
+- **YMYL tone guard (Bible Part 23 / Thai med-ad law):** hooks must be question-form or empathetic; **never** fear-mongering, hyperbole, superlatives, urgency-pressure, or outcome guarantees. The Section Brief gains a per-block **tension role** column (`answer-first` / `hook` / `both`).
+
+**2 — §4.7 Block Data-Readiness & Fallback Framework.** Every block in a template's composition carries a **readiness tier** governing publish behavior when real data is not ready. Three tiers:
+
+| Tier | Blocks | Data not ready → | Publishes? | Flag |
+|---|---|---|---|---|
+| 🔴 **Gate** (core-answer + trust + compliance) | B01, B04, B18, B19, B21, B25, B25a (if acute) | **Block publish, OR publish `noindex` until ready** | ❌ / noindex | `blocking_gap` |
+| 🟠 **First-party-preferred** | B10/B11a Brand Stance, B12 Clinical Insight, §10 Patient Journey, B16 Before/After, Pattern A clinic-data citables | **Skip + flag for backfill** (page still ships). Optional: external-evidence fallback (Tier 1-2 citation instead of first-party, lower LLMO power). **Never fabricate first-party stats.** | ✅ | `content_gap` |
+| 🟢 **Conditional / Optional** | B09 (skip if 1 option), B25a (skip if chronic-only), severity table, etc. | **Skip silently** when genuinely N/A; justify in Dev Notes | ✅ | `na_justified` |
+
+Mechanism: page carries `content_gaps[]` (`{block, tier, reason, fallback_used, owner, due}`) → feeds a **Content-Completeness report** so operators backfill 🟠 gaps over time and 🔴 gaps block release. This **retains** the existing graceful-skip render pattern (`{data.x && <Block/>}`) but mandates a **written flag (no silent skips)** and **tier enforcement** (a 🔴 gate block can never silently vanish).
+
+**3 — `examples/T5-service-SKELETON.md` authored.** T5 was field-built (SmileScape All-on-4) but had no skeleton. Authored mirroring T1's strict Part 1 (WYSIWYG) / Part 2 (technical+editorial toggles) structure, using the T5 composition (B01, B04, B27 who-for, B13 process, B09 comparison, B16 before/after, B17 pricing, B18 FAQ, B19 review, B22 related, B20 CTA, B21 references) + the commercial marketing layer (heroPromo trust band, "Quick Check" B02 variant, per-tier pricing CTA). Establishes the worked-skeleton authoring pattern for the remaining T2/T3/T4/T6/T6a/T8 templates.
+
+**4 — Trust-footer order standardized: References before the final CTA.** Production groups **Doctor Review + References** as the E-E-A-T trust footer, then the related cluster, then the single final conversion CTA. Standard end-sequence is now **B19 Doctor Review → B21 References → B22 Related → B20 CTA(final)**. `examples/T1` §13–16 reordered accordingly (was: Review → Related → CTA → References).
+
+**Rationale:**
+
+- **§4.6** turns a latent contradiction into a teachable rule; the question-heading unifier means we lose nothing on AEO (body stays answer-first) while gaining CRO tension — and it rides the existing §4.5.4 routing rather than fighting it.
+- **§4.7** is the single biggest missing governance piece: without it, a young brand either ships empty block shells, fabricates stats (compliance + trust catastrophe), or blocks publication on data it doesn't have yet. The tiered rule makes the safe path deterministic and machine-trackable.
+- **Trust-before-CTA**: citations + reviewer are the last persuasion beat before the ask; a CTA followed by a wall of references reads as an anticlimax and buries the conversion.
+
+**Consequences:**
+
+- Additive; brands re-bump `examples/` + adopt §4.6/§4.7 at their next content Stage gate. No retro-mandate (DR-020 lock unaffected; block composition unchanged).
+- Follow-up: add `content_gaps jsonb` to `seo_website_page_master` (Schema Overview migration) — until then static-stack brands store it in page frontmatter. The Content-Completeness report (n8n / dashboard) is a Phase-1 build.
+- The 🟠 external-evidence fallback for B10/B12 produces lower-LLMO content by design — flagged so it is upgraded to first-party as data accrues.
+- Writers get one new Section-Brief column (tension role) + one new pre-publish gate (resolve 🔴 `blocking_gap`, log 🟠 `content_gap`).
+
+**References:** DR-034 (intra-page routing — direct parent of §4.6), DR-020 (template lock), DR-019 (schema), DR-030 (PDPA consent — §10/B16 readiness), `examples/T1-medical-condition-SKELETON.md`, `examples/T5-service-SKELETON.md`, Content_Templates §4.5.4 → §4.6 → §4.7. First proven in `brands/eywa-smile-scape` (`web/src/layouts/templates/`, `docs/content-blueprint.md`).
 
 ### [DR-038] — Canonicalize `seo_media_assets` Multi-Brand Digital Asset Manager + Per-Brand Cloudflare Routing (promotes SS-DR-015/SS-DR-016) (2026-06-11 → Locked 2026-06-11) 🔒🖼️☁️
 

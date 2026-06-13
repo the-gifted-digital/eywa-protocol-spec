@@ -3,10 +3,21 @@
 > **Companion document to** EYWA Bible v3.19 + Schema Overview v1.15
 > **Universal Content Production Standards across 13 brands × 6 verticals**
 
-**Version:** v1.8 (2026-06-03 — ➕ §4.5.4 Intra-Page Answer Routing (PAA × FAQ) + B18 tiered FAQ floor per DR-034; additive, T1-T22 + T-ADS-X structurally unchanged. v1.7 LOCKED 2026-05-18 per DR-029 design-token integration remains in force.)
+**Version:** v1.9 (2026-06-13 — ➕ §4.6 Content Tension Model (answer-first ↔ hook) + §4.7 Block Data-Readiness & Fallback Framework per DR-039; ➕ examples/T5-service-SKELETON.md; examples/T1 §13–16 trust-footer order fix. Additive — T1-T22 + T-ADS-X block taxonomy structurally unchanged. v1.8 DR-034 + v1.7 DR-029 remain in force.)
 **Status:** **LOCKED 2026-05-12** for T1-T22 (Universal Content Template Standard per DR-020); T-ADS-X (DR-026) Proposed status retained until 2026-06-21 lock
-**Companion to:** Bible v3.24 + Schema Overview v1.20 + DECISION_RECORDS v1.20
+**Companion to:** Bible v3.24 + Schema Overview v1.20 + DECISION_RECORDS v1.25
 **Format:** Append-only with semantic versioning (v1.0 → v1.5 backward compatible)
+
+## v1.9 Changelog (2026-06-13) — Content Tension Model + Block Data-Readiness/Fallback + T5 Skeleton (DR-039 Locked)
+
+Two production gaps surfaced during the SmileScape T5/T1 Astro reference build. DR-039 closes both with cross-cutting editorial frameworks (additive — no change to the locked T1-T22 block taxonomy):
+
+- ➕ **§4.6 NEW — Content Tension Model (answer-first ↔ hook)** — formalizes the previously-implicit reconciliation (§4.5.4). Answer-first zones (B01 / B02 / B04 first line / B18 answers) are sacred AI-extraction targets; hooks live in the visual hero, section headings, and CTA copy. The unifier = **question-style headings** (engagement hook + AEO query-match in one); a micro-hook never delays the answer. YMYL tone guard: question/empathetic framing only — no fear/hyperbole/guarantees.
+- ➕ **§4.7 NEW — Block Data-Readiness & Fallback Framework** — every block carries a readiness tier (🔴 Gate / 🟠 First-party-preferred / 🟢 Conditional). When real data isn't ready: 🔴 blocks publish (or noindex) until present; 🟠 skip + flag for backfill (optional external-evidence fallback, never fabricate first-party stats); 🟢 skip silently when N/A. Adds page `content_gaps[]` (generalizes DR-034's FAQ-only `content_gap_flag` to all blocks).
+- ➕ **examples/T5-service-SKELETON.md** — first worked T5 skeleton (mirrors T1 Part 1/Part 2), seeded from the SmileScape All-on-4 build.
+- 🔄 **examples/T1 §13–16 reordered** — trust-footer standard: Doctor Review → References → Related → CTA (final).
+- 📌 T1-T22 + T-ADS-X: **NO structural change** — §4.6/§4.7 are cross-cutting editorial standards. v1.8 DR-034 + v1.7 DR-029 locks remain in force.
+- 🔄 Companion ref: DECISION_RECORDS → v1.25.
 
 ## v1.8 Changelog (2026-06-03) — Intra-Page Answer Routing (DR-034 Locked)
 
@@ -2268,6 +2279,44 @@ qa_check_per_page:
   - "PAA ที่ drop → คนละ intent จริง + (ถ้า cross-cluster) link out แล้ว?"
   - "intent_source_tier + paa_checked_at ถูกบันทึก? (seo_website_page_master)"
 ```
+
+---
+
+## 4.6 Content Tension Model — Answer-First ↔ Hook 🆕 v1.9 (DR-039)
+
+> Formalizes the previously-implicit reconciliation in §4.5.4. Answer-first (AEO / Speakable) and engagement hooks do **not** conflict when each is kept to its zone.
+
+**Two layers, three zones:**
+
+| Zone | Where | Rule |
+|------|-------|------|
+| 🔵 **Answer-first (sacred)** | B01 Hero Summary · B02 Quick Facts · B04 Definition (first sentence) · B18 FAQ answers · every §4.5.4 understanding-PAA body answer | Direct 40-60-word answer, no preamble. These are the AI / Speakable / featured-snippet extraction targets — **never** delay the answer with a hook. |
+| 🟡 **Hook (tension permitted)** | the visual hero (where a template has one distinct from B01) · section H2/H3 **headings** · B20 CTA copy · inter-section transitions | Open with the reader's pain/question to build pull. |
+| 🟢 **Both (the unifier)** | section **headings** phrased as the reader's own question | A question-heading is *simultaneously* an engagement hook AND an AEO query-match; the answer-first body follows in the next line. |
+
+**The unifier — question-style headings.** `"{topic} คืออะไร?"`, `"เลือกแบบไหนดี?"`, `"เหมาะกับใครบ้าง?"` carry tension (hook) and match the query (AEO) at once. A **micro-hook is never preamble before the answer** — it is *framing-with-the-reader's-question, then answering immediately*. This is the same split as §4.5.4 (understanding-intent → body answer-first; decision-intent → FAQ/hook), applied at section granularity.
+
+**YMYL tone guard (Bible Part 23 / Thai med-ad law).** Hooks must be **question-form or empathetic** only. Forbidden in every zone: fear-mongering, hyperbole, superlatives ("ดีที่สุด"), urgency-pressure, outcome guarantees. A condition page is read by a *worried* patient — tension ≠ alarm.
+
+**Writer artifact.** The Part 2 Section Brief gains a **tension role** column per section: `answer-first` / `hook` / `both`.
+
+---
+
+## 4.7 Block Data-Readiness & Fallback Framework 🆕 v1.9 (DR-039)
+
+> Governs publish behavior when a block is part of a template's composition but its real DATA is not ready yet. Generalizes DR-034's FAQ-only `content_gap_flag` to **all** blocks. Render keeps the graceful-skip pattern (`{block.data && <Block/>}`) — but a skip must now be **flagged, never silent**, and must **respect the block's tier**.
+
+**Readiness tiers** — every composed block carries one:
+
+| Tier | Blocks | Data not ready → | Publishes? | Flag |
+|------|--------|------------------|------------|------|
+| 🔴 **Gate** (core answer + trust + compliance) | B01 Hero · B04 Definition · B18 FAQ · B19 Doctor Review · B21 References · B25 Safety · B25a Crisis (if acute) | **Block publish, OR ship `noindex` until present** | ❌ / noindex | `blocking_gap` |
+| 🟠 **First-party-preferred** | B10/B11a Brand Stance · B12 Clinical Insight · §10 Patient Journey · B16 Before/After · Pattern A clinic-data citables | **Skip + flag for backfill** (page still ships). *Optional:* external-evidence fallback (Tier 1-2 citation instead of first-party — lower LLMO power). **Never fabricate first-party stats.** | ✅ | `content_gap` |
+| 🟢 **Conditional / Optional** | B09 (1 option → skip) · B25a (chronic-only → skip) · severity table · etc. | **Skip silently** when genuinely N/A; justify in Dev Notes | ✅ | `na_justified` |
+
+**Mechanism — `content_gaps[]`.** Each page carries an array of `{ block, tier, reason, fallback_used, owner, due }` → feeds a **Content-Completeness report** so operators backfill 🟠 gaps over time; 🔴 entries block release. Stored in `seo_website_page_master.content_gaps jsonb` (Schema follow-up) or, for static-stack brands, page frontmatter.
+
+**Why a tier, not just "optional".** A young brand often lacks first-party data (clinic stats, patient cases, a formulated stance). Without this framework it would either ship empty block shells, fabricate stats (a compliance + trust failure), or block publication on data it does not have. The tier makes the safe path deterministic: trust / compliance / core-answer can **never** silently vanish (🔴); brand-voice depth degrades gracefully and is tracked for upgrade (🟠); genuinely-N/A blocks disappear cleanly (🟢).
 
 ---
 

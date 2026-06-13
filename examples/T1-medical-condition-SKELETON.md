@@ -418,7 +418,24 @@ citations_used:
 
 ---
 
-## SECTION 14: โรคและภาวะที่เกี่ยวข้อง
+<!-- §13–16 = E-E-A-T trust footer → conversion close (per DR-039 / Content_Templates §4.6 + §4.7).
+     ORDER: Doctor Review → References → Related → CTA (final). Citations + reviewer are the last
+     persuasion beat BEFORE the ask; the CTA is the final thing on the page. (Reordered v1.2→ per DR-039;
+     was Review → Related → CTA → References.) -->
+
+## SECTION 14: แหล่งข้อมูลอ้างอิง
+
+1. {Author lastname}, {first}. ({YYYY}). *{Title}*. {Journal/Publisher}. {URL/DOI}
+2. {Citation 2}
+3. {Citation 3}
+4. {Citation 4}
+5. {Citation 5}
+
+[TODO: 5-10 numbered citations matching `citations_used` pool above]
+
+---
+
+## SECTION 15: โรคและภาวะที่เกี่ยวข้อง
 
 - [{Related Condition 1}](/{slug}) — {1-line context}
 - [{Related Condition 2}](/{slug}) — {context}
@@ -429,7 +446,7 @@ citations_used:
 
 ---
 
-## SECTION 15: ปรึกษาแพทย์เกี่ยวกับ{topic}
+## SECTION 16: ปรึกษาแพทย์เกี่ยวกับ{topic}
 
 ### 📞 ปรึกษาแพทย์เกี่ยวกับ{topic} — {pricing or "ฟรี"}
 
@@ -438,18 +455,6 @@ citations_used:
 **[นัดปรึกษาแพทย์ออนไลน์ ฟรี]** | **[โทร {phone}]** | **[LINE: @{brand}]**
 
 *ไม่แน่ใจว่าตัวเองเป็นหรือเปล่า? ลองทำ [{Quiz/Assessment Tool}](/{path-to-T15})ใช้เวลา {N} นาที*
-
----
-
-## SECTION 16: แหล่งข้อมูลอ้างอิง
-
-1. {Author lastname}, {first}. ({YYYY}). *{Title}*. {Journal/Publisher}. {URL/DOI}
-2. {Citation 2}
-3. {Citation 3}
-4. {Citation 4}
-5. {Citation 5}
-
-[TODO: 5-10 numbered citations matching `citations_used` pool above]
 
 ---
 ---
@@ -478,9 +483,9 @@ citations_used:
 | 11 | FAQ | B18 | AEO. ≥8 Q&A across ≥7 of 8 intent types: What/Can/Is/How-to/Cost/Difference/Serious/Cross-cluster | ≥8 Q&A | — | FAQPage (DR-019: AI-only) |
 | 12 | Crisis Disclosure | B25a | Acute YMYL emergency-trigger callout. REQUIRED if acute risk. | 50-100 words | — | role="alert" |
 | 13 | Doctor Review | B19 | E-E-A-T Core Signal. VISUAL + STRUCTURED both required. | — | — | Article.reviewedBy → Physician |
-| 14 | Related | B22 | Cross-cluster authority flow. 5-7 deep links. | 5-7 links | — | — |
-| 15 | CTA | B20 | Funnel bottom + low-pressure alternative. | — | — | — |
-| 16 | References | B21 | External authority links. Numbered citations. | 5-10 entries | — | Article.citation array |
+| 14 | References | B21 | External authority links. Numbered citations. | 5-10 entries | — | Article.citation array |
+| 15 | Related | B22 | Cross-cluster authority flow. 5-7 deep links. | 5-7 links | — | — |
+| 16 | CTA | B20 | Funnel bottom + low-pressure alternative. (Trust footer → conversion close per DR-039.) | — | — | — |
 
 </details>
 
@@ -505,9 +510,9 @@ citations_used:
 | 11 | FAQ | `.faq-accordion` | Q&A collapsible UI |
 | 12 | Crisis Disclosure | `.crisis-disclosure` | Red/orange callout, role="alert" |
 | 13 | Doctor Review | `.doctor-review-block` | Reviewer card |
-| 14 | Related | `.related-links-cluster` | — |
-| 15 | CTA | `.cta-block` + `.cta-sticky` (mobile) | Conversion box |
-| 16 | References | `.references-list` | Numbered citations |
+| 14 | References | `.references-list` | Numbered citations |
+| 15 | Related | `.related-links-cluster` | — |
+| 16 | CTA | `.cta-block` + `.cta-sticky` (mobile) | Conversion box |
 | inline | Citables | `.citable-quote` | Per Pattern A-E sentence (subtle accent) — applied programmatically per Citation Map |
 
 </details>
@@ -705,9 +710,9 @@ citations_used:
 | `field_faq` | §11 | repeater (Q + A + intent_type) | ≥8 entries |
 | `field_crisis_disclosure` | §12 | wysiwyg (conditional) | Only if condition has acute risk |
 | `field_doctor_reviewer` | §13 | relation → seo_authors | REQUIRED |
-| `field_related_links` | §14 | repeater (link + context) | 5-7 links |
-| `field_cta_primary` | §15 | wysiwyg | |
-| `field_references` | §16 | repeater (linked to seo_citations) | matches `citations_used` pool |
+| `field_references` | §14 | repeater (linked to seo_citations) | matches `citations_used` pool |
+| `field_related_links` | §15 | repeater (link + context) | 5-7 links |
+| `field_cta_primary` | §16 | wysiwyg | |
 
 </details>
 
@@ -715,14 +720,14 @@ citations_used:
 <summary>🔗 Internal Link Checklist</summary>
 
 - → `/our-doctors/{reviewer-slug}` (§13 — Doctor profile T9)
-- → `/{topic-cluster-hub}` (§14 — Topic Hub T12)
+- → `/{topic-cluster-hub}` (§15 — Topic Hub T12)
 - → `/services/{primary-treatment-1}` (§7.1 — T2)
 - → `/services/{primary-treatment-2}` (§7.2 — T2)
 - → `/services/{primary-treatment-3}` (§7.3 — T2)
 - → `/case-studies/{relevant-cases}` (§10 — T8)
 - → `/diagnostic/{primary-test}` (§6 — T3)
 - → `/quiz/{self-assessment-quiz}` (§5 + §15 — T15)
-- → `/related-condition-1` (§14 — T1 sibling)
+- → `/related-condition-1` (§15 — T1 sibling)
 
 Total target: ≥5 internal links
 
