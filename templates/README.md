@@ -92,7 +92,8 @@ Rationale: Observed in 3+ brand bootstraps (list them)
 | 1.1 | 2026-05-25 | + `brand_structure` (DR-032) — every brand picks `monolithic \| multi_center` upfront |
 | 1.2 | 2026-06-03 | Snapshot defaults refreshed → Bible v3.24 / Schema v1.20 / Templates v1.8 / Handover v1.18 / DR v1.20. Locked set DR-001..022 + 024/025/028..034; Proposed DR-026 |
 | 1.3 | 2026-06-04 | Snapshot → Bible v3.26 / Schema v1.21 / DR v1.22 (+ DR-035 image storage, DR-036 condition/symptom split — both Locked). **Tier-1 Core now 9 CPTs** (+`symptom`, DR-036). Proposed DR-026 |
-| 1.4 | 2026-06-14 | **Current.** Snapshot → Bible v3.33 / Schema v1.23 / Templates v1.9 / DR v1.26. +DR-037 (payer_partners), DR-038 (media_assets DAM + CF config), DR-039 (content tension + T5), DR-040 (R2 per-brand bucket isolation + key naming) — all Locked. 🆕 **Astro R2 media skeleton** at `deployment/cloudflare/r2-media.template.md`. Proposed DR-026 |
+| 1.4 | 2026-06-14 | Snapshot → Bible v3.33 / Schema v1.23 / Templates v1.9 / DR v1.26. +DR-037 (payer_partners), DR-038 (media_assets DAM + CF config), DR-039 (content tension + T5), DR-040 (R2 per-brand bucket isolation + key naming) — all Locked. 🆕 **Astro R2 media skeleton** at `deployment/cloudflare/r2-media.template.md`. Proposed DR-026 |
+| 1.5 | 2026-06-21 | **Current.** Snapshot → Bible v3.34 / Handover v1.19 / DR v1.27 (Schema v1.23 / Templates v1.9 unchanged). +DR-041 (Heading Hierarchy & Document-Semantics Standard — universal §9.9, WCAG 2.2 AA, stack-agnostic Elementor Pro + Astro) — Locked. 🆕 **Heading-semantics conformance skeleton** at `docs/heading-semantics-conformance.template.md` (every brand copies + fills per release). Documentation-only, no schema change. Proposed DR-026 |
 
 ---
 

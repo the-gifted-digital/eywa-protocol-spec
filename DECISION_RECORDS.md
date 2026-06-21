@@ -2,8 +2,8 @@
 
 > **Append-only architectural decision log.** Each record explains WHY a decision was made — not just WHAT.
 
-**Document Version:** 1.26  
-**Last Updated:** 2026-06-14  
+**Document Version:** 1.27  
+**Last Updated:** 2026-06-21  
 **Format:** Reverse chronological (newest first)
 
 ---
@@ -31,6 +31,47 @@
 ---
 
 ## Decisions Log
+
+### [DR-041] — Heading Hierarchy & Document-Semantics Standard (Universal) (2026-06-21 → Locked 2026-06-21) 🔒♿🧭
+
+**Status:** **🔒 Locked 2026-06-21** — operator-directed ("อยากให้บรรจุเรื่องนี้เป็น universal ไว้ใน protocol", 2026-06-21), drafted + applied same working session. **Documentation-only — no schema migration, no DDL change.**
+
+**Scope:** **UNIVERSAL** — every EYWA brand site, every locale, **both render paths** (Elementor Pro per DR-002 default stack; Astro per DR-035 / §31.6 stack profile). The standard binds the *rendered HTML semantics*, not the authoring tool.
+
+**Bible Reference:** **New §9.9 Heading Hierarchy & Document-Semantics Standard** (Bible v3.33 → **v3.34**). Sibling to §9.7 Accessibility (§9.8 "Page Content Length" was already taken). Cross-ref row added to §9.7.7.
+
+**Schema Reference:** **No version change — stays v1.23.** No new/altered columns.
+
+**Companion to:** DR-029 (Universal Brand Design System — component tokens / shared components that §9.9's block-role map keys on), §9.7 (WCAG-AA accessibility framework, Bible v3.4.2), §23.6 (per-component a11y checklist, already WCAG 2.2 AA), DR-030 (sensitive-topic compliance — heading-free chrome keeps off-topic promo text out of the topical outline).
+
+**Context:**
+
+§9.7 (Bible v3.4.2) shipped a 30-criteria WCAG-AA framework with an *illustrative* semantic-landmark template (§9.7.3), and §23.6 added a per-component checklist at WCAG 2.2 AA — but neither pinned down a single, machine-checkable **heading + landmark contract**: which elements may carry `<h1>`–`<h6>`, where headings may live, and how non-content chrome (site header/footer, injected promos, inline CTAs, mega-menu labels, sticky CTAs) must be marked up so it stays *out* of the heading outline. The VTH BioDent brand produced exactly such a standard (`docs/eywa-heading-hierarchy-standard.md`, 2026-06-21) — spec-grounded (WCAG 2.2 / WAI-ARIA APG / HTML-AAM / HTML Living Standard + Google Search guidance) and adversarially verified — written against that brand's Astro component names (`SectionHeading`, `ExpertiseBox`, `TreatmentOptions`, `SpecialInlineBanner`, `CtaInline`, `SiteHeader`, `SiteFooter`). Operator directed it be promoted to universal protocol.
+
+**Decision:**
+
+1. **Promote the standard to a universal Bible section (§9.9), brand-agnostic.** The brand's component vocabulary (which exists nowhere in the protocol) is **re-expressed as a "block-role → element/level map" keyed on Part 9 page anatomy**, with the original component names retained only as *Astro render-path examples* alongside their *Elementor Pro* equivalents.
+2. **The one rule:** headings describe the structure of the **content**, not of everything on the page. Real headings live **only inside `<main>`**; `<header>`/`<footer>` carry **zero** headings (navigated as banner/contentinfo landmarks: logo + `<nav>`; footer columns = `<nav aria-label> + <ul>`, contact = `<address>`); injected promos are **`<aside aria-label>`** with a **non-heading `<p>`** headline.
+3. **Heading contract:** exactly one `<h1>` (hero/page title), `<h2>` per top-level section, `<h3>`/`<h4>` nested, **no level skips**. Controls are controls (mega-menu label = `<div>`/`<button>`, SC 4.1.2), not headings.
+4. **Preserve the source's honesty trichotomy** — *hard rule* (1.3.1 / 2.4.6 / 4.1.2 / don't destroy group semantics) vs *house style we enforce uniformly* (one h1, no skips, headings-in-`<main>`-only, ads=`<aside>`, chrome heading-free) vs *genuine brand choice* (footer headings yes/no — both conform; promo disclosure wording). Per-brand deviations on the "brand choice" tier follow the normal brand-DR path.
+5. **Raise the masthead compliance token `WCAG 2.1 Level AA` → `WCAG 2.2 Level AA`** to match §9.9's conformance target and §23.6 (which was already 2.2 AA). 2.2 is a backward-compatible superset of 2.1, so nothing in §9.7's existing 2.1-phrased criteria breaks.
+
+**Rationale:**
+
+- **One contract, fixed at the block/component level → propagates to every template + locale** (the brand doc's core thesis). A purely prose checklist (§9.7) is not machine-checkable; §9.9 adds an axe rule set + an outline-scan script + an SR-rotor manual pass.
+- **SEO + a11y dual benefit (consistent with §9.7.1):** keeping off-topic text (promo headlines, footer/header chrome) out of the heading rotor/outline is the real SEO-positive move; semantic HTML itself is not a ranking factor, so the standard is framed honestly (no "semantic HTML boosts ranking" myth).
+- **Stack-agnostic by construction:** because the rules bind rendered HTML, the single contract serves the WordPress/Elementor default stack and the Astro stack identically — no per-stack fork.
+
+**Consequences:**
+
+- **§9.9 becomes the authoritative heading/landmark contract.** The §9.7.3 landmark sketch is now explicitly *illustrative* and predates §9.9; where they differ, §9.9 governs (e.g. promos = `<aside aria-label>` + `<p>` headline; the §9.3 persistent sticky-CTA is a complementary landmark whose label is not a heading). No §9.7.3 markup was rewritten — the reconciliation is stated in §9.9.11.
+- **§9.7 still phrases its baseline as "WCAG 2.1 Level AA"** in two spots — the §9.7.2 prose ("EYWA targets WCAG 2.1 Level AA") and the §9.7.6 `EYWA_default` YAML line. These are left intact (superset-safe) and **flagged for a future §9.7 wording-harmonisation pass** — deliberately out of scope here to keep this DR documentation-only and avoid touching the 30-criteria checklist semantics. (The Part 27 scoring-signal *cross-reference label* to Part 9 was realigned 2.1 → 2.2 AA, since it is a pointer, not checklist semantics.)
+- **No build/runtime change required today**; brands adopt §9.9 at their next template/release pass. **Per-brand adoption instrument:** a copyable `docs/heading-semantics-conformance.template.md` ships in the brand folder-skeleton (template v1.5) — **every** brand (both stacks) copies + fills it: a component→element/level inventory, a per-release axe / outline-scan / SR-rotor verification log, and a brand-choice deviations log (the only deviable tier per §9.9.8, each needing a brand-DR). It *points at* §9.9, not restating it. **`EYWA_HANDOVER.md` §"v1.19 Note"** carries the adopt-on-bump steps (additive, no retroactive deadline; Phase E+ brands backfill before Phase F) so every existing brand picks it up at its next Stage gate. The verification recipe runs against built HTML (Astro `dist/`) or a rendered-HTML crawl (WP).
+- Brand snapshot stack versions bump: Bible v3.34, **Handover v1.19** (adds the §"v1.19 Note" adopt-on-bump guidance), Decision Records v1.27 (README + `templates/` brand-bootstrap snapshot + `NEW_BRAND_BOOTSTRAP.md` updated accordingly).
+
+**References:** Bible §9.9 (new), §9.7 / §9.7.3 / §9.7.7, §23.6, §9.1/§9.3/§9.4, Part 6 (Content Standard), Part 28 (Multilingual), Part 31 (Universal Brand Design System), DR-029. Source: `repos/brands/eywa-vth-biodent/docs/eywa-heading-hierarchy-standard.md` (2026-06-21). External: WCAG 2.2 (W3C Rec / ISO-IEC 40500) SC 1.3.1 / 2.4.6 / 4.1.2 / 2.4.10; WAI-ARIA Authoring Practices (landmark naming); HTML-AAM + ARIA-in-HTML (`<aside>`→complementary mapping); HTML Living Standard (`aside`/`section`/`article` semantics); Google Search Central (heading guidance, MC/SC model).
+
+---
 
 ### [DR-040] — R2 Media Bucket: Strict Per-Brand Isolation + Object-Key / Folder Naming Convention (Universal) (2026-06-14 → Locked 2026-06-14) 🔒🖼️☁️
 

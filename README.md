@@ -4,10 +4,10 @@
 
 | 📖 Bible | 📊 Schema | 🏗️ Phase | ⚖️ License |
 |----------|-----------|-----------|-------------|
-| **v3.33** | **v1.23** | **1A Built ✅** | Proprietary |
+| **v3.34** | **v1.23** | **1A Built ✅** | Proprietary |
 
 <!-- Badges (render on GitHub.com): -->
-[![Bible](https://img.shields.io/badge/Bible-v3.33-blue?style=flat-square)](./EYWA_PROTOCOL_v3_33.md)
+[![Bible](https://img.shields.io/badge/Bible-v3.34-blue?style=flat-square)](./EYWA_PROTOCOL_v3_33.md)
 [![Schema](https://img.shields.io/badge/Schema-v1.23-green?style=flat-square)](./Schema_Overview_EYWA_v1_23.md)
 [![Migrations](https://img.shields.io/badge/Migrations-Phase%201A%20Built-success?style=flat-square)](./migrations/README.md)
 [![Phase](https://img.shields.io/badge/Phase-1%20Foundation-orange?style=flat-square)](./PHASE_1_DECISIONS.md)
@@ -35,10 +35,10 @@ EYWA™ is a registered trademark of **The Gifted Digital Marketing Co., Ltd.** 
 | Document | Purpose | Lines | Status |
 |----------|---------|-------|--------|
 | `PROJECT_MEMORY.md` | Project context for AI sessions + onboarding | ~880 | 🧠 Memory (local-only, gitignored) |
-| `EYWA_PROTOCOL_v3_33.md` | The Bible — full specification | ~27,600 | 🔒 Active (v3.33) |
+| `EYWA_PROTOCOL_v3_33.md` | The Bible — full specification | ~27,800 | 🔒 Active (v3.34) |
 | `Schema_Overview_EYWA_v1_23.md` | Database schema companion (43 live base tables, Group 11 NEW media_assets) | ~2,000 | 🔒 Active (v1.23) |
-| `EYWA_HANDOVER.md` | Operating manual for Claude/AI | ~3,100 | 🔒 Active (v1.18) |
-| `DECISION_RECORDS.md` | Architecture decision log | ~3,600 | 🔒 Active (v1.26) |
+| `EYWA_HANDOVER.md` | Operating manual for Claude/AI | ~3,100 | 🔒 Active (v1.19) |
+| `DECISION_RECORDS.md` | Architecture decision log | ~3,700 | 🔒 Active (v1.27) |
 | `PHASE_1_DECISIONS.md` | Phase 1 quick reference | ~440 | 🔒 Active (v1.9) |
 | `Content_Templates_EYWA_v1_0.md` | Universal Content Templates (DR-020 companion, v1.8 internal) | ~2,420 | 🔒 Active (v1.8 — DR-020 locked 2026-05-12 + §4.5.4 per DR-034) |
 | `examples/T1-medical-condition-SKELETON.md` | T1 boilerplate (Part 1/2 separation reference) | ~840 | 🌱 DRAFT |
@@ -51,10 +51,12 @@ EYWA™ is a registered trademark of **The Gifted Digital Marketing Co., Ltd.** 
 
 ---
 
-## 🆕 Latest Update — Bible v3.33 / Schema v1.23 (2026-06-14)
+## 🆕 Latest Update — Bible v3.34 / Schema v1.23 (2026-06-21)
 
 **Current spec stack — brands bump to these versions:**
-**Bible v3.33** · **Schema v1.23** · **Handover v1.18** · **Decision Records v1.26** · **Content_Templates v1.8** · **PHASE_1 v1.9**
+**Bible v3.34** · **Schema v1.23** · **Handover v1.19** · **Decision Records v1.27** · **Content_Templates v1.8** · **PHASE_1 v1.9**
+
+**DR-041 (Locked 2026-06-21):** **Heading Hierarchy & Document-Semantics Standard** — universal §9.9. One stack-agnostic heading + landmark contract for every brand (Elementor Pro **and** Astro): real headings only inside `<main>` (H1 hero → H2 sections → H3/H4, no skips), `<header>`/`<footer>` heading-free landmarks, injected promos = `<aside aria-label>` with a non-heading `<p>` headline. Block-role → element/level map keyed on Part 9 anatomy. Promoted from the VTH BioDent brand standard; masthead compliance bumped `WCAG 2.1` → **`2.2 Level AA`** (matches §23.6). Documentation-only (no schema change); Bible §9.9.
 
 **DR-040 (Locked 2026-06-14):** R2 media buckets — **strict per-brand isolation** (`{brand-slug}-media`, no cross-brand sharing, ever) + object-key/folder naming convention + `r2.dev` → `cdn.{brand}` delivery. Convention-only (no schema change); Bible §18.5b. Supersedes the unapplied 2026-06-09 Deezy "DR-038" staging draft (number collision with the canonical DR-038 below).
 

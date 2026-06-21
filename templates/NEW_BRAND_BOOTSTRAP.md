@@ -54,6 +54,7 @@ This creates: `docs/` (with signature-programs/), `content-plan/` (with archive/
 - `theme/elementor-templates-overrides/` — only if brand will customize global Elementor templates
 - `deployment/acf-overrides/` — only if brand needs custom ACF beyond GTGT defaults
 - `deployment/cloudflare/r2-media.template.md` 🆕 v1.4 — **Astro / Cloudflare brands only** (DR-040 + DR-035 + DR-038): per-brand R2 bucket `{brand-slug}-media` + object-key/folder naming + delivery. Copy → rename to `r2-media.md` → fill placeholders. **WP brands skip** (WordPress serves its own media).
+- `docs/heading-semantics-conformance.template.md` 🆕 v1.5 — **EVERY brand, both stacks** (DR-041 / Bible §9.9): per-brand heading + landmark conformance record. Copy → rename to `heading-semantics-conformance.md` → fill the component→level inventory + per-release verification log + brand-choice deviations. Points at §9.9 (doesn't restate the rules); re-run the checklist each release.
 
 ### Step 1.5 — Decide `brand_structure` 🆕 v1.8 (DR-032 Locked 2026-05-25)
 
@@ -187,8 +188,8 @@ git commit -m "Brand bootstrap: eywa-{brand-id}
 Folder skeleton + brand-config + core docs initialized from
 templates/ baseline. Phase A brand-concept.md ready for editing.
 
-Spec snapshot pinned: Bible v3.33 / Schema v1.23 / Templates v1.9
-                      / Handover v1.18 / DR v1.26
+Spec snapshot pinned: Bible v3.34 / Schema v1.23 / Templates v1.9
+                      / Handover v1.19 / DR v1.27
 
 Per Handover §9.3 — eywa_spec_snapshot block records this entry point.
 Per DR-022 (Locked) — Lean Phase B workflow adopted from inception."

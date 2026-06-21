@@ -1,13 +1,13 @@
 # 📖 คัมภีร์ EYWA™ PROTOCOL
 ## The Universal Knowledge Graph SEO Specification for the AI Era
 
-**Version:** 3.33  
-**Last Updated:** 2026-06-14  
+**Version:** 3.34  
+**Last Updated:** 2026-06-21  
 **Trademark:** EYWA™ (Class 35+42, DIP Thailand, filed 2026-04-20)  
 **Created by:** The Gifted Digital Marketing Co., Ltd.  
 **Scope:** Universal standard สำหรับการบริหารจัดการ SEO + Knowledge Graph แบบ multi-vertical, multi-brand, multi-specialty, multi-lingual, multi-location, **AI-future-ready** ในยุค AI Search (2026+) — ครอบคลุม healthcare verticals (clinic ทุก specialty, hospital, dental, sleep medicine, aesthetic, wellness, healthcare media) extensible to other regulated YMYL niches  
 **Implementation Stack:** Notion (planning) + Supabase (knowledge graph source of truth) + n8n (sync/automation) + WordPress + WPML + RankMath Pro  
-**Compliance:** ISO 25964, SKOS (W3C), Schema.org, DAMA-DMBOK, Semantic SEO 2026, **WCAG 2.1 Level AA**, GEO+AEO+SEO+LLMO + Google March 2026 Core Update aligned + PDPA-aware + AI Agent Era ready  
+**Compliance:** ISO 25964, SKOS (W3C), Schema.org, DAMA-DMBOK, Semantic SEO 2026, **WCAG 2.2 Level AA**, GEO+AEO+SEO+LLMO + Google March 2026 Core Update aligned + PDPA-aware + AI Agent Era ready  
 **Service Suite:** EYWA™ Audit · Graph · Stack · Vital · Forge · Score · Atlas
 
 ---
@@ -143,6 +143,14 @@ Throughout this Bible:
 
 
 ## 📜 Changelog
+
+### v3.34 (2026-06-21) — DR-041 Heading Hierarchy & Document-Semantics Standard (Universal) ♿🧭🔒
+
+Companion to **DR-041 (Locked 2026-06-21)**. **Documentation-only — no schema change (stays v1.23).** Promotes the VTH BioDent brand heading/semantics standard to a **universal** §9.9: one stack-agnostic heading + landmark contract for every brand (Elementor Pro **and** Astro render paths).
+
+- ➕ **New §9.9 Heading Hierarchy & Document-Semantics Standard** (WCAG 2.2 AA): the one rule (headings map *content*, not chrome), the H1–H4 contract + no-skips, landmark/region rules (header/main/aside/footer), injected promos → `<aside aria-label>` with non-heading `<p>` headline, a **block-role → element/level map** keyed on Part 9 anatomy (re-expressed from the brand's component names; dual-stack examples), myths-to-retire, the hard-rule / house-style / brand-choice trichotomy, i18n/RTL, and a per-release verification recipe (axe + outline-scan script + SR rotor pass).
+- 🔄 **Masthead compliance token `WCAG 2.1 Level AA` → `WCAG 2.2 Level AA`** — reflects the protocol's actual target (already used in §23.6) and §9.9's conformance target; 2.2 is a backward-compatible superset of 2.1. The Part 27 scoring-signal *cross-reference label* to Part 9 was realigned 2.1 → 2.2 AA (a pointer, not checklist semantics). *§9.7's "2.1 AA" baseline phrasing (§9.7.2 prose + §9.7.6 `EYWA_default`) is left intact (superset-safe); flagged for a future §9.7 wording pass — not in this DR's scope.*
+- 🔗 **§9.9 is the authoritative heading/landmark contract**; the illustrative landmark sketch in §9.7.3 predates it and §9.9 governs where they differ. Cross-ref row added to §9.7.7.
 
 ### v3.33 (2026-06-14) — DR-040 R2 Media Bucket: Strict Per-Brand Isolation + Key/Folder Naming 🖼️☁️🔒
 
@@ -10832,6 +10840,7 @@ DON'T_pursue_AAA_blanket:
 
 | Topic | See Also |
 |-------|----------|
+| **Heading hierarchy & document-semantics contract (authoritative)** | **Part 9.9 (DR-041)** |
 | Layout structure (semantic HTML foundation) | Part 9.1 |
 | Mobile-first considerations | Part 9.4 |
 | Content standard (heading hierarchy) | Part 6 |
@@ -11030,6 +11039,166 @@ ongoing_audit:
 | Quality companion to length | Bible Part 6 (Content Standard) |
 | Editorial review (validates targets) | Bible §23.4 |
 | Industry references | Backlinko, Ahrefs, HubSpot, Google HCU |
+
+---
+
+## 9.9 Heading Hierarchy & Document-Semantics Standard 🆕 v3.34 (DR-041)
+
+> **Status:** Universal · **Conformance target:** WCAG 2.2 **Level AA** · **Origin:** promoted from the VTH BioDent brand standard (2026-06-21), spec-grounded (WCAG 2.2 / WAI-ARIA APG / HTML-AAM / HTML Living Standard + Google Search guidance), adversarially verified.
+>
+> **One heading/semantics rulebook for every brand**, so every EYWA site reads identically to Google and to assistive technology. **Stack-agnostic:** the rules bind the *rendered HTML semantics*, not the authoring tool — they apply whether a block is rendered by an **Elementor Pro** widget (DR-002 default stack) or an **Astro** component (DR-035 / §31.6 stack profile). Fix at the **block/component level** → one change propagates to every template and locale.
+
+### 9.9.1 TL;DR — the one rule
+
+> **Headings describe the structure of the *content*, not of *everything on the page*.**
+> Real headings (`<h1>`–`<h6>`) live **only inside `<main>`**. The `<header>` and `<footer>` carry **zero headings** — they are navigated as **landmarks** (banner / contentinfo) with `nav[aria-label]` + lists. Injected ads/promos are **`<aside>`** (complementary landmarks), never headings.
+
+Outline contract for every page, every locale, every stack:
+
+```
+<header>  →  0 headings        (banner landmark: logo + <nav>)
+<main>    →  H1 (hero) → H2 (sections) → H3 → H4   (no level skips)
+<aside>   →  0 headings        (injected promo = complementary landmark, skippable)
+<footer>  →  0 headings        (contentinfo: nav[aria-label] + <ul> + <address>)
+```
+
+### 9.9.2 Governing standards (what actually binds us)
+
+| Source | What it says | Binding? |
+|---|---|---|
+| **WCAG 2.2 = ISO/IEC 40500** SC **1.3.1** Info & Relationships (A) | Structure conveyed visually must be **programmatically determinable** → a visual heading/group MUST use real markup. | **Hard rule** |
+| SC **2.4.6** Headings and Labels (AA) | Headings/labels that exist must be **descriptive**. *"This Success Criterion does not require headings or labels."* | **Hard rule** (descriptiveness) |
+| SC **4.1.2** Name, Role, Value (A) | Interactive controls expose the **correct role** — a menu trigger is a `button`, **not** a heading. | **Hard rule** |
+| SC **2.4.10** Section Headings (**AAA**) | About "sections within writing," **not** UI chrome. Beyond the AA target. | Not required at AA |
+| **HTML Living Standard** | Element semantics (`<aside>` = "separate / advertising"; `<section>`/`<article>` definitions). `header`/`footer` don't affect the document outline. | Element correctness |
+| **HTML-AAM / ARIA-in-HTML** | Element→role mapping (e.g. `<aside>`→`complementary` *conditionally* — §9.9.5). | Role correctness |
+| **Google Search** (Mueller; Quality-Rater MC/SC model) | Headings = section-scoped topical signal, a **minor** factor; footer/header = Supplementary Content, discounted not penalised. | SEO context |
+
+**Heuristics — strongly recommended, NOT normative SCs** (house style, enforced via tooling): exactly one `<h1>`, the `<h1>` is the page title, **no skipped levels** (`heading-order` in axe). Good practice and uniformly enforced, but not Level-A/AA failures by themselves.
+
+### 9.9.3 The canonical heading contract (inside `<main>`)
+
+| Level | Used for | Notes |
+|---|---|---|
+| **H1** | The page title (hero) — **exactly one** per page | Front-load the primary keyword/entity (see §6 content standard) |
+| **H2** | Every **top-level content section** | Section wrappers + standalone blocks (References, FAQ, Related cluster, News/Why-Now, Final CTA) |
+| **H3** | A **sub-section inside an H2** | e.g. cause factors, treatment/procedure options, card titles, coverage labels |
+| **H4** | Deeper nesting, **only under an H3** | Rare |
+| — | **Ads / inline CTAs / decorative labels** | **Never a heading** (see §9.9.5–§9.9.6) |
+
+**No level skips.** `H2 → H4` (skipping H3) is a defect; so is `H3 → H5`. A block whose heading sits directly under a section H2 must be **H3**, not H4. (This is the machine-checkable form of the "heading hierarchy → topical signal strength" co-benefit noted in §9.7.1.)
+
+### 9.9.4 Landmark / region rules (the part most teams get wrong)
+
+**Headings and landmarks are two *separate, orthogonal* navigation systems.** No WCAG SC and no ARIA practice confines headings to `<main>` or forbids them in header/footer — but for a clean, SEO-and-screen-reader-friendly outline EYWA **chooses** to keep the heading list a pure map of the content:
+
+| Region | Landmark | Headings? | How it's structured instead |
+|---|---|---|---|
+| `<header>` | `banner` | **None** | Logo (link/img) + `<nav>`. A mega-menu label is a **`<div>`/`<button>`**, not an `<h3>` (it's a control → SC 4.1.2). |
+| `<main>` | `main` | **Yes** — the full contract (§9.9.3) | Hero `<h1>` → section `<h2>` → nested H3/H4 |
+| `<aside>` | `complementary` | **None** | Injected ad/promo — see §9.9.5 |
+| `<footer>` | `contentinfo` | **None** | Each link column = **`<nav aria-label="…">` + `<ul><li><a>`**; contact block = **`<address>`**. The visible column label is a styled **`<p>`**, not a heading. |
+
+**Why footer columns are `nav + ul`, not headings:** if the columns were bare `<a>` runs, removing the heading would collapse them into one undifferentiated link stream (a real SC 1.3.1 comprehension loss). The `nav[aria-label]` gives each group a **name**; the `<ul>` gives **"list, N items"** boundaries. Grouping is preserved **without** polluting the heading list. (Footer headings are *not illegal* — GOV.UK ships `<h2>` columns — but for an SEO-first marketing site this keeps the heading outline a pure content map. See §9.9.8.)
+
+### 9.9.5 Injected ads / promos → `<aside>` (the subtle one)
+
+A date-gated promo banner injected **between content sections** is, by the HTML spec's own words, the textbook **`<aside>`** case: *"content that is tangentially related… could be considered separate… for advertising."* It is the only sectioning element that fits — `<section>` = a thematic part of the article (false), `<article>` = a syndicatable composition (false), `<div>` = no meaning, `<p>` = a paragraph of the prose (false, and can't contain a card).
+
+**Rules for the promo wrapper:**
+
+1. Element = **`<aside>`** (not `div`/`p`/`section`/`article`).
+2. **Keep an `aria-label`** — it is **load-bearing**, not decorative. When the aside is nested in sectioning content, HTML-AAM maps `<aside>`→`complementary` **only if it has an accessible name**; without a name it silently degrades to `role=generic` (no landmark). *(An `aria-label` on a bare `<div>` does nothing — `generic` is a name-prohibited role.)*
+3. **Do NOT** add `role="complementary"` — it is the implicit role and `html-aria` marks the explicit role as *not recommended* on `<aside>` (first rule of ARIA).
+4. **Distinct names** when a page has more than one promo: append an index, e.g. `aria-label = "${label} ${pos}"` → "Special promotion 1 / 2". Identical landmark names are a defect (WAI-APG: unique label per repeated landmark).
+5. **Inner headline stays a `<p>`** (styled to look like a heading). An off-topic promo headline must never enter the heading rotor/outline; the **landmark**, not a heading, provides identify-and-skip.
+6. Gate visibility with the **`hidden` attribute / `display:none`** — it prunes the inactive promo from the accessibility tree (no landmark/heading clutter until a promo is live). This is correct and is **not** cloaking (§9.9.7), *provided* gating is client-side and identical markup is served to users and crawlers (consistent with DR-035 Astro delivery and the WP render path).
+
+Net effect: a screen-reader user hears *"Special promotion, complementary"* and can **skip the whole block** — the right treatment for content that interrupts the page topic.
+
+### 9.9.6 Block-role → element/level map (apply to every brand, every stack)
+
+Keyed on **EYWA block roles** (Part 9 anatomy), not on any one stack's component names. The right-hand column shows how each role is realised in the two supported render paths.
+
+| EYWA block role (Part 9 anatomy) | Correct markup | Render path (Elementor Pro widget · Astro component) |
+|---|---|---|
+| Hero (§9.1) | **`<h1>`** (exactly one) | Heading widget `H1` · `*Hero` |
+| Top-level section wrapper | **`<h2>`** | Heading widget `H2` · `SectionHeading` |
+| References / E-E-A-T block | **`<h2>`** (standalone section) | Heading widget `H2` · `ReferencesBlock` |
+| FAQ / Related cluster / News-Why-Now / Final CTA | **`<h2>`** | Heading widget `H2` · `FAQ` / `Related` / `NewsWhyNow` / `FinalCta` |
+| Treatment/procedure option titles | **`<h3>`** under the section `<h2>` | Heading widget `H3` · `TreatmentOptions` (option titles) |
+| Card titles (service / branch / pillar) | **`<h3>`** (cards in a grid under a section `<h2>`) | Heading widget `H3` · card component title |
+| Nested box → its items | box = **`<h3>`**, items = **`<h4>`** (never `h3→h5`) | Heading widgets H3/H4 · `ExpertiseBox` (box / item titles) |
+| Injected ad / date-gated promo | wrapper = **`<aside aria-label>`**, headline = **`<p>`** | HTML/Inner-section + custom markup · `SpecialInlineBanner` (§9.9.5) |
+| Inline CTA band | **`<p>`** (non-heading — a conversion nudge, not a content section) | Text/Button widget · `CtaInline` |
+| Persistent sticky CTA (§9.3) | complementary landmark (`<aside>` or `<div role="complementary">`) + `aria-label`; label is **not** a heading | sticky container · sticky-CTA component |
+| Site header mega-menu label | **`<div>`** (or `<button>` for the trigger) — UI chrome → SC 4.1.2 | Nav/Menu widget · `SiteHeader` |
+| Site footer column labels | **`<p>`** inside `<nav aria-label> + <ul>`; contact = `<address>` | Footer widget set · `SiteFooter` (§9.9.4) |
+
+### 9.9.7 Myths to retire (verified against primary sources)
+
+- ❌ **"Only one `<h1>` allowed / headings must start at h1."** Multiple `h1` is tolerated by Google and is not a WCAG failure; one-h1 + h1-first are *house heuristics* (we still enforce one h1 as style).
+- ❌ **"Headings in `<footer>`/`<header>` hurt SEO / dilute the topic."** Footer/header = Supplementary Content, **discounted, never penalised**. Our reason for keeping them heading-free is a **clean content outline**, not a ranking fear.
+- ❌ **"`<aside>`/semantic HTML boosts ranking."** Semantic HTML is **not** a ranking factor (Google treats `section/article/div` the same when combining text). The SEO-positive move is keeping off-topic text (promo headlines) **out of the heading outline** via `<p>`.
+- ❌ **"`display:none`-until-JS (date-gated) promo = cloaking."** Not cloaking — identical HTML is served to users and Googlebot; visibility resolves client-side the same for both. *(True only while gating is client-side; never serve different markup to crawlers.)*
+- ❌ **"A responsive hero with a mobile + desktop `<h1>` = duplicate-h1 error."** If the two skins are mutually exclusive via `display:none` (`md:hidden` / `hidden md:flex`), exactly one is in the a11y tree per viewport and Google's mobile-first crawl sees one. Acceptable by design (consistent with §9.4 mobile-first).
+
+### 9.9.8 Hard rule vs house style vs brand choice (be honest with brand teams)
+
+- **Hard (do not deviate):** real markup for visual structure (1.3.1); descriptive headings (2.4.6); controls are controls, not headings (4.1.2); never destroy group semantics (don't strip footer labels to bare text without `nav`+`ul`).
+- **House style — enforced everywhere (heuristic, but uniform):** one h1 = page title; no skipped levels; headings only in `<main>`; ads = `<aside>`; header/footer heading-free.
+- **Genuinely optional / brand choice:** whether the footer carries *any* heading at all (EYWA default = no; GOV.UK = yes — both conform); whether a promo label discloses "Advertisement/Sponsored" vs "Special promotion" (disclose for paid placements). A documented per-brand deviation here follows the normal brand-DR path.
+
+### 9.9.9 i18n / RTL
+
+Heading semantics are **direction-agnostic** — identical across all locales (th/en/zh/ar). Apply the same structure to every locale build. **Localise accessible names** (`aria-label` on footer `nav` and promo `aside`) exactly like visible text; an untranslated `aria-label` produces a mixed-language announcement (SC 3.1.2). Prefer visible labels (translated as content) over invisible `aria-label` where practical. (Pairs with §28 Multilingual Strategy + the §10 WPML/Astro-i18n routing.)
+
+### 9.9.10 Verification (run per brand, per release)
+
+> **Per-brand adoption:** copy `docs/heading-semantics-conformance.template.md` from the brand folder-skeleton (template v1.5+), fill the component→level inventory + brand-choice deviations log, and record the checks below each release. The template *points back here* — §9.9 stays the single source of the rules.
+
+1. **Automated:** `axe` must pass `page-has-heading-one`, `empty-heading`, `heading-order`. (None of these flag a footer/header that simply has no headings.) Feeds the Lighthouse a11y ≥90 gate in §9.7.5.
+2. **Outline scan** — confirm `<main>` has exactly one `<h1>` and no level skips, and that `<header>`/`<footer>` emit **zero** headings. Run against built/rendered HTML — Astro `dist/` routes, or the WP rendered output (curl/headless):
+
+```js
+// node --input-type=module : scan built pages for heading-contract violations
+import { readFileSync, readdirSync } from 'fs';
+const base = 'dist/preview';                       // adjust to your built routes (Astro) or a crawl dump (WP)
+for (const k of readdirSync(base)) {
+  let html; try { html = readFileSync(`${base}/${k}/index.html`,'utf8'); } catch { continue; }
+  const main   = (html.match(/<main\b[^>]*>([\s\S]*?)<\/main>/i)||[])[1] || '';
+  const header = (html.match(/<header\b[^>]*>([\s\S]*?)<\/header>/i)||[])[1] || '';
+  const footer = (html.match(/<footer\b[^>]*>([\s\S]*?)<\/footer>/i)||[])[1] || '';
+  const lv = s => [...s.matchAll(/<(h[1-6])\b/gi)].map(m=>+m[1][1]);
+  const m = lv(main), probs = [];
+  const h1 = m.filter(x=>x===1).length; if (h1!==1) probs.push(`H1×${h1}`);
+  for (let i=1;i<m.length;i++) if (m[i] > m[i-1]+1) probs.push(`skip @${i}`);
+  if (lv(header).length) probs.push(`header has ${lv(header).length} heading(s)`);
+  if (lv(footer).length) probs.push(`footer has ${lv(footer).length} heading(s)`);
+  console.log(`${probs.length?'⚠':'✓'} ${k}  [${m.join('')}]  ${probs.join(' | ')}`);
+}
+```
+
+3. **Manual a11y pass:** screen-reader Headings rotor shows only hero-H1 + content H2/H3; Landmarks rotor shows banner / main / contentinfo (+ a *named, distinct* complementary per visible promo). Each footer column is a named `nav` with a counted list.
+
+### 9.9.11 Reconciliation + cross-references
+
+- **§9.9 is the authoritative heading + landmark contract.** The illustrative landmark sketch in **§9.7.3** predates it and remains broadly conformant; where §9.9 is stricter it governs — chiefly that off-topic/promo blocks are `<aside aria-label>` with a **non-heading `<p>`** headline (§9.7.3 has no promo case). It also clarifies that the persistent sticky-CTA in §9.3 is a complementary landmark whose label is **not** a heading — consistent with the `<div role="complementary">` already used in §9.7.3.
+- **§9.7** (30-criteria WCAG-AA checklist) and **§23.6** (per-component checklist) remain in force; §9.9 sharpens the heading/landmark subset into one contract and raises its conformance target to **WCAG 2.2 AA** (matching §23.6).
+
+| Topic | See Also |
+|-------|----------|
+| Accessibility Standards (WCAG AA — full checklist) | Part 9.7 |
+| Semantic landmark template (illustrative) | §9.7.3 |
+| Per-component a11y checklist | §23.6 |
+| Content standard (heading hierarchy as topical signal) | Part 6 |
+| Layout structure | §9.1 / §9.4 |
+| CTA strategy (3 primary + 2 sticky) | §9.3 |
+| Universal Brand Design System (component tokens, stack pipelines) | Part 31 |
+| Multilingual / RTL accessible names | Part 28 / Part 10 |
+| Decision record (provenance + universal scope) | DR-041 |
+
+> **One-line policy for brand teams:** *Headings = the table of contents of your **content**. If it isn't a section of the page's actual subject matter, it isn't a heading — it's a landmark, a list, an `<aside>`, or a `<p>`.*
 
 ---
 
@@ -25747,7 +25916,7 @@ U_understanding:
     - Patient persona depth visible in content tone
     - Journey-stage content coverage (per CDJ map)
     - Concern-led content (Section 5 Concerns per Part 4)
-    - Accessibility (WCAG 2.1 AA — Bible Part 9)
+    - Accessibility (WCAG 2.2 AA — Bible Part 9)
     - Language clarity (no jargon barriers, multilingual where relevant)
   score_band:
     0-3: Generic content, single-persona

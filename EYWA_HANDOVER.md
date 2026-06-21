@@ -3,10 +3,26 @@
 > **For Claude (and any AI assistant) working on a new brand within the EYWA portfolio.**  
 > **Read this file first, every new project, every new session.**
 
-**Document Version:** 1.18  
-**Last Updated:** 2026-05-25  
-**Companion to:** EYWA Bible v3.24 (§25.13 multi-center propagated; DR-033 in-prose; DR-034 ref'd) + Schema Overview v1.20 + DECISION_RECORDS v1.20 + Content_Templates_EYWA_v1_0.md v1.8 (LOCKED + §4.5.4 per DR-034)  
+**Document Version:** 1.19  
+**Last Updated:** 2026-06-21  
+**Companion to:** EYWA Bible v3.34 (§9.9 Heading & Document-Semantics Standard — DR-041 Universal) + Schema Overview v1.23 + DECISION_RECORDS v1.27 + Content_Templates_EYWA_v1_0.md v1.9 (LOCKED)  
 **Created by:** The Gifted Digital Marketing Co., Ltd.
+
+---
+
+## 🆕 v1.19 Note (2026-06-21) — Heading & Document-Semantics Standard Universal (DR-041) — adopt on bump ♿🧭
+
+Bible v3.34 adds **§9.9 Heading Hierarchy & Document-Semantics Standard** (DR-041 Locked, **Universal**, WCAG 2.2 AA) — one stack-agnostic heading + landmark contract for **every** brand, both render paths (WordPress + Elementor Pro · Astro). It binds the *rendered HTML*, so the same rule serves both stacks. The one rule: real headings (`<h1>`–`<h6>`) live **only inside `<main>`** (H1 hero → H2 sections → H3/H4, no skips); `<header>`/`<footer>` carry **zero** headings (banner/contentinfo landmarks); injected promos are **`<aside aria-label>`** with a non-heading `<p>` headline.
+
+**Adopt on bump — every existing brand (whole portfolio), additive, no retroactive deadline:**
+
+1. When you refresh `eywa_spec_snapshot` to **Bible v3.34 / Handover v1.19 / DR v1.27**, add **DR-041** to `drs_locked_at_snapshot`.
+2. **Copy** `docs/heading-semantics-conformance.template.md` from the brand folder-skeleton → rename to `heading-semantics-conformance.md` → **fill** it: the component→element/level inventory, the per-release verification log (axe `page-has-heading-one` / `empty-heading` / `heading-order` + the §9.9.10 outline-scan + SR-rotor pass + Lighthouse a11y ≥90), and the brand-choice deviations log.
+3. **Re-run the checklist each release.** The rules live in **Bible §9.9** (single source of truth) — the template *points there*, it does not restate them.
+
+**Timing:** pre-Stage-1 brands get the template automatically at bootstrap; brands in **Phase E+ backfill before Phase F** content production. No page rebuilds — fix at the **shared-component level** and it propagates to every template + locale.
+
+**If a brand already has its own heading doc** (e.g. VTH BioDent's origin `docs/eywa-heading-hierarchy-standard.md`, which DR-041 was promoted from): repoint it to Bible §9.9 (make it a thin pointer) so there is no divergent copy to drift.
 
 ---
 
