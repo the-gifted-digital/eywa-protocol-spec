@@ -1021,11 +1021,13 @@ Preserved in **Appendix H — Deferred v2.0 Provisions**.
 - `primary_entity_name` `text` (denormalized)
 
 **Page taxonomy (5):**
-- `page_type` `text` — page-type taxonomy (`'pillar'`, `'spoke'`, `'lp'`, `'support'`, etc.)
+- `page_type` `text` — **SEMANTIC page category** (drives template T1-T22 + schema.org selection). Values: `home`, `about`, `contact`, `pillar`, `supporting`, `condition_pillar`, `procedure_pillar`, `service_page`, `technology_page`, `knowledge_article`, `evidence_case`, `doctor_profile`, `branch_landing`, `local_landing`. ⚠️ **NOT a tier — never store `A`/`B`/`C`/`D` here** (that is `node_tier`).
 - `page_intent_type` `text` — search intent (`'informational'`, `'commercial'`, etc.)
-- `node_tier` `text` — A/B/C tier
-- `node_tier_strategy` `text` CHECK IN (`'hub'`,`'spoke'`,`'pillar'`,`'supporting'`,`'leaf'`)
+- `node_tier` `text` — **TIER only**: `A`/`B`/`C`/`D` (crawl-depth allowance, Bible Part 3.4). The page's importance tier — NOT its category.
+- `node_tier_strategy` `text` CHECK IN (`'hub'`,`'spoke'`,`'pillar'`,`'supporting'`,`'leaf'`) — structural hub/leaf role (distinct from `page_type` and `node_tier`).
 - `funnel_stage` `text` — `'awareness'`, `'consideration'`, `'decision'`, `'retention'`
+
+> **⚠️ Column-semantics clarification (2026-07-09, SmileScape backfill).** `page_type` (category), `node_tier` (A/B/C/D tier), and `node_tier_strategy` (hub/leaf role) are **three independent axes** — do not conflate. **Known data bug:** VTH BioDent rows currently store the tier letters `A/B/C/D` in `page_type` (should be the semantic category; the A/B/C/D belongs in `node_tier`) — flagged for re-derivation. These semantics are now also documented as live `COMMENT ON COLUMN` on `seo_website_page_master` in GTGT so any brand inspecting the DB sees them. SmileScape derives `page_type` deterministically from `primary_entity` entity_type + `sitemap_section` + hub/leaf role (no keyword research needed). The sitemap markdown's own "Page Type" column (mostly `A`) is a legacy placeholder and must NOT be copied into this field.
 
 **Authority & link strategy (DR-021, 7):**
 - `priority` `text` — operator-set priority label
