@@ -1929,12 +1929,38 @@ future_consideration: RDF/SPARQL/OWL
 │   • organization    — clinic/branch — link via providedBy        │
 │                                                                   │
 │  Validation gate per entity:                                      │
+│    ✓ REUSE-FIRST CHECK (DR-042) — ค้น seo_entity_graph จริงก่อน   │
+│      มี concept นี้แล้ว → เติม alias เท่านั้น ห้ามสร้างแถวใหม่        │
 │    ✓ entity_fingerprint unique format: 'entity:{slug}'           │
 │    ✓ entity_type ∈ Master List (15 types)                        │
 │    ✓ topic_cluster_id assigned                                   │
 │    ✓ schema_org_type ตาม mapping table (Part 26.3)               │
 │    ✓ brand_scope[] = ['*'] หรือ specific brand                    │
 └─────────────────────────────────────────────────────────────────┘
+
+> **🔒 DR-042 Reuse-First Gate (Locked 2026-07-28) — บังคับก่อนสร้างทุก entity**
+>
+> `seo_entity_graph` เป็นกราฟ **ใช้ร่วมข้ามแบรนด์** (`brand_scope = ['*']`) การแยกแบรนด์อยู่ที่ชั้นคีย์เวิร์ด/หน้า ไม่ใช่ชั้น entity — โมเดลนี้ทำงานได้ก็ต่อเมื่อ **1 concept = 1 แถว** การสร้างแถวซ้ำทำให้ cross-brand rollup แตกเป็นสองถังโดยไม่มีใครรู้ตัว
+>
+> ```sql
+> -- รันก่อนสร้าง entity ใหม่ทุกครั้ง (ค้น 3 แกน: ชื่อ / alias / รหัสโรค)
+> select entity_fingerprint, entity_name, entity_type, brand_scope, icd_10_code, aliases
+> from seo_entity_graph
+> where entity_name ilike '%'||:term||'%'
+>    or entity_slug ilike '%'||:term||'%'
+>    or aliases     ilike '%'||:term||'%'
+>    or icd_10_code = :icd;          -- ⚠️ ICD ซ้ำ = สันนิษฐานว่าเป็น concept เดียวกัน
+> ```
+>
+> | ผลการค้น | สิ่งที่ทำได้ |
+> |---|---|
+> | เจอ concept เดียวกัน | **เติม `aliases` เท่านั้น** (+ ext-table field ที่ยังว่าง) — ห้ามสร้างแถวใหม่ |
+> | เจอแต่ต่าง granularity จริง | สร้างได้ **แต่ต้องผูก edge ทันที** (`is_a` / `part_of` / `treats`) ห้ามปล่อยลอย |
+> | ไม่เจอ | สร้างใหม่ได้ตาม Genesis Checklist |
+>
+> **ห้าม fork ที่ชั้นคีย์เวิร์ด:** ถ้าพบว่าแบรนด์ตัวเองชี้คนละแถวกับแบรนด์อื่นสำหรับ concept เดียวกัน **ห้ามแก้ด้วยการ remap คีย์เวิร์ดของแบรนด์ตัวเอง** ต้อง merge ที่กราฟเสมอ — canonical = แถวที่แบรนด์ซึ่ง data สมบูรณ์ที่สุดใช้อยู่ · ตัวที่ถูกยุบตั้ง `entity_lifecycle = 'merged'` **ไม่ลบทิ้ง** · backup ลง `_entity_merge_backup_YYYYMMDD` ก่อนเสมอ
+>
+> ดู DR-042 ใน `DECISION_RECORDS.md` — มีเคสจริง 6 คู่ที่ตรวจพบระหว่างงาน keyword assignment ของ VTH BioDent
                                 ↓
 ┌─────────────────────────────────────────────────────────────────┐
 │  Step 4: Relationship Wiring     [Apply Edge Vocabulary]         │
@@ -18872,6 +18898,29 @@ prerequisites_to_activate:
 ---
 
 ## 23.1 Citation Tier System — Evidence Hierarchy
+
+> **🔒 DR-044 Locator Round-Trip Gate (Locked 2026-07-29) — บังคับก่อนรับ citation ทุกแถวเข้าสระ**
+>
+> **ตัวระบุ (PMID / DOI / URL) ต้องถูกยิงกลับไปถามต้นทางก่อนเสมอ — ชื่อเรื่องที่บันทึกไว้ไม่ใช่หลักฐาน**
+>
+> ที่มา: ตรวจสระ VTH BioDent 2026-07-29 พบว่าใน 115 แถวที่มี PMID/DOI มี **13 แถวชี้ไปงานวิจัยคนละสาขา** — งานนิเวศวิทยาทางทะเล, การถ่ายยีนมะเขือเทศ, การวิเคราะห์เชิงพื้นที่ผู้ป่วย ALS ทุกแถวถูกบันทึกด้วยชื่อเรื่องทางทันตกรรมที่ฟังดูสมเหตุสมผล มีวารสารจริง ปีสอดคล้อง **regex บนชื่อเรื่องจับไม่ได้แม้แต่แถวเดียว**
+>
+> ```
+> 1. หา       → PubMed / Crossref / เว็บหน่วยงาน       ห้ามเขียนจากความจำ
+> 2. ยิงกลับ   → efetch หรือ api.crossref.org           ต้องได้ record จริง
+> 3. เทียบชื่อ → token overlap >= 0.34
+> 4. เขียนทับ  → title/journal/year เอาจากต้นทาง         ไม่ใช่คำสรุปที่เขียนเอง
+> 5. ตั้ง tier → จาก PubMed PublicationType (ตารางด้านล่าง)  ห้าม regex ชื่อเรื่อง
+> 6. archive  → Wayback CDX API ถ้ามี snapshot จริงเท่านั้น  ไม่มี = ปล่อย null
+> 7. verification_status = 'verified'
+> ```
+>
+> **สระ `brand_scope = ['*']` เป็นของกลาง** — แบรนด์ไหนใส่ citation เน่าเข้าไป แบรนด์อื่นได้ไปด้วยทันที gate นี้จึงเป็น **ระดับสระ ไม่ใช่ระดับแบรนด์**
+>
+> **ใช้กับเนื้อหาที่เขียนไปแล้วด้วย** — References ที่พิมพ์ไว้ในไฟล์เนื้อหาโดยไม่ผูกสระ ต้องผ่าน gate เดียวกัน (ตรวจร่าง Deezy พบแต่งขึ้น 1 รายการ + อ้าง Cochrane แล้วสรุปตรงข้ามกับที่รีวิวสรุป)
+>
+> **เอกสารเต็ม:** [`Citation_Pool_SOP_v1_0.md`](Citation_Pool_SOP_v1_0.md) — ขั้นตอนรับเข้าสระ · QA gate G1–G11 · anchor+round-robin สำหรับผูก `seo_page_citations` · บทเรียน C1–C20
+> **เครื่องมือ:** `verify-citation-locators.py` · `citation-qa-gates.sql` (ในโฟลเดอร์นี้)
 
 ### Why Tiers Matter
 

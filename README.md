@@ -38,7 +38,11 @@ EYWA™ is a registered trademark of **The Gifted Digital Marketing Co., Ltd.** 
 | `EYWA_PROTOCOL_v3_33.md` | The Bible — full specification | ~27,800 | 🔒 Active (v3.34) |
 | `Schema_Overview_EYWA_v1_23.md` | Database schema companion (43 live base tables, Group 11 NEW media_assets) | ~2,000 | 🔒 Active (v1.23) |
 | `EYWA_HANDOVER.md` | Operating manual for Claude/AI | ~3,100 | 🔒 Active (v1.19) |
-| `DECISION_RECORDS.md` | Architecture decision log | ~3,700 | 🔒 Active (v1.27) |
+| `DECISION_RECORDS.md` | Architecture decision log | ~3,900 | 🔒 Active (v1.30) |
+| `Keyword_Assignment_SOP_v1_0.md` | SOP — เลือกคีย์เวิร์ดหลัก/รอง ผูกเข้าหน้า (DR-043) + บทเรียน L1–L19 | ~520 | 🔒 Active (v1.2) |
+| `Citation_Pool_SOP_v1_0.md` | SOP — สร้าง/ตรวจ/ผูก citation (DR-044) + บทเรียน C1–C20 | ~160 | 🔒 Active (v1.2) |
+| `verify-citation-locators.py` | ยิง PMID/DOI กลับไปถาม PubMed + Crossref คืน verdict (DR-044 ขั้นที่ 2) | ~150 | 🧰 Tool |
+| `citation-qa-gates.sql` | QA gate G1–G11 สำหรับสระ citation ต้องคืน 0 แถวทุกข้อ | ~150 | 🧰 Tool |
 | `PHASE_1_DECISIONS.md` | Phase 1 quick reference | ~440 | 🔒 Active (v1.9) |
 | `Content_Templates_EYWA_v1_0.md` | Universal Content Templates (DR-020 companion, v1.9 internal) | ~2,500 | 🔒 Active (v1.9 — DR-020 locked 2026-05-12 + §4.5.4 per DR-034 + §4.6/§4.7 per DR-039) |
 | `examples/T1-medical-condition-SKELETON.md` | T1 boilerplate (Part 1/2 separation reference) | ~840 | 🌱 DRAFT |

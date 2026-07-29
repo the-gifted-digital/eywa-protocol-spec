@@ -2,8 +2,8 @@
 
 > **Append-only architectural decision log.** Each record explains WHY a decision was made — not just WHAT.
 
-**Document Version:** 1.27  
-**Last Updated:** 2026-06-21  
+**Document Version:** 1.30  
+**Last Updated:** 2026-07-29  
 **Format:** Reverse chronological (newest first)
 
 ---
@@ -31,6 +31,158 @@
 ---
 
 ## Decisions Log
+
+### [DR-044] — Citation locator ต้องยิงกลับต้นทางก่อนรับเข้าสระ (Universal) (2026-07-29) 🔒📚
+
+**Status:** **🔒 Locked 2026-07-29** — operator-directed ("รื้อทั้งระบบ" + "recode ตาม Bible 23.1")
+
+**Scope:** **UNIVERSAL** — ทุกแบรนด์ที่มีตาราง `seo_citations` / `seo_page_citations`
+
+**Bible Reference:** Part 23.1 (Citation Tier System) · **Schema Reference:** v1.23 (ไม่เปลี่ยนเวอร์ชัน)
+
+**Context:**
+
+ตรวจสระ citation ของ VTH BioDent (196 แถว) ด้วยการยิง PMID/DOI กลับไปถาม NCBI E-utilities และ Crossref พบว่าใน 115 แถวที่มีตัวระบุ **13 แถวชี้ไปงานวิจัยคนละสาขาโดยสิ้นเชิง**:
+
+| ที่บันทึกไว้ | ตัวระบุชี้ไปจริง ๆ |
+|---|---|
+| Titanium Allergy & Implant Loss | ความหลากหลายของผู้ล่า/ผู้ถูกล่าในระบบนิเวศทางทะเล (*Ecol Lett* 2008) |
+| Changes in the Facial Skeleton with Aging | การถ่ายยีนมะเขือเทศด้วย Agrobacterium (*Genet Mol Res* 2012) |
+| Botox Type A for Bruxism (SR+MA) | ภาวะพร่อง transaldolase จากพาราเซตามอล (*J Inherit Metab Dis* 2020) |
+| Periodontitis and the Microbiome | เลือดออกหลังผ่าตัดขากับขนาดยาแอสไพริน (*Pharmacotherapy* 2021) |
+| Mandibular Advancement Devices, 630 ผู้ป่วย | นักดับเพลิง New York หลังเหตุการณ์ World Trade Center (*Chest* 2004) |
+
+อีก 15 แถวชี้ไปงานที่ถูกต้องแต่ชื่อเรื่องที่บันทึกเป็นคำสรุปที่เขียนขึ้นเอง ไม่ใช่ชื่อจริงของงาน
+
+ทั้ง 13 แถวมีชื่อเรื่องทางทันตกรรมที่ฟังดูสมเหตุสมผล มีวารสารที่มีอยู่จริง มีปีที่สอดคล้อง — **การอ่านสระเปล่า ๆ หรือ regex บนชื่อเรื่องจับไม่ได้แม้แต่แถวเดียว** ถ้าปล่อยไปถึงขั้นเขียนเนื้อหา เว็บ YMYL ด้านการแพทย์จะอ้างงานวิจัยที่ไม่มีอยู่จริง
+
+นอกจากนี้ `citation_tier` ที่กรอกมือไม่ตรง Bible 23.1 และไม่ตรงกันเอง: Cochrane 14/15 แถวถูกใส่ T2 (สเปกคือ T1) · แนวปฏิบัติของสมาคมกระจายอยู่ 4 tier · AAOMS MRONJ position paper มี 2 แถวคนละ tier ทำให้ QA gate ที่ผูกกับ tier ไม่มีความหมาย
+
+**Decision:**
+
+1. **Locator round-trip เป็นเงื่อนไขบังคับก่อนรับ citation เข้าสระ** — PMID ยิง NCBI efetch, DOI ยิง api.crossref.org, URL ยิง HTTP + เทียบเนื้อหา ห้ามรับแถวที่ยังไม่ผ่านขั้นนี้เข้าสู่ `verification_status='verified'`
+2. **title/journal/year ต้องเขียนทับด้วยค่าจากต้นทาง** — ห้ามเก็บคำสรุปที่เขียนเองไว้ในช่อง `title` เพราะคนเขียนเนื้อหาจะ copy ไปใส่ References ตรง ๆ
+3. **`citation_tier` map จาก PubMed `PublicationType` เท่านั้น** ห้าม regex บนชื่อเรื่อง · เอกสารที่เป็นทั้ง guideline และ SR ให้เป็น T1 ตาม Bible "Highest Tier available"
+4. **แถวที่ตัวระบุชี้ไปคนละสาขา** → ถอดตัวระบุ ตั้ง `verification_status='broken_link'` บันทึกไว้ว่าเลขนั้นชี้ไปอะไรจริง ๆ แล้วหาแหล่งใหม่ให้ข้ออ้างนั้น **ห้ามลบแถวทิ้งเงียบ ๆ** เพราะข้ออ้างมักถูกต้อง แค่แหล่งผิด
+5. **`archive_url` ต้องมี snapshot จริง** — เช็ค `archive.org/wayback/available` ก่อน ไม่มีก็ปล่อย null การเดา URL archive คือการปลอมตัวระบุแบบเดียวกับที่ DR นี้แก้
+6. **`seo_page_citations` ผูกด้วย anchor + round-robin** ไม่ใช่ top-N ต่อ cluster (ไม่งั้นทุกหน้าใน cluster ได้ชุดเดียวกัน — รอบแรกที่ VTH ใช้ไปแค่ 58 จาก 227 ตัว)
+7. **QA gate 11 ข้อ (G1–G11)** ต้องผ่านก่อนเริ่มเขียนเนื้อหาและก่อน publish
+
+**Consequences:**
+
+- ✅ **VTH BioDent (BUILT 2026-07-29):** สระ 228 ตัว · verified 227 · Tier 1-3 = 137 · แหล่งไทย 9 (เดิม 0) · ผูก 1,730 แถวเข้า 691 หน้า · 0 หน้าต่ำกว่าขั้นต่ำ · 0 หน้าไม่มี Tier 1-3 · สำรองของเดิมที่ `_vth_citations_bak_20260729`
+- 🧰 **เครื่องมือ (universal):** `content-plan/etl/verify-citation-locators.py` + `content-plan/etl/citation-qa-gates.sql`
+- 📄 **SOP:** `eywa-protocol-spec/Citation_Pool_SOP_v1_0.md` — บทเรียน C1–C20
+- ♻️ **สระเป็นตัวเดียวร่วมกันทุกแบรนด์ (ตรวจสอบแล้ว 2026-07-29):** `seo_citations` ที่ `brand_scope = '*'` (226 แถว) ถูกอ่านโดย **deezy-dental · smile-scape-clinic · vth-biodent** พร้อมกัน ไม่ได้แยกสระต่อแบรนด์ → การซ่อมรอบนี้ปลด citation ปลอม 13 ตัวออกจากทั้งสามแบรนด์ในคราวเดียว **ไม่ต้องรันสคริปต์ซ้ำแยกแบรนด์**
+  - ผลข้างเคียงที่ต้องรู้: แบรนด์ไหนใส่ citation เน่าเข้าสระ `'*'` แบรนด์อื่นได้ไปด้วยทันที — locator round-trip จึงเป็น gate **ระดับสระ** ไม่ใช่ระดับแบรนด์
+  - `brand_scope` ที่ระบุแบรนด์เจาะจง (เช่น 13 แถว first-party ของ smile-scape-clinic) กันไว้ถูกต้องแล้ว query สระต้องกรอง `brand_scope @> array['*'] or brand_scope @> array['<brand>']` เสมอ
+  - VitalSleep and Wellness ไม่มีข้อมูลใน Supabase project นี้ (มีแค่ 3 แบรนด์ข้างต้น) — หนี้ของ VitalSleep ใน DR-043 เป็นเรื่องคีย์เวิร์ด ไม่ใช่ citation
+- ✅ **Deezy Dental (BUILT 2026-07-29):** ผูกสระเข้าหน้าแล้ว **1,475 แถว ครอบคลุม 616 หน้า** · 0 หน้าต่ำกว่าขั้นต่ำ · 0 หน้าไม่มี Tier 1-3 · เพิ่มงานวิจัยจริงจากร่างเนื้อหา Deezy เข้าสระอีก 29 รายการ (`load_source='deezy-draft-reconcile-2026-07-29'`)
+- ✅ **freshness ไล่ครบแล้ว:** 55 แถวที่เกิน window ตรวจทีละตัวกับ PubMed related-articles → **แทนที่ 7 แถว** ที่มีรีวิวใหม่กว่าตอบคำถามเดียวกัน · **48 แถวคงไว้โดยเจตนา** (ไม่มี SR/MA/guideline ใหม่กว่าที่ตอบคำถามเดียวกัน) · Cochrane อีก 10 แถวตรวจเวอร์ชันด้วย Crossref แล้ว — พบซ้อนทับ 4 ตัว รวมถึง **CD002778 (splint therapy for TMD) ที่ Cochrane ถอนออก WITHDRAWN ตั้งแต่ 2016** เปลี่ยนเป็น SR+MA ปี 2020 (PMID 32421379) แล้ว · บันทึกเหตุผลรายแถวไว้ใน `abstract`
+- ✅ **archive:** ใช้ **Wayback CDX API** แทน availability API (ซึ่งมองข้าม snapshot ที่มีจริง) — เก็บได้เพิ่ม 4 แถว · เหลือ **0 แถวที่ไร้ตัวป้องกัน** (ทุกแถวที่ไม่มี archive มี PMID/DOI/ISBN ค้ำอยู่)
+- ⚠️ **หนี้ที่ยังค้าง:**
+  - **smile-scape-clinic ยังไม่ผูกสระเข้าหน้าเลย (0 แถว)** — 722 หน้า ต้องรัน §6 ของ SOP
+  - **ร่างเนื้อหา Deezy 9 หน้ามีอ้างอิงที่ต้องแก้** — พบ 1 รายการที่แต่งขึ้น (Lou T., ใช้บน 2 หน้า) · 1 รายการปีผิด (Esposito) · 1 รายการใช้ Cochrane ฉบับเก่า **และตีความข้อสรุปผิด** · 7 เอกสารทันตแพทยสภาที่ยืนยันการมีอยู่ไม่ได้ → รายละเอียดที่ `eywa-deezy/content-drafts/CITATION-DEFECTS-2026-07-29.md`
+  - References ใน HTML ของ Deezy **ยังไม่ sync กับ `seo_page_citations`** — มีความจริงสองชุด ต้อง reconcile ก่อน publish
+
+**References:** `eywa-protocol-spec/Citation_Pool_SOP_v1_0.md` · Bible Part 23.1 · Schema v1.23 (`seo_citations`, `seo_page_citations`) · DR-043 (SOP คู่ขนานฝั่งคีย์เวิร์ด)
+
+---
+
+### [DR-043] — Keyword Assignment SOP เป็น universal + 12 บทเรียนบังคับอ่าน (2026-07-28) 🔒🔑
+
+**Status:** **🔒 Locked 2026-07-28** — operator-directed ("บันทึกทุกอย่างไว้ใน sop เพื่อให้แต่ละแบรนด์ใช้งานต่อได้และมีบทเรียนกันผิดพลาดด้วย")
+
+**Scope:** **UNIVERSAL** — ทุกแบรนด์ที่มีตาราง `seo_website_page_master` + `seo_x_ads_keywords_contextual_master`
+
+**Bible Reference:** ผูกกับ Part 2.6 (EGP) และ Part 4 (Sitemap) · **Schema Reference:** v1.23 §5.1 (ไม่เปลี่ยนเวอร์ชัน)
+
+**Context:**
+
+ก่อนหน้านี้ไม่มีเอกสารกำหนดว่า "คีย์เวิร์ดตัวไหนควรเป็น target ของหน้าไหน" — แต่ละแบรนด์ assign ตามดุลพินิจ ทำให้ VTH BioDent (698 หน้า) มีปัญหาสะสม: คีย์ซ้ำข้ามหน้า 7 คู่ (fingerprint จับไม่ได้เพราะต่างแค่เว้นวรรค) · หน้า Local 11/12 ถือคีย์ที่ไม่มี geo · ชื่อยาเป็น primary บนหน้าอาการ · head term 17,892/mo ไม่มีเจ้าของ · 43% ของ primary มี volume < 50 · รวม **255 หน้าละเมิดเกณฑ์คุณภาพ**
+
+การแก้รอบนี้ผลิตทั้งกติกาและ ETL ที่ทำงานจริง จึงควรยกขึ้นเป็น protocol ก่อนที่แบรนด์ถัดไป (Smile Scape, VitalSleep และอื่น ๆ) จะทำผิดซ้ำ
+
+**Decision:**
+
+1. ประกาศ **`Keyword_Assignment_SOP_v1_0.md`** เป็นเอกสาร universal — 12 หัวข้อ: relevance ladder R1–R4 · blacklist 11 แบบ · intent × page-type matrix · `kw_norm()` + 1 keyword : 1 page · หน้า concept volume-0 · หมวดราคา hub & spoke ตัดสินด้วย SERP overlap · **§8b Local หลายสาขา 3 ชั้น** · เกณฑ์สร้างหน้าใหม่ · **QA gates 8 ข้อ** · audit trail ลง `viability_assessment`
+2. **§11b บทเรียน 12 ข้อ เป็นส่วนบังคับอ่านก่อนรัน** ไม่ใช่ภาคผนวก — แต่ละข้อคือความผิดพลาดที่เกิดขึ้นจริงพร้อมวิธีกัน
+3. **QA gates §10 ห้ามลดข้อ** ทุกแบรนด์ต้องผ่านครบ 8 ข้อก่อนถือว่า assignment เสร็จ
+4. reference implementation + ETL 3 สคริปต์ (`step0` triage / `step1` inventory views / `step2` rule engine) อยู่ที่ `eywa-vth-biodent/content-plan/etl/` ให้ copy ไปปรับ `brand=` ได้เลย
+
+**Rationale:**
+
+บทเรียนที่แพงที่สุด 3 ข้อ — เก็บไว้ในหัวคนไม่ได้:
+- **L1 เขียนกฎแล้วไม่ implement:** กฎ hierarchy monotonicity อยู่ใน SOP ตั้งแต่วันแรกแต่ rule engine รอบแรกไม่ได้ใส่ ผลคือหน้าเฉพาะทางได้คำที่กว้างกว่าตัวเอง → **ทุกกฎต้องมี SQL ที่บังคับใช้ + QA gate คู่กัน**
+- **L2 ปล่อย loop ไล่จนคีย์หมด:** engine ไล่ 40 รอบเพื่อเติมหน้าให้ครบ แล้วยัดคีย์อ่อนให้หน้าว่าง → **`exit when no new match` ไม่ใช่ `exit when pages full`** · หน้าที่ไม่มีผู้สมัครต้องปล่อยว่าง
+- **L5 entity ซ้ำห้ามแก้ที่ชั้นคีย์:** การ remap คีย์ของแบรนด์ตัวเองไป entity อื่นทำลาย cross-brand rollup → ต้อง merge ที่กราฟตาม DR-042
+
+**Consequences:**
+
+- แบรนด์ที่ยังไม่จบ planning ต้องรัน QA gates §10 กับ assignment ที่มีอยู่ก่อนขึ้น production
+- ETL ทั้งสามใช้ `v_seo_keyword_pool` / `v_seo_entity_inventory` — แบรนด์ใหม่ต้องสร้าง view ทั้งสอง (สคริปต์ step1 สร้างให้แบบ brand-generic อยู่แล้ว)
+- ธง "ไม่นับ KPI organic" ใช้ `page_purpose='utility'` (ไม่ใช่ `intent_source_tier` ซึ่ง CHECK รับแค่ paa/derived/template_only)
+- **หนี้ที่ยังค้าง:** `VitalSleep and Wellness` มีคีย์ 4,133 แถวชี้ entity ที่ไม่มีในกราฟ (ดู DR-042) · Smile Scape มีคีย์ 722 หน้า/67 primary รอ audit ด้วยกติกานี้
+
+**References:** `eywa-protocol-spec/Keyword_Assignment_SOP_v1_0.md` · DR-042 · Bible Part 2.6 / Part 4 · Schema v1.23 §5.1 · รายงานผลงาน `eywa-vth-biodent/content-plan/keyword-assignment-report.md`
+
+---
+
+### [DR-042] — Entity Reuse-First: ห้ามสร้าง entity ซ้ำ concept เดิม (Universal) (2026-07-28) 🔒🕸️
+
+**Status:** **🔒 Locked 2026-07-28** — operator-directed ("จะสร้าง entity อะไรใหม่ในขั้นวางแผนของแบรนด์ถัดๆ ไป ต้องกลับมาดูของในตารางจริงก่อน ว่ามีแล้วหรือยัง ถ้ามี เติมได้แค่ alias เท่านั้น", 2026-07-28)
+
+**Scope:** **UNIVERSAL** — ทุกแบรนด์ ทุกครั้งที่รัน EGP Step 3 (Entity Genesis) และทุกครั้งที่เติม entity ระหว่าง Phase E/F
+
+**Bible Reference:** Part 2.6.3 (EGP Step 3 — Genesis Checklist) — เพิ่ม validation gate ใหม่ 1 ข้อ
+**Schema Reference:** ไม่เปลี่ยนเวอร์ชัน (v1.23) — ไม่มี DDL ใหม่
+
+**Context:**
+
+`seo_entity_graph` ถูกออกแบบให้ **ใช้ร่วมกันข้ามแบรนด์** (`brand_scope = ['*']` — 646/712 แถว) การแยกแบรนด์เกิดที่ชั้นคีย์เวิร์ดและหน้า ไม่ใช่ที่ชั้น entity ทำให้ดู performance รวมข้ามแบรนด์ที่ระดับ entity ได้ **โมเดลนี้ทำงานได้ก็ต่อเมื่อ 1 concept = 1 แถวเท่านั้น**
+
+แต่ในทางปฏิบัติ แต่ละแบรนด์รัน EGP แล้ว load `content-plan/entities.md` ของตัวเองเข้ามาคนละรอบ โดยตรวจเฉพาะ "unique format" ของ `entity_fingerprint` ไม่ได้ตรวจว่า **concept นั้นมีแถวอยู่แล้วหรือยัง** ผลคือเกิดแถวซ้ำ concept เดียวกันแต่ fingerprint ต่างกัน ตรวจพบจริงระหว่างงาน keyword assignment ของ VTH BioDent (2026-07-27):
+
+| concept | แถว A (แบรนด์) | แถว B (แบรนด์) | ICD |
+|---|---|---|---|
+| แผลร้อนใน | `canker-sore` (Deezy) | `mouth-ulcers` (VTH) | K12.0 ทั้งคู่ |
+| โพรงประสาทฟันอักเสบ | `pulpitis` | `acute-pulpitis` | K04.0 ทั้งคู่ |
+| ศัลยกรรมช่องปาก | `omfs` (Deezy+VTH) | `maxillofacial-surgery` | — |
+| ฟันซ้อน | `crowding` (Deezy) | `crowded-teeth` (VTH) | K07.3 / M26.31 |
+| ครอบฟัน | `dental-crown` (3 แบรนด์) | `crowns-bridges` | — |
+| จัดฟัน self-ligating | `self-ligating-braces` | `damon-braces` | — |
+
+alias ของทั้งสองฝั่งมีคำของกันและกันด้วยซ้ำ — ยืนยันว่าเป็น defect ไม่ใช่การแยก granularity โดยตั้งใจ ผลกระทบคือ **cross-brand rollup แตกเป็นสองถัง** เห็น performance ครึ่งเดียวโดยไม่รู้ตัว
+
+**Decision:**
+
+1. **Reuse-first gate** — ก่อนสร้าง entity ใหม่ทุกครั้ง **ต้องค้นตารางจริง** (`seo_entity_graph`) ก่อน ไม่ใช่ค้นเฉพาะ `entities.md` ของแบรนด์ตัวเอง ค้นด้วย 3 แกน:
+   - `entity_name` / `entity_slug` (fuzzy)
+   - `aliases` (ทั้งไทยและอังกฤษ)
+   - `icd_10_code` / `snomed_ct_id` — **โค้ดซ้ำ = ต้องสันนิษฐานว่าเป็น concept เดียวกันจนกว่าจะพิสูจน์เป็นอื่น**
+2. **ถ้ามีอยู่แล้ว → เติมได้แค่ `aliases`** (และ ext-table field ที่ยังว่าง) **ห้ามสร้างแถวใหม่**
+3. **ถ้าต่างกันที่ granularity จริง** (เช่น `impacted-tooth` ⊃ `impacted-wisdom-tooth`) → เก็บสองแถว **แต่ต้องผูก edge** `is_a` / `part_of` / `treats` ทันที ห้ามปล่อยลอย — rollup จะไต่ผ่าน edge ขึ้น parent เอง
+4. **ห้าม fork ที่ชั้นคีย์เวิร์ด** — เมื่อพบว่าแบรนด์ตัวเองชี้คนละแถวกับแบรนด์อื่นสำหรับ concept เดียวกัน **ห้ามแก้โดย remap คีย์เวิร์ดของแบรนด์ตัวเองไปอีกแถว** เพราะจะยิ่งทำให้ rollup แตก ต้องแก้ที่กราฟ (merge) เสมอ
+5. **วิธี merge:** เลือกแถว canonical = **แถวที่แบรนด์ซึ่ง data สมบูรณ์ที่สุดใช้อยู่** (ณ 2026-07-28 คือ Deezy Dental) → ดูด `aliases` + `entity_name` เดิมเข้า canonical → repoint ทุก reference (`keywords.primary_entity_fp`, `page_master.primary_entity_fp` + `related_entities_fps[]`, `entity_graph.parent_entity_fp`, `entity_relationships.from/to`, ext tables) → ลบ ext row ของตัวที่ถูกยุบ → **ไม่ลบแถว** แต่ตั้ง `entity_lifecycle = 'merged'` และ prefix `ai_entity_summary` ด้วย `[MERGED YYYY-MM-DD -> <canonical>]` เพื่อให้ทำงานเป็น redirect ย้อนสอบได้
+6. **Backup ก่อนเสมอ** — snapshot ทุก reference ที่จะถูกแตะลงตาราง `_entity_merge_backup_YYYYMMDD`
+
+**Rationale:**
+
+ทางเลือกที่พิจารณาแล้วไม่เลือก:
+- *ให้แต่ละแบรนด์มี entity ของตัวเอง (`brand_scope` = brand)* — ทิ้งความสามารถ cross-brand rollup ซึ่งเป็นเหตุผลหลักที่ทำ shared graph ตั้งแต่แรก
+- *ปล่อยให้ซ้ำแล้วไป dedup ตอน report* — ผลักภาระไป BI ทุกครั้งที่ query และไม่มีใครรู้ว่าต้องรวมคู่ไหนบ้าง
+- *ลบแถวที่ซ้ำทิ้ง* — ทำลาย audit trail และ FK ของแบรนด์อื่นที่อาจยังไม่ sync
+
+**Consequences:**
+
+- EGP Step 3 validation gate เพิ่มจาก 5 → **6 ข้อ** (เพิ่ม "reuse-first check ผ่านตารางจริง")
+- แบรนด์ที่ยังไม่จบ planning (ณ 2026-07-28: VTH BioDent, Smile Scape Clinic) ปรับเข้ากติกานี้ได้ทันที · แบรนด์ที่จบแล้ว (Deezy Dental) ถูกใช้เป็น canonical จึงไม่ถูกกระทบ
+- ต้องมี query มาตรฐานสำหรับ reuse-check ก่อน genesis (ดู §2.6.3)
+- **หนี้ที่ยังค้าง:** `VitalSleep and Wellness` มีคีย์เวิร์ด 4,133 แถวชี้ไป `primary_entity_fp` ที่ไม่มีในกราฟ (179 fingerprint) — entity ของแบรนด์นั้นยังไม่เคย load เข้าตาราง ต้องเคลียร์แยกต่างหาก
+
+**References:** Bible Part 2.6 (EGP) · Part 2.7 (Edge Vocabulary) · DR-008 (Two-Column Identity) · DR-013/014 (edge + subtype) · Schema v1.23 §4.1 · งานภาคสนาม: `eywa-vth-biodent/content-plan/keyword-assignment-sop.md` §2, `content-plan/etl/step0-entity-triage.sql`
+
+---
 
 ### [DR-041] — Heading Hierarchy & Document-Semantics Standard (Universal) (2026-06-21 → Locked 2026-06-21) 🔒♿🧭
 
