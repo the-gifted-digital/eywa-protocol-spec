@@ -63,6 +63,8 @@
 - ⚠️ นโยบาย medical review (`byline.reviewedDate` / auto sign-off) **เป็นการตัดสินใจของแต่ละแบรนด์** ไม่ใช่ของสเปก
 - 📌 หนี้: #18 ต่อ PAMREL เข้า NEW_BRAND_BOOTSTRAP ให้แบรนด์ใหม่ได้ทั้งชุดอัตโนมัติ
 
+**Addendum 2026-07-31 (PAMREL v1.1):** เพิ่ม **P13** — หน้าที่ ship แล้วต้องมีอะไรเขียน `status` กลับ VTH มี 17 หน้าบน production ขณะที่ `page_master` ยังบอก `Planned` อยู่สองวัน จับได้เพราะ operator สังเกตเอง · `stamp:live` เข้าเป็นเกตตัวที่ 7 ของสัญญา และ**ต้องต่อเข้า CI หลังขั้น deploy ไม่ใช่งานมือ** · อ่านจาก `dist/` ไม่ใช่ YAML (หน้าที่เป็น `.astro` route ไม่มี YAML ให้สแกน) · `canonical_url` ใช้ host production เสมอ ซึ่งจับ path ผิดได้ด้วย (VTH เจอ trailing slash หายทุกแถว) · Bootstrap Step 5.5 + checklist อัปเดตตาม
+
 **References:** `eywa-protocol-spec/Pamrel_Content_Writing_SOP_v1_0.md` · DR-043 (Keyword Assignment) · DR-044 (Citation Pool) · DR-020 (Content Templates) · reference implementation `eywa-vth-biodent/docs/` + `eywa-vth-biodent/web/scripts/`
 
 ---
