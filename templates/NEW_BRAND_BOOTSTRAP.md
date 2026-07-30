@@ -192,6 +192,7 @@ cp ../eywa-vth-biodent/docs/template-block-standards.md  docs/
 cp ../eywa-vth-biodent/web/scripts/check-keyword-rules.mjs  web/scripts/
 cp ../eywa-vth-biodent/web/scripts/page-brief.mjs           web/scripts/
 cp ../eywa-vth-biodent/web/scripts/keyword-density.mjs      web/scripts/
+cp ../eywa-vth-biodent/web/scripts/stamp-live.mjs           web/scripts/
 ```
 
 #### 🔴 ปรับ 5 อย่าง — ไม่ปรับแล้วสคริปต์จะโกหกเงียบ ๆ
@@ -203,6 +204,7 @@ cp ../eywa-vth-biodent/web/scripts/keyword-density.mjs      web/scripts/
 | 3 | **§B ตรวจ layout ของแบรนด์เองว่า block ไหนไม่ render** | `grep -rl "<Component>" web/src/layouts/templates/` · VTH render `crisis` 2 template · Deezy 3 — **ต่างกันจริง** (P5) |
 | 4 | B11 exempt pattern ให้ตรงผัง section ของแบรนด์ | VTH = `^vth-9` · Deezy = `^deezy-(8\|9)\.` เพราะ §2.5 ของ Deezy คือ Medical Team ไม่ใช่ Local |
 | 5 | ตัดตัวอย่าง/บทเรียนที่เป็นของแบรนด์อื่นออก | เอกสารที่เล่าเคสของแบรนด์อื่นทำให้คนเขียนเชื่อผิด |
+| 6 | `stamp-live.mjs` — `BRAND` · `SITE` (host **production** ไม่ใช่ preview/staging) · `SKIP` (locale ทั้งหมด + route ที่ไม่ใช่แถวใน page_master เช่น `/lp/*` `/preview/*`) | `/lp/dental-implant/` มี slug ท้ายสุดเป็น `dental-implant` ซึ่งเป็นหน้าจริงอีกหน้า — ไม่ SKIP จะเขียนทับ canonical ของหน้านั้น |
 
 #### ✅ รันก่อนเขียนหน้าแรกเสมอ
 
@@ -219,8 +221,23 @@ npm run brief -- <page_fingerprint>                 # ใบสั่งงา�
 ```json
 "brief":          "node --env-file-if-exists=../.secrets/supabase.env scripts/page-brief.mjs",
 "check:keywords": "node --env-file-if-exists=../.secrets/supabase.env scripts/check-keyword-rules.mjs",
-"check:density":  "node scripts/keyword-density.mjs"
+"check:density":  "node scripts/keyword-density.mjs",
+"stamp:live":     "node --env-file-if-exists=../.secrets/supabase.env scripts/stamp-live.mjs"
 ```
+
+#### 🔴 ต่อ `stamp-live` เข้า CI — ไม่ใช่ให้คนรันมือ
+
+```yaml
+      # หลังขั้น deploy เท่านั้น — รันกับสิ่งที่ ship จริง ไม่รันเมื่อ build ล้ม
+      - name: Stamp shipped pages Live in page_master
+        run: node scripts/stamp-live.mjs
+        env:
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+```
+
+ตรวจก่อนรันจริงครั้งแรก: `STAMP_LIVE_DRY=1 npm run stamp:live` พิมพ์ slug → canonical โดยไม่เขียนอะไร
+
+> **ไม่มีตัวนี้ = หน้าที่ live แล้วจะค้าง `status=Planned` ตลอดไป** VTH มี 17 หน้าอยู่บน production สองวันโดยแผนยังบอกว่ายังไม่ได้ทำ จับได้เพราะ operator สังเกตเอง (PAMREL P13)
 
 #### ⚠️ ห้ามลอกข้ามแบรนด์
 
@@ -266,6 +283,11 @@ before_writing_the_first_page:   # ✍️ PAMREL — Step 5.5
   ☐ §B ตรวจ layout ของแบรนด์เองแล้วว่า block ไหนไม่ render
   ☐ npm run check:keywords รันแล้ว — ต้องเขียว หรือมี veto ที่ operator อนุมัติแล้ว
   ☐ npm run brief -- <fp> พ่นใบสั่งงานได้จริง
+
+after_first_deploy:
+  ☐ stamp-live ต่อเข้า CI หลังขั้น deploy แล้ว
+  ☐ STAMP_LIVE_DRY=1 รันแล้วดู slug → canonical ว่าถูกต้อง ก่อนปล่อยให้เขียนจริง
+  ☐ page_master มีแถว status=Live เท่ากับจำนวนหน้าที่ ship จริง
 ```
 
 ---
@@ -280,6 +302,8 @@ before_writing_the_first_page:   # ✍️ PAMREL — Step 5.5
 | Pin old spec versions in eywa_spec_snapshot | Always pin **current** versions at bootstrap time. Re-snapshot at each Stage gate, not retroactively. |
 | ข้ามการปรับ brand filter ในสคริปต์ PAMREL | สคริปต์จะอ่านข้อมูลแบรนด์อื่นและรายงานว่า "ผ่าน" — โกหกเงียบ ๆ ไม่ error ตรวจด้วยการดูจำนวนหน้าที่ audit ว่าตรงกับแบรนด์ตัวเอง |
 | ลอก §A/§B จาก reference โดยไม่ยิงคิวรี/ไม่ตรวจ layout | Deezy เคยเขียนผิดเรื่องโค้ดของ Deezy เอง (`Procedure.astro` render `crisis` แต่เอกสารบอกว่าไม่) นานหลายเดือน |
+| ปล่อยให้ `stamp-live` เป็นงานมือ | ไม่มีใครจำได้ทุกครั้ง — หน้าจะ live แต่แผนบอกว่ายังไม่ได้ทำ และไม่มีอะไรฟ้อง |
+| ตั้ง `SITE` เป็น host ของ preview/staging | canonical ใน DB จะไม่ตรงกับที่ HTML ประกาศ · staging เป็นการจัดการรอบปล่อย ไม่ใช่ตัวตนของหน้า |
 | เขียนหน้าแรกก่อนรัน `check:keywords` | กฎที่ประกาศไว้ไม่ทำงานจนกว่าจะมีตัวบังคับ — Deezy เจอ 5 หน้าในการรันครั้งแรก |
 | Treat templates as immutable | Templates are baselines. If a brand needs a new field that 80% of brands would need, propose an update to `templates/brand-config.template.json` via DR. If only this brand needs it, add inline + log in brand DR. |
 
@@ -308,4 +332,4 @@ Rationale: Observed in 3+ brand bootstraps (list them) — repetition cost > tem
 
 ---
 
-*Last updated: 2026-07-31 (templates v1.1 — Step 5.5 PAMREL content-writing setup per DR-045)*
+*Last updated: 2026-07-31 (templates v1.2 — Step 5.5 PAMREL setup + stamp-live wiring per DR-045 / PAMREL P13)*

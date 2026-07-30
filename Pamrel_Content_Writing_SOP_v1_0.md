@@ -1,6 +1,6 @@
 # ✍️ PAMREL — EYWA Content Writing System
 
-> **เวอร์ชัน:** 1.0 · **ประกาศใช้:** 2026-07-31 · **สถานะ:** 🔒 Locked
+> **เวอร์ชัน:** 1.1 · **ประกาศใช้:** 2026-07-31 · **v1.1:** เพิ่ม P13 (stamp:live) + ขั้นที่ 6 deploy ใน pipeline · **สถานะ:** 🔒 Locked
 > **ขอบเขต:** **UNIVERSAL** — ทุกแบรนด์ที่ใช้ `seo_website_page_master` + `seo_x_ads_keywords_contextual_master` + `seo_citations`
 > **ที่มา:** field-tested กับ VTH BioDent — 16 หน้า / 4 รอบทดลองแบบมีตัวควบคุม (2026-07-29 → 07-31)
 > **Companion:** DR-045 (ฉบับนี้) · DR-043 Keyword Assignment · DR-044 Citation Pool · DR-020 Content Templates
@@ -11,7 +11,7 @@
 
 ## 0. PAMREL คืออะไร — และทำไมต้องมีชื่อ
 
-เขียนคอนเทนต์ 1 หน้าให้ถูกต้อง ต้องใช้เอกสาร 3 ฉบับ + สคริปต์ 6 ตัว + ตาราง 8 ตาราง เวลาสั่งงานจึงกลายเป็นการไล่ชื่อไฟล์ทีละอัน **PAMREL คือชื่อเรียกรวมของทั้งชุด**
+เขียนคอนเทนต์ 1 หน้าให้ถูกต้อง ต้องใช้เอกสาร 3 ฉบับ + สคริปต์ 7 ตัว + ตาราง 8 ตาราง เวลาสั่งงานจึงกลายเป็นการไล่ชื่อไฟล์ทีละอัน **PAMREL คือชื่อเรียกรวมของทั้งชุด**
 
 ```
 "เขียนหน้า <fp> ตาม PAMREL"
@@ -27,14 +27,14 @@
 | | `Content_Templates_EYWA_v1_0.md` — T1–T22 | `eywa-protocol-spec/` |
 | **ของแบรนด์** | `docs/CONTENT-WRITING-SOP.md` — ขั้นตอนพร้อมคิวรีจริงของแบรนด์ | `<brand>/docs/` |
 | | `docs/template-block-standards.md` — §A สภาพข้อมูล · §B block ต่อ template · exemplar | `<brand>/docs/` |
-| **เครื่องมือ** | `brief` · `check:keywords` · `check:density` · `scan:headings` · `check:links` · `gen:links` | `<brand>/web/scripts/` |
+| **เครื่องมือ** | `brief` · `check:keywords` · `check:density` · `scan:headings` · `check:links` · `gen:links` · `stamp:live` | `<brand>/web/scripts/` |
 | **ใบสั่งงาน** | ผลลัพธ์ของ `npm run brief -- <fp>` — ใช้แล้วทิ้ง | ไม่ commit |
 
 > 🔴 **สเปกคือกฎ · เอกสารแบรนด์คือวิธีทำกับข้อมูลจริง · สคริปต์คือตัวบังคับ** ขาดชั้นใดชั้นหนึ่งแล้วอีกสองชั้นจะเน่าเงียบ ๆ
 
 ---
 
-## 1. Pipeline — 6 ขั้น
+## 1. Pipeline — 7 ขั้น
 
 ```
 1. brief      npm run brief -- <fp>        ใบสั่งงานจาก DB + ธงเตือนที่คำนวณได้เอง
@@ -42,10 +42,11 @@
 3. write      .yaml ตาม §B ของ template นั้น
 4. gates      รันทุกตัวที่ brief ระบุ
 5. write-back เขียนกลับ DB — junction · title/meta · paa_checked_at · anchor_text
-6. report     ช่องโหว่ของเอกสารที่เจอ + contentGaps ที่ลง
+6. deploy     push → CI build + deploy → stamp:live flip status Planned→Live อัตโนมัติ
+7. report     ช่องโหว่ของเอกสารที่เจอ + contentGaps ที่ลง
 ```
 
-**ขั้น 6 ไม่ใช่พิธีกรรม** — เอกสารแน่นขึ้นจากรอบการเขียนจริงเท่านั้น ไม่ใช่จากการวางแผน VTH เจอช่องโหว่ 4 → 8 → 3 → 5 ข้อ ตลอด 4 รอบ ทุกข้อกลายเป็นกฎในสเปก
+**ขั้น 7 ไม่ใช่พิธีกรรม** — เอกสารแน่นขึ้นจากรอบการเขียนจริงเท่านั้น ไม่ใช่จากการวางแผน VTH เจอช่องโหว่ 4 → 8 → 3 → 5 ข้อ ตลอด 4 รอบ ทุกข้อกลายเป็นกฎในสเปก
 
 ---
 
@@ -135,6 +136,14 @@ stuffing guard เป็น**สัญญาณให้กลับไปอ่
 
 VTH เขียน T6 สำเร็จโดยไม่มี exemplar เลย **ตราบใดที่ §B ของ template นั้นระบุ silent-drop ครบ** — template ที่ยังไม่มี exemplar ให้เผื่อเวลาตรวจ P5 มากกว่าปกติ แล้วจดลง §B ทันที
 
+### P13 · หน้าที่ ship แล้ว ต้องมีอะไรเขียน status กลับ ไม่งั้นแผนกับเว็บจะไม่ตรงกัน
+
+VTH มี 17 หน้าอยู่บน production ขณะที่ `page_master` ยังบอกว่า `Planned` ทั้งหมด — สองวันโดยไม่มีอะไรฟ้อง จับได้เพราะ operator สังเกตเอง
+
+**อ่านจาก `dist/` ไม่ใช่จาก YAML** — `published: true` ในไฟล์คือ*เจตนา* หน้าใน `dist/` คือ*ข้อเท็จจริง* และหน้าที่เขียนเป็น `.astro` route ไม่มี YAML ให้สแกนเลย (Deezy เจอหน้าพวกนี้ค้าง `Planned` ตลอดกาลทั้งที่รับ traffic · VTH เจอ 2 หน้าคือ home กับหน้าโปรไฟล์หมอ)
+
+**`canonical_url` ใช้ host production เสมอ ไม่ใช่ host ที่ hosting อยู่ตอนนี้** — staging/preview เป็นการจัดการรอบปล่อยภายใน ไม่ใช่ตัวตนของหน้า DB ควรตรงกับ canonical ที่ HTML ประกาศ · การเขียนกลับจาก path ที่ build ออกมาจริงยังจับ path ที่ผิดได้ด้วย (VTH เจอ trailing slash หายทุกแถว และหน้าหมอถูกบันทึกเป็น `/dr-amornpong` ทั้งที่อยู่ที่ `/team/dr-amornpong/`)
+
 ---
 
 ## 3. Keyword veto — เมื่อ target ใช้ไม่ได้ ให้หยุด
@@ -178,6 +187,9 @@ target ที่ผ่าน gate ตอน assign ยัง**ใช้ไม่
 | `scan:headings` | H1 เดียวต่อหน้า · ไม่ข้ามระดับ · aside มีชื่อ | มี issue |
 | `check:links` | canonical tie-breaker + related block ตรงแผน | assertion ล้ม |
 | `gen:links` | export แผนลิงก์ → JSON ที่ commit | — |
+| `stamp:live` | อ่าน `dist/` → flip `status` Planned→Live · `published_date` ครั้งแรกครั้งเดียว · `canonical_url` จาก path ที่ ship จริง | — (idempotent · exit 0 ถ้าไม่มี key) |
+
+> **`stamp:live` ต้องต่อเข้า CI หลังขั้น deploy** ไม่ใช่ให้คนรันมือ — รันกับสิ่งที่ ship จริง ไม่รันเมื่อ build ล้ม และไม่มี key ก็ต้อง exit 0 เพื่อไม่ให้ deploy ที่สำเร็จแล้วล้มเพราะ secret หาย · ต้องมีโหมด dry-run เพราะมัน PATCH แถว production
 
 > **`check:density` มีกับดัก 3 ชั้นที่ทุกแบรนด์จะเจอ:** นับ hit จาก YAML แล้วหารด้วยฐานของ prose fields (คนละฐาน) · นับ `<main>` ทั้งก้อนโดยลืมว่ากล่อง debt อยู่ใน main · ToC ทวน H2 คำต่อคำ ทำให้ H2 ที่มี target ถูกนับสองครั้ง
 >
