@@ -179,6 +179,55 @@ cp ../../eywa-protocol-spec/templates/folder-skeleton/content-plan/patient-journ
 
 These are the 4 Phase B output files per DR-022 (Lean Phase B).
 
+### Step 5.5 — ✍️ PAMREL content-writing setup (~10 min · ทำก่อนเขียนหน้าแรก ไม่ใช่ตอน bootstrap)
+
+> **PAMREL** = ระบบเขียนคอนเทนต์ทั้งชุด (DR-045) · สเปกกลาง: [`Pamrel_Content_Writing_SOP_v1_0.md`](../Pamrel_Content_Writing_SOP_v1_0.md)
+> ข้ามได้ตอน bootstrap **แต่ห้ามข้ามก่อนเขียนหน้าแรก** — ทุกขั้นด้านล่างมีหน้าที่ publish ผิดเป็นค่าเสียหายจริงมาแล้ว
+
+ยังไม่มี template ของสองไฟล์นี้ (เนื้อในผูกกับข้อมูลจริงของแบรนด์เกินกว่าจะ generalize) — คัดลอกจาก reference แล้วปรับ:
+
+```bash
+cp ../eywa-vth-biodent/docs/CONTENT-WRITING-SOP.md       docs/
+cp ../eywa-vth-biodent/docs/template-block-standards.md  docs/
+cp ../eywa-vth-biodent/web/scripts/check-keyword-rules.mjs  web/scripts/
+cp ../eywa-vth-biodent/web/scripts/page-brief.mjs           web/scripts/
+cp ../eywa-vth-biodent/web/scripts/keyword-density.mjs      web/scripts/
+```
+
+#### 🔴 ปรับ 5 อย่าง — ไม่ปรับแล้วสคริปต์จะโกหกเงียบ ๆ
+
+| # | ปรับอะไร | ทำไม |
+|---|---|---|
+| 1 | `brand_id` · fingerprint prefix · `ilike('brand', '%X%')` ในทุกสคริปต์ | ไม่ปรับ = อ่านข้อมูลแบรนด์อื่น |
+| 2 | **§A ยิงคิวรีใหม่ทั้งหมด** — ห้ามลอกตัวเลข | สภาพข้อมูลแต่ละแบรนด์ไม่เหมือนกัน และตัวเลขเน่าเร็ว (PAMREL P4) |
+| 3 | **§B ตรวจ layout ของแบรนด์เองว่า block ไหนไม่ render** | `grep -rl "<Component>" web/src/layouts/templates/` · VTH render `crisis` 2 template · Deezy 3 — **ต่างกันจริง** (P5) |
+| 4 | B11 exempt pattern ให้ตรงผัง section ของแบรนด์ | VTH = `^vth-9` · Deezy = `^deezy-(8\|9)\.` เพราะ §2.5 ของ Deezy คือ Medical Team ไม่ใช่ Local |
+| 5 | ตัดตัวอย่าง/บทเรียนที่เป็นของแบรนด์อื่นออก | เอกสารที่เล่าเคสของแบรนด์อื่นทำให้คนเขียนเชื่อผิด |
+
+#### ✅ รันก่อนเขียนหน้าแรกเสมอ
+
+```bash
+cd web
+SUPABASE_SERVICE_KEY=xxx npm run check:keywords     # exit 1 ถ้ามีหน้าไหน target ชน B-rule
+npm run brief -- <page_fingerprint>                 # ใบสั่งงานของหน้าแรก
+```
+
+> **Deezy รัน `check:keywords` ครั้งแรกเจอ 5 หน้าทันที** (3×B11 · 1×B3 · 1×B6) หลังจากที่กฎเหล่านั้นประกาศไว้เฉย ๆ มาหลายเดือน **สมมติว่าแบรนด์ใหม่ก็มี** จนกว่าเกตจะบอกว่าไม่มี
+
+#### เพิ่มใน `web/package.json`
+
+```json
+"brief":          "node --env-file-if-exists=../.secrets/supabase.env scripts/page-brief.mjs",
+"check:keywords": "node --env-file-if-exists=../.secrets/supabase.env scripts/check-keyword-rules.mjs",
+"check:density":  "node scripts/keyword-density.mjs"
+```
+
+#### ⚠️ ห้ามลอกข้ามแบรนด์
+
+ตัวเลขสภาพข้อมูล (§A) · block ที่ไม่ render (§B) · **นโยบาย medical review** (`byline.reviewedDate` / auto sign-off เป็นการตัดสินใจของเจ้าของแบรนด์แต่ละราย) · รายชื่อคู่แข่งใน blacklist
+
+---
+
 ### Step 6 — First commit (~1 min)
 
 ```bash
@@ -189,7 +238,7 @@ Folder skeleton + brand-config + core docs initialized from
 templates/ baseline. Phase A brand-concept.md ready for editing.
 
 Spec snapshot pinned: Bible v3.34 / Schema v1.23 / Templates v1.9
-                      / Handover v1.19 / DR v1.27
+                      / Handover v1.19 / DR v1.31
 
 Per Handover §9.3 — eywa_spec_snapshot block records this entry point.
 Per DR-022 (Locked) — Lean Phase B workflow adopted from inception."
@@ -210,6 +259,13 @@ sanity_checks_after_step_6:
   ☐ git push successful (visible on github.com/the-gifted-digital/eywa-{brand-id})
   ☐ eywa_spec_snapshot block has all 5 versions + snapshot_taken_at populated
   ☐ Memory updated: ~/.claude/projects/-Users-nn-CLAUDE-AI/memory/project_{brand}.md created (or noted in MEMORY.md)
+
+before_writing_the_first_page:   # ✍️ PAMREL — Step 5.5
+  ☐ docs/CONTENT-WRITING-SOP.md + docs/template-block-standards.md คัดลอกและปรับแล้ว (5 ข้อใน Step 5.5)
+  ☐ §A ยิงคิวรีใหม่ ไม่ใช่ลอกตัวเลขจาก reference
+  ☐ §B ตรวจ layout ของแบรนด์เองแล้วว่า block ไหนไม่ render
+  ☐ npm run check:keywords รันแล้ว — ต้องเขียว หรือมี veto ที่ operator อนุมัติแล้ว
+  ☐ npm run brief -- <fp> พ่นใบสั่งงานได้จริง
 ```
 
 ---
@@ -222,6 +278,9 @@ sanity_checks_after_step_6:
 | Copy SmileScape's brand-config wholesale | Has SmileScape-specific blocks (SMILE DNA, Founders, Implant Brand Strategy) that don't apply to other brands. Use the **template**, not another brand's config. |
 | Set deal_status="CLOSED" prematurely | Only set CLOSED when contract signed. Use LEAD/NEGOTIATING during sales pipeline. |
 | Pin old spec versions in eywa_spec_snapshot | Always pin **current** versions at bootstrap time. Re-snapshot at each Stage gate, not retroactively. |
+| ข้ามการปรับ brand filter ในสคริปต์ PAMREL | สคริปต์จะอ่านข้อมูลแบรนด์อื่นและรายงานว่า "ผ่าน" — โกหกเงียบ ๆ ไม่ error ตรวจด้วยการดูจำนวนหน้าที่ audit ว่าตรงกับแบรนด์ตัวเอง |
+| ลอก §A/§B จาก reference โดยไม่ยิงคิวรี/ไม่ตรวจ layout | Deezy เคยเขียนผิดเรื่องโค้ดของ Deezy เอง (`Procedure.astro` render `crisis` แต่เอกสารบอกว่าไม่) นานหลายเดือน |
+| เขียนหน้าแรกก่อนรัน `check:keywords` | กฎที่ประกาศไว้ไม่ทำงานจนกว่าจะมีตัวบังคับ — Deezy เจอ 5 หน้าในการรันครั้งแรก |
 | Treat templates as immutable | Templates are baselines. If a brand needs a new field that 80% of brands would need, propose an update to `templates/brand-config.template.json` via DR. If only this brand needs it, add inline + log in brand DR. |
 
 ---
@@ -229,6 +288,7 @@ sanity_checks_after_step_6:
 ## Reference Examples
 
 - **Full bootstrap (~13 sections, mature):** `eywa-vth-biodent/` — Stage 1 done, Phase 4.5 retrofit pending
+- **PAMREL reference implementation:** `eywa-vth-biodent/docs/` + `eywa-vth-biodent/web/scripts/` — 16 หน้า / 4 รอบพิสูจน์ (DR-045)
 - **Fresh bootstrap (recent):** `eywa-smile-scape/` — Stage 1 Phase E, DR-022 field test
 - **Folder structure spec:** Handover §5.11
 - **Spec snapshot semantics:** Handover §9.3
@@ -248,4 +308,4 @@ Rationale: Observed in 3+ brand bootstraps (list them) — repetition cost > tem
 
 ---
 
-*Last updated: 2026-05-11 (templates v1.0 — initial release alongside DR-022 Proposed)*
+*Last updated: 2026-07-31 (templates v1.1 — Step 5.5 PAMREL content-writing setup per DR-045)*
