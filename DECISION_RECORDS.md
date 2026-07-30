@@ -2,8 +2,8 @@
 
 > **Append-only architectural decision log.** Each record explains WHY a decision was made — not just WHAT.
 
-**Document Version:** 1.30  
-**Last Updated:** 2026-07-29  
+**Document Version:** 1.31  
+**Last Updated:** 2026-07-31  
 **Format:** Reverse chronological (newest first)
 
 ---
@@ -31,6 +31,41 @@
 ---
 
 ## Decisions Log
+
+### [DR-045] — PAMREL: Content Writing System เป็น universal + สคริปต์ต้องบังคับกฎได้ (2026-07-31) 🔒✍️
+
+**Status:** **🔒 Locked 2026-07-31** — operator-directed หลังพิสูจน์ 4 รอบกับ VTH BioDent
+
+**Scope:** **UNIVERSAL** — ทุกแบรนด์ที่ใช้ `seo_website_page_master` + `seo_x_ads_keywords_contextual_master` + `seo_citations`
+
+**Context:**
+การเขียนคอนเทนต์ 1 หน้าให้ถูกต้องต้องใช้เอกสาร 3 ฉบับ + สคริปต์ 6 ตัว + ตาราง 8 ตาราง แต่ชุดนี้ไม่เคยมีชื่อเรียกรวมและไม่เคยถูกยกขึ้นเป็นสเปกกลาง — VTH กับ Deezy ต่างมีสำเนาของตัวเอง แบรนด์ใหม่จึงไม่ได้อะไรเลย และกฎเดียวกันกระจายอยู่ 4 ที่ (spec กลาง · doc ของ VTH · สคริปต์ของ VTH · สคริปต์ของ Deezy)
+
+ที่สำคัญกว่านั้น: **กฎที่ประกาศไว้แต่ไม่มีตัวบังคับ ไม่ทำงานเลย** — B10 (ห้ามคีย์เวิร์ดฟอรัมเป็น primary) มีมาตั้งแต่ DR-043 เคยถูกใช้จริงตอนวางผัง แต่ถูกจัดเป็น "กลยุทธ์" ไม่ใช่ "compliance" จึงไม่มี unit test เหมือน B1/B9 ผลคือ VTH 4 หน้าและ Deezy 5 หน้าหลุดถึงคิวเขียนพร้อม target ที่ใช้ไม่ได้ โดยไม่มีอะไรฟ้อง
+
+**Decision:**
+1. ประกาศ **PAMREL** (Na'vi: "การเขียน") เป็นชื่อเรียกรวมของทั้งชุด — สั่งงานด้วย "เขียนหน้า `<fp>` ตาม PAMREL"
+2. สร้าง `Pamrel_Content_Writing_SOP_v1_0.md` เป็นสเปกกลาง — กระบวนการ 6 ขั้น · หลักการ P1–P12 · keyword veto · สัญญาของเกต · วิธีปรับใช้กับแบรนด์ใหม่
+3. **ทุกกฎที่ประกาศต้องมีคิวรีหรือสคริปต์ที่ทำให้มันล้มได้** — ยกระดับ B3/B6/B10/B11 ให้มีตัวตรวจเท่ากับ B1/B9 (`check:keywords`, exit 1)
+4. **Keyword veto** — คนเขียนที่เจอ target ใช้ไม่ได้ ต้องหยุด แจ้ง operator พร้อมคำที่เสนอ รออนุมัติ แล้วเขียนรอบถัดไป · ห้ามเขียนอ้อม ห้ามเปลี่ยนเอง
+5. **volume 0 ใช้เป็น primary ได้** ถ้าตรงเจตนาของหน้าและเป็นคำที่คนไข้พิมพ์จริง — optimize เมื่อมี GSC ซึ่งเป็นข้อมูลของเราเอง
+
+**Rationale:**
+- ทางเลือกอื่นคือปล่อยให้แต่ละแบรนด์ดูแลสำเนาตัวเอง ซึ่งพิสูจน์แล้วว่าไม่ทำงาน: เอกสารของ Deezy เคยเขียนผิดเรื่องโค้ดของ Deezy เอง (บอกว่า `Procedure.astro` ไม่ render `crisis` ทั้งที่ render) นานหลายเดือนโดยไม่มีใครจับได้
+- ชื่อรวมไม่ใช่เรื่องความสวยงาม — ตอนสั่งงานต้องไล่ชื่อไฟล์ทีละอัน ทำให้ข้ามขั้นได้ง่าย
+- สคริปต์ที่บังคับกฎได้จริงมีต้นทุนต่ำมาก (`check:keywords` = 90 บรรทัด) เทียบกับหน้าที่ publish ไปแล้วด้วย target ที่ใช้ไม่ได้
+
+**Consequences:**
+- ✅ พิสูจน์แล้ว 4 รอบ: ช่องโหว่ 4 → 8 → 3 → 5 · **รอบ 3 พลาด 0 จาก 12 กับดักเดิม** โดย session ที่ไม่เคยเห็นฉบับแรก · **รอบ 4 เขียน T6 สำเร็จโดยไม่มี exemplar** = เอกสารพาได้เองจริง
+- ✅ `check:keywords` รันกับ Deezy ครั้งแรกเจอ 5 หน้าทันที — **ไม่มีข้อไหนเป็น B10** (3×B11, 1×B3, 1×B6) กฎที่จับแบรนด์หนึ่งได้ ไม่ใช่กฎที่จับอีกแบรนด์ได้
+- ⚠️ **ตาราง B-rule ถูกคัดลอกอยู่ใน 2 สคริปต์ + spec** — Deezy ไม่มีสำเนา keyword-assignment SOP ในเครื่องด้วยซ้ำ ต้องแก้หลายที่จนกว่าจะดึงมาจากแหล่งเดียว
+- ⚠️ `page-brief.mjs` ยังไม่ได้พอร์ตไป Deezy — อ่านสัญญาของหน้าทั้งก้อน ต้องไล่ตรวจทีละ field เทียบ schema ของแบรนด์ก่อน **พอร์ตมั่ว = ได้สคริปต์ที่โกหก**
+- ⚠️ นโยบาย medical review (`byline.reviewedDate` / auto sign-off) **เป็นการตัดสินใจของแต่ละแบรนด์** ไม่ใช่ของสเปก
+- 📌 หนี้: #18 ต่อ PAMREL เข้า NEW_BRAND_BOOTSTRAP ให้แบรนด์ใหม่ได้ทั้งชุดอัตโนมัติ
+
+**References:** `eywa-protocol-spec/Pamrel_Content_Writing_SOP_v1_0.md` · DR-043 (Keyword Assignment) · DR-044 (Citation Pool) · DR-020 (Content Templates) · reference implementation `eywa-vth-biodent/docs/` + `eywa-vth-biodent/web/scripts/`
+
+---
 
 ### [DR-044] — Citation locator ต้องยิงกลับต้นทางก่อนรับเข้าสระ (Universal) (2026-07-29) 🔒📚
 

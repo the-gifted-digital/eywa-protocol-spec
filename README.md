@@ -41,6 +41,7 @@ EYWA™ is a registered trademark of **The Gifted Digital Marketing Co., Ltd.** 
 | `DECISION_RECORDS.md` | Architecture decision log | ~3,900 | 🔒 Active (v1.30) |
 | `Keyword_Assignment_SOP_v1_0.md` | SOP — เลือกคีย์เวิร์ดหลัก/รอง ผูกเข้าหน้า (DR-043) + บทเรียน L1–L19 | ~520 | 🔒 Active (v1.2) |
 | `Citation_Pool_SOP_v1_0.md` | SOP — สร้าง/ตรวจ/ผูก citation (DR-044) + บทเรียน C1–C20 | ~160 | 🔒 Active (v1.2) |
+| `Pamrel_Content_Writing_SOP_v1_0.md` | **PAMREL** — ระบบเขียนคอนเทนต์ทั้งชุด (DR-045) · pipeline 6 ขั้น + หลักการ P1–P12 + keyword veto + สัญญาของเกต | ~230 | 🔒 Active (v1.0) |
 | `verify-citation-locators.py` | ยิง PMID/DOI กลับไปถาม PubMed + Crossref คืน verdict (DR-044 ขั้นที่ 2) | ~150 | 🧰 Tool |
 | `citation-qa-gates.sql` | QA gate G1–G11 สำหรับสระ citation ต้องคืน 0 แถวทุกข้อ | ~150 | 🧰 Tool |
 | `PHASE_1_DECISIONS.md` | Phase 1 quick reference | ~440 | 🔒 Active (v1.9) |
