@@ -65,6 +65,8 @@
 
 **Addendum 2026-07-31 (PAMREL v1.1):** เพิ่ม **P13** — หน้าที่ ship แล้วต้องมีอะไรเขียน `status` กลับ VTH มี 17 หน้าบน production ขณะที่ `page_master` ยังบอก `Planned` อยู่สองวัน จับได้เพราะ operator สังเกตเอง · `stamp:live` เข้าเป็นเกตตัวที่ 7 ของสัญญา และ**ต้องต่อเข้า CI หลังขั้น deploy ไม่ใช่งานมือ** · อ่านจาก `dist/` ไม่ใช่ YAML (หน้าที่เป็น `.astro` route ไม่มี YAML ให้สแกน) · `canonical_url` ใช้ host production เสมอ ซึ่งจับ path ผิดได้ด้วย (VTH เจอ trailing slash หายทุกแถว) · Bootstrap Step 5.5 + checklist อัปเดตตาม
 
+**Addendum 2026-07-31 (PAMREL v1.2):** เพิ่ม **P14 — เอกสารบอกกฎ ระบบบังคับอีกอย่าง** จาก cutover ของ VTH: `robots.txt` ที่ Cloudflare เสิร์ฟ Disallow แค่ crawler สำหรับเทรน แต่ WAF rule 403 ใส่ crawler สำหรับอ้างอิงด้วย (OAI-SearchBot · ChatGPT-User · Claude-User · PerplexityBot) ซึ่งไม่มีชื่อในไฟล์นั้น และ Googlebot ผ่านปกติ — สรุปผิด 2 รอบเพราะอ่าน config แทนที่จะยิง UA จริง · P1 บอกว่ากฎต้องมีตัวบังคับ P14 บอกว่าตัวบังคับอาจทำไม่ตรงกับที่ประกาศไว้ ทั้งคู่ลงเอยที่เดียวกัน: วัดผลจริง อย่าเชื่อคำประกาศ · บทเรียน cutover เชิงปฏิบัติ 4 ข้อจดไว้ที่ `eywa-deezy/docs/proposed-protocol-changes/web-parallel-launch-cutover-runbook-and-field-lessons.md` (§1.4b CI deploy worker เดียวจากสองตัว · §1.5b route pattern + zero-downtime flip · §1.7b WAF vs robots.txt · §1.7 checklist เพิ่ม)
+
 **References:** `eywa-protocol-spec/Pamrel_Content_Writing_SOP_v1_0.md` · DR-043 (Keyword Assignment) · DR-044 (Citation Pool) · DR-020 (Content Templates) · reference implementation `eywa-vth-biodent/docs/` + `eywa-vth-biodent/web/scripts/`
 
 ---

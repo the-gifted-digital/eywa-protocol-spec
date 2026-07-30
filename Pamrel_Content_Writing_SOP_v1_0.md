@@ -1,6 +1,6 @@
 # ✍️ PAMREL — EYWA Content Writing System
 
-> **เวอร์ชัน:** 1.1 · **ประกาศใช้:** 2026-07-31 · **v1.1:** เพิ่ม P13 (stamp:live) + ขั้นที่ 6 deploy ใน pipeline · **สถานะ:** 🔒 Locked
+> **เวอร์ชัน:** 1.2 · **ประกาศใช้:** 2026-07-31 · **v1.2:** เพิ่ม P14 (เอกสาร ≠ การบังคับใช้ — จาก cutover VTH) · **v1.1:** เพิ่ม P13 (stamp:live) + ขั้น deploy ใน pipeline · **สถานะ:** 🔒 Locked
 > **ขอบเขต:** **UNIVERSAL** — ทุกแบรนด์ที่ใช้ `seo_website_page_master` + `seo_x_ads_keywords_contextual_master` + `seo_citations`
 > **ที่มา:** field-tested กับ VTH BioDent — 16 หน้า / 4 รอบทดลองแบบมีตัวควบคุม (2026-07-29 → 07-31)
 > **Companion:** DR-045 (ฉบับนี้) · DR-043 Keyword Assignment · DR-044 Citation Pool · DR-020 Content Templates
@@ -143,6 +143,18 @@ VTH มี 17 หน้าอยู่บน production ขณะที่ `page
 **อ่านจาก `dist/` ไม่ใช่จาก YAML** — `published: true` ในไฟล์คือ*เจตนา* หน้าใน `dist/` คือ*ข้อเท็จจริง* และหน้าที่เขียนเป็น `.astro` route ไม่มี YAML ให้สแกนเลย (Deezy เจอหน้าพวกนี้ค้าง `Planned` ตลอดกาลทั้งที่รับ traffic · VTH เจอ 2 หน้าคือ home กับหน้าโปรไฟล์หมอ)
 
 **`canonical_url` ใช้ host production เสมอ ไม่ใช่ host ที่ hosting อยู่ตอนนี้** — staging/preview เป็นการจัดการรอบปล่อยภายใน ไม่ใช่ตัวตนของหน้า DB ควรตรงกับ canonical ที่ HTML ประกาศ · การเขียนกลับจาก path ที่ build ออกมาจริงยังจับ path ที่ผิดได้ด้วย (VTH เจอ trailing slash หายทุกแถว และหน้าหมอถูกบันทึกเป็น `/dr-amornpong` ทั้งที่อยู่ที่ `/team/dr-amornpong/`)
+
+### P14 · เอกสารบอกกฎ ระบบบังคับอีกอย่าง — ต้องยิงของจริงถึงจะรู้
+
+P1 บอกว่ากฎต้องมีตัวบังคับ **P14 คืออีกด้านของเหรียญ: ตัวบังคับที่มีอยู่ อาจทำมากกว่าหรือน้อยกว่าที่เอกสารเขียนไว้**
+
+ตอน cutover ของ VTH: `robots.txt` ที่ Cloudflare เสิร์ฟ ลิสต์ Disallow แค่ crawler สำหรับ**เทรน** (`GPTBot` `ClaudeBot` `CCBot`…) แต่ WAF rule กลับ **403 ใส่ crawler สำหรับ*อ้างอิง*ด้วย** (`OAI-SearchBot` `ChatGPT-User` `Claude-User` `PerplexityBot`) ซึ่งไม่มีชื่ออยู่ในไฟล์นั้นเลย — และ `Googlebot` ผ่านปกติ การเช็คแบบทั่วไปจึงไม่เห็นอะไรผิด
+
+**อ่านไฟล์ config แล้วสรุปว่าระบบทำอะไร = เดา** — สรุปผิดไป 2 รอบก่อนจะมีใครยิง UA จริง
+
+> เกตทุกตัวที่เขียนใน §4 มีเหตุผลเดียวกัน: มันยิงของจริงแล้ววัดผลลัพธ์ ไม่ได้อ่านว่าใครประกาศอะไรไว้
+>
+> ก่อนสรุปว่า "ตั้งค่าถูกแล้ว" — ยิงคำขอที่เหมือนของจริงที่สุดเข้าไป แล้วดูว่าได้อะไรกลับมา
 
 ---
 
