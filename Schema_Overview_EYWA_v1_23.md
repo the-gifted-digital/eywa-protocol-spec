@@ -823,8 +823,16 @@ Preserved in **Appendix H — Deferred v2.0 Provisions**.
 
 > **Purpose:** SKOS-style topic cluster registry. Four facets: topical (medical domain), content_format (page type taxonomy), audience (persona), section_meta (sitemap section).
 > **Sync:** N↔S (Notion `Topic Cluster Master` — created 2026-05-30)
-> **DR:** Bible Part 7 SKOS pattern
+> **DR:** Bible Part 7 SKOS pattern · **DR-046** (shared-table governance)
 > **Volume:** ~10–50 per brand.
+
+> 🔴 **Rows with `brand_scope ['*']` are shared across the whole table, not owned by the brand that
+> created them.** When two rows describe one topic, merge per DR-046 / PAMREL P15: the survivor is
+> the row from the brand furthest ahead (`load_from`), **not** the row with more pages; the retired
+> slug is preserved as `aliases.merged_from` on the survivor and its own row is set `status='merged'`,
+> never deleted. Check the LOSING row for data the survivor lacks before retiring it — VTH 2026-08-03
+> found the retired row held the only `descriptions` for the topic. `cluster_slug` is UNIQUE per
+> brand, so nothing at the database level prevents two brands from naming the same topic differently.
 
 #### Columns (27)
 
