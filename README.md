@@ -38,11 +38,13 @@ EYWA™ is a registered trademark of **The Gifted Digital Marketing Co., Ltd.** 
 | `EYWA_PROTOCOL_v3_33.md` | The Bible — full specification | ~27,800 | 🔒 Active (v3.34) |
 | `Schema_Overview_EYWA_v1_23.md` | Database schema companion (43 live base tables, Group 11 NEW media_assets) | ~2,000 | 🔒 Active (v1.23) |
 | `EYWA_HANDOVER.md` | Operating manual for Claude/AI | ~3,100 | 🔒 Active (v1.19) |
-| `DECISION_RECORDS.md` | Architecture decision log | ~3,900 | 🔒 Active (v1.30) |
-| `Keyword_Assignment_SOP_v1_0.md` | SOP — เลือกคีย์เวิร์ดหลัก/รอง ผูกเข้าหน้า (DR-043) + บทเรียน L1–L19 | ~520 | 🔒 Active (v1.2) |
+| `DECISION_RECORDS.md` | Architecture decision log | ~5,300 | 🔒 Active (v1.36) |
+| `Keyword_Assignment_SOP_v1_0.md` | SOP — เลือกคีย์เวิร์ดหลัก/รอง ผูกเข้าหน้า (DR-043) + บทเรียน L1–L23 | ~540 | 🔒 Active (v1.3) |
 | `Citation_Pool_SOP_v1_0.md` | SOP — สร้าง/ตรวจ/ผูก citation (DR-044) + บทเรียน C1–C20 | ~160 | 🔒 Active (v1.2) |
+| `Entity_Identity_SOP_v1_0.md` | SOP — ICD · Wikidata · Wikipedia → schema markup (DR-050) · สามด่านก่อนเชื่อ identifier + one-store-per-fact | ~200 | 🔒 Active (v1.0) |
 | `Pamrel_Content_Writing_SOP_v1_0.md` | **PAMREL** — ระบบเขียนคอนเทนต์ทั้งชุด (DR-045) · pipeline 6 ขั้น + หลักการ P1–P12 + keyword veto + สัญญาของเกต | ~230 | 🔒 Active (v1.0) |
 | `verify-citation-locators.py` | ยิง PMID/DOI กลับไปถาม PubMed + Crossref คืน verdict (DR-044 ขั้นที่ 2) | ~150 | 🧰 Tool |
+| `scripts/entity-identity/` | 🧰 ชุดสคริปต์ entity identity (DR-050) — verify Wikidata สามด่าน · harvest ICD/MeSH/UMLS/SNOMED · map ICD-10→ICD-11 จากตาราง WHO · export JSON-LD · embeddings | 5 ไฟล์ | 🧰 Tool |
 | `citation-qa-gates.sql` | QA gate G1–G11 สำหรับสระ citation ต้องคืน 0 แถวทุกข้อ | ~150 | 🧰 Tool |
 | `PHASE_1_DECISIONS.md` | Phase 1 quick reference | ~440 | 🔒 Active (v1.9) |
 | `Content_Templates_EYWA_v1_0.md` | Universal Content Templates (DR-020 companion, v1.9 internal) | ~2,500 | 🔒 Active (v1.9 — DR-020 locked 2026-05-12 + §4.5.4 per DR-034 + §4.6/§4.7 per DR-039) |

@@ -2,8 +2,8 @@
 
 > **Append-only architectural decision log.** Each record explains WHY a decision was made — not just WHAT.
 
-**Document Version:** 1.31  
-**Last Updated:** 2026-07-31  
+**Document Version:** 1.36  
+**Last Updated:** 2026-08-07  
 **Format:** Reverse chronological (newest first)
 
 ---
@@ -31,6 +31,290 @@
 ---
 
 ## Decisions Log
+
+### [DR-051] — §3 เป็นเจ้าของหัวบริการ · role-mismatch ต้องมีตัวตรวจ ไม่ใช่แค่กฎ (2026-08-07) 🔒🔑
+
+**Status:** **🔒 Locked 2026-08-07** — จาก audit VTH BioDent ต่อเนื่องจาก DR-048
+
+**Scope:** **UNIVERSAL** — `seo_website_page_master.target_keyword_fp` ทุกแบรนด์
+
+**Context:**
+
+DR-048 วางหลัก "relevancy มาก่อน volume" ไว้แล้ว แต่ไม่ได้บอกว่า **จะรู้ได้อย่างไรว่าหน้าไหนละเมิด** ผลคือ VTH ผ่านเกตคีย์เวิร์ดทุกข้อ — ทุกหน้ามีคีย์ · ไม่มีคีย์ซ้ำ · `keyword_use_as` ตรงหมด — ขณะที่ **22 หน้าถือคีย์ที่ไม่ตรงบทบาทของตัวเอง**
+
+ตัวอย่างที่หนักที่สุด: `3.7.16 Clear Aligner Orthodontics (hub)` ซึ่งเป็น procedure pillar ของบริการจัดฟันใสทั้งก้อน ถือคำว่า `ข้อเสีย จัดฟันใส` ส่วนคำว่า **`จัดฟันใส` เปล่า ๆ ไม่มีอยู่ในคลังของแบรนด์เลย**
+
+ตรวจซ้ำพบว่าไม่ใช่กรณีเดียว หัวบริการที่หายไปจากคลังทั้งที่มีหน้าให้บริการอยู่จริง: `ครอบฟัน` · `อุดฟัน` · `รักษารากฟัน` · `ฟันคุด` · `ผ่าฟันคุด` · `เกลารากฟัน` · `ผ่าตัดเหงือก` · `รากฟันเทียม` · `จัดฟัน`
+
+เกตที่มีอยู่มองไม่เห็นเพราะทุกหน้า *มี* คีย์และไม่ซ้ำใคร — มันแค่ **ผิดหน้า**
+
+**Decision:**
+
+1. **หน้า §3 ต้องถือหัวบริการ (commercial head)** ของบริการนั้น ส่วนคำถามเชิงกังวล / เปรียบเทียบ / ราคา / ทำเล เป็นของ §6 · §5 · §8.4 · §9 ตามลำดับ
+2. **ก่อนประกาศว่าคีย์เวิร์ดของแบรนด์ครบ ต้องรันตัวตรวจ role-mismatch** สองชั้น:
+   - **ชั้นที่ 1 — หัวหาย:** สำหรับทุกบริการที่มีหน้า §3 ตรวจว่าหัวบริการเปล่า ๆ มีอยู่ในคลังหรือไม่ (เทียบแบบ strip เว้นวรรคตาม trap L13) ถ้าไม่มี = โครงมีรูรั่ว
+   - **ชั้นที่ 2 — คำผิดบทบาท:** `sitemap_section='3'` ที่คีย์ match `(ข้อดี|ข้อเสีย|ไหม|ยังไง|อย่างไร|คือ|กี่|รีวิว|เทียบ|ผ่อน|vs)`
+3. **ผลของชั้นที่ 2 ส่วนใหญ่เป็น false positive และต้องดูด้วยคน** — สำหรับบริการเฉพาะทางหรือชื่อแบรนด์ รูปประโยค `X คือ` **คือหัวคำไทยจริง** (`myobrace คือ` · `gbt airflow คือ` · `biomimetic dentistry คือ`) ที่นับเป็นการละเมิดคือกรณีที่ **หัวข้อของคีย์ต่างจากบทบาทของหน้า** เช่นคำเรื่องผ่อนชำระบนหน้า AI monitoring หรือคำเรื่องยางเกี่ยวบนหน้าภาพรวมการจัดฟัน
+4. **คำที่ปลดออกมาห้ามทิ้ง** — ลดเป็น `semantic_keyword` พร้อมโน้ตว่าต้องมีโหนดของตัวเองตาม DR-048 ข้อ 3 แล้วเปิดโหนดให้เมื่อ volume คุ้ม
+
+**Rationale:**
+
+กฎที่ไม่มีตัวบังคับไม่ทำงาน — บทเรียนเดียวกับ DR-045 (B10 มีมาตั้งแต่ DR-043 แต่ไม่มี unit test จึงหลุด 9 หน้า) DR-048 เป็นกฎ ส่วน DR นี้คือตัวตรวจของกฎนั้น
+
+ที่สำคัญกว่าคือ **ความเสียหายไม่ปรากฏในเกตใด ๆ**: หน้าขายบริการที่นั่งอยู่บนคำ informational จะแพ้ให้ pantip และบล็อกเสมอ ขณะที่หัวคำเชิงพาณิชย์ซึ่งเป็นคำที่คนตั้งใจมาซื้อ ไม่มีหน้าไหนของแบรนด์เล็งเลย
+
+**Consequences:**
+
+- ✅ VTH แก้ 22 หน้า · เปิดโหนดใหม่ 12 โหนดรับคำที่ปลดออกมา · มินต์หัวบริการ 14 คำที่ไม่เคยมีในคลัง
+- ✅ ตัวอย่างที่ถูกทั้งชุดใช้เป็นแม่แบบได้: `ขูดหินปูน` มี §3 หัวบริการ · §6 `ขูดหินปูน เจ็บไหม` · §6 เปรียบเทียบ · §8.4 ราคา · §9 ใกล้ฉัน · §5 อาการที่เกี่ยวข้อง
+- ⚠️ ตัวตรวจชั้นที่ 2 มี false positive สูง (VTH 33 hit เป็นการละเมิดจริง 10) — **ห้าม auto-fix** ต้องอ่านทีละหน้า
+- 📌 Deezy และ Smile Scape ยังไม่เคยรันตัวตรวจนี้
+
+**References:**
+
+- DR-048 (relevancy ก่อน volume) — DR นี้คือตัวบังคับใช้
+- DR-045 (กฎที่ไม่มีตัวบังคับ ไม่ทำงาน) — รูปแบบเดียวกัน
+- Cannibalization Shield (Bible §4.2) — §6 เป็นเจ้าของ informational
+- `eywa-vth-biodent/content-plan/vth-audit-2026-08-06.md` §รอบสี่–ห้า (หลักฐานเต็ม)
+
+---
+
+### [DR-050] — Entity identity ต้องผ่านสามด่าน · sameAs ที่ผิดแย่กว่าไม่มี (2026-08-07) 🔒🕸️
+
+**Status:** **🔒 Locked 2026-08-07**
+
+**Scope:** **UNIVERSAL** — `seo_entity_graph.wikidata_id` / `.wikipedia_url` · `seo_entity_condition` · `seo_entity_symptom` · `seo_entity_anatomy` · `seo_entity_drug` · `seo_entity_lab_test` · schema markup ของทุกแบรนด์
+
+**Context:**
+
+`seo_entity_graph` มีคอลัมน์ `wikidata_id` · `wikipedia_url` · `icd_10_code` มาตั้งแต่ต้น แต่ไม่มีใครกำหนดว่า **ค่าที่อยู่ในนั้นถูกต้องได้อย่างไร** และไม่มีอะไรพาไปถึงหน้าเว็บ
+
+ตอนตรวจจริงพบสามปัญหาซ้อนกัน
+
+1. **ไม่มีใครยืนยันเลย** — Q-number คือข้อความสี่ตัวอักษรที่ดูน่าเชื่อเสมอ ไม่มี schema ไหนกันค่าผิด
+2. **คอลัมน์ถูกตั้งชื่อผิด** — `seo_entity_graph.icd_10_code` เก็บค่า **ICD-10-CM** (K05.10 · K08.409 · M27.62) ขณะที่ `seo_entity_condition.icd10_code` เก็บ WHO ICD-10 (K05.1 · K08.4 · M27.6) → 7 ใน 9 "ความขัดแย้ง" คือคนละมาตรฐานเก็บปนกัน
+3. **รหัสอยู่ผิดชนิด** — procedure/treatment/drug ถือรหัส ICD-10 ของ **โรคที่รักษา** (`Dental Scaling [K03.6]` = คราบหินปูน · `Wisdom Tooth Removal [K01.1]` = ฟันคุด · `Bisphosphonates [Z79.83]` = รหัสสถานะผู้ป่วย)
+
+และเมื่อลองจับคู่อัตโนมัติด้วยการเทียบชื่ออย่างเดียว ผลลัพธ์คือ:
+
+| entity | Q-id ที่ได้ | ที่จริงคือ |
+|---|---|---|
+| `mbm-bruxism-evaluation` | Q1204903 | **meat and bone meal** (ชน alias "MBM") |
+| `corticosteroid-injection-tmj` | Q978073 | **Termez Airport** (TMJ คือรหัสสนามบิน) |
+| `oral-inflammation-reset-program` | Q568609 | **Persona 4** |
+| `emax-material` | Q10847000 | **ห้างสรรพสินค้าในฮ่องกง** |
+| `emax-crown` | Q51595256 | **บทความวิชาการปี 2004** |
+
+**Decision:**
+
+**1. สามด่านก่อนเขียน `wikidata_id`**
+
+| ด่าน | เกณฑ์ |
+|---|---|
+| **label** | label หรือ alias ภาษาอังกฤษของ item ต้องตรงกับชื่อ entity (ถอดวงเล็บ) — และ**ห้ามค้นด้วยชิ้นส่วนสั้น** (ตัวย่อ / คำเดี่ยวทั่วไป) เพราะนั่นคือทางที่ MBM ไปเจอ meat and bone meal |
+| **clinical** | สำหรับ entity ชนิดคลินิก item ต้องมี identifier ทางการแพทย์อย่างน้อยหนึ่งตัว (P494 · P4229 · P7807 · P486 · P2892 · P5806) — ด่านนี้ปัดตก 63 ตัวใน VTH |
+| **uniqueness** | **Q-id หนึ่งตัว ต่อ entity เดียว** — สอง entity อ้าง item เดียวกันคือความขัดแย้งในตัวเอง (sameAs = คือสิ่งเดียวกัน) และเป็น**สัญญาณว่า entity ซ้ำกัน** |
+
+ตัวที่ผ่าน label แต่ไม่ผ่านชั้นอื่น **ห้าม auto-clear** — ส่วนใหญ่เป็นกรณีที่ชื่อเราเป็นเวอร์ชันขยายของ Wikidata (`Buteyko Breathing Method` → `Buteyko method`) ซึ่งถูก ให้รายงานแล้วตัดสินด้วยคน และ**บันทึกคำตัดสินไว้** เพื่อไม่ให้รอบหน้าถกซ้ำ
+
+**2. One store per fact**
+
+| entity_type | เจ้าของ ICD |
+|---|---|
+| condition | `seo_entity_condition` (`icd10_code` = WHO · `icd10_cm_code` = CM · `icd11_code` = MMS) |
+| symptom | `seo_entity_symptom.icd10_code` |
+| procedure · treatment · drug · device | **ไม่มี** — รหัสของโรคที่รักษาเป็น *ความสัมพันธ์* ให้ไป `treats_conditions_fps` |
+
+`seo_entity_graph.icd_10_code` **ปลดระวาง**
+
+**3. รหัสให้เก็บจากต้นทาง ไม่ใช่เดา**
+
+- **Wikidata** — เมื่อ Q-id ผ่านสามด่านแล้ว รหัสบน item (P4229 ICD-10-CM · P7329 ICD-11 MMS · P486 MeSH · P2892 UMLS · P5806 SNOMED · P1402 FMA · P1554 UBERON · P4338 LOINC · P267 ATC · P3345 RxNorm) เป็น sourced statement → copy ได้
+- **WHO ICD-10 → ICD-11** — WHO เผยแพร่ตารางเทียบสาธารณะ ไม่ต้อง auth ที่ `https://icdcdn.who.int/static/releasefiles/<release>/mapping.zip` (WHO ICD API ต้องมี OAuth) ใช้แปลง ICD-10 ที่มีอยู่เป็น ICD-11
+- **ห้ามทับค่าเดิม** — ค่าที่มีอยู่ชนะเสมอ ความขัดแย้งให้รายงาน
+
+**4. ห้ามใช้ residual code**
+
+ICD-10 ที่ลงท้าย `.8 other specified` / `.9 unspecified` แมปไปถังเศษของ ICD-11 (`snoring → MD11.Z "Abnormalities of breathing, unspecified"`) — ประกาศเป็นรหัสวินิจฉัยของหน้าแต่ไม่มีเนื้อหาการวินิจฉัย **ให้ปฏิเสธ** เช่นเดียวกับการแมประดับ category สามหลัก (`G47` จริงกับทั้ง insomnia · apnea · bruxism)
+
+**5. ต้องไปถึงหน้าเว็บ**
+
+`code` (MedicalCode + codingSystem) และ `sameAs` ต้องออกใน JSON-LD ของหน้าที่ใช้ entity นั้น ผ่าน JSON ที่ commit ไว้ (สัญญาเดียวกับ internal-links.json — build ไม่แตะเน็ตเวิร์ก) และ **`code` ออกเฉพาะ node ชนิดที่รหัสมีความหมาย** (MedicalCondition · MedicalProcedure · Service · MedicalDevice) — Offer · quiz · หน้าสาขา · หน้าหมอ ไม่ใช่การวินิจฉัย
+
+**Rationale:**
+
+`name` บอกว่าเราเรียกสิ่งนั้นว่าอะไร · `code` กับ `sameAs` บอกว่ามัน**คือสิ่งไหน** ซึ่งเป็นสัญญาณ disambiguation ที่ทั้ง Google และโมเดลที่ค้นข้อมูลใช้ตัดสินว่าหน้านี้พูดเรื่องอะไร
+
+แต่ด้วยเหตุผลเดียวกัน **sameAs ที่ผิดแย่กว่าไม่มี** — มันไม่ได้เงียบ มันประกาศว่าหน้านี้พูดเรื่องอื่น เพจโปรแกรมลดการอักเสบที่ชี้ไป Persona 4 ไม่ใช่ข้อมูลขาด แต่เป็นข้อมูลผิดที่ถูกประกาศออกไปในรูปแบบที่เครื่องอ่านได้
+
+กฎ never-overwrite พิสูจน์ตัวเองทันที: Wikidata ให้ `K05.205.2,K05.305.3` กับ periodontitis และ `K0202.` กับ dental caries — สตริงพังทั้งคู่ ขณะที่ค่าของเรามาจากการ resolve กับ ICD-10-CM ที่มีคลินิกร่วมตัดสิน
+
+**Consequences:**
+
+- ✅ VTH+ทุกแบรนด์: wikidata 88 → 148 · wikipedia 83 → 130 · duplicate Q-id 8 → 0
+- ✅ condition ICD-11 9 → 73 / 125 · MeSH 0 → 41 · UMLS 0 → 43 · anatomy FMA 8 → 15 · UBERON 12 → 18
+- ✅ `code` + `sameAs` ออกใน JSON-LD จริงแล้ว (ตรวจบนเว็บ: `/jaw-lock/` → M26.69 + Trismus · `/night-guard/` → sameAs ไม่มี code เพราะเป็นอุปกรณ์)
+- ⚠️ 306 entity ไม่มี Q-id และ **ถูกต้องแล้วที่ว่าง** — ชื่อโปรแกรมของแบรนด์ (`mbm-*` · `bfb` · `pncl`) ชื่อรุ่นเครื่องมือ และ concept การตลาด ไม่มีในสารานุกรม การบังคับให้มีคือทางที่ทำให้ได้ Persona 4
+- ⚠️ ICD-11 ที่แมปไม่ได้ 17 ตัวส่วนใหญ่คือกลุ่ม TMJ ที่ **ICD-10 ต้นทางเองยังว่าง** — ต้องเติมต้นทางก่อน
+- 📌 คู่ Q-id ที่ชนกันสามคู่เป็น entity ซ้ำจริง (`root-canal-treatment`/`endodontic-treatment` · `dental-phobia`/`dental-anxiety-adult` · `prf-technology`/`prf-platelet-rich-fibrin`) → เข้าคิว merge ตาม DR-042
+
+**References:**
+
+- `eywa-protocol-spec/Entity_Identity_SOP_v1_0.md` (SOP เต็ม + สคริปต์)
+- DR-042 (entity reuse-first) — ด่าน uniqueness เป็นตัวตรวจของ DR-042 อีกทาง
+- DR-008 (two-column identity) · DR-047 (ความหมายของคอลัมน์ต้องอยู่ในฐานข้อมูล)
+- Schema v1.23 §4 (`seo_entity_graph` + ตาราง subtype)
+
+---
+
+### [DR-049] — หน้า Merged ต้องตัดลิงก์สองทาง · exporter ต้องกรอง status ของหน้า (2026-08-07) 🔒🔗
+
+**Status:** **🔒 Locked 2026-08-07**
+
+**Scope:** **UNIVERSAL** — `seo_page_internal_links` · สคริปต์ export ทุกตัวที่แปลงแผนเป็น JSON ให้เว็บอ่าน
+
+**Context:**
+
+หลัง merge หน้าตาม SOP §13.3 ครบทุกขั้น ตรวจแล้วยัง**เหลือลิงก์ตาย 968 เส้นกำลังออกเว็บจริง**
+
+- **373 เส้นชี้เข้า** 70 หน้าที่ merge ไปแล้ว
+- **595 เส้นวิ่งออกจาก** หน้าเดียวกันนั้น
+
+สาเหตุ: `gen-internal-links.mjs` กรอง `link.status <> 'deprecated'` แต่**ไม่เคยกรอง status ของตัวหน้า** — หน้าที่ยุบไปแล้วแต่ยังมี `slug` อยู่ในตาราง จึงยังถูกดึงเข้า map และปล่อยลิงก์ขาออกลง JSON ต่อไป
+
+ยืนยันได้ด้วยตัวเลข: หลังแก้ `internal-links.json` ลดจาก 755 from-page เหลือ **688 ซึ่งเท่ากับจำนวนหน้า active พอดี** และลิงก์ลดจาก 5,969 เหลือ 5,480
+
+รอบแรกของการแก้ปิดเฉพาะฝั่ง "ชี้เข้า" แล้วหยุด — ฝั่ง "ออกจาก" ไม่มีใครนึกถึงเพราะเกตที่เขียนไว้ถามแค่ทิศทางเดียว
+
+**Decision:**
+
+1. **ตอน merge ต้อง deprecate ลิงก์ทั้งสองทิศ** — ทั้ง `to_page_fp` และ `from_page_fp` ที่แตะหน้า Merged
+2. **สคริปต์ export ทุกตัวต้องกรองด้วย status ของหน้า ไม่ใช่แค่ status ของ record** — หน้า Merged/ยกเลิก ห้ามอยู่ในชุดข้อมูลที่เว็บอ่าน
+3. **เกตตรวจต้องถามสองทิศเสมอ** เพิ่มเข้าชุดตรวจหลัง merge:
+   ```sql
+   -- ต้องได้ 0 ทั้งสองข้อ
+   select count(*) from seo_page_internal_links l join seo_website_page_master p
+     on p.page_fingerprint = l.to_page_fp   where p.status='Merged' and l.status<>'deprecated';
+   select count(*) from seo_page_internal_links l join seo_website_page_master p
+     on p.page_fingerprint = l.from_page_fp where p.status='Merged' and l.status<>'deprecated';
+   ```
+4. **ตัวเลขใน JSON ต้องเท่ากับจำนวนหน้า active** — ถ้า from-page ใน export มากกว่าหน้าที่ยังอยู่ แปลว่ามีหน้าตายกำลังส่งลิงก์
+
+**Rationale:**
+
+ลิงก์ที่ชี้ไปหน้าที่ไม่มีอยู่คือ 404 ภายในที่ผู้ใช้เจอจริงและ crawler เดินตาม — แต่ลิงก์ที่**วิ่งออกจาก**หน้าที่ตายแล้วอันตรายกว่าในแง่หนึ่ง เพราะมันไม่ปรากฏใน report ใด ๆ ที่ถามว่า "มีอะไรพังไหม" มันแค่เงียบ ๆ ทำให้ JSON ที่ commit ไว้ไม่ตรงกับผังจริง
+
+บทเรียนที่กว้างกว่าคือ: **เมื่อพบข้อบกพร่องแบบมีทิศทาง ให้ตรวจทิศตรงข้ามทันที** ก่อนประกาศว่าปิดจบ
+
+**Consequences:**
+
+- ✅ VTH: ลิงก์ตาย 968 → 0 · `internal-links.json` 755 → 688 from-page (= จำนวนหน้า active เป๊ะ)
+- ⚠️ Deezy และ Smile Scape ใช้ exporter รูปแบบเดียวกัน — **ยังไม่ได้ตรวจ** ต้องรันเกตข้อ 3 ทั้งสองแบรนด์
+- 📌 `status='deprecated'` เป็นกลไกที่ exporter เคารพอยู่แล้ว จึงไม่ต้องแก้โค้ด exporter ก็ปิดปัญหาได้ทันที แต่ควรแก้ทั้งสองอย่าง
+
+**References:**
+
+- `Keyword_Assignment_SOP_v1_0.md` §13.3 (checklist หลัง rename/merge — เพิ่มข้อนี้แล้ว)
+- `eywa-vth-biodent/web/scripts/gen-internal-links.mjs`
+- DR-046 (shared-table governance) — การ merge ข้ามแบรนด์ใช้ checklist เดียวกัน
+
+---
+
+### [DR-048] — Relevancy มาก่อน volume · โครงสร้างไม่ขยับตามดีมานด์ (2026-08-06) 🔒🧬
+
+**Status:** **🔒 Locked 2026-08-06** — operator-directed ระหว่างเก็บงาน keyword ของ Deezy
+
+**Scope:** **UNIVERSAL** — `seo_website_page_master.target_keyword_fp` · `seo_x_ads_keywords_contextual_master.keyword_use_as` · การวางผังไซต์ทุกแบรนด์
+
+**Context:**
+
+ตอนไล่เติม `target_keyword_fp` ให้ครบ เจอสองสถานการณ์ที่สเปกยังไม่ได้ตัดสิน
+
+1. หน้าที่โครงสร้างกำหนดว่าต้องมี แต่คำที่ตรงความหมายที่สุด **volume = 0** เช่น `deezy-3.4` (§3 pillar ปริทันต์) — คำเชิงบริการ `รักษาโรคปริทันต์` / `รักษาเหงือก` ได้ 0 ขณะที่หัวคำที่มีดีมานด์จริง `ปริทันต์` (720/mo) ถูก §5 ถือ และ `ปริทันต์ คือ` (1,000/mo) ถูก §6 ถือ
+2. คำที่ volume สูงแต่ **ไม่ตรงกับหน้าที่ของหน้านั้นตามโครง** — แรงกดดันคือ "ย้ายคำมาให้หน้าที่ว่าง" หรือ "เปลี่ยนบทบาทหน้าให้เข้ากับคำ"
+
+ทางเลือกที่เคยเสนอ (และถูกปฏิเสธ): ประกาศหน้าเหล่านั้นเป็น *authority page* ที่ไม่มี target keyword เมื่อคำตรงไม่มีดีมานด์
+
+**Decision:**
+
+**ลำดับการตัดสินคือ relevancy → แล้วค่อย volume และปัจจัยอื่น** ไม่ใช่ทางกลับกัน
+
+1. หน้าที่โครงสร้างกำหนดว่าต้องมีคีย์ **ต้องได้คำที่ความหมายตรงที่สุด แม้ volume = 0** — คำนั้นคือสิ่งที่รักษาโครงเนื้อหาไว้ ไม่ใช่สิ่งที่ต้องพิสูจน์ตัวเองด้วยดีมานด์ก่อน
+2. คำที่ volume สูงแต่ไม่ตรงบทบาทของหน้า **ห้ามยัดใส่หน้าเดิม** ให้ไปอยู่หน้าที่ตรงตามโครง หรือ **เปิดหน้า/หมวดใหม่มารองรับ**
+3. **โครงสร้างไม่เปลี่ยนตามคีย์เวิร์ด — โครงสร้างขยาย** ดีมานด์ใหม่ = โหนดใหม่ใต้ผัง 8 section เดิม (สอดคล้อง S1) ไม่ใช่การรีเซ็ตบทบาทของโหนดที่มีอยู่
+4. "volume = 0 วันนี้" ไม่ใช่เหตุผลให้ปล่อยหน้าไร้คีย์ — snapshot คือภาพหนึ่งช่วงเวลาของหนึ่งแบรนด์ ไม่ใช่คำตัดสินว่าหัวข้อไม่มีอยู่จริง
+
+**Rationale:**
+
+โครงที่ถูกเปลี่ยนบ่อยตามคีย์เวิร์ดที่โผล่มา จะ scale ไม่ได้ — flow ของเนื้อหาจะไม่สม่ำเสมอ และ internal-link graph ที่ออกแบบให้ทุกหมวดไหลกลับเข้า §3 service จะพังทุกครั้งที่โหนดเปลี่ยนบทบาท ต้นทุนของการมีคำ volume ต่ำอยู่บนหน้าที่ถูกต้อง ต่ำกว่าต้นทุนของการมีโครงที่ขยับได้ตลอดเวลา มาก
+
+ข้อ 2 ยังกันปัญหาตรงข้ามด้วย: คำ volume สูงที่ถูกยัดใส่หน้าที่ไม่ตรง จะดึงหน้านั้นออกจากบทบาทเดิม แล้วสร้าง cannibalization กับหน้าที่ควรถือคำนั้นจริง
+
+**Consequences:**
+
+- ✅ ทุกหน้าเชิงเนื้อหาที่มี entity มีคำของตัวเองได้เสมอ — ไม่มีชั้น "หน้าที่ทำไม่จบ"
+- ✅ คำ volume สูงที่ไม่มีบ้าน กลายเป็น **ตัวกระตุ้นให้เปิดหน้าใหม่** ซึ่งเป็นการเติบโตของผัง ไม่ใช่การแก้ผัง
+- ⚠️ ต้องยอมรับว่าหน้าจำนวนหนึ่งถือคำที่ volume ต่ำหรือ 0 — วัดผลด้วย impression/coverage ไม่ใช่อันดับของคำเดี่ยว
+- ⚠️ คำ 0 volume ยังต้องผ่าน P1/P3 และการเช็คชนแบบ strip เว้นวรรค (trap L13) เหมือนคำอื่น
+- 📌 กลับคำตัดสิน "authority page" ที่เคยประกาศไว้ 26 หน้าของ Deezy เมื่อ 2026-08-06 — ทั้งหมดกลับเข้าคิวรับคำตรง (`content-plan/deezy-keyword-etl-load-2026-08-06.csv`)
+- 📌 `deezy-3.4` ได้ `รักษาเหงือก` ตามกฎนี้ ขณะที่ `ปริทันต์` ยังอยู่กับ 5.3.3 และ `ปริทันต์ คือ` อยู่กับ 6.9.17
+
+**References:**
+
+- `keyword-assignment-sop.md` §R (Relevance ladder) · บรรทัด 42 (ห้าม assign มั่ว — กฎนี้ไม่ได้ยกเลิก แต่บอกว่า "คำตรงที่ volume ต่ำ" ไม่นับเป็นการ assign มั่ว)
+- S1 (8-section universal) — ข้อ 3 ของ decision นี้คือการบังคับใช้ S1 ในระดับคีย์เวิร์ด
+- L6 (ไม่มีคีย์ ≠ seed ไม่ครบ) — ยังจริง แต่ผลลัพธ์เปลี่ยนจาก "ปล่อยว่าง" เป็น "ใช้คำตรงแล้วรอดีมานด์"
+- DR-047 (cluster precedence) — รูปแบบเดียวกัน คือให้โครงสร้างชนะการเดาจากข้อมูลปลายทาง
+
+---
+
+### [DR-047] — Cluster precedence + ความหมายของคอลัมน์ต้องอยู่ในฐานข้อมูล ไม่ใช่แค่ในเอกสาร (2026-08-04) 🔒🧬
+
+**Status:** **🔒 Locked 2026-08-04** — operator-directed ก่อนเริ่ม dedupe ของ Deezy
+
+**Scope:** **UNIVERSAL** — `seo_website_page_master` · `seo_entity_graph` · `seo_topic_cluster_master`
+
+**Context:**
+
+`page_master.cluster_id` (ชื่อในสเปก v1.10 = `topical_cluster_id`) กับ `entity_graph.topic_cluster_id` ชี้ทะเบียนเดียวกันคือ `seo_topic_cluster_master.cluster_slug` — แต่ **สเปกไม่เคยเขียนว่าอันไหนชนะเมื่อสองค่าไม่ตรงกัน** ผลที่วัดได้ 2026-08-04: VTH 137 หน้า · Deezy 49 หน้า ที่ `page.cluster_id ≠ entity.topic_cluster_id` โดยไม่มีใครผิดกฎ เพราะไม่มีกฎ
+
+รากลึกกว่านั้น: 3 ตารางนี้มี 156 คอลัมน์ แต่มี `COMMENT ON COLUMN` อยู่แค่ 39 คอลัมน์ ที่เหลือคนเขียน/ETL **เดาความหมายจากชื่อคอลัมน์** ตอนเขียนข้อมูล ซึ่งเป็นที่มาโดยตรงของ:
+
+- ตัวอักษร tier `A/B/C/D` ไปอยู่ใน `page_type` (ควรอยู่ `node_tier`)
+- คลัสเตอร์คู่ขนาน 13 คู่ข้ามสามแบรนด์ เพราะ `cluster_slug` UNIQUE per brand เท่านั้น และไม่มีที่ไหนบอก
+- `entity_graph.topic_cluster_name` เพี้ยนจาก master **181 แถว** เพราะไม่มีใครรู้ว่ามันเป็นแค่สำเนา
+- `gen-internal-links.mjs` กรอง `status='deprecated'` ทั้งที่โดเมนจริงคือ `Planned|Live|Merged|Dropped` → 968 ลิงก์วิ่งผ่านหน้าที่ยุบไปแล้ว
+
+**Decision:**
+
+1. **ทะเบียนเดียว** — `seo_topic_cluster_master.cluster_slug` เป็นแหล่งความจริงเดียวของคลัสเตอร์ · `entity_graph.topic_cluster_id` เป็น **denormalized pointer** ไม่ใช่ข้อมูลอีกชุด · `topic_cluster_name` เป็น cache ห้ามอ่านไปใช้ตัดสินใจ ให้ join master เสมอ
+2. **Precedence** — หน้าที่มี `primary_entity_fp` ต้องมี `cluster_id` **เท่ากับ** cluster ของ entity นั้น **เว้นแต่**เขียนเหตุผลไว้ใน `reconciliation_notes` · หน้าที่ไม่มี entity (home/hub/contact/สาขา/index) ตั้ง `cluster_id` เองได้
+3. **ยุบคลัสเตอร์ = repoint 4 จุดในทรานแซกชันเดียว** — `page_master.cluster_id` · `entity_graph.topic_cluster_id` · `entity_graph.topic_cluster_name` · `cluster_master.aliases.merged_from`
+4. **ทุกคอลัมน์ของ 3 ตารางนี้ต้องมี `COMMENT ON COLUMN`** ที่อธิบาย: คอลัมน์นี้คืออะไร · ค่าที่ถูกต้อง/ฟอร์แมต · โยงกับตารางไหน · กับดักที่รู้แล้ว — และ **comment ต้องบรรยายพฤติกรรมจริงของ live ไม่ใช่สเปกที่ตั้งใจไว้** ที่ไหน CHECK constraint ขัดกับ `Schema_Overview` ให้ constraint ชนะ แล้วเขียนความขัดนั้นลง comment ตรง ๆ
+5. **คอลัมน์ใหม่ = ต้องมาพร้อม comment** ไม่มี comment ถือว่า migration ไม่สมบูรณ์
+
+**Rationale:**
+
+เอกสารสเปกอยู่คนละที่กับตอนพิมพ์ข้อมูล คนเขียน ETL เปิด DB แล้วเห็นชื่อคอลัมน์อย่างเดียว — `COMMENT` คือที่เดียวที่ความหมายเดินทางไปพร้อมกับตาราง และ agent / BI tool อ่านได้โดยไม่ต้องมีเรพอยู่ในมือ
+
+ทางเลือกที่ไม่เลือก: บังคับ precedence ด้วย trigger — ตัดสินว่าเร็วเกินไป เพราะยังมีเคสที่หน้าตั้งใจวางต่างจาก entity จริง ๆ (หน้า FAQ / เปรียบเทียบ) จึงใช้ "ต่างได้ถ้าเขียนเหตุผล" + gate ที่รายงาน แทน hard block
+
+**Consequences:**
+
+- ✅ 156/156 คอลัมน์มี comment แล้ว (page_master 91 · entity_graph 36 · cluster_master 29) — migration `2026-08-04_column_comments_page_entity_cluster.sql`
+- ✅ ความขัดระหว่างสเปกกับ live ถูกบันทึกไว้ในคอลัมน์ที่มันเกิด: `status` (Planned/Live/Merged/Dropped ไม่ใช่ planning/draft/published) · `brand_id` (เก็บ slug ไม่ใช่ UUID) · `content_format` (T-code ไม่ใช่ prose) · `schema_markup_type` (type text แต่มีทั้ง bare และ brace-set) · `funnel_stage` (สอง vocabulary ปนกัน) · `entity_lifecycle` (ตัวพิมพ์ไม่ตรงกัน) · `cluster_master.status` (Bible พูดถึง `pending_review` ซึ่งไม่มีใน CHECK)
+- ⚠️ ต้องมี gate ใหม่รายงาน `page.cluster_id ≠ entity.topic_cluster_id` ที่ไม่มี `reconciliation_notes` — ยังไม่ได้เขียน
+- ⚠️ `Schema_Overview` ต้องอัปเดตให้ตรงกับ comment ในรอบถัดไป (ตอนนี้ comment คือฉบับที่ถูกต้องกว่า)
+- 📌 งาน dedupe ตาม DR-046 เริ่มได้หลังจากนี้ ลำดับ Deezy → VTH → smile-scape
+
+**References:**
+
+- DR-046 (shared-table governance · `load_from` เป็นตัวตัดสิน) · DR-042 (reuse-first entity) · DR-008 (two-column identity)
+- `Schema_Overview_EYWA_v1_23.md` §4.1 · §4.2 · §5.1 · Appendix H.3
+- `EYWA_PROTOCOL_v3_33.md` §2.2 (โครง page→cluster 2 ช่อง) · §7.6 (lifecycle) · §7.7.1 (5 creation checks)
+- `migrations/2026-08-04_column_comments_page_entity_cluster.sql`
+
+---
 
 ### [DR-046] — Shared-table governance: ตารางที่ `brand_scope ['*']` ต้องมีกฎว่าใครชนะตอนชื่อซ้ำ (2026-08-03) 🔒🧬
 

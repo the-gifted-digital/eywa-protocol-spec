@@ -409,11 +409,16 @@ from p group by 1, 2 having count(*) > 1;
 | L12 | **DB มี constraint ที่ช่วยเราอยู่แล้ว** | insert หน้าราคาไม่ผ่านเพราะคีย์ยังผูกกับหน้าเดิม — 1 keyword : 1 page ถูกบังคับที่ DB จริง | อย่ามองว่าเป็น error ให้มองว่าเป็น gate ที่ทำงาน แล้วปลดคีย์เดิมก่อน |
 | L13 | **`kw_norm()` จับคำไทยที่ไม่เว้นวรรคไม่ได้** | `ฟันปลอม ทั้งปาก` กับ `ฟันปลอมทั้งปาก` เป็นคำเดียวกันในสายตาผู้ค้น แต่ normalize ออกมาคนละค่า (token เดียว vs สอง token) → QA Q1 ไม่จับ | เสริม gate: เทียบเวอร์ชัน **ลบช่องว่างทั้งหมด** (`replace(kw,' ','')`) ควบคู่กับ token-sort · เจอคู่แบบนี้ให้ตัวหนึ่งเป็น semantic |
 | L14 | **QA gate ที่ผูกกับเลข section จะพังเมื่อย้ายหมวด** | ย้ายหมวดราคา §10 → §8.10 แล้ว gate Q4c (`section <> '10'`) รายงาน false positive 6 หน้า | เขียน gate ให้ผูกกับ **คุณสมบัติของหน้า** (slug prefix / page_purpose) ไม่ใช่เลข section |
-| L15 | **renumber node ต้องทำ 2-phase** | สลับเลขในหมวด (5.3.22 → 5.3.1 ขณะที่ 5.3.1 ยังอยู่) ทำตรง ๆ จะชน unique key ทันที | เขียน `page_fingerprint` เป็นค่าชั่วคราว (`zzz-<new>`) ก่อน แล้วค่อยลงค่าจริง · อัปเดต 4 จุดเสมอ: `page_fingerprint` · `parent_page_fp` · `links.from` · `links.to` |
+| L15 | **renumber node ต้องทำ 2-phase** | สลับเลขในหมวด (5.3.22 → 5.3.1 ขณะที่ 5.3.1 ยังอยู่) ทำตรง ๆ จะชน unique key ทันที | เขียน `page_fingerprint` เป็นค่าชั่วคราว (`zzz-<new>`) ก่อน แล้วค่อยลงค่าจริง · อัปเดต **7 จุด** เสมอ (ดู §13.3) — สามจุดหลังไม่มี FK คุม: `page_citations.page_fp` · `editorial_reviews.page_fp` · `planned_outbound_fps` |
 | L16 | **`link_priority` มี CHECK 1–10** | จะใช้เก็บลำดับการอ่าน 1–26 ไม่ได้ | ใช้ priority ระดับ**กลุ่ม** + เก็บลำดับย่อยใน `section_context` / `surrounding_text_snippet` |
 | L17 | **title/meta ของหน้าใหม่ต้องเดินตาม convention ของหน้าเดิม ไม่ใช่ best practice ทั่วไป** | จะเขียนตามสูตรสากล (ใส่ brand suffix, title ≤60 ตัวอักษรละติน) แต่ 698 หน้าเดิมของแบรนด์ไม่มี suffix เลย (3/698) และวัดเป็นตัวอักษรไทย | ก่อนเขียน ให้ query หาค่า min/max/avg ความยาว + นับสัดส่วนที่มี brand suffix จากหน้าที่มีอยู่แล้ว แล้วยึดค่านั้นเป็นเกณฑ์ |
 | L18 | **title/meta ที่เขียนตอนวางแผน = baseline ไม่ใช่ final** | ตอนวางแผนยังไม่ได้ดู SERP ของคู่แข่งที่ครองอันดับรายหน้า | เขียนให้ครบเป็น baseline (กัน field ว่างตอน build) แล้ว **ทบทวนอีกรอบตอนเขียนเนื้อหาจริง** พร้อมเทียบ SERP · บันทึกสถานะไว้ที่ `reconciliation_notes` |
 | L19 | **หน้าที่ `legal_review_required=true` ต้องคุมถ้อยคำถึงระดับ meta** | meta ของหน้าราคาถ้าเขียนแบบชวนซื้อ/เทียบราคา = โฆษณาสถานพยาบาลตาม ม.38 · หน้ายาถ้าอ้างสรรพคุณ = พ.ร.บ.ยา ม.88 | หน้าราคา: meta อธิบาย**ปัจจัยที่ทำให้ราคาต่าง** ไม่ใส่ตัวเลข ไม่มีคำเชิญชวน · หน้ายา: ไม่อ้างสรรพคุณ ไม่ระบุขนาดยาใน meta · ทุกหน้าอาการ: ห้ามคำรับประกันผล |
+| L20 | **DFS ไม่คืน volume ให้หัวคำไทยตัวใหญ่ — absence ≠ zero** | `ครอบฟัน` `อุดฟัน` `รักษารากฟัน` `ฟันคุด` `จัดฟัน` `จัดฟันใส` `รากฟันเทียม` `หยุดหายใจขณะหลับ` คืนค่าว่างทั้งหมด ขณะที่ `ขูดหินปูน` รูปประโยคเดียวกันเป๊ะคืน **12,100/mo** · DFS ยังคืน backlink profile ของคำเหล่านั้นมาด้วย และมันชี้ว่า SERP แข่งดุ (`จัดฟัน` avg 13.3 backlinks · rank 71.3) | เก็บ snapshot เป็น **`NULL` ไม่ใช่ `0`** + ตั้ง `data_signal_quality=0` · L8 ยังใช้ได้แต่ขยายผล: ตัวเลขว่างของ DFS เป็นช่องว่างของ**ข้อมูล** ไม่ใช่ของ**ดีมานด์** |
+| L21 | **§3 ถือคำถามแทนหัวบริการ — ผ่านทุกเกตเพราะไม่มีอะไรผิดกติกา** | `3.7.16 Clear Aligner (hub)` ถือ `ข้อเสีย จัดฟันใส` ขณะที่ `จัดฟันใส` เปล่า ๆ ไม่มีในคลังเลย · รวม 22 หน้าผิดบทบาท และหัวบริการหายจากคลัง 9 คำ | รัน detector ตาม DR-051 ก่อนประกาศว่าคีย์ครบ — ทั้งชั้น "หัวหาย" และชั้น "คำผิดบทบาท" · ผลชั้นสองมี false positive สูง (33 hit จริง 10) ต้องอ่านด้วยคน |
+| L22 | **byline บนเทมเพลต ≠ editorial review record** | VTH โชว์ชื่อหมอครบทุกหน้า EEAT แต่ `seo_editorial_reviews` มี **0 แถว** ของแบรนด์ ขณะที่ Deezy มี 666 | ผูก reviewer ให้ครบทุกหน้าตั้งแต่แผน · และ **ห้ามบันทึก `approved=true` ให้หน้าที่ยังไม่มีเนื้อหา** — หน้า Planned ได้แค่ `pending` เพราะ field นี้เป็นสิ่งที่ผู้ตรวจอ่านตามตัวอักษร |
+| L23 | **เจอข้อบกพร่องแบบมีทิศทาง ให้ตรวจทิศตรงข้ามทันที** | ปิดลิงก์ที่ *ชี้เข้า* หน้า Merged 373 เส้นแล้วประกาศจบ — อีกสามรอบถัดมาถึงพบว่ามี 595 เส้น *วิ่งออกจาก* หน้าเดียวกันนั้น รวม 968 เส้นกำลังออกเว็บจริง | เกตทุกข้อที่ถามความสัมพันธ์ ต้องถามทั้งสองปลาย (DR-049) · และเทียบตัวเลขปลายทาง: from-page ใน export ต้องเท่ากับจำนวนหน้า active พอดี |
+
 
 **สรุปหลักการเดียวที่ครอบทุกข้อ:** *เติมหน้าให้ครบไม่ใช่เป้าหมาย — เป้าหมายคือทุกคำที่ลงไปต้องมีเหตุผลที่ตรวจสอบย้อนหลังได้*
 
@@ -476,8 +481,21 @@ PHASE 1  page_fingerprint → 'zzz-<new_node>'   (+ parent_page_fp, links.from, 
 PHASE 2  'zzz-<new_node>' → 'vth-<new_node>'   (+ sitemap_node_id)
 ```
 
-**ต้องอัปเดต 4 จุดทุกครั้ง:** `page_fingerprint` · `parent_page_fp` · `internal_links.from_page_fp` · `internal_links.to_page_fp`
+**ต้องอัปเดต 7 จุดทุกครั้ง** — ไม่มีจุดใดใน 5–7 ที่มี FK คุม เขียนผิดแล้วเงียบ:
+
+| # | จุด | เจอพลาดจริง |
+|---|---|---|
+| 1 | `page_fingerprint` | |
+| 2 | `parent_page_fp` | |
+| 3 | `internal_links.from_page_fp` | |
+| 4 | `internal_links.to_page_fp` | |
+| 5 | **`seo_page_citations.page_fp`** | Deezy 26 แถวลอย (2026-08-06) |
+| 6 | **`seo_editorial_reviews.page_fp`** | Deezy 11 แถวลอย (2026-08-06) |
+| 7 | **`planned_outbound_fps`** (array) | VTH 7 ตัวยังชี้ fingerprint ก่อน rename (2026-08-07) |
+
 `fingerprint` (`page_XXXX`) **ห้ามแตะ** — เป็น canonical ID ตาม DR-008 และมี trigger ป้องกันอยู่
+
+> ⚠️ **กับดัก DR-008 สองคอลัมน์** — ตอนเขียน binding ต้องใช้ `page_fingerprint` (`vth-6.1.3`) เสมอ ไม่ใช่ `fingerprint` (`page_XXXX`) เจอมาแล้วสามรอบ รอบล่าสุดอยู่ที่ `seo_doctor_assignments.author_fp` ซึ่งเก็บ slug แทน `auth_XXXX` → ทุกคอลัมน์ที่ลงท้าย `_fp` และไม่มี FK ต้องอยู่ในชุดตรวจ
 
 **ตรวจหลัง renumber (ต้องได้ 0 ทุกข้อ):**
 
@@ -492,7 +510,22 @@ select count(*) from seo_website_page_master p where p.parent_page_fp is not nul
 -- ซ้ำ / orphan
 select count(*) from (select page_fingerprint from seo_website_page_master where brand_id=:b group by 1 having count(*)>1) x;
 select count(*) from seo_website_page_master p where p.brand_id=:b and not exists (select 1 from seo_page_internal_links l where l.to_page_fp=p.page_fingerprint);
+
+-- binding 3 จุดที่ไม่มี FK (จุด 5–7)
+select count(*) from seo_page_citations c   where not exists (select 1 from seo_website_page_master p where p.page_fingerprint=c.page_fp);
+select count(*) from seo_editorial_reviews r where not exists (select 1 from seo_website_page_master p where p.page_fingerprint=r.page_fp);
+select count(*) from seo_website_page_master p
+  where p.brand_id=:b and exists (select 1 from unnest(p.planned_outbound_fps) x
+                                  where not exists (select 1 from seo_website_page_master q where q.page_fingerprint=x));
+
+-- DR-049 · ลิงก์ที่แตะหน้า Merged ต้องถูก deprecate ทั้งสองทิศ (ถามทิศเดียวไม่พอ)
+select count(*) from seo_page_internal_links l join seo_website_page_master p
+  on p.page_fingerprint=l.to_page_fp   where p.status='Merged' and l.status<>'deprecated';
+select count(*) from seo_page_internal_links l join seo_website_page_master p
+  on p.page_fingerprint=l.from_page_fp where p.status='Merged' and l.status<>'deprecated';
 ```
+
+**หลัง export ต้องเช็คตัวเลขด้วย:** จำนวน from-page ใน `internal-links.json` ต้อง **เท่ากับ** จำนวนหน้า active พอดี ถ้ามากกว่า แปลว่ามีหน้าที่ยุบไปแล้วยังส่งลิงก์อยู่ (DR-049 — VTH เจอ 968 เส้น)
 
 ### 13.4 คุมลำดับการอ่านโดยไม่ renumber
 
