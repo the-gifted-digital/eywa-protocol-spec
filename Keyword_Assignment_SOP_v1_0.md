@@ -1,6 +1,7 @@
 # 📌 EYWA Protocol — Keyword Assignment SOP
 
 > **เวอร์ชัน:** 1.1 (universal) · **ประกาศใช้:** 2026-07-28 · **สถานะ:** 🔒 Locked
+> **v1.4 (2026-08-09):** เพิ่ม **Q9** ใน §10 (Q1 ชั้นที่ 3 ด้วย `pg_trgm`) + บทเรียน **L24–L25** จากรอบ Smile Scape — สองชั้นเดิมของ L13 จับการสลับลำดับคำไทยไม่ได้ · และ dedupe ที่ใช้แต่การเทียบสตริงประกาศ "สะอาด" ทั้งที่ยังซ้ำ
 > **v1.2:** เพิ่มบทเรียน L17–L19 (convention ของ seo_title/meta_description · baseline vs final · การคุมถ้อยคำ meta บนหน้า legal_review)
 > **v1.1:** เพิ่ม §8.5 ตำแหน่งหมวดราคาในผัง · §13 โครงสร้าง & ลำดับเนื้อหา + วิธี renumber · บทเรียน L13–L16
 > **ขอบเขต:** **UNIVERSAL** — ทุกแบรนด์ที่ใช้ `seo_website_page_master` + `seo_x_ads_keywords_contextual_master`
@@ -353,9 +354,12 @@ overlap = |urls(X) ∩ urls(X ราคา)| / N      โดย N = min(จำ�
 | Q6 | primary v=0 ที่ไม่ได้ติดธง `brand_nav` | 0 แถว |
 | Q7 | คีย์ที่เป็น primary แล้วไปโผล่เป็น semantic ที่อื่น | 0 แถว |
 | Q8 | entity เดียวกันมี primary >1 หน้า โดย SERP overlap ≥0.6 | 0 แถว (ไม่งั้น = cannibalization) |
+| **Q9** | **คีย์ใกล้ซ้ำระดับ trigram ที่ทั้งสองฝั่งเป็น primary** (L24) | 0 แถว หรือมีคำอธิบายรายคู่ |
+
+**Q1 มีสามชั้น ไม่ใช่สองชั้น** — L13 ให้ token-sort + strip-เว้นวรรค · **L24 เพิ่มชั้น trigram** เพราะสองชั้นแรกจับการสลับลำดับคำไทยที่ไม่เว้นวรรคไม่ได้
 
 ```sql
--- Q1
+-- Q1 ชั้นที่ 1 · token-sort
 with p as (
   select brand_id, sitemap_node_id, kw_norm(k.keyword) n
   from seo_website_page_master pm
@@ -363,7 +367,18 @@ with p as (
 )
 select brand_id, n, count(*), string_agg(sitemap_node_id, ',')
 from p group by 1, 2 having count(*) > 1;
+
+-- Q1 ชั้นที่ 2 · strip เว้นวรรค (L13)  → เปลี่ยน kw_norm(k.keyword) เป็น replace(lower(k.keyword),' ','')
+
+-- Q9 / Q1 ชั้นที่ 3 · trigram (L24) — ตัดคู่ substring ออกเพราะนั่นคือ "หัวคำ vs คำมุม" ที่ถูกตาม DR-048
+select keyword_a, page_a, keyword_b, page_b, kw_similarity
+from v_keyword_near_duplicates
+where brand = :brand and page_a is not null and page_b is not null and kw_similarity >= 0.70
+  and position(replace(lower(keyword_a),' ','') in replace(lower(keyword_b),' ','')) = 0
+  and position(replace(lower(keyword_b),' ','') in replace(lower(keyword_a),' ','')) = 0;
 ```
+
+> ⚠️ ชั้นที่ 3 มี false positive — `ค่ารากฟันเทียม` ⟷ `ผ่ารากฟันเทียม` (0.765) ต่างกันอักษรเดียวแต่คนละความหมายสิ้นเชิง · **ห้าม auto-fix** เหมือนตัวตรวจชั้นสองของ DR-051
 
 ---
 
@@ -418,6 +433,8 @@ from p group by 1, 2 having count(*) > 1;
 | L21 | **§3 ถือคำถามแทนหัวบริการ — ผ่านทุกเกตเพราะไม่มีอะไรผิดกติกา** | `3.7.16 Clear Aligner (hub)` ถือ `ข้อเสีย จัดฟันใส` ขณะที่ `จัดฟันใส` เปล่า ๆ ไม่มีในคลังเลย · รวม 22 หน้าผิดบทบาท และหัวบริการหายจากคลัง 9 คำ | รัน detector ตาม DR-051 ก่อนประกาศว่าคีย์ครบ — ทั้งชั้น "หัวหาย" และชั้น "คำผิดบทบาท" · ผลชั้นสองมี false positive สูง (33 hit จริง 10) ต้องอ่านด้วยคน |
 | L22 | **byline บนเทมเพลต ≠ editorial review record** | VTH โชว์ชื่อหมอครบทุกหน้า EEAT แต่ `seo_editorial_reviews` มี **0 แถว** ของแบรนด์ ขณะที่ Deezy มี 666 | ผูก reviewer ให้ครบทุกหน้าตั้งแต่แผน · และ **ห้ามบันทึก `approved=true` ให้หน้าที่ยังไม่มีเนื้อหา** — หน้า Planned ได้แค่ `pending` เพราะ field นี้เป็นสิ่งที่ผู้ตรวจอ่านตามตัวอักษร |
 | L23 | **เจอข้อบกพร่องแบบมีทิศทาง ให้ตรวจทิศตรงข้ามทันที** | ปิดลิงก์ที่ *ชี้เข้า* หน้า Merged 373 เส้นแล้วประกาศจบ — อีกสามรอบถัดมาถึงพบว่ามี 595 เส้น *วิ่งออกจาก* หน้าเดียวกันนั้น รวม 968 เส้นกำลังออกเว็บจริง | เกตทุกข้อที่ถามความสัมพันธ์ ต้องถามทั้งสองปลาย (DR-049) · และเทียบตัวเลขปลายทาง: from-page ใน export ต้องเท่ากับจำนวนหน้า active พอดี |
+| L24 | **Q1 สองชั้นของ L13 จับ "การสลับลำดับคำไทยที่ไม่เว้นวรรค" ไม่ได้** | Smile Scape ผ่าน Q1 ทั้ง token-sort และ strip-เว้นวรรค แล้วประกาศ 0 — ชั้น `pg_trgm` พบ **13 คู่ที่ทั้งสองฝั่งเป็น primary ของคนละหน้า**: `รักษาโรคเหงือก` ⟷ `โรคเหงือก รักษา` (0.72) · `ผ่าตัดรากฟันเทียม` ⟷ `รากฟันเทียม ผ่าตัด` (0.76) · `คลินิกสไมล์สเคป` ⟷ `สไมล์สเคป คลินิก` (0.78) · เหตุผลเชิงกลไก: token-sort ต้องมีช่องว่างถึงจะตัดคำได้ ส่วน strip-เว้นวรรคเทียบสตริงตรงตัวจึงแพ้ทันทีเมื่อลำดับคำต่าง | **Q1 ต้องมีชั้นที่ 3** (= Q9 ใน §10) — `v_keyword_near_duplicates` sim ≥ 0.70 โดยตัดคู่ที่ฝั่งหนึ่งเป็น substring ของอีกฝั่งออก · **ห้าม auto-fix** มี false positive (`ค่ารากฟันเทียม` ⟷ `ผ่ารากฟันเทียม` 0.765 ต่างอักษรเดียวแต่คนละความหมาย) |
+| L25 | **dedupe ที่ใช้แต่การเทียบสตริงจะประกาศ "สะอาด" ทั้งที่ยังซ้ำ** | Smile Scape ยุบ entity/cluster ด้วยชื่อ · token-sort · ICD จนเกตขึ้น 0 ทุกข้อ — พอรันชั้น embedding ทีหลังเจอของจริงอีก 4 รายการ: `social-security-dental-benefit "(TH)"` (17 หน้า · 9 คีย์) · `bone-graft-implant` (deezy ซ้ำกับตัวเอง) · `tmj-disorder` ที่ loader รอบหลังเขียนทับให้ไปนั่งผิดคลัสเตอร์ · และคู่ subtype ที่ต้องผูก edge แทนยุบ | รัน **ทั้ง 4 view ก่อน**เริ่ม dedupe ทุกรอบ · เกตปิดงานเพิ่ม 3 ข้อ: trigram-pair = 0 · semantic `cluster_conflict` = 0 · **embedding ที่ยังชี้ entity `lifecycle='merged'` = 0** (ยุบ entity ต้อง `delete from seo_entity_embeddings` ด้วย ไม่งั้น view ชูซากขึ้นมาซ้ำทุกรอบ) |
 
 
 **สรุปหลักการเดียวที่ครอบทุกข้อ:** *เติมหน้าให้ครบไม่ใช่เป้าหมาย — เป้าหมายคือทุกคำที่ลงไปต้องมีเหตุผลที่ตรวจสอบย้อนหลังได้*
