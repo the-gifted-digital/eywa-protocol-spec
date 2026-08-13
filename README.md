@@ -38,7 +38,7 @@ EYWA™ is a registered trademark of **The Gifted Digital Marketing Co., Ltd.** 
 | `EYWA_PROTOCOL_v3_33.md` | The Bible — full specification | ~27,800 | 🔒 Active (v3.34) |
 | `Schema_Overview_EYWA_v1_23.md` | Database schema companion (43 live base tables, Group 11 NEW media_assets) | ~2,000 | 🔒 Active (v1.23) |
 | `EYWA_HANDOVER.md` | Operating manual for Claude/AI | ~3,100 | 🔒 Active (v1.19) |
-| `DECISION_RECORDS.md` | Architecture decision log | ~5,300 | 🔒 Active (v1.36) |
+| `DECISION_RECORDS.md` | Architecture decision log | ~5,300 | 🔒 Active (v1.37) |
 | `Keyword_Assignment_SOP_v1_0.md` | SOP — เลือกคีย์เวิร์ดหลัก/รอง ผูกเข้าหน้า (DR-043) + บทเรียน L1–L23 | ~540 | 🔒 Active (v1.3) |
 | `Citation_Pool_SOP_v1_0.md` | SOP — สร้าง/ตรวจ/ผูก citation (DR-044) + บทเรียน C1–C20 | ~160 | 🔒 Active (v1.2) |
 | `Entity_Identity_SOP_v1_0.md` | SOP — ICD · Wikidata · Wikipedia → schema markup (DR-050) · สามด่านก่อนเชื่อ identifier + one-store-per-fact | ~200 | 🔒 Active (v1.0) |
