@@ -76,6 +76,18 @@ Bible 23.1 กำหนด 6 tier ให้ map จาก **PubMed `PublicationT
 | G9 | เอกสารเชิงพาณิชย์ที่ไม่ได้ติดป้าย |
 | G10 | DOI/PMID ซ้ำในสระเดียวกัน |
 | G11 | citation เดียวกันซ้ำในหน้าเดียวกัน |
+| **G12** | **`page_fp` ผูกด้วยคีย์ผิดตัว → orphan เงียบ** (L28) — รัน **ข้ามทุกแบรนด์** ไม่ใช่แค่แบรนด์ตัวเอง |
+| **G13** | **citation ที่บทคัดย่อจริงไม่รองรับหัวข้อของหน้า** (L29) — ตรวจด้วย abstract+MeSH ไม่ใช่ชื่อเรื่อง |
+
+```sql
+-- G12 · คีย์ผูกของตารางบริวารคือ page_fingerprint ({brand}-{node}) เท่านั้น
+-- ไม่ใช่ fingerprint (page_{ULID16}) · ไม่มี FK จริงบังคับ ใส่ผิดแล้วหลุดเงียบ
+-- เจอแล้วให้ "เขียนคีย์ใหม่" ห้ามลบแถว — ของที่ผูกไว้ถูก ผิดแค่รูปคีย์
+select pc.id, pc.page_fp, p.brand_id, p.page_fingerprint as should_be
+from seo_page_citations pc
+left join seo_website_page_master p on p.fingerprint = pc.page_fp   -- ใส่ผิดเป็นตัวนี้
+where not exists (select 1 from seo_website_page_master q where q.page_fingerprint = pc.page_fp);
+```
 
 ---
 
