@@ -4,7 +4,7 @@
 **Live database:** Supabase project `lffcbeszjqzioobqfdav` ("GTGT") · region `ap-northeast-1` · Postgres 17
 **Total base tables:** 43 (in `public` schema, excluding `logs_2025`/`logs_2026` and backups) — `seo_media_assets` §13.1 (Group 11) canonicalized 2026-06-11 via migration `eywa_w11_08` (DR-038); `brands` §3.1 +4 Cloudflare cols via `eywa_w11_09` (DR-038); `seo_payer_partners` §3.9 canonicalized 2026-06-08 via migration `eywa_w11_07` (DR-037); `seo_entity_symptom` §11.5a built 2026-06-04 via `eywa_w11_06`
 **Spec stack:** Bible v3.32 · Handover v1.18 · Decision Records v1.24
-**Audit method:** Full drift audit vs live `information_schema` performed 2026-05-30. Every column listed below was verified against the live database at audit time.
+**Audit method:** Last full drift audit vs live `information_schema` was **2026-05-30**. Columns listed here were verified against the live database **at that date only** — **v1.20–v1.23 have never been re-verified.** A cross-brand reconciliation on 2026-08-23 checked 2,317 documented claims against the live database and found 1,837 that no longer match, including 336 rules that cannot fire at all. **Do not treat any statement in this document as verified-current without re-querying.** See `eywa-vth-biodent/content-plan/` reconciliation report.
 
 > **Reader heads-up:** v1.18 is a **full rewrite + audit** of v1.10. Aspirational columns from v1.0–v1.10 that never shipped are dropped (or moved to **Appendix H — Deferred v2.0 Provisions**). Every column under each table reflects the live database. Two new DR waves landed in this version:
 > - **DR-030 Sensitive Topic Compliance** (Schema v1.17, 2026-05-27)
@@ -759,7 +759,7 @@ When `brand_structure='monolithic'`: unchanged DR-004 behavior `{brand_domain}/{
 | `id` `uuid` UNIQUE | machine key |
 | `fingerprint` `text` | `ent_{ULID16}` (DR-008) |
 | `fingerprint_display_name` `text` | `{fp_last_6}::{entity_slug}` |
-| `entity_fingerprint` `text` | **Legacy v1.10** — preserved for n8n compat (drop in v2.0) |
+| `entity_fingerprint` `text` | 🔴 **LOAD-BEARING — DO NOT DROP.** This is the key the whole entity layer actually resolves on: 12 FKs target it, 1,089/1,089 edges and 2,043/2,043 page `primary_entity_fp` bindings resolve here, while `fingerprint` resolves **0**. §11.5a of this same document defines new extension FKs against it. The former note calling it "Legacy v1.10, drop in v2.0" was wrong and is withdrawn 2026-08-23 — acting on it would orphan the entity graph for all three brands at once. |
 | `entity_name` `text` | Canonical display name |
 | `entity_slug` `text` | Canonical machine key (immutable) |
 | `entity_type` `text` | CHECK enum — see below |

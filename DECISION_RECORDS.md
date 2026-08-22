@@ -600,7 +600,18 @@ ICD-10 ที่ลงท้าย `.8 other specified` / `.9 unspecified` แ�
   - ผลข้างเคียงที่ต้องรู้: แบรนด์ไหนใส่ citation เน่าเข้าสระ `'*'` แบรนด์อื่นได้ไปด้วยทันที — locator round-trip จึงเป็น gate **ระดับสระ** ไม่ใช่ระดับแบรนด์
   - `brand_scope` ที่ระบุแบรนด์เจาะจง (เช่น 13 แถว first-party ของ smile-scape-clinic) กันไว้ถูกต้องแล้ว query สระต้องกรอง `brand_scope @> array['*'] or brand_scope @> array['<brand>']` เสมอ
   - VitalSleep and Wellness ไม่มีข้อมูลใน Supabase project นี้ (มีแค่ 3 แบรนด์ข้างต้น) — หนี้ของ VitalSleep ใน DR-043 เป็นเรื่องคีย์เวิร์ด ไม่ใช่ citation
-- ✅ **Deezy Dental (BUILT 2026-07-29):** ผูกสระเข้าหน้าแล้ว **1,475 แถว ครอบคลุม 616 หน้า** · 0 หน้าต่ำกว่าขั้นต่ำ · 0 หน้าไม่มี Tier 1-3 · เพิ่มงานวิจัยจริงจากร่างเนื้อหา Deezy เข้าสระอีก 29 รายการ (`load_source='deezy-draft-reconcile-2026-07-29'`)
+
+> 🔴 **แก้ไข 2026-08-23 — ประโยคบนนี้ผิด อย่าทำตาม**
+> DR-044 ยัง 🔒 Locked ตามเดิม ข้อความเดิมคงไว้เพื่อรักษาประวัติ แต่ข้อเท็จจริงไม่ตรง:
+> `seo_x_ads_keywords_contextual_master` มี **8 แบรนด์ รวม 22,710 แถว** — Deezy Dental 6,269 ·
+> VitalSleep and Wellness **4,412** · The Face by Vertex 3,586 · VitalSleep Clinic 3,478 ·
+> VTH BioDent 2,129 · Smile Scape Clinic 1,786 · TC Smile Dental 784 · Clearisma 266
+> **ห้ามรัน cleanup แบบ "ลบแถวของแบรนด์ที่ไม่อยู่ใน project นี้"** — จะลบ 12,526 แถวของ 5 แบรนด์ที่มีอยู่จริง
+> ที่ถูกคือ: page_master มี 3 แบรนด์ ส่วน keyword layer มี 8 — คนละขอบเขตกัน
+- ✅ **Deezy Dental (BUILT 2026-07-29):** ผูกสระเข้าหน้าแล้ว **1,475 แถว ครอบคลุม 616 หน้า** · 0 หน้าต่ำกว่าขั้นต่ำ · 0 หน้าไม่มี Tier 1-3
+  > 🔴 **สถานะนี้ regress แล้ว (วัด 2026-08-23):** deezy มี **245 หน้าไม่มี citation เลย และ 150 หน้าในนั้น Live อยู่**
+  > อีก 9 หน้ามี binding แต่ไม่มี Tier 1-3 · ตัวเลข "0 หน้าต่ำกว่าขั้นต่ำ" เป็นจริงเฉพาะ ณ 2026-07-29
+  > สาเหตุ: `package.json` ของ deezy ไม่เรียกเกต citation สักตัว ขณะที่ VTH เรียก 5 ตัว — ไม่มีอะไรจับ regression · เพิ่มงานวิจัยจริงจากร่างเนื้อหา Deezy เข้าสระอีก 29 รายการ (`load_source='deezy-draft-reconcile-2026-07-29'`)
 - ✅ **freshness ไล่ครบแล้ว:** 55 แถวที่เกิน window ตรวจทีละตัวกับ PubMed related-articles → **แทนที่ 7 แถว** ที่มีรีวิวใหม่กว่าตอบคำถามเดียวกัน · **48 แถวคงไว้โดยเจตนา** (ไม่มี SR/MA/guideline ใหม่กว่าที่ตอบคำถามเดียวกัน) · Cochrane อีก 10 แถวตรวจเวอร์ชันด้วย Crossref แล้ว — พบซ้อนทับ 4 ตัว รวมถึง **CD002778 (splint therapy for TMD) ที่ Cochrane ถอนออก WITHDRAWN ตั้งแต่ 2016** เปลี่ยนเป็น SR+MA ปี 2020 (PMID 32421379) แล้ว · บันทึกเหตุผลรายแถวไว้ใน `abstract`
 - ✅ **archive:** ใช้ **Wayback CDX API** แทน availability API (ซึ่งมองข้าม snapshot ที่มีจริง) — เก็บได้เพิ่ม 4 แถว · เหลือ **0 แถวที่ไร้ตัวป้องกัน** (ทุกแถวที่ไม่มี archive มี PMID/DOI/ISBN ค้ำอยู่)
 - ⚠️ **หนี้ที่ยังค้าง:**
