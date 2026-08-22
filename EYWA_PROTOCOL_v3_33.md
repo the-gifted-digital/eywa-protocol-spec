@@ -846,7 +846,7 @@ Documentation patch — ปิดช่องว่างเดียวที�
   - 23.2 Medical Disclaimers & Red Lines (legal protection + AI trust)
   - 23.3 Authority Validation Standards (license + accreditation + advisory board)
   - 23.4 Multi-Stage Editorial Review (5-stage workflow + SLA)
-  - 23.5 Core Web Vitals Targets per Layer (Google direct ranking signal)
+  - 23.5 Core Web Vitals Targets per Page Category (Google direct ranking signal)
   - 23.6 Accessibility Essentials (WCAG 2.2 AA — checklist)
   - 🔮 Future notes: International SEO (hreflang), Crisis Management, Specialized Content Types
 - ➕ **Part 5 extension (Section 5.14):** Authority & Evidence Schema Additions
@@ -893,7 +893,7 @@ Documentation patch — ปิดช่องว่างเดียวที�
 - ➕ **Part 4: Sitemap Architecture Design** (10 sub-sections, ~50KB)
   - 4.1 Design Methodology (5-phase top-down workflow)
   - 4.2 Standard 8 Sections (Gold Ideology — Home/Uniqueness/Services/Tech/Concern/Knowledge/Cases/Contact)
-  - 4.3 Section ↔ Layer Mapping Matrix (with cannibalization shield rules)
+  - 4.3 Section ↔ Page Category Mapping Matrix (with cannibalization shield rules)
   - 4.4 Numbered Hierarchy Convention ({S}.{C}.{D}.{L} format)
   - 4.5 Page Type Matrix (4 Types: A/B/C/D — branch relationships)
   - 4.6 Multi-Vertical Variations (8 healthcare formats + media + other)
@@ -1882,7 +1882,9 @@ future_consideration: RDF/SPARQL/OWL
 │    → กฎนี้ enforce โดย Part 7.7 Cluster Creation Rules           │
 │                                                                   │
 │  Rule 2.3 (Pillar):                                              │
-│    ทุก cluster ต้องมี ≥1 L5 pillar guide ใน sitemap                │
+│    ทุก cluster ต้องมี ≥1 knowledge_article pillar ใน sitemap        │
+│    (was "L5 pillar" — rewritten 2026-08-23, layer column          │
+│     does not exist; see the reconciliation report)                │
 │    → ถ้าไม่มี → cluster ยังไม่พร้อมเป็น "active"                     │
 │    → state = pending_review (ดู Part 7.6)                         │
 │                                                                   │
@@ -2098,7 +2100,8 @@ check_2_critical_mass:
                  หรือ ขยาย scope จนครบ"
 
 check_3_pillar_alignment:
-  question: "Cluster นี้มี ≥1 L5 pillar guide ใน sitemap?"
+  # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
+  question: "Cluster นี้มี ≥1 knowledge_article pillar ใน sitemap?"  # was "L5 pillar guide"
   test: "Search sitemap section 6 (Knowledge) — มี pillar ที่
          topic_cluster_id ตรงไหม?"
   remediation: "ถ้าไม่มี → set state='pending_review' จนกว่า
@@ -3972,7 +3975,7 @@ ORDER BY 1, 3 DESC;
 
 # PART 3: Neural Authority Architecture
 
-> **Why this section exists:** Part 3 เป็น **canonical framework** สำหรับการ "definition" ของทุกหน้าในระบบ — ทุกหน้าต้องมี 3 มิติ (Layer + Tier + Funnel) ครบถึงจะถือว่า "structurally complete"
+> **Why this section exists:** Part 3 เป็น **canonical framework** สำหรับการ "definition" ของทุกหน้าในระบบ — ทุกหน้าต้องมี 3 มิติ (page_category + Tier + Funnel) ครบถึงจะถือว่า "structurally complete" *(rewritten 2026-08-23 — `layer` column does not exist; see the reconciliation report)*
 >
 > **Origin:** เดิมทีเป็น operational framework ที่ใช้กันภายใน — v2.7 promote ขึ้นเป็น Part หลักของคัมภีร์ พร้อม industry verification (เทียบกับ HubSpot, Whitehat, Brafton, Ahrefs consensus 2026)
 
@@ -3980,14 +3983,17 @@ ORDER BY 1, 3 DESC;
 
 ## 3.1 Core Principle — 3-Dimensional Page Definition
 
-> **Rule:** A page without ALL THREE dimensions defined is considered **structurally incomplete** และไม่ควร publish จนกว่าจะกรอกครบ
+> **Rule:** A page without ALL THREE dimensions defined is considered **structurally incomplete** และไม่ควร publish จนกว่าจะกรอกครบ *(rewritten 2026-08-23 — `layer` column does not exist; see the reconciliation report)*
 
 ```
 Every page must answer 3 questions:
 
-1. WHAT TYPE OF CONTENT?  → LAYER (1-7)
+1. WHAT TYPE OF CONTENT?  → PAGE_CATEGORY (was LAYER 1-7 — approximate, see §3.2 mapping)
    = Knowledge depth + content nature
-   = Authority/Money/Product/Concern/Knowledge/Protocol/Evidence
+   = home/about/doctor_profile/contact/branch_landing (was L1 Authority)
+     service_page + procedure_pillar (L2), technology_page (L3),
+     condition_pillar (L4), knowledge_article (L5), evidence_case (L7)
+   = 🔴 L6 Protocol has no page_category value — UNIMPLEMENTABLE as written, see mapping note
 
 2. HOW IMPORTANT?         → TIER (A/B/C/D)
    = Authority weight + revenue contribution
@@ -4002,8 +4008,9 @@ Every page must answer 3 questions:
 
 ```sql
 -- Soft enforcement (warning only) — Q8 decision
+-- rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
 structurally_complete BOOLEAN GENERATED ALWAYS AS (
-  layer IS NOT NULL 
+  coalesce(page_category, page_type) IS NOT NULL   -- was: layer IS NOT NULL
   AND node_tier IS NOT NULL 
   AND funnel_stage IS NOT NULL
 ) STORED;
@@ -4138,16 +4145,22 @@ IF confidence_score > 0.3 THEN flag_as REVIEW;
 ### Layer Connection Rules (Cannibalization Shield + Authority Flow)
 
 ```yaml
+# rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
 cannibalization_shield:
-  - Layer 4 (Concern) describes patient PROBLEMS
-  - Layer 5 (Knowledge) provides clinical UNDERSTANDING
-  - Layer 6 (Protocol) provides solution SEQUENCING
-  - DO NOT allow keyword overlap between L4/L5/L6
+  - page_category='condition_pillar' describes patient PROBLEMS
+  - page_category='knowledge_article' provides clinical UNDERSTANDING
+  - 🔴 UNIMPLEMENTABLE as written — see mapping note: "Protocol provides solution SEQUENCING"
+    has no predicate; protocol pages are stored as service_page or knowledge_article
+  - DO NOT allow keyword overlap between condition_pillar / knowledge_article
+    (the third arm, Protocol, cannot be detected — check content, not columns)
   - If overlap detected → flag as REVIEW (Q8 soft enforce)
 
 authority_flow_rules:
-  - Layer 3 (Tech) MUST connect to Layer 6 (Protocol)
-  - Layer 7 (Evidence) MUST link back to Layer 2 (Money) or Layer 6 (Protocol)
+  - 🔴 UNIMPLEMENTABLE as written — see mapping note: "technology_page MUST connect to Protocol"
+    cannot run, because Protocol has no column to select on
+  - 🔴 UNIMPLEMENTABLE as written — see mapping note: "evidence_case MUST link back to Money or
+    Protocol" is only half-checkable — the Money half is service_page/procedure_pillar, the
+    Protocol half has no predicate
   - Authority gravity: D → C → B → A (always upward)
   - PageRank damping factor: 0.85 per hop = 15% authority loss per click
 ```
@@ -4165,6 +4178,24 @@ authority_flow_rules:
 | L7 Evidence | Case Studies | MedicalStudy, CaseReport, Review | High (proof) |
 
 → ทีม onboarding ใหม่จาก consumer SEO อ่านปุ๊บเข้าใจ + เห็น healthcare specialization
+
+### Layer → Live Column Mapping *(rewritten 2026-08-23 — `layer` column does not exist; see the reconciliation report)*
+
+> `seo_website_page_master.layer` was never built. Every rule in this document that used to key on it now keys on **`coalesce(page_category, page_type)`** — `page_category` is still NULL on brands whose backfill has not landed, and `page_type` carries the same vocabulary one notch coarser (its generic `'supporting'` / `'pillar'` buckets belong to no layer). `sitemap_section` is a **zone**, not a layer: use it only when the rule is genuinely about which part of the site a page lives in.
+
+| Layer | Live predicate on `seo_website_page_master` | Fit |
+|-------|--------------------------------------------|-----|
+| L1 Authority | `coalesce(page_category, page_type) IN ('home','about','doctor_profile','contact','branch_landing')` | approximate — contact/branch rows are navigational in the data, so L1 no longer reads as a pure E-E-A-T signal |
+| L2 Money | `coalesce(page_category, page_type) IN ('service_page','procedure_pillar')` | approximate — also absorbs every L6 Protocol page; add `('local_landing','local_programmatic','local_service','local_service_page')` only when localized money pages are in scope |
+| L3 Product | `coalesce(page_category, page_type) = 'technology_page'` | approximate — category and `sitemap_section` disagree on ~26% of device pages; whichever you pick, the rest land in the wrong bucket |
+| L4 Concern | `coalesce(page_category, page_type) = 'condition_pillar'` | clean — do NOT substitute `sitemap_section='5'`, that zone also holds service, supporting and technology pages |
+| L5 Knowledge | `coalesce(page_category, page_type) = 'knowledge_article'` | approximate — also swallows every protocol page written as an article |
+| L6 Protocol | 🔴 **UNIMPLEMENTABLE as written — see mapping note** — no value of `page_category`, `page_type`, `node_tier` or `sitemap_section` isolates protocol pages; they sit as `service_page` in section 3 or `knowledge_article` in section 6. Nearest runnable filter leaves these columns entirely: `schema_markup_type LIKE '%HowTo%' OR schema_markup_type LIKE '%TreatmentPlan%'`, which returns zero rows on two of three brands. | none |
+| L7 Evidence | `coalesce(page_category, page_type) = 'evidence_case'` | clean — `sitemap_section='7'` corroborates it to within 4 rows |
+
+**What goes with L6:** the authority-flow rules (L3→L6, L7→L2/L6), the L4/L5/L6 three-way cannibalization shield (only the L4-vs-L5 half survives, as `condition_pillar` vs `knowledge_article`), and the per-layer word-count floors in §9.8 that set a different minimum for protocol pages than for money pages. Every rule that keyed on L6 is marked 🔴 where it appears; it has to become a content check or be dropped — it cannot become a column predicate.
+
+**Two-axis loss:** §4.3 gives each section a primary AND a secondary layer, but a page has exactly one `page_category`. Where the two disagree (technology_page rows in section 3, service_page rows in section 5, knowledge_article rows in section 3) one reading is lost. `node_tier` carries no layer information at all and can never stand in.
 
 ---
 
@@ -4241,7 +4272,9 @@ Bottom (Conversion)     — ready to book/buy
 Retention (Aftercare)   — post-treatment, follow-up, loyalty
   ├─ Layer fit: L6 Protocol (aftercare), L7 Evidence
   ├─ Intent: support, reinforcement
-  └─ Required: Must link back to L2 or L6
+  └─ Required: Must link back to service_page/procedure_pillar (was L2), or to a protocol page —
+     🔴 UNIMPLEMENTABLE as written — see mapping note: the protocol half has no column predicate
+     (rewritten 2026-08-23 — `layer` column does not exist; see the reconciliation report)
 ```
 
 ### Industry verification
@@ -4330,18 +4363,22 @@ enforcement:
 rule: "Before approving page structure, determine appropriate schema type"
 enforcement: Soft (Q8 confirmed)
 mechanism:
-  - Validation warning if schema_type doesn't match Layer expectation
+  # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
+  - Validation warning if schema_type doesn't match the page_category expectation (approximate — see §3.2 mapping)
   - Flag as REVIEW (not blocked)
-  - Reference: seo_layer_schema_mapping table
+  - Reference: seo_layer_schema_mapping table (now keyed on page_category, not layer) 🔴 **ตารางนี้ไม่มีอยู่จริง** (ตรวจ 2026-08-23: `seo_layer_schema_mapping` ไม่อยู่ใน schema) — กฎ Layer→Schema จึงไม่เคยถูกบังคับใช้เลย ต้องสร้างตารางก่อนหรือย้ายกฎไปอยู่ในโค้ดเกต
 
-layer_schema_examples:
-  L1: [Person, Physician, MedicalOrganization]
-  L2: [Service, MedicalProcedure, MedicalTherapy]
-  L3: [MedicalDevice, DiagnosticProcedure, MedicalTest]
-  L4: [MedicalCondition, Symptom]                   # NOT Article
-  L5: [Article, MedicalScholarlyArticle]            # NOT MedicalCondition
-  L6: [MedicalTherapy, TreatmentPlan, HowTo]
-  L7: [MedicalStudy, CaseReport, Review]
+page_category_schema_examples:
+  home | about | doctor_profile | contact | branch_landing:
+                       [Person, Physician, MedicalOrganization]
+  service_page | procedure_pillar:
+                       [Service, MedicalProcedure, MedicalTherapy]
+  technology_page:     [MedicalDevice, DiagnosticProcedure, MedicalTest]
+  condition_pillar:    [MedicalCondition, Symptom]           # NOT Article
+  knowledge_article:   [Article, MedicalScholarlyArticle]    # NOT MedicalCondition
+  evidence_case:       [MedicalStudy, CaseReport, Review]
+  # 🔴 UNIMPLEMENTABLE as written — see mapping note: the L6 Protocol row
+  #    [MedicalTherapy, TreatmentPlan, HowTo] has no page_category to key on
 
 note: "If schema cannot be determined, page structure is NOT ready"
 ```
@@ -4352,7 +4389,8 @@ note: "If schema cannot be determined, page structure is NOT ready"
 
 ```yaml
 AI_may:
-  - Classify Layer (1-7) — auto-suggest with confidence_score
+  # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
+  - Classify page_category (was Layer 1-7) — auto-suggest with confidence_score
   - Suggest Tier (B/C/D)
   - Assign Funnel Stage
   - Suggest Link Role
@@ -4378,14 +4416,15 @@ confidence_threshold:
 
 ```yaml
 page_analysis_required_fields:
-  - primary_layer: integer (1-7)
-  - layer_name: string (e.g., "Authority Pages")
+  # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
+  - page_category: string (was primary_layer 1-7 — approximate, see §3.2 mapping)
+  - layer_name: string (e.g., "Authority Pages") — descriptive label only, no column behind it
   - suggested_tier: string (A/B/C/D)
   - funnel_stage: string (top/mid/bottom/retention)
   - suggested_link_role: string (Structural/Authority/Contextual/Conversion)
   - authority_flow_direction: string (upward/downward/balanced)
   - cannibalization_risk: string (low/medium/high) + with_pages: list
-  - schema_type: string (must match Layer mapping)
+  - schema_type: string (must match the page_category mapping in §3.2)
   - confidence_score: float (0-1)
   - structurally_complete: boolean
   - flag: optional 'REVIEW' if confidence > 0.3
@@ -4423,7 +4462,7 @@ Tier 1 — Planning & Control (Notion ↔ Supabase mirror):
   Existing 4:
     1. brands                                    (15 rows)
     2. seo_entity_graph                         (400-500 rows (typical mid-size))
-    3. seo_website_page_master                (1,000-1,500 rows (typical mid-size)) — adds: layer, branch_id, computed
+    3. seo_website_page_master                (1,000-1,500 rows (typical mid-size)) — adds: page_category (was layer), branch_id, computed
     4. seo_x_ads_keywords_contextual_master  (10,000-15,000 rows (typical)) — adds: classification fields
   
   NEW 7:
@@ -4436,7 +4475,7 @@ Tier 1 — Planning & Control (Notion ↔ Supabase mirror):
    11. seo_page_templates                    ⭐ programmatic Type C
   
   Reference 1:
-   12. seo_layer_schema_mapping              ⭐ Layer → Schema.org validation
+   12. seo_layer_schema_mapping              ⭐ page_category → Schema.org validation *(rewritten 2026-08-23 — `layer` column does not exist; see the reconciliation report)* 🔴 **ตารางนี้ไม่มีอยู่จริง** (ตรวจ 2026-08-23: `seo_layer_schema_mapping` ไม่อยู่ใน schema) — กฎ Layer→Schema จึงไม่เคยถูกบังคับใช้เลย ต้องสร้างตารางก่อนหรือย้ายกฎไปอยู่ในโค้ดเกต
 ```
 
 ### All Q1-Q10 Decisions (locked in v0.2)
@@ -4448,6 +4487,8 @@ schema_decisions:
   Q3_notion_db_order:     branches → authors → topic_cluster → doctor_assignments → citations → templates
   Q4_junction_tables:     doctor_assignments = junction DB, page_citations = simple relation
   Q5_layer_column:        Day 1 NULLABLE + AI auto-suggest + 30-day manual review
+                          # rewritten 2026-08-23 — the layer column was never built; the decision
+                          # now applies to page_category (see §3.2 mapping)
 
 framework_decisions:
   Q6_depth_control:       Hybrid — strict 3 for Tier A/B/C money, flex 4-6 for Tier D supporting
@@ -4550,20 +4591,25 @@ outputs:
 ### Phase 4 — Page-Level Tagging (Day 3-5)
 
 ```yaml
-goal: "ทุกหน้าได้ Layer + Tier + Funnel + Page Type ครบ"
+goal: "ทุกหน้าได้ page_category + Tier + Funnel + Page Type ครบ"
+# rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
 
 per_page_required:
-  - layer:                   1-7
+  - page_category:           home | about | doctor_profile | contact | branch_landing |
+                             service_page | procedure_pillar | technology_page |
+                             condition_pillar | knowledge_article | evidence_case
+                             (was layer 1-7 — approximate, see §3.2 mapping;
+                              🔴 protocol pages have no value of their own — UNIMPLEMENTABLE as written)
   - node_tier:               A | B | C | D
   - funnel_stage:            top | mid | bottom | retention
   - page_branch_relationship: A (brand_wide) | B (branch_landing) | C (local_programmatic) | D (brand_wide_tagged)
-  - schema_org_type:         match Layer expectation
+  - schema_org_type:         match page_category expectation
   - cluster_id:              link to seo_topic_cluster_master
   - sitemap_node_id:         hierarchical numbered ID
 
 validation:
   IF NOT structurally_complete THEN flag REVIEW
-  IF schema_type NOT IN seo_layer_schema_mapping[layer].required THEN warn
+  IF schema_type NOT IN seo_layer_schema_mapping[page_category].required THEN warn 🔴 **ตารางนี้ไม่มีอยู่จริง** (ตรวจ 2026-08-23: `seo_layer_schema_mapping` ไม่อยู่ใน schema) — กฎ Layer→Schema จึงไม่เคยถูกบังคับใช้เลย ต้องสร้างตารางก่อนหรือย้ายกฎไปอยู่ในโค้ดเกต
 ```
 
 ### Phase 4.5 — Sitemap Quality Gates (Day 4-5) 🆕 v3.14
@@ -4595,7 +4641,9 @@ gates_in_order:
     process:
       - Score 4 criteria: predicted volume, search volume, topic distinctness, intent distinctness
       - Decision: standalone | collapse | merge | exception
-      - HARD RULE: L4/L5 pillars NEVER thin (always standalone)
+      - HARD RULE: condition_pillar + knowledge_article NEVER thin (always standalone)
+        # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
+        # (was "L4/L5 pillars"; knowledge_article is approximate — see §3.2 mapping)
       - Document any exception (legal/contact/intent_capture/glossary/programmatic)
     output_column:
       - page_master.viability_assessment (jsonb)
@@ -4631,10 +4679,13 @@ audit_checklist:
   - Tier A pages within 3 clicks
   - Tier B pages within 4 clicks
   - Pillar-Cluster ratio: 8-25 supporting per pillar
-  - Cross-Layer rules:
-    - L3 (Tech) connects to L6 (Protocol)? ✓
-    - L7 (Evidence) links back to L2 or L6? ✓
-  - Cannibalization shield: L4 vs L5 keyword overlap? ✗
+  # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
+  - Cross-category rules:
+    - 🔴 UNIMPLEMENTABLE as written — see mapping note: technology_page → Protocol has no
+      Protocol predicate to check against
+    - 🔴 UNIMPLEMENTABLE as written — see mapping note: evidence_case → service_page/
+      procedure_pillar is checkable, the "or Protocol" half is not
+  - Cannibalization shield: condition_pillar vs knowledge_article keyword overlap? ✗
   - Cluster health: pillar_count + supporting_count balanced?
 
 fix_priority:
@@ -4647,14 +4698,15 @@ fix_priority:
 
 ## 4.2 Standard 8 Sections (Gold Ideology)
 
-> **Rule:** 8 sections เป็น **gold ideology standard** — ทุก vertical เริ่มจากนี่. ปรับได้ (skip/rename) แต่ต้องสอดคล้องกับ Layer mapping. Section ไหน skip ต้อง justify.
+> **Rule:** 8 sections เป็น **gold ideology standard** — ทุก vertical เริ่มจากนี่. ปรับได้ (skip/rename) แต่ต้องสอดคล้องกับ page_category mapping (§3.2). Section ไหน skip ต้อง justify. *(rewritten 2026-08-23 — `layer` column does not exist; see the reconciliation report)*
 
 ### Section 1 — Home
 
 ```
 URL pattern:    /
 Sitemap node:   1
-Primary Layer:  L1 (Authority)
+Primary category: home                       # was "Primary Layer: L1 (Authority)"
+                                             # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
 Tier:           A (Core Revenue Hub)
 Funnel:         Top (entry point)
 
@@ -4687,7 +4739,8 @@ Universal: ✅ ทุก vertical
 ```
 URL pattern:    /about-us, /our-story, /why-us
 Sitemap node:   2.x
-Primary Layer:  L1 (Authority)
+Primary category: about, doctor_profile       # was "Primary Layer: L1 (Authority)"
+                                              # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
 Tier:           B (Strategic Hub)
 Funnel:         Mid (consideration phase)
 
@@ -4721,7 +4774,11 @@ URL pattern (single_specialty):     /services/{service-slug}
 URL pattern (multi_specialty):      /services/{specialty}/{service-slug}
 URL pattern (hospital):             /departments/{dept}/services/{service-slug}
 Sitemap node:   3.x.y.z
-Primary Layer:  L2 (Money) + L6 (Protocol) + L3 (Product)
+Primary category: service_page + procedure_pillar + technology_page
+                  # was "L2 (Money) + L6 (Protocol) + L3 (Product)"
+                  # 🔴 UNIMPLEMENTABLE as written — see mapping note: the L6 Protocol part of this
+                  #    section has no page_category of its own; those pages sit here as service_page
+                  # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
 Tier:           A-C (revenue-driving)
 Funnel:         Mid → Bottom
 
@@ -4764,7 +4821,9 @@ Universal: ✅ healthcare, ❌ media skip
 ```
 URL pattern:    /technology/{device-slug}
 Sitemap node:   4.x
-Primary Layer:  L3 (Product)
+Primary category: technology_page              # was "Primary Layer: L3 (Product)"; approximate —
+                                               # category and sitemap_section disagree on ~26% of these rows
+                                               # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
 Tier:           C-D
 Funnel:         Mid (evaluation)
 
@@ -4786,10 +4845,12 @@ Schema markup:
   - DiagnosticProcedure
   - MedicalTest
 
-Connection rule (Layer 3 mandatory):
+Connection rule (technology_page mandatory):
   Each Technology page MUST link to:
-  - At least 1 Service that uses it (Section 3)
-  - At least 1 Protocol that explains it (Section 6)
+  - At least 1 Service that uses it (page_category='service_page', Section 3)
+  - 🔴 UNIMPLEMENTABLE as written — see mapping note: "at least 1 Protocol that explains it"
+    cannot be checked, because no column identifies a protocol page
+  # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
 
 Universal: ✅ healthcare with devices, ❌ media skip, ⚠️ wellness optional
 ```
@@ -4800,7 +4861,10 @@ Universal: ✅ healthcare with devices, ❌ media skip, ⚠️ wellness optional
 URL pattern:    /by-concern/{concern-slug}
                 /symptoms/{symptom-slug}
 Sitemap node:   5.x.y
-Primary Layer:  L4 (Concern Pillars)
+Primary category: condition_pillar             # was "Primary Layer: L4 (Concern Pillars)"
+                                               # do NOT read this zone as the category — section 5 also
+                                               # holds service_page, supporting and technology_page rows
+                                               # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
 Tier:           B (Strategic Pillar)
 Funnel:         Top (problem-aware)
 
@@ -4824,8 +4888,9 @@ Schema markup:
   - MedicalRiskFactor
 
 ⚠️ Cannibalization Shield:
-  L4 (Concern) describes patient PROBLEMS — patient perspective
-  L5 (Knowledge) provides clinical UNDERSTANDING — medical perspective
+  # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
+  condition_pillar describes patient PROBLEMS — patient perspective
+  knowledge_article provides clinical UNDERSTANDING — medical perspective
   DO NOT use Article schema in Section 5 (that's Section 6's territory)
 
 Universal: ✅ healthcare, ⚠️ media (use as Topic Pillar)
@@ -4837,7 +4902,9 @@ Universal: ✅ healthcare, ⚠️ media (use as Topic Pillar)
 URL pattern:    /knowledge/{article-slug}
                 /clinical-guide/{guide-slug}
 Sitemap node:   6.x.y
-Primary Layer:  L5 (Knowledge Hub)
+Primary category: knowledge_article            # was "Primary Layer: L5 (Knowledge Hub)"; approximate —
+                                               # this bucket also swallows protocol/aftercare articles
+                                               # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
 Tier:           B-D
 Funnel:         Top (informational)
 
@@ -4859,7 +4926,9 @@ Sub-pages typical:
 Schema markup:
   - Article (primary)
   - MedicalScholarlyArticle (cited content)
-  - HowTo (if procedural — but prefer Section under L6)
+  - HowTo (if procedural — 🔴 the old "prefer Section under L6" routing is
+    UNIMPLEMENTABLE as written — see mapping note: there is no protocol category to route to,
+    so these pages stay here as knowledge_article)
 
 ⚠️ Cannibalization Shield (vs Section 5):
   Section 5 = "I have snoring problem" (patient view)
@@ -4876,7 +4945,8 @@ URL pattern:    /case-studies/{case-id}
                 /patient-stories/{story-id}
                 /testimonials
 Sitemap node:   7.x
-Primary Layer:  L7 (Evidence Pages)
+Primary category: evidence_case                # was "Primary Layer: L7 (Evidence Pages)"
+                                               # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
 Tier:           C-D
 Funnel:         Mid → Bottom (proof)
 
@@ -4899,9 +4969,11 @@ Schema markup:
   - Review (for testimonials)
 
 Connection rule (mandatory):
+  # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
   Each Case Study MUST link back to:
-  - L2 Money page (Service used) OR
-  - L6 Protocol page (Treatment pathway)
+  - a service_page / procedure_pillar (Service used) OR
+  - 🔴 a Protocol page (Treatment pathway) — UNIMPLEMENTABLE as written — see mapping note:
+    the second arm cannot be verified, so only the service link is enforceable
 
 Universal: ✅ healthcare (DOMINANT in aesthetic), ⚠️ media (reporter cases)
 ```
@@ -4911,7 +4983,9 @@ Universal: ✅ healthcare (DOMINANT in aesthetic), ⚠️ media (reporter cases)
 ```
 URL pattern:    /contact, /branches, /branches/{branch-slug}
 Sitemap node:   8.x
-Primary Layer:  L1 (Authority — branch profile)
+Primary category: contact, branch_landing      # was "Primary Layer: L1 (Authority — branch profile)";
+                                               # in the data these rows are navigational, NOT an E-E-A-T signal
+                                               # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
 Tier:           B-C
 Funnel:         Bottom (action)
 
@@ -4941,22 +5015,24 @@ Universal: ✅ healthcare with branches, ⚠️ media (single contact)
 
 ---
 
-## 4.3 Section ↔ Layer Mapping Matrix
+## 4.3 Section ↔ Page Category Mapping Matrix *(rewritten 2026-08-23 — `layer` column does not exist; see the reconciliation report)*
 
-> **Rule:** Section ใดควรมี Layer ใดเป็น primary, ใดเป็น secondary, ใดที่ห้ามมี (cannibalization shield)
+> **Rule:** Section ใดควรมี page_category ใดเป็น primary, ใดเป็น secondary, ใดที่ห้ามมี (cannibalization shield)
+>
+> **Two-axis caveat (approximate):** a page has exactly one `page_category` but the matrix wants a primary AND a secondary reading, so wherever category and `sitemap_section` disagree in the data one of the two readings is lost. Judge content type by `page_category`; use `sitemap_section` only for zone questions.
 
 ### Primary Mapping Table
 
-| Section | Primary Layer | Secondary Layer | Forbidden Layer | Notes |
-|---------|---------------|-----------------|-----------------|-------|
-| **1. Home** | L1 Authority | L2, L4 (teasers) | — | Aggregator; teases all sections |
-| **2. Our Uniqueness** | L1 Authority | — | L4, L5 | About + Doctors |
-| **3. Services** | L2 Money | L3 Product, L6 Protocol | L4, L5, L7 | Money pages cluster |
-| **4. Technology** | L3 Product | L6 Protocol (linked) | L4, L5, L7 | Devices/equipment |
-| **5. By Concern** | L4 Concern | L7 Evidence (linked) | **L5** ⚠️ | Patient-perspective |
-| **6. Knowledge** | L5 Knowledge | L6 Protocol | **L4** ⚠️ | Clinical-perspective |
-| **7. Case Studies** | L7 Evidence | — | L4, L5 | Outcomes/stories |
-| **8. Contact/Branches** | L1 Authority (branches) | — | L4, L5, L6, L7 | Local SEO |
+| Section | Primary category | Secondary category | Forbidden category | Notes |
+|---------|------------------|--------------------|--------------------|-------|
+| **1. Home** | `home` | service_page, condition_pillar (teasers) | — | Aggregator; teases all sections |
+| **2. Our Uniqueness** | `about`, `doctor_profile` | — | condition_pillar, knowledge_article | About + Doctors |
+| **3. Services** | `service_page` | technology_page; 🔴 Protocol — **UNIMPLEMENTABLE as written — see mapping note** (no predicate) | condition_pillar, knowledge_article, evidence_case | Money pages cluster |
+| **4. Technology** | `technology_page` | 🔴 Protocol (linked) — **UNIMPLEMENTABLE as written — see mapping note** | condition_pillar, knowledge_article, evidence_case | Devices/equipment |
+| **5. By Concern** | `condition_pillar` | evidence_case (linked) | **knowledge_article** ⚠️ | Patient-perspective |
+| **6. Knowledge** | `knowledge_article` | 🔴 Protocol — **UNIMPLEMENTABLE as written — see mapping note**; in practice these rows already sit inside knowledge_article | **condition_pillar** ⚠️ | Clinical-perspective |
+| **7. Case Studies** | `evidence_case` | — | condition_pillar, knowledge_article | Outcomes/stories |
+| **8. Contact/Branches** | `contact`, `branch_landing` | — | condition_pillar, knowledge_article, evidence_case | Local SEO |
 
 ### Cannibalization Shield Rules (Section 5 vs Section 6)
 
@@ -4972,7 +5048,8 @@ section_5_by_concern:
     - "I have sleep apnea"
   schema_required: MedicalCondition, Symptom
   schema_forbidden: Article, HowTo
-  layer: L4 (Concern Pillars)
+  page_category: condition_pillar   # was "layer: L4"
+                                    # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
 
 section_6_knowledge:
   perspective: CLINICAL (objective)
@@ -4983,7 +5060,8 @@ section_6_knowledge:
     - "OSA diagnostic criteria"
   schema_required: Article, MedicalScholarlyArticle
   schema_forbidden: MedicalCondition (that's Section 5)
-  layer: L5 (Knowledge Hub)
+  page_category: knowledge_article  # was "layer: L5" — approximate, see §3.2 mapping
+                                    # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
 
 detection_rule:
   IF page targets keyword from BOTH patient + clinical perspective:
@@ -4995,10 +5073,13 @@ detection_rule:
 
 ```yaml
 mandatory_connections:
-  - Section 4 (Tech/L3) → Section 3 (Service/L2)
-  - Section 4 (Tech/L3) → Section 6 (Protocol/L6) 
-  - Section 7 (Cases/L7) → Section 3 (Service/L2) OR Section 6 (Protocol/L6)
-  - Section 5 (Concern/L4) → Section 3 (Service/L2) [solution path]
+  # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
+  - technology_page → service_page
+  - 🔴 UNIMPLEMENTABLE as written — see mapping note: technology_page → Protocol (Section 6)
+    has no Protocol predicate on the target side
+  - evidence_case → service_page (checkable) OR Protocol
+    🔴 the "OR Protocol" half is UNIMPLEMENTABLE as written — see mapping note
+  - condition_pillar → service_page [solution path]
 
 optional_connections:
   - Section 6 (Knowledge) → Section 5 (Concern) [from clinical to patient view]
@@ -5113,7 +5194,10 @@ content_rule:
   - Pricing/availability mentions: "available at all branches" or list
 
 typical_share: ~70% of pages
-applies_to_layers: 1, 2, 3, 4, 5, 6
+# rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
+applies_to_categories: home, about, doctor_profile, service_page, procedure_pillar,
+                       technology_page, condition_pillar, knowledge_article
+                       # was "layers 1, 2, 3, 4, 5, 6" — the 6 (Protocol) part has no predicate
 ```
 
 ### Type B — Branch Landing
@@ -5140,7 +5224,8 @@ content_rule:
   - Branch-specific contact form
 
 count_formula: = N branches
-applies_to_layers: 1 (Authority for branch as MedicalClinic entity)
+applies_to_categories: branch_landing   # was "layers: 1 (Authority for branch as MedicalClinic entity)"
+                                        # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
 ```
 
 ### Type C — Local Programmatic
@@ -5169,7 +5254,10 @@ content_rule:
 
 count_formula: = N branches × M services (selective by keyword volume)
 generation_trigger: "Only generate if {service} {location} keyword has search volume >= threshold"
-applies_to_layers: 2, 3 (Service + Tech localized)
+applies_to_categories: local_landing, local_programmatic, local_service, local_service_page
+                       # was "layers: 2, 3 (Service + Tech localized)" — these rows are NOT inside
+                       # the service_page/technology_page buckets; include them explicitly
+                       # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
 ```
 
 ### Type D — Brand-Wide Tagged
@@ -5195,7 +5283,8 @@ content_rule:
   - Filter mechanism on branch landing pages uses branch_tags
 
 typical_share: ~10% of pages (mostly doctors + case studies)
-applies_to_layers: 1 (doctors), 7 (case studies)
+applies_to_categories: doctor_profile, evidence_case   # was "layers: 1 (doctors), 7 (case studies)"
+                                                       # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
 ```
 
 ### Decision Tree (สำหรับสร้างหน้าใหม่)
@@ -5588,7 +5677,8 @@ required_per_specialty:
   hub_page:
     url: /services/{specialty-slug}/
     sitemap_node: 3.{N}
-    layer: 2 (Money — Hub)
+    page_category: procedure_pillar   # was "layer: 2 (Money — Hub)"
+                                      # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
     tier: B (Strategic Pillar)
     funnel: top-mid (entry to specialty)
     schema:
@@ -5607,7 +5697,8 @@ required_per_specialty:
   service_pages_under_hub:
     url: /services/{specialty-slug}/{service-slug}
     sitemap_node: 3.{N}.{M}
-    layer: 2 (Money — Spoke)
+    page_category: service_page       # was "layer: 2 (Money — Spoke)"
+                                      # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
     tier: C (Service)
     funnel: mid-bottom
     must_link_to: hub page (mandatory upward link)
@@ -5708,15 +5799,16 @@ deliverable:
 
 ```yaml
 morning:
-  - For each page: assign Layer (1-7)
+  # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
+  - For each page: assign page_category (was Layer 1-7 — approximate, see §3.2 mapping)
   - For each page: assign Tier (A/B/C/D)
   - For each page: assign Funnel (top/mid/bottom/retention)
   - For each page: assign Page Type (A/B/C/D)
-  - For each page: pick schema_org_type (must match Layer)
+  - For each page: pick schema_org_type (must match page_category)
 
 afternoon:
   - Validate: structurally_complete = true for all
-  - Validate: schema_type matches seo_layer_schema_mapping
+  - Validate: schema_type matches seo_layer_schema_mapping (keyed on page_category) 🔴 **ตารางนี้ไม่มีอยู่จริง** (ตรวจ 2026-08-23: `seo_layer_schema_mapping` ไม่อยู่ใน schema) — กฎ Layer→Schema จึงไม่เคยถูกบังคับใช้เลย ต้องสร้างตารางก่อนหรือย้ายกฎไปอยู่ในโค้ดเกต
   - Flag REVIEW where confidence < 0.7
   - Branch tagging: which pages are Type A/B/C/D
 
@@ -5769,7 +5861,8 @@ checkpoint_3_after_day_3:
 
 checkpoint_4_after_day_4:
   question: "All pages structurally complete?"
-  go_no_go: 100% pages have Layer + Tier + Funnel + Type ครบ
+  go_no_go: 100% pages have page_category + Tier + Funnel + Type ครบ
+            # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
 
 checkpoint_5_after_day_5:
   question: "No orphans, depth OK, no cannibalization?"
@@ -5798,7 +5891,8 @@ outputs:
     - current_url
     - current_traffic
     - current_rankings
-    - assigned_layer (proposed)
+    - assigned_page_category (proposed)   # was assigned_layer
+                                          # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
     - assigned_tier (proposed)
     - assigned_section (proposed)
     - migration_action (keep/rename/redirect/merge/delete)
@@ -5810,7 +5904,8 @@ outputs:
 process:
   for_each_existing_page:
     - Determine which of 8 sections it belongs to
-    - Assign Layer (1-7) using AI classification (System Instruction Section XII)
+    - Assign page_category using AI classification (System Instruction Section XII)
+      # was "Layer (1-7)" — rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
     - Assign Tier based on traffic + business value
     - Assign Funnel from intent analysis
     - Determine Page Type (A/B/C/D)
@@ -5844,7 +5939,8 @@ priority_order:
     - Programmatic candidates
 
 actions_per_priority:
-  P0: keep URL, only re-tag (Layer/Tier/Funnel) — NO URL change
+  P0: keep URL, only re-tag (page_category/Tier/Funnel) — NO URL change
+      # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
   P1: keep URL preferred, restructure only if necessary with 301
   P2: free to restructure, batch 301 redirects
 ```
@@ -5873,10 +5969,11 @@ rollback_trigger:
 
 ```sql
 -- Run this to identify migration candidates
+-- rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
 SELECT 
   page_fingerprint,
   full_url,
-  layer,
+  coalesce(page_category, page_type) AS page_category,   -- was: layer
   node_tier,
   sitemap_node_id,
   authority_weight,
@@ -5884,7 +5981,9 @@ SELECT
   traffic_30d,
   -- Action recommendation
   CASE
-    WHEN layer IS NULL THEN 'CLASSIFY_REQUIRED'
+    WHEN coalesce(page_category, page_type) IS NULL
+      OR coalesce(page_category, page_type) IN ('supporting','pillar')  -- tier words, not category words
+      THEN 'CLASSIFY_REQUIRED'
     WHEN sitemap_node_id IS NULL THEN 'ASSIGN_NODE_ID'
     WHEN crawl_depth > tier_max_depth THEN 'RESTRUCTURE_DEPTH'
     WHEN structurally_complete = false THEN 'COMPLETE_TAGGING'
@@ -6071,7 +6170,7 @@ FROM metrics;
 ```
 ✅ Methodology      — 5-phase top-down design workflow
 ✅ 8 Sections       — Gold ideology with vertical-specific activation
-✅ Section ↔ Layer  — Mapping matrix + cannibalization shield
+✅ Section ↔ Category — Mapping matrix + cannibalization shield
 ✅ Numbered IDs     — {S}.{C}.{D}.{L} hierarchical convention
 ✅ Page Types       — 4 types (A/B/C/D) — branch relationship
 ✅ Vertical Variations — 8 healthcare formats + media + other
@@ -6674,12 +6773,15 @@ For each page in the sitemap candidate, score 4 dimensions:
 
 ```yaml
 criterion_1_predicted_content_volume:
-  question: "Can this topic sustain min word count for its layer?"
+  # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
+  question: "Can this topic sustain min word count for its page_category?"
   source: Bible §9.8 (Page Content Length Standards)
   scoring:
-    pass: predicted ≥ layer minimum
+    pass: predicted ≥ page_category minimum
     warn: predicted 70-100% of minimum
     fail: predicted < 70% of minimum
+  note: "🔴 protocol / aftercare pages have no floor of their own — UNIMPLEMENTABLE as written,
+         see mapping note; they inherit whichever bucket they were filed under"
 
 criterion_2_search_volume:
   question: "Is there real search demand for this topic?"
@@ -6753,7 +6855,7 @@ exception_5_programmatic:
   required: ["unique sections per instance", "LocalBusiness + Service schema"]
 ```
 
-**HARD RULE:** Pillars (L4 + L5) **NEVER allowed thin** — these are SEO authority pages. No exception applies.
+**HARD RULE:** Pillars (`page_category IN ('condition_pillar','knowledge_article')`) **NEVER allowed thin** — these are SEO authority pages. No exception applies. *(rewritten 2026-08-23 — `layer` column does not exist; see the reconciliation report)*
 
 ### 4.14.5 Output
 
@@ -6802,11 +6904,12 @@ case_3_legal:
   decision: STANDALONE — PDPA compliance + trust signal
 
 case_4_pillar_must_be_long:
-  page: "Sleep Apnea Complete Guide" (L4 pillar)
+  # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
+  page: "Sleep Apnea Complete Guide" (page_category='condition_pillar')
   predicted: 1,500 words
-  layer_minimum: 2,500 (per §9.8)
+  category_minimum: 2,500 (per §9.8)
   decision: REWORK — content team must expand to 4,000+ words
-  rationale: "L4 pillars have NO exceptions"
+  rationale: "condition_pillar has NO exceptions"
 ```
 
 ### 4.14.7 Cross-References
@@ -7270,7 +7373,8 @@ CREATE INDEX idx_edge_brand_scope
 
 ```
 หัวใจของระบบ — page_master เป็นตารางที่ทุกอย่างเชื่อมโยงไปหา:
-  - Layer 1-7 (Bible Part 3) คือ vertical axis ของ Neural Authority
+  - page_category (Bible Part 3, was Layer 1-7) คือ vertical axis ของ Neural Authority
+    # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
   - Tier A-D (crawl depth)
   - Funnel stage (awareness/consideration/decision/retention)
   - Page-Branch relationship 4 patterns (Bible Part 4.5)
@@ -7281,10 +7385,11 @@ CREATE INDEX idx_edge_brand_scope
 
 ```yaml
 1. seo_website_page_master
-   role: ตารางหลักของทุก page — identity + layer/tier/funnel + branch + cluster + entity + SEO + editorial
+   role: ตารางหลักของทุก page — identity + page_category/tier/funnel + branch + cluster + entity + SEO + editorial
    columns: 60+ (largest table by columns)
    key_features:
-     - layer (1-7) ตาม Bible Part 3 Neural Authority
+     - page_category ตาม Bible Part 3 Neural Authority (was "layer (1-7)" — approximate, see §3.2 mapping)
+       # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
      - page_branch_relationship 4 patterns (Bible Part 4.5)
      - cross_brand sharing fields
      - multilingual translation tracking (WPML)
@@ -7320,7 +7425,16 @@ CREATE TABLE seo_website_page_master (
   status text,                                    -- 'draft'/'in_review'/'active'/'archived'/'redirected'
   
   -- Neural Authority Architecture (Bible Part 3) ⭐
-  layer integer,                                  -- 1-7 Knowledge Layer
+  -- rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
+  page_category text,                             -- content-type bucket; replaces the never-built
+                                                  -- `layer integer` 1-7. Values: home/about/
+                                                  -- doctor_profile/contact/branch_landing/service_page/
+                                                  -- procedure_pillar/technology_page/condition_pillar/
+                                                  -- knowledge_article/evidence_case/local_*
+                                                  -- 🔴 no value for L6 Protocol — UNIMPLEMENTABLE as
+                                                  --    written, see mapping note
+                                                  -- NULL until backfill lands → read via
+                                                  --    coalesce(page_category, page_type)
   node_tier text,                                 -- A/B/C/D
   funnel_stage text,                              -- awareness/consideration/decision/retention
   page_intent_type text,
@@ -7380,7 +7494,10 @@ CREATE TABLE seo_website_page_master (
   updated_at timestamptz DEFAULT now(),
   notion_synced_at timestamptz,
   
-  CONSTRAINT valid_layer CHECK (layer BETWEEN 1 AND 7),
+  -- rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
+  -- (was: CONSTRAINT valid_layer CHECK (layer BETWEEN 1 AND 7) — never shipped.
+  --  page_category is NOT constrained: its vocabulary is still open while backfill runs,
+  --  and 'supporting'/'pillar' rows inherited from page_type belong to no category yet.)
   CONSTRAINT valid_tier CHECK (node_tier IN ('A','B','C','D')),
   CONSTRAINT valid_branch_relationship CHECK (
     page_branch_relationship IN ('brand_wide','branch_landing','local_programmatic','brand_wide_tagged')
@@ -7534,15 +7651,15 @@ migration_strategy:
    sync: S only
 ```
 
-### Targets per Layer (Bible Part 23.5)
+### Targets per Page Category (Bible Part 23.5) *(rewritten 2026-08-23 — `layer` column does not exist; see the reconciliation report)*
 
-CWV columns ใน `daily_logs` ต้องอ่านพร้อมกับ targets ของ Layer ที่ page นั้นอยู่:
+CWV columns ใน `daily_logs` ต้องอ่านพร้อมกับ targets ของ page_category ที่ page นั้นอยู่:
 
 ```yaml
-Layer_2_Money_Pages:        LCP ≤ 2.0s, INP ≤ 150ms, CLS ≤ 0.1
-Layer_4_Concern_Pillars:    LCP ≤ 2.0s, INP ≤ 150ms, CLS ≤ 0.05
-Layer_5_Knowledge_Hub:      LCP ≤ 2.5s, INP ≤ 200ms, CLS ≤ 0.1
-Layer_7_Evidence_Pages:     LCP ≤ 2.8s, INP ≤ 200ms, CLS ≤ 0.1
+service_page + procedure_pillar:  LCP ≤ 2.0s, INP ≤ 150ms, CLS ≤ 0.1
+condition_pillar:                 LCP ≤ 2.0s, INP ≤ 150ms, CLS ≤ 0.05
+knowledge_article:                LCP ≤ 2.5s, INP ≤ 200ms, CLS ≤ 0.1
+evidence_case:                    LCP ≤ 2.8s, INP ≤ 200ms, CLS ≤ 0.1
 ```
 
 → **Full schemas + all 130+ daily_logs columns** : ดู `Schema_Overview v1.0 Section 7`
@@ -7862,8 +7979,11 @@ existing_tables_updated:
   - seo_authors_reviewers + fhir_practitioner_id
 
 content_implications:
-  - Layer 6 Protocol pages can reference FHIR-backed clinical pathways
-  - Patient story pages (Layer 7) can derive from de-identified FHIR Encounter data
+  # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
+  - 🔴 Protocol pages can reference FHIR-backed clinical pathways — UNIMPLEMENTABLE as
+    written — see mapping note: no column selects protocol pages to apply this to
+  - Patient story pages (page_category='evidence_case') can derive from de-identified
+    FHIR Encounter data
 ```
 
 → See **Part 24 (Future Roadmap & Beyond)** for full activation plan
@@ -8171,13 +8291,15 @@ use_pattern_F:
   - When citing systematic reviews / meta-analyses (Tier 1)
   - When citing clinical guidelines (Tier 3)
   - When AI Citation rate optimization matters
-  - In Layer 4 Concern Pillars (high-stakes medical content)
-  - In Layer 5 Knowledge Hub (educational reference)
+  # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
+  - In page_category='condition_pillar' (high-stakes medical content)
+  - In page_category='knowledge_article' (educational reference)
 
 use_simpler_patterns_A_E:
   - When citing brand-specific data (Tier 6)
-  - In Layer 6 Protocol pages (more procedural)
-  - In Layer 7 Evidence pages (already case-data)
+  - 🔴 UNIMPLEMENTABLE as written — see mapping note: "in Protocol pages (more procedural)"
+    cannot be selected; those rows sit inside service_page / knowledge_article
+  - In page_category='evidence_case' (already case-data)
   - When reading flow demands brevity
 ```
 
@@ -8197,11 +8319,12 @@ use_simpler_patterns_A_E:
 
 ```yaml
 content_quality_gate_v3_1:
-  citable_density_per_page (Layer 4-5):
+  # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
+  citable_density_per_page (page_category IN ('condition_pillar','knowledge_article')):
     minimum: ≥ 5 (existing)
     elite_target: ≥ 7 with at least 2 Pattern F citables
   
-  evidence_level_distribution (Layer 4-5):
+  evidence_level_distribution (page_category IN ('condition_pillar','knowledge_article')):
     target: ≥ 30% citations from Tier 1-3 (systematic reviews + guidelines)
     minimum: ≥ 1 Tier 1-3 citation per pillar page
 ```
@@ -10885,25 +11008,30 @@ DON'T_pursue_AAA_blanket:
 
 ### 9.8.1 Standards Table
 
+*(rewritten 2026-08-23 — `layer` column does not exist; see the reconciliation report)*
+
 ```
-                              Min       Target     Max
-Layer  Page Type             Words      Words      Words     Notes
-─────────────────────────────────────────────────────────────────────
-L1     Home                  500        1,000      1,500     Brand intro, scannable
-L1     About                 800        1,500      2,500     Trust + founder story
-L2     Money/Service         800        1,500      2,500     Decision page
-L2     Service Hub           1,000      2,000      3,500     Sub-service overview
-L3     Center/Wellness Hub   1,500      2,500      4,000     Authority page
-L3     Tech Hub              1,500      2,500      4,000     Methodology authority
-L4     Concern Pillar        2,500      4,000      6,000     SEO pillar — exhaustive
-L4     Topic Pillar          2,500      4,000      6,000     Knowledge graph anchor
-L5     Knowledge Article     2,000      3,500      5,000     AI-citable, dense citations
-L5     Educational Guide     2,000      3,500      5,000     Long-form authority
-L6     Local Service         600        1,200      2,000     NAP + service per location
-L6     Branch Page           600        1,000      1,800     Location-specific
-L7     Case Study            1,500      2,500      4,000     Outcome + journey + proof
-L7     Testimonial Hub       1,000      1,800      3,000     Aggregate proof
+                                           Min       Target     Max
+page_category        Page Type            Words      Words      Words     Notes
+──────────────────────────────────────────────────────────────────────────────────
+home                 Home                  500        1,000      1,500     Brand intro, scannable
+about                About                 800        1,500      2,500     Trust + founder story
+service_page         Money/Service         800        1,500      2,500     Decision page
+procedure_pillar     Service Hub           1,000      2,000      3,500     Sub-service overview
+procedure_pillar     Center/Wellness Hub   1,500      2,500      4,000     Authority page
+technology_page      Tech Hub              1,500      2,500      4,000     Methodology authority
+condition_pillar     Concern Pillar        2,500      4,000      6,000     SEO pillar — exhaustive
+condition_pillar     Topic Pillar          2,500      4,000      6,000     Knowledge graph anchor
+knowledge_article    Knowledge Article     2,000      3,500      5,000     AI-citable, dense citations
+knowledge_article    Educational Guide     2,000      3,500      5,000     Long-form authority
+local_service*       Local Service         600        1,200      2,000     NAP + service per location
+branch_landing       Branch Page           600        1,000      1,800     Location-specific
+evidence_case        Case Study            1,500      2,500      4,000     Outcome + journey + proof
+evidence_case        Testimonial Hub       1,000      1,800      3,000     Aggregate proof
+🔴 (no category)     Protocol / Aftercare    —          —          —       UNIMPLEMENTABLE as written
 ```
+
+> **Three caveats on this rewrite.** (1) The old `L6` rows here were *Local Service* and *Branch Page*, **not** the L6 Protocol of §3.2 — a naming clash that predates this rewrite; they map to `local_*` and `branch_landing`. (2) 🔴 **UNIMPLEMENTABLE as written — see mapping note:** protocol / aftercare pages get no floor of their own, because no column identifies them; each inherits the floor of whichever bucket it was filed under (usually `service_page` 800 or `knowledge_article` 2,000). (3) `procedure_pillar` now carries two former rows with different floors (1,000 and 1,500) — when `page_category` is all you have, apply the higher one.
 
 ### 9.8.2 Definitions
 
@@ -10923,44 +11051,45 @@ max_practical:
   enforcement: "Soft signal — flag for review, may justify cluster opportunity"
 ```
 
-### 9.8.3 Per-Layer Rationale
+### 9.8.3 Per-Category Rationale *(rewritten 2026-08-23 — `layer` column does not exist; see the reconciliation report)*
 
 ```yaml
-L1_home:
+# keys renamed from L1..L7 to the page_category they resolve to (see §3.2 mapping)
+home:
   intent: "Brand orientation, primary nav"
   user_goal: "Quick scan, find what I need"
   long_kills_value: TRUE — homepages should be efficient
   AI_citation_factor: LOW (not a citable page)
 
-L2_money_service:
+service_page:
   intent: "Decision support — should I book this?"
   user_goal: "Price, process, doctor, trust"
   long_increases_value: PARTIALLY — depth signals expertise, but bloat hurts conversion
 
-L3_center_hub:
+procedure_pillar:   # + technology_page for the Tech Hub row
   intent: "Service collection authority"
   user_goal: "Overview + drill-down to specific service"
   long_increases_value: TRUE — hub authority requires comprehensive coverage
 
-L4_concern_pillar:
+condition_pillar:
   intent: "Authority on topic, exhaustive treatment"
   user_goal: "Find everything about this concern"
   long_increases_value: TRUE — depth = authority
   AI_citation_factor: HIGHEST — comprehensive sources preferred
 
-L5_knowledge_article:
+knowledge_article:
   intent: "Education + AI citation target"
   user_goal: "Learn deeply about specific topic"
   long_increases_value: TRUE — citation density requires word count budget
   AI_citation_factor: HIGHEST
 
-L6_local:
+local_service / branch_landing:   # the old "L6" here was Local/Branch, not L6 Protocol
   intent: "Find this branch, get directions, book"
   user_goal: "Action, not learning"
   long_kills_value: PARTIALLY — location content + NAP sufficient
   schema_compensates: TRUE — LocalBusiness markup carries semantic weight
 
-L7_evidence:
+evidence_case:
   intent: "Proof — outcomes, transformations"
   user_goal: "See real results, build trust"
   long_increases_value: PARTIALLY — case detail depth matters but bloat reduces emotional impact
@@ -11001,7 +11130,7 @@ exception_5_programmatic:
   rationale: "Template enforces minimum + per-location dynamic data"
 ```
 
-**HARD RULE:** L4 + L5 pillars NEVER below minimum — no exception applies. These are SEO authority pages.
+**HARD RULE:** `condition_pillar` + `knowledge_article` NEVER below minimum — no exception applies. These are SEO authority pages. *(rewritten 2026-08-23 — `layer` column does not exist; see the reconciliation report)*
 
 ### 9.8.5 Multilingual Adjustment
 
@@ -11009,7 +11138,8 @@ Standards baseline = Thai/English. Adjust by character density:
 
 ```yaml
 thai_chinese: subtract ~20% (denser per character)
-  example: L4 pillar Thai min = 2,500 × 0.8 = 2,000 words
+  example: condition_pillar Thai min = 2,500 × 0.8 = 2,000 words
+           # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
 
 japanese: ~equivalent (no adjustment)
 
@@ -11618,7 +11748,8 @@ sharable_at_global_level (brand_scope = ['*']):
   ✅ Reference data:
      - ICD-10 codes
      - Schema.org type mappings
-     - Standardized taxonomy terms (sitemap_section, layer, tier)
+     - Standardized taxonomy terms (sitemap_section, page_category, tier)
+       # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
   
   ✅ Authors/Reviewers:
      - Doctor working at multiple clinics
@@ -11963,7 +12094,8 @@ TIER 1 — MVP (Month 1-3) — "Foundation Only"
     fields_per_page:
       Tier 1 critical only:
         - page_fingerprint, brand_id, full_url
-        - layer (1-7), node_tier (A/B/C/D)
+        - page_category (was layer 1-7), node_tier (A/B/C/D)
+          # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
         - funnel_stage, page_branch_relationship
         - schema_org_type
     
@@ -11994,7 +12126,8 @@ TIER 1 — MVP (Month 1-3) — "Foundation Only"
     - 1 Engineering (Notion/Supabase setup)
   
   success_metrics:
-    ☐ All 1,000-1,500 pages (typical mid-size) classified (layer, tier, funnel)
+    ☐ All 1,000-1,500 pages (typical mid-size) classified (page_category, tier, funnel)
+      # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
     ☐ Data quality score > 75% on critical tables
     ☐ Daily quality dashboard operational
     ☐ Content publishing workflow with quality gate
@@ -12097,7 +12230,7 @@ Growth → Scale (Month 9 transition):
 
 ```yaml
 mvp_risks:
-  HIGH: Pages misclassified (wrong layer/tier)
+  HIGH: Pages misclassified (wrong page_category/tier)   # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
   MEDIUM: Data quality drift if no monitoring
   MITIGATION: Quality dashboard from Day 1
 
@@ -14674,7 +14807,10 @@ llmo_compliance_officer:
     - Tools: Notion, n8n monitoring
 
 medical_content_reviewer:
-  scope: Healthcare content (Layer 4-7)
+  # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
+  scope: Healthcare content — page_category IN ('condition_pillar','knowledge_article','evidence_case')
+         plus any protocol / aftercare page, which 🔴 cannot be selected by column
+         (UNIMPLEMENTABLE as written — see mapping note); was "Layer 4-7"
   
   responsibilities:
     - Sign off on medical claims
@@ -16947,7 +17083,10 @@ per_table_score:
   └─ target: ≥ 90% for Tier 1 tables, ≥ 70% for Tier 2
 
 universal_examples:
-  - seo_website_page_master: layer, node_tier, funnel_stage, schema_org_type ต้อง NOT NULL
+  - seo_website_page_master: page_category, node_tier, funnel_stage, schema_org_type ต้อง NOT NULL
+    # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
+    # note: page_category is still 0% populated on two of three brands — read via
+    #       coalesce(page_category, page_type) until the backfill lands
   - brands: vertical_family, healthcare_format ต้อง NOT NULL
   - seo_entity_graph: entity_type, schema_org_type ต้อง NOT NULL
 ```
@@ -16966,7 +17105,8 @@ types:
   business_rule_consistency:
     ├─ Type A page → branch_id IS NULL ✓
     ├─ Type C page → must have programmatic_template_id
-    ├─ Layer 4 page → schema_org_type IN MedicalCondition/Symptom
+    ├─ page_category='condition_pillar' → schema_org_type IN MedicalCondition/Symptom
+    │  # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
     └─ check via CHECK constraint + validation triggers
   
   cross_record_consistency:
@@ -17078,7 +17218,7 @@ required_fields_for_completeness:
     - page_fingerprint (PK)
     - brand_id (FK)
     - full_url
-    - layer (1-7)
+    - page_category (was layer 1-7)   # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
     - node_tier (A/B/C/D)
     - funnel_stage
     - page_branch_relationship (A/B/C/D)
@@ -17112,11 +17252,17 @@ consistency_rules:
       branch_id IS NULL
       branch_tags IS NOT NULL AND array_length > 0
 
-  rule_2_schema_layer_match:
-    IF layer = 4: schema_org_type IN ('MedicalCondition', 'Symptom')
-    IF layer = 5: schema_org_type IN ('Article', 'MedicalScholarlyArticle')
-    IF layer = 6: schema_org_type IN ('MedicalTherapy', 'TreatmentPlan', 'HowTo')
-    [...] (per Layer-Schema Mapping)
+  rule_2_schema_category_match:
+    # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
+    IF coalesce(page_category, page_type) = 'condition_pillar':
+       schema_org_type IN ('MedicalCondition', 'Symptom')
+    IF coalesce(page_category, page_type) = 'knowledge_article':
+       schema_org_type IN ('Article', 'MedicalScholarlyArticle')
+    🔴 UNIMPLEMENTABLE as written — see mapping note: the old "IF layer = 6 →
+       ('MedicalTherapy','TreatmentPlan','HowTo')" rule has no predicate to fire on;
+       the inverse (schema_markup_type LIKE '%HowTo%') is the only handle, and it is
+       empty on two of three brands
+    [...] (per §3.2 Layer → Live Column Mapping)
   
   rule_3_depth_tier_match:
     IF node_tier = 'A': crawl_depth ≤ 3
@@ -17124,10 +17270,11 @@ consistency_rules:
     [...] (per Hybrid Depth)
 
 freshness_thresholds:
-  layer_4_concern_pillars: 90 days (medical YMYL — quarterly review)
-  layer_5_knowledge:       180 days (semi-annual review)
-  layer_2_money:           90 days (pricing/services change)
-  layer_7_evidence:        30 days (cases freshness signal)
+  # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
+  condition_pillar:               90 days (medical YMYL — quarterly review)
+  knowledge_article:              180 days (semi-annual review)
+  service_page/procedure_pillar:  90 days (pricing/services change)
+  evidence_case:                  30 days (cases freshness signal)
 
 uniqueness_checks:
   - full_url UNIQUE per brand_id
@@ -17315,7 +17462,8 @@ CREATE TABLE seo_data_quality_metrics (
   critical_issues integer,
   
   -- Detailed findings (JSONB)
-  issue_breakdown jsonb,                       -- {missing_layer: 12, schema_mismatch: 3, ...}
+  issue_breakdown jsonb,                       -- {missing_page_category: 12, schema_mismatch: 3, ...}
+                                               -- rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
   
   measurement_method text,                     -- 'automated' | 'manual_audit' | 'sampled'
   
@@ -17435,7 +17583,10 @@ workflow_freshness_refresh:
 ```yaml
 priority: HIGHEST
 fields_to_backfill:
-  - layer (1-7) — AI classification + manual review
+  # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
+  - page_category (was layer 1-7) — AI classification + manual review.
+    Two of three brands are at 0% today, and ~135 rows still sit in page_type's
+    generic 'supporting'/'pillar' buckets, which belong to no category.
   - node_tier (A/B/C/D) — based on traffic + business value
   - funnel_stage — based on intent analysis
   - page_branch_relationship — automated detection from URL pattern
@@ -17454,12 +17605,12 @@ target: 100% Tier 1 completeness end of Week 2
 ```yaml
 priority: HIGH
 fields_to_backfill:
-  - schema_org_type — match Layer expectation
+  - schema_org_type — match page_category expectation   # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
   - cluster_id — assign to existing or create new clusters
   - sitemap_node_id — generate per hierarchy
 
 method:
-  1. Layer-Schema validation (per Part 5 mapping)
+  1. page_category → Schema validation (per Part 5 mapping / §3.2)
   2. Cluster assignment via topical similarity
   3. Sitemap hierarchy generation
 
@@ -17484,7 +17635,7 @@ method:
 
 ```yaml
 pre_v30_baseline:
-  - completeness_pct: ~40% (estimated, mostly missing layer/cluster)
+  - completeness_pct: ~40% (estimated, mostly missing page_category/cluster)   # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
   - consistency_pct: ~70%
   - timeliness_pct: ~50%
   - overall_score: ~55% [NEEDS_WORK]
@@ -17629,16 +17780,19 @@ action_on_low:
 ### KPI #2 — Content Freshness Score
 
 ```yaml
-definition: "% pages updated within their layer-specific freshness threshold"
+definition: "% pages updated within their page_category-specific freshness threshold"
+# rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
 
-freshness_thresholds_by_layer:
-  L4 Concern Pillars:    90 days  (medical YMYL)
-  L5 Knowledge Hub:      180 days
-  L2 Money Pages:        90 days  (pricing/services)
-  L7 Evidence Pages:     30 days  (cases freshness)
-  L1 Authority:          365 days
-  L6 Protocol Pages:     180 days
-  L3 Product Pages:      180 days
+freshness_thresholds_by_category:
+  condition_pillar:                 90 days  (medical YMYL)
+  knowledge_article:                180 days
+  service_page + procedure_pillar:  90 days  (pricing/services)
+  evidence_case:                    30 days  (cases freshness)
+  home/about/doctor_profile/contact/branch_landing: 365 days
+  🔴 Protocol pages: 180 days — UNIMPLEMENTABLE as written — see mapping note:
+     no column selects them, so they silently inherit the service_page or
+     knowledge_article threshold instead
+  technology_page:                  180 days
 
 formula:
   freshness_pct = pages_within_threshold / total_active_pages × 100
@@ -17649,7 +17803,7 @@ target:
   needs_work: 60-74%
   critical:  < 60%
 
-source: page_master.last_content_review_at vs threshold per layer
+source: page_master.last_content_review_at vs threshold per page_category
 ```
 
 ### KPI #3 — E-E-A-T Coverage
@@ -17673,11 +17827,13 @@ requirements_per_page:
 
 source: page_master + seo_page_citations + seo_authors_reviewers
 
-priority_layers:
-  - L4 Concern Pillars (PATIENT-facing — must have)
-  - L5 Knowledge Hub (CLINICAL — must have)
-  - L6 Protocol (PROCEDURAL — should have)
-  - L2 Money Pages (must have for medical YMYL)
+priority_categories:
+  # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
+  - condition_pillar (PATIENT-facing — must have)
+  - knowledge_article (CLINICAL — must have)
+  - 🔴 Protocol (PROCEDURAL — should have) — UNIMPLEMENTABLE as written — see mapping note:
+    no predicate isolates protocol pages
+  - service_page + procedure_pillar (must have for medical YMYL)
 ```
 
 ---
@@ -17702,11 +17858,12 @@ source: GA4 (organic search channel)
 
 per_brand_breakdown:
   - Track per brand_id
-  - Per Layer (L2 Money getting most? L5 Knowledge getting most?)
+  - Per page_category (service_page getting most? knowledge_article getting most?)
+    # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
   - Per cluster
 
 action_on_decline:
-  - Drill into which layers/clusters declined
+  - Drill into which page_categories/clusters declined
   - Check GSC for ranking drops
   - Check freshness (KPI #2)
 ```
@@ -17825,7 +17982,7 @@ formula:
   entity_coverage = entities_cited_at_least_once / total_entities_in_priority × 100
 
 priority_entities:
-  - Layer 4 Concern Pillars (sleep apnea, melasma, etc.)
+  - condition_pillar pages (sleep apnea, melasma, etc.)   # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
   - Tier A Services
   - Doctor profiles (cited in "best doctor for X" queries)
 
@@ -17909,10 +18066,11 @@ target:
 
 source: seo_entity_graph + page_master.primary_entity_fp
 
-per_layer_breakdown:
-  - Layer 4 Concern: ≥ 90% (every concern should have pillar)
-  - Layer 5 Knowledge: ≥ 70%
-  - Layer 6 Protocol: ≥ 60%
+per_category_breakdown:
+  # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
+  - condition_pillar: ≥ 90% (every concern should have pillar)
+  - knowledge_article: ≥ 70%
+  - 🔴 Protocol: ≥ 60% — UNIMPLEMENTABLE as written — see mapping note: not selectable
 ```
 
 ### KPI #13 — Entity Connectivity Score
@@ -18013,7 +18171,7 @@ widgets:
   - Top 10 Orphan Entities (action queue)
   - Cluster Completeness Distribution
   - Pillar-Cluster Ratio per Cluster
-  - Layer Distribution (pie chart)
+  - Page Category Distribution (pie chart)   # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
 
 refresh_rate: Weekly
 display: Metabase/Superset (custom queries to Supabase)
@@ -18026,7 +18184,7 @@ purpose: "Traditional SEO KPIs + technical health"
 audience: SEO team, Marketing Lead
 
 widgets:
-  - Traffic by Page Layer (stacked area)
+  - Traffic by Page Category (stacked area)   # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
   - Top Pages (by traffic)
   - Keyword Rankings Distribution (top 3/10/20)
   - CTR by Tier
@@ -18072,7 +18230,7 @@ audience: Content Lead, Editorial Team
 
 widgets:
   - Citable Density Distribution
-  - Freshness Heatmap (Layer × Time bucket)
+  - Freshness Heatmap (page_category × Time bucket)   # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
   - E-E-A-T Coverage (gauge)
   - Pages Missing Reviewer (action queue)
   - Pages Missing Citations (action queue)
@@ -18296,7 +18454,7 @@ Don't implement when:
 │  ──────────────────────────                                      │
 │  - Hybrid search (vector + keyword)                              │
 │  - Re-ranking by authority_weight                                │
-│  - Filtering (brand, layer, vertical)                            │
+│  - Filtering (brand, page_category, vertical)  ← was "layer"     │
 │                                                                  │
 │  Layer A: Embedding Foundation                                   │
 │  ────────────────────────────                                    │
@@ -18328,13 +18486,14 @@ priority_1_must_embed:
     chunking: 1 sentence = 1 chunk (preserve meaning)
     use_case: AI extracts our sentences as citations
     
+  # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
   service_descriptions:
-    source: page_master where layer = 2 (Money Pages)
+    source: page_master where coalesce(page_category, page_type) IN ('service_page','procedure_pillar')
     chunking: per service section (~200 tokens each)
     use_case: AI recommends our services
     
   knowledge_articles:
-    source: page_master where layer = 5 (Knowledge Hub)
+    source: page_master where coalesce(page_category, page_type) = 'knowledge_article'
     chunking: per H2 section (200-500 tokens)
     use_case: AI cites our educational content
 
@@ -18345,12 +18504,15 @@ priority_2_should_embed:
     use_case: "Best doctor for X" queries
     
   treatment_protocols:
-    source: page_master where layer = 6 (Protocol)
+    source: 🔴 UNIMPLEMENTABLE as written — see mapping note: no page_category selects
+            protocol pages; nearest runnable filter is
+            page_master where schema_markup_type LIKE '%HowTo%', which is empty on
+            two of three brands
     chunking: per protocol step
     use_case: How-to queries
     
   patient_stories:
-    source: page_master where layer = 7 (Evidence)
+    source: page_master where coalesce(page_category, page_type) = 'evidence_case'
     chunking: per story (de-identified)
     use_case: Outcome queries
 
@@ -18393,7 +18555,8 @@ chunk_metadata_required:
   - chunk_text (raw text)
   - chunk_token_count
   - heading_path (e.g., "H1 > H2 > current section")
-  - layer (inherited from source page)
+  - page_category (inherited from source page)   # was "layer"
+    # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
   - tier (inherited)
   - language (th-TH | en-US)
 
@@ -18462,8 +18625,9 @@ CREATE TABLE seo_entity_embeddings (
   chunk_token_count integer,
   heading_path text,
   
-  -- Layer/Tier inheritance
-  layer integer,                              -- 1-7
+  -- Category/Tier inheritance
+  -- rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
+  page_category text,                         -- inherited from source page (was: layer integer 1-7)
   tier text,                                  -- A/B/C/D
   funnel_stage text,
   vertical_family text,
@@ -18483,12 +18647,14 @@ CREATE TABLE seo_entity_embeddings (
   confidence_score numeric(3,2),
   citable_pattern text,                       -- 'A'/'B'/'C'/'D'/'E' if applicable
   
-  CONSTRAINT valid_layer CHECK (layer BETWEEN 1 AND 7)
+  -- rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
+  -- (was: CONSTRAINT valid_layer CHECK (layer BETWEEN 1 AND 7) — never shipped;
+  --  page_category inherits an open vocabulary, so no CHECK)
 );
 
 -- Indexes
 CREATE INDEX idx_embeddings_source ON seo_entity_embeddings(source_type, source_fingerprint);
-CREATE INDEX idx_embeddings_brand_layer ON seo_entity_embeddings(brand_id, layer) WHERE is_active = true;
+CREATE INDEX idx_embeddings_brand_category ON seo_entity_embeddings(brand_id, page_category) WHERE is_active = true;
 CREATE INDEX idx_embeddings_vector ON seo_entity_embeddings 
   USING hnsw (embedding vector_cosine_ops);  -- HNSW for fast similarity
 ```
@@ -18499,7 +18665,7 @@ CREATE INDEX idx_embeddings_vector ON seo_entity_embeddings
 when_to_embed:
   initial:
     - All Tier A/B pages on Day 1
-    - All Layer 4 Concern Pillars on Day 1
+    - All condition_pillar pages on Day 1   # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
     - Entity descriptions for high-priority entities
 
   ongoing:
@@ -18596,9 +18762,11 @@ common_filters:
     - WHERE brand_id = ?
     - Use case: brand-specific AI assistant
   
-  by_layer:
-    - WHERE layer IN (?, ?, ...)
-    - Use case: only Money pages, only Knowledge, etc.
+  by_page_category:
+    # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
+    - WHERE page_category IN (?, ?, ...)
+    - Use case: only service_page, only knowledge_article, etc.
+    - 🔴 "only Protocol pages" is UNIMPLEMENTABLE as written — see mapping note
   
   by_vertical:
     - WHERE vertical_family = ?
@@ -19026,12 +19194,15 @@ priority_order_when_choosing:
   3. Most authoritative author/journal within Tier
   4. Most accessible to readers (open-access preferred)
 
-minimum_per_layer:
-  Layer_4_Concern_Pillars:    ≥ 3 citations, at least 1 in Tier 1-3
-  Layer_5_Knowledge_Hub:      ≥ 3 citations, at least 1 in Tier 1-3
-  Layer_6_Protocol_Pages:     ≥ 2 citations, at least 1 in Tier 2-3
-  Layer_2_Money_Pages:        ≥ 2 citations (Tier 3-4 acceptable)
-  Layer_7_Evidence_Pages:     ≥ 1 citation (often hospital data Tier 6)
+minimum_per_page_category:
+  # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
+  condition_pillar:                 ≥ 3 citations, at least 1 in Tier 1-3
+  knowledge_article:                ≥ 3 citations, at least 1 in Tier 1-3
+  🔴 Protocol_Pages:                ≥ 2 citations, at least 1 in Tier 2-3
+     UNIMPLEMENTABLE as written — see mapping note: these rows are indistinguishable
+     from service_page / knowledge_article, so they get whichever floor those carry
+  service_page + procedure_pillar:  ≥ 2 citations (Tier 3-4 acceptable)
+  evidence_case:                    ≥ 1 citation (often hospital data Tier 6)
 
 forbidden:
   ✗ Wikipedia as primary source (use as starting point only)
@@ -19086,12 +19257,12 @@ format:
 
 ### The Standard Disclaimer Framework
 
-Every page in Layers 4, 5, 6, 7 (medical content) must have a disclaimer block matched to content type:
+Every medical-content page — `page_category IN ('condition_pillar','knowledge_article','evidence_case')`, plus protocol/aftercare pages, which 🔴 **UNIMPLEMENTABLE as written — see mapping note** cannot be selected by any column — must have a disclaimer block matched to content type. *(rewritten 2026-08-23 — `layer` column does not exist; see the reconciliation report)*
 
 ```yaml
 disclaimer_types:
 
-GENERAL_INFORMATIONAL (Layer 5 Knowledge):
+GENERAL_INFORMATIONAL (page_category='knowledge_article'):
   thai: |
     ข้อมูลในบทความนี้เป็นข้อมูลทั่วไปเพื่อการศึกษาเท่านั้น 
     ไม่ใช่คำแนะนำทางการแพทย์ส่วนบุคคล หากมีข้อสงสัยหรืออาการเจ็บป่วย 
@@ -19101,12 +19272,12 @@ GENERAL_INFORMATIONAL (Layer 5 Knowledge):
     and is not personal medical advice. For any health concerns or symptoms, 
     please consult a licensed healthcare provider.
 
-CONDITION_PILLAR (Layer 4 Concerns):
+CONDITION_PILLAR (page_category='condition_pillar'):
   add_to_general: |
     + อาการที่ระบุในบทความนี้อาจแตกต่างจากกรณีของคุณ 
       การวินิจฉัยที่แม่นยำต้องการการตรวจร่างกายและประวัติทางการแพทย์ที่ครบถ้วน
 
-PROCEDURE_PROTOCOL (Layer 6 Protocols):
+PROCEDURE_PROTOCOL (🔴 UNIMPLEMENTABLE as written — see mapping note: no page_category selects protocol pages; apply by hand at write time):
   add_to_general: |
     + ผลลัพธ์ของหัตถการขึ้นอยู่กับสภาพร่างกายของแต่ละบุคคล 
     + ภาวะแทรกซ้อนเป็นไปได้ — ควรปรึกษาแพทย์เกี่ยวกับความเสี่ยงเฉพาะของคุณ
@@ -19159,7 +19330,7 @@ acceptable_alternatives:
 ```yaml
 when_to_add_consultation_prompt:
   always_at_top_of:
-    - Symptom-checking content (Layer 4)
+    - Symptom-checking content (page_category='condition_pillar')   # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
     - Drug information pages
     - Self-treatment guides
 
@@ -19414,7 +19585,11 @@ STAGE_4_Legal_Compliance:
     ☐ Vulnerable population considerations met (per 23.2)
   output: Legal sign-off
   sla: 3 business days
-  trigger_full_review: any Layer 2/4/6 page; any drug/procedure mentioning
+  trigger_full_review: any page with page_category IN ('service_page','procedure_pillar','condition_pillar');
+                       any drug/procedure mentioning.
+                       # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
+                       # 🔴 the old "Layer 6" arm is UNIMPLEMENTABLE as written — see mapping note;
+                       #    protocol pages must be routed to legal by the writer, not by a query
 
 STAGE_5_Final_Publish_Gate:
   reviewer: Brand Owner / Editor-in-Chief
@@ -19465,7 +19640,7 @@ blocking_thresholds:
 
 ---
 
-## 23.5 Core Web Vitals Targets per Layer
+## 23.5 Core Web Vitals Targets per Page Category *(rewritten 2026-08-23 — `layer` column does not exist; see the reconciliation report)*
 
 ### Performance Budget Framework
 
@@ -19487,34 +19662,35 @@ google_core_web_vitals_2026_thresholds:
     poor: > 0.25
 ```
 
-### Layer/Tier-Specific Targets (Stricter than Default)
+### Category/Tier-Specific Targets (Stricter than Default)
 
 ```yaml
-LAYER_2_Money_Pages (Tier A-B — high commercial intent):
+# rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
+service_page + procedure_pillar (Tier A-B — high commercial intent):
   LCP: ≤ 2.0s          # 20% stricter — these convert; speed = revenue
   INP: ≤ 150ms
   CLS: ≤ 0.1
   rationale: First impression for paying customers
 
-LAYER_4_Concern_Pillars (Tier B — high traffic):
+condition_pillar (Tier B — high traffic):
   LCP: ≤ 2.0s
   INP: ≤ 150ms
   CLS: ≤ 0.05         # very low — sensitive medical content shouldn't shift
   rationale: High traffic, mobile-heavy users with anxiety
 
-LAYER_5_Knowledge_Hub (Tier C-D):
+knowledge_article (Tier C-D):
   LCP: ≤ 2.5s
   INP: ≤ 200ms
   CLS: ≤ 0.1
   rationale: Educational reading — slightly more lenient
 
-LAYER_7_Evidence_Pages (Tier D — heavy media):
+evidence_case (Tier D — heavy media):
   LCP: ≤ 2.8s         # photos/videos justify slightly higher
   INP: ≤ 200ms
   CLS: ≤ 0.1
   rationale: Patient stories with media justify slight relaxation
 
-LAYER_1_Authority / LAYER_3_Product:
+home/about/doctor_profile/contact/branch_landing + technology_page:
   LCP: ≤ 2.5s
   INP: ≤ 200ms
   CLS: ≤ 0.1
@@ -19544,8 +19720,8 @@ must_have_optimizations:
 monitoring:
   - Real User Monitoring (RUM) via GA4 Web Vitals
   - Lab data via PageSpeed Insights / Lighthouse
-  - Track per-Layer in Part 20 KPI dashboard
-  - Alert when Layer 2/4 violates target
+  - Track per page_category in Part 20 KPI dashboard
+  - Alert when service_page/procedure_pillar or condition_pillar violates target
 ```
 
 > 📚 **External standards referenced:**
@@ -19793,7 +19969,7 @@ Part 23 transforms EYWA™ PROTOCOL from "strong system" to "elite global standa
 ✅ 23.2 Medical Disclaimers & Red Lines (legal protection + AI trust)
 ✅ 23.3 Authority Validation Standards (license + accreditation + advisory board)
 ✅ 23.4 Multi-Stage Editorial Review (5-stage workflow + SLA)
-✅ 23.5 Core Web Vitals Targets per Layer (Google direct ranking)
+✅ 23.5 Core Web Vitals Targets per Page Category (Google direct ranking)
 ✅ 23.6 Accessibility Essentials (WCAG 2.2 AA — Google + ADA compliant)
 
 🔮 Future Notes (kept lean — activate when needed):
@@ -20725,10 +20901,11 @@ acf_field_groups:
 ```yaml
 slug: post (default WP)
 name: ['Knowledge Article', 'Knowledge']
-hosts_entity_type: concept (when L5/L6) | (none — content CPT)
+hosts_entity_type: concept (when page_category='knowledge_article') | (none — content CPT)
 schema_org: 
-  - MedicalScholarlyArticle (L5 Pillar)
-  - Article (L6 Knowledge)
+  # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
+  - MedicalScholarlyArticle (knowledge_article at tier A/B — the old "L5 Pillar")
+  - Article (knowledge_article at tier B/C/D — the old "L6 Knowledge")
 URL: /knowledge/{slug}
 
 modify_default_post:
@@ -20740,16 +20917,20 @@ modify_default_post:
     - audience
     - sitemap_section
 
-acf_field_groups (when post_category='knowledge-pillar' OR Layer=L5):
+acf_field_groups (when post_category='knowledge-pillar' OR page_category='knowledge_article'):
   - eywa_classification
   - eywa_relationships
   - eywa_evidence
   - article_meta (reading_time, last_reviewed_date, evidence_grade)
 
 distinction:
-  L5_pillar_article: has_pillar_status=true, layer='L5', tier=A/B
-  L6_knowledge_article: layer='L6', tier=B/C/D
-  L5/L6 ใช้ post CPT เดียวกัน — ต่างที่ taxonomy + ACF
+  # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
+  # Both rows are page_category='knowledge_article' in the live data — this local L5/L6
+  # encoding was a THIRD, incompatible meaning of "L6" (knowledge, not Protocol).
+  # The split that actually survives is tier, not category:
+  pillar_article:    has_pillar_status=true, page_category='knowledge_article', tier=A/B
+  knowledge_article: page_category='knowledge_article', tier=B/C/D
+  ทั้งสองใช้ post CPT เดียวกัน — ต่างที่ taxonomy + ACF + tier
 ```
 
 ### Tier 2 CPT — `program`
@@ -21042,8 +21223,11 @@ evidence_tier:
 ├──────────────────────────────────────────────────────────────────┤
 │  Group 1: eywa_classification    [universal — all content CPTs]   │
 │  Group 2: eywa_relationships     [universal — all content CPTs]   │
-│  Group 3: eywa_evidence          [universal — L4-L7 mandatory]    │
-│  Group 4: eywa_llmo_citables     [universal — recommended L2-L5]  │
+│  Group 3: eywa_evidence   [universal — mandatory for condition_  │
+│                            pillar/knowledge_article/evidence_case]│
+│  Group 4: eywa_llmo_citables [universal — recommended for service_│
+│                            page/procedure_pillar/condition_pillar/│
+│                            knowledge_article]                     │
 │  Group 5: cpt_specific_meta      [per-CPT additional fields]      │
 │  ─────────────────────────────────────────────────────────────── │
 │  Group 6: eywa_program_meta      [conditional: program CPT only]  │
@@ -21059,10 +21243,15 @@ evidence_tier:
 
 ```yaml
 fields:
-  layer:
+  # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
+  page_category:                          # was: layer, options [L1..L7]
     type: radio
-    options: [L1, L2, L3, L4, L5, L6, L7]
+    options: [home, about, doctor_profile, contact, branch_landing,
+              service_page, procedure_pillar, technology_page,
+              condition_pillar, knowledge_article, evidence_case]
     required: true
+    note: "🔴 no option for the Bible's L6 Protocol — UNIMPLEMENTABLE as written,
+           see mapping note; protocol pages are filed as service_page or knowledge_article"
   
   tier:
     type: radio
@@ -21176,13 +21365,15 @@ fields:
     constraint: post_type=case_study
 ```
 
-### Group 3 — `eywa_evidence` (Universal, L4-L7 mandatory)
+### Group 3 — `eywa_evidence` (Universal; mandatory for condition_pillar / knowledge_article / evidence_case) *(rewritten 2026-08-23 — `layer` column does not exist; see the reconciliation report)*
 
 ```yaml
 fields:
   reviewed_by:
     type: post_object → doctor CPT
-    required: when layer in [L4, L5, L6, L7]
+    # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
+    required: when page_category in [condition_pillar, knowledge_article, evidence_case]
+              (the old L6 Protocol arm 🔴 UNIMPLEMENTABLE as written — see mapping note)
   
   authored_by:
     type: post_object → doctor CPT
@@ -21193,7 +21384,7 @@ fields:
   
   medical_disclaimer:
     type: true_false
-    default: true (when layer in [L4-L7])
+    default: true (when page_category in [condition_pillar, knowledge_article, evidence_case])
   
   reviewer_note:
     type: textarea
@@ -21221,7 +21412,9 @@ fields:
 fields:
   brand_linked_citables:
     type: repeater
-    min_items: 3 (for L2-L5)
+    min_items: 3 (for page_category in [service_page, procedure_pillar, technology_page,
+                  condition_pillar, knowledge_article])
+                  # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
     sub_fields:
       - statement (textarea — "From X cases at Brand Y, we found Z%")
       - metric (text)
@@ -21392,7 +21585,7 @@ Templates > Theme Builder > Single
   ├─ single-condition           → condition CPT
   ├─ single-symptom             → symptom CPT (DR-036 — own CPT, was condition+entity_subtype)
   ├─ single-case_study          → case_study CPT
-  ├─ single-post                → post (knowledge L5/L6, conditional by layer)
+  ├─ single-post                → post (knowledge_article, conditional by tier — was "by layer")
   ├─ single-program             → program CPT (Tier 2)
   ├─ single-signature_system    → signature_system CPT (Tier 2)
   ├─ single-ingredient          → ingredient CPT (Tier 3)
@@ -21630,7 +21823,7 @@ single_templates_(12_per_brand):
     [patient demographics, before/after, treatment used, outcome]
   
   post_template:
-    [knowledge layer L5/L6 — flexible content sections]
+    [page_category='knowledge_article' — flexible content sections]
   
   # Tier 2:
   program_template:
@@ -22299,10 +22492,12 @@ function eywa_get_schema_type_mapping() {
         ],
         
         'post' => [
-            // Conditional based on layer
+            // Conditional based on page_category + tier
+            // rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
             'primary_type' => function($post) {
-                $layer = get_field('layer', $post->ID);
-                return ($layer === 'L5')
+                $category = get_field('page_category', $post->ID);
+                $tier     = get_field('tier', $post->ID);
+                return ($category === 'knowledge_article' && in_array($tier, ['A', 'B'], true))
                     ? 'MedicalScholarlyArticle'
                     : 'Article';
             },
@@ -23635,26 +23830,31 @@ def page_freshness_score_v1_0(page_id: str) -> float:
     
     days_old = (now() - last_meaningful).days
     
-    # Layer-aware decay (some content types stay fresh longer)
-    if page.layer in ['L4', 'L5']:  # Concern + Pillar — high freshness expectation
+    # Category-aware decay (some content types stay fresh longer)
+    # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
+    category = page.page_category or page.page_type
+    if category in ['condition_pillar', 'knowledge_article']:  # high freshness expectation
         if days_old <= 90:    return 1.0
         elif days_old <= 180: return 0.85
         elif days_old <= 365: return 0.65
         elif days_old <= 540: return 0.40
         else:                 return 0.15
     
-    elif page.layer in ['L1', 'L2']:  # Authority + Service — medium decay
+    elif category in ['home', 'about', 'doctor_profile', 'contact', 'branch_landing',
+                      'service_page', 'procedure_pillar']:  # Authority + Service — medium decay
         if days_old <= 180:   return 1.0
         elif days_old <= 365: return 0.85
         elif days_old <= 730: return 0.65
         else:                 return 0.40
     
-    elif page.layer == 'L7':  # Case studies — slow decay
+    elif category == 'evidence_case':  # Case studies — slow decay
         if days_old <= 365:   return 1.0
         elif days_old <= 1095: return 0.80
         else:                 return 0.60
     
-    else:  # L3 Tech, L6 Knowledge — standard
+    else:  # technology_page + everything unclassified — standard.
+           # 🔴 protocol pages land here or in the branch above by accident, never by rule —
+           #    UNIMPLEMENTABLE as written, see mapping note
         if days_old <= 180:   return 1.0
         elif days_old <= 365: return 0.85
         elif days_old <= 730: return 0.55
@@ -23682,7 +23882,8 @@ def cluster_health_score_v1_0(cluster_id: str) -> dict:
     else:                      critical_mass = 20
     
     # ─── Factor 2: Pillar Presence (25%) ───
-    # Bible Part 7.7 — every cluster needs ≥1 L5 pillar
+    # Bible Part 7.7 — every cluster needs ≥1 knowledge_article pillar
+    # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
     pillar_count = count_pillar_pages_in_cluster(cluster_id)
     if pillar_count >= 2:    pillar = 100
     elif pillar_count == 1:  pillar = 80
@@ -23903,7 +24104,9 @@ def ai_citation_readiness_v1_0(brand_id: str) -> float:
 
 KPI_1_citable_density:
   formula: avg(brand_linked_citables_count) per page across brand
-  target: ≥3 per L2-L5 page
+  target: ≥3 per page with page_category IN ('service_page','procedure_pillar',
+          'technology_page','condition_pillar','knowledge_article')
+          # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
   
 KPI_2_freshness:
   formula: pct_pages_freshness_score >= 0.65
@@ -23911,7 +24114,9 @@ KPI_2_freshness:
 
 KPI_3_eeat_coverage:
   formula: pct_pages_with(reviewer + citations>=1)
-  target: ≥80% for L4-L7
+  target: ≥80% for page_category IN ('condition_pillar','knowledge_article','evidence_case')
+          # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
+          # 🔴 protocol pages were in the old L4-L7 range but cannot be selected — see mapping note
 
 KPI_4_organic_traffic:
   source: GA4
@@ -24644,7 +24849,8 @@ wpml_translation_management:
 
 never_translate_(universal):
   - taxonomies (use term IDs across languages):
-    sitemap_section, layer, tier, funnel_stage, lifecycle_state
+    sitemap_section, page_category, tier, funnel_stage, lifecycle_state
+    # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
   - URL slugs of doctors, branches (transliteration kept)
   - SKUs, codes, IDs
 ```
@@ -26052,7 +26258,7 @@ pillar_audit:
 ```
 
 **Used downstream:**
-- **Phase E sitemap audit** — every Layer 1 + Layer 2 page must trace to an alignment-map row
+- **Phase E sitemap audit** — every page with `page_category IN ('home','about','doctor_profile','contact','branch_landing','service_page','procedure_pillar')` must trace to an alignment-map row *(rewritten 2026-08-23 — `layer` column does not exist; see the reconciliation report)*
 - **Phase F content brief** — content_brief field references alignment-map row
 - **EYWA Compound Growth dashboard** — KPI reporting uses success_metric column
 - **Client quarterly review** — table is the agenda
@@ -26827,7 +27033,7 @@ Sensitive content has Ads consequences:
 | ส่วนของร่างกาย | `anatomy` | (in cross-cutting domain) | AnatomicalStructure |
 | สาขาเชี่ยวชาญ | `specialty` | Taxonomy: specialty | MedicalSpecialty |
 | การตรวจแลบ | `lab_test` | CPT: lab_test (Tier 3) | MedicalTest |
-| ตัวบ่งชี้ทางชีวภาพ | `biomarker` | no CPT — host on `post` (L6) for deep-dives, inline within `lab_test` otherwise. Promote to Tier 3 CPT in v3.5+ if brand is biomarker-heavy (e.g., longevity clinic) | MedicalEntity (custom) |
+| ตัวบ่งชี้ทางชีวภาพ | `biomarker` | no CPT — host on `post` (page_category `knowledge_article`) for deep-dives, inline within `lab_test` otherwise. Promote to Tier 3 CPT in v3.5+ if brand is biomarker-heavy (e.g., longevity clinic) | MedicalEntity (custom) |
 | หมอ/นักวิจัย | `person` | CPT: doctor | Person \| Physician |
 | คลินิก/แบรนด์/สาขา | `organization` | CPT: branch | Organization \| MedicalClinic |
 

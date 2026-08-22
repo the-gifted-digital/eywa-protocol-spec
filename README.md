@@ -166,7 +166,7 @@ Real-world feedback from VTH BioDent (Naphannop S.) surfaced 4 process gaps in t
 
 **No DDL change** — existing page_master columns suffice. Future v1.1 may add `template_id` + `template_version` columns.
 
-**EEAT enforcement phasing:** Soft-warn now → Hard-block 2026-09-01 (prerequisite: ≥80% brand doctor onboarding).
+**EEAT enforcement phasing:** Soft-warn now → Hard-block **เมื่อ prerequisite ผ่าน ไม่ใช่ตามวันที่** — เดิมตั้งไว้ 2026-09-01 · **เลื่อนออกไปโดย operator 2026-08-23** ด้วยเหตุผลสองข้อ: (1) prerequisite อ้างตาราง `seo_authors` ซึ่ง**ไม่มีอยู่จริง** ของจริงคือ `seo_authors_reviewers` (184 แถว) จึงไม่เคยมีใครวัด prerequisite นี้ได้เลย · (2) วัดจริง 2026-08-23: `seo_doctor_assignments` = deezy 259 · smile-scape **2** · vth **1** กับ 742 หน้าที่ Live อยู่ — สองแบรนด์ fail แน่นอน **เงื่อนไขเปิด gate ใหม่: ≥80% ของหมอในแต่ละแบรนด์มีแถวใน `seo_authors_reviewers` และผูกผ่าน `seo_doctor_assignments` — ตรวจด้วย query ต่อแบรนด์ ไม่ใช่ตามปฏิทิน**
 
 **If LOCKED 2026-06-07:** `Content_Templates_EYWA_v1_0.md` upgrades from DRAFT → LOCKED status (already at repo root) + Bible v3.15 references it + ACF field group refactor + eywa-schema-pipeline plugin update for medical_reviewer injection.
 
@@ -445,7 +445,7 @@ See `DECISION_RECORDS.md` for full rationale.
 
 The EYWA database schema (v1.11) consists of **37 tables organized into 9 groups**:
 
-1. **Group 1 — Core Identity** (brands, seo_authors, seo_brand_doctors, seo_brand_branches)
+1. **Group 1 — Core Identity** (brands, seo_authors_reviewers, seo_doctor_assignments, seo_branches) — *ชื่อเดิม seo_authors / seo_brand_doctors / seo_brand_branches ไม่มีอยู่จริง แก้ 2026-08-23*
 2. **Group 2 — Knowledge Graph** (seo_entity_graph, seo_entity_relationships, seo_topic_cluster_master)
 3. **Group 3 — Content Pages** (seo_website_page_master)
 4. **Group 4 — Citations** (seo_citations, seo_page_citations, seo_editorial_reviews)

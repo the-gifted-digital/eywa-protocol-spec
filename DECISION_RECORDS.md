@@ -1505,7 +1505,7 @@ Insert terminology cross-reference at top of Predicted Prompts Methodology secti
 
 #### 5. Add chunking scope clarification (Bible §21.2)
 
-Insert scope clarification at top of Chunking Strategy section: chunking applies **exclusively to internal RAG embedding pipelines** (pgvector storage feeding own brand chatbots + AI agent grounding), NOT to published web page structure. Published pillar pages follow DR-018 word count standards (1,500-4,000+ words depending on Layer + topic depth).
+Insert scope clarification at top of Chunking Strategy section: chunking applies **exclusively to internal RAG embedding pipelines** (pgvector storage feeding own brand chatbots + AI agent grounding), NOT to published web page structure. Published pillar pages follow DR-018 word count standards (1,500-4,000+ words depending on `page_category` + topic depth). *(rewritten 2026-08-23 — `layer` column does not exist; see the reconciliation report)*
 
 **All chunking implementation details preserved** (100-500 token chunk size, H2/H3 boundaries, 15-20% overlap, embedding model selection table). Only adds scope guard to prevent misreading as page-structure prescription.
 
@@ -1553,7 +1553,7 @@ Insert scope clarification at top of Chunking Strategy section: chunking applies
 - Bible Part 13 §13.13 — Prompt Prediction Methodology (query fan-out cross-reference per DR-031)
 - Bible Part 13 §13.17 §4 — AI Agent Era llms.txt enhancement (reframed per DR-031)
 - Bible Part 21 §21.2 — Embedding Strategy Chunking Strategy (scope-clarified per DR-031)
-- DR-018 — Layer-by-Layer Word Count Standards (supports chunking scope clarification — pillar pages 1,500-4,000+ words)
+- DR-018 — Page Content Length Standards, keyed on `page_category` (supports chunking scope clarification — pillar pages 1,500-4,000+ words)
 - External: [Google Search Central — Mythbusting generative AI search: what you don't need to do (2026-05)](https://developers.google.com/search/blog) — primary source for llms.txt + chunking + rewriting + mentions + structured data clarifications
 - External: [Google Search Central — Is SEO still relevant for generative AI search? (2026-05)](https://developers.google.com/search/blog) — primary source for RAG + query fan-out + AEO/GEO terminology
 - External: [llms.txt proposal (Answer.AI, 2024)](https://llmstxt.org/) — original spec, status unchanged but Google adoption clarified as "not consumed"
@@ -2790,6 +2790,8 @@ Reorganize Phase B into a **lean planning loop** with **async background enrichm
 
 #### 1. Two-Layer Sitemap Architecture
 
+> **Not the page-master layer.** "Layer 1/2/3" in DR-022 (and in DR-026) is a sitemap *band* resolved from `sitemap_section` — Layer 1 = sections 1,2,3,4,7,8; Layer 2 = sections 5,6 — and is unrelated to the L1–L7 page-master `layer` column, which does not exist in the schema. Left as-is deliberately; do not fold these into a layer rewrite. *(noted 2026-08-23)*
+
 ```yaml
 layer_1_brand_service:
   scope: [Section 1 Home, 2 Uniqueness, 3 Services, 4 Technology, 7 Branches, 8 Contact]
@@ -3213,14 +3215,14 @@ Lock the following 4 sub-decisions together (final lock 2026-06-07):
 - ⚠️ Editorial workflow gains template_id selection step (Notion DB schema update)
 - ⚠️ Existing pages need template_id back-fill (audit task, can be opportunistic)
 - 🚧 Follow-up: separate DR-021 may add `template_id` + `template_version` columns to page_master (v1.1)
-- 🚧 Follow-up: phase 2 EEAT enforcement (CHECK constraint) targeted 2026-09-01 after doctor onboarding
+- 🚧 Follow-up: phase 2 EEAT enforcement (CHECK constraint) — **วันที่ถูกถอน 2026-08-23** gate เปิดเมื่อ doctor onboarding วัดได้ถึงเกณฑ์ใน `seo_authors_reviewers` ไม่ใช่ตามปฏิทิน
 
 **Open Questions for Review (must answer before lock):**
 
 1. Template count — 25 too many? *(Recommend: keep, each addresses real page type from sitemap analysis)*
 2. T6 vs T6a Guide overlap — risk of confusion? *(Recommend: editorial reviewer makes call; border cases default to T6 lower bar)*
 3. T18 Programmatic Local uniqueness enforcement — algorithmic check or manual? *(Recommend: manual v1, algorithmic v2 with cosine similarity threshold <0.7)*
-4. EEAT phase 2 hard-block timing — 2026-09-01 OK? *(Prerequisite: ≥80% of brand clinic doctors registered in seo_authors)*
+4. EEAT phase 2 hard-block timing — 🔴 **เลื่อนแล้ว 2026-08-23 ไม่ใช่ 2026-09-01** · prerequisite เดิมเขียนว่า `seo_authors` ซึ่งไม่มีตารางนี้อยู่จริง (ของจริง `seo_authors_reviewers`) จึงวัดไม่ได้มาตลอด · เงื่อนไขใหม่: ≥80% ของหมอต่อแบรนด์อยู่ใน `seo_authors_reviewers` + ผูกผ่าน `seo_doctor_assignments`
 5. Template versioning strategy — semantic versioning vs date-stamped? *(Recommend: semver, store in page_master.template_version jsonb in v1.1)*
 6. ~~Should `Content_Templates_EYWA_v1_0.md` move to repo root immediately or wait for lock?~~ **RESOLVED 2026-05-10:** placed at repo root with DRAFT status in frontmatter (gitignore excludes `drafts/` folder; root placement enables claude.ai project sync during review window).
 
@@ -3272,10 +3274,12 @@ follow_up_workload:
 
 1. Plugin enforcement timing: **warn-only first 2 weeks** then escalate to hard-block
 2. Existing pages cleanup: **opportunistic** (most brands don't use the 7 deprecated schemas anyway)
-3. Featured Snippet pattern enforcement: **WARN v1**, BLOCK for L4/L5 only after 6 months measurement
+3. Featured Snippet pattern enforcement: **WARN v1**, BLOCK for `condition_pillar` / `knowledge_article` only after 6 months measurement
 4. AI citation tracking ETL: **accept lag** — DR specifies metric, ETL is Phase 3 task
-5. `QAPage` schema for single-question Knowledge L5 pages: **YES**
+5. `QAPage` schema for single-question `knowledge_article` pages: **YES**
 6. SpeakableSpecification rollout: **only pages following Decision 2 Featured Snippet pattern**
+
+*(items 3 and 5 rewritten 2026-08-23 — `layer` column does not exist; matched as `coalesce(page_category, page_type)`, approximate on `knowledge_article`; see the reconciliation report)*
 
 **Bible Reference:** Part 26 (Schema Pipeline) — major refactor pending lock; Part 9 (Templates) — new Featured Snippet section pending lock; Part 20 (KPIs) — metric replacement pending lock
 **Schema Reference:** v1.10 — **no DDL change** (decision is spec-level + plugin-level)
@@ -3347,10 +3351,12 @@ EYWA Bible v3.14 currently embeds FAQPage and HowTo across Part 6, 9, 25, 26 + L
 
 1. Plugin enforcement timing: warn-only first 2 weeks then hard-block, OR hard-block immediately? *(Recommend: warn-only 2 weeks)*
 2. Existing pages cleanup priority: blocking bug / opportunistic / batch? *(Recommend: opportunistic — most brands don't use the 7 anyway)*
-3. Featured Snippet pattern enforcement: WARN or BLOCK in editorial review? *(Recommend: WARN v1, BLOCK for L4/L5 only after 6 months measurement)*
+3. Featured Snippet pattern enforcement: WARN or BLOCK in editorial review? *(Recommend: WARN v1, BLOCK for `condition_pillar` / `knowledge_article` only after 6 months measurement)*
 4. AI citation tracking ETL: block this DR until pipeline exists, or accept lag? *(Recommend: accept lag — DR specifies metric, ETL is separate Phase 3 task)*
-5. Add `QAPage` schema for single-question Knowledge L5 pages? *(Recommend: YES)*
+5. Add `QAPage` schema for single-question `knowledge_article` pages? *(Recommend: YES)*
 6. SpeakableSpecification rollout: all pages or only Featured-Snippet-targeted? *(Recommend: only pages following Decision 2 pattern)*
+
+*(items 3 and 5 rewritten 2026-08-23 — `layer` column does not exist; see the reconciliation report)*
 
 **References:**
 
@@ -3416,29 +3422,38 @@ Real impact at VTH BioDent: AI/operator designing sitemap and assessing thin-pag
 
 **Decision:**
 
-Add comprehensive Page Content Length Standards table to Bible Part 9.8 covering all 7 Layers + 5 documented exception clauses for valid non-SEO purposes (legal, contact, intent-capture, glossary, programmatic).
+Add comprehensive Page Content Length Standards table to Bible Part 9.8 covering all 14 page types (Bible §9.8.1) + 5 documented exception clauses for valid non-SEO purposes (legal, contact, intent-capture, glossary, programmatic).
 
-Standards (key targets, full table in Bible §9.8):
+Standards (key targets, full table in Bible §9.8) — keyed on `page_category`, matched as `coalesce(page_category, page_type) = '<value>'`:
 
-| Layer | Type | Min | Target | Max |
-|-------|------|-----|--------|-----|
-| L1 | Home | 500 | 1,000 | 1,500 |
-| L2 | Money/Service | 800 | 1,500 | 2,500 |
-| L3 | Center/Hub | 1,500 | 2,500 | 4,000 |
-| L4 | Concern Pillar | 2,500 | 4,000 | 6,000 |
-| L5 | Knowledge | 2,000 | 3,500 | 5,000 |
-| L6 | Local | 600 | 1,200 | 2,000 |
-| L7 | Case Study | 1,500 | 2,500 | 4,000 |
+| `page_category` | Type | Min | Target | Max |
+|-----------------|------|-----|--------|-----|
+| `home` | Home | 500 | 1,000 | 1,500 |
+| `service_page` | Money/Service | 800 | 1,500 | 2,500 |
+| `procedure_pillar`, `technology_page` | Center/Hub, Tech Hub | 1,500 | 2,500 | 4,000 |
+| `condition_pillar` | Concern Pillar | 2,500 | 4,000 | 6,000 |
+| `knowledge_article` | Knowledge | 2,000 | 3,500 | 5,000 |
+| `local_landing`, `local_programmatic`, `local_service`, `local_service_page` | Local | 600 | 1,200 | 2,000 |
+| `evidence_case` | Case Study | 1,500 | 2,500 | 4,000 |
 
 Multilingual adjustment: Thai/Chinese -20% (denser per character).
+
+**Keying notes (approximate — do not read the table as exact):**
+- The `coalesce` is load-bearing: `page_category` is 0/869 on deezy and 0/728 on smile-scape, so a pure `page_category` rule passes vacuously on two of three brands. Where both columns exist (vth) they disagree on 139/685 rows.
+- `knowledge_article` is the loosest row: vth's backfill folded `supporting`/`pillar` rows into it, and it also absorbs protocol/aftercare pages written as articles.
+- Excerpt only — `about` and `branch_landing` have their own rows in the full §9.8.1 table; `doctor_profile` and `contact` have no row in any table.
+- The old L1–L7 numbers were §9.8's own numbering, not Bible Part 3.2's (§9.8 "L3" = hubs, Part 3.2 "L3" = devices; §9.8 "L6" = Local, Part 3.2 "L6" = Protocol). That collision is why the layer number was never a safe key.
+- 🔴 **UNIMPLEMENTABLE as written — see mapping note:** the floor for protocol / aftercare / how-to pages (Bible Part 3.2's Protocol layer) has no key at all — those pages are stored as `service_page` in section 3 or as `knowledge_article`, so no column predicate can hold them to a floor distinct from money pages. Nearest runnable filter is `schema_markup_type LIKE '%HowTo%'`, which returns zero rows on vth and smile-scape.
+
+*(rewritten 2026-08-23 — `layer` column does not exist; see the reconciliation report)*
 
 **Rationale:**
 
 - Concrete benchmarks unblock DR-016 (viability assessment needs numbers)
-- Layer-specific (Home ≠ Pillar; intent and value-of-length curve differ)
+- Page-type-specific (`home` ≠ `condition_pillar`; intent and value-of-length curve differ)
 - Industry-grounded (Backlinko, Ahrefs, HubSpot 2020-2024 studies)
 - Exception clauses preserve flexibility — 5 documented patterns for valid thin pages
-- Pillar exception explicitly forbidden (L4/L5 must be exhaustive — SEO authority)
+- Pillar exception explicitly forbidden (`condition_pillar` / `knowledge_article` must be exhaustive — SEO authority)
 - Annual review cadence (algorithm landscape shifts)
 
 **Consequences:**
@@ -3555,7 +3570,7 @@ Bible v3.13 had no comprehensive thin-page risk framework. No criteria, no decis
 Add **"Page Viability Assessment"** quality gate in sitemap design (new Phase 4.5, between Phase 4 Page-Level Tagging and Phase 5 Connection Audit).
 
 **4 Criteria per page:**
-1. Predicted Content Volume (vs DR-018 Layer minimum)
+1. Predicted Content Volume (vs the DR-018 minimum for the page's `page_category`)
 2. Search Volume (≥ 100/mo Thai, ≥ 50/mo English niche)
 3. Topic Distinctness (< 30% overlap with parent)
 4. User Intent Distinctness (different intent type or sub-intent)
@@ -3573,7 +3588,7 @@ Add **"Page Viability Assessment"** quality gate in sitemap design (new Phase 4.
 4. Disambiguation/Glossary hubs (200-600, heavy cross-linking)
 5. Programmatic pages Type C (600-1,200 per template)
 
-**Pillars NEVER allowed thin** (L4/L5 — SEO authority pages have no exception).
+**Pillars NEVER allowed thin** — `coalesce(page_category, page_type) IN ('condition_pillar','knowledge_article')`; SEO authority pages have no exception. Approximate on the `knowledge_article` half only (vth's backfill folded `supporting`/`pillar` rows into it, and it also holds protocol/aftercare pages written as articles); `condition_pillar` is exact. *(rewritten 2026-08-23 — `layer` column does not exist; see the reconciliation report)*
 
 **Rationale:**
 
@@ -3603,7 +3618,7 @@ Add **"Page Viability Assessment"** quality gate in sitemap design (new Phase 4.
 
 - DR-011 (EUG) — pre-lock quality gate pattern
 - DR-017 (Content Brief) — preserves context when pages collapse
-- DR-018 (Word Count Standards) — provides Layer minimums (Criterion 1)
+- DR-018 (Word Count Standards) — provides per-`page_category` minimums (Criterion 1)
 - Bible Part 3.5 (Cannibalization Shield) — related concern
 - Bible Part 4.5 (Page Type Matrix) — Type C programmatic exception
 - Industry: Google Helpful Content Update (Aug 2022, ongoing)
@@ -4119,7 +4134,7 @@ schema_v1_10_changes:
     add_fields:
       - edge_evidence_citation text NULL (FK to seo_citations.fingerprint)
       - medical_reviewer_signoff_at timestamptz NULL
-      - medical_reviewer_fp text NULL (FK to seo_authors.fingerprint)
+      - medical_reviewer_fp text NULL (FK to seo_authors_reviewers.fingerprint — `seo_authors` does not exist)
     expand_check_constraint: 16 enum values
   
   section_4_2_seo_entity_graph:
@@ -5439,7 +5454,7 @@ Triggered by VTH BioDent /mouth-biomapping/ EEAT audit (visual EEAT good, struct
   - `page_master.translation_tier` column (text — for §4.5.2 enforcement)
 - 📝 **Review cycle:** 4 weeks (until 2026-06-07) — paired with DR-019 lock cycle.
 - 📝 **No DDL change for v1.0** — existing page_master columns suffice. Future template_id + template_version columns deferred to v1.1.
-- 📝 **EEAT phase 2 hard-block targeted 2026-09-01** — prerequisite: ≥80% brand doctor onboarding to seo_authors.
+- 📝 **EEAT phase 2 hard-block** — **gate เปิดเมื่อวัดได้จริง ไม่ใช่ตามวันที่** — เดิมตั้งไว้ 2026-09-01 · **เลื่อนออกไปโดย operator 2026-08-23** ด้วยเหตุผลสองข้อ: (1) prerequisite อ้างตาราง `seo_authors` ซึ่ง**ไม่มีอยู่จริง** ของจริงคือ `seo_authors_reviewers` (184 แถว) จึงไม่เคยมีใครวัด prerequisite นี้ได้เลย · (2) วัดจริง 2026-08-23: `seo_doctor_assignments` = deezy 259 · smile-scape **2** · vth **1** กับ 742 หน้าที่ Live อยู่ — สองแบรนด์ fail แน่นอน **เงื่อนไขเปิด gate ใหม่: ≥80% ของหมอในแต่ละแบรนด์มีแถวใน `seo_authors_reviewers` และผูกผ่าน `seo_doctor_assignments` — ตรวจด้วย query ต่อแบรนด์ ไม่ใช่ตามปฏิทิน**
 - 📝 **Independent of DR-013/014** — different governance scope (content composition layer vs entity edge vocabulary layer).
 - 📝 **Companion to DR-017/018/019** — together form complete content production stack.
 
@@ -5457,7 +5472,7 @@ Triggered by Google announcement 2026-05-07 (FAQ rich results full deprecation e
 Field-tested feedback from VTH BioDent surfaced 4 process gaps in the sitemap design layer (Phase E). All 4 DRs locked together, independent of DR-013/014 governance.
 
 - ➕ **DR-015 (NEW, Locked):** Brand Scope Market Reconciliation Pattern — 3-axis scoring (Necessity / Brand-Fit / SEO Opportunity) for healthcare brands. Adds `marketplace_proposal_status` + `reconciliation_notes` to page_master.
-- ➕ **DR-016 (NEW, Locked):** Page Viability Assessment / Thin Page Detection — 4-criteria gate + 5 exception clauses + HARD RULE (L4/L5 pillars never thin). Adds `viability_assessment` jsonb to page_master.
+- ➕ **DR-016 (NEW, Locked):** Page Viability Assessment / Thin Page Detection — 4-criteria gate + 5 exception clauses + HARD RULE (`condition_pillar` / `knowledge_article` pillars never thin). *(rewritten 2026-08-23 — `layer` column does not exist; see the reconciliation report)* Adds `viability_assessment` jsonb to page_master.
 - ➕ **DR-017 (NEW, Locked):** Page Content Brief Field — REQUIRED for collapsed pages, RECOMMENDED otherwise. Adds `content_brief` text to page_master.
 - ➕ **DR-018 (NEW, Locked):** Page Content Length Standards — 14 page types × Min/Target/Max word count, multilingual -20%. Spec-level only, no DDL.
 - 🔄 Bible v3.13 → v3.14 (Sections 4.13, 4.14, 9.8 + §4.1 Phase 4.5 added)

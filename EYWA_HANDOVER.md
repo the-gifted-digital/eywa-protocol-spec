@@ -779,7 +779,7 @@ required_planning_files:
 | `Cluster Name` | Yes | Display name |
 | `Domain` | Yes | Domain ID + name (e.g., "A: TMJ & Jaw") |
 | `Parent Cluster (text)` | Optional | Parent cluster ID (for nested SKOS hierarchy) |
-| `Pillar Page` | Yes | sitemap_node_id of L5 pillar guide |
+| `Pillar Page` | Yes | sitemap_node_id of the cluster's `knowledge_article` pillar guide (was "L5 pillar"); approximate — `knowledge_article` also absorbs protocol/how-to pages *(rewritten 2026-08-23 — `layer` column does not exist; see the reconciliation report)* |
 | `Brand Scope` | Yes | `['*']` / `['{brand}']` / `['{brand}', '{other}']` |
 
 ### 5.5 Schema — Sitemap Planning File
@@ -793,17 +793,17 @@ required_planning_files:
 - Tier A: ...
 - Tier B: ...
 
-## Layer Distribution
-- L1: ...
+## Page Category Distribution
+- condition_pillar: ...
 
 ---
 
 ## Section 5: TREATMENT BY CONCERNS (147 pages)
 
-| # | Page Name | Layer | Tier | Funnel | Page Type | Primary Entity (text) |
-|---|-----------|-------|------|--------|-----------|----------------------|
-| 5.2 | TMJ & Jaw Disorders Hub | L4 | B | top | A | tmj-disorder |
-| 5.2.1 | TMJ Pain — symptom guide | L4 | C | top | A | tmj-pain |
+| # | Page Name | Page Category | Tier | Funnel | Page Type | Primary Entity (text) |
+|---|-----------|---------------|------|--------|-----------|----------------------|
+| 5.2 | TMJ & Jaw Disorders Hub | condition_pillar | B | top | A | tmj-disorder |
+| 5.2.1 | TMJ Pain — symptom guide | condition_pillar | C | top | A | tmj-pain |
 ```
 
 **Column specs (7 columns):**
@@ -812,11 +812,15 @@ required_planning_files:
 |--------|----------|-------------|
 | `#` | Yes | sitemap_node_id (e.g., "5.2.1") — defines hierarchy via numbering |
 | `Page Name` | Yes | Display name |
-| `Layer` | Yes | L1-L7 (Bible Part 3.2) |
+| `Page Category` | Yes | `home` / `about` / `doctor_profile` / `contact` / `branch_landing` / `service_page` / `procedure_pillar` / `technology_page` / `condition_pillar` / `knowledge_article` / `evidence_case` — replaces `Layer` (L1-L7, Bible Part 3.2), which has no column. Approximate: category answers what the content IS; use `sitemap_section` only when the rule is about site zone *(rewritten 2026-08-23 — `layer` column does not exist; see the reconciliation report)* |
 | `Tier` | Yes | A / B / C / D (Bible Part 3.3) |
 | `Funnel` | Yes | top / mid / bottom / retention (Bible Part 3.4) |
 | `Page Type` | Yes | A (Standard) / B (Branch Landing) / C (Programmatic) / D (Tagged) |
 | `Primary Entity (text)` | Optional | Entity slug if page anchored to specific entity |
+
+> **Runnable form:** every `page_category` predicate in this document must be written `coalesce(page_category, page_type)` — `page_category` is still unbackfilled on two of three brands, so a pure `page_category` rule returns zero rows and passes vacuously. `supporting` / `pillar` are tier words, not category words, and belong to no category. *(rewritten 2026-08-23 — `layer` column does not exist; see the reconciliation report)*
+
+> 🔴 **UNIMPLEMENTABLE as written — see mapping note:** the Bible's Layer 6 (protocol / aftercare / how-to) has no `page_category` value at all — those pages sit under `service_page` or `knowledge_article`, so no column isolates them, and every rule keyed on L6 (L3→L6 and L7→L2/L6 authority flow, the L5/L6 half of the cannibalization shield, the L6 word-count floor) must be rewritten as a content check or dropped. *(rewritten 2026-08-23 — `layer` column does not exist; see the reconciliation report)*
 
 > **Hierarchy via numbering:** Page "5.2.1" is automatically child of "5.2" (no separate parent column needed in sitemap — numbering encodes hierarchy)
 
@@ -868,11 +872,11 @@ required_planning_files:
 ```markdown
 # {Brand Name} — Content Production Priorities
 
-| Priority | Page Node | Layer | Tier | Sprint | Status | Owner |
-|----------|-----------|-------|------|--------|--------|-------|
-| 1 | 1.0 | L1 | A | Sprint 1 | Drafting | @writer1 |
-| 2 | 2.1 | L1 | B | Sprint 1 | Planned | @writer2 |
-| 3 | 3.1 | L2 | A | Sprint 1 | Planned | @writer1 |
+| Priority | Page Node | Page Category | Tier | Sprint | Status | Owner |
+|----------|-----------|---------------|------|--------|--------|-------|
+| 1 | 1.0 | home | A | Sprint 1 | Drafting | @writer1 |
+| 2 | 2.1 | about | B | Sprint 1 | Planned | @writer2 |
+| 3 | 3.1 | service_page | A | Sprint 1 | Planned | @writer1 |
 ```
 
 **Column specs (7 columns):**
@@ -881,7 +885,7 @@ required_planning_files:
 |--------|----------|-------------|
 | `Priority` | Yes | Sequential priority order |
 | `Page Node` | Yes | sitemap_node_id |
-| `Layer` | Yes | L1-L7 |
+| `Page Category` | Yes | Same vocabulary as `sitemap.md` §5.5 — replaces `Layer` (L1-L7), which has no column; approximate *(rewritten 2026-08-23 — `layer` column does not exist; see the reconciliation report)* |
 | `Tier` | Yes | A/B/C/D (typically Tier A first) |
 | `Sprint` | Yes | Sprint identifier |
 | `Status` | Yes | Planned / Drafting / Reviewing / Published |
@@ -1113,27 +1117,27 @@ eywa-{brand-slug}/                       Example: eywa-vth-biodent/
 │   │   └── ...                         # One per template type brand will use
 │   │
 │   │   # Per-template subfolders — drafts grouped by template_id
-│   ├── T1-medical-condition/           # Disease/condition pages (L4 pillars typically)
+│   ├── T1-medical-condition/           # Disease/condition pages (page_category=condition_pillar typically)
 │   │   ├── obstructive-sleep-apnea.md
 │   │   ├── tmj-disorder.md
 │   │   └── ...
-│   ├── T2-medical-procedure/           # Treatment/service detail pages (L2)
+│   ├── T2-medical-procedure/           # Treatment/service detail pages (page_category=service_page)
 │   ├── T2a-aesthetic-procedure/        # If brand has aesthetic vertical
 │   ├── T2b-dental-procedure/           # If brand is dental
 │   ├── T2c-wellness-program/           # If brand has wellness programs
 │   ├── T2d-physiotherapy/
 │   ├── T2e-genomic/                    # If brand offers genomic testing
 │   ├── T3-diagnostic/
-│   ├── T4-medical-device/              # Technology pages (L3)
+│   ├── T4-medical-device/              # Technology pages (page_category=technology_page)
 │   ├── T5-service-money-page/
-│   ├── T6-concept/                     # Knowledge concepts (L5)
+│   ├── T6-concept/                     # Knowledge concepts (page_category=knowledge_article)
 │   ├── T6a-guide/                      # Comprehensive guides
 │   ├── T7-comparison/
-│   ├── T8-case-study/                  # L7 patient cases (PDPA-anonymized)
+│   ├── T8-case-study/                  # page_category=evidence_case patient cases (PDPA-anonymized)
 │   ├── T9-author-profile/              # Doctor/team pages
-│   ├── T10-branch/                     # Branch location pages (L6)
+│   ├── T10-branch/                     # Branch location pages (page_category=branch_landing; old tag said L6, Bible files branches under L1)
 │   ├── T11-institutional/              # Home/About/Contact/Privacy
-│   ├── T12-hub/                        # Topic hubs (L3 navigational)
+│   ├── T12-hub/                        # Topic hubs (navigational — no page_category of its own; a hub carries the category it heads)
 │   ├── T13-pricing/
 │   ├── T14-trending/                   # News/clinical updates
 │   ├── T15-quiz/                       # Self-assessment tools
@@ -1168,6 +1172,8 @@ eywa-{brand-slug}/                       Example: eywa-vth-biodent/
     ├── monthly-kpi/                    # KPI snapshots per month
     └── audit-snapshots/                # Quality audit results over time
 ```
+
+> The template comments above name `page_category` values, not L1-L7 *(rewritten 2026-08-23 — `layer` column does not exist; see the reconciliation report)*. T17-care-instructions is the Bible's Layer 6 folder and has 🔴 **no page_category equivalent** — its pages land in `service_page` or `knowledge_article`.
 
 #### 5.11.2 Stage Mapping (which folder produces what when)
 
@@ -2026,7 +2032,7 @@ session_2026_05_10_part_3:  # 🆕 NEW v1.6 (continued — same calendar day)
       - eywa-schema-pipeline plugin — medical_reviewer_fp injection logic (~6h dev)
       - Notion editorial DB — add template_id property + template_version
       - Schema v1.11 (deferred) — add template_id text + template_version jsonb to page_master
-      - Phase 2 EEAT enforcement (CHECK constraint) targeted 2026-09-01 after doctor onboarding
+      - Phase 2 EEAT enforcement (CHECK constraint) — **date withdrawn 2026-08-23**, now gated on measured doctor onboarding in `seo_authors_reviewers` (deezy 259 · smile-scape 2 · vth 1 as of that date)
     
     if_rejected:
       - Document remains advisory pattern in scratchpad
@@ -2276,9 +2282,11 @@ citation_research_per_pillar:
     - mark brand_scope: ['*'] for universal vs ['{brand}'] for brand-specific
     - check for duplicates against existing seo_citations pool (federation reuse)
 
-priority_targets:
-  - L4 pillar topics (need 5-10 Tier 1-3 citations each)
-  - L5 knowledge topics (need 3-5 Tier 1-3 each)
+priority_targets:  # keyed on page_category — rewritten 2026-08-23, no layer column exists
+  - page_category=condition_pillar topics (need 5-10 Tier 1-3 citations each)
+  - page_category=knowledge_article topics (need 3-5 Tier 1-3 each)
+      # approximate: knowledge_article also absorbs protocol/how-to pages and,
+      # pre-backfill, rows page_type still calls 'supporting'/'pillar'
   - Brand stance topics (Pattern E backing — need ≥1 Tier 1-2 + brand internal data)
 ```
 
@@ -2325,9 +2333,9 @@ Validate: pillar-supporting ratio (8-25), domain balance, cross-brand overlap wi
 
 > 🆕 **v1.6 Note — Phase 4.5 Sitemap Quality Gates** (Bible §4.1 Phase 4.5, run in this order):
 > - **Gate 1 — Market Reconciliation (§4.13, DR-015):** for healthcare brands, MUST run the 3-step pass (Strict EGP → Reconciliation pass → Operator review). Pages outside strict scope but with high market demand get repackaged via Necessity/Brand-Fit/SEO Opportunity scoring. Status stored in `page_master.marketplace_proposal_status`.
-> - **Gate 2 — Page Viability Assessment (§4.14, DR-016):** every page passes the 4-criteria gate (predicted volume, search volume, topic distinctness, intent distinctness). Result stored in `page_master.viability_assessment` (jsonb). Decision: standalone / collapse / merge / exception. **HARD RULE:** L4/L5 pillars NEVER thin.
+> - **Gate 2 — Page Viability Assessment (§4.14, DR-016):** every page passes the 4-criteria gate (predicted volume, search volume, topic distinctness, intent distinctness). Result stored in `page_master.viability_assessment` (jsonb). Decision: standalone / collapse / merge / exception. **HARD RULE:** `condition_pillar` / `knowledge_article` pages NEVER thin — approximate, since `knowledge_article` is broader than the old L5 (it also holds protocol/how-to pages and un-backfilled `supporting`/`pillar` rows) *(rewritten 2026-08-23 — `layer` column does not exist; see the reconciliation report)*.
 > - **Gate 3 — Content Brief (DR-017):** every page gets `content_brief` filled at design time. **REQUIRED** for collapsed pages, **RECOMMENDED** for all others. Preserves intent across weeks/writers/AI sessions.
-> - **Reference — Content Length Standards (§9.8, DR-018):** word count targets per Layer × Tier × language. Drives QA and informs viability assessment.
+> - **Reference — Content Length Standards (§9.8, DR-018):** word count targets per Page Category × Tier × language (approximate — category is not a clean substitute for the old Layer axis). Drives QA and informs viability assessment. The matrix's protocol-page floor is 🔴 **UNIMPLEMENTABLE as written — see mapping note**: Layer 6 has no `page_category`, so protocol pages inherit the `service_page` / `knowledge_article` floor instead of their own. *(rewritten 2026-08-23 — `layer` column does not exist; see the reconciliation report)*
 
 **Output:** `sitemap.md` (now 11 columns including `content_brief`, `marketplace_proposal_status`, `reconciliation_notes`, `viability_assessment`), `internal-linking-plan.md`, `audit-report.md`
 
@@ -2418,7 +2426,9 @@ stage_1_5_workflow:
       - author_fp + medical_reviewer_fp (assign reviewers to pages — required for YMYL)
       - target_keyword_fp (link to keyword_master row)
       - viability_assessment.predicted_volume (final post-KW data)
-      - schema_org_type per page (must match seo_layer mapping)
+      - schema_org_type per page (must match the page_category → schema.org mapping;
+        approximate — no seo_layer/layer column exists, and Bible L6 protocol pages
+        have no page_category of their own. rewritten 2026-08-23, see reconciliation report)
       - content_brief refinement (DR-017 — may add details after sitemap review)
     
     internal_linking_planning:  # 🆕 DR-021 Proposed
@@ -2721,7 +2731,7 @@ Stop and escalate to operator if:
 **Schema:**
 - Tier 1 + Tier 2 not linked via @id
 - Page lacks hasCredential when brand is healthcare
-- Schema type inconsistent with page Layer
+- Schema type inconsistent with page `page_category` (approximate — the old Layer→schema mapping had no L6 row, so protocol pages cannot trip this check) *(rewritten 2026-08-23 — `layer` column does not exist; see the reconciliation report)*
 
 **Federation:**
 - Decision affects ['*'] entities
@@ -2738,9 +2748,9 @@ Stop and escalate to operator if:
 
 **Entity:** searched? brand_scope correct? fingerprint unique? type valid? linked to cluster? **EUG preflight passed?** 🆕
 
-**Cluster:** anchor entity? ≥5 entities? L5 pillar planned? naming format? domain mapped?
+**Cluster:** anchor entity? ≥5 entities? `knowledge_article` pillar planned? naming format? domain mapped? *(rewritten 2026-08-23 — `layer` column does not exist; see the reconciliation report)*
 
-**Page:** 3 dimensions defined? schema matches Layer? citations meet minimums? author+reviewer? multilingual fields? internal links per plan?
+**Page:** 3 dimensions defined (`page_category` + Tier + Funnel — category replaces Layer, approximately)? schema matches `page_category`? citations meet minimums? author+reviewer? multilingual fields? internal links per plan? *(rewritten 2026-08-23 — `layer` column does not exist; see the reconciliation report)*
 
 **Citation:** evidence_tier set? within freshness? COI disclosed? schema:MedicalEvidenceLevel mapped?
 
@@ -3002,7 +3012,7 @@ A brand is **bootstrap complete** when:
 
 **Knowledge graph:** all entities created/adopted, clusters validated, edges wired, brand_scope correct, **EUG preflight clean** 🆕.
 
-**Sitemap:** 8 sections decided, every page has Layer+Tier+Funnel+Type, hierarchy consistent, linking plan complete, health audit passed.
+**Sitemap:** 8 sections decided, every page has Page Category+Tier+Funnel+Type (category replaces Layer, approximately — `supporting` / `pillar` are tier words and satisfy nothing here), hierarchy consistent, linking plan complete, health audit passed. *(rewritten 2026-08-23 — `layer` column does not exist; see the reconciliation report)*
 
 **Content:** 6-month editorial calendar, first 5 cornerstone pages drafted, 50+ citations, author/reviewer profiles, brand voice approved.
 
@@ -3039,13 +3049,13 @@ knowledge_graph:
 
 sitemap:
   8-Section Universal:        Part 4.2
-  Section ↔ Layer Mapping:    Part 4.3
+  Section ↔ Layer Mapping:    Part 4.3   # no layer column — read as section ↔ page_category (rewritten 2026-08-23)
   Numbered Hierarchy:         Part 4.4
   Health Metrics:             Part 4.10
 
 page_definition:
-  3-Dimensional Definition:   Part 3.1
-  Layer Definitions (1-7):    Part 3.2
+  3-Dimensional Definition:   Part 3.1   # dimension 1 is page_category in the data, not layer (rewritten 2026-08-23)
+  Layer Definitions (1-7):    Part 3.2   # Bible-only concept — no layer column; L6 has no page_category at all (rewritten 2026-08-23)
   Tier System (A-D):          Part 3.3
   Funnel Stages:              Part 3.4
 

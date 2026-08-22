@@ -1512,7 +1512,22 @@ Key fields: `loinc_code`, `cpt_code`, `test_name`, `test_category`, `specimen_ty
 > **Sync:** S only (despite spec comment saying N↔S — no notion_id column built). Source of truth for human-readable templates lives in `Content_Templates_EYWA_v1_0.md` in spec repo; this table is the pipeline-consumed structured registry.
 > **Trigger:** `trg_set_fingerprint`, `trg_prevent_fingerprint_change`
 
-Columns: `id uuid`, `fingerprint text` (`tmpl_{ULID16}`), `fingerprint_display_name`, `template_name text`, `template_id text` (e.g. `'T1'`, `'T-ADS-3'`), `target_layer text`, `url_pattern text`, `page_template_blueprint jsonb` (the actual template structure: sections, schema rules, content requirements), `applicable_brands text[]`, `entity_type_required text`, `created_at`, `updated_at`.
+Columns: `id uuid`, `fingerprint text` (`tmpl_{ULID16}`), `fingerprint_display_name`, `template_name text`, `template_id text` (e.g. `'T1'`, `'T-ADS-3'`), `target_layer text` 🔴 **UNIMPLEMENTABLE as written — see mapping note** (nothing to join on: the page master has no `layer` column — Appendix H.3), `url_pattern text`, `page_template_blueprint jsonb` (the actual template structure: sections, schema rules, content requirements), `applicable_brands text[]`, `entity_type_required text`, `created_at`, `updated_at`.
+
+> 🔴 **`target_layer` mapping note** *(rewritten 2026-08-23 — `layer` column does not exist; see the reconciliation report)*
+> This column stores Bible Part 3.2 layers `L1`–`L7`, but `seo_website_page_master` has no `layer` column to match them against (Appendix H.3), so template↔page resolution cannot join here. Resolve on the taxonomy columns that do exist (§5.1) — `coalesce(page_category, page_type)`; `page_category` is the newer backfill column (not in the §5.1 listing, still empty on two of three brands), `page_type` the coarser fallback:
+>
+> | Bible layer | Predicate on `seo_website_page_master` | Fit |
+> |---|---|---|
+> | L1 Authority | `coalesce(page_category, page_type) IN ('home','about','doctor_profile','contact','branch_landing')` | **approximate** — sweeps in branch/contact rows that are navigational, not E-E-A-T signals. Do not substitute `sitemap_section IN ('1','2','8')`. |
+> | L2 Money | `coalesce(page_category, page_type) IN ('service_page','procedure_pillar')` | **approximate** — also absorbs L6 protocol pages; excludes `local_landing`/`local_service*` programmatic money pages unless added explicitly. |
+> | L3 Product / Tech | `coalesce(page_category, page_type) = 'technology_page'` | **approximate** — category and `sitemap_section='4'` disagree on ~26% of VTH device pages; no third column breaks the tie. |
+> | L4 Concern | `coalesce(page_category, page_type) = 'condition_pillar'` | clean — do **not** substitute `sitemap_section='5'` (a zone, not a layer). |
+> | L5 Knowledge | `coalesce(page_category, page_type) = 'knowledge_article'` | **approximate** — also swallows protocol/aftercare articles; nothing separates L5 from L6 here. |
+> | L6 Protocol | 🔴 **UNIMPLEMENTABLE as written — see mapping note:** no value of `page_category`, `page_type`, `node_tier` or `sitemap_section` isolates protocol pages (they are stored as `service_page` in section 3 or `knowledge_article` in section 6). Nearest runnable filter leaves these columns entirely: `schema_markup_type LIKE '%HowTo%' OR schema_markup_type LIKE '%TreatmentPlan%'` — which returns zero rows on two of three brands. | **no equivalent** |
+> | L7 Evidence | `coalesce(page_category, page_type) = 'evidence_case'` | clean — `sitemap_section='7'` corroborates to within 4 rows per brand. |
+>
+> Because L6 has no predicate, the Bible rules keyed on it cannot run as column checks and must be rewritten as content checks or dropped: "L3 MUST connect to L6", "L7 must link back to L2 or L6", the L4/L5/L6 cannibalization shield (only the L4-vs-L5 half survives), and the per-layer word-count floors in §9.8. Layer is also neither `sitemap_section` (site zone) nor `node_tier` (importance) — see the three-axes warning in §5.1.
 
 ---
 
@@ -1921,7 +1936,7 @@ The v1.10 doc referred to columns by names that never matched live. v1.18 uses l
 | `topical_cluster_id` | `cluster_id` |
 | `page_url` | (does not exist — URL is composed from canonical_url + slug) |
 | `page_title` | `seo_title` |
-| `seo_layer`, `seo_tier` | (does not exist — replaced by `node_tier` + `node_tier_strategy`) |
+| `seo_layer`, `seo_tier` | (does not exist — replaced by `node_tier` + `node_tier_strategy`). ⚠️ This is also the denial for the Bible Part 3.2 **L1–L7 layer system**: no layer column exists on the page master, so nothing keyed on `layer` can run. Do not re-introduce `seo_layer` — resolve layers on `page_type` per the mapping table in §11.10. *(strengthened 2026-08-23 — see the reconciliation report)* |
 | `secondary_entities_fps` | `related_entities_fps` |
 | `schema_markup_planned jsonb` | (does not exist) |
 | `editorial_status` | (does not exist; status flow lives in `status` + `seo_editorial_reviews`) |

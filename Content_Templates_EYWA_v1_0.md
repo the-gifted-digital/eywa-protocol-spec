@@ -976,6 +976,14 @@ cross_brand_quality_check:
 
 ## 3. Layer 2 — Content Type Templates (25)
 
+> **📌 `layer_mapping:` → `page_category:` — rewritten 2026-08-23; the page master has no `layer` column (see the reconciliation report).**
+> Every template header below now names **`page_master.page_category`** values instead of L1–L7. Match them as `coalesce(page_category, page_type)` — `page_category` is backfilled on VTH only, so a predicate written in `page_category` alone returns zero rows on Deezy and Smile-Scape and passes vacuously.
+> **Confidence:** exact for `condition_pillar` (was L4) and `evidence_case` (was L7); **approximate** for every other value — the mapping keys on what the content IS, and `sitemap_section` (which zone it lives in) disagrees on a real share of rows. Where a template's old L-number has no column value at all, the header says so inline.
+> **🔴 Gone entirely:** old L6 (protocol / aftercare / how-to). No value of `page_category`, `node_tier` or `sitemap_section` isolates it — those pages sit inside `service_page` and `knowledge_article`, indistinguishable. T17 and the §4.5.3 rules that depended on it are marked accordingly. (T10/T18's "L6 Local" used the number in a different, local-pages sense — not this one.)
+> **Length targets:** the numeric range in each header IS the target. Bible §9.8's table is keyed by layer, so its per-layer key no longer resolves; the `(Bible §9.8)` citations are kept as provenance only.
+> **Tier words:** "pillar" / "supporting" in the old values were `node_tier` (how important), never layer (what it is).
+> **T-ADS-1..5** never carried this field and still don't — §3.4 keys them on `page_purpose: ads_lp` instead.
+
 ### 3.1 Core Universal Templates (12)
 
 #### T1 — Medical Condition (โรค/ภาวะ)
@@ -984,7 +992,7 @@ cross_brand_quality_check:
 purpose: "Patient-facing disease/condition page (clinical or patient-language)"
 schema_org_type: MedicalCondition
 secondary_schemas: [Article, FAQPage]
-layer_mapping: L4 pillar (primary) | L5 supporting
+page_category: condition_pillar (primary) | knowledge_article (supporting)  # rewritten 2026-08-23 (was L4|L5) — condition_pillar exact, knowledge_article approximate; §3 note
 length_target: 2,500-4,000 words (per Bible §9.8)
 eeat_required: YES — author + medical_reviewer + last_reviewed mandatory
 
@@ -1028,7 +1036,7 @@ reference_implementation: |
 purpose: "Clinical procedure page — generic, applies across verticals"
 schema_org_type: MedicalProcedure
 secondary_schemas: [Service, Article]
-layer_mapping: L2 money | L4 pillar
+page_category: service_page (primary) | condition_pillar  # rewritten 2026-08-23 (was L2 money | L4 pillar) — approximate; §3 note
 length_target: 2,000-3,500 words
 eeat_required: YES
 
@@ -1063,7 +1071,7 @@ allowed_tweaks: "Pricing block can defer to T13 link if pricing is complex"
 purpose: "Test/screening page — Sleep Study, ABI, CBCT, hormone panel, etc."
 schema_org_type: MedicalProcedure (subtype: diagnostic)
 secondary_schemas: [Article, FAQPage]
-layer_mapping: L2 | L3
+page_category: service_page | technology_page  # rewritten 2026-08-23 (was L2|L3) — approximate; §3 note
 length_target: 1,500-2,500 words
 eeat_required: YES
 
@@ -1084,7 +1092,7 @@ allowed_tweaks: "B15 simplified or omitted if no aftercare needed (e.g., simple 
 purpose: "Equipment/technology page — Fotona, Waterlase, EMFACE, CPAP machines"
 schema_org_type: MedicalDevice
 secondary_schemas: [Product, Article]
-layer_mapping: L3
+page_category: technology_page  # rewritten 2026-08-23 (was L3) — approximate: category and sitemap_section disagree on ~26% of VTH device pages; §3 note
 length_target: 1,500-2,500 words
 eeat_required: YES (device claims need clinical reviewer)
 
@@ -1106,13 +1114,13 @@ recommended_blocks:
   - B25 safety_disclosures
 ```
 
-#### T5 — Service / Money Page (commercial L2)
+#### T5 — Service / Money Page (commercial — page_category service_page)
 
 ```yaml
 purpose: "Bundled service offering — primary commercial conversion"
 schema_org_type: Service
 secondary_schemas: [MedicalProcedure, Offer]
-layer_mapping: L2
+page_category: service_page  # rewritten 2026-08-23 (was L2) — approximate; use procedure_pillar for programme/specialty-centre hubs; §3 note
 length_target: 1,500-2,500 words (Bible §9.8)
 eeat_required: YES if claims medical outcome
 
@@ -1137,7 +1145,7 @@ recommended_blocks:
 purpose: '"What is sleep medicine?" / "What is implantology?" — neutral education'
 schema_org_type: Article
 secondary_schemas: [DefinedTerm, FAQPage]
-layer_mapping: L5 knowledge
+page_category: knowledge_article  # rewritten 2026-08-23 (was L5 knowledge) — approximate; §3 note
 length_target: 2,000-3,500 words (Bible §9.8)
 eeat_required: REQUIRED if YMYL (medical/health), RECOMMENDED otherwise
 
@@ -1169,7 +1177,7 @@ allowed_tweaks: |
 purpose: "Comprehensive guide — 'คู่มือฉบับสมบูรณ์', step-by-step actionable"
 schema_org_type: Article
 secondary_schemas: [HowTo (sub-blocks), FAQPage]
-layer_mapping: L5 pillar
+page_category: knowledge_article + node_tier A/B  # rewritten 2026-08-23 (was "L5 pillar" — "pillar" is a node_tier word, not a category) — approximate; §3 note
 length_target: 4,000-7,000 words (long-form for comprehensive coverage)
 eeat_required: YES
 
@@ -1212,7 +1220,7 @@ example_pages:
 purpose: "Head-to-head — must take stance, not neutral list"
 schema_org_type: Article
 secondary_schemas: [FAQPage]
-layer_mapping: L4 | L5
+page_category: condition_pillar | knowledge_article  # rewritten 2026-08-23 (was L4|L5) — knowledge_article approximate; §3 note
 length_target: 1,500-2,500 words
 eeat_required: YES (recommendation = health choice)
 
@@ -1240,10 +1248,10 @@ example_pages:
 #### T8 — Case Study / Patient Outcome
 
 ```yaml
-purpose: "L7 evidence — patient story OR clinical reasoning teaching case"
+purpose: "Patient-evidence page (page_category evidence_case) — patient story OR clinical reasoning teaching case"
 schema_org_type: MedicalScholarlyArticle
 secondary_schemas: [(CaseStudy if available)]
-layer_mapping: L7
+page_category: evidence_case  # rewritten 2026-08-23 (was L7) — exact; sitemap_section '7' corroborates; §3 note
 length_target: 1,500-2,500 words (Bible §9.8)
 eeat_required: YES (clinical claim)
 
@@ -1273,7 +1281,7 @@ recommended_blocks:
 purpose: "Physician/team member page — IS the EEAT signal"
 schema_org_type: Person
 secondary_schemas: [Physician]
-layer_mapping: L1 (team)
+page_category: doctor_profile  # rewritten 2026-08-23 (was "L1 team") — approximate; §3 note
 length_target: 800-1,500 words
 eeat_required: SELF (page is its own reviewer)
 
@@ -1306,10 +1314,10 @@ schema_required_properties:
 #### T10 — Branch / Location Page
 
 ```yaml
-purpose: "L6 local — clinic location"
+purpose: "Branch page (page_category branch_landing) — clinic location"
 schema_org_type: MedicalBusiness
 secondary_schemas: [LocalBusiness, Place]
-layer_mapping: L6
+page_category: branch_landing  # rewritten 2026-08-23 (was "L6" in its local sense, NOT the protocol layer) — approximate: these rows read as navigational, so do not count them as an E-E-A-T signal; §3 note
 length_target: 600-1,200 words (Bible §9.8)
 eeat_required: NOT REQUIRED (operational page)
 
@@ -1334,7 +1342,7 @@ recommended_blocks:
 purpose: "Brand-level operational pages — no medical content"
 schema_org_type: Organization
 secondary_schemas: [WebPage]
-layer_mapping: L1
+page_category: home | about | contact  # rewritten 2026-08-23 (was L1) — approximate; no category value exists for privacy/legal pages; §3 note
 length_target: 500-1,500 words (Home), 800-1,200 (About), 300-600 (Contact)
 eeat_required: NOT REQUIRED
 
@@ -1351,11 +1359,11 @@ allowed_tweaks: "EXTREMELY high — institutional pages are brand-voice driven"
 #### T12 — Hub Page (FAQ / Glossary / Topic)
 
 ```yaml
-purpose: "L3 navigational hub — collects related sub-pages or anchor sections"
+purpose: "Navigational hub — collects related sub-pages or anchor sections"
 schema_org_type: CollectionPage
 secondary_schemas: [FAQPage (if FAQ-style), DefinedTermSet (if glossary)]
-layer_mapping: L3
-length_target: 1,500-2,500 words (Bible §9.8 L3)
+page_category: (unmapped — ⚠️ no page_category value denotes a navigational hub)  # rewritten 2026-08-23 (was "L3", but Bible L3 = technology_page, which a FAQ/glossary/topic hub is not); §3 note
+length_target: 1,500-2,500 words  # rewritten 2026-08-23 — literal target; Bible §9.8's per-layer key ("L3") no longer resolves
 eeat_required: REQUIRED if individual hub items are YMYL
 
 modes:
@@ -1392,7 +1400,7 @@ allowed_tweaks: "Hub design varies — FAQ vs Glossary vs Topic each tweak block
 purpose: "Cosmetic/aesthetic — Botox, fillers, EMFACE, NightLase, ortho cosmetic"
 schema_org_type: MedicalProcedure
 secondary_schemas: [Service, Article]
-layer_mapping: L2 | L4
+page_category: service_page | condition_pillar  # rewritten 2026-08-23 (was L2|L4) — approximate; §3 note
 length_target: 2,000-3,000 words
 eeat_required: YES (medical reviewer for any health-impact claim)
 
@@ -1415,7 +1423,7 @@ required_blocks:
 purpose: "Dental-specific — implant, ortho, root canal, crown, extraction"
 schema_org_type: MedicalProcedure (DentalProcedure subtype)
 secondary_schemas: [Service]
-layer_mapping: L2 | L4
+page_category: service_page | condition_pillar  # rewritten 2026-08-23 (was L2|L4) — approximate; §3 note
 length_target: 2,500-4,000 words (often complex multi-visit)
 eeat_required: YES
 
@@ -1437,7 +1445,7 @@ required_blocks:
 purpose: "Multi-session — Men's Vitality programs, Detox, Hair regrowth"
 schema_org_type: MedicalTherapy
 secondary_schemas: [Service, HealthAndBeautyBusiness]
-layer_mapping: L2 program
+page_category: procedure_pillar  # rewritten 2026-08-23 (was "L2 program" — procedure_pillar is the programme/specialty-centre hub tier of the money layer) — approximate; §3 note
 length_target: 2,500-4,000 words
 eeat_required: YES
 
@@ -1459,7 +1467,7 @@ required_blocks:
 purpose: "Recovery/rehab — PRP knee, post-stroke rehab, Cerebrolysin program"
 schema_org_type: PhysicalTherapy
 secondary_schemas: [MedicalTherapy]
-layer_mapping: L2 | L4
+page_category: service_page | condition_pillar  # rewritten 2026-08-23 (was L2|L4) — approximate; procedure_pillar when the rehab programme is a hub; §3 note
 length_target: 2,000-3,500 words
 eeat_required: YES
 
@@ -1481,7 +1489,7 @@ required_blocks:
 purpose: "DNA-based test — Genowell signature"
 schema_org_type: MedicalTest
 secondary_schemas: [Article]
-layer_mapping: L3 | L4
+page_category: technology_page | condition_pillar  # rewritten 2026-08-23 (was L3|L4) — approximate; §3 note
 length_target: 1,800-3,000 words
 eeat_required: YES
 
@@ -1505,7 +1513,7 @@ required_blocks:
 purpose: "Pure price-list — ราคาครอบ/ขูดหินปูน/ฟอกฟัน list-style"
 schema_org_type: WebPage
 secondary_schemas: [PriceSpecification (multiple), Service]
-layer_mapping: L4 (intent capture)
+page_category: service_page  # rewritten 2026-08-23 (was "L4 intent capture") — ⚠️ approximate: no page_category value denotes a price-list page; §3 note
 length_target: 800-1,500 words
 eeat_required: NOT REQUIRED if pure prices, REQUIRED if explains procedure
 
@@ -1529,7 +1537,7 @@ required_blocks:
 purpose: "Date-sensitive — Clinical Updates, viral trends, research news"
 schema_org_type: NewsArticle
 secondary_schemas: [Article]
-layer_mapping: L5 supporting
+page_category: knowledge_article + node_tier C/D  # rewritten 2026-08-23 (was "L5 supporting" — "supporting" is a node_tier word, not a category) — approximate; §3 note
 length_target: 800-2,000 words (typically shorter)
 eeat_required: REQUIRED + dateModified critical
 
@@ -1557,7 +1565,7 @@ allowed_tweaks: "Should be retired/archived once no longer current — scheduled
 purpose: "Interactive — STOP-BANG, Epworth Scale, OSA risk quiz, oral health checker"
 schema_org_type: WebApplication (or Quiz custom type)
 secondary_schemas: [WebPage]
-layer_mapping: L4 (lead magnet)
+page_category: (unmapped — ⚠️ no page_category value denotes an interactive tool)  # rewritten 2026-08-23 (was "L4 lead magnet"); §3 note
 length_target: 600-1,500 words supporting copy
 eeat_required: YES (clinical scoring → health guidance)
 
@@ -1579,7 +1587,7 @@ special_property: "All quiz scoring algorithms must be documented + reviewer-sig
 purpose: "ประกันสังคม / ประกันสุขภาพเอกชน explainer"
 schema_org_type: WebPage
 secondary_schemas: [(FinancialProduct if applicable)]
-layer_mapping: L4 (intent capture)
+page_category: knowledge_article  # rewritten 2026-08-23 (was "L4 intent capture") — ⚠️ approximate: nearest value only; a coverage explainer is not a condition pillar; §3 note
 length_target: 1,200-2,500 words
 eeat_required: NOT REQUIRED (operational), reviewer for coverage details RECOMMENDED
 
@@ -1602,7 +1610,9 @@ allowed_tweaks: "Brand-specific implementation — insurance varies by clinic ag
 purpose: "Post-op care, what to expect day 1-7, maintenance routines"
 schema_org_type: HowTo
 secondary_schemas: [MedicalTherapy]
-layer_mapping: L4 supporting | L7 supporting
+page_category: service_page OR knowledge_article  # rewritten 2026-08-23 (was "L4 supporting | L7 supporting")
+# 🔴 UNIMPLEMENTABLE as written — see mapping note: this is the old L6 protocol/aftercare page, and no column isolates it —
+#   such pages are stored as service_page (sitemap_section 3) or knowledge_article (section 6) with nothing to tell them apart.
 length_target: 1,000-2,000 words
 eeat_required: YES (medical instruction)
 
@@ -1629,8 +1639,8 @@ example_pages:
 purpose: "Hyper-local [service]×[branch] — auto-templated for SEO scale"
 schema_org_type: MedicalBusiness
 secondary_schemas: [Service, Place, LocalBusiness]
-layer_mapping: L6 Local
-length_target: 800-1,500 words (Bible §9.8 L6)
+page_category: local_landing | local_service | local_programmatic  # rewritten 2026-08-23 (was "L6 Local" — local sense, NOT the protocol layer) — approximate; the Bible files these as Type C "layers 2, 3" and they sit outside the plain service_page predicate; §3 note
+length_target: 800-1,500 words  # rewritten 2026-08-23 — literal target; Bible §9.8's per-layer key ("L6") no longer resolves
 eeat_required: YES (branch doctor surface as Person/Physician)
 
 programmatic_constraints:
@@ -1672,7 +1682,7 @@ scale_consideration: |
 purpose: "Time-sensitive offer / promotion / package"
 schema_org_type: Offer
 secondary_schemas: [Product, Service]
-layer_mapping: L4 commercial
+page_category: service_page  # rewritten 2026-08-23 (was "L4 commercial") — ⚠️ approximate: no page_category value denotes a time-boxed offer page; §3 note
 length_target: 600-1,200 words
 eeat_required: NOT REQUIRED (operational), author signoff RECOMMENDED for trust
 
@@ -2038,7 +2048,8 @@ hook_1_block_substitution:
   description: "Replace block X with brand-specific variant"
   example: |
     VTH BioDent uses "PNCL_methodology_explainer" instead of generic
-    B04 definition for L2 service pages
+    B04 definition on page_category = service_page pages
+  # rewritten 2026-08-23 — was "L2 service pages"; there is no `layer` column.
   enforcement: "Substitute must serve same purpose + maintain schema emission"
 
 hook_2_block_addition:
@@ -2160,30 +2171,37 @@ Operator-coined term for content separation between sibling pages — formalized
 
 ```yaml
 cannibalization_shield_principle:
+  # rewritten 2026-08-23 — re-keyed from L1–L7 to page_master.page_category; the `layer` column does not exist (see the reconciliation report).
   rule: |
-    "Each page covers ONE primary intent layer:
-     - L1 brand/team
-     - L2 service/procedure (commercial)
-     - L4 condition/concern (informational)
-     - L5 educational concept
-     - L7 patient case
+    "Each page covers ONE primary intent, keyed on page_master.page_category
+     (match as coalesce(page_category, page_type) — see §3 note):
+     - home / about / doctor_profile / contact / branch_landing — brand & team (was L1, approximate)
+     - service_page / procedure_pillar — service/procedure, commercial (was L2, approximate)
+     - condition_pillar — condition/concern, informational (was L4, exact)
+     - knowledge_article — educational concept (was L5, approximate)
+     - evidence_case — patient case (was L7, exact)
      
-     Content that crosses layers → link out, don't duplicate"
+     Content that crosses categories → link out, don't duplicate"
+  # technology_page (was L3) was never in this list; protocol/aftercare (was L6) has no value at all.
   
   example_dental_implant:
-    L4_condition_page: "ฟันหายต้องทำยังไง?" (informational, link to procedure)
-    L2_procedure_page: "รากเทียม" (full procedure description, pricing, steps)
-    L5_concept_page: "Implantology คืออะไร?" (educational background)
-    L7_case_page: "Case Smile Makeover ด้วยรากเทียม" (specific patient outcome)
+    condition_page: "ฟันหายต้องทำยังไง?" (condition_pillar — informational, link to procedure)
+    procedure_page: "รากเทียม" (service_page — full procedure description, pricing, steps)
+    concept_page: "Implantology คืออะไร?" (knowledge_article — educational background)
+    case_page: "Case Smile Makeover ด้วยรากเทียม" (evidence_case — specific patient outcome)
     
-    HARD RULE: L4 page MUST NOT contain full procedure description (link to L2 instead)
-              L2 page MUST NOT contain full educational background (link to L5 instead)
-              L5 page MUST NOT contain pricing or specific cases (link to L2 / L7 instead)
+    HARD RULE: condition_pillar MUST NOT contain full procedure description (link to service_page instead)
+              service_page MUST NOT contain full educational background (link to knowledge_article instead)
+              knowledge_article MUST NOT contain pricing or specific cases (link to service_page / evidence_case instead)
+              knowledge_article vs protocol/aftercare — 🔴 UNIMPLEMENTABLE as written — see mapping note:
+                no column separates clinical understanding (was L5) from solution sequencing (was L6),
+                so this fourth MUST NOT can only be checked by reading the page, not by a predicate.
   
   qa_check_per_template:
-    T1 (L4): "Does this page describe TREATMENT in full? If yes → BLOCK. Link to T2 instead."
-    T2 (L2): "Does this page describe ETIOLOGY in full? If yes → BLOCK. Link to T1 instead."
-    T6 (L5): "Does this page list PRICES or CASES? If yes → BLOCK. Link to T2/T8 instead."
+    T1 (condition_pillar): "Does this page describe TREATMENT in full? If yes → BLOCK. Link to T2 instead."
+    T2 (service_page): "Does this page describe ETIOLOGY in full? If yes → BLOCK. Link to T1 instead."
+    T6 (knowledge_article): "Does this page list PRICES or CASES? If yes → BLOCK. Link to T2/T8 instead."
+    T17 (protocol/aftercare): 🔴 UNIMPLEMENTABLE as written — see mapping note: no page_category value selects these pages.
   
   cross_reference: "Bible §4.13 Market Reconciliation + DR-016 Page Viability §4.14"
 ```
@@ -2193,7 +2211,7 @@ cannibalization_shield_principle:
 Extends §4.5.3 Cannibalization Shield from **between-page** separation to **within-page** separation (body section vs FAQ block). PAA = demand evidence that *serves* the locked template — it does not dictate structure.
 
 ```yaml
-# §4.5.3 = separation ระหว่างหน้า (L1/L2/L4/L5/L7)
+# §4.5.3 = separation ระหว่างหน้า (page_category: identity / service_page / condition_pillar / knowledge_article / evidence_case) — rewritten 2026-08-23
 # §4.5.4 = separation ภายในหน้าเดียว (body section vs FAQ block)
 # PAA source: seo_x_ads_keyword_serp_competitors.paa_questions (text[])
 #   ⚠️ Audited schema v1.20 — NOT people_also_ask_json (ไม่มี column นั้นจริง).
@@ -2384,7 +2402,7 @@ phase_2_2026_09_onwards:
                                'MedicalTherapy', 'MedicalDevice', ...)
       OR (medical_reviewer_fp IS NOT NULL AND last_reviewed_at IS NOT NULL)
     )
-  prerequisite: "All clinics onboarded their doctors as seo_authors records"
+  prerequisite: "All clinics onboarded their doctors as seo_authors_reviewers records"
 ```
 
 ---
@@ -2682,7 +2700,7 @@ required_fields:
   - SEO Title (with char count + status indicator)
   - Meta Description (with char count + status indicator)
   - URL Slug
-  - Target Word Count (with Bible §9.8 range reference)
+  - Target Word Count (range from the template header's length_target — Bible §9.8 is keyed by layer, retired 2026-08-23)
   - Featured Snippet Target (predicted query + answer location)
   - Schema Type (informational — link to Part 2 for full)
 
@@ -2714,7 +2732,7 @@ table_template: |
   | **SEO Title** | {browser tab title} | **{N} chars** | {✅/⚠️/❌} |
   | **Meta Description** | {SERP description} | **{N} chars** | {✅/⚠️/❌} |
   | **URL Slug** | `/{path}/{slug}` | — | — |
-  | **Target Word Count** | {N} (Bible §9.8 {Layer}: {range}) | — | — |
+  | **Target Word Count** | {N} ({template_id} length_target: {range}) | — | — |
   | **Featured Snippet Target** | "{predicted query}" ({intent type}, §{N}) | — | 🎯 Position 0 |
   | **Schema Type** | {primary} + {secondary} + {tier 3} | — | (see Part 2) |
 ```
@@ -2839,7 +2857,7 @@ required_properties:
   - assigned_author (relation → Authors DB)
   - assigned_medical_reviewer (relation → Authors DB)
   - block_overrides (long text — Layer 3 hooks)
-  - target_word_count (number — from §9.8)
+  - target_word_count (number — from the template header's length_target; §9.8's per-layer key retired 2026-08-23)
   - last_reviewed_date (date)
   - next_review_due (formula: last_reviewed + 6/12 months)
 
@@ -2878,8 +2896,8 @@ eywa_schema_pipeline_plugin:
 
 ```yaml
 page_master_columns_already_exist:
-  - author_fp (FK → seo_authors)
-  - medical_reviewer_fp (FK → seo_authors)
+  - author_fp (FK → seo_authors_reviewers)          # NOTE: neither column exists on page_master today
+  - medical_reviewer_fp (FK → seo_authors_reviewers) # verified 2026-08-23 against the live 93-column table
   - last_reviewed_at (timestamptz)
   - schema_org_type (text)
   - schema_markup_planned (jsonb)
@@ -2916,8 +2934,8 @@ Q2_block_count_explosion:
 
 Q3_eeat_phase_2_timing:
   question: "When to flip from soft warn to hard block?"
-  recommend: "2026-09-01 (4 months grace period)"
-  prerequisite: "≥80% of brand clinic doctors registered in seo_authors"
+  recommend: "withdrawn 2026-08-23 — gate on the measured prerequisite, not a calendar date"
+  prerequisite: "≥80% of brand clinic doctors registered in seo_authors_reviewers (the table seo_authors does not exist)"
 
 Q4_t6_t6a_overlap:
   question: "Concept vs Guide — risk of confusion?"

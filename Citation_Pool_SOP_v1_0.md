@@ -70,7 +70,7 @@ Bible 23.1 กำหนด 6 tier ให้ map จาก **PubMed `PublicationT
 | G3 | retracted / broken_link ยัง active บนหน้า |
 | G4 | URL PubMed ไม่ตรงกับ PMID ที่บันทึก |
 | G5 | tier ไม่ตรงกับ citation_type |
-| G6 | หน้าได้ citation ไม่ถึงขั้นต่ำตาม layer |
+| G6 | หน้าได้ citation ไม่ถึงขั้นต่ำตาม `page_category` (§5) *(rewritten 2026-08-23 — `layer` column does not exist; see the reconciliation report)* |
 | G7 | หน้าที่มีข้ออ้างทางการแพทย์ไม่มี Tier 1-3 เลย |
 | G8 | freshness (T1>5ปี, T2/T5>7ปี) — ระดับเตือน ไม่บล็อก |
 | G9 | เอกสารเชิงพาณิชย์ที่ไม่ได้ติดป้าย |
@@ -93,12 +93,17 @@ where not exists (select 1 from seo_website_page_master q where q.page_fingerpri
 
 ## 5. ขั้นต่ำต่อหน้า (Bible 23.1 minimum_per_layer)
 
-| layer | ขั้นต่ำ |
+| `page_category` (fallback `page_type`) | ขั้นต่ำ |
 |---|---|
-| §5 หน้าอาการ · §6 หน้าความรู้ | ≥ 3 (≥1 ใน Tier 1-3) |
-| §3 หน้าบริการ · §4 หน้าเทคโนโลยี | ≥ 2 |
-| §7 หน้าเคส | ≥ 1 |
-| §1/§2/§8/§9 utility, local, brand | 0 — **ยกเว้น** หน้าราคา/สิทธิเบิกจ่าย ต้องมีแหล่งกฎหมาย/สิทธิประโยชน์ของประเทศนั้น |
+| `condition_pillar` หน้าอาการ · `knowledge_article` หน้าความรู้ | ≥ 3 (≥1 ใน Tier 1-3) |
+| `service_page` · `procedure_pillar` หน้าบริการ · `technology_page` หน้าเทคโนโลยี | ≥ 2 |
+| `evidence_case` หน้าเคส | ≥ 1 |
+| `home` · `about` · `doctor_profile` · `contact` · `branch_landing` · `local_*` — utility, local, brand | 0 — **ยกเว้น** หน้าราคา/สิทธิเบิกจ่าย ต้องมีแหล่งกฎหมาย/สิทธิประโยชน์ของประเทศนั้น |
+
+*(rewritten 2026-08-23 — `layer` column does not exist; see the reconciliation report)*
+- predicate จริง = `coalesce(page_category, page_type) in (…)` — `page_category` ยังว่าง 100% บน deezy/smile-scape ถ้าไม่ coalesce จะคืน 0 แถวแล้วผ่านแบบว่างเปล่า
+- **map แบบประมาณ ไม่ใช่ 1:1 กับ §-number เดิม** — category บอกว่าหน้า*คืออะไร* ส่วน sitemap_section บอกว่าอยู่*โซนไหน* และสองอย่างขัดกันจริงในข้อมูล (vth `technology_page` 17 แถวอยู่ §3 · smile-scape `service_page` 80 แถวอยู่ §5) · G6 ที่ shipped ยังอ่าน §-number จาก `split_part(sitemap_node_id,'.',1)` — ย้ายคีย์ต้องแก้ SQL ด้วย
+- 🔴 **UNIMPLEMENTABLE as written — see mapping note**: โควตาเฉพาะหน้า protocol/aftercare (Bible Layer 6) รันไม่ได้ เพราะไม่มีคอลัมน์ใดแยกมันออกจาก `service_page` — มันจึงตกไปกินโควตาแถว ≥ 2 เงียบ ๆ
 
 สระคือ **backbone** ไม่ใช่คำตอบสุดท้าย — ตอนเขียนเนื้อหาจริงต้องหา citation เฉพาะหน้าเพิ่ม แล้วผูกเข้า `seo_page_citations` ทีละข้ออ้าง
 
@@ -161,7 +166,7 @@ where not exists (select 1 from seo_website_page_master q where q.page_fingerpri
 ## 9. Change control
 
 - แก้ SOP นี้ = bump version + บันทึกเหตุผลท้ายไฟล์
-- §2 (tier mapping) และ §5 (ขั้นต่ำต่อหน้า) ผูกกับ Bible 23.1 โดยตรง แก้ที่นี่ฝ่ายเดียวไม่ได้
+- §2 (tier mapping) และ §5 (ขั้นต่ำต่อหน้า) ผูกกับ Bible 23.1 โดยตรง แก้ที่นี่ฝ่ายเดียวไม่ได้ · §5 เปลี่ยน**คีย์**จาก layer → `page_category` แล้ว (ค่าขั้นต่ำเท่าเดิม) แต่ Bible 23.1 `minimum_per_layer` ยังคีย์ด้วย layer อยู่ — ต้องตามมาปรับ *(rewritten 2026-08-23 — `layer` column does not exist; see the reconciliation report)*
 - เนื้อหาการแพทย์ยังต้องผ่าน sign-off ของผู้ประกอบวิชาชีพตามกระบวนการเดิม (`seo_editorial_reviews`)
 
 ---
