@@ -17,11 +17,25 @@
 -- ---------------------------------------------------------------------------
 --     Exempt: 'textbook' (ISBN only) and 'other' (Bible T6 first-party clinic
 --     registries, which have no external locator by definition).
-select 'G1_no_locator' gate, fingerprint, left(title,70) title
-from seo_citations
-where (brand_scope @> array['*'] or brand_scope @> array[:'brand'])
-  and pubmed_pmid is null and doi is null and url is null and isbn is null
-  and citation_type not in ('textbook','other');
+--     2026-08-24: split by whether anyone relies on the row. A locatorless row that says
+--     verification_status='unverified' and is bound to no page is a research to-do somebody
+--     wrote down honestly, not a defect — blocking on it makes the gate punish bookkeeping.
+--     G2 still blocks the moment such a row is bound to a page, so nothing reaches a reader.
+select 'G1_no_locator' gate, c.fingerprint, left(c.title,70) title
+from seo_citations c
+where (c.brand_scope @> array['*'] or c.brand_scope @> array[:'brand'])
+  and c.pubmed_pmid is null and c.doi is null and c.url is null and c.isbn is null
+  and c.citation_type not in ('textbook','other')
+  and (c.verification_status = 'verified'
+       or exists (select 1 from seo_page_citations pc where pc.citation_fp = c.fingerprint));
+
+select 'G1w_locatorless_backlog' gate, c.fingerprint, left(c.title,70) title
+from seo_citations c
+where (c.brand_scope @> array['*'] or c.brand_scope @> array[:'brand'])
+  and c.pubmed_pmid is null and c.doi is null and c.url is null and c.isbn is null
+  and c.citation_type not in ('textbook','other')
+  and c.verification_status <> 'verified'
+  and not exists (select 1 from seo_page_citations pc where pc.citation_fp = c.fingerprint);
 
 -- ---------------------------------------------------------------------------
 -- G2  Nothing unverified may reach a page.
@@ -81,14 +95,26 @@ where brand_scope <> array[]::text[]
 --     §5 concern + §6 knowledge >= 3 · §3 service + §4 tech >= 2 · §7 case >= 1
 -- ---------------------------------------------------------------------------
 with quota as (
-  select page_fingerprint page_fp,
-         case split_part(sitemap_node_id,'.',1)
+  -- Section comes from sitemap_node_id, falling back to sitemap_section when the node id is
+  -- empty. deezy's 72 translation rows carry no node_id, and defaulting them to quota 0 exempted
+  -- them silently — "nothing required" and "could not classify" must not share a return value.
+  -- Pages whose notes carry CITATION EXEMPTION state no claims, so nothing is required of them;
+  -- the exemption lives in the data, never in this file, so every brand can declare its own.
+  select page_fingerprint page_fp, status,
+         case coalesce(nullif(split_part(coalesce(sitemap_node_id,''),'.',1),''), sitemap_section)
            when '5' then 3 when '6' then 3 when '3' then 2 when '4' then 2 when '7' then 1 else 0 end q
-  from seo_website_page_master where brand_id = :'brand'
+  from seo_website_page_master
+  where brand_id = :'brand'
+    and status in ('Planned','Live')
+    and coalesce(reconciliation_notes,'') not like '%CITATION EXEMPTION%'
 ), got as (
   select page_fp, count(*) n from seo_page_citations where status='active' group by 1
 )
-select 'G6_below_minimum' gate, quota.page_fp, quota.q required, coalesce(got.n,0) actual
+--     Live blocks, Planned warns. The minimum is a promise about what SHIPS; demanding
+--     citations for text nobody has written yet is what produced the off-topic backbone sweep.
+select case when quota.status = 'Live' then 'G6_below_minimum'
+            else 'G6w_planned_below_minimum' end gate,
+       quota.page_fp, quota.q required, coalesce(got.n,0) actual
 from quota left join got using (page_fp)
 where quota.q > 0 and coalesce(got.n,0) < quota.q;
 
@@ -96,12 +122,22 @@ where quota.q > 0 and coalesce(got.n,0) < quota.q;
 -- G7  Every page carrying medical claims has at least one Tier 1-3 source.
 -- ---------------------------------------------------------------------------
 with quota as (
-  select page_fingerprint page_fp,
-         case split_part(sitemap_node_id,'.',1)
+  -- Section comes from sitemap_node_id, falling back to sitemap_section when the node id is
+  -- empty. deezy's 72 translation rows carry no node_id, and defaulting them to quota 0 exempted
+  -- them silently — "nothing required" and "could not classify" must not share a return value.
+  -- Pages whose notes carry CITATION EXEMPTION state no claims, so nothing is required of them;
+  -- the exemption lives in the data, never in this file, so every brand can declare its own.
+  select page_fingerprint page_fp, status,
+         case coalesce(nullif(split_part(coalesce(sitemap_node_id,''),'.',1),''), sitemap_section)
            when '5' then 3 when '6' then 3 when '3' then 2 when '4' then 2 when '7' then 1 else 0 end q
-  from seo_website_page_master where brand_id = :'brand'
+  from seo_website_page_master
+  where brand_id = :'brand'
+    and status in ('Planned','Live')
+    and coalesce(reconciliation_notes,'') not like '%CITATION EXEMPTION%'
 )
-select 'G7_no_tier1_3' gate, quota.page_fp
+select case when quota.status = 'Live' then 'G7_no_tier1_3'
+            else 'G7w_planned_no_tier1_3' end gate,
+       quota.page_fp
 from quota
 where quota.q > 0
   and not exists (
