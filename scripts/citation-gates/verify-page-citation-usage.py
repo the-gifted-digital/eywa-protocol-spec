@@ -31,12 +31,31 @@ import re
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-ROOT = os.path.abspath(os.path.join(HERE, "..", ".."))
-CONTENT = os.path.join(ROOT, "web", "src", "content")
+# Content lives in the BRAND being checked, not next to this script — the gates moved to the
+# protocol repo, which holds no content at all. Resolve from the working directory, walking up
+# for web/src/content, so the same file serves whichever brand repo it is run from.
+def _find_content():
+    override = os.environ.get("EYWA_CONTENT_ROOT")
+    if override:
+        return os.path.abspath(override)
+    d = os.path.abspath(os.getcwd())
+    while True:
+        cand = os.path.join(d, "web", "src", "content")
+        if os.path.isdir(cand):
+            return cand
+        parent = os.path.dirname(d)
+        if parent == d:
+            break
+        d = parent
+    sys.exit("ไม่พบ web/src/content — รันจากใน repo ของแบรนด์ หรือชี้ EYWA_CONTENT_ROOT")
 
-spec = importlib.util.spec_from_file_location("fpf", os.path.join(HERE, "find-page-forks.py"))
-fpf = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(fpf)
+
+CONTENT = _find_content()
+ROOT = os.path.abspath(os.path.join(CONTENT, "..", "..", ".."))
+
+import sys as _sys
+_sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import eywa_supabase as fpf  # key() / fetch() / SB — see eywa_supabase.py
 
 
 def content_files_by_slug():

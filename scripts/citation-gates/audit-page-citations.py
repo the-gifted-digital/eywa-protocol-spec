@@ -17,11 +17,12 @@ table is exactly that, self-labelled by the sweep that created it. B1 counts
 them, B3 flags citations spread so widely that a cluster-level matcher must have
 guessed, and B4 is informational.
 
-Usage: python3 content-plan/etl/audit-page-citations.py
+Usage: python3 audit-page-citations.py   (from anywhere; needs SUPABASE_SERVICE_KEY)
 """
-import importlib.util, collections, re
-spec = importlib.util.spec_from_file_location("fpf","content-plan/etl/find-page-forks.py")
-m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m); k=m.key()
+import collections, os, re, sys
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import eywa_supabase as m  # key() / fetch() — see eywa_supabase.py
+k = m.key()
 
 links=m.fetch("seo_page_citations","id,page_fp,citation_fp,status,supports_claim,citation_purpose,evidence_strength_score,inline_position,added_by_fp,created_at","&limit=40000",k)
 cites={c["fingerprint"]:c for c in m.fetch("seo_citations","fingerprint,title,verification_status,is_retracted,citation_tier,brand_scope","",k)}

@@ -37,9 +37,9 @@ import re
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-spec = importlib.util.spec_from_file_location("fpf", os.path.join(HERE, "find-page-forks.py"))
-fpf = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(fpf)
+import sys as _sys
+_sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import eywa_supabase as fpf  # key() / fetch() / SB — see eywa_supabase.py
 
 # House rules. Not standards — chosen so an anchor stays a phrase inside a sentence.
 MAX_LEN = 60

@@ -11,7 +11,8 @@ which is what SOP §4 asks for.
 Usage:
     python3 run-citation-qa-gates.py [--brand vth-biodent] [--verbose]
 
-Reads SUPABASE_SERVICE_KEY from ../../.secrets/supabase.env.
+Reads SUPABASE_SERVICE_KEY from the environment, EYWA_SECRETS_ENV, or a brand's
+.secrets/supabase.env found by walking up from the working directory — see eywa_supabase.py.
 Exits 1 if any blocking gate returns rows. G8 is warn-level and never blocks.
 """
 import argparse
@@ -25,7 +26,8 @@ import urllib.request
 from collections import Counter, defaultdict
 
 SB = "https://lffcbeszjqzioobqfdav.supabase.co"
-SECRETS = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", ".secrets", "supabase.env")
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import eywa_supabase  # noqa: E402 — resolves the key without assuming where this file sits
 
 # Bible 23.1 tier per citation_type. Mirrors G5 in the .sql — keep in step.
 TIER_BY_TYPE = {
@@ -101,14 +103,7 @@ COMMERCIAL_RE = re.compile(r"\bmanufacturer\b|\bversah\b|graphy inc|\btrioclear\
 PUBMED_URL_RE = re.compile(r"pubmed\.ncbi\.nlm\.nih\.gov/([0-9]+)")
 
 
-def load_key():
-    if "SUPABASE_SERVICE_KEY" in os.environ:
-        return os.environ["SUPABASE_SERVICE_KEY"]
-    with open(SECRETS, encoding="utf-8") as fh:
-        for line in fh:
-            if line.startswith("SUPABASE_SERVICE_KEY="):
-                return line.split("=", 1)[1].strip()
-    sys.exit("SUPABASE_SERVICE_KEY not found in env or " + SECRETS)
+load_key = eywa_supabase.key  # the gates moved to the protocol repo; the secret belongs to the brand
 
 
 KEY = load_key()
