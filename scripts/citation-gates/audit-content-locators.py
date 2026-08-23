@@ -99,33 +99,76 @@ def fetch(url, attempts=3):
     raise last
 
 
+def identifies_by_author_year(label, authors, year):
+    """Does this label name the paper the way an academic citation names it?
+
+    DR-061 (2026-08-24). Nothing anywhere said what references[].label had to
+    contain, so eywa-deezy wrote the finding — "การขูดหินปูนช่วยลดการอักเสบของเหงือก" —
+    where vth-biodent wrote the paper's title. Both are defensible: one reads
+    better to a patient, the other is machine-checkable. The ruling is that both
+    are allowed, and the label must merely IDENTIFY the paper: either it carries
+    enough of the real title to match, or it carries a first-author surname and
+    the year, which is how a human names a paper without quoting its title.
+
+    This matters because it is the only thing separating two very different
+    findings that scored in the same band. A label that is a summary and a label
+    that points at the wrong paper both disagree with the resolved title. Author
+    and year tell them apart: the summary still names the right work.
+    """
+    low = (label or "").lower()
+    if not year or str(year) not in low:
+        return False
+    return any(s and len(s) > 2 and s.lower() in low for s in (authors or []))
+
+
+def _surnames_pubmed(rec):
+    # esummary gives "Smith AB" — the surname is everything before the initials.
+    out = []
+    for a in (rec.get("authors") or []):
+        n = (a.get("name") or "").strip()
+        if n:
+            out.append(n.split()[0])
+    return out
+
+
 def resolve(url):
-    """Return (kind, identifier, title).
+    """Return (kind, identifier, title, authors, year).
 
     title is the resolved title, "" when there is nothing to resolve against,
     and None when the source could not be reached. None is deliberately not the
     same as a mismatch: unreachable is a network fact, wrong is a data fact, and
     only the second should ever fail a build. A gate that goes red because an
     API blinked is one people learn to ignore.
+
+    authors and year come back for the same reason: without them a label written
+    as a plain-language finding is indistinguishable from a label naming the
+    wrong paper, and only one of those is a defect.
     """
     m = PMID_RE.search(url)
     if m:
         pmid = m.group(1)
         try:
-            return "pmid", pmid, fetch(ESUMMARY + pmid)["result"][pmid].get("title")
+            rec = fetch(ESUMMARY + pmid)["result"][pmid]
+            yr = re.search(r"\b(19|20)\d{2}\b", str(rec.get("pubdate") or ""))
+            return ("pmid", pmid, rec.get("title"), _surnames_pubmed(rec),
+                    yr.group(0) if yr else "")
         except Exception:
-            return "pmid", pmid, None
+            return "pmid", pmid, None, [], ""
     doi = url.lower().replace("https://doi.org/", "").replace("http://doi.org/", "").strip()
     if doi.startswith("10."):
         try:
-            return "doi", doi, (fetch(CROSSREF + urllib.parse.quote(doi, safe=""))["message"].get("title") or [None])[0]
+            msg = fetch(CROSSREF + urllib.parse.quote(doi, safe=""))["message"]
+            parts = (msg.get("issued", {}).get("date-parts") or [[None]])[0] or [None]
+            return ("doi", doi, (msg.get("title") or [None])[0],
+                    [a.get("family") for a in (msg.get("author") or []) if a.get("family")],
+                    str(parts[0]) if parts[0] else "")
         except Exception:
-            return "doi", doi, None
+            return "doi", doi, None, [], ""
     # A plain web source — a society guideline page, a government document.
     # Nothing to resolve a title against, so "" rather than None. Normalised the
     # same way db_backed_keys stores it: an unnormalised key here made the
     # backing check miss an AAO reference that was linked all along.
-    return "url", url.rstrip("/").lower(), ""
+    return "url", url.rstrip("/").lower(), "", [], ""
 
 
 def db_backed_keys(brand):
@@ -176,7 +219,7 @@ def db_backed_keys(brand):
 
 def main(root, brand, skip_db, out_json):
     backed = {} if skip_db else db_backed_keys(brand)
-    seen, wrong, unresolved, unbacked = {}, [], [], []
+    seen, wrong, unresolved, unbacked, label_form = {}, [], [], [], []
     # 2026-08-24: this globbed "*/th/*.yaml" and so audited Thai content only. vth-biodent
     # writes ten languages — 183 of its 367 files, half the brand, were never checked while the
     # gate reported clean. deezy missed 147. A brand whose content is not laid out as
@@ -196,14 +239,26 @@ def main(root, brand, skip_db, out_json):
         if not m:
             continue
         for label, url in PAIR_RE.findall(m.group(1)):
-            kind, ident, title = seen.get((label, url), (None, None, None)) if (label, url) in seen else resolve(url)
-            if (label, url) not in seen:
-                seen[(label, url)] = (kind, ident, title)
+            if (label, url) in seen:
+                kind, ident, title, authors, year = seen[(label, url)]
+            else:
+                kind, ident, title, authors, year = resolve(url)
+                seen[(label, url)] = (kind, ident, title, authors, year)
                 time.sleep(0.15)
             if title is None:
                 unresolved.append((slug, label, url))
             elif title and agreement(label, title) < MATCH_FLOOR:
-                wrong.append((slug, label, url, title, round(agreement(label, title), 2)))
+                # Two findings, not one. Both disagree with the resolved title and
+                # both used to land in `wrong` and block the build, which is how 16
+                # correctly-sourced deezy references sat in the same bucket as 4 that
+                # pointed at the wrong paper. If the label names the first author and
+                # the year, it identifies the work — the label is just not written as
+                # a title, which DR-061 allows.
+                ag = round(agreement(label, title), 2)
+                if identifies_by_author_year(label, authors, year):
+                    label_form.append((slug, label, url, title, ag))
+                else:
+                    wrong.append((slug, label, url, title, ag))
             if not skip_db and slug in backed and ("%s:%s" % (kind, ident)) not in backed[slug]:
                 unbacked.append((slug, label, url))
 
@@ -234,6 +289,15 @@ def main(root, brand, skip_db, out_json):
             print("          %s  (agreement %.2f)" % (url, ag))
     else:
         print("PASS  every locator resolves to the paper its label names")
+    if label_form:
+        print("WARN  label เขียนเป็นข้อสรุป ไม่ใช่ชื่อเรื่อง แต่ระบุเปเปอร์ถูก — %d" % len(label_form))
+        print("        DR-061 อนุญาตทั้งสองแบบ · ที่ผ่านได้เพราะ label มีนามสกุลผู้เขียนคนแรก + ปี")
+        print("        ถ้าอยากให้เกตเทียบชื่อเรื่องตรง ๆ ให้เปลี่ยน label เป็นชื่อเปเปอร์")
+        for slug, label, url, title, ag in label_form[:10]:
+            print("        %-26s %s" % (slug, label[:60]))
+            print("          %s  (agreement %.2f)" % ((title or "")[:66], ag))
+        if len(label_form) > 10:
+            print("        ... อีก %d" % (len(label_form) - 10))
     if unresolved:
         print("WARN  could not reach the source after 3 tries — %d" % len(unresolved))
         print("        Unreachable is not the same as wrong. Re-run; if one keeps failing,")

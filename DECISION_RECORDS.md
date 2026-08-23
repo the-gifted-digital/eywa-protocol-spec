@@ -3,7 +3,7 @@
 > **Append-only architectural decision log.** Each record explains WHY a decision was made — not just WHAT.
 
 **Document Version:** 1.37  
-**Last Updated:** 2026-08-24 — DR-057/058 landed 2026-08-23; on 2026-08-24 every checkable claim in this file (table name, column name, allowed-value list, threshold, row count, status) was re-run against the live database. Corrections are appended in place and marked *(corrected 2026-08-24 against live schema)* — locked bodies are untouched. A second pass re-queried the corrections themselves and fixed four of them (deezy `page_category` 773→776 and the brand-wide NULL count 192→189; `schema_markup_type` 2,358→2,357 scalar rows / 27→26 distinct values; `periodontal-gum` "0 rows" narrowed to 0 pages and 0 entities, the deprecated cluster row survives; smile-scape's "0 uncited Live pages" flagged as vacuous — that brand has no Live page at all).  
+**Last Updated:** 2026-08-24 — DR-059/060/061 landed 2026-08-24; DR-057/058 landed 2026-08-23; on 2026-08-24 every checkable claim in this file (table name, column name, allowed-value list, threshold, row count, status) was re-run against the live database. Corrections are appended in place and marked *(corrected 2026-08-24 against live schema)* — locked bodies are untouched. A second pass re-queried the corrections themselves and fixed four of them (deezy `page_category` 773→776 and the brand-wide NULL count 192→189; `schema_markup_type` 2,358→2,357 scalar rows / 27→26 distinct values; `periodontal-gum` "0 rows" narrowed to 0 pages and 0 entities, the deprecated cluster row survives; smile-scape's "0 uncited Live pages" flagged as vacuous — that brand has no Live page at all).  
 **Format:** Reverse chronological (newest first)
 
 ---
@@ -31,6 +31,73 @@
 ---
 
 ## Decisions Log
+
+### [DR-061] — `references[].label` ระบุเปเปอร์ได้ทั้งสองแบบ: ชื่อเรื่อง หรือ นามสกุลผู้เขียน+ปี (2026-08-24) 🔒📐
+
+**Status:** **🔒 Locked 2026-08-24** — operator-directed ("ข้อ 3 โอเค")
+
+**Scope:** **UNIVERSAL** — ทุกแบรนด์ที่เขียน `references:` ใน content YAML · **Gate:** `check:content-citations`
+
+**Context:**
+
+eywa-deezy รายงาน 2026-08-24 ว่า `audit-content-locators.py` บล็อก 20 แถว แต่จริง ๆ เป็นสองอาการที่คนละเรื่องกันสิ้นเชิง คาอยู่ในถังเดียว: **4 แถวอ้างผิดเปเปอร์** (agreement ≤0.11, สองแถวอยู่บนหน้า Live) กับ **16 แถวที่ label เขียนเป็นข้อสรุปไม่ใช่ชื่อเรื่อง** (agreement 0.20–0.33) ซึ่งไม่ผิดอะไรเลย
+
+รากของปัญหาไม่ใช่เกต — **ไม่มีเอกสารไหนเคยเขียนว่า `label` ต้องมีอะไร** deezy จึงเขียนเป็นข้อสรุปภาษาคนมาตลอดโดยสุจริต ส่วน vth-biodent เขียนเป็นชื่อเปเปอร์ ทั้งสองฝั่งไม่เคยรู้ว่าอีกฝั่งทำคนละแบบ
+
+**Decision:**
+
+1. **อนุญาตทั้งสองแบบ** — `label` เป็นชื่อเปเปอร์ก็ได้ เป็นข้อสรุปภาษาคนไข้ก็ได้ ข้อความนี้เรนเดอร์ในลิสต์ References ที่พับปิดไว้ ไม่ใช่ในเนื้อความ
+2. **แต่ต้อง _ระบุ_ เปเปอร์ได้** — ผ่านทางใดทางหนึ่ง: (ก) มีคำจากชื่อเรื่องจริงพอให้ agreement ≥ 0.34 หรือ (ข) มี **นามสกุลผู้เขียนคนแรก + ปี**
+3. **แยกเป็นสอง finding** — `wrong` (อ้างผิดเปเปอร์) **บล็อก** · `label_form` (ข้อสรุป แต่ระบุเปเปอร์ถูก) **เตือน** · เกตดึง author/year จาก PubMed esummary และ Crossref มาใช้ตัดสิน
+4. **ข้อสรุปล้วนที่ไม่มีตัวระบุเลย = บล็อก** — ไม่ใช่เพราะเขียนไม่สวย แต่เพราะไม่มีอะไรบอกได้ว่ามันหมายถึงเปเปอร์ไหน ซึ่งเป็นคำถามเดียวที่เกตนี้มีไว้ตอบ
+
+**Consequences:** deezy แก้ 16 แถวได้ด้วยการเติม `(Surname ปี)` ต่อท้าย label ไม่ต้องเขียนใหม่ทั้งหมด · 4 แถวที่อ้างผิดเปเปอร์ยังบล็อกอยู่และต้องแก้จริง
+
+**References:** deezy ask #3 · `audit-content-locators.py` `identifies_by_author_year()` · [[DR-057]]
+
+---
+
+### [DR-060] — `regulator` ได้ source authority 1.0 (2026-08-24) 🔒📐
+
+**Status:** **🔒 Locked 2026-08-24** — operator-directed ("เคาะตามที่คุณเสนอ")
+
+**Scope:** **UNIVERSAL** — สระ citation ใช้ร่วมทุกแบรนด์ · **SOP:** Authority_Scoring_SOP_v1_0 · **Formula:** eywa-authority-1.0
+
+**Context:**
+
+`ORG_POINTS` ใน `compute-citation-authority.py` แมป organization_type ไว้ 8 จาก 12 ค่าที่คอลัมน์อนุญาต · ค่าที่ไม่ได้แมปตกไป `0.0` เงียบ ๆ ซึ่งเป็น**ค่าเดียวกับ "ไม่มีองค์กรหนุนเลย"** · หนึ่งในนั้นคือ `regulator` ซึ่งเป็นชนิดองค์กรที่ช่อง 1.0 `tier_1_regulatory` เขียนขึ้นมาเพื่อมันโดยตรง
+
+ผลที่ลงตารางไปแล้ว: `cite_AB5FB724012A37EF` (ทันตแพทยสภา, tier_1_regulatory) เก็บ 5.8 ขณะที่ฝาแฝดชนิด `government_agency` เก็บ 6.8 ทั้งที่เหมือนกันทุกแกนอื่น
+
+**Decision:**
+
+1. **`("regulator", *) = 1.0`** — องค์กรกำกับตามกฎหมายออกข้อบังคับที่ผูกพันวิชาชีพ อยู่บนสุดของสเกล ไม่ใช่ต่ำกว่ากรมในกระทรวง
+2. **`org_points()` คืน `None` ไม่ใช่ `0.0` เมื่อไม่รู้จักชนิด** และ `--apply` **ปฏิเสธการเขียน**ตราบใดที่ยังมีชนิดที่ไม่ได้แมป — คะแนนอำนาจเป็นนโยบาย ไม่ใช่ค่า default ที่สคริปต์ควรเดา
+3. **ยังไม่รันคะแนนใหม่** — การเขียนทับ 551 แถวเป็นคำสั่งของ operator ต่างหาก
+
+**References:** [[DR-021]] (authority_weight 1–100 บน page_master) · Authority_Scoring_SOP_v1_0
+
+---
+
+### [DR-059] — `pricing_page` เป็นหมวดกลางใน `page_category` (2026-08-24) 🔒📐
+
+**Status:** **🔒 Locked 2026-08-24** — operator-directed ("สร้างหมวดขึ้นมาเลยไหม ยังไงแต่ละแบรนด์ก็ต้องมีราคาอยู่แล้วไหม")
+
+**Scope:** **UNIVERSAL** — `seo_website_page_master.page_category` · **Gate:** `check:template-registry`
+
+**Context:**
+
+eywa-deezy ชี้ว่า `page_category` ไม่มีหมวดสำหรับหน้าราคา/แพ็กเกจ · เขามี 22 แถวที่ลงหมวดไม่ได้ (T13 + T19) และระบุถูกว่านี่ไม่ใช่ข้อมูลขาด แต่ **vocabulary ขาด** · ถ้าปล่อยให้แต่ละแบรนด์ยัดลงหมวดที่ใกล้ที่สุด แต่ละแบรนด์จะยัดคนละหมวด แล้วกฎทุกข้อที่ key ด้วย `page_category` จะเงียบไปคนละแบบ
+
+**Decision:**
+
+1. **เพิ่ม `pricing_page`** เป็นค่าที่ใช้ได้ใน `page_category` — 52 หน้าใน 3 แบรนด์เข้าหมวดนี้
+2. **เทมเพลตที่เรนเดอร์หน้าราคาถือได้หลายหมวด** — ใน `template-registry.json` ช่อง `category` เป็น list · VTH ให้ T5 ถือ `["service_page","pricing_page"]` และ T6 ถือ `["knowledge_article","pricing_page"]` ไม่ใช่ drift
+3. **หมวดไม่ผูกกับเทมเพลต** — โค้ดเทมเพลตเป็นของแบรนด์ (DR-057 §2.5) หมวดเป็นของโปรโตคอล
+
+**References:** deezy ask #1 · [[DR-057]] · `template-registry.example.json`
+
+---
 
 ### [DR-058] — ข้อห้ามทางคลินิก 31 เส้น: หลักฐานบอกว่าเป็น "สัมพัทธ์" ทุกเส้น และสามเส้นบอกตรงข้ามกับที่ฐานข้อมูลอ้าง (2026-08-23) 🔒🩺
 

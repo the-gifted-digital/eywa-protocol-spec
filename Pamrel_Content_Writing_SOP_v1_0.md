@@ -242,9 +242,39 @@ target ที่ผ่าน gate ตอน assign ยัง**ใช้ไม่
 | `check:keywords` | audit target ทุกหน้าเทียบ B-rule §4 | มีหน้าชน |
 | `check:density` | นับ hit จาก HTML ที่ render จริง **ตัด ToC / กล่อง debt / navigation ออกก่อนวัด** | เกิน guard หรือ 0 hit |
 | `scan:headings` | H1 เดียวต่อหน้า · ไม่ข้ามระดับ · aside มีชื่อ | มี issue |
+| `check:content-citations` | ทุก `label`+`url` ใน `references:` — locator resolve ได้ · label ระบุเปเปอร์ถูก · มีแถวใน `seo_page_citations` หนุน | locator ชี้ไปคนละเปเปอร์ |
+| `check:keyword-collisions` | หาหน้าที่แย่ง query เดียวกัน (normalize · containment · edit distance · seo_title) แล้ว **เสนอ** ว่าใครควรเป็น target | มีหน้าถือ target_keyword_fp ซ้ำกัน |
 | `check:links` | canonical tie-breaker + related block ตรงแผน | assertion ล้ม |
 | `gen:links` | export แผนลิงก์ → JSON ที่ commit | — |
 | `stamp:live` | อ่าน `dist/` → flip `status` Planned→Live · `published_date` ครั้งแรกครั้งเดียว · `canonical_url` จาก path ที่ ship จริง | — (idempotent · exit 0 ถ้าไม่มี key) |
+
+### 4.1 `references[].label` — เขียนได้สองแบบ แต่ต้องระบุเปเปอร์ได้ (DR-061)
+
+จนถึง 2026-08-24 ไม่มีเอกสารไหนเขียนว่า `label` ต้องมีอะไร ผลคือ vth-biodent เขียนเป็น
+ชื่อเปเปอร์ ส่วน deezy เขียนเป็นข้อสรุปภาษาคนไข้ ทั้งสองฝั่งไม่รู้ว่าอีกฝั่งทำคนละแบบ และ
+เกตบล็อกฝั่งหลังทั้งที่ไม่ได้ผิดอะไร
+
+**กติกา** — `label` เป็นข้อความอะไรก็ได้ที่อ่านรู้เรื่อง แต่ต้องระบุได้ว่าหมายถึงเปเปอร์ไหน
+ผ่านทางใดทางหนึ่ง:
+
+```yaml
+# แบบ ก — ชื่อเปเปอร์ (เกตเทียบกับชื่อเรื่องที่ resolve ได้)
+- label: "Efficacy of occlusal splints in the treatment of temporomandibular disorders. Acta Odontol Scand. 2020."
+  url: "https://pubmed.ncbi.nlm.nih.gov/32421379/"
+
+# แบบ ข — ข้อสรุปภาษาคนไข้ + นามสกุลผู้เขียนคนแรก + ปี
+- label: "เฝือกสบฟันช่วยลดอาการปวดข้อต่อขากรรไกรได้จริง (Alkhutari 2020)"
+  url: "https://pubmed.ncbi.nlm.nih.gov/32421379/"
+```
+
+**ที่ห้ามคือแบบที่สาม** — ข้อสรุปล้วนไม่มีตัวระบุเลย ไม่ได้ห้ามเพราะเขียนไม่สวย แต่เพราะ
+ไม่มีอะไรบอกได้ว่ามันหมายถึงเปเปอร์ไหน ซึ่งเป็นคำถามเดียวที่เกตนี้มีไว้ตอบ
+
+เกตแยกเป็นสอง finding: **`wrong`** (locator ชี้ไปคนละเปเปอร์) บล็อก · **`label_form`**
+(เขียนเป็นข้อสรุป แต่ระบุเปเปอร์ถูก) เตือนอย่างเดียว
+
+> `label` เรนเดอร์ในลิสต์ References ที่พับปิดไว้ท้ายหน้า ไม่ใช่ในเนื้อความ — การใส่
+> `(Surname ปี)` จึงไม่ทำให้บทความอ่านเหมือนรายงานวิจัย
 
 > **`stamp:live` ต้องต่อเข้า CI หลังขั้น deploy** ไม่ใช่ให้คนรันมือ — รันกับสิ่งที่ ship จริง ไม่รันเมื่อ build ล้ม และไม่มี key ก็ต้อง exit 0 เพื่อไม่ให้ deploy ที่สำเร็จแล้วล้มเพราะ secret หาย · ต้องมีโหมด dry-run เพราะมัน PATCH แถว production
 
