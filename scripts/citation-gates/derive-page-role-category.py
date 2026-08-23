@@ -38,7 +38,9 @@ import urllib.parse
 import urllib.request
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-SB = "https://lffcbeszjqzioobqfdav.supabase.co/rest/v1/"
+sys.path.insert(0, HERE)
+import eywa_supabase  # noqa: E402 — one place that knows the URL and how to find the key
+SB = eywa_supabase.SB
 TABLE = "seo_website_page_master"
 
 # Values of page_type that ARE a semantic kind. Anything else in that column is a structural
@@ -62,15 +64,7 @@ SCHEMA_CATEGORY = {
 }
 
 
-def key():
-    k = os.environ.get("SUPABASE_SERVICE_KEY")
-    if k:
-        return k
-    with open(os.path.join(HERE, "..", "..", ".secrets", "supabase.env"), encoding="utf-8") as fh:
-        for line in fh:
-            if line.startswith("SUPABASE_SERVICE_KEY="):
-                return line.split("=", 1)[1].strip()
-    sys.exit("no SUPABASE_SERVICE_KEY")
+key = eywa_supabase.key  # the gates live in the protocol repo; the secret belongs to the brand
 
 
 def fetch(select, flt, k):

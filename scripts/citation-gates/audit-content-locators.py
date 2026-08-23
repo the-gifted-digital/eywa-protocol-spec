@@ -36,6 +36,9 @@ import argparse
 import glob
 import json
 import os
+import sys
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import eywa_supabase  # noqa: E402
 import re
 import sys
 import time
@@ -128,12 +131,12 @@ def db_backed_keys(brand):
     """The identifiers seo_page_citations actually links, keyed by page slug."""
     key = os.environ.get("SUPABASE_SERVICE_KEY")
     if not key:
-        secrets = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", ".secrets", "supabase.env")
+        k = eywa_supabase.key()
         with open(secrets, encoding="utf-8") as fh:
             for line in fh:
                 if line.startswith("SUPABASE_SERVICE_KEY="):
                     key = line.split("=", 1)[1].strip()
-    sb = "https://lffcbeszjqzioobqfdav.supabase.co/rest/v1/"
+    sb = eywa_supabase.SB
 
     def page_all(table, select, flt=""):
         out, off = [], 0

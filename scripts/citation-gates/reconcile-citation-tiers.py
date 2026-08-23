@@ -18,7 +18,8 @@ Usage:
     python3 reconcile-citation-tiers.py            # report only
     python3 reconcile-citation-tiers.py --apply    # write
 
-Reads SUPABASE_SERVICE_KEY from ../../.secrets/supabase.env.
+Reads SUPABASE_SERVICE_KEY from the environment, EYWA_SECRETS_ENV, or a brand's
+.secrets/supabase.env found by walking up from the working directory (eywa_supabase.py).
 """
 import argparse
 import importlib.util

@@ -25,9 +25,9 @@ import urllib.parse
 import urllib.request
 from collections import Counter, defaultdict
 
-SB = "https://lffcbeszjqzioobqfdav.supabase.co"
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import eywa_supabase  # noqa: E402 — resolves the key without assuming where this file sits
+SB = eywa_supabase.SB_ORIGIN  # one definition of the host, in eywa_supabase.py
 
 # Bible 23.1 tier per citation_type. Mirrors G5 in the .sql — keep in step.
 TIER_BY_TYPE = {

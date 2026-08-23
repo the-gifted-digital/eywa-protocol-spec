@@ -21,7 +21,11 @@ import sys
 import urllib.parse
 import urllib.request
 
-SB = "https://lffcbeszjqzioobqfdav.supabase.co/rest/v1/"
+# The project origin, with no path. SB appends the PostgREST prefix, because callers
+# split on that boundary two different ways and having both spelled out here is what stops a
+# second copy of the host appearing in some other file.
+SB_ORIGIN = "https://lffcbeszjqzioobqfdav.supabase.co"
+SB = SB_ORIGIN + "/rest/v1/"
 
 
 def _from_env_file(path):
