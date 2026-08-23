@@ -782,7 +782,7 @@ When `brand_structure='monolithic'`: unchanged DR-004 behavior `{brand_domain}/{
 | `topic_cluster_id` `text` | denormalized cluster key (FK soft → seo_topic_cluster_master.cluster_slug) |
 | `topic_cluster_name` `text` | denormalized cluster name |
 | `schema_org_type` `text` | `'MedicalCondition'`, `'MedicalTherapy'`, `'MedicalProcedure'`, `'Symptom'`, `'MedicalSpecialty'`, `'Drug'`, `'MedicalDevice'`, etc. |
-| `entity_authority_score` `numeric` | 0–100, DR-013 evidence rollup |
+| `entity_authority_score` `numeric` | **0–10**, DR-013 evidence rollup · live range 0.3–7.94, nothing above 8 *(corrected 2026-08-24 — documented 0–100, so a "promote entities ≥70" rule matches nothing, ever)* |
 | `search_volume_total` `integer` | Aggregated monthly search volume across keywords mapped to entity |
 | `brand_scope` `text[]` | DR-010 — brands this entity is in scope for (`['*']` = universal) |
 | `brand_scope_id` `text` | DR-008 single-brand fast path (NULL for multi-brand) |
@@ -870,8 +870,8 @@ Preserved in **Appendix H — Deferred v2.0 Provisions**.
 | `brand_scope` `text[]` | DR-010 |
 | `brand_scope_primary` `text` | Single primary brand (denorm) |
 | `cluster_facet` `text` | Subcategory within cluster_type |
-| `cluster_health_score` `numeric` | 0–100; computed nightly via cron |
-| `cluster_topical_authority` `numeric` | 0–100 |
+| `cluster_health_score` `numeric` | **0–10**; computed nightly via cron · live range 0.0–8.19, mean 5.17 *(corrected 2026-08-24 — a "warn below 60" alert on a 0–10 column fires on every cluster forever)* |
+| `cluster_topical_authority` `numeric` | **0–10** · live range 0.0–6.76, mean 4.20 *(corrected 2026-08-24 — a target of ≥60 is unreachable by construction)* |
 | `cluster_health_breakdown` `jsonb` | Score factors |
 | `cluster_health_formula_version` `text` | E.g. `'v1.0'` |
 | `cluster_health_computed_at` `timestamptz` | |

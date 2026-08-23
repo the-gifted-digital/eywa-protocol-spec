@@ -26463,7 +26463,7 @@ page_purpose:
 
 ```yaml
 seo_organic: /{vertical-slug}/{topic-slug}/   # Part 4 convention unchanged
-ads_lp:      /lp/{campaign-or-offer-slug}/    # NEW — `/lp/` marks Ads track
+ads_landing: /lp/{campaign-or-offer-slug}/    # `/lp/` marks Ads track · live value is `ads_landing`, not `ads_lp` (corrected 2026-08-24)
 dual_use:    existing SEO URL (no change — flagged via page_purpose)
 ```
 
@@ -26724,7 +26724,7 @@ When a brand decides to launch Google Ads:
 step_1_planning:
   scope: identify hero offer + 2-5 LPs needed
   outputs:
-    - LP page rows in Notion (page_purpose=ads_lp, ads_template_id=T-ADS-X, campaign_id set)
+    - LP page rows in Notion (page_purpose=ads_landing, ads_template_id=T-ADS-X, campaign_id set)
     - Keyword rows flagged (ad_active=true, ad_intent_score, ad_priority_tier, ad_landing_page_fp)
   dependencies:
     - Brand Stage 1 Phase A complete (brand-concept.md)
