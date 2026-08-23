@@ -32,6 +32,71 @@
 
 ## Decisions Log
 
+### [DR-058] — ข้อห้ามทางคลินิก 31 เส้น: หลักฐานบอกว่าเป็น "สัมพัทธ์" ทุกเส้น และสามเส้นบอกตรงข้ามกับที่ฐานข้อมูลอ้าง (2026-08-23) 🔒🩺
+
+**Status:** **🔒 Locked 2026-08-23** — operator-directed ("31 ข้อห้าม ให้ทำไปตาม global standard ได้เลย")
+
+**Scope:** **UNIVERSAL** — `seo_entity_relationships` ใช้ร่วมทุกแบรนด์ · **Bible Reference:** Part 2.7 (edge vocabulary) · Part 23.1 (citation tier)
+
+**Context:**
+
+`trg_validate_medical_signoff` กับ `trg_validate_edge_evidence` ติดตั้งและ armed อยู่จริง แต่ดักที่ `edge_type='contraindicates'` ซึ่ง **มี 0 แถวจาก 1,089** ข้อห้ามจริง 32 ข้อถูก park เป็น `related_to` พร้อม `edge_note='future-contraindicates-*'` · 15 แถวติดป้าย strength 3 (เด็ดขาด) และไม่มีแถวไหนมี signoff เลย · 68 หน้าที่ Live อยู่ถือ entity ที่เป็นเป้าของข้อห้ามเหล่านั้นเป็น primary
+
+**Decision:**
+
+1. **retype ได้เฉพาะเมื่อมีหลักฐานผูก** — ค้น PubMed แล้ว verify แบบ adversarial ทุกใบ ได้ 14 ใบที่ใช้ได้ (round 1) · PMID/DOI ทุกใบ round-trip ด้วยมือก่อนเก็บ
+2. 🔴 **ไม่มีสักใบที่รองรับข้อห้ามเด็ดขาด** — ทั้งหมดเป็นข้อห้ามเชิงสัมพัทธ์ที่ต้องประเมินรายกรณี · **13 เส้น retype เป็น `contraindicates` strength 2** ไม่ใช่ 3
+3. 🔴 **สามแหล่งพูดตรงข้ามกับที่ฐานข้อมูลอ้าง** — International ONJ Taskforce 2025 ระบุว่าไม่ต้องหยุดยาต้านการสลายกระดูกก่อนฝังรากเทียมและฝังได้อย่างปลอดภัย · SR เบาหวาน 2022 เขียนคำว่า "ไม่มีข้อห้าม" ไว้เองเมื่อควบคุมน้ำตาลได้ · MA 2026 ระบุว่าการถอนฟันไม่ใช่ตัวกระตุ้นที่ต้องเลี่ยงเสมอไป
+4. **`osteoporosis-on-oral-bisphosphonate → dental-implant` ห้าม retype** — คงเป็น `related_to` strength 1 พร้อมหลักฐานผูกไว้ เพราะติดป้ายว่าห้าม ทั้งที่ฉันทามตินานาชาติบอกว่าทำได้ คือการบิดหลักฐาน
+5. **strength 3 ต้องมีทั้ง citation และ signoff ของทันตแพทย์จริง** — ระบบห้ามเติม `medical_reviewer_signoff_at` โดยไม่มีคนเซ็นจริง ไม่ว่ากรณีใด
+
+**Rationale:**
+
+กลไกความปลอดภัยที่ชี้ผิดที่ ไม่เคย error — มันคืน 0 แล้วคนอ่านว่า "ผ่าน" · การ retype ทั้ง 32 เส้นแบบรวดเดียวจะเปลี่ยนความเงียบเป็นการอ้างเกินจริง ซึ่งบนหน้า YMYL แย่กว่าเดิม · เกณฑ์ที่ใช้คือ **หลักฐานกำหนดระดับ ไม่ใช่ระดับกำหนดว่าจะหาหลักฐานแบบไหน**
+
+**กับดักที่เจอจริงและต้องกันซ้ำ:**
+- **อวัยวะถูก โรคถูก หัตถการผิด** — งาน MRONJ ของการถอนฟันไม่ครอบ sinus lift · bisphosphonate ชนิดฉีดไม่ครอบชนิดกิน · เบาหวานที่ควบคุมได้ไม่ครอบที่ควบคุมไม่ได้
+- **ชื่อเรื่องไม่ได้กำหนด tier** — เจอบทความที่เรียกตัวเองว่า systematic review แต่ PubMed จัดเป็น Journal Article ธรรมดา (8 case report) → tier 5 ไม่ใช่ tier 1
+- **scoping review ไม่พอจะปลดข้อจำกัดทางคลินิก** — ไม่มีตัวหาร ไม่มีอุบัติการณ์ ไม่มีกลุ่มเปรียบเทียบ
+
+**References:** `eywa-vth-biodent/content-plan/protocol-db-reconcile-2026-08-23.md` · DR-013 (trigger enforcement) · DR-044 (Citation Pool) · Citation Pool SOP §2
+
+---
+
+### [DR-057] — เก้าคำตัดสินเรื่องคำศัพท์และความเป็นเจ้าของ: อะไรที่แบรนด์ต่างกันได้ และอะไรที่ต้องตรงกัน (2026-08-23) 🔒📐
+
+**Status:** **🔒 Locked 2026-08-23** — operator-directed
+
+**Scope:** **UNIVERSAL** — ทุกแบรนด์บน `seo_website_page_master` · **Schema Reference:** v1.23
+
+**Context:**
+
+การตรวจเอกสารทั้งชุดเทียบฐานข้อมูลจริงเมื่อ 2026-08-23 พบว่า 1,837 จาก 2,317 ข้อไม่ตรง และ **336 กฎยิงไม่ออกเลย** ในนั้นมี 9 จุดที่ตัดสินด้วยข้อเท็จจริงไม่ได้ เพราะเป็นคำถามว่าจะเอาแบบไหน ไม่ใช่คำถามว่าอะไรจริง
+
+**Decision:**
+
+| # | เรื่อง | คำตัดสิน |
+|---|---|---|
+| 1 | `schema_markup_type` | ใช้ **scalar** · migrate smile-scape 728 แถวจากรูป `{A,B}` — กฎ schema ที่เขียนเป็น `=` มองไม่เห็นทั้งแบรนด์ (109 หน้า MedicalCondition คืน 0) |
+| 2 | `funnel_stage` | ใช้ **awareness / consideration / decision / retention** ตามตารางคีย์เวิร์ด 22,710 แถว · migrate ฝั่งหน้า 1,489 แถว |
+| 3 | `intent_source_tier` | รับ **`brand`** เป็นชั้นที่ 4 — ข้อมูลใช้จริง 88 ครั้ง เอกสารตามไม่ทัน · `paa` = 0 แถว |
+| 4 | citation tier scale | **คอมเมนต์ใน DB เป็นฉบับจริง** (1=SR/MA · 3=guideline) เพราะ G5 ที่รันใน CI ยึดอันนั้น · แก้อีก 3 เอกสารตาม |
+| 5 | `content_format` | 🔑 **ปล่อยให้ต่างกันได้ตามแบรนด์** — แต่ละแบรนด์ออกแบบเทมเพลตเอง (deezy ใช้ T2b ที่ vth/smile-scape ใช้ T2) · สิ่งที่ห้ามคือโค้ดที่ไม่มีนิยาม → **ตรวจกับทะเบียนของแบรนด์นั้น ไม่ใช่รายการ T-code กลาง** · map ทุกตัวต้องคีย์ด้วยแบรนด์ด้วย |
+| 6 | `has_medical_review` | 🔑 **หน้าที่ operator อนุมัติให้ Live = ผ่านการรีวิวแล้ว** ฝังลง schema ได้เลย · ห้าม gate ด้วยแถวใน `seo_editorial_reviews` · backfill 143 แถว Live ที่ยังเป็น false |
+| 7 | word count | คอลัมน์มีอยู่แล้วที่ชั้นวัดผล: `seo_x_ads_keywords_x_url_daily_logs.plain_text_word_count` — **NULL ทั้ง 151,471 แถว** → แก้ที่ crawl ETL ห้ามเพิ่มคอลัมน์ที่ page master |
+| 8 | DR-032 multi_center | **dormant** — ยังไม่มีแบรนด์ไหนเป็น multi-center จริง · `seo_brand_centers` 0 แถว · 20/20 แบรนด์ monolithic · ข้อความเดิมที่ว่า vitality-hospital มี 7 center ไม่ตรงกับข้อมูล |
+| 9 | ads track (DR-026) | **dormant** — ยังไม่เคยเปิดใช้จริง · `ad_active` false ครบ 22,710 แถว · smile-scape เป็น MVP และโฆษณามีอยู่ก่อนแล้วบังเอิญตรงคีย์เวิร์ด · ยังไม่ถึงคิวคุยเรื่อง ad จริงจัง |
+
+**Rationale:**
+
+เส้นแบ่งของทั้งเก้าข้อคือ **อะไรคือคำศัพท์ร่วม กับอะไรคือของแบรนด์** · คอลัมน์ที่กฎร่วมต้องอ่าน (schema type · funnel · tier ของหลักฐาน) ต้องพูดภาษาเดียวกัน ไม่งั้นกฎที่เขียนครั้งเดียวจะเงียบไปทั้งแบรนด์โดยไม่มีใครรู้ · ส่วนสิ่งที่เป็นการออกแบบของแบรนด์ (เทมเพลต) ปล่อยต่างกันได้ ขอแค่มีทะเบียนให้ตรวจ
+
+ข้อ 6 เป็นการกลับคำเสนอเดิมที่ให้ derive จากแถวรีวิวที่ approved — operator ยืนมาตลอดว่าการอนุมัติให้ขึ้น Live **คือ** การรีวิว และระบบต้องสะท้อนสิ่งที่เกิดขึ้นจริง ไม่ใช่บังคับให้มีขั้นตอนซ้ำ
+
+**References:** `eywa-vth-biodent/content-plan/protocol-db-reconcile-2026-08-23.md` · DR-026 (ads) · DR-032 (multi-center) · DR-034/043 (intent tier) · DR-044 (citation tier)
+
+---
+
 ### [DR-056] — Web performance: อ่าน field data ก่อน · ซ่อม paint path ก่อนแตะ third-party · เช็คว่าแท็กยังกินแต้มไหมก่อนคิดถอด (2026-08-12) 🔒⚡📐
 
 **Status:** **🔒 Locked 2026-08-14** — operator-directed · หนึ่งวันกับหน้าแรกของ Deezy **82 → 98** Lighthouse mobile โดยที่ GTM + GA4 ติดครบ
