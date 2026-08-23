@@ -177,7 +177,15 @@ def db_backed_keys(brand):
 def main(root, brand, skip_db, out_json):
     backed = {} if skip_db else db_backed_keys(brand)
     seen, wrong, unresolved, unbacked = {}, [], [], []
-    files = sorted(glob.glob(os.path.join(root, "*/th/*.yaml")))
+    # 2026-08-24: this globbed "*/th/*.yaml" and so audited Thai content only. vth-biodent
+    # writes ten languages — 183 of its 367 files, half the brand, were never checked while the
+    # gate reported clean. deezy missed 147. A brand whose content is not laid out as
+    # <template>/<lang>/ got zero files and a PASS, which is the exact failure this gate set
+    # exists to catch, sitting inside one of the gates.
+    files = sorted(glob.glob(os.path.join(root, "*", "*", "*.yaml")))
+    if not files:
+        files = sorted(glob.glob(os.path.join(root, "**", "*.yaml"), recursive=True))
+    langs = sorted({os.path.basename(os.path.dirname(f)) for f in files})
     for f in files:
         slug = os.path.basename(f)[:-5]
         m = REF_RE.search(open(f, encoding="utf-8").read())
@@ -195,7 +203,13 @@ def main(root, brand, skip_db, out_json):
             if not skip_db and slug in backed and ("%s:%s" % (kind, ident)) not in backed[slug]:
                 unbacked.append((slug, label, url))
 
-    print("content locator audit — %d files, %d distinct label+url pairs" % (len(files), len(seen)))
+    print("content locator audit — %d files across %d dirs (%s), %d distinct label+url pairs"
+          % (len(files), len(langs), ", ".join(langs[:12]) or "-", len(seen)))
+    if not files:
+        # Zero files and zero findings look identical in a summary line. Say which one this is.
+        print("🔴 R0_no_content — ไม่พบไฟล์ .yaml ใต้ %s" % root)
+        print("   เกตที่ไม่มีอะไรให้ตรวจ ไม่ใช่เกตที่ผ่าน · ชี้ --root ให้ถูก หรือดูโครงโฟลเดอร์ของแบรนด์")
+        return 1
     print("-" * 78)
     if wrong:
         print("FAIL  resolves to a different paper — %d" % len(wrong))

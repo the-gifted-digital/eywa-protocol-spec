@@ -12,6 +12,13 @@ The registry is what replaces the global list. Each brand keeps
 `content-plan/template-registry.json` naming every code it uses, which template directory that
 code renders through, and which page_category values it may carry. This gate reads it.
 
+🔑 THE CODES ARE ARBITRARY STRINGS. Brands design their own templates, so they have different
+numbers of them, and they name them whatever their team actually calls them. Nothing here
+requires a `T` prefix, a number, or any shared vocabulary between brands: vth-biodent has nine
+codes, smile-scape thirteen, deezy twenty-one including T2b, T6a, T8g and T12i that no other
+brand uses. A brand writing `service-long` or `price-sheet` is as valid. This gate compares
+keys as plain strings and never parses their shape — see template-registry.example.json.
+
 Three findings, and the split matters as much as the checks:
 
   R1_unregistered_code    a content_format in the plan that the registry does not define.
