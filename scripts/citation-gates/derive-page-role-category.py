@@ -128,11 +128,20 @@ def run(brand, k, apply_writes):
             votes[r["content_format"].strip()].add(cat)
 
     resolved, ambiguous, unknown = [], [], []
+    # page_role and page_category are answers to two independent questions. role comes
+    # from the tree — does this page have children — and is known for every live row the
+    # moment `kids` is built. category comes from content_format and its siblings, and
+    # sometimes cannot be settled. Tying the write of the first to the success of the
+    # second left 87 live rows with page_role NULL, 30 of them genuine hubs (including
+    # deezy-8.1, which has 99 children), and NULL reads downstream as "not derived yet"
+    # rather than "wrong", so they queued forever instead of surfacing.
+    roles = {}
     for r in live:
         fp = r["page_fingerprint"]
         cf = (r["content_format"] or "").strip()
         stored, pt = norm(r.get("page_category")), norm(r["page_type"])
         role = "hub" if kids.get(fp, 0) > 0 else "leaf"
+        roles[fp] = role
 
         if stored in CATEGORY_VALUES:
             resolved.append((fp, r["slug"], stored, role, "page_category มีค่าอยู่แล้ว"))
@@ -155,8 +164,8 @@ def run(brand, k, apply_writes):
 
     print(f"══ {brand} · {len(live)} แถวที่ไม่ใช่ Merged")
     print(f"   derive ได้ {len(resolved)} · กำกวม {len(ambiguous)} · ไม่รู้ {len(unknown)}\n")
-    print("── page_role (คำนวณจากต้นไม้)")
-    for v, n in collections.Counter(x[3] for x in resolved).most_common():
+    print("── page_role (คำนวณจากต้นไม้ · ทุกแถวที่ live ไม่ใช่เฉพาะแถวที่หมวดลงตัว)")
+    for v, n in collections.Counter(roles.values()).most_common():
         print(f"   {v:<6} {n}")
     print("\n── page_category")
     for v, n in collections.Counter(x[2] for x in resolved).most_common():
@@ -189,8 +198,21 @@ def run(brand, k, apply_writes):
     written = 0
     for (cat, role), fps in sorted(groups.items()):
         written += patch_many(fps, {"page_category": cat, "page_role": role}, k)
-    print(f"\nเขียนแล้ว {written} แถว ใน {len(groups)} กลุ่ม · "
-          f"ข้ามกำกวม {len(ambiguous)} และไม่รู้ {len(unknown)}")
+
+    # Roles for the rows whose category did not resolve. Their role was never in doubt.
+    settled = {fp for fp, _s, _c, _r, _w in resolved}
+    role_only = collections.defaultdict(list)
+    for fp, role in roles.items():
+        if fp not in settled:
+            role_only[role].append(fp)
+    role_written = 0
+    for role, fps in sorted(role_only.items()):
+        role_written += patch_many(fps, {"page_role": role}, k)
+
+    print(f"\nเขียนแล้ว {written} แถว (หมวด+role) ใน {len(groups)} กลุ่ม")
+    print(f"เขียน role อย่างเดียวอีก {role_written} แถวที่หมวดยังไม่ลงตัว "
+          f"— role มาจากต้นไม้ ไม่ได้ขึ้นกับหมวด")
+    print(f"ยังค้างหมวด: กำกวม {len(ambiguous)} · ไม่รู้ {len(unknown)}")
     return len(ambiguous) + len(unknown)
 
 

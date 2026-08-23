@@ -48,6 +48,11 @@ def overlap(a, b):
     return len(A & B) / max(1, min(len(A), len(B)))
 
 
+# A transport failure is not a fact about the data. Distinct from None, which means
+# "the source answered, and it has no such record".
+UNREACHABLE = object()
+
+
 def fetch_pubmed(pmids):
     """Batch efetch. Returns {pmid: {title, journal, year, pubtypes}}."""
     out = {}
@@ -58,13 +63,27 @@ def fetch_pubmed(pmids):
             data=urllib.parse.urlencode(
                 {"db": "pubmed", "retmode": "xml", "id": ",".join(chunk)}).encode())
         root = ET.fromstring(urllib.request.urlopen(req, timeout=60).read())
-        for a in root.iter("PubmedArticle"):
-            out[a.findtext(".//PMID")] = {
-                "title": " ".join((a.findtext(".//ArticleTitle") or "").split()),
-                "journal": a.findtext(".//Journal/ISOAbbreviation") or "",
-                "year": a.findtext(".//PubDate/Year") or "",
-                "pubtypes": [p.text for p in a.iter("PublicationType")],
-            }
+        # BOTH element types. efetch wraps NCBI Bookshelf records (StatPearls,
+        # GeneReviews, NBK chapters — heavily cited in clinical content) in
+        # <PubmedBookArticle>, which root.iter("PubmedArticle") never yields. Every
+        # valid Bookshelf PMID therefore fell through to "not in pm" and was reported
+        # NOT_FOUND, and this file's own remedy for NOT_FOUND is to strip the locator.
+        # A book record puts its title in BookTitle or ArticleTitle depending on
+        # whether the citation is the whole book or one chapter, so read either.
+        for tag in ("PubmedArticle", "PubmedBookArticle"):
+            for a in root.iter(tag):
+                pmid = a.findtext(".//PMID")
+                if not pmid:
+                    continue
+                out[pmid] = {
+                    "title": " ".join(((a.findtext(".//ArticleTitle")
+                                        or a.findtext(".//BookTitle") or "").split())),
+                    "journal": (a.findtext(".//Journal/ISOAbbreviation")
+                                or a.findtext(".//Book/Publisher/PublisherName") or ""),
+                    "year": (a.findtext(".//PubDate/Year")
+                             or a.findtext(".//Book/PubDate/Year") or ""),
+                    "pubtypes": [p.text for p in a.iter("PublicationType")],
+                }
         time.sleep(0.4)
     return out
 
@@ -79,8 +98,13 @@ def fetch_crossref(doi):
             "journal": (m.get("container-title") or [""])[0],
             "year": (m.get("issued", {}).get("date-parts", [[None]])[0] or [None])[0],
         }
+    except urllib.error.HTTPError as e:
+        # 404 is Crossref answering "no such DOI". Anything else is Crossref not
+        # answering: 429 (likely — the caller sleeps 0.25s with no backoff), 500, 503.
+        return None if e.code == 404 else UNREACHABLE
     except Exception:
-        return None
+        # Timeout, DNS, TLS. Never a statement about the DOI.
+        return UNREACHABLE
 
 
 def tier_from_pubtypes(pt):
@@ -99,7 +123,13 @@ def tier_from_pubtypes(pt):
         return 6, "case_report"
     if s & {"Letter", "Comment", "Editorial"}:
         return 6, "editorial"
-    return 5, "cohort_study"
+    # No match — including the modal case ["Journal Article"] on its own, and [None]
+    # when a PublicationType element carries no text. This used to fall through to
+    # (5, "cohort_study"), printing a specific study design under a column header that
+    # reads as derived fact; a tier reconciliation trusting that column would rewrite
+    # accurate hand-entered rows to a guess. reconcile-citation-tiers.py returns None
+    # here and the two are meant to stay identical — this copy is the one that drifted.
+    return None, None
 
 
 def main(path, threshold=0.34):
@@ -109,6 +139,14 @@ def main(path, threshold=0.34):
         if len(parts) < 4 or parts[0] in ("fingerprint", ""):
             continue
         rows.append(parts[:4])
+
+    if not rows:
+        # An empty verdicts stream is the exact output of a perfectly clean pool, so it
+        # cannot be allowed to print like one: a truncated or wrong-format export would
+        # read as "every citation round-tripped".
+        sys.exit("🔴 no input rows parsed from %s — expected TSV "
+                 "fingerprint\\tpmid\\tdoi\\ttitle with at least 4 columns.\n"
+                 "   ศูนย์แถวที่อ่านได้ ไม่ใช่ศูนย์แถวที่ผิด" % path)
 
     pmids = [r[1] for r in rows if r[1] and r[1].isdigit()]
     pm = fetch_pubmed(pmids) if pmids else {}
@@ -120,10 +158,16 @@ def main(path, threshold=0.34):
             rec, locator = pm.get(pmid), "PMID:" + pmid
             if rec:
                 src = rec["title"]
-                tier = "T%d/%s" % tier_from_pubtypes(rec["pubtypes"])
+                t, name = tier_from_pubtypes(rec["pubtypes"])
+                tier = "T%d/%s" % (t, name) if t else "UNCLASSIFIED"
         elif doi:
             rec, locator = fetch_crossref(doi), "DOI:" + doi
             time.sleep(0.25)
+            if rec is UNREACHABLE:
+                # Not a verdict about the DOI. Printing NOT_FOUND here is what turns one
+                # rate-limit window into an instruction to strip every DOI in the pool.
+                print("\t".join([fp, "UNREACHABLE", locator, title, "", ""]))
+                continue
             src = rec["title"] if rec else None
         else:
             print("\t".join([fp, "NO_LOCATOR", "", title, "", ""]))

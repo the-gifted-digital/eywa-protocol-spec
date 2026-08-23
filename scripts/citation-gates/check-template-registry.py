@@ -113,21 +113,39 @@ def main():
 
     content = a.content_root or find_content()
     mismatch = []
+    scanned = 0
     if content:
         want = {c: v["template"] for c, v in codes.items()}
-        by_slug = {r["slug"]: r for r in rows if r["content_format"]}
+        # Key by the slug's LAST segment, not the whole slug. Files are named for the
+        # leaf ("scaling.yaml"), so a dict keyed on the full slug can never be hit by a
+        # nested one ("pricing/scaling") — those pages were silently excluded from R3w
+        # and could sit in any template directory forever while the gate printed PASS.
+        # On vth-biodent that was the entire pricing cluster, which is exactly where T5
+        # (service) and T6 (knowledge) are easiest to confuse.
+        by_slug = {}
+        for r in rows:
+            if r["content_format"]:
+                by_slug.setdefault(r["slug"].rstrip("/").split("/")[-1], []).append(r)
         for f in glob.glob(os.path.join(content, "*", "*", "*.yaml")):
+            scanned += 1
             tpl = os.path.basename(os.path.dirname(os.path.dirname(f)))
-            row = by_slug.get(os.path.basename(f)[:-5])
-            if row and want.get(row["content_format"]) not in (None, tpl):
-                mismatch.append((row["page_fingerprint"], row["content_format"],
-                                 want[row["content_format"]], tpl))
-    findings["R3w_template_mismatch"] = sorted(mismatch)
+            for row in by_slug.get(os.path.basename(f)[:-5], []):
+                if want.get(row["content_format"]) not in (None, tpl):
+                    mismatch.append((row["page_fingerprint"], row["content_format"],
+                                     want[row["content_format"]], tpl))
+    findings["R3w_template_mismatch"] = sorted(set(mismatch))
 
     print("template registry — %s · %d โค้ด · %d หน้าที่ไม่ใช่ Merged" % (a.brand, len(codes), len(rows)))
     print("registry: %s" % reg_path)
     if not content:
         print("⚠️  ไม่พบ web/src/content — ข้าม R3w (ตรวจได้เฉพาะชั้นแผน)")
+    elif not scanned:
+        # `if not content` only tested whether the PATH resolved, never whether the glob
+        # matched anything. A brand whose layout is not <root>/<template>/<lang>/x.yaml
+        # got a permanently green R3w that had inspected zero files — byte-identical to
+        # a brand with no mismatches.
+        print("🔴 R3w ตรวจ 0 ไฟล์ที่ %s/<template>/<lang>/*.yaml — ไม่ใช่ผ่าน" % content)
+        print("   แบรนด์นี้วางโครงคนละแบบ · ส่ง --content-root ให้ตรงชั้นเทมเพลต")
     print("-" * 78)
     blocking = 0
     for gate, hits in findings.items():

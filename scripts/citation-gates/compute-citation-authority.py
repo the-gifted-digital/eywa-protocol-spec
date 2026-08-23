@@ -42,6 +42,7 @@ import argparse
 import datetime
 import importlib.util
 import json
+import sys
 import math
 import os
 import time
@@ -111,13 +112,29 @@ def corroboration_points(fwci, cited_by):
     return 0.0
 
 
+UNMAPPED_ORG_TYPES = set()
+
+
 def org_points(org):
+    """Points, or None when this organization_type has no entry in ORG_POINTS.
+
+    None is not 0.0. 0.0 is the honest score for a citation with no organisation
+    behind it at all; an unmapped type means the question was never asked. They were
+    the same value here, so `regulator` — the body type the 1.0 tier_1_regulatory
+    slot exists for — scored as though nobody stood behind the paper, and the stored
+    breakdown read as a computed zero. main() refuses --apply while any unmapped type
+    is in play: the alternative is writing a wrong number and stamping it with a
+    version string that says it was computed."""
     if not org:
         return 0.0
     key = (org.get("organization_type"), org.get("authority_tier"))
     if key in ORG_POINTS:
         return float(ORG_POINTS[key])
-    return float(ORG_POINTS.get((org.get("organization_type"), None), 0))
+    fallback = (org.get("organization_type"), None)
+    if fallback in ORG_POINTS:
+        return float(ORG_POINTS[fallback])
+    UNMAPPED_ORG_TYPES.add(org.get("organization_type"))
+    return None
 
 
 def openalex(cites):
@@ -154,7 +171,11 @@ def openalex(cites):
             time.sleep(0.3)
     if failed:
         print("  %d works could not be looked up" % failed)
-    return out
+    # `failed` used to stay inside this function. main() then scored every unreachable
+    # work as corroboration 0.0 / source "none" — byte-identical to a work OpenAlex has
+    # genuinely never heard of — and --apply wrote those over the previous good scores
+    # with the same authority_formula_version, so the loss left no trace to find later.
+    return out, failed
 
 
 def score(c, oa, orgs):
@@ -189,7 +210,7 @@ def main(apply, top):
     orgs = {o["entity_fp"]: o for o in fetch_all("seo_entity_organization",
                                                  "entity_fp,organization_type,authority_tier")}
     print("citations %d · organisations %d" % (len(cites), len(orgs)))
-    oa = openalex(cites)
+    oa, oa_failed = openalex(cites)
     print("OpenAlex matched %d lookup keys\n" % len(oa))
 
     scored = []
@@ -223,6 +244,22 @@ def main(apply, top):
     if not apply:
         print("\nreport only — re-run with --apply to write")
         return
+
+    # Two refusals to write. Both exist because this script overwrites good scores in
+    # place with the same authority_formula_version, so a bad run is not recoverable by
+    # reading the rows afterwards — there is nothing in the row that says it was
+    # computed blind.
+    if oa_failed:
+        sys.exit("🔴 ปฏิเสธการเขียน — OpenAlex ตอบไม่ครบ %d works\n"
+                 "   corroboration ของงานที่เรียกไม่ติดจะกลายเป็น 0.0 ซึ่งหน้าตาเหมือน\n"
+                 "   'ไม่มีสัญญาณภายนอกจริง ๆ' แล้วทับคะแนนเดิมที่ถูกต้องโดยตรวจย้อนไม่ได้\n"
+                 "   รอให้ OpenAlex กลับมาแล้วรันใหม่" % oa_failed)
+    if UNMAPPED_ORG_TYPES:
+        sys.exit("🔴 ปฏิเสธการเขียน — organization_type ที่ ORG_POINTS ไม่รู้จัก: %s\n"
+                 "   ตอนนี้มันได้ 0.0 เท่ากับ 'ไม่มีองค์กรหนุนเลย' ซึ่งคนละเรื่องกัน\n"
+                 "   เติมค่าใน ORG_POINTS ให้ครบก่อน แล้วบันทึกเป็น DR — คะแนนอำนาจเป็น\n"
+                 "   นโยบาย ไม่ใช่ค่า default ที่สคริปต์ควรเดาเอง"
+                 % ", ".join(sorted(str(t) for t in UNMAPPED_ORG_TYPES)))
 
     now = datetime.datetime.now(datetime.timezone.utc).isoformat()
     for total, bd, c in scored:

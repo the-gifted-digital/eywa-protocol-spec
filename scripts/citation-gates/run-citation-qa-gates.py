@@ -335,11 +335,22 @@ def run(brand, verbose):
     ]
 
     all_page_fps = {p["page_fingerprint"] for p in fetch_all("seo_website_page_master", "page_fingerprint")}
+    # Iterates `links`, NOT `active`. `active` is filtered to page_fp in own_pages, and
+    # own_pages is a subset of all_page_fps, so a G12 over `active` asks for rows that
+    # were removed one step earlier — an empty set by construction. It printed
+    # "PASS G12_page_fp_not_fingerprint 0" on every run for every brand from the
+    # 2026-08-17 brand filter onward, including runs where a ULID key was exactly what
+    # someone needed to find. The comment above says validity is checked against every
+    # brand's fingerprints "because a bad key has no brand prefix to filter on" — that
+    # is the reason this one gate cannot be brand-scoped: a row keyed on the ULID
+    # belongs to no brand, so scoping it to a brand is scoping it out of existence. It
+    # stays pool-level, like G1/G5/G8, and is blocking because nobody else will see it.
     findings["G12_page_fp_not_fingerprint"] = [
         (l["page_fp"], l["citation_fp"],
          "ULID identity column — use page_fingerprint"
          if re.match(r"^page_[0-9A-Za-z]{16}$", l["page_fp"] or "") else "no such page")
-        for l in active if (l["page_fp"] or "") not in all_page_fps
+        for l in links
+        if l["status"] == "active" and (l["page_fp"] or "") not in all_page_fps
     ]
 
     print("Citation QA gates — brand %s · pool %d of %d citations · %d active links · %d pages"

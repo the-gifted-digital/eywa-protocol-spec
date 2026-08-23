@@ -33,6 +33,7 @@ rather than a data one, and a reference no seo_page_citations row backs, where
 which side to correct is a judgement call.
 """
 import argparse
+import functools
 import glob
 import json
 import os
@@ -129,30 +130,29 @@ def resolve(url):
 
 def db_backed_keys(brand):
     """The identifiers seo_page_citations actually links, keyed by page slug."""
-    key = os.environ.get("SUPABASE_SERVICE_KEY")
-    if not key:
-        k = eywa_supabase.key()
-        with open(secrets, encoding="utf-8") as fh:
-            for line in fh:
-                if line.startswith("SUPABASE_SERVICE_KEY="):
-                    key = line.split("=", 1)[1].strip()
-    sb = eywa_supabase.SB
-
-    def page_all(table, select, flt=""):
-        out, off = [], 0
-        while True:
-            req = urllib.request.Request("%s%s?select=%s%s&limit=1000&offset=%d" % (sb, table, select, flt, off),
-                                         headers={"apikey": key, "Authorization": "Bearer " + key})
-            batch = json.load(urllib.request.urlopen(req))
-            out += batch
-            if len(batch) < 1000:
-                return out
-            off += 1000
+    # This used to re-open the secrets file by hand, referencing a name that was never
+    # defined — a NameError sitting behind `if not key`, so it only fired for someone
+    # without SUPABASE_SERVICE_KEY in the environment. Everyone who tested had it set.
+    key = eywa_supabase.key()
+    page_all = functools.partial(eywa_supabase.fetch, k=key)
 
     cites = {c["fingerprint"]: c for c in page_all("seo_citations", "fingerprint,doi,pubmed_pmid,url")}
-    pages = {p["page_fingerprint"]: p["slug"]
-             for p in page_all("seo_website_page_master", "page_fingerprint,slug",
-                               "&brand_name=eq." + urllib.parse.quote(brand))}
+
+    # `--brand` is a brand_id everywhere else in this directory, and all three brands'
+    # package.json pass the slug here too — but this one gate filtered on brand_name,
+    # which holds the display name ("VTH BioDent"). brand_name=eq.vth-biodent matched
+    # nothing, so `pages` was empty, every binding was dropped below, and the unbacked
+    # check reported nothing on every CI run for every brand since the flag was added.
+    # Accept either spelling, and refuse to continue on a brand that matches no page:
+    # a filter that selects nothing must not be reported as a brand with nothing wrong.
+    rows = page_all("seo_website_page_master", "page_fingerprint,slug,brand_id,brand_name")
+    pages = {p["page_fingerprint"]: p["slug"] for p in rows
+             if brand in (p.get("brand_id"), p.get("brand_name"))}
+    if not pages:
+        seen = sorted({str(p.get("brand_id")) for p in rows} |
+                      {str(p.get("brand_name")) for p in rows} - {"None"})
+        sys.exit("🔴 --brand %r matches no page. brand_id or brand_name, one of: %s"
+                 % (brand, ", ".join(seen)))
     backed = {}
     for l in page_all("seo_page_citations", "page_fp,citation_fp,status"):
         if l["status"] != "active" or l["page_fp"] not in pages:
@@ -182,9 +182,13 @@ def main(root, brand, skip_db, out_json):
     # gate reported clean. deezy missed 147. A brand whose content is not laid out as
     # <template>/<lang>/ got zero files and a PASS, which is the exact failure this gate set
     # exists to catch, sitting inside one of the gates.
-    files = sorted(glob.glob(os.path.join(root, "*", "*", "*.yaml")))
-    if not files:
-        files = sorted(glob.glob(os.path.join(root, "**", "*.yaml"), recursive=True))
+    # Take every .yaml under root, full stop. The fixed-depth glob was kept as the
+    # primary with the recursive one as a *fallback that only fired on zero files*,
+    # which meant a layout where most content sits two levels down and some sits three
+    # scanned the two and never mentioned the three — partial coverage reported as full,
+    # the same shape as the bug above but quieter, because the file count still looked
+    # plausible. There is no reason to prefer the shallower answer.
+    files = sorted(glob.glob(os.path.join(root, "**", "*.yaml"), recursive=True))
     langs = sorted({os.path.basename(os.path.dirname(f)) for f in files})
     for f in files:
         slug = os.path.basename(f)[:-5]
@@ -209,6 +213,16 @@ def main(root, brand, skip_db, out_json):
         # Zero files and zero findings look identical in a summary line. Say which one this is.
         print("🔴 R0_no_content — ไม่พบไฟล์ .yaml ใต้ %s" % root)
         print("   เกตที่ไม่มีอะไรให้ตรวจ ไม่ใช่เกตที่ผ่าน · ชี้ --root ให้ถูก หรือดูโครงโฟลเดอร์ของแบรนด์")
+        return 1
+    if not seen:
+        # R0 covered zero files. Zero *pairs* with files present is the other way to
+        # check nothing: PAIR_RE wants a quoted label: immediately followed by a quoted
+        # url:, so a brand writing single quotes, a bare scalar, url-first, or any key
+        # between the two yields no pairs at all — and printed "PASS every locator
+        # resolves" over content it never parsed.
+        print("🔴 R0_no_references — อ่าน %d ไฟล์แต่แยก label+url ไม่ได้สักคู่" % len(files))
+        print("   ไม่ได้แปลว่าสะอาด แปลว่า parser ไม่รู้จักรูปแบบ references[] ของแบรนด์นี้")
+        print("   ดูหนึ่งไฟล์ด้วยตา: ต้องเป็น label: \"...\" แล้วตามด้วย url: \"...\" (double quote)")
         return 1
     print("-" * 78)
     if wrong:

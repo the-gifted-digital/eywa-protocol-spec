@@ -36,11 +36,24 @@ pages={p["page_fingerprint"]:p for p in m.fetch("seo_website_page_master","page_
 # The second version then over-reported, because the note written to CLEAR a row also
 # contains the word "sweep". A detector has to exclude its own remediation text, or it
 # reports the cleanup as more of the problem.
-SWEEP=re.compile(r"Backbone evidence assigned|ผูกจากคลัง|sweep|ยังไม่ได้แม็ป|to be refined during content writing")
-CLEARED=re.compile(r"^\s*(ตรวจแล้ว|บันทึกย้อนหลัง|ปลด) \d{4}-\d{2}-\d{2}")
+# Third version. The wordings below were named by hand from the notes the sweeps of the
+# time happened to write, so every later bulk round that phrased itself differently was
+# invisible: the wave16 / wave16e round-robin of 2026-08-06..09 wrote "topical binding
+# (round-robin ตาม DR-044 ข้อ 6)" and none of the earlier words, so 1,428 of the bindings
+# this finding exists to count were reported as hand-verified. B1 read 442 of 3,414 when
+# the real figure was over four times that. A detector keyed on remembered phrasing
+# measures the sweeps someone remembered, not the table.
+SWEEP=re.compile(r"Backbone evidence assigned|ผูกจากคลัง|sweep|ยังไม่ได้แม็ป"
+                 r"|to be refined during content writing"
+                 r"|round-robin|topical binding|wave\d+[a-z]?\s+\d{4}-\d{2}-\d{2}")
+CLEARED=re.compile(r"^\s*(ตรวจแล้ว|บันทึกย้อนหลัง|ปลด|คัดตอนเขียนจริง) \d{4}-\d{2}-\d{2}")
 def is_sweep(s):
     s=str(s or "")
     return bool(SWEEP.search(s)) and not CLEARED.match(s)
+def is_blank(s):
+    # A binding that states no claim at all is not "not a sweep" — it is the one row
+    # shape no claim-checker can evaluate, and it used to fall into the clean bucket.
+    return not str(s or "").strip()
 act=[l for l in links if l["status"]=="active"]
 print(f"=== seo_page_citations ทั้งตาราง ===")
 print(f"  แถวทั้งหมด {len(links)} · active {len(act)} · removed {len(links)-len(act)}")
@@ -79,7 +92,10 @@ chk("A12 brand_scope ของ citation ไม่ครอบแบรนด์�
 
 print("\n--- ความน่าเชื่อถือของเนื้อหา ---")
 sweep=[l for l in act if is_sweep(l["supports_claim"])]
+blank=[l for l in act if is_blank(l.get("supports_claim"))]
 print(f"  ⚠  B1 ยังเป็น backbone sweep ที่ไม่เคยแม็ป      {len(sweep):6}  ({100*len(sweep)//max(len(act),1)}% ของ active)")
+print(f"  ⚠  B1b supports_claim ว่างเปล่า                {len(blank):6}  ({100*len(blank)//max(len(act),1)}% ของ active)")
+print(f"       แถวที่ไม่ได้บอกว่ารองรับข้อความไหน ตรวจความสัมพันธ์ไม่ได้เลย ไม่ใช่แถวสะอาด")
 bs=collections.Counter(pages.get(l["page_fp"],{}).get("brand_id","?") for l in sweep)
 for b,n in bs.most_common(): print(f"        {str(b):26} {n:6}")
 chk("B2 supports_claim ว่าง", [l for l in act if not str(l["supports_claim"] or "").strip()])

@@ -18,6 +18,7 @@ The key is never printed, never logged, and never written anywhere by these help
 import json
 import os
 import sys
+import urllib.error
 import urllib.parse
 import urllib.request
 
@@ -69,16 +70,33 @@ def key():
     )
 
 
-def fetch(table, select, flt="", k=None, page=1000):
-    """Every row matching the filter. PostgREST caps a response, so page until short."""
+def fetch(table, select, flt="", k=None, page=1000, order="id"):
+    """Every row matching the filter. PostgREST caps a response, so page until short.
+
+    `order` is not decoration. LIMIT/OFFSET without ORDER BY has no stability
+    guarantee in PostgreSQL — the planner may return page 2 in an order that skips
+    rows page 1 walked past, or repeats them. This helper feeds every gate here, and
+    the tables that matter are well past one page (seo_page_internal_links ~16.5k,
+    seo_page_citations ~5k), so an unordered walk lets a gate audit a subset and then
+    report on it as if it were the whole table: a row lost in the gap enters no
+    counter and raises no finding. All four tables the gates read carry `id`; a table
+    that does not must be handed its own stable key by the caller."""
     k = k or key()
     out, off = [], 0
     while True:
-        url = "%s%s?select=%s%s&limit=%d&offset=%d" % (
-            SB, urllib.parse.quote(table), select, flt, page, off)
+        url = "%s%s?select=%s%s%s&limit=%d&offset=%d" % (
+            SB, urllib.parse.quote(table), select, flt,
+            "&order=" + urllib.parse.quote(order) if order else "", page, off)
         req = urllib.request.Request(
             url, headers={"apikey": k, "Authorization": "Bearer " + k})
-        batch = json.load(urllib.request.urlopen(req))
+        try:
+            batch = json.load(urllib.request.urlopen(req))
+        except urllib.error.HTTPError as e:
+            if e.code == 400 and order:
+                sys.exit("%s cannot be ordered by %r — pass order= to fetch(), but do not "
+                         "pass order=None unless the result fits in one page of %d"
+                         % (table, order, page))
+            raise
         out += batch
         if len(batch) < page:
             return out

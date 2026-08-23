@@ -63,11 +63,30 @@ def main():
     pages = {p["page_fingerprint"]: p for p in fpf.fetch(
         "seo_website_page_master", "page_fingerprint,page_name,target_keyword_fp,brand_id",
         "&limit=6000", k)}
+    # `status` was never fetched, so retired links were audited exactly like live ones.
+    # That went wrong in both directions at once: anchors on links the brand had already
+    # deprecated counted toward `blocking` and could only be "fixed" by editing dead
+    # data, while one deprecated sibling carrying a different anchor lifted
+    # len(set(anchors)) above 1 and suppressed the A6 monotony warning for the live
+    # ones — deezy-3.4.2 has 30 planned inbound links sharing a single anchor and passed
+    # A6 because of one retired row. Every other gate here already drops retired rows.
     links = [l for l in fpf.fetch(
         "seo_page_internal_links",
-        "id,from_page_fp,to_page_fp,anchor_text,anchor_variant_type,surrounding_text_snippet",
+        "id,from_page_fp,to_page_fp,anchor_text,anchor_variant_type,"
+        "surrounding_text_snippet,status",
         "&limit=40000", k)
-        if l["from_page_fp"] in pages and pages[l["from_page_fp"]].get("brand_id") == a.brand]
+        if l["from_page_fp"] in pages and pages[l["from_page_fp"]].get("brand_id") == a.brand
+        and l.get("status") != "deprecated"]
+
+    if not links:
+        # Zero links and zero findings printed the same seven PASS lines and the same
+        # exit 0. The likeliest cause is a --brand spelling this table cannot match:
+        # brand_id holds the slug ("vth-biodent"), while audit-content-locators.py in
+        # this same directory used to take only the display name. One flag, two value
+        # spaces, one directory — so say which one this is instead of printing PASS.
+        seen = sorted({str(p.get("brand_id")) for p in pages.values()} - {"None"})
+        sys.exit("🔴 --brand %r ตรงกับ internal link 0 เส้น — เกตที่ไม่ได้ตรวจอะไรเลย ไม่ใช่เกตที่ผ่าน\n"
+                 "   brand_id ที่มีจริง: %s" % (a.brand, ", ".join(seen)))
 
     findings = collections.defaultdict(list)
     inbound = collections.defaultdict(list)
