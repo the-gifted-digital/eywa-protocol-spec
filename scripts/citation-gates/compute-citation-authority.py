@@ -72,6 +72,14 @@ CEILING = {1: 5, 2: 7, 3: 10, 4: 10, 5: 7, 6: 15}
 ORG_POINTS = {
     ("government_agency", "tier_1_regulatory"): 1.0,
     ("government_agency", None): 0.9,
+    # DR-060 (2026-08-24). A statutory regulator — the Dental Council of Thailand is
+    # the case in hand — issues rules that are binding on the profession, so it sits at
+    # the top of the scale, not below a ministry department. Before this entry the type
+    # was unmapped and scored 0.0, which is the value for "no organisation behind this
+    # citation at all"; cite_AB5FB724012A37EF stored 5.8 where its government_agency
+    # twin stored 6.8, identical on every other axis.
+    ("regulator", "tier_1_regulatory"): 1.0,
+    ("regulator", None): 1.0,
     ("professional_association", None): 0.8,
     ("accreditation_body", None): 0.7,
     ("university", None): 0.6,
