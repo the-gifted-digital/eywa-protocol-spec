@@ -232,6 +232,13 @@ def main(root, brand, skip_db, out_json):
     # the same shape as the bug above but quieter, because the file count still looked
     # plausible. There is no reason to prefer the shallower answer.
     files = sorted(glob.glob(os.path.join(root, "**", "*.yaml"), recursive=True))
+    # demo.yaml ships with the templates and carries example locators on purpose, so its
+    # references point wherever the scaffolding pointed. verify-page-citation-usage.py in
+    # this directory has excluded them since 2026-08-16; this gate did not, and blocked
+    # two of eywa-deezy's builds on a fake reference nobody can fix without deleting the
+    # scaffolding. Two gates disagreeing about whether the same file counts is worse than
+    # either answer on its own.
+    files = [f for f in files if os.path.basename(f) != "demo.yaml"]
     langs = sorted({os.path.basename(os.path.dirname(f)) for f in files})
     for f in files:
         slug = os.path.basename(f)[:-5]
