@@ -10,9 +10,12 @@ boilerplate, so a page can sit on Live looking evidence-backed for claims it
 never makes.
 
 The test is deliberately mechanical, not semantic: a citation counts as used
-only when its full DOI or its PMID (word-bounded) appears in the page's own
-YAML. No keyword matching — a loose comparator that approves everything is a
-gate that checks nothing.
+when a locator that identifies it — DOI, PMID, URL, or ISBN — or a 40-character
+prefix of its title appears in the page's own YAML. No keyword matching; a loose
+comparator that approves everything is a gate that checks nothing.
+
+Rows the gate cannot judge are reported as UNCHECKABLE, never as unused. Read
+cited_on_page() for why that distinction is the point of this script.
 
 Usage:
     python3 content-plan/etl/verify-page-citation-usage.py            # Live pages
@@ -74,25 +77,45 @@ TITLE_PREFIX_CHARS = 40
 
 
 def cited_on_page(c, text, low):
-    """True when the page itself points at this citation.
+    """Returns (verdict, detail) — "cited", "uncited", or "uncheckable".
 
-    Locators first, because they are unambiguous. Textbooks and guidelines often
-    carry neither a DOI nor a PMID (ISBN or a plain URL instead) and would be
-    reported as unused forever, so fall back to the URL and then to a long title
-    prefix — pages label references with the full title."""
+    Locators first, because they are unambiguous. Guidelines, fact sheets and
+    textbooks often carry neither a DOI nor a PMID (a plain URL or an ISBN
+    instead), so fall back to the URL, the ISBN, and finally to a long title
+    prefix — pages label references with the full title.
+
+    "uncheckable" is a separate verdict on purpose, and it is the whole reason
+    this function returns a string instead of a bool. A citation carrying no
+    locator this gate can search for, and a title too short to match on, cannot
+    be judged either way. Calling that "unused" is a false accusation, and the
+    consequence is not theoretical: the remedy for an unused binding is to
+    delete it, so a gate that cannot tell the two apart hands you a list that
+    quietly mixes real dead weight with citations the page genuinely rests on.
+    Only "uncited" may drive an unbind."""
     doi = (c.get("doi") or "").strip()
-    if doi and doi.lower() in low:
-        return True
     pmid = (c.get("pubmed_pmid") or "").strip()
-    if pmid and re.search(r"\b" + re.escape(pmid) + r"\b", text):
-        return True
     url = (c.get("url") or "").strip()
-    if url and len(url) > 20 and url.lower().rstrip("/") in low:
-        return True
+    isbn = re.sub(r"[^0-9Xx]", "", (c.get("isbn") or ""))
     title = re.sub(r"\s+", " ", (c.get("title") or "")).strip()
+
+    if doi and doi.lower() in low:
+        return "cited", "doi"
+    if pmid and re.search(r"\b" + re.escape(pmid) + r"\b", text):
+        return "cited", "pmid"
+    # A bare origin ("https://who.int") would match half the web; require a path.
+    if url and len(url) > 20 and url.lower().rstrip("/") in low:
+        return "cited", "url"
+    # Pages print ISBNs with hyphens in any position, so compare digits only.
+    if len(isbn) >= 10 and isbn in re.sub(r"[^0-9Xx]", "", text):
+        return "cited", "isbn"
     if len(title) >= TITLE_PREFIX_CHARS:
-        return title[:TITLE_PREFIX_CHARS].lower() in low
-    return False
+        if title[:TITLE_PREFIX_CHARS].lower() in low:
+            return "cited", "title"
+        return "uncited", None
+
+    if doi or pmid or (url and len(url) > 20) or len(isbn) >= 10:
+        return "uncited", None      # had something to look for, it was not there
+    return "uncheckable", "no locator, title %d chars" % len(title)
 
 
 def main():
@@ -108,7 +131,14 @@ def main():
         "&brand_id=eq." + a.brand + "&limit=5000", k)}
     wanted = {"Live"} if not a.all else {"Live", "Planned"}
     cites = {c["fingerprint"]: c for c in fpf.fetch(
-        "seo_citations", "fingerprint,title,doi,pubmed_pmid,citation_tier", "", k)}
+        # url and isbn are NOT optional here. cited_on_page() reads both, and for two
+        # months this select omitted them, so `c.get("url")` was None on every row and
+        # the URL branch below could never fire — dead code that reads as a live check.
+        # 30 pool citations carry a URL as their only locator; every one of them was
+        # reported unused on every page that binds it. eywa-deezy found it on
+        # oral-cancer-screening, which cites a WHO fact sheet by URL in references[].
+        "seo_citations",
+        "fingerprint,title,doi,pubmed_pmid,url,isbn,citation_tier", "", k)}
     links = [l for l in fpf.fetch(
         "seo_page_citations", "page_fp,citation_fp,status,supports_claim", "&limit=20000", k)
         if l["status"] == "active"
@@ -120,7 +150,8 @@ def main():
     for l in links:
         by_page[l["page_fp"]].append(l)
 
-    used = unused = nofile = 0
+    used = unused = uncheckable = nofile = 0
+    unwritten_pages = unwritten_bindings = 0
     for pf in sorted(by_page):
         page = pages[pf]
         # Some slugs are nested ("pricing/dental-veneer"); the file keeps only the leaf.
@@ -130,22 +161,36 @@ def main():
             if page["status"] == "Live":
                 nofile += 1
                 print("  NOFILE  %-14s %s" % (pf, page["slug"]))
+            else:
+                # Counted, not silently skipped. Under --all these pages dominate the
+                # binding count, and a summary that omits them invites the reader to
+                # treat "cited + unused" as the whole estate and unbind the remainder.
+                unwritten_pages += 1
+                unwritten_bindings += len(by_page[pf])
             continue
         text = "\n".join(io.open(f, encoding="utf-8").read() for f in files)
         low = text.lower()
         misses = []
         for l in by_page[pf]:
             c = cites.get(l["citation_fp"]) or {}
-            if cited_on_page(c, text, low):
+            verdict, detail = cited_on_page(c, text, low)
+            if verdict == "cited":
                 used += 1
             else:
-                unused += 1
-                misses.append((l["citation_fp"], c.get("citation_tier"), c.get("title")))
+                if verdict == "uncited":
+                    unused += 1
+                else:
+                    uncheckable += 1
+                misses.append((verdict, detail, l["citation_fp"],
+                               c.get("citation_tier"), c.get("title")))
         if misses or a.verbose:
             print("\n  %-14s %s  (%s, %d bound)"
                   % (pf, page["slug"], page["status"], len(by_page[pf])))
-            for fp, tier, title in misses:
-                print("      UNUSED  t%-3s %s  %s" % (tier, fp, str(title)[:70]))
+            for verdict, detail, fp, tier, title in misses:
+                label = "UNUSED" if verdict == "uncited" else "UNCHECKABLE"
+                print("      %-11s t%-3s %s  %s%s"
+                      % (label, tier, fp, str(title)[:60],
+                         "  [%s]" % detail if detail else ""))
 
     # The other direction, added 2026-08-16 after eywa-deezy pointed out this script
     # only ever asked "is this binding used?". A page can equally cite a DOI or PMID the
@@ -180,8 +225,19 @@ def main():
             print("      ... %d more (--verbose for all)" % (len(orphan_locators) - 10))
 
     print("\n" + "-" * 78)
-    print("cited by the page: %d · bound but never cited: %d · Live page with no file: %d · "
-          "cited but not in the pool: %d" % (used, unused, nofile, len(orphan_locators)))
+    print("cited by the page: %d · bound but never cited: %d · could not be checked: %d · "
+          "Live page with no file: %d · cited but not in the pool: %d"
+          % (used, unused, uncheckable, nofile, len(orphan_locators)))
+    if unwritten_bindings:
+        print("ℹ️  %d more binding(s) on %d Planned page(s) that have no content file yet — not"
+              % (unwritten_bindings, unwritten_pages))
+        print("   examined, and not a finding. A page cannot cite what it has not been written")
+        print("   to say. These are the plan's pre-bindings; judge them after the page exists.")
+    if uncheckable:
+        print("⚠️  the %d uncheckable rows are NOT a finding and MUST NOT be unbound — the pool"
+              % uncheckable)
+        print("   row carries no DOI, PMID, URL or ISBN to search for. Fix the pool row, not the")
+        print("   binding. Only the 'bound but never cited' figure may drive an unbind.")
     return 1 if (unused or nofile or orphan_locators) else 0
 
 
