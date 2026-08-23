@@ -3,7 +3,7 @@
 > **Append-only architectural decision log.** Each record explains WHY a decision was made — not just WHAT.
 
 **Document Version:** 1.37  
-**Last Updated:** 2026-08-14  
+**Last Updated:** 2026-08-24 — DR-057/058 landed 2026-08-23; on 2026-08-24 every checkable claim in this file (table name, column name, allowed-value list, threshold, row count, status) was re-run against the live database. Corrections are appended in place and marked *(corrected 2026-08-24 against live schema)* — locked bodies are untouched. A second pass re-queried the corrections themselves and fixed four of them (deezy `page_category` 773→776 and the brand-wide NULL count 192→189; `schema_markup_type` 2,358→2,357 scalar rows / 27→26 distinct values; `periodontal-gum` "0 rows" narrowed to 0 pages and 0 entities, the deprecated cluster row survives; smile-scape's "0 uncited Live pages" flagged as vacuous — that brand has no Live page at all).  
 **Format:** Reverse chronological (newest first)
 
 ---
@@ -522,7 +522,9 @@ ICD-10 ที่ลงท้าย `.8 other specified` / `.9 unspecified` แ�
 **Consequences:**
 
 - ✅ 156/156 คอลัมน์มี comment แล้ว (page_master 91 · entity_graph 36 · cluster_master 29) — migration `2026-08-04_column_comments_page_entity_cluster.sql`
+  > ตัวเลขนี้เป็นภาพ ณ 2026-08-04 · **นับใหม่ 2026-08-24: 158 คอลัมน์ (page_master 93 · entity_graph 36 · cluster_master 29)** — page_master โต 2 คอลัมน์จาก `page_category` + `page_role` ซึ่งมาพร้อม comment ตามกฎข้อ 5 · อย่า hardcode ตัวเลข ให้นับสด: `select count(*) from information_schema.columns where table_name in ('seo_website_page_master','seo_entity_graph','seo_topic_cluster_master');` *(corrected 2026-08-24 against live schema)*
 - ✅ ความขัดระหว่างสเปกกับ live ถูกบันทึกไว้ในคอลัมน์ที่มันเกิด: `status` (Planned/Live/Merged/Dropped ไม่ใช่ planning/draft/published) · `brand_id` (เก็บ slug ไม่ใช่ UUID) · `content_format` (T-code ไม่ใช่ prose) · `schema_markup_type` (type text แต่มีทั้ง bare และ brace-set) · `funnel_stage` (สอง vocabulary ปนกัน) · `entity_lifecycle` (ตัวพิมพ์ไม่ตรงกัน) · `cluster_master.status` (Bible พูดถึง `pending_review` ซึ่งไม่มีใน CHECK)
+  > **สองข้อในรายการนี้ปิดไปแล้วโดย DR-057 · วัดใหม่ 2026-08-24:** `schema_markup_type` **ไม่เหลือรูป `{A,B}` เลยสักแถว** — 2,357/2,358 แถวเป็น scalar อีก 1 แถวเป็น NULL · ค่าที่ไม่ใช่ NULL มี **26** แบบ · กฎที่เขียนด้วย `=` ใช้ได้แล้ว ไม่ต้อง parse เผื่อ · `funnel_stage` เหลือ vocabulary เดียวคือ `awareness | consideration | decision | retention` (**top/mid/bottom = 0 แถว**, NULL 5) · ที่เหลือในรายการยังจริงอยู่ *(corrected 2026-08-24 against live schema)*
 - ⚠️ ต้องมี gate ใหม่รายงาน `page.cluster_id ≠ entity.topic_cluster_id` ที่ไม่มี `reconciliation_notes` — ยังไม่ได้เขียน
 - ⚠️ `Schema_Overview` ต้องอัปเดตให้ตรงกับ comment ในรอบถัดไป (ตอนนี้ comment คือฉบับที่ถูกต้องกว่า)
 - 📌 งาน dedupe ตาม DR-046 เริ่มได้หลังจากนี้ ลำดับ Deezy → VTH → smile-scape
@@ -566,6 +568,7 @@ ICD-10 ที่ลงท้าย `.8 other specified` / `.9 unspecified` แ�
 **Consequences:**
 
 - ✅ คลัสเตอร์เหงือกเหลือชื่อเดียวข้ามสองแบรนด์ — `periodontics-gum` 77 หน้า (deezy 47 + vth 30)
+  > **วัดใหม่ 2026-08-24:** `periodontal-gum` **ไม่มีหน้าและไม่มี entity ชี้มาแล้วสักแถว** (ยุบสำเร็จตามแผน) — แต่แถวคลัสเตอร์เองยังอยู่ใน `seo_topic_cluster_master` สถานะ `deprecated` ไม่ได้ถูกลบ · `periodontics-gum` ตอนนี้ **117 หน้า active ข้ามสามแบรนด์** — deezy 48 · smile-scape 38 · vth 31 · แปลว่าข้อ 📌 ข้างล่างเรื่อง smile-scape ถูกตัดสินไปแล้วในทางปฏิบัติ คือย้ายเข้าชื่อนี้ ไม่ได้เก็บโครงสองชั้นไว้ *(corrected 2026-08-24 against live schema)*
 - ✅ `aliases` รายการแรกในตาราง 58 แถว ตั้งรูปแบบไว้: `{"merged_from": ["<slug>"]}`
 - ⚠️ ต้อง regen ทุกอย่างที่ฝัง `cluster_id` ไว้ (`gen:page-context` → tracking payload) ไม่งั้นรายงานชื่อเก่า
 - ⚠️ เอกสารแผนที่อ้าง slug เดิมต้องแก้ในคอมมิตเดียวกัน **ยกเว้นบันทึก audit ที่ลงวันที่** ซึ่งเป็นบันทึกของสิ่งที่เคยจริง
@@ -662,6 +665,7 @@ ICD-10 ที่ลงท้าย `.8 other specified` / `.9 unspecified` แ�
 - 🧰 **เครื่องมือ (universal):** `content-plan/etl/verify-citation-locators.py` + `content-plan/etl/citation-qa-gates.sql`
 - 📄 **SOP:** `eywa-protocol-spec/Citation_Pool_SOP_v1_0.md` — บทเรียน C1–C20
 - ♻️ **สระเป็นตัวเดียวร่วมกันทุกแบรนด์ (ตรวจสอบแล้ว 2026-07-29):** `seo_citations` ที่ `brand_scope = '*'` (226 แถว) ถูกอ่านโดย **deezy-dental · smile-scape-clinic · vth-biodent** พร้อมกัน ไม่ได้แยกสระต่อแบรนด์ → การซ่อมรอบนี้ปลด citation ปลอม 13 ตัวออกจากทั้งสามแบรนด์ในคราวเดียว **ไม่ต้องรันสคริปต์ซ้ำแยกแบรนด์**
+  > ตัวเลข 226 เป็นภาพ ณ 2026-07-29 · **วัดใหม่ 2026-08-24: สระมี 551 แถว · `brand_scope @> {*}` = 466 แถว · verified 522 · unverified 26 · broken_link 3** · โครงสร้าง "สระเดียวร่วมสามแบรนด์" ยังเหมือนเดิม เปลี่ยนแค่ขนาด · อย่า hardcode ให้นับสด: `select count(*) from seo_citations where brand_scope @> array['*'];` *(corrected 2026-08-24 against live schema)*
   - ผลข้างเคียงที่ต้องรู้: แบรนด์ไหนใส่ citation เน่าเข้าสระ `'*'` แบรนด์อื่นได้ไปด้วยทันที — locator round-trip จึงเป็น gate **ระดับสระ** ไม่ใช่ระดับแบรนด์
   - `brand_scope` ที่ระบุแบรนด์เจาะจง (เช่น 13 แถว first-party ของ smile-scape-clinic) กันไว้ถูกต้องแล้ว query สระต้องกรอง `brand_scope @> array['*'] or brand_scope @> array['<brand>']` เสมอ
   - VitalSleep and Wellness ไม่มีข้อมูลใน Supabase project นี้ (มีแค่ 3 แบรนด์ข้างต้น) — หนี้ของ VitalSleep ใน DR-043 เป็นเรื่องคีย์เวิร์ด ไม่ใช่ citation
@@ -673,6 +677,7 @@ ICD-10 ที่ลงท้าย `.8 other specified` / `.9 unspecified` แ�
 > VTH BioDent 2,129 · Smile Scape Clinic 1,786 · TC Smile Dental 784 · Clearisma 266
 > **ห้ามรัน cleanup แบบ "ลบแถวของแบรนด์ที่ไม่อยู่ใน project นี้"** — จะลบ 12,526 แถวของ 5 แบรนด์ที่มีอยู่จริง
 > ที่ถูกคือ: page_master มี 3 แบรนด์ ส่วน keyword layer มี 8 — คนละขอบเขตกัน
+
 - ✅ **Deezy Dental (BUILT 2026-07-29):** ผูกสระเข้าหน้าแล้ว **1,475 แถว ครอบคลุม 616 หน้า** · 0 หน้าต่ำกว่าขั้นต่ำ · 0 หน้าไม่มี Tier 1-3
   > 🔴 **สถานะนี้ regress แล้ว (วัด 2026-08-23):** deezy มี **245 หน้าไม่มี citation เลย และ 150 หน้าในนั้น Live อยู่**
   > อีก 9 หน้ามี binding แต่ไม่มี Tier 1-3 · ตัวเลข "0 หน้าต่ำกว่าขั้นต่ำ" เป็นจริงเฉพาะ ณ 2026-07-29
@@ -681,6 +686,7 @@ ICD-10 ที่ลงท้าย `.8 other specified` / `.9 unspecified` แ�
 - ✅ **archive:** ใช้ **Wayback CDX API** แทน availability API (ซึ่งมองข้าม snapshot ที่มีจริง) — เก็บได้เพิ่ม 4 แถว · เหลือ **0 แถวที่ไร้ตัวป้องกัน** (ทุกแถวที่ไม่มี archive มี PMID/DOI/ISBN ค้ำอยู่)
 - ⚠️ **หนี้ที่ยังค้าง:**
   - **smile-scape-clinic ยังไม่ผูกสระเข้าหน้าเลย (0 แถว)** — 722 หน้า ต้องรัน §6 ของ SOP
+    > ✅ **หนี้ข้อนี้ปิดแล้ว · วัด 2026-08-24:** smile-scape ผูกครบ **665 จาก 728 หน้าที่ active** · ที่เหลือ 63 หน้ายังเป็น Planned · **"0 หน้าที่ Live แล้วไม่มี citation" เป็นจริงแบบว่างเปล่า — smile-scape ยังไม่มีหน้า Live สักหน้า (Live = 0, active ทั้ง 728 หน้าเป็น Planned)** อย่าอ่านเลขนี้เป็นหลักฐานคุณภาพ · เทียบกัน vth 664/686 (Live ที่ยังว่าง 2 หน้า) และ deezy 596/841 ซึ่งยังเป็นหนี้จริงตามบล็อกด้านบน *(corrected 2026-08-24 against live schema)*
   - **ร่างเนื้อหา Deezy 9 หน้ามีอ้างอิงที่ต้องแก้** — พบ 1 รายการที่แต่งขึ้น (Lou T., ใช้บน 2 หน้า) · 1 รายการปีผิด (Esposito) · 1 รายการใช้ Cochrane ฉบับเก่า **และตีความข้อสรุปผิด** · 7 เอกสารทันตแพทยสภาที่ยืนยันการมีอยู่ไม่ได้ → รายละเอียดที่ `eywa-deezy/content-drafts/CITATION-DEFECTS-2026-07-29.md`
   - References ใน HTML ของ Deezy **ยังไม่ sync กับ `seo_page_citations`** — มีความจริงสองชุด ต้อง reconcile ก่อน publish
 
@@ -720,7 +726,7 @@ ICD-10 ที่ลงท้าย `.8 other specified` / `.9 unspecified` แ�
 
 - แบรนด์ที่ยังไม่จบ planning ต้องรัน QA gates §10 กับ assignment ที่มีอยู่ก่อนขึ้น production
 - ETL ทั้งสามใช้ `v_seo_keyword_pool` / `v_seo_entity_inventory` — แบรนด์ใหม่ต้องสร้าง view ทั้งสอง (สคริปต์ step1 สร้างให้แบบ brand-generic อยู่แล้ว)
-- ธง "ไม่นับ KPI organic" ใช้ `page_purpose='utility'` (ไม่ใช่ `intent_source_tier` ซึ่ง CHECK รับแค่ paa/derived/template_only)
+- ธง "ไม่นับ KPI organic" ใช้ `page_purpose='utility'` (ไม่ใช่ `intent_source_tier` ซึ่ง CHECK รับแค่ paa/derived/template_only) — ⚠️ วงเล็บนี้ล้าสมัย: `intent_source_tier` รับ **`brand`** เป็นค่าที่สี่แล้ว (DR-057 §3) · ค่าจริง 2026-08-24: template_only 2,259 · brand 88 · derived 11 · paa 0 · ข้อสรุปยังเหมือนเดิม คือใช้ `page_purpose='utility'` (82 แถว) *(corrected 2026-08-24 against live schema)*
 - **หนี้ที่ยังค้าง:** `VitalSleep and Wellness` มีคีย์ 4,133 แถวชี้ entity ที่ไม่มีในกราฟ (ดู DR-042) · Smile Scape มีคีย์ 722 หน้า/67 primary รอ audit ด้วยกติกานี้
 
 **References:** `eywa-protocol-spec/Keyword_Assignment_SOP_v1_0.md` · DR-042 · Bible Part 2.6 / Part 4 · Schema v1.23 §5.1 · รายงานผลงาน `eywa-vth-biodent/content-plan/keyword-assignment-report.md`
@@ -738,7 +744,7 @@ ICD-10 ที่ลงท้าย `.8 other specified` / `.9 unspecified` แ�
 
 **Context:**
 
-`seo_entity_graph` ถูกออกแบบให้ **ใช้ร่วมกันข้ามแบรนด์** (`brand_scope = ['*']` — 646/712 แถว) การแยกแบรนด์เกิดที่ชั้นคีย์เวิร์ดและหน้า ไม่ใช่ที่ชั้น entity ทำให้ดู performance รวมข้ามแบรนด์ที่ระดับ entity ได้ **โมเดลนี้ทำงานได้ก็ต่อเมื่อ 1 concept = 1 แถวเท่านั้น**
+`seo_entity_graph` ถูกออกแบบให้ **ใช้ร่วมกันข้ามแบรนด์** (`brand_scope = ['*']` — 646/712 แถว · **วัดใหม่ 2026-08-24: 665/732** สัดส่วนเท่าเดิม *(corrected 2026-08-24 against live schema)*) การแยกแบรนด์เกิดที่ชั้นคีย์เวิร์ดและหน้า ไม่ใช่ที่ชั้น entity ทำให้ดู performance รวมข้ามแบรนด์ที่ระดับ entity ได้ **โมเดลนี้ทำงานได้ก็ต่อเมื่อ 1 concept = 1 แถวเท่านั้น**
 
 แต่ในทางปฏิบัติ แต่ละแบรนด์รัน EGP แล้ว load `content-plan/entities.md` ของตัวเองเข้ามาคนละรอบ โดยตรวจเฉพาะ "unique format" ของ `entity_fingerprint` ไม่ได้ตรวจว่า **concept นั้นมีแถวอยู่แล้วหรือยัง** ผลคือเกิดแถวซ้ำ concept เดียวกันแต่ fingerprint ต่างกัน ตรวจพบจริงระหว่างงาน keyword assignment ของ VTH BioDent (2026-07-27):
 
@@ -1191,6 +1197,13 @@ For Astro brands, **image binaries live on Cloudflare; Supabase stores only the 
 **Status:** **🔒 Locked 2026-06-03** — operator-approved in working session same day (14-day review waived: additive/non-breaking, safe defaults, no brand mid-content-build to canvass, and the design *ratifies the existing §4.5.3 Cannibalization Shield intent* by extending it from between-page to within-page scope).
 **Bible Reference:** Extends Content_Templates **§4.5.3 Cannibalization Shield** → new **§4.5.4 Intra-Page Answer Routing**; updates block **B18 FAQ** floor logic. Referenced in Bible v3.24 changelog (2026-06-03); full spec lives in Content_Templates §4.5.4 + this DR (no Bible §-section needed — this is a content-composition rule).
 **Schema Reference:** **BUILT 2026-06-03** — migration `eywa_w11_05_dr034_v20_page_master_paa_routing` (W11.5) adds **`seo_website_page_master.intent_source_tier text NOT NULL DEFAULT 'template_only'`** (CHECK `paa`/`derived`/`template_only`) + **`seo_website_page_master.paa_checked_at timestamptz`**. **Schema_Overview → v1.20** (file renamed `…v1_19.md` → `…v1_20.md`). Additive; safe default backfills existing 1,376 rows to `template_only`; non-breaking. **NOT added to the page fingerprint** → no reference cascade.
+> 🔴 **The 3-value CHECK above is stale — corrected 2026-08-24 against live schema.**
+> `intent_source_tier` accepts a **fourth value, `brand`**, ruled in by DR-057 §3. Live distribution
+> measured 2026-08-24: `template_only` 2,259 · `brand` 88 · `derived` 11 · **`paa` 0**.
+> `paa` has never been written by anything — the tier-1 branch of §5 below has produced no rows, because
+> the PAA crawl in the follow-ups was never wired. Read the 3-tier fallback as a 4-value column whose
+> top tier is still unreachable. Query: `select intent_source_tier, count(*) from seo_website_page_master group by 1;`
+
 **Companion to:** DR-020 (Universal Content Template Standard — §4.5.4 extends its §4.5.3; this DR does **not** reopen the locked DR-020), DR-019 (Schema emission AI-only — FAQ floor logic post-rich-results), DR-031 (Audience-first authoring — routing serves human + AI simultaneously).
 **Scope:** **UNIVERSAL** — additive, non-breaking. **Zero brand-side action required.** Every existing page inherits `intent_source_tier='template_only'` + `paa_checked_at=NULL` and behaves identically to pre-DR-034 until a PAA crawl runs.
 
@@ -1237,7 +1250,21 @@ Adopt **§4.5.4 Intra-Page Answer Routing** with five rules + a 2-column page_ma
 
 ### [DR-033] — ICD Dual-Coding Standard (ICD-11-MMS Primary + ICD-10 / ICD-10-CM Full Coverage) (2026-06-02 → Locked 2026-06-02) 🔒🩺🌐
 
-**Status:** **🔒 Locked 2026-06-02** — operator-approved in working session same day (14-day review waived: additive/non-breaking, no other medical-condition brand mid-build to canvass, and the change *aligns the spec with the existing entity-fingerprint intent*, which already keys on the WHO-base value `g47.3` not the US-CM `g47.33`).
+**Status:** **🔒 Locked 2026-06-02** · **⛔ Superseded by DR-050 (2026-08-07)** on the entity-key half — operator-approved in working session same day (14-day review waived: additive/non-breaking, no other medical-condition brand mid-build to canvass, and the change *aligns the spec with the existing entity-fingerprint intent*, which already keys on the WHO-base value `g47.3` not the US-CM `g47.33`).
+
+> ⛔ **Superseded 2026-08-07 by DR-050 · confirmed against live data 2026-08-24**
+> Body preserved for history. What is superseded is only the claim that `seo_entity_graph.icd_10_code`
+> is the **universal entity code**: DR-050 §2 retired that column (`one store per fact` — condition codes
+> live on `seo_entity_condition`, symptom codes on `seo_entity_symptom`, and procedure/treatment/drug
+> carry none). Measured 2026-08-24: `seo_entity_graph.icd_10_code` is NULL in **all 732 rows**, so any
+> rule reading it returns nothing.
+> **Still in force:** the dual-coding standard itself — `MedicalCondition.code[]` ordered
+> ICD-11-MMS → ICD-10 (WHO base) → ICD-10-CM (US) → SNOMED-CT, and the four `codingSystem` strings.
+> Read the column semantics in §3 against `seo_entity_condition`, whose live column names are
+> `icd11_code` / `icd10_code` / `icd10_cm_code` (no underscore after `icd`) — not the underscored
+> `icd_11_code` / `icd_10_cm_code` spelled in §3 and in the Consequences below.
+> *(corrected 2026-08-24 against live schema)*
+
 **Bible Reference:** Entity Graph schema emission (`MedicalCondition.code[]` doctrine) + T1 medical-condition template — codingSystem standardization. Bible-prose propagation deferred to next Bible release; Handover + this DR carry operational guidance meanwhile.
 **Schema Reference:** **BUILT 2026-06-02** — migration `eywa_w11_04_dr033_v19_icd_dual_coding_condition` (W11.4) adds **`seo_entity_condition.icd11_code text`** (ICD-11-MMS, primary) + **`seo_entity_condition.icd10_cm_code text`** (US ICD-10-CM) and clarifies the `icd10_code` comment (WHO base). **Schema_Overview → v1.19** (file renamed `…v1_18.md` → `…v1_19.md`). Additive, nullable, non-breaking. Columns follow the table's existing `icd10_code` (no-underscore) naming. **NOT added to the entity fingerprint** (`seo_entity_graph.icd_10_code`, WHO base, unchanged) → no reference cascade. *(Build note: the initial draft below targeted `seo_entity_graph`; the live audit showed the per-condition medical coding set lives on the `seo_entity_condition` extension — alongside `snomed_ct_id`/`mesh_id`/`umls_cui` — so the new columns landed there. `seo_entity_graph.icd_10_code` remains the universal entity code + fingerprint key.)*
 **Companion to:** DR-031 (Google Generative AI Search Alignment — ICD codes serve AI/LLM entity grounding, not Google rich results), DR-019 (Schema Two-Purpose Taxonomy), DR-009 (Multilingual Strategy — codes are `never_translate` universals)
@@ -1289,7 +1316,17 @@ Audit of the spec found the doctrine was **half-implemented and inconsistent**: 
 
 ### [DR-032] — Multi-Center Hospital Brand Pattern (2026-05-25 → Locked 2026-05-25) 🔒🏥🗂️
 
-**Status:** **🔒 Locked 2026-05-25** — operator-approved same day as proposed (14-day review waived; no other multi-center brand currently in portfolio to canvass; Vitality opt-in early already proved pattern viability through full Phase A authoring + master/hospital-wide sitemap; doctrinal urgency on Vitality timeline)
+**Status:** **🔒 Locked 2026-05-25** · **💤 DORMANT** (DR-057 §8) — operator-approved same day as proposed (14-day review waived; no other multi-center brand currently in portfolio to canvass; Vitality opt-in early already proved pattern viability through full Phase A authoring + master/hospital-wide sitemap; doctrinal urgency on Vitality timeline)
+
+> 💤 **Dormant — measured 2026-08-24.** The pattern is built and the columns exist, but nothing uses it.
+> `seo_brand_centers` holds **0 rows**; all **20/20** rows in `brands` are `brand_structure='monolithic'`,
+> `vitality-hospital` included; `seo_website_page_master.center_slug` is NULL on all 2,358 page rows.
+> Read every "7 centers" statement below as the **authored brand doctrine of 2026-05-25**, not as a
+> description of the database — no center has ever been loaded. The rules stay in force for the first
+> brand that flips `brand_structure` to `multi_center`; until then they match nothing.
+> Live check: `select brand_structure, count(*) from brands group by 1;` and `select count(*) from seo_brand_centers;`
+> *(corrected 2026-08-24 against live schema)*
+
 **Bible Reference:** New **Section 25.13 — Multi-Center Brand Architecture** (✅ propagated to Bible §25.13 in v3.24, 2026-06-03; Handover v1.18 §1.3 carries the operational onboarding); extends Part 25 (Multi-Brand Federation), Part 26 (WordPress + Elementor Stack), Part 28 (Multilingual Strategy)
 **Schema Reference:** Target **v1.18** (Wave 11 → v1.17 already pending separately; v1.18 = DR-032 additions) — adds 1 new table + 2 new optional columns + 1 brand-level enum field. **Migration scripts pending** — additive, non-breaking; can land at next Phase 1A.4 wave.
 **Handover Reference:** **v1.18** — Section 1.3 now includes `brand_structure` as upfront brand context (monolithic | multi_center); `NEW_BRAND_BOOTSTRAP.md` Step 1.5 documents the decision; `brand-config.template.json` includes the field with both-option comments
@@ -1511,6 +1548,15 @@ Specify in Bible §25.13 (post-lock):
 **Status:** **Locked 2026-05-24** (operator-approved — triggered by Google Search Central guidance "Mythbusting generative AI search" + "Is SEO still relevant for generative AI search?" published 2026-05)
 **Bible Reference:** Part 1 §1.3 (SEO 2026 Layer Model) + §1.5 (Update Principles, new Principle 6 §1.5.1) + Part 13 §13.13 (Predicted Prompts ↔ Query Fan-out) + Part 13 §13.17 §4 (llms.txt enhancement) + Part 21 §21.2 (Chunking Strategy) — framing/terminology updates only
 **Schema Reference:** **None** — pure spec-level reframing, no DDL changes, no migration. Optional follow-up: `COMMENT ON TABLE seo_predicted_prompts` (single non-blocking statement, can ride next migration wave)
+
+> 🔴 **That follow-up cannot run — `seo_predicted_prompts` does not exist.** Checked 2026-08-24 against the
+> live table list (228 relations): no table by that name, and no table whose name contains `prompt`.
+> The dual-naming policy in §3 below still stands as terminology ("query fan-out (Predicted Prompts)"),
+> but the half of it that promises a *table name* for schema stability is naming something unbuilt —
+> the Predicted Prompts Bank lives in the Bible and in planning artifacts, not in Postgres.
+> Same correction applies to the identical line in Consequences below.
+> *(corrected 2026-08-24 against live schema)*
+
 **Companion to:** DR-018 (Word Count Standards — supports chunking scope clarification), Bible §1.5 (AEO+GEO+SEO+LLMO Update Principles — extended with Principle 6)
 **Scope:** **UNIVERSAL** — applies to all brands using EYWA Protocol; framing affects how operators + content teams + AI agents reason about AI-search infrastructure priorities. **Zero brand-side action required** — existing content + infrastructure continues operating unchanged.
 
@@ -1751,6 +1797,21 @@ ALTER TABLE seo_editorial_reviews
 - When page row inserted/updated with `compliance_max_tier >= 3`, automatically create pending `seo_editorial_reviews` row with `review_type='medical'`
 - When `content_topic_tier=4 OR product_regulatory_tier=4`, also auto-create `review_type='legal_compliance'` row
 - Page cannot move to `status='published'` until all required review rows have `approved=true`
+
+> 🔴 **That publish gate cannot run as written — corrected 2026-08-24 against live schema.** There is no
+> `published` status: `chk_page_status` closes the domain at **`Planned | Live | Merged | Dropped`**
+> (live counts 1,513 / 742 / 102 / 1), so a gate keyed on `status='published'` matches nothing and has
+> never blocked anything. The state it means is **`Live`**.
+> It also now conflicts with **DR-057 §6**, which rules that a page the operator approves and sets `Live`
+> **is** medically reviewed and must **not** be gated on rows in `seo_editorial_reviews`. Where the two
+> disagree, DR-057 governs; keep this DR's reviewer-tier *routing* (who reviews what), drop its
+> *blocking* semantics.
+> Fill rates measured 2026-08-24, for anyone writing a rule on these columns: `content_topic_tier` 1,534 /
+> 2,358 · `product_regulatory_tier` 1,432 · `compliance_max_tier` 1,535 · `sensitive_topic_flag` 1,502 ·
+> `legal_review_required` true on 139 · **`target_audience_segment` NULL on every row**, so the §4 ads gate
+> (which ANDs on that array) can never fire — and `ad_active` is false on all 22,710 keyword rows anyway
+> (DR-026 is dormant). `brands.positioning_mode` is set on **1 of 20** brands.
+> §5's PDPA testimonial workflow is un-exercised: **`seo_reviews` holds 0 rows.**
 
 #### 4. Keyword + Ads gating
 
@@ -2248,7 +2309,23 @@ References existing Bible Part 20 (Measurement & KPI Framework). DR-028 doesn't 
 
 ### [DR-027] — Campaign Universal Master Table (Future Phase 1) (2026-05-12) 🌱📣
 
-**Status:** Proposed (Phase 1 implementation — soak window opens upon DR-026 lock; review cycle TBD)
+> 🔴 **หมายเหตุ 2026-08-24 — DR-025 · DR-026 · DR-027 อ้างชื่อตารางที่ไม่มีอยู่จริง**
+> ทั้งสาม DR เขียนว่า `seo_page_master` และ `seo_keyword_master` ซึ่ง **ไม่เคยเป็นชื่อตารางจริง**
+> ของจริงคือ `seo_website_page_master` และ `seo_x_ads_keywords_contextual_master`
+> (ตรวจ 2026-08-24 · `to_regclass('public.seo_page_master')` คืน NULL)
+> ตัว DR ยัง 🔒 Locked และไม่ถูกเขียนทับ เพราะเป็นบันทึกว่าตอนนั้นตัดสินอะไร —
+> แต่ query ที่คัดลอกจากสามฉบับนี้จะคืน 404 ทุกครั้ง ให้แทนชื่อก่อนใช้
+> ดู DR-057 ข้อ "ชื่อตาราง" และรายงาน `protocol-db-reconcile-2026-08-23.md`
+
+**Status:** Proposed — **soak window never opened** (it was gated on a DR-026 lock that never happened; DR-026 is dormant per DR-057 §9)
+
+> 🔴 **Not built — measured 2026-08-24.** None of the four sketched tables exist in the database:
+> `seo_campaigns` · `seo_campaign_pages` · `seo_campaign_keywords` · `seo_campaign_performance_snapshot`.
+> The Phase-0 stub they were to replace is `seo_website_page_master.campaign_id` (the DR writes
+> `seo_page_master`, which is not a table name), and it is non-NULL on **1 of 2,358** page rows —
+> so the "parse distinct TEXT values" migration path has nothing to parse yet. The sketch stays as the
+> reserved architecture; nothing keys on it today. *(corrected 2026-08-24 against live schema)*
+
 **Bible Reference:** Part 29.11 (Future: Campaign Master Track), Part 5 (Database Schema Architecture)
 **Schema Reference:** v1.12 (hint only — no DDL ships in v1.12; full table ships in Schema v1.13+ when DR-027 locks)
 **Pairs with:** DR-026 (Ads-LP Phase 0 — this DR is the Phase 1 successor)
@@ -2374,8 +2451,24 @@ seo_campaign_performance_snapshot:
 
 ### [DR-026] — Ads Landing Page Track (Phase 0) (2026-05-12) 🌱📣
 
-**Status:** Proposed (review window opens 2026-05-12, target lock 2026-06-21 — 40-day soak per Handover §9 default; pilot validation expected via VTH BioDent Google Ads launch ~2026-05-15)
+**Status:** Proposed · **never locked** (the 2026-06-21 target passed with no lock event) · **💤 DORMANT** (DR-057 §9)
 **Bible Reference:** Part 29 (NEW — Ads Landing Page Track), Part 4 (Sitemap Architecture — Layer 1/2 unchanged; Ads-LP is parallel track)
+
+> 💤 **Dormant, and the vocabularies below never shipped as written — measured 2026-08-24.**
+> The columns exist and the track is unused: `ad_active` is **false on all 22,710** keyword rows,
+> and no page row carries `page_purpose='ads_lp'` or an ads template.
+> Live values differ from §A / §C below — the DR's names were never the ones created:
+> - `page_purpose` — column comment allows `seo_organic · ads_landing · hybrid · utility · legal · thank_you`;
+>   live data holds only `seo_organic` (2,276) and `utility` (82). The DR's `ads_lp` / `dual_use` do not exist.
+> - `index_directive` — column comment allows `index · noindex · index_no_follow · noindex_no_follow`;
+>   live data holds `index` (2,321) and `noindex` (37). The DR's `noindex_lp` / `dual` do not exist.
+> - `conversion_event_primary` matches the DR (`line_follow` 2,224 · `call_click` 36 · 98 NULL).
+> - `seo_page_master` throughout this DR means **`seo_website_page_master`** — the only page table there is.
+> - The §F keyword columns all exist as named, on `seo_x_ads_keywords_contextual_master`; `ad_priority_tier`'s
+>   live comment reads `tier_1 · tier_2 · tier_3 · experimental · none`, not the DR's `t1 | t2 | t3 | none`.
+> The rules stay in force for the first brand that runs Ads; today they match nothing.
+> *(corrected 2026-08-24 against live schema)*
+
 **Schema Reference:** v1.12 (additive columns on `seo_page_master` + `seo_x_ads_keywords_contextual_master`; no new tables in Phase 0)
 **Pairs with:** DR-027 (Campaign Universal Master — Future Phase 1 successor)
 
@@ -2681,6 +2774,11 @@ seo_gbp_posts:
 - ✅ Bible n8n GROUP E flows (E1/E2/E3/E4) become implementable
 - ✅ Clinic brand Phase 5 (Local SEO) unblocked
 - ✅ NAP consistency monitoring + PDPA-safe review responses operational
+  > ⚠️ **Built, never fed — measured 2026-08-24.** All five tables exist and `seo_local_rankings.branch_id`
+  > was renamed as §E specifies, but four of them are **empty**: `seo_reviews` 0 · `seo_directory_listings` 0 ·
+  > `seo_gbp_posts` 0 · `seo_local_rankings` 0. Only `seo_branches` carries data (**37 rows** across all
+  > brands). So GROUP E flows E1–E4 became *implementable*, as this DR says, and were never implemented —
+  > "operational" describes the schema, not the pipeline. *(corrected 2026-08-24 against live schema)*
 - ✅ Schema v1.11 ships with Group 1 = 7 tables (was 4), Group 5 unchanged
 - ⚠️ Migration files needed: `009_enhance_seo_branches.sql`, `010_create_seo_reviews.sql`, `011_create_seo_directory_listings.sql`, `012_create_seo_gbp_posts.sql`, `013_rename_local_rankings_fk.sql`
 - ⚠️ Existing brands with `seo_branches` rows: backfill new columns as available (NULL allowed initially)
@@ -3132,6 +3230,16 @@ operator_notion_db_precedent:
    - Quality: `is_reciprocal`, `is_cross_brand`, `cross_brand_justification`
    - Audit: timestamps + `first_planned_at`, `last_verified_at`
 
+> ⚠️ **Two column names shipped without the `_default` suffix — corrected 2026-08-24 against live schema.**
+> On `seo_website_page_master` they are **`link_priority`** and **`link_role`**, not `link_priority_default` /
+> `link_role_default`; the other eleven page-level names in sub-decision 1 are live exactly as written
+> (the list says "12 columns" and names 13 — 13 is the live count). Every column in sub-decision 2 exists on
+> `seo_page_internal_links` as named (28 columns total, plus `brand_scope` and the Notion sync trio).
+> On `status`: the Open Questions above resolve to six values and sub-decision 2 lists four; live data over
+> **16,564 rows** uses three — `planned` 15,299 · `deprecated` 1,194 · `live` 71. Nothing has ever been
+> written as `broken`, `pending_review` or `archived`, so a report that keys on those returns zero, and
+> "broken link" is currently expressed by `deprecated` (see DR-049).
+
 3. **Bidirectional Consistency Validation**:
    - Reciprocal detection trigger (auto-mark `is_reciprocal=true` when A→B and B→A both exist)
    - Anchor diversity warning (same anchor used >3 times for different targets → flag in editorial review)
@@ -3269,6 +3377,15 @@ Lock the following 4 sub-decisions together (final lock 2026-06-07):
 **Consequences:**
 
 - ✅ Universal standard across 13 brands eliminates "writer reinvents structure" waste
+  > ⚠️ **Universal as a *block library*, not as a shared code list — corrected 2026-08-24 against live schema.**
+  > DR-057 §5 rules that template codes are **per brand** and may diverge completely. Measured 2026-08-24,
+  > the three loaded brands share no single vocabulary:
+  > deezy uses `T2b` (21 codes, incl. `T8g` and `T12i`) where vth (9 codes) and smile-scape (13 codes) use `T2`.
+  > So validate a code against **that brand's own template registry**, never against a global T1–T22 list, and
+  > key any code→category map by brand as well as code.
+  > The column is **`content_format`** (+ denormalised `content_format_name`) on `seo_website_page_master` —
+  > the `template_id` / `template_version` columns floated in the header above were never added.
+  > Query: `select brand_id, array_agg(distinct content_format) from seo_website_page_master group by 1;`
 - ✅ EEAT enforcement (visual + structured) closes the silent failure gap audited at VTH
 - ✅ T18 Programmatic Local solves Deezy 68+ hyper-local pages problem (and all multi-branch brand scaling)
 - ✅ T6a Guide solves "คู่มือ" search intent (31 pages in Deezy alone)
@@ -3504,9 +3621,9 @@ Standards (key targets, full table in Bible §9.8) — keyed on `page_category`,
 Multilingual adjustment: Thai/Chinese -20% (denser per character).
 
 **Keying notes (approximate — do not read the table as exact):**
-- The `coalesce` is load-bearing: `page_category` is 0/869 on deezy and 0/728 on smile-scape, so a pure `page_category` rule passes vacuously on two of three brands. Where both columns exist (vth) they disagree on 139/685 rows.
+- The `coalesce` is still load-bearing, but no longer for the reason recorded on 2026-08-23 (when `page_category` was 0/869 on deezy and 0/728 on smile-scape). **Re-measured 2026-08-24:** it is now backfilled on all three brands — deezy **776/869**, vth **686/761**, smile-scape **707/728**; **189 rows brand-wide are still NULL** and fall through to `page_type`. Do not hardcode these; they move with every backfill. Live check: `select brand_id, count(*) filter (where page_category is not null), count(*) from seo_website_page_master group by 1;` *(corrected 2026-08-24 against live schema)*
 - `knowledge_article` is the loosest row: vth's backfill folded `supporting`/`pillar` rows into it, and it also absorbs protocol/aftercare pages written as articles.
-- Excerpt only — `about` and `branch_landing` have their own rows in the full §9.8.1 table; `doctor_profile` and `contact` have no row in any table.
+- Excerpt only — `about` and `branch_landing` have their own rows in the full §9.8.1 table; `doctor_profile` and `contact` have no row in any table. In the Local row, **`local_service` matches nothing** — the live values are `local_landing` (11) · `local_programmatic` (99) · `local_service_page` (6), measured 2026-08-24. *(corrected 2026-08-24 against live schema)*
 - The old L1–L7 numbers were §9.8's own numbering, not Bible Part 3.2's (§9.8 "L3" = hubs, Part 3.2 "L3" = devices; §9.8 "L6" = Local, Part 3.2 "L6" = Protocol). That collision is why the layer number was never a safe key.
 - 🔴 **UNIMPLEMENTABLE as written — see mapping note:** the floor for protocol / aftercare / how-to pages (Bible Part 3.2's Protocol layer) has no key at all — those pages are stored as `service_page` in section 3 or as `knowledge_article`, so no column predicate can hold them to a floor distinct from money pages. Nearest runnable filter is `schema_markup_type LIKE '%HowTo%'`, which returns zero rows on vth and smile-scape.
 
@@ -4434,6 +4551,21 @@ edge_deprecation_workflow:
 current_status: "All 10 edges actively used as of v3.13"
 ```
 
+> 🔴 **"All 10 edges actively used" is no longer true, and the lock leaked — measured 2026-08-24.**
+> Live `seo_entity_relationships.edge_type` over **1,089 rows**:
+> `related_to` 427 · `broader_than` 271 · `treats` 166 · `requires` 58 · `symptom_of` 54 · `part_of` 51 ·
+> `is_a` 30 · `contraindicates` 21 · `causes` 6 · `caused_by` 5.
+> **Three values in use were never voted in by this policy** — `broader_than`, `requires`, `is_a`
+> (359 rows, a third of the graph). They read as informal spellings of `parent_of`/`requires_assessment`/
+> `subtype_of`, but nothing in this DR authorised them and no DR records the addition.
+> **Ten documented values hold zero rows**: `parent_of` · `child_of` · `subtype_of` · `contains` ·
+> `treated_by` · `requires_assessment` · `uses` · `used_by` · `alternative_to` · `evidenced_by` —
+> so the 12-month deprecation clock in the block above is already running on most of the vocabulary and
+> has never been read. The governance policy stays in force; what it needs is a reconciliation pass
+> (adopt the three, or migrate them onto the locked spellings) before the next edge proposal.
+> Query: `select edge_type, count(*) from seo_entity_relationships group by 1 order by 2 desc;`
+> *(corrected 2026-08-24 against live schema)*
+
 **Rationale:**
 
 ✅ **Prevents ontology drift before it manifests:**
@@ -4535,6 +4667,18 @@ Adopt **Entity Uniqueness Guard (EUG)** as a 2-wave deployment:
    - `find_similar_entities(slug, threshold, brand_scope, limit)` function
    - Uses `pg_trgm` extension (already required for keywords)
    - Threshold semantics: ≥0.90 BLOCK, 0.75-0.89 WARN, 0.60-0.74 INFO
+
+> 🔴 **Layers 1 and 3a name columns `seo_entity_graph` does not have — corrected 2026-08-24 against live schema.**
+> `brand_scope_primary` is not on `seo_entity_graph`; the live denormalised single-brand column is
+> **`brand_scope_id`** (with `brand_scope_name`), maintained by `trg_brand_scope_names`.
+> (`brand_scope_primary` does exist — on `seo_topic_cluster_master`.) `entity_slug` is documented UNIQUE
+> **table-wide**, not per brand, so the composite guard as written is not the constraint in force.
+> There is **no `canonical_names`** on the entity table, and `aliases` is **plain text, not jsonb** — so a
+> Layer-3a collision check written as a jsonb search, and the GIN indexes on `canonical_names`/`aliases` in
+> the deployment plan below, cannot run against these columns as typed. The same wording repeats in the
+> Rationale and Consequences below; read all of them against `aliases text`.
+> Layer 3b (pg_trgm on the slug) is unaffected. The EUG decision itself stands — DR-042 and DR-050's
+> uniqueness gate are the checks that actually caught duplicates in the field.
 
 **Coverage:** ~85% of duplicate scenarios at $0 marginal cost (no new dependencies).
 
@@ -4672,6 +4816,18 @@ Tables: `seo_entity_graph`, `seo_topic_cluster_master`, `seo_authors`, `seo_cita
 
 Tables: `seo_website_page_master`, `seo_brand_doctors`, `seo_brand_branches`, `seo_x_ads_keywords_contextual_master`
 
+> 🔴 **Three of these table names are wrong and the column rename never happened — corrected 2026-08-24 against live schema.**
+> Pattern A: `seo_authors` → the live table is **`seo_authors_reviewers`** (184 rows, carries `brand_scope`).
+> Pattern B: `seo_brand_doctors` → **`seo_doctor_assignments`** (262 rows, scalar `brand_id`);
+> `seo_brand_branches` → **`seo_branches`** (scalar `brand_id` + `brand_slug`).
+> The `brand_slug` column named in the Consequences below exists only on `brands` and on `seo_branches`.
+> On the two tables this DR aimed at, the rename was never applied and the pattern is honoured under
+> different column names: `seo_website_page_master.brand_id` holds the **slug** (`deezy-dental` ·
+> `vth-biodent` · `smile-scape-clinic`), and `seo_x_ads_keywords_contextual_master.brand` holds the
+> **display name** and FKs to `brands.brand_name` (`Deezy Dental`, …) — the one place the federation still
+> keys on a name rather than a slug. The decision stands; the migration bullets below describe work that
+> was not done, so a query written from them returns an undefined-column error, not a wrong answer.
+
 **`brand_slug`** = canonical brand identifier:
 - Lowercase, kebab-case, immutable
 - Examples: `vth-biodent`, `vitalsleep`, `the-face-by-vertex`
@@ -4760,6 +4916,20 @@ Tables:
 - `seo_website_page_master` (page)
 - `seo_x_ads_keywords_contextual_master` (kw) — already has `translation_group`
 - `seo_editorial_reviews` (rev)
+
+> 🔴 **Both tier lists name tables and columns that do not exist — corrected 2026-08-24 against live schema.**
+> **Names:** `seo_authors` → **`seo_authors_reviewers`** · `seo_brand_doctors` → **`seo_doctor_assignments`** ·
+> `seo_brand_branches` → **`seo_branches`**.
+> **Tier 1 shape:** only three of the seven tables actually carry the jsonb trio — `seo_topic_cluster_master`
+> (`canonical_names` + `aliases` + `descriptions`), `seo_authors_reviewers` (`canonical_names`) and
+> `seo_branches` (`canonical_names`). `seo_entity_graph` has **no `canonical_names` and no `descriptions`**,
+> and its `aliases` is **plain text, not jsonb** (its own column comment says so); `brands`, `seo_citations`
+> and `seo_doctor_assignments` carry none of the three.
+> **Tier 2 shape:** `seo_website_page_master` has **no `translation_group_id`** — language versions are tied
+> together by `translations_versions_fps text[]` + `source_translation_fp`, with `page_language` (2,358/2,358
+> filled) and `is_source_page`. The keyword table's `translation_group` is real, as the DR says.
+> `seo_editorial_reviews` carries no language column at all, so it is not a Tier-2 table in practice.
+> The two-tier decision stands; the format below is what a group key *would* look like, not a live column.
 
 **Translation Group ID Format:** `tg_{ULID16}` (separate namespace from row fingerprints)
 
@@ -5112,6 +5282,14 @@ Option B — single entity record per concept, with `canonical_names jsonb` fiel
 canonical_names jsonb DEFAULT '{}'
 -- Structure: {"th": "...", "en": "...", "zh": "...", "ja": "...", ...}
 ```
+
+> 🔴 **Not on `seo_entity_graph` — corrected 2026-08-24 against live schema.** The entity table has **no
+> `canonical_names` column**; it carries `entity_name` (single canonical display name) plus `aliases` as
+> **plain text**, comma/line-separated, mixing TH and EN in one field. `canonical_names jsonb` was built on
+> `seo_topic_cluster_master`, `seo_authors_reviewers` and `seo_branches` instead.
+> The decision — **one row per concept**, `entity_fingerprint` universal across languages — is what the data
+> actually does (732 rows, one per concept, no per-language duplicates), so the pattern holds; only the
+> storage shape for the labels is different from what is written here.
 
 **Rationale:**  
 - ✅ Knowledge graph stays unified (1 concept = 1 entity)

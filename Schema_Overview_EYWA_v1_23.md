@@ -2,9 +2,9 @@
 
 **Version:** v1.23 (2026-06-11) — DR-038 Canonicalize `seo_media_assets` (Group 11 NEW §13.1, BUILT) + Cloudflare config columns on `brands` (§3.1, BUILT) 🔒🖼️☁️
 **Live database:** Supabase project `lffcbeszjqzioobqfdav` ("GTGT") · region `ap-northeast-1` · Postgres 17
-**Total base tables:** 43 (in `public` schema, excluding `logs_2025`/`logs_2026` and backups) — `seo_media_assets` §13.1 (Group 11) canonicalized 2026-06-11 via migration `eywa_w11_08` (DR-038); `brands` §3.1 +4 Cloudflare cols via `eywa_w11_09` (DR-038); `seo_payer_partners` §3.9 canonicalized 2026-06-08 via migration `eywa_w11_07` (DR-037); `seo_entity_symptom` §11.5a built 2026-06-04 via `eywa_w11_06`
+**Total base tables:** 43 EYWA canonical tables — all 43 confirmed present *(corrected 2026-08-24 against live schema: the count is right, the scope claim was not — `public` also holds non-EYWA tables `tsa_bond`/`tsa_bond_valued`/`tsa_call`/`tsa_event`/`tsa_page_product`/`tsa_param`/`tsa_product_map`/`tsa_product_value`, `fbads_account`/`fbads_daily`/`fbads_sync_log`, `web_lead`, `ss_kw_seed_wave16_20260806`, plus ~140 `_`-prefixed backup/scratch tables and 7 `v_` views. The live list is whatever `GET /rest/v1/` returns as OpenAPI definitions; do not hardcode a total)* — `seo_media_assets` §13.1 (Group 11) canonicalized 2026-06-11 via migration `eywa_w11_08` (DR-038); `brands` §3.1 +4 Cloudflare cols via `eywa_w11_09` (DR-038); `seo_payer_partners` §3.9 canonicalized 2026-06-08 via migration `eywa_w11_07` (DR-037); `seo_entity_symptom` §11.5a built 2026-06-04 via `eywa_w11_06`
 **Spec stack:** Bible v3.32 · Handover v1.18 · Decision Records v1.24
-**Audit method:** Last full drift audit vs live `information_schema` was **2026-05-30**. Columns listed here were verified against the live database **at that date only** — **v1.20–v1.23 have never been re-verified.** A cross-brand reconciliation on 2026-08-23 checked 2,317 documented claims against the live database and found 1,837 that no longer match, including 336 rules that cannot fire at all. **Do not treat any statement in this document as verified-current without re-querying.** See `eywa-vth-biodent/content-plan/` reconciliation report.
+**Audit method:** Last full drift audit vs live `information_schema` was **2026-05-30**. A cross-brand reconciliation on 2026-08-23 checked 2,317 documented claims against the live database and found 1,837 that no longer match, including 336 rules that cannot fire at all. **Every column count, allowed-value list and row count in this document was re-checked against the live PostgREST schema + live data on 2026-08-24**; corrections carry an inline `*(corrected 2026-08-24 against live schema)*` marker. Row counts drift daily — treat every number here as a measurement with a date, not a constant. Constraint definitions (CHECK bodies, trigger existence, index lists, partitions) are **not** reachable through PostgREST and remain unverified since 2026-05-30. See `eywa-vth-biodent/content-plan/` reconciliation report.
 
 > **Reader heads-up:** v1.18 is a **full rewrite + audit** of v1.10. Aspirational columns from v1.0–v1.10 that never shipped are dropped (or moved to **Appendix H — Deferred v2.0 Provisions**). Every column under each table reflects the live database. Two new DR waves landed in this version:
 > - **DR-030 Sensitive Topic Compliance** (Schema v1.17, 2026-05-27)
@@ -55,9 +55,9 @@ Paired companion to **DR-038 (Locked 2026-06-11)**. Ships Group 11 NEW (Media As
 
 **`seo_website_page_master` 88 → 90 cols** — adds the two columns that record where a page's on-page intent coverage came from and whether PAA has been crawled:
 - `intent_source_tier text NOT NULL DEFAULT 'template_only'` 🆕 — `CHECK IN ('paa','derived','template_only')`. Which signal drove the page's intent map: real PAA, derived (painpoint / predicted SERP features / voice), or the 8-intent template baseline.
-- `paa_checked_at timestamptz` 🆕 — last PAA crawl time. `NULL` = never crawled (trigger a crawl, *not* tier-3). SET + empty `paa_questions` = checked, genuinely no PAA → tier-2/3.
+- `paa_checked_at timestamptz` 🆕 — last PAA crawl time. `NULL` = never crawled (trigger a crawl, *not* tier-3). SET + empty PAA store = checked, genuinely no PAA → tier-2/3.
 
-Additive, non-breaking; the NOT NULL column carries a safe default so existing 1,376 rows auto-set to `template_only` (no backfill). **NOT** in the page fingerprint → no reference cascade. Drives **Content_Templates §4.5.4 Intra-Page Answer Routing** (understanding-PAA → body, decision-PAA → FAQ; page-level ≥8 intent coverage; tiered FAQ floor). PAA source is the existing **`seo_x_ads_keyword_serp_competitors.paa_questions text[]`** — the original proposal's `people_also_ask_json` / `paa_ai_content_json` / `related_searches` columns **do not exist** in the audited schema and were re-mapped to `paa_questions` + `keyword_painpoint` + `predicted_serp_features` + `seo_x_voice_search`. See **DR-034**.
+Additive, non-breaking; the NOT NULL column carries a safe default so existing 1,376 rows auto-set to `template_only` (no backfill). **NOT** in the page fingerprint → no reference cascade. Drives **Content_Templates §4.5.4 Intra-Page Answer Routing** (understanding-PAA → body, decision-PAA → FAQ; page-level ≥8 intent coverage; tiered FAQ floor). PAA source is **`seo_x_ads_keyword_serp_competitors.people_also_ask_json`** (with `paa_ai_content_json`). *(corrected 2026-08-24 against the live schema — this entry had the mapping exactly backwards: `people_also_ask_json`, `paa_ai_content_json` and `related_searches` **do** exist on that table, and `paa_questions` does not exist at all. `keyword_painpoint` + `predicted_serp_features` + `seo_x_voice_search` remain the `derived` inputs.)* See **DR-034**.
 
 ### v1.19 (2026-06-02) — DR-033 ICD Dual-Coding Standard 🔒🩺🌐
 
@@ -161,7 +161,7 @@ v1.10 → v1.0: see `archive/Schema_Overview_EYWA_v1_10.md` for the historical d
 | Source of truth | Used for |
 |---|---|
 | **This doc (Schema Overview)** | Column lists, types, constraints, triggers, indexes |
-| `EYWA_PROTOCOL_v3_19.md` (Bible) | Strategic intent, why columns exist, workflow context |
+| `EYWA_PROTOCOL_v3_33.md` (Bible) | Strategic intent, why columns exist, workflow context *(corrected 2026-08-24 — the file in the spec repo is v3_33; no `EYWA_PROTOCOL_v3_19.md` exists there)* |
 | `DECISION_RECORDS.md` | Why a column was added or changed (DR-NNN cross-ref) |
 | `EYWA_HANDOVER.md` | Operational sync patterns, n8n flows, Notion mirror behavior |
 
@@ -202,7 +202,7 @@ v1.10 → v1.0: see `archive/Schema_Overview_EYWA_v1_10.md` for the historical d
 | **Group 10** | Ads Landing Page Track (column extensions only) | (no new tables; columns on page_master + keyword master) | — |
 | **Group 11** 🆕 v1.23 | Media Assets | seo_media_assets (**1**) | N↔S (Notion master 🖼️ Media Library; n8n → Cloudflare R2 + Supabase mirror per DR-038) |
 
-**Total: 43 base tables** in `public` schema (incl. `seo_entity_symptom` built 2026-06-04 DR-036; `seo_payer_partners` canonicalized 2026-06-08 DR-037; `seo_media_assets` shipped 2026-06-11 DR-038).
+**Total: 43 EYWA canonical base tables** (incl. `seo_entity_symptom` built 2026-06-04 DR-036; `seo_payer_partners` canonicalized 2026-06-08 DR-037; `seo_media_assets` shipped 2026-06-11 DR-038). *(corrected 2026-08-24 against live schema — all 43 exist; `public` additionally holds non-EYWA tables and ~140 backup/scratch tables that this 43 does not count, see the header note.)*
 
 > **Note on Group 9 vs spec drift:** Spec comments on Group 9 tables mark them `N↔S`, but they were built without `notion_id` columns — practically these function as **S-only** lookup/detail tables (1:1 with entity_graph). v1.18 keeps the historical N↔S label in the spec comment but flags the practical S-only behavior here.
 
@@ -268,10 +268,10 @@ See **Appendix A** for installation order and per-table extension dependencies.
 > **Purpose:** Authoritative brand registry. One row per brand (e.g., `vth-biodent`, `vitality-hospital`, `the-face-by-vertex`).
 > **Sync:** N↔S (Notion master `[DB 1.1] Brand Database`, Supabase mirror via n8n)
 > **PK:** Currently on `brand_name` (legacy from v1.0); UNIQUE on `id` (UUID), `brand_slug`, `fingerprint`, `notion_id`. Migration to id-as-PK deferred to v2.0.
-> **Volume:** 10–50 rows (current: 15).
+> **Volume:** 10–50 rows (current: **20**, measured 2026-08-24). *(corrected 2026-08-24 against live schema)*
 > **Bible:** §17.6 Group A (Brand Identity)
 
-#### Columns (24 — full live snapshot, +4 Cloudflare cols per DR-038 v1.23)
+#### Columns (31 — full live snapshot; was documented as 24) *(corrected 2026-08-24 against live schema — +`notion_synced_at` and +6 Tsaheylu/analytics columns were never documented)*
 
 | Column | Type | Constraint | Description |
 |---|---|---|---|
@@ -281,7 +281,7 @@ See **Appendix A** for installation order and per-table extension dependencies.
 | `fingerprint` | `text` | UNIQUE NOT NULL | DR-008 v1.9 — `brnd_{ULID16}` immutable machine ID. Auto-generated by `trg_set_fingerprint_brand`. Immutable via `trg_prevent_fingerprint_change`. |
 | `fingerprint_display_name` | `text` | NOT NULL | DR-008 v1.9 — auto-computed `{fp_last_6}::{brand_slug}` by `trg_refresh_display_name_brand`. |
 | `company` | `text` | nullable | Legal company name (e.g. "The Gifted Digital Co., Ltd."). |
-| `status` | `text` | nullable | Lifecycle status (`'ACTIVE'`, `'IN ACTIVE'`, `'PENDING'`). |
+| `status` | `text` | nullable | Lifecycle status. *(corrected 2026-08-24 against live schema — no CHECK; the only values in the table are `'active'` (7 rows, one with a trailing newline) and the empty string (13 rows). `'ACTIVE'`/`'IN ACTIVE'`/`'PENDING'` appear nowhere.)* |
 | `brand_web_url` | `text` | nullable | Public marketing site URL. |
 | `gsc_property_url` | `text` | nullable | Google Search Console property URL. |
 | `ga4_property_id` | `text` | nullable | Google Analytics 4 property ID (e.g. `G-XXXXXXX`). |
@@ -297,6 +297,13 @@ See **Appendix A** for installation order and per-table extension dependencies.
 | `cloudflare_account_id` 🆕 v1.23 | `text` | nullable | DR-038 — Cloudflare numeric account ID (optional; used for account-scoped API endpoints). |
 | `cloudflare_zone_id` 🆕 v1.23 | `text` | nullable | DR-038 — Cloudflare DNS zone ID for this brand's primary domain; used by Image Transformations (per DR-035). |
 | `cloudflare_r2_bucket` 🆕 v1.23 | `text` | nullable | DR-038 — R2 bucket name that holds this brand's images (`{brand-slug}-media`). **One bucket per brand — no cross-brand sharing (DR-040, 2026-06-14).** |
+| `notion_synced_at` | `timestamptz` | nullable | *(added 2026-08-24 — live column, never documented.)* Last bidirectional Notion sync. N→S poll filters on `last_edited_time > notion_synced_at`. |
+| `gtm_container_id` | `text` | nullable | *(added 2026-08-24 — live column, never documented.)* Tsaheylu: GTM container (`GTM-XXXXXXX`). Public value, not a secret. |
+| `ga4_measurement_id` | `text` | nullable | *(added 2026-08-24 — live column, never documented.)* Tsaheylu: GA4 web-stream measurement id (`G-XXXXXXXXXX`). Distinct from `ga4_property_id`. |
+| `bq_dataset` | `text` | nullable | *(added 2026-08-24 — live column, never documented.)* GA4→BigQuery export dataset. NULL = export off (raw events for that period are lost permanently). |
+| `tsa_phase` | `smallint` | nullable | *(added 2026-08-24 — live column, never documented.)* Tsaheylu rollout phase 0–5. |
+| `tsa_events_live` | `jsonb` | nullable | *(added 2026-08-24 — live column, never documented.)* Event names verified firing in production. |
+| `tsa_verified_at` | `timestamptz` | nullable | *(added 2026-08-24 — live column, never documented.)* |
 | `created_at` | `timestamptz` | NOT NULL DEFAULT `now()` | |
 | `updated_at` | `timestamptz` | NOT NULL DEFAULT `now()` | |
 
@@ -334,9 +341,9 @@ These are preserved in **Appendix H — Deferred v2.0 Provisions** for historica
 > **Purpose:** Local SEO master — physical branch locations with GBP integration. Renamed from `seo_locations` per DR-025 in v1.11.
 > **Sync:** N↔S (Notion `Branches Database`, Supabase mirror)
 > **Bible:** §10.5 Local SEO · Part 17.6 Group E
-> **Volume:** 1–20 rows per brand.
+> **Volume:** 1–20 rows per brand — **37 rows** across all brands, measured 2026-08-24. *(corrected 2026-08-24 against live schema)*
 
-#### Columns (60 — abridged to logical groups; full DDL in live `information_schema`)
+#### Columns (61 — abridged to logical groups; full DDL in live `information_schema`) *(corrected 2026-08-24 against live schema — was documented as 60)*
 
 **Identity & DR-008 (5):**
 - `id uuid` UNIQUE
@@ -417,9 +424,9 @@ These are preserved in **Appendix H — Deferred v2.0 Provisions** for historica
 > **Purpose:** Doctor/author registry — license verification + E-E-A-T compliance for medical content authority.
 > **Sync:** N↔S (Notion `Medical Team Database`, Supabase mirror)
 > **Bible:** §23.3 Authors/Reviewers E-E-A-T
-> **Volume:** 1–30 per brand; shared across brands via `seo_doctor_assignments`.
+> **Volume:** 1–30 per brand; shared across brands via `seo_doctor_assignments`. **184 rows** total, measured 2026-08-24. *(corrected 2026-08-24 against live schema)*
 
-#### Columns (26)
+#### Columns (28) *(corrected 2026-08-24 against live schema — was documented as 26; live adds `load_from` + `load_source`, the DZ-DR-029 federation-provenance pair)*
 
 | Column | Type | Notes |
 |---|---|---|
@@ -445,6 +452,7 @@ These are preserved in **Appendix H — Deferred v2.0 Provisions** for historica
 | `linkedin_url text` | |
 | `is_active boolean` | |
 | `notion_id text`, `notion_synced_at`, `sync_state` | N↔S |
+| `load_from text`, `load_source text` | *(added 2026-08-24 — live columns, never documented.)* DZ-DR-029 federation provenance: which brand's load created the row, and from which file |
 | `created_at`, `updated_at` | |
 
 #### Notion-side fields NOT mirrored to Supabase
@@ -467,15 +475,15 @@ These are Notion-only UI fields; operator-managed in Notion, not synced.
 
 > **Purpose:** Junction (author × brand × branch). Supports cross-brand doctor sharing within EYWA federation.
 > **Sync:** N↔S (Notion `Doctor Assignments Database`)
-> **Volume:** ~1 row per (author × brand) pair.
+> **Volume:** ~1 row per (author × brand) pair — **262 rows**, measured 2026-08-24. *(corrected 2026-08-24 against live schema)*
 
-#### Columns (13)
+#### Columns (16) *(corrected 2026-08-24 against live schema — was documented as 13; the three Notion-sync columns added by Wave 11.7a, already listed in Appendix I, were never added to this table)*
 
 | Column | Type | Notes |
 |---|---|---|
 | `id uuid` UNIQUE | |
 | `fingerprint text` | `docasg_{ULID16}` |
-| `fingerprint_display_name text` | `{fp_last_6}::{brand_slug}::{author_name}::{role}` |
+| `fingerprint_display_name text` | `{fp_last_6}::{role_at_brand}` *(corrected 2026-08-24 against live data — e.g. `6E40BA::medical_director`; no brand or author segment is stored)* |
 | `author_id uuid` | FK → seo_authors_reviewers.id |
 | `author_fp text` | FK → seo_authors_reviewers.fingerprint |
 | `brand_id uuid` | FK → brands.id |
@@ -484,6 +492,7 @@ These are Notion-only UI fields; operator-managed in Notion, not synced.
 | `is_primary_role boolean` | True = primary brand affiliation for this doctor |
 | `started_at date` | |
 | `ended_at date` | NULL = active |
+| `notion_id text`, `notion_synced_at timestamptz`, `sync_state text` | *(added 2026-08-24 — live columns; added by W11.7a 2026-06-04, never listed here)* |
 | `created_at`, `updated_at` | |
 
 ---
@@ -494,9 +503,9 @@ These are Notion-only UI fields; operator-managed in Notion, not synced.
 > **Sync:** **S only** — ingested via GBP API + n8n flows (E1)
 > **DR-025 v1.11** — Local SEO subsystem
 > **DR-030 v1.17** — +3 cols for sensitive recovery testimonials (consent + anonymization workflow)
-> **Volume:** ~1k–100k rows per brand (high cardinality from review platforms).
+> **Volume:** ~1k–100k rows per brand at maturity — **0 rows** live, measured 2026-08-24: the GBP/n8n ingest has never run, so every rule below is schema-ready but has nothing to fire on. *(corrected 2026-08-24 against live schema)*
 
-#### Columns (45 — abridged)
+#### Columns (45 — abridged) *(count confirmed 2026-08-24 against live schema)*
 
 **Identity & lineage (5):**
 - `id uuid` UNIQUE
@@ -579,15 +588,15 @@ App-layer constraint (Phase 1A): enforced in n8n flow E1.5; database-layer trigg
 > **Distinct from `seo_citations`** which is academic/medical citation pool.
 > **Bible:** Local SEO §10.5
 
-37 columns. Key fields:
-- `directory_name text` (`'YellowPages_TH'`, `'Wongnai'`, `'TripAdvisor'`, etc.)
-- `listing_url text`
-- `nap_name text`, `nap_address text`, `nap_phone text` (as found on directory)
-- `nap_consistency_score numeric` (vs branch canonical)
-- `nap_mismatch_flags text[]` (which fields disagree)
-- `is_claimed boolean`
-- `claim_status text`
-- `last_audited_at timestamptz`
+37 columns *(confirmed 2026-08-24 against live schema)* · **0 rows** live, measured 2026-08-24 — the flow-E3 auto-detect has never run. Key fields *(every name below corrected 2026-08-24 against the live column list — eight of the ten previously listed here did not exist; only `directory_name` and `claim_status` were real)*:
+- `directory_name text` (`'YellowPages_TH'`, `'Wongnai'`, `'TripAdvisor'`, etc.), `directory_slug`, `directory_category`, `directory_authority_score`
+- `citation_url text` — the listing URL *(live name; this doc said `listing_url`)*
+- `business_name_listed`, `address_listed`, `phone_listed`, `website_listed`, `hours_listed`, `categories_listed` — NAP as found on the directory *(live names; this doc said `nap_name` / `nap_address` / `nap_phone`)*
+- `nap_match_score` plus per-field `name_match_score`, `address_match_score`, `phone_match_score`, `website_match_score` *(live names; this doc said `nap_consistency_score`)*
+- `has_inconsistency boolean`, `inconsistency_severity`, `inconsistency_notes` *(live names; there is no `nap_mismatch_flags text[]`)*
+- `claim_status text`, `claimed_at`, `claimed_by_fp` *(live; there is no `is_claimed boolean`)*
+- `last_verified_at timestamptz`, `next_verification_due`, `discovered_at`, `found_via` *(live names; this doc said `last_audited_at`)*
+- `brand_id`, `branch_id`, `status`, `is_industry_specific`, `industry_focus`, `is_thai_specific`
 
 (Full column list in live DB; this section will be expanded in v1.19 if directory listings become a primary editorial workflow surface. Currently low-touch S-only.)
 
@@ -598,16 +607,20 @@ App-layer constraint (Phase 1A): enforced in n8n flow E1.5; database-layer trigg
 > **Purpose:** Google Business Profile Posts management + local archive.
 > **Sync:** S only — n8n flow E2/E4 (publish to GBP) + E4 (archive responses)
 
-45 columns. Key fields:
-- `gbp_post_id text` (Google's ID)
+45 columns *(confirmed 2026-08-24 against live schema)* · **0 rows** live, measured 2026-08-24 — flows E2/E4 have never published. Key fields *(every name below corrected 2026-08-24 against the live column list — eight of the eighteen previously listed here did not exist)*:
+- `gbp_post_id text` (Google's ID), `gbp_post_url`, `gbp_published_at`, `gbp_last_synced_at`, `gbp_api_response jsonb`
 - `post_type text` (`'EVENT'`, `'OFFER'`, `'WHATS_NEW'`, `'PRODUCT'`)
-- `headline text`, `body text`, `cta_label text`, `cta_url text`
-- `event_start_date`, `event_end_date`, `offer_coupon_code`, `offer_terms`
-- `media_urls text[]`
-- `branch_id uuid` (FK → seo_branches)
-- `scheduled_publish_at timestamptz`, `published_at`, `expires_at`
-- `gbp_views_count int`, `gbp_clicks_count int`
-- `status text` (`'draft'`,`'scheduled'`,`'published'`,`'expired'`,`'failed'`)
+- `title text`, `body text` *(live name is `title`; this doc said `headline`)*
+- `cta_type text`, `cta_url text` *(live name is `cta_type`; this doc said `cta_label`)*
+- `event_start_at`, `event_end_at` *(live names; this doc said `event_start_date` / `event_end_date`)*
+- `offer_coupon_code`, `offer_terms`, `offer_redeem_url`
+- `product_name`, `product_price_min`, `product_price_max`, `product_currency`
+- `photo_url text`, `video_url text` *(live names; there is no `media_urls text[]`)*
+- `brand_id`, `branch_id uuid` (FK → seo_branches), `language_code`
+- `scheduled_for timestamptz` *(live name; this doc said `scheduled_publish_at`)*, `published_at`, `expires_at`
+- `views_count int`, `clicks_count int`, `conversions_count`, `engagement_rate` *(live names; this doc said `gbp_views_count` / `gbp_clicks_count`)*
+- `status text`, `approval_status`, `approved_at`, `approved_by_fp`, `rejection_reason` — value lists unverifiable: the CHECK bodies are not exposed by PostgREST and the table is empty
+- `campaign_id`, `campaign_name`, `batch_id`, `parent_post_id`
 
 ---
 
@@ -615,11 +628,12 @@ App-layer constraint (Phase 1A): enforced in n8n flow E1.5; database-layer trigg
 
 > **Purpose:** Center subdivision for brands where `brands.brand_structure='multi_center'`. One row per center within a multi-center hospital brand.
 > **Sync:** N↔S (Notion `Brand Centers Database`, Supabase mirror via Wave 11.3 follow-up)
-> **First adopter:** `vitality-hospital` (7 centers — Vital Sleep, Vital Sleep Intimacy, Vital Breathing, Vital Facial Pain, Vital Wellness, Vital Effortless Weight Loss, Vital Brain Center)
+> **First adopter:** `vitality-hospital` was the planned first adopter (7 centers — Vital Sleep, Vital Sleep Intimacy, Vital Breathing, Vital Facial Pain, Vital Wellness, Vital Effortless Weight Loss, Vital Brain Center).
+> 🔴 **DR-032 is DORMANT — nothing in this section can fire today** *(corrected 2026-08-24 against live schema)*: `seo_brand_centers` holds **0 rows**, all **20** `brands` rows carry `brand_structure='monolithic'` (no `multi_center` brand exists), and all **2,358** `seo_website_page_master` rows have `center_slug` NULL. The table, the trigger and the URL pattern below are built and correct; they simply have no data. Re-measure with `select brand_structure, count(*) from brands group by 1`.
 > **DR:** DR-032 (Locked 2026-05-25) — Multi-Center Hospital Brand Pattern
 > **Bible:** §25.13 (post-lock propagation)
 
-#### Columns (17)
+#### Columns (17) *(confirmed 2026-08-24 against live schema)*
 
 | Column | Type | Constraint | Description |
 |---|---|---|---|
@@ -688,16 +702,16 @@ When `brand_structure='monolithic'`: unchanged DR-004 behavior `{brand_domain}/{
 > **Purpose:** Per-brand directory of **commercial payer partners** — cashless insurers + corporate-welfare employers — rendered on a brand's cashless/partner directory pages (e.g. Deezy sitemap §2.7/§2.8). Operational, per-brand, high-churn reference data.
 > **Distinct from `seo_entity_organization` (§11.8):** that table hosts **authority/citation** orgs for the E-E-A-T graph; payers are commercial partners, **not** knowledge-graph entities (no `seo_entity_graph` row).
 > **Sync:** S only (operator-curated / API-ingested reference data; refresh cadence per brand)
-> **First adopter:** `deezy-dental` (71 rows — 36 insurers [32 TH + 4 foreign] + 35 employers)
+> **First adopter:** `deezy-dental` — **70 rows** as of 2026-08-24: 35 insurers (`insurer_category`: 23 non_life, 7 life, 4 foreign, 1 tpa) + 35 employers. *(corrected 2026-08-24 against live schema — the 71/36-insurer figure was the 2026-06-08 migration count; one insurer row has since gone.)*
 > **DR:** DR-037 (Locked 2026-06-08) — canonicalized from brand-local DZ-DR-014 into the Family-B per-brand-operational shape (sibling of `seo_branches` §3.2 / `seo_reviews` §3.5 / `seo_directory_listings` §3.6).
 > **Bible:** §5.3 Group 1
 
-#### Columns (19)
+#### Columns (19) *(confirmed 2026-08-24 against live schema)*
 
 | Column | Type | Constraint | Description |
 |---|---|---|---|
 | `id` | `uuid` | PRIMARY KEY DEFAULT `gen_random_uuid()` | Surrogate PK. |
-| `fingerprint` | `text` | NOT NULL, UNIQUE | DR-008 — `payp_{ULID16}` immutable. Auto-set by `trg_set_fingerprint`. |
+| `fingerprint` | `text` | NOT NULL, UNIQUE | DR-008 — `payp_{ULID16}` immutable. Auto-set by `trg_set_fingerprint`. ✅ verified live 2026-08-24. |
 | `fingerprint_display_name` | `text` | NOT NULL | DR-008 — `{fp_last_6}::{partner_name}` auto-computed. |
 | `brand_id` | `uuid` | NOT NULL, FK → `brands(id)` | Owning brand. uuid FK (matches the Local-SEO operational subsystem), **not** `brand_scope[]`. |
 | `partner_type` | `text` | NOT NULL, CHECK IN (`insurer`,`employer`) | Row discriminator. |
@@ -750,20 +764,20 @@ When `brand_structure='monolithic'`: unchanged DR-004 behavior `{brand_domain}/{
 > **Purpose:** Master of every named entity (condition, treatment, ingredient, drug, etc.) used across EYWA brands. Foundation of the Knowledge Graph.
 > **Sync:** N↔S (Notion `🧬 Entity Graph`, Supabase mirror)
 > **DR:** DR-008 (Two-Column Identity), DR-013 (edge vocab — see §4.5), DR-014 (entity_subtype lock for concept type), DR-024 (links to Group 9 extensions), DR-032 (center_scope)
-> **Volume:** ~500–5,000 per brand · 466 current rows (VTH BioDent + VitalSleep and Wellness only).
+> **Volume:** ~500–5,000 per brand · **732 rows**, measured 2026-08-24. `brand_scope`: 665 `['*']` (shared), 38 vth-biodent, 25 smile-scape-clinic, 4 deezy-dental. *(corrected 2026-08-24 against live schema — was "466 rows, VTH BioDent + VitalSleep and Wellness only")*
 
-#### Columns (34 — full live snapshot)
+#### Columns (36 — full live snapshot) *(corrected 2026-08-24 against live schema — was documented as 34; live adds `load_from` + `load_source`)*
 
 | Column | Type | Notes |
 |---|---|---|
 | `id` `uuid` UNIQUE | machine key |
 | `fingerprint` `text` | `ent_{ULID16}` (DR-008) |
 | `fingerprint_display_name` `text` | `{fp_last_6}::{entity_slug}` |
-| `entity_fingerprint` `text` | 🔴 **LOAD-BEARING — DO NOT DROP.** This is the key the whole entity layer actually resolves on: 12 FKs target it, 1,089/1,089 edges and 2,043/2,043 page `primary_entity_fp` bindings resolve here, while `fingerprint` resolves **0**. §11.5a of this same document defines new extension FKs against it. The former note calling it "Legacy v1.10, drop in v2.0" was wrong and is withdrawn 2026-08-23 — acting on it would orphan the entity graph for all three brands at once. |
+| `entity_fingerprint` `text` | 🔴 **LOAD-BEARING — DO NOT DROP.** This is the key the whole entity layer actually resolves on: 12 FKs target it, 1,089/1,089 edges and 2,043/2,043 page `primary_entity_fp` bindings resolve here, while `fingerprint` resolves **0**. *(re-measured 2026-08-24 and still exact: 1,089 of 1,089 edges and 2,043 of 2,043 non-NULL `primary_entity_fp` values match an `entity_fingerprint`; zero match a `fingerprint`. The value is the entity slug, e.g. `horizontal-bone-deficiency`.)* §11.5a of this same document defines new extension FKs against it. The former note calling it "Legacy v1.10, drop in v2.0" was wrong and is withdrawn 2026-08-23 — acting on it would orphan the entity graph for all three brands at once. |
 | `entity_name` `text` | Canonical display name |
 | `entity_slug` `text` | Canonical machine key (immutable) |
 | `entity_type` `text` | CHECK enum — see below |
-| `entity_subtype` `text` 🆕 v1.14 | DR-014 — for `entity_type='concept'` only: CHECK IN (`'framework'`,`'axis'`,`'health-belief'`) |
+| `entity_subtype` `text` 🆕 v1.14 | DR-014 — for `entity_type='concept'` only: CHECK `chk_concept_subtype` IN (`'framework'`,`'axis'`,`'general'`) or NULL; other entity_types are free-text. *(corrected 2026-08-24 against live schema — the third value is `'general'`, not `'health-belief'`; Appendix J.5 row 1 already said so. The column is **NULL in all 732 rows**, so the DR-014 concept-axis lock has never been exercised.)* |
 | `parent_entity_fp` `text` | **Legacy** — use `seo_entity_relationships` w/ `edge_type='child_of'` for typed edges (Bible Part 2.7); kept for backward compat |
 | `topic_cluster_id` `text` | denormalized cluster key (FK soft → seo_topic_cluster_master.cluster_slug) |
 | `topic_cluster_name` `text` | denormalized cluster name |
@@ -788,11 +802,14 @@ When `brand_structure='monolithic'`: unchanged DR-004 behavior `{brand_domain}/{
 | `notion_id` `text` | N↔S sync |
 | `notion_synced_at` `timestamptz` | |
 | `last_graph_update` `timestamptz` | |
+| `load_from` `text`, `load_source` `text` | *(added 2026-08-24 — live columns, never documented.)* DZ-DR-029 federation provenance: brand slug whose load created/vetted the row, and the origin file |
 | `created_at`, `updated_at` `timestamptz` | |
 
 #### `entity_type` CHECK enum
 
-Live: `('condition','symptom','treatment','technology','specialty','anatomy','drug','procedure','concept','product','ingredient','device','organization','lab_test')`. The 10 extension types (ingredient/device/procedure/product/condition/**symptom**/drug/anatomy/organization/lab_test) bind to Group 9 detail tables (`symptom` → `seo_entity_symptom` §11.5a per **DR-036**, built 2026-06-04). The remaining enum values (`treatment`/`technology`/`specialty`/`concept`) bind to CPTs without a dedicated extension table.
+Documented: `('condition','symptom','treatment','technology','specialty','anatomy','drug','procedure','concept','product','ingredient','device','organization','lab_test')`. The 10 extension types (ingredient/device/procedure/product/condition/**symptom**/drug/anatomy/organization/lab_test) bind to Group 9 detail tables (`symptom` → `seo_entity_symptom` §11.5a per **DR-036**, built 2026-06-04). The remaining enum values (`treatment`/`technology`/`specialty`/`concept`) bind to CPTs without a dedicated extension table.
+
+⚠️ *(corrected 2026-08-24 against live schema)* **The live data contains a 15th value the list above does not: `person` (6 rows — Dr. Amornpong Vachiramon, Dr. Tomas Linkevicius, Dr. Pitchapa Phudphong, Dr. Woraphat Jarangkul, and two TH-named clinicians).** Either the CHECK admits `person` or no CHECK is installed; PostgREST cannot show the constraint body, so which one is true is unverified. Add `person` to any validation list before it rejects rows that already exist. Live value counts 2026-08-24: concept 154 · procedure 142 · condition 127 · treatment 119 · device 73 · organization 25 · anatomy 21 · symptom 21 · specialty 19 · technology 12 · drug 9 · person 6 · product 4 — `ingredient` and `lab_test` have **zero** rows.
 
 #### Indexes
 
@@ -824,7 +841,7 @@ Preserved in **Appendix H — Deferred v2.0 Provisions**.
 > **Purpose:** SKOS-style topic cluster registry. Four facets: topical (medical domain), content_format (page type taxonomy), audience (persona), section_meta (sitemap section).
 > **Sync:** N↔S (Notion `Topic Cluster Master` — created 2026-05-30)
 > **DR:** Bible Part 7 SKOS pattern · **DR-046** (shared-table governance)
-> **Volume:** ~10–50 per brand.
+> **Volume:** ~10–50 per brand — **58 rows** total, measured 2026-08-24 (56 `brand_scope ['*']`, 1 vth-biodent, 1 smile-scape-clinic). *(corrected 2026-08-24 against live schema)*
 
 > 🔴 **Rows with `brand_scope ['*']` are shared across the whole table, not owned by the brand that
 > created them.** When two rows describe one topic, merge per DR-046 / PAMREL P15: the survivor is
@@ -834,16 +851,16 @@ Preserved in **Appendix H — Deferred v2.0 Provisions**.
 > found the retired row held the only `descriptions` for the topic. `cluster_slug` is UNIQUE per
 > brand, so nothing at the database level prevents two brands from naming the same topic differently.
 
-#### Columns (27)
+#### Columns (29) *(corrected 2026-08-24 against live schema — was documented as 27; live adds `load_from` + `load_source`)*
 
 | Column | Type | Notes |
 |---|---|---|
 | `id` `uuid` UNIQUE | |
-| `fingerprint` `text` | `tcls_{ULID16}` |
+| `fingerprint` `text` | `clst_{ULID16}` *(corrected 2026-08-24 against live data — live fingerprints read `clst_FDD80BDCE00946A0`, not `tcls_`)* |
 | `fingerprint_display_name` `text` | |
 | `cluster_slug` `text` | UNIQUE per brand |
 | `cluster_name` `text` | Display name |
-| `cluster_type` `text` | CHECK IN (`'topical'`,`'content_format'`,`'audience'`,`'section_meta'`) |
+| `cluster_type` `text` | CHECK IN (`'topical'`,`'content_format'`,`'audience'`,`'section_meta'`). *(measured 2026-08-24: all 58 live rows are `'topical'` — the other three facets have never been populated, so any rule that reads a `content_format` / `audience` / `section_meta` cluster returns nothing.)* |
 | `parent_cluster_fp` `text` | Self-FK for hierarchy |
 | `hierarchy_level` `smallint` | 0=root, 1=child, etc. |
 | `skos_concept_scheme` `text` | SKOS scheme URI |
@@ -858,8 +875,9 @@ Preserved in **Appendix H — Deferred v2.0 Provisions**.
 | `cluster_health_breakdown` `jsonb` | Score factors |
 | `cluster_health_formula_version` `text` | E.g. `'v1.0'` |
 | `cluster_health_computed_at` `timestamptz` | |
-| `status` `text` | `'active'`, `'draft'`, `'archived'` |
+| `status` `text` | *(corrected 2026-08-24 against live data)* live values are `'active'` (46), `'merged'` (7), `'deprecated'` (5). `'draft'` and `'archived'` appear nowhere; `'merged'` is the DR-046 survivor-merge state described in the box above and was missing from this list. |
 | `notion_id` `text`, `parent_notion_id` `text`, `notion_synced_at`, `sync_state` | N↔S sync (Two-Phase per DR-006) |
+| `load_from` `text`, `load_source` `text` | *(added 2026-08-24 — live columns, never documented.)* DZ-DR-029 federation provenance |
 | `created_at`, `updated_at` | |
 
 ---
@@ -869,9 +887,9 @@ Preserved in **Appendix H — Deferred v2.0 Provisions**.
 > **Purpose:** Academic citation pool (PubMed/DOI/clinical guidelines/government sources). 6-tier hierarchy per Bible Part 23.1.
 > **Sync:** N↔S (Notion `Citations Pool` — created 2026-05-30)
 > **Distinct from:** `seo_directory_listings` (Local SEO NAP citations)
-> **Volume:** ~50–500 per brand (Phase B.2 seeded ≥5 per pillar).
+> **Volume:** **551 rows**, measured 2026-08-24 — ONE pool shared by all three brands (`brand_scope`: 466 `['*']`, 62 vth-biodent, 23 smile-scape-clinic), not ~50–500 *per brand*. *(corrected 2026-08-24 against live schema)*
 
-#### Columns (38)
+#### Columns (41) *(corrected 2026-08-24 against live schema — was documented as 38; live adds `load_from`, `load_source` and `maintenance_log`)*
 
 **Identity & lineage:**
 - `id uuid`, `fingerprint text` (`cite_{ULID16}`), `fingerprint_display_name text`, `citation_slug text`
@@ -884,9 +902,17 @@ Preserved in **Appendix H — Deferred v2.0 Provisions**.
 - `publication_date date`
 
 **Classification (4):**
-- `citation_tier smallint` (1–6 per Bible Part 23.1; 1=meta-analysis, 6=expert opinion)
-- `citation_type text` (`'journal_article'`, `'clinical_guideline'`, `'systematic_review'`, `'rct'`, `'book'`, `'government'`, `'organization'`, `'website'`)
-- `study_type text` (`'meta_analysis'`, `'systematic_review'`, `'rct'`, `'cohort'`, `'case_control'`, `'case_series'`, `'expert_opinion'`, `'in_vitro'`, `'animal'`)
+- `citation_tier smallint` (1–6) — *(corrected 2026-08-24 against live schema)* **the `COMMENT ON COLUMN` in the database is the authoritative scale**, and it is not "1=meta-analysis … 6=expert opinion". The tier reflects **study design**, never journal quality or author standing; use `citation_authority_weight` for quality weighting. This is the scale gate G5 (`check:citations`) enforces in every brand's CI — a mistiered row stops the other brands' deploys too:
+  - **1** = `systematic_review` · `meta_analysis` · `systematic_review_and_meta_analysis` · `cochrane_review`
+  - **2** = `rct` · `randomized_controlled_trial` · `cohort_study`
+  - **3** = `clinical_guideline` · `consensus_guideline` · `clinical_practice_guideline`
+  - **4** = `law` · `regulation` · `regulatory_document` · `report` · `fact_sheet` · `survey_report` · `genetic_association`
+  - **5** = `cross_sectional` · `in_vitro` · `retrospective_cohort` · `prospective_cohort` · `case_series` · `clinical_study` · `pilot_study`
+  - **6** = `narrative_review` · `textbook` · `manufacturer_document` · `expert_opinion` · `consensus_statement`
+
+  Undecided: `scoping_review` (**3** rows live, tiered 1, 5 and 6 — the database comment's "2 rows, tiered 5 and 6" was measured 2026-08-18 and a third row has since landed) and `other` (spread across 1/3/5/6 — live 1=16, 3=10, 5=9, 6=10). Evidence limitations — a meta-analysis of animal studies, say — go in `key_findings`; never push the tier down instead. Live distribution 2026-08-24: tier 1 = 288 · 2 = 38 · 3 = 50 · 4 = 16 · 5 = 57 · 6 = 102.
+- `citation_type text` — *(corrected 2026-08-24 against live data — the old list was mostly values that do not occur.)* live values: `meta_analysis` (170), `systematic_review` (116), `expert_opinion` (80), `clinical_guideline` (49), `cohort_study` (40), `rct` (37), `other` (25), `regulatory_document` (14), `cross_sectional` (7), `case_series` (4), `industry_publication` (4), `textbook` (3), `case_control` (1), `case_report` (1)
+- `study_type text` — drives `citation_tier` (see the scale above). **33** distinct live values *(re-measured 2026-08-24 — an earlier reading said 34 because it counted NULL as a value)*; the largest are `systematic_review` (121), `meta_analysis` (117), `narrative_review` (52), `other` (45, = *not yet classified*, not a real category), `rct` (20), `clinical_guideline` (19); 82 rows NULL. *(corrected 2026-08-24 against live data — `'cohort'` and `'animal'` are not live values; the live spellings are `retrospective_cohort` / `prospective_cohort` and `in_vitro`.)*
 - `country_of_origin text`, `language_code text`, `is_thai_specific boolean`
 
 **Authority scoring (4):**
@@ -903,10 +929,14 @@ Preserved in **Appendix H — Deferred v2.0 Provisions**.
 **Verification & status (4):**
 - `is_retracted boolean`, `retracted_at timestamptz`
 - `last_verified_at timestamptz`
-- `verification_status text` (`'verified'`,`'pending'`,`'broken'`,`'unverified'`)
+- `verification_status text` — CHECK `chk_verification_status` IN (`'unverified'`,`'verified'`,`'broken_link'`,`'paywalled'`,`'retracted'`). *(corrected 2026-08-24 against live schema — `'pending'` and `'broken'` are not values; the live spelling is `broken_link`, and `paywalled`/`retracted` were missing. Live distribution: verified 522, unverified 26, broken_link 3.)* `verified` means a human checked the PMID/DOI/title against the source record — never mark it on someone else's behalf.
 
 **Notion sync (3):**
 - `notion_id text`, `notion_synced_at`, `sync_state`
+
+**Provenance & maintenance (3):** *(added 2026-08-24 — live columns, never documented.)*
+- `load_from text`, `load_source text` — DZ-DR-029 federation provenance
+- `maintenance_log text` — split out of `abstract` on 2026-08-17 (Wave 16as) because log text was being read as abstract text. Tags in live use: `PMID-VERIFY`, `FRESHNESS`, `PURGE` and five others.
 
 **Standard (2):** `created_at`, `updated_at`
 
@@ -916,21 +946,28 @@ Preserved in **Appendix H — Deferred v2.0 Provisions**.
 
 > **Purpose:** Junction table page ↔ citation. A page may cite the same source for different purposes (claim backing vs methodology vs counter-evidence).
 > **Sync:** **S only** (no notion_id — built as S-only M:N junction)
-> **Volume:** ~5–20 citations per page.
+> **Volume:** ~5–20 citations per page — **6,626 rows**, measured 2026-08-24.
 
-#### Columns (15)
+#### Columns (15) *(count right, names largely wrong — corrected 2026-08-24 against live schema)*
 
-- `id uuid`, `fingerprint text` (`pcit_{ULID16}`), `fingerprint_display_name text`
-- `page_fp text` (FK → seo_website_page_master.fingerprint)
-- `citation_fp text` (FK → seo_citations.fingerprint)
-- `citation_purpose text` CHECK IN (`'primary_claim_backing'`,`'supporting_evidence'`,`'counter_evidence'`,`'methodology'`,`'background'`,`'further_reading'`)
+🔴 **This table has NO `fingerprint` / `fingerprint_display_name`** — it is the one table in Appendix B's fingerprint registry that never got DR-008 two-column identity. A `pcit_` prefix does not exist. Join on `(page_fp, citation_fp)`.
+
+- `id uuid`
+- `page_fp text` → `seo_website_page_master.page_fingerprint` (the `vth-4.4.4`-style key, **not** `fingerprint`)
+- `citation_fp text` → `seo_citations.fingerprint`
+- `citation_purpose text`
 - `citation_anchor_text text` — visible text near the citation marker on the page
-- `citation_position text` — section identifier (e.g. `'§3.2-paragraph-2'`)
-- `claim_being_backed text` — short paraphrase of what the citation supports
-- `evidence_strength smallint` — 1–5, operator scored
-- `is_primary boolean` — primary citation for the claim
-- `notes text`
+- `section_context text` *(live name; the doc said `citation_position`)*
+- `inline_position text` *(live column, never documented)*
+- `supports_claim text` — short paraphrase of what the citation backs *(live name; the doc said `claim_being_backed`)*
+- `evidence_strength_score` *(live name; the doc said `evidence_strength`)*
+- `status text` *(live column, never documented)*
+- `added_by_fp text`, `reviewed_by_fp text`, `reviewed_at timestamptz` *(live columns, never documented)*
 - `created_at`, `updated_at`
+
+**Not live:** `is_primary` and `notes` do not exist. The `citation_purpose` CHECK list previously given here (`primary_claim_backing` / `supporting_evidence` / `counter_evidence` / `methodology` / `background` / `further_reading`) could not be re-verified — PostgREST does not expose CHECK bodies — so it is left as written; confirm against `pg_constraint` before relying on it.
+
+> ⚠️ A row here does not prove the page cites the source. Binding rows and rendered YAML references are two different surfaces — see `check:citation-usage`.
 
 ---
 
@@ -939,17 +976,17 @@ Preserved in **Appendix H — Deferred v2.0 Provisions**.
 > **Purpose:** Typed edge junction over `seo_entity_graph`. Models 12-edge vocabulary (DR-013 v3.5) including medical edges (`treats`, `causes`, `caused_by`, `contraindicates`) with evidence FK + medical signoff requirements.
 > **Sync:** N↔S (Notion `Entity Relationships` — created 2026-05-30)
 > **DR:** DR-013 (Edge Vocab v3.5 Locked v1.13)
-> **Volume:** ~200–2,000 edges per brand (estimated 2–10× entity count).
+> **Volume:** **1,089 edges** total, measured 2026-08-24 (`brand_scope`: 669 vth-biodent, 339 `['*']`, 73 smile-scape-clinic, 8 deezy-dental). `status`: 1,077 `active`, 12 `flagged_review`. *(corrected 2026-08-24 against live schema — `'draft'`, `'pending_signoff'` and `'deprecated'` do not occur; `'flagged_review'` was missing from the documented list.)*
 
-#### Columns (19)
+#### Columns (21) *(corrected 2026-08-24 against live schema — was documented as 19; live adds `load_from` + `load_source`)*
 
 | Column | Type | Notes |
 |---|---|---|
 | `id uuid` UNIQUE | |
-| `fingerprint text` | `edge_{ULID16}` |
+| `fingerprint text` | `erel_{ULID16}` *(corrected 2026-08-24 against live data — live fingerprints read `erel_27CFB90655A84B87`, not `edge_`)* |
 | `fingerprint_display_name text` | |
-| `from_entity_fp text` | FK → seo_entity_graph.fingerprint |
-| `to_entity_fp text` | FK → seo_entity_graph.fingerprint |
+| `from_entity_fp text` | FK → `seo_entity_graph.entity_fingerprint` (the entity slug). *(corrected 2026-08-24 against live data — 1,089 of 1,089 edges resolve there, zero on `fingerprint`; see §4.1.)* |
+| `to_entity_fp text` | FK → `seo_entity_graph.entity_fingerprint` — same key as `from_entity_fp`. |
 | `edge_type text` | DR-013 vocab — see below |
 | `edge_note text` | Free-form context |
 | `edge_strength smallint` | 1–5 operator scored |
@@ -958,26 +995,32 @@ Preserved in **Appendix H — Deferred v2.0 Provisions**.
 | `medical_reviewer_signoff_at timestamptz` | Required for `contraindicates` edges per `trg_validate_medical_signoff` |
 | `medical_reviewer_fp text` | FK → seo_authors_reviewers.fingerprint |
 | `brand_scope text[]` | |
-| `status text` | `'active'`, `'draft'`, `'pending_signoff'`, `'deprecated'` |
+| `status text` | live values only: `'active'`, `'flagged_review'` *(corrected 2026-08-24 against live data)* |
 | `notion_id text`, `notion_synced_at`, `sync_state` | N↔S |
+| `load_from text`, `load_source text` | *(added 2026-08-24 — live columns, never documented.)* DZ-DR-029 federation provenance |
 | `created_at`, `updated_at` | |
 
-#### DR-013 Edge Vocabulary (12 edge types)
+#### DR-013 Edge Vocabulary (12 edge types) + live counts *(corrected 2026-08-24 against live data)*
 
-| Edge type | Description | Evidence required? | Medical signoff? |
-|---|---|---|---|
-| `child_of` | Hierarchical parent (replaces legacy `parent_entity_fp`) | No | No |
-| `part_of` | Mereological — anatomy components | No | No |
-| `related_to` | Generic association | No | No |
-| `treats` | A treats B (treatment → condition) | **Yes (citation)** | No |
-| `treated_by` | Inverse of treats | **Yes** | No |
-| `causes` | A causes B (etiology) | **Yes** | No |
-| `caused_by` | Inverse of causes | **Yes** | No |
-| `contraindicates` | A contraindicates B (safety-critical) | **Yes** | **Yes (MD signoff)** |
-| `symptom_of` | A is a symptom of B | **Yes** | No |
-| `diagnoses` | A (test/procedure) diagnoses B (condition) | **Yes** | No |
-| `prevents` | A prevents B | **Yes** | No |
-| `risk_factor_for` | A is a risk factor for B | **Yes** | No |
+| Edge type | Description | Evidence required? | Medical signoff? | Live rows 2026-08-24 |
+|---|---|---|---|---|
+| `child_of` | Hierarchical parent (replaces legacy `parent_entity_fp`) | No | No | **0** |
+| `part_of` | Mereological — anatomy components | No | No | 51 |
+| `related_to` | Generic association | No | No | 427 |
+| `treats` | A treats B (treatment → condition) | **Yes (citation)** | No | 166 |
+| `treated_by` | Inverse of treats | **Yes** | No | **0** |
+| `causes` | A causes B (etiology) | **Yes** | No | 6 |
+| `caused_by` | Inverse of causes | **Yes** | No | 5 |
+| `contraindicates` | A contraindicates B (safety-critical) | **Yes** | **Yes (MD signoff)** | 21 |
+| `symptom_of` | A is a symptom of B | **Yes** | No | 54 |
+| `diagnoses` | A (test/procedure) diagnoses B (condition) | **Yes** | No | **0** |
+| `prevents` | A prevents B | **Yes** | No | **0** |
+| `risk_factor_for` | A is a risk factor for B | **Yes** | No | **0** |
+| `broader_than` 🔴 | **not in the DR-013 vocabulary but live** | — | — | 271 |
+| `requires` 🔴 | **not in the DR-013 vocabulary but live** | — | — | 58 |
+| `is_a` 🔴 | **not in the DR-013 vocabulary but live** | — | — | 30 |
+
+🔴 *(added 2026-08-24 against live data)* Three edge types outside the locked vocabulary hold **359 of 1,089 edges** — `broader_than` alone is the second-largest edge type in the graph. Either the CHECK admits them or none is installed. Any consumer that switches on the 12-value list silently drops a third of the graph; `broader_than` and `is_a` look like the hierarchy `child_of` was supposed to carry (which has zero rows).
 
 #### Triggers
 
@@ -986,11 +1029,14 @@ Preserved in **Appendix H — Deferred v2.0 Provisions**.
 - `trg_validate_edge_evidence` BEFORE INSERT/UPDATE → `fn_validate_edge_evidence_requirement()` — for `causes`/`treats`/`contraindicates`/etc., raises if `edge_evidence_citation` is NULL
 - `trg_validate_medical_signoff` BEFORE INSERT/UPDATE → `fn_validate_medical_signoff_for_contraindication()` — for `contraindicates`, raises if `medical_reviewer_signoff_at` is NULL
 
+> 🔴 **Neither validation trigger is protecting the live data** *(measured 2026-08-24)*. Rows that the two rules say cannot exist do exist: `edge_evidence_citation` is NULL on **all 166 `treats`**, all 6 `causes`, all 5 `caused_by` and all 54 `symptom_of` edges, and `medical_reviewer_signoff_at` is NULL on **all 21 `contraindicates`** edges. Whether the triggers were dropped, disabled during a bulk load, or never installed cannot be seen through PostgREST — but do not rely on the database to refuse a bad edge. Treat both requirements as ETL-side gates and verify with:
+> `select edge_type, count(*) filter (where edge_evidence_citation is null) from seo_entity_relationships group by 1`.
+
 ---
 
 ## 5. Group 3 — Page System (3 tables)
 
-> The page master + per-page editorial workflow + page↔page internal linking junction. Largest single table in the system (`seo_website_page_master` at 88 columns).
+> The page master + per-page editorial workflow + page↔page internal linking junction. Widest table outside the telemetry partitions (`seo_website_page_master` at **93 columns**; the daily-logs partitions carry 125). *(corrected 2026-08-24 against live schema — was "largest single table … at 88 columns")*
 
 ### 5.1 `seo_website_page_master`
 
@@ -998,23 +1044,23 @@ Preserved in **Appendix H — Deferred v2.0 Provisions**.
 > **Sync:** N↔S (Notion `🌐 Website & SEO Page Intelligent Master`)
 > **DR:** DR-008 (identity), DR-015 (marketplace reconciliation), DR-016 (viability assessment / thin page risk), DR-017 (content brief field), DR-021 (internal linking HYBRID), DR-026 (Ads LP Phase 0), DR-030 (compliance tiers), DR-032 (center_slug), DR-034 (PAA × FAQ intent routing)
 > **Volume:** 100s–10,000s per brand.
-> **Current data:** 1,376 rows (VitalSleep and Wellness only).
+> **Current data:** **2,358 rows** across three brands, measured 2026-08-24 — deezy-dental 869, vth-biodent 761, smile-scape-clinic 728. `status`: Planned 1,513 · Live 742 · Merged 102 · Dropped 1. *(corrected 2026-08-24 against live schema — was "1,376 rows (VitalSleep and Wellness only)"; VitalSleep has no rows in this table. This is a SHARED table: every query must filter on `brand_id`.)*
 
-#### Columns (90 — canonical full list grouped by domain)
+#### Columns (93 — canonical full list grouped by domain) *(corrected 2026-08-24 against live schema — was documented as 90; `page_category`, `page_role` and `content_format_name` were live but undocumented, and are added below)*
 
 **Identity (5):**
 - `id` `uuid` PK DEFAULT `gen_random_uuid()`
-- `page_fingerprint` `text` NOT NULL — **legacy v1.10**, preserved for n8n compat
-- `fingerprint` `text` NOT NULL — DR-008 canonical `page_{16HEX}` (CHECK `^page_[0-9A-F]{16}$`)
-- `fingerprint_display_name` `text` NOT NULL — `{fp_last_6}::{brand_slug}::{slug}`
+- `page_fingerprint` `text` NOT NULL — **the real join key**, format `{brand_prefix}-{sitemap_node_id}` (`vth-5.3.1`). *(corrected 2026-08-24 against live schema — this is not merely "legacy, preserved for n8n compat": since 2026-08-16 seven real FKs target it — `seo_page_citations`, `seo_editorial_reviews`, `seo_page_internal_links` (from/to), `parent_page_fp` self-FK, `seo_x_ads_keywords_contextual_master.ad_landing_page_fp`, `seo_x_voice_search.optimized_for_page_fp` — all ON UPDATE CASCADE.)*
+- `fingerprint` `text` NOT NULL — DR-008 canonical `page_{16HEX}` (CHECK `^page_[0-9A-F]{16}$`). Audit identity only — **never join on it**: no satellite table stores this form.
+- `fingerprint_display_name` `text` NOT NULL — `{fp_last_6}::{slug}` *(corrected 2026-08-24 against live data — live values read `A943E6::myofunction-tmj`; there is no `brand_slug` segment)*
 - `notion_id` `text` — Notion mirror
 
 **Brand & taxonomy (5):**
-- `brand_id` `text` (stores `brands.id` UUID as text)
+- `brand_id` `text` — **the brand SLUG**, live values `deezy-dental` / `vth-biodent` / `smile-scape-clinic`. *(corrected 2026-08-24 against live data — this doc's "stores `brands.id` UUID as text" is wrong and the live column comment calls it out by name.)*
 - `brand_name` `text` (denormalized)
-- `cluster_id` `text` (FK soft → seo_topic_cluster_master)
-- `sitemap_node_id` `text` — operator-facing sitemap identifier
-- `sitemap_section` `text` — operator-defined section grouping
+- `cluster_id` `text` (FK soft → seo_topic_cluster_master.cluster_slug; DR-047: must equal the primary entity's `topic_cluster_id` unless a reason is written in `reconciliation_notes`)
+- `sitemap_node_id` `text` — dotted path in the page tree (`5.3.9`); its leading segment is what the citation minimum keys on. No UNIQUE constraint, but zero duplicates exist and tree-building code depends on that.
+- `sitemap_section` `text` — **site zone as a NUMBER, `'1'`..`'9'`**, for all three brands (deezy-dental's slug form was migrated 2026-08-23). *(corrected 2026-08-24 against live schema — "operator-defined section grouping" understated it. Live distribution: 3=658, 6=617, 5=444, 8=196, 7=135, 9=126, 4=115, 2=62, 1=5; no NULLs.)* This is a ZONE, never a substitute for `page_category` when the rule asks what a page **is** — section 5 on smile-scape-clinic holds 91 `condition_pillar` rows plus 80 `service_page` and five other kinds.
 
 **URL & SEO meta (5):**
 - `slug` `text` — page slug
@@ -1028,20 +1074,22 @@ Preserved in **Appendix H — Deferred v2.0 Provisions**.
 - `parent_page_name` `text` (denormalized)
 - `primary_entity_name` `text` (denormalized)
 
-**Page taxonomy (5):**
-- `page_type` `text` — **SEMANTIC page category** (drives template T1-T22 + schema.org selection). Values: `home`, `about`, `contact`, `pillar`, `supporting`, `condition_pillar`, `procedure_pillar`, `service_page`, `technology_page`, `knowledge_article`, `evidence_case`, `doctor_profile`, `branch_landing`, `local_landing`. ⚠️ **NOT a tier — never store `A`/`B`/`C`/`D` here** (that is `node_tier`).
-- `page_intent_type` `text` — search intent (`'informational'`, `'commercial'`, etc.)
-- `node_tier` `text` — **TIER only**: `A`/`B`/`C`/`D` (crawl-depth allowance, Bible Part 3.4). The page's importance tier — NOT its category.
-- `node_tier_strategy` `text` CHECK IN (`'hub'`,`'spoke'`,`'pillar'`,`'supporting'`,`'leaf'`) — structural hub/leaf role (distinct from `page_type` and `node_tier`).
-- `funnel_stage` `text` — `'awareness'`, `'consideration'`, `'decision'`, `'retention'`
+**Page taxonomy (7):** *(corrected 2026-08-24 against live schema — was 5; `page_category` and `page_role` are live columns this listing never had; the third undocumented column, `content_format_name`, is listed under Hierarchy below)*
+- `page_type` `text` — 🔴 **DEPRECATED 2026-08-20** because it carried two axes at once (semantic kind + hub/leaf role), which made cross-column validation impossible. Split into `page_category` + `page_role`. **DO NOT DROP YET**: the Bible §3.2 layer mapping resolves through `coalesce(page_category, page_type)` and `page_category` is not yet complete on any brand. Live values (2,358 rows): knowledge_article 608 · service_page 544 · condition_pillar 263 · supporting 218 · technology_page 143 · evidence_case 131 · branch_landing 110 · local_programmatic 99 · procedure_pillar 77 · pillar 62 · about 45 · local_landing 21 · doctor_profile 16 · local_service_page 6 · home 5 · contact 5 · local_service 4 · popup 1. *(corrected 2026-08-24 — the documented value list omitted `local_programmatic`, `local_service_page`, `local_service` and `popup`.)*
+- `page_category` `text` 🆕 *(added 2026-08-24 — live column, never documented)* — **SEMANTIC PAGE KIND**, the replacement for the category half of `page_type`. Controlled values: `home`, `about`, `contact`, `condition_pillar`, `procedure_pillar`, `service_page`, `technology_page`, `knowledge_article`, `evidence_case`, `doctor_profile`, `branch_landing`, `local_landing` — plus `local_programmatic` and `local_service_page`, which occur in the data. Mostly determined by `content_format` but not a function of it. Backfilled on **all three brands** as of 2026-08-24: vth-biodent 686/761, deezy-dental 776/869, smile-scape-clinic 707/728 (189 NULL overall).
+- `page_role` `text` 🆕 *(added 2026-08-24 — live column, never documented)* — **STRUCTURAL ROLE**: `hub` (has ≥1 non-Merged child via `parent_page_fp`) or `leaf`. **DERIVED — never hand-set**; recomputed by `content-plan/etl/derive-page-role-category.py`, and `check:plan` fails when a stored value disagrees with the tree. Live: leaf 1,972 · hub 197 · NULL 189 *(re-measured 2026-08-24; an earlier reading the same day said 1,969/197/192 — the derive script had not finished the last three deezy rows)*.
+- `page_intent_type` `text` — search intent. Live values: informational 1,284 · commercial 514 · transactional 420 · navigational 65 · NULL 75.
+- `node_tier` `text` — **TIER only**: `A`/`B`/`C`/`D` (crawl-depth allowance, Bible Part 3.4). The page's importance tier — NOT its category. Live: C 1,416 · D 530 · B 319 · A 87 · NULL 6.
+- `node_tier_strategy` `text` CHECK IN (`'hub'`,`'spoke'`,`'pillar'`,`'supporting'`,`'leaf'`) — structural hub/leaf role (distinct from `page_type` and `node_tier`). Live: spoke 1,588 · supporting 229 · pillar 199 · leaf 195 · hub 45 · NULL 102.
+- `funnel_stage` `text` — `'awareness'`, `'consideration'`, `'decision'`, `'retention'` (DR-057, 2026-08-23; `top`/`mid`/`bottom` are RETIRED — pre-migration values are kept in `_funnel_stage_bak_20260823`). *(confirmed 2026-08-24 against live data: consideration 1,066 · awareness 682 · decision 560 · retention 45 · NULL 5. No CHECK constraint is installed yet.)*
 
-> **⚠️ Column-semantics clarification (2026-07-09, SmileScape backfill).** `page_type` (category), `node_tier` (A/B/C/D tier), and `node_tier_strategy` (hub/leaf role) are **three independent axes** — do not conflate. **Known data bug:** VTH BioDent rows currently store the tier letters `A/B/C/D` in `page_type` (should be the semantic category; the A/B/C/D belongs in `node_tier`) — flagged for re-derivation. These semantics are now also documented as live `COMMENT ON COLUMN` on `seo_website_page_master` in GTGT so any brand inspecting the DB sees them. SmileScape derives `page_type` deterministically from `primary_entity` entity_type + `sitemap_section` + hub/leaf role (no keyword research needed). The sitemap markdown's own "Page Type" column (mostly `A`) is a legacy placeholder and must NOT be copied into this field.
+> **⚠️ Column-semantics clarification (2026-07-09, SmileScape backfill).** `page_type` (category), `node_tier` (A/B/C/D tier), and `node_tier_strategy` (hub/leaf role) are **three independent axes** — do not conflate. ~~**Known data bug:** VTH BioDent rows currently store the tier letters `A/B/C/D` in `page_type`~~ — **fixed; do not go looking for it.** *(corrected 2026-08-24 against live data — zero rows in any brand hold `A`/`B`/`C`/`D` in `page_type`; all 18 live values are semantic categories. The axis-splitting work went further and produced `page_category` + `page_role`, see above.)* These semantics are now also documented as live `COMMENT ON COLUMN` on `seo_website_page_master` in GTGT so any brand inspecting the DB sees them. SmileScape derives `page_type` deterministically from `primary_entity` entity_type + `sitemap_section` + hub/leaf role (no keyword research needed). The sitemap markdown's own "Page Type" column (mostly `A`) is a legacy placeholder and must NOT be copied into this field.
 
-**Authority & link strategy (DR-021, 7):**
-- `priority` `text` — operator-set priority label
-- `link_role` `text` — `'structural'`, `'authority'`, `'contextual'`, `'conversion'`
-- `link_priority` `text`
-- `anchor_strategy_mode` `text` — anchor text variation strategy
+**Authority & link strategy (DR-021, 11):** *(subtotal corrected 2026-08-24 — the label said 7; eleven columns are listed and all eleven are live)*
+- `priority` `text` — **XML sitemap `<priority>` as text** (`'0.4'`..`'1.0'`). Not the same thing as `link_priority` or `authority_weight`. *(corrected 2026-08-24 against live schema — "operator-set priority label" was too vague to be checkable. Live: 0.6=1,176 · 0.4=569 · 0.8=301 · 0.5=100 · 0.9=89 · 0.7=18 · 1.0=16 · NULL=89.)*
+- `link_role` `text` — live values `'primary_hub'`, `'cluster_spoke'`, `'supporting'`, `'reference'`. *(corrected 2026-08-24 against live data — `structural`/`authority`/`contextual`/`conversion` occur in zero rows. Consumed by `gen-internal-links`. Live: cluster_spoke 1,180 · supporting 230 · primary_hub 101 · reference 2 · NULL 845.)*
+- `link_priority` `text` — weighting bucket 1–10 stored as text. Cannot express a long reading order; use group-level priority plus `seo_page_internal_links.section_context` for intra-group order.
+- `anchor_strategy_mode` `text` — anchor text variation strategy. Live values: `topical_diverse` (1,536), `partial_diverse` (371), `generic_mixed` (148), `branded_navigational` (97), NULL (206). *(added 2026-08-24 against live data — the column had no value list.)*
 - `authority_weight` `smallint` CHECK 1..100 — operator-set link equity weight
 - `link_equity_score` `smallint` CHECK 0..100 — computed
 - `orphan_risk_score` `smallint` CHECK 0..100 — computed (high = orphan candidate)
@@ -1057,7 +1105,7 @@ Preserved in **Appendix H — Deferred v2.0 Provisions**.
 - `cross_brand_link_type` `text`
 
 **Entity & keyword binding (8):**
-- `primary_entity_fp` `text` (FK → seo_entity_graph)
+- `primary_entity_fp` `text` → **`seo_entity_graph.entity_fingerprint`** (the slug-shaped key), not `.fingerprint` *(corrected 2026-08-24 against live schema)*
 - `related_entities_fps` `text[]`
 - `target_keyword_fp` `text` (FK → seo_x_ads_keywords_contextual_master)
 - `semantic_keywords_fps` `text[]`
@@ -1066,22 +1114,23 @@ Preserved in **Appendix H — Deferred v2.0 Provisions**.
 - `cross_brand_links_fps` `text[]`
 
 **Schema markup (1 + linked):**
-- `schema_markup_type` `text` (`'WebPage'`, `'Article'`, `'MedicalProcedure'`, `'Drug'`, etc.) — drives JSON-LD generation
+- `schema_markup_type` `text` — **a bare scalar Schema.org type**, one per row, e.g. `'MedicalWebPage'` (493), `'MedicalProcedure'` (431), `'MedicalCondition'` (269), `'Article'` (241), `'Service'` (179), `'MedicalDevice'` (167) — **26** distinct types live plus 1 NULL row. *(count re-measured 2026-08-24 — an earlier reading said 27 because it counted NULL as a value.)* Drives JSON-LD generation. *(corrected 2026-08-24 against live data — the brace-set form `{MedicalCondition,MedicalWebPage}` is **retired**: zero rows in any of the three brands hold one. The live `COMMENT ON COLUMN` still tells readers to "parse defensively" for brace sets; that comment is stale, the data is clean. Distinct from `page_type`/`page_category`: those pick the template, this describes the markup.)*
 - (Schema markup planned/emitted details live in editorial_reviews + page templates)
 
 **Multilingual (DR-009, 5):**
 - `page_language` `text` — `'th'`, `'en'`, `'zh'`, `'ar'`, `'fr'`, ...
-- `translation_status` `text` — `'pending'`, `'in_progress'`, `'approved'`, `'live'`
+- `translation_status` `text` — DR-009 workflow state. *(corrected 2026-08-24 against live data — only `'pending'` (1,415) and `'published'` (108) occur, plus 835 NULL. `'in_progress'`, `'approved'` and `'live'` are in no row; `'published'` was missing from this list.)*
 - `translation_due_date` `timestamptz`
 - `translations_versions_fps` `text[]` — FK to other-language versions of same content
 - `source_translation_fp` `text` — FK to source-language version
 
-**Hierarchy (2):**
-- `parent_page_fp` `text` (FK → seo_website_page_master)
-- `content_format` `text` (`'long_form_article'`, `'comparison_table'`, `'video_centric'`, etc.)
+**Hierarchy (3):**
+- `parent_page_fp` `text` → `seo_website_page_master(page_fingerprint)` self-FK · ON UPDATE CASCADE · **ON DELETE SET NULL deliberately — never change to CASCADE**, or deleting one hub deletes its whole branch
+- `content_format` `text` — **a template code, PER BRAND**: `T1`, `T2`, `T2b`, `T4`, `T5`, `T6`, `T6a`, `T18`… **22** distinct codes live (T6=605, T5=397, T1=270, T4=158, T2b=151, T18=130, T8=124, T10=111, T12=91, …) plus 21 NULL rows. *(count re-measured 2026-08-24 — an earlier reading said 23 because it counted NULL as a code.)* *(corrected 2026-08-24 against live schema — `'long_form_article'` / `'comparison_table'` / `'video_centric'` occur in zero rows and were never the vocabulary.)* **Operator ruling 2026-08-23:** brands design their own templates, so the vocabularies may legitimately differ and diverge completely — deezy uses `T2b` where vth and smile-scape use `T2`, and that is allowed. What is not allowed is a code with no definition. **Validation is per-brand registry membership, never a global T-code list**, and any code→category map must be keyed by brand as well as code.
+- `content_format_name` `text` 🆕 *(added 2026-08-24 — live column, never documented)* — human-readable name for the `content_format` code (web template key + descriptive name, per `web/src/lib/template-keys.ts`). Denormalized companion to `content_format`, like `primary_entity_name`. DZ-DR-034. 32 distinct live values, 752 NULL.
 
 **Word count targets (3):**
-- `auto_suggested_word_count_target` `numeric`
+- `auto_suggested_word_count_target` `numeric` — a target for writers, **not a gate**. *(added 2026-08-24: there is no measured word-count column on this table. The only measured one in the schema is `seo_x_ads_keywords_x_url_daily_logs.plain_text_word_count`, which is NULL in all 151,471 rows — so a word-count floor has nothing to compare a target against today. Do not document a `word_count` column here; there is none.)*
 - `required_min_outbound` `numeric`
 - `required_min_inbound` `numeric`
 
@@ -1095,25 +1144,25 @@ Preserved in **Appendix H — Deferred v2.0 Provisions**.
 - `content_brief` `text` 🆕 v1.16 (DR-017) — content brief
 - `suggested_page_content` `text` — operator-suggested content outline
 - `viability_assessment` `jsonb` 🆕 v1.16 (DR-016) — thin page risk + viability audit trail
-- `marketplace_proposal_status` `text` 🆕 v1.16 (DR-015) CHECK IN (`'proposed'`,`'approved'`,`'rejected'`,`'repackaged'`,`'deferred'`) — multi-brand marketplace reconciliation
-- `reconciliation_notes` `text` — DR-015 operator notes
+- `marketplace_proposal_status` `text` 🆕 v1.16 (DR-015) CHECK IN (`'proposed'`,`'approved'`,`'rejected'`,`'repackaged'`,`'deferred'`) — multi-brand marketplace reconciliation. *(measured 2026-08-24: **NULL in all 2,358 rows** — DR-015 marketplace reconciliation has never been recorded here.)*
+- `reconciliation_notes` `text` — DR-015 operator notes. **Append-only log**, entries separated by `" | "`; gates read it for `INTENT` and `CITATION EXEMPTION` markers. Overwriting it deletes those silently.
 - `flag_review` `text` — operator review flag
 - `snapshot_version` `text` — planning snapshot identifier
 
-**Status & lifecycle (4):**
-- `status` `text` — page lifecycle (`'planning'`, `'draft'`, `'in_review'`, `'published'`, `'archived'`)
+**Status & lifecycle (5):** *(subtotal corrected 2026-08-24 — the label said 4; five columns are listed and all five are live)*
+- `status` `text` — page lifecycle. CHECK `chk_page_status`: **`Planned` | `Live` | `Merged` | `Dropped`** (NULL allowed). *(corrected 2026-08-24 against live schema — `'planning'`/`'draft'`/`'in_review'`/`'published'`/`'archived'` are in no row and the constraint rejects them; the live column comment names this document as the stale source. `Merged` = folded into another page, row kept for provenance. **Every script reading this table must exclude `Merged` and `Dropped` explicitly** — filtering on the string `'deprecated'` matches nothing.)*
 - `published_date` `timestamptz`
 - `hreflang_validated` `boolean` DEFAULT false
-- `has_medical_review` `boolean` DEFAULT false
-- `review_cycle` `text` — review cadence (`'monthly'`, `'quarterly'`, `'annual'`)
+- `has_medical_review` `boolean` DEFAULT false — **operator ruling 2026-08-23: a page the operator approves and sets `Live` IS medically reviewed.** `Live` implies true; set it and emit the reviewer into schema markup. This is **not** gated on rows in `seo_editorial_reviews`. Non-Live rows may carry true harmlessly, since schema only ships when the page is Live. *(added 2026-08-24 against the live column comment; live: 2,057 true / 301 false.)*
+- `review_cycle` `text` — review cadence. Live values: `annual` (1,943), `semiannual` (362), `quarterly` (26), `post_live_6m` (8), `monthly` (8), NULL (11). *(corrected 2026-08-24 against live data — `semiannual` and `post_live_6m` were missing from the list.)*
 
-**Ads LP track (DR-026, 6):** 🌱 v1.12
-- `page_purpose` `text` NOT NULL DEFAULT `'seo_organic'` CHECK IN (`'seo_organic'`,`'ads_landing'`,`'hybrid'`,`'utility'`,`'legal'`,`'thank_you'`)
-- `ads_template_id` `text` (CHECK regex `^T-ADS-[1-5]$` OR `^T-DUAL-[0-9]+$`)
-- `index_directive` `text` NOT NULL DEFAULT `'index'` CHECK IN (`'index'`,`'noindex'`,`'index_no_follow'`,`'noindex_no_follow'`)
-- `conversion_event_primary` `text` — CHECK IN (`'lead_form'`,`'call_click'`,`'line_follow'`,`'booking'`,`'download'`,`'package_view'`,`'add_to_cart'`)
+**Ads LP track (DR-026, 6):** 🌱 v1.12 — 🔴 **DORMANT** *(measured 2026-08-24)*: `ads_template_id` is NULL in all 2,358 page rows and `ad_active` is false on all 22,710 keyword rows (§6.1). The columns exist and are correct; no ad landing page has ever been recorded through them.
+- `page_purpose` `text` NOT NULL DEFAULT `'seo_organic'` CHECK IN (`'seo_organic'`,`'ads_landing'`,`'hybrid'`,`'utility'`,`'legal'`,`'thank_you'`) — *(live 2026-08-24: only `seo_organic` (2,276) and `utility` (82) occur.)*
+- `ads_template_id` `text` (CHECK regex `^T-ADS-[1-5]$` OR `^T-DUAL-[0-9]+$`) — *(live 2026-08-24: NULL in all 2,358 rows.)*
+- `index_directive` `text` NOT NULL DEFAULT `'index'` CHECK IN (`'index'`,`'noindex'`,`'index_no_follow'`,`'noindex_no_follow'`) — *(live 2026-08-24: index 2,321, noindex 37.)* This is the constrained field; `robots_directive` is the raw legacy string and loses when they disagree.
+- `conversion_event_primary` `text` — *(corrected 2026-08-24 against live data: only `'line_follow'` (2,224) and `'call_click'` (36) occur, 98 NULL. `lead_form`/`booking`/`download`/`package_view`/`add_to_cart` are in no row, and the live column comment names a different set again (`form_submit`, `phone_click`, `line_click`, `schedule`, `purchase`) — three vocabularies for one column. The CHECK body is not readable through PostgREST; confirm before validating against any of them.)*
 - `conversion_event_secondary` `text[]` (max 3 elements)
-- `campaign_id` `text` — Phase 0 stub; becomes `campaign_fp` FK in Schema v1.13+ when DR-027 locks
+- `campaign_id` `text` — Phase 0 stub; becomes `campaign_fp` FK when DR-027 locks. *(confirmed 2026-08-24: `seo_campaigns` still does not exist.)*
 
 **Sensitive Topic Compliance (DR-030, 6):** 🆕 v1.17
 - `product_regulatory_tier` `smallint` CHECK 1..4 — DR-030 §1 (1=Basic / 2=Functional / 3=Medical-Adjacent / 4=Quasi-Restricted)
@@ -1123,15 +1172,15 @@ Preserved in **Appendix H — Deferred v2.0 Provisions**.
 - `legal_review_required` `boolean` NOT NULL DEFAULT false — triggers `legal_compliance` editorial review row
 - `compliance_max_tier` `smallint` **GENERATED ALWAYS AS** `GREATEST(product_regulatory_tier, content_topic_tier)` **STORED** — drives reviewer tier auto-routing
 
-**Multi-Center (DR-032, 1):** 🆕 v1.18
+**Multi-Center (DR-032, 1):** 🆕 v1.18 — 🔴 **DORMANT**: NULL in all 2,358 rows, because no brand is `multi_center` (§3.8). *(measured 2026-08-24)*
 - `center_slug` `text` — NULL = umbrella/hospital-wide page (Home/About/Method/Membership). Non-NULL = page belongs to a center (URL: `/{lang}/{url_segment}/{slug}/`). Validated by `trg_validate_page_center_slug`: must be NULL when `brand.brand_structure='monolithic'`; must match a `seo_brand_centers.center_slug` row when `multi_center`.
 
 **Intra-Page Routing (DR-034, 2):** 🆕 v1.20
-- `intent_source_tier` `text` NOT NULL DEFAULT `'template_only'` CHECK IN (`'paa'`,`'derived'`,`'template_only'`) — source of the page's on-page intent coverage: `paa` = real PAA (`seo_x_ads_keyword_serp_competitors.paa_questions`), `derived` = `keyword_painpoint` / `predicted_serp_features` / voice signals, `template_only` = 8-intent baseline. Drives Content_Templates §4.5.4 routing + tiered FAQ floor.
-- `paa_checked_at` `timestamptz` — last PAA crawl time. NULL = never crawled (→ trigger crawl, **not** tier-3). SET + empty `paa_questions` = checked, genuinely no PAA → tier-2/3.
+- `intent_source_tier` `text` NOT NULL DEFAULT `'template_only'` CHECK IN (`'paa'`,`'derived'`,`'template_only'`,**`'brand'`**) — source of the page's on-page intent coverage: `paa` = real PAA (`seo_x_ads_keyword_serp_competitors.people_also_ask_json` — *corrected 2026-08-24: that table has no `paa_questions` column; the live column comment on `intent_source_tier` repeats the wrong name*), `derived` = `keyword_painpoint` / `predicted_serp_features` / voice signals, `template_only` = 8-intent baseline, **`brand` = brand-supplied intent**. *(corrected 2026-08-24 against live data — a fourth value `brand` is in use and was undocumented. Live: template_only 2,259 · brand 88 · derived 11 · **`paa` = 0 rows, never once written** — so the PAA branch of Content_Templates §4.5.4 has never routed anything.)* Drives Content_Templates §4.5.4 routing + tiered FAQ floor.
+- `paa_checked_at` `timestamptz` — last PAA crawl time. NULL = never crawled (→ trigger crawl, **not** tier-3). SET + empty `people_also_ask_json` = checked, genuinely no PAA → tier-2/3. *(column name corrected 2026-08-24 — see §6.3.)*
 
-**Sync (3):**
-- `notion_id text`, `notion_synced_at timestamptz`, (`sync_state` carried by other tables; page_master uses `notion_synced_at` only currently)
+**Sync (2):** *(subtotal corrected 2026-08-24 — `sync_state` is **not** a column on this table, so the group holds two, not three)*
+- `notion_id text` (also counted under Identity above), `notion_synced_at timestamptz` — page_master has no `sync_state` column
 
 **Standard (2):** `created_at`, `updated_at`
 
@@ -1150,7 +1199,9 @@ Preserved in **Appendix H — Deferred v2.0 Provisions**.
 | `seo_website_page_master_product_regulatory_tier_check` | `product_regulatory_tier BETWEEN 1 AND 4` |
 | `seo_website_page_master_content_topic_tier_check` | `content_topic_tier BETWEEN 1 AND 4` |
 | `seo_website_page_master_sensitive_topic_flag_check` | `sensitive_topic_flag IN ('none','low','medium','high','critical')` |
-| `seo_website_page_master_intent_source_tier_check` 🆕 v1.20 | `intent_source_tier IN ('paa','derived','template_only')` |
+| `seo_website_page_master_intent_source_tier_check` 🆕 v1.20 | `intent_source_tier IN ('paa','derived','template_only','brand')` *(corrected 2026-08-24 — `brand` is live on 88 rows)* |
+| `chk_page_status` *(added 2026-08-24 — live constraint, never documented)* | `status IS NULL OR status IN ('Planned','Live','Merged','Dropped')` |
+| `chk_page_master_page_fingerprint` etc. | ⚠️ *(2026-08-24)* CHECK **bodies are not exposed by PostgREST** — every definition in this table is carried over from the 2026-05-30 audit and re-verified only where live data contradicted it. Re-read from `pg_constraint` before treating any row here as current. |
 
 #### Triggers
 
@@ -1163,7 +1214,9 @@ Preserved in **Appendix H — Deferred v2.0 Provisions**.
 
 When `compliance_max_tier >= 3`, n8n flow auto-creates a pending `seo_editorial_reviews` row with `review_type='medical'`.
 When `content_topic_tier=4 OR product_regulatory_tier=4`, also auto-creates `review_type='legal_compliance'`.
-Page cannot move to `status='published'` until all required review rows have `approved=true`. (Enforced at app/n8n layer; database-layer trigger deferred to v1.19+.)
+Page cannot move to `status='Live'` until all required review rows have `approved=true`. (Enforced at app/n8n layer; database-layer trigger deferred to v1.19+.) *(corrected 2026-08-24 — the terminal status is `Live`; `'published'` is not a value `chk_page_status` accepts, so this rule as previously written could never fire. Note also that `has_medical_review` is **not** derived from these rows — see §5.1: the operator setting a page Live is the medical review.)*
+
+🔴 *(added 2026-08-24 against live data)* **The `legal_compliance` branch has never run.** `seo_editorial_reviews` holds 2,095 rows of exactly two types — `medical` (2,022) and `editorial` (73). No `legal_compliance`, `fact_check`, `legal`, `seo`, `translation` or `final_approval` row exists.
 
 ---
 
@@ -1172,16 +1225,16 @@ Page cannot move to `status='published'` until all required review rows have `ap
 > **Purpose:** Per-page editorial workflow rows. Multiple review types per page (medical, editorial, fact_check, legal, seo, translation, final_approval, legal_compliance).
 > **Sync:** N↔S (Notion `Editorial Reviews` — created 2026-05-30)
 > **DR:** Bible Part 23.4 (editorial review workflow), DR-030 (legal_compliance type added)
-> **Volume:** 1–8 rows per page.
+> **Volume:** 1–8 rows per page — **2,095 rows**, measured 2026-08-24. `review_status`: pending 1,636 · approved 459. `review_stage`: pre_publication 1,317 · plan_cleared 724 · post_publication 54. *(corrected 2026-08-24 against live schema)*
 
-#### Columns (21 — full live snapshot)
+#### Columns (22 — full live snapshot) *(corrected 2026-08-24 against live schema — was documented as 21; the table's own listing already ran to 22 columns)*
 
 | Column | Type | Notes |
 |---|---|---|
 | `id uuid` UNIQUE | |
-| `fingerprint text` | `erev_{ULID16}` |
+| `fingerprint text` | `edrv_{ULID16}` *(corrected 2026-08-24 against live data — live fingerprints read `edrv_25C411303ED44224`, not `erev_`)* |
 | `fingerprint_display_name text` | |
-| `page_fp text` | FK → seo_website_page_master.fingerprint |
+| `page_fp text` | FK → `seo_website_page_master.page_fingerprint` — the `deezy-1` / `vth-4.4.4` form. *(corrected 2026-08-24 against live data — all 2,095 rows resolve on `page_fingerprint` and **zero** on `fingerprint`; §5.1 lists this as one of the seven FKs targeting it.)* |
 | `reviewer_fp text` | FK → seo_authors_reviewers.fingerprint |
 | `review_type text` | CHECK enum — see below ⚠️ NOT `review_stage` (legacy v1.10 doc had this wrong) |
 | `review_stage text` | Free-form stage descriptor (orthogonal to review_type) |
@@ -1202,8 +1255,8 @@ Page cannot move to `status='published'` until all required review rows have `ap
 
 #### CHECK constraints (live)
 
-- `chk_er_review_type` CHECK IN **(`'medical'`, `'editorial'`, `'fact_check'`, `'legal'`, `'seo'`, `'translation'`, `'final_approval'`, `'legal_compliance'`)** 🆕 v1.17 — `legal_compliance` added by DR-030
-- `chk_er_review_status` CHECK IN (`'pending'`, `'in_progress'`, `'changes_requested'`, `'approved'`, `'rejected'`, `'skipped'`)
+- `chk_er_review_type` CHECK IN **(`'medical'`, `'editorial'`, `'fact_check'`, `'legal'`, `'seo'`, `'translation'`, `'final_approval'`, `'legal_compliance'`)** 🆕 v1.17 — `legal_compliance` added by DR-030. *(2026-08-24: only `medical` and `editorial` are used; the other six have zero rows. CHECK body unverifiable through PostgREST.)*
+- `chk_er_review_status` CHECK IN (`'pending'`, `'in_progress'`, `'changes_requested'`, `'approved'`, `'rejected'`, `'skipped'`) *(2026-08-24: only `pending` and `approved` occur.)*
 - `chk_er_review_score` CHECK (`review_score IS NULL OR BETWEEN 1 AND 10`)
 
 #### Triggers
@@ -1219,37 +1272,37 @@ Page cannot move to `status='published'` until all required review rows have `ap
 > **Purpose:** Junction page↔page (or page↔external URL). Records both planned and implemented internal links for analytics + audit + cross-brand governance.
 > **Sync:** N↔S (Notion `Page Internal Links` — created 2026-05-30)
 > **DR:** DR-021 (Internal Linking HYBRID Locked v1.15)
-> **Volume:** ~10–50 links per page.
+> **Volume:** ~10–50 links per page — **16,564 rows**, measured 2026-08-24.
 
-#### Columns (28)
+#### Columns (28) *(count confirmed 2026-08-24 against live schema; four value lists below were wrong and are corrected)*
 
-**Identity (3):** `id uuid`, `fingerprint text` (`plnk_{ULID16}`), `fingerprint_display_name text`
+**Identity (3):** `id uuid`, `fingerprint text` (`pil_{ULID16}` — *corrected 2026-08-24 against live data: live fingerprints read `pil_3AF0672CF8924DD7`, not `plnk_`*), `fingerprint_display_name text`
 
 **Link target (3):**
-- `from_page_fp text` (FK → seo_website_page_master.fingerprint)
-- `to_page_fp text` (FK → seo_website_page_master.fingerprint, nullable when external)
+- `from_page_fp text` → `seo_website_page_master.page_fingerprint` (the `vth-4.4.4` form — **not** `fingerprint`; all 16,564 rows use it) *(corrected 2026-08-24 against live schema)*
+- `to_page_fp text` → same key, nullable when external
 - `to_external_url text` (when linking to external URL)
 
-**Link classification (3):**
-- `link_type text` CHECK IN (`'internal'`,`'external'`,`'cross_brand'`,`'cross_center_intra_brand'` 🆕 v1.18 DR-032)
-- `link_role text` CHECK IN (`'structural'`,`'authority'`,`'contextual'`,`'conversion'`)
+**Link classification (3):** *(all three value lists corrected 2026-08-24 against live data)*
+- `link_type text` — live values `'contextual'` (10,040), `'breadcrumb'` (4,230), `'navigational'` (2,174), `'related'` (120). The documented set `internal`/`external`/`cross_brand`/`cross_center_intra_brand` occurs in **zero** rows — including the DR-032 `cross_center_intra_brand` value, which has nothing to record while no brand is multi-center.
+- `link_role text` — live values `'cluster_spoke'` (8,853), `'primary_hub'` (3,646), `'cross_cluster'` (3,092), `'supporting'` (904), `'reference'` (69). `structural`/`authority`/`contextual`/`conversion` occur in zero rows; `cross_cluster` was missing from the documented set. Same vocabulary as `seo_website_page_master.link_role`.
 - `link_priority smallint` 1..5
 
 **Anchor text strategy (4):**
 - `anchor_text text` — actual anchor copy
-- `anchor_variant_type text` CHECK IN (`'exact'`,`'partial'`,`'branded'`,`'generic'`,`'naked_url'`)
+- `anchor_variant_type text` — live values `'partial'` (9,402), `'topical'` (4,430), `'branded'` (2,066), `'exact'` (524), NULL (142). *(corrected 2026-08-24 — `'topical'` was undocumented; `'generic'` and `'naked_url'` occur in zero rows.)*
 - `section_context text` — where on the page (`'header'`, `'body-§3'`, `'footer'`, etc.)
 - `surrounding_text_snippet text` — context for review
 
 **Lifecycle (4):**
-- `status text` CHECK IN (`'planned'`,`'implemented'`,`'broken'`,`'removed'`)
+- `status text` — live values `'planned'` (15,299), `'deprecated'` (1,194), `'live'` (71). *(corrected 2026-08-24 against live data — `'implemented'`, `'broken'` and `'removed'` occur in zero rows; `'deprecated'` and `'live'` were undocumented. Only 71 of 16,564 planned links are recorded as live.)*
 - `planned boolean`
 - `implemented boolean`
 - `first_planned_at timestamptz`, `last_verified_at timestamptz`
 
 **Reciprocal & cross-brand (5):**
 - `is_reciprocal boolean` — auto-flipped by `trg_internal_link_reciprocal`
-- `is_cross_brand boolean`
+- `is_cross_brand boolean` — *(2026-08-24: false on all 16,564 rows; the DR-021 cross-brand governance path has never been exercised.)*
 - `cross_brand_justification text` — required when is_cross_brand=true
 - `cross_brand_role text`
 - `brand_scope text[]`
@@ -1270,7 +1323,7 @@ Page cannot move to `status='published'` until all required review rows have `ap
 
 > **Purpose:** Master keyword registry — contextual classification (intent, painpoint, funnel stage), SEO/Ads dual-flag, primary entity binding.
 > **Sync:** N↔S (Notion `Keyword Hub`) for master; daily logs S-only
-> **Volume:** 12,526 current rows (multi-brand).
+> **Volume:** **22,710 rows across 8 brands**, measured 2026-08-24 — Deezy Dental 6,269 · VitalSleep and Wellness 4,412 · The Face by Vertex 3,586 · VitalSleep Clinic 3,478 · VTH BioDent 2,129 · Smile Scape Clinic 1,786 · TC Smile Dental 784 · Clearisma 266. *(corrected 2026-08-24 against live schema — was "12,526 rows"; and this table is **not** limited to the three page-master brands, so `where brand = …` is mandatory.)*
 > **DR:** DR-026 v1.12 (+6 cols seo_active/ad_active/ad_intent_score/ad_match_type_preferred/ad_landing_page_fp/ad_priority_tier)
 
 Key columns:
@@ -1279,16 +1332,17 @@ Key columns:
 - Localization: `target_market`, `target_language`, `wpml_code`, `translation_group`
 - Difficulty: `qualitative_kd`, `qualitative_kd_number`, `kd_reasoning`, `predicted_serp_features`
 - Entity binding: `primary_entity_fp`, `primary_entity_name`, `keyword_use_as`
-- DR-026 Ads track: `seo_active boolean DEFAULT true`, `ad_active boolean DEFAULT false`, `ad_intent_score smallint 1..10`, `ad_match_type_preferred text` CHECK IN `('exact','phrase','broad','broad_modified')`, `ad_landing_page_fp text` FK → seo_website_page_master.fingerprint, `ad_priority_tier text DEFAULT 'none'` CHECK IN `('t1','t2','t3','none')`
+- DR-026 Ads track — 🔴 **DORMANT** *(measured 2026-08-24)*: `ad_active` is **false on all 22,710 rows**, `ad_priority_tier` is `'none'` on all 22,710, and `ad_match_type_preferred` is NULL on all 22,710. Only `seo_active` carries signal (22,436 true / 274 false). Columns: `seo_active boolean DEFAULT true`, `ad_active boolean DEFAULT false`, `ad_intent_score smallint 1..10`, `ad_match_type_preferred text` CHECK IN `('exact','phrase','broad','broad_modified')`, `ad_landing_page_fp text` → `seo_website_page_master.page_fingerprint` (real FK since 2026-08-16, ON DELETE SET NULL — *corrected 2026-08-24, the doc said `.fingerprint`*), `ad_priority_tier text DEFAULT 'none'` CHECK IN `('t1','t2','t3','none')`
+- ⚠️ `funnel_stage` on **this** table is Title-Case (`Awareness` 7,201 · `Consideration` 6,968 · `Decision` 3,361 · `None` 563 · `Ambiguous` 1 · NULL 4,616), while `seo_website_page_master.funnel_stage` is lower-case after DR-057. Joining the two on funnel stage requires folding case. *(added 2026-08-24 against live data.)*
 - Notion tier: `notion_tier`, `notion_tier_updated_at`
 - Telemetry: `gsc_last_update`, `ga4_last_update`, `satellite_data_updated_at`, `notion_synced_at`, `keyword_contextual_ready_last_update`, `last_checked_at`
 - Standard: `created_at`, `updated_at`, `note`
 
-### 6.2 `seo_x_ads_keywords_monthly_market_snapshot` (57 cols)
+### 6.2 `seo_x_ads_keywords_monthly_market_snapshot` (61 cols) *(corrected 2026-08-24 against live schema — was documented as 57)*
 
 > **Purpose:** Monthly DataForSEO snapshot — volume metrics, KD, CPC, momentum, ROI proxy. Recomputed monthly by n8n.
 > **Sync:** S only
-> **Volume:** 12,156 current rows.
+> **Volume:** **24,610 rows**, measured 2026-08-24. *(corrected 2026-08-24 against live schema — was 12,156)*
 
 Key column families: Volume Metrics (3/6/12/48-month avg), Difficulty (KD score, competition), Cost (CPC range), Momentum (trend slope, seasonality), DataForSEO Source metadata.
 
@@ -1296,14 +1350,15 @@ Key column families: Volume Metrics (3/6/12/48-month avg), Difficulty (KD score,
 
 > **Purpose:** SERP top-3 + AI Overview + Featured Snippet + PAA snapshots per keyword × time.
 > **Sync:** S only
-> **Volume:** 8,589 current rows (9 snapshot waves 2026-02 → 05).
+> **Volume:** **13,666 rows**, measured 2026-08-24. `content_scraped_at` months present: 2026-05, 2026-07, 2026-08 (plus NULLs). *(corrected 2026-08-24 against live data — was "8,589 rows (9 snapshot waves 2026-02 → 05)"; the wave count is not derivable from the data and is dropped rather than re-guessed.)*
 
-Key columns include `top_competitors_meta jsonb`, `aio_present boolean`, `featured_snippet_url`, `paa_questions text[]`, `content_scraped_at`.
+Key columns *(corrected 2026-08-24 against the live schema — `aio_present`, `featured_snippet_url` and `paa_questions` exist in no form on this table)*: `top_competitors_meta jsonb`, `competitor_url_list`, `competitors_content_json`, `my_content_json`, `my_onpage_score`, `ai_overview_text` (the AI-Overview body — there is **no** `aio_present boolean`; "AIO present" = this column non-NULL), `featured_snippet` (**not** `featured_snippet_url`), `people_also_ask_json` + `paa_ai_content_json` (the PAA store — there is **no** `paa_questions text[]`), `serp_features_list`, `image_pack`, `video_domains`, `related_searches`, `actual_rank`, `actual_url`, `total_ads_count`, `ads_context_json`, `snapshot_date`, `content_scraped_at`.
 
 ### 6.4 `seo_x_voice_search` (19 cols)
 
 > **Purpose:** Voice search query tracking — natural language queries that trigger Alexa/Siri/Google Assistant answers.
 > **Sync:** N↔S (master only)
+> **Volume:** 🔴 **0 rows**, measured 2026-08-24 — nothing has ever been recorded here, so `intent_source_tier='derived'` cannot draw on voice signals in practice (§5.1).
 
 Columns: `fingerprint`, `parent_keyword_fp` (FK → keyword master), `voice_query`, `query_language`, `query_intent`, `conversational_form`, `triggered_assistants text[]` (`{Alexa, Siri, Google_Assistant, Bixby}`), `expected_answer_format`, `current_answer_source`, `optimized_for_page_fp` (FK → page_master), `is_featured_snippet`, `featured_snippet_url`, `is_in_pasf` (People Also Search For), `query_volume_estimate`, `last_tested_at`, plus standard.
 
@@ -1315,25 +1370,28 @@ Columns: `fingerprint`, `parent_keyword_fp` (FK → keyword master), `voice_quer
 
 > **Purpose:** Denormalized daily fact table — GSC + GA4 + CWV + indexing + on-page audit + link graph. The dashboard's primary data source.
 > **Sync:** S only (telemetry ingest from GSC API, GA4 API, PSI, Lighthouse)
-> **Partitioning:** Per year — `logs_2025`, `logs_2026` (125 cols each)
-> **Volume:** logs_2026 = 89,960 rows (2026-02-27 → 03-22 currently)
+> **Partitioning:** Per year — `logs_2025`, `logs_2026` (125 cols each). ⚠️ *(2026-08-24: the partitions are **not** individually reachable through PostgREST — `GET /rest/v1/logs_2026` returns 404 — which is normal for partitions but means the partition layout could not be re-verified here. Confirm against `pg_inherits` before relying on it.)*
+> **Volume:** **151,471 rows** on `seo_x_ads_keywords_x_url_daily_logs`, measured 2026-08-24; `snapshot_at` spans **2026-02-27 → 2026-08-23**. *(corrected 2026-08-24 against live data — was "logs_2026 = 89,960 rows (2026-02-27 → 03-22)"; the time column is `snapshot_at`, there is no `log_date`.)*
 
-125 columns total per partition. Major column families:
-- **GSC:** clicks, impressions, ctr, ranking_mobile, ranking_desktop, per-query rollups
-- **GA4:** organic_sessions, organic_users, organic_engagement_rate, total_sessions, conversions
-- **Core Web Vitals (mobile + desktop):** LCP, CLS, FCP, TBT, INP, TTFB, performance_score
-- **Indexing:** indexing_status, indexability_issues, last_crawl_at, has_canonical_issue
-- **On-page audit:** title_length, meta_description_length, has_h1, schema_emitted, image_count, broken_links_count
-- **Link graph:** inbound_link_count, outbound_internal_link_count, outbound_external_link_count, is_orphan
+125 columns total per partition. Major column families *(every name below corrected 2026-08-24 against the live column list — the previous names were paraphrases and none of them existed)*:
+- **GSC:** `gsc_clicks`, `gsc_impressions`, `gsc_ctr` (+`_mobile`/`_desktop`), `gsc_mobile_ranking`, `gsc_desktop_ranking`, `ranking`, `gsc_actual_ranking_url`, `gsc_canabalization_urls` *(live spelling, sic)*, `gsc_inspection_status`/`_verdict`
+- **GA4:** `ga4_organic_sessions`, `ga4_organic_active_users`, `ga4_organic_engagement_rate`, `ga4_total_sessions`, `ga4_organic_key_event` / `ga4_total_key_event` (conversions), each with mobile/desktop splits
+- **Core Web Vitals (mobile only — no desktop set exists):** `cwv_lcp_loading`, `cwv_cls_stability`, `cwv_fcp`, `cwv_tbt`, `cwv_inp`, `cwv_ttfb`, `cwv_speed_index`, `cwv_mobile_performance_score`, `cwv_score_seo`/`_accessibility`/`_best_practices`
+- **Indexing:** `indexing_status`, `index_http_status`, `indexing_last_update`, `canonical_chains` — there is no `indexability_issues`, `last_crawl_at` or `has_canonical_issue`
+- **On-page audit:** `onpage_score`, `page_meta_title`, `page_meta_description`, `title_too_long`, `no_description`, `no_h1_tag`, `has_duplicate_title`, `click_depth`, `automated_readability_index`, `plain_text_word_count` — there is no `title_length`, `meta_description_length`, `has_h1`, `schema_emitted`, `image_count` or `broken_links_count`
+- **Link graph:** `internal_inbound_count`, `internal_outbound_count`, `external_outbound_count`, `is_orphan`
+
+> 🔴 **`plain_text_word_count` is NULL in all 151,471 rows** *(measured 2026-08-24)*. It is the only measured word count in the schema and the crawl ETL has never populated it — so any word-count floor keyed on measured content cannot run. `seo_website_page_master.auto_suggested_word_count_target` is a target with nothing to compare against. Fix the ETL here rather than inventing a word-count column on the page master.
 
 Triggers: `trg_dl_bump_keyword` AFTER INSERT/UPDATE → updates `seo_x_ads_keywords_contextual_master.gsc_last_update` and `ga4_last_update` denorm fields.
 
-> **Backup:** `seo_x_ads_keywords_x_url_daily_logs_backup_20260227` exists from a pre-partition migration — 37,572 rows. Retain through v2.0 then drop.
+> **Backup:** `seo_x_ads_keywords_x_url_daily_logs_backup_20260227` exists from a pre-partition migration — 37,572 rows *(confirmed 2026-08-24 against live data)*. Retain through v2.0 then drop.
 
 ### 7.2 `seo_local_rankings` (25 cols)
 
 > **Purpose:** Local SERP / Google Maps Pack rankings per keyword × branch × search point × time.
 > **Sync:** S only — DataForSEO Maps API + n8n flow E5
+> **Status:** 🔴 **0 rows**, measured 2026-08-24 — flow E5 has never run; the local-ranking rules below have no data to read.
 > **DR:** DR-025 v1.11 (FK rename `location_id` → `branch_id`)
 
 Columns:
@@ -1354,7 +1412,7 @@ Columns:
 
 > **Purpose:** Aggregated backlink domain authority + referring domain count per brand per snapshot.
 > **Sync:** S only — Ahrefs / Moz / DataForSEO ingest (pipeline pending)
-> **Status:** 0 rows currently (schema ready, ingest not wired)
+> **Status:** **0 rows**, confirmed 2026-08-24 against live data (schema ready, ingest not wired)
 
 Typical fields: brand_id, snapshot_at, total_backlinks, referring_domains, dofollow_count, nofollow_count, domain_rating, url_rating, source_provider.
 
@@ -1362,7 +1420,7 @@ Typical fields: brand_id, snapshot_at, total_backlinks, referring_domains, dofol
 
 > **Purpose:** Per-link backlink rows — source URL, target URL, anchor text, link attributes.
 > **Sync:** S only
-> **Status:** 0 rows currently
+> **Status:** **0 rows**, confirmed 2026-08-24 against live data
 
 Typical fields: source_url, source_domain, target_url, target_page_fp, anchor_text, link_attribute (`'dofollow'`/`'nofollow'`/`'ugc'`/`'sponsored'`), first_seen_at, last_verified_at, is_active, source_authority_score.
 
@@ -1374,7 +1432,7 @@ Typical fields: source_url, source_domain, target_url, target_page_fp, anchor_te
 
 > **Purpose:** Cross-platform brand mention tracking (Pantip/Facebook/Wongnai/IG/TikTok/X/news/blog). "Everywhere SEO" per Bible Part 13.
 > **Sync:** S only — monitor tool (Mention.com / Brand24 / custom scraper) ingest
-> **Status:** 0 rows currently
+> **Status:** **0 rows**, confirmed 2026-08-24 against live data
 
 Columns:
 - Identity: `id`, `fingerprint` (`bmen_{ULID16}`), `fingerprint_display_name`, `brand_id`
@@ -1388,7 +1446,7 @@ Columns:
 
 > **Purpose:** LLMO citation tracking — record when ChatGPT/Claude/Perplexity/Gemini cite the brand or its pages in responses to test prompts.
 > **Sync:** S only — scripted query simulation (LangChain + Anthropic SDK + OpenAI SDK + Perplexity API + Gemini API)
-> **Status:** 0 rows currently
+> **Status:** **0 rows**, confirmed 2026-08-24 against live data
 > **Bible:** Part 13
 
 Columns:
@@ -1404,7 +1462,7 @@ Columns:
 
 > **Purpose:** Recurring LLM query simulation registry — prompts tested on a cadence (weekly/monthly) to track citation/mention rate over time.
 > **Sync:** S only
-> **Status:** 0 rows currently
+> **Status:** **0 rows**, confirmed 2026-08-24 against live data
 
 Columns: `id`, `fingerprint` (`llmq_{ULID16}`), `fingerprint_display_name`, `brand_id`, `simulation_name`, `prompt_template`, `prompt_variables jsonb`, `target_intent`, `target_funnel_stage`, `target_entity_fp`, `expected_citation_pages_fps text[]`, `expected_brand_mention boolean`, `total_runs int`, `successful_citations int`, `citation_rate numeric`, `brand_mention_rate numeric`, `last_run_at`, `next_scheduled_run`, `is_active boolean`, `created_at`, `updated_at`.
 
@@ -1412,11 +1470,12 @@ Columns: `id`, `fingerprint` (`llmq_{ULID16}`), `fingerprint_display_name`, `bra
 
 > **Purpose:** Vector embeddings per entity (via pgvector). For semantic search, EUG (Entity Uniqueness Guard) v2.0, and similar-entity recommendations.
 > **Sync:** S only
-> **Extension:** `vector` (pgvector). HNSW index **deferred** until bulk-loaded (creating HNSW on near-empty table wastes catalog space).
+> **Volume:** **684 rows**, measured 2026-08-24 — against 732 entity rows, ~93% coverage. *(added 2026-08-24 against live data — this table is no longer empty.)*
+> **Extension:** `vector` (pgvector). HNSW index **deferred** — the "creating HNSW on a near-empty table wastes catalog space" rationale no longer applies at 684 vectors; re-decide.
 
 Columns:
 - `id uuid`
-- `entity_fp text` (FK → seo_entity_graph.fingerprint)
+- `entity_fp text` (FK → seo_entity_graph.entity_fingerprint) *(corrected 2026-08-24 — the entity layer resolves on `entity_fingerprint`, not `fingerprint`)*
 - `embedding_model text` (e.g. `'text-embedding-3-large'`, `'voyage-2'`)
 - `embedding_dimensions smallint` (e.g. 1536, 1024)
 - `embedding vector(N)` — pgvector type (N varies per model)
@@ -1429,10 +1488,11 @@ Columns:
 
 ## 10. Group 8 — Data Quality & Governance (2 tables)
 
-### 10.1 `seo_data_quality_metrics` (15 cols)
+### 10.1 `seo_data_quality_metrics` (13 cols) *(corrected 2026-08-24 against live schema — was documented as 15; the column list below has always enumerated 13)*
 
 > **Purpose:** Time-series data quality metrics — DAMA 5 dimensions (completeness, consistency, accuracy, timeliness, uniqueness) + sync lag + FK integrity scores.
 > **Sync:** S only — populated by scheduled jobs
+> **Status:** 🔴 **0 rows**, measured 2026-08-24 — the scheduled jobs have never written here, so no DAMA metric is tracked in the database today.
 
 Columns: `id`, `metric_name`, `metric_category` (e.g. `'completeness'`, `'consistency'`, `'sync_lag'`), `metric_value numeric`, `metric_value_jsonb` (for structured breakdowns), `threshold_min`, `threshold_max`, `status` (`'green'`, `'yellow'`, `'red'`), `target_table_name`, `target_brand_id`, `scope_description`, `computed_at`, `computation_duration_ms`.
 
@@ -1443,79 +1503,82 @@ Columns: `id`, `metric_name`, `metric_category` (e.g. `'completeness'`, `'consis
 
 Columns: `id`, `change_type` text CHECK IN (`'create_table'`,`'drop_table'`,`'alter_table_add_column'`,`'alter_table_drop_column'`,`'alter_table_alter_column'`,`'rename_table'`,`'rename_column'`,`'add_index'`,`'drop_index'`,`'add_constraint'`,`'drop_constraint'`,`'add_trigger'`,`'drop_trigger'`,`'create_function'`,`'drop_function'`,`'create_view'`,`'drop_view'`,`'enable_rls'`,`'disable_rls'`,`'create_policy'`,`'drop_policy'`,`'other'`), `table_name`, `column_name`, `index_name`, `constraint_name`, `migration_version`, `migration_name`, `related_dr_id`, `spec_version`, `description`, `ddl_statement`, `performed_by`, `performed_at`, `duration_ms`, `rolled_back boolean`, `rolled_back_at`, `rollback_reason`.
 
-**Recent activity:** 20 rows logged 2026-05-27 for Wave 11 (DR-030 + DR-032). See `migration_version LIKE 'eywa_w11_%'`.
+**Recent activity:** **54 rows** total, measured 2026-08-24 — 33 of them carry `migration_version LIKE 'eywa_w11_%'`. Logged dates: 2026-05-27, 06-02, 06-04, 06-07, 06-08, 06-11, 07-10, 07-27, 07-28, 07-29. *(corrected 2026-08-24 against live data — was "20 rows logged 2026-05-27". Note the log stops at 2026-07-29: the DR-057 funnel/section/schema migrations of 2026-08-23 are **not** recorded here, so this table is no longer a complete DDL audit trail.)*
 
 ---
 
 ## 11. Group 9 — Entity Extensions & Templates (11 tables = 10 extensions + 1 template registry; `seo_entity_symptom` §11.5a added per DR-036)
 
-> **Pattern:** 1:1 extension to `seo_entity_graph` via `entity_fp text FK→seo_entity_graph.fingerprint`. One row per qualifying entity. Each table adds vocabulary specific to its entity_type (CPT codes for procedures, ATC codes for drugs, FMA terms for anatomy, etc.).
+> **Pattern:** 1:1 extension to `seo_entity_graph` via `entity_fp text FK→seo_entity_graph.entity_fingerprint` *(corrected 2026-08-24 — the extensions resolve on `entity_fingerprint`, the load-bearing key of §4.1, not on `fingerprint`)*. One row per qualifying entity. Each table adds vocabulary specific to its entity_type (CPT codes for procedures, ATC codes for drugs, FMA terms for anatomy, etc.).
 >
-> **Sync drift note:** Spec comments mark these `N↔S` but the actual tables were built **without `notion_id` columns** — practically these function as **S-only** detail tables today. Operator may add notion_id later if a Notion mirror DB is built. See §2 Sync direction matrix.
+> **Sync drift note:** Spec comments mark these `N↔S` but the actual tables were built **without `notion_id` columns** — practically these function as **S-only** detail tables today. Operator may add notion_id later if a Notion mirror DB is built. See §2 Sync direction matrix. *(confirmed 2026-08-24: no Group-9 table has a `notion_id` column.)*
+>
+> ⚠️ *(added 2026-08-24 against live data)* **Every "Key fields" line in §11.1–§11.9 was re-checked column by column against the live schema and most were wrong** — they listed plausible names that do not exist. The lists below are now the live names. Row counts are as of 2026-08-24 and will drift; re-measure per table.
 
-### 11.1 `seo_entity_ingredients` (29 cols) — entity_type='ingredient'
+### 11.1 `seo_entity_ingredients` (29 cols) — entity_type='ingredient' · **0 rows** (2026-08-24)
 
-INCI / CAS / EWG hazard scores. Used by cosmetic/supplement product pages.
-Key fields: `inci_name`, `cas_number`, `ewg_hazard_score`, `function_category text[]`, `restrictions_eu`, `restrictions_us_fda`, `restrictions_thai_fda`, `comedogenic_rating`, `vegan_status`, `cruelty_free_status`, `paraben_free`, `phthalate_free`, `is_natural`, `synonyms text[]`, `safe_usage_concentration_pct`.
+INCI / CAS / EWG. Used by cosmetic/supplement product pages. 🔴 Empty, and `seo_entity_graph` holds no `ingredient`-typed entity either — nothing binds here today.
+Key fields *(corrected 2026-08-24 against live schema)*: `inci_name`, `inci_aliases`, `cas_number`, `ec_number`, `ewg_id`, `cosing_ref_no`, `allergen_status`, `comedogenic_rating`, `irritancy_rating`, `pregnancy_safe`, `breastfeeding_safe`, `fungal_acne_safe`, `photosensitivity`, `function_categories`, `concentration_range_typical`, `typical_concentration_min`/`_max`, `effective_concentration_min`, `regulatory_status`, `thai_fda_classification`, `thai_fda_max_concentration`, `eu_annex_restriction`, `us_fda_status`, `mechanism_of_action`, `evidence_level`. **Not live:** `ewg_hazard_score`, `function_category`, `restrictions_eu`, `restrictions_us_fda`, `restrictions_thai_fda`, `vegan_status`, `cruelty_free_status`, `paraben_free`, `phthalate_free`, `is_natural`, `synonyms`, `safe_usage_concentration_pct`.
 
-### 11.2 `seo_entity_devices` (22 cols) — entity_type='device'
+### 11.2 `seo_entity_devices` (24 cols) — entity_type='device' · **64 rows** (2026-08-24) *(count corrected 2026-08-24 — was documented as 22 cols)*
 
 FDA / CE / manufacturer registration. Used by medical device pages.
-Key fields: `fda_clearance_number`, `ce_mark_number`, `manufacturer_name`, `device_class`, `intended_use_statement`, `contraindications text[]`, `warnings text[]`, `made_in_country`, `is_class_iii boolean`, `is_implantable boolean`, `approval_status`.
+Key fields *(corrected 2026-08-24 against live schema)*: `manufacturer`, `manufacturer_org_fp`, `model_number`, `device_family`, `fda_clearance`, `fda_clearance_date`, `ce_mark`, `ce_mark_class`, `thai_fda_reg_no`, `regulatory_class`, `technology_category`, `wavelength_nm`, `clinical_indications`, `contraindications`, `treatment_areas`, `typical_session_duration_min`, `typical_sessions_required`, `downtime_days`, `load_from`, `load_source`. **Not live:** `fda_clearance_number`, `ce_mark_number`, `manufacturer_name`, `device_class`, `intended_use_statement`, `warnings`, `made_in_country`, `is_class_iii`, `is_implantable`, `approval_status`.
 
-### 11.3 `seo_entity_procedures` (25 cols) — entity_type='procedure'
+### 11.3 `seo_entity_procedures` (27 cols) — entity_type='procedure' · **145 rows** (2026-08-24) *(count corrected 2026-08-24 — was documented as 25 cols)*
 
-CPT codes + recovery + contraindications. **T2-medical-procedure template binding** — page templates auto-pull from this when `page_type='procedure'`.
-Key fields: `cpt_code`, `hcpcs_code`, `thai_procedure_code`, `procedure_category`, `typical_duration_minutes`, `anesthesia_type`, `recovery_time_days`, `pain_level smallint`, `success_rate_pct`, `risks text[]`, `contraindications text[]`, `pre_op_instructions text`, `post_op_instructions text`, `expected_outcomes text[]`, `cost_range_thb numrange`.
+CPT codes + recovery + contraindications. **T2-medical-procedure template binding.**
+Key fields *(corrected 2026-08-24 against live schema)*: `cpt_code`, `cpt_alternate_codes`, `procedure_type`, `invasiveness_level`, `procedure_duration_min`/`_max`/`_typical`, `recovery_time_days`, `recovery_back_to_work_days`, `recovery_full_recovery_days`, `anesthesia_type`, `anesthesia_required`, `treats_conditions_fps`, `affects_anatomy_fps`, `uses_devices_fps`, `contraindications`, `contraindication_entities_fps`, `complications_common`, `success_rate_pct`, `requires_followup`, `followup_visits_typical`, `load_from`, `load_source`. **Not live:** `hcpcs_code`, `thai_procedure_code`, `procedure_category`, `typical_duration_minutes`, `pain_level`, `risks`, `pre_op_instructions`, `post_op_instructions`, `expected_outcomes`, `cost_range_thb`.
 
-### 11.4 `seo_entity_product` 🆕 v1.11 (42 cols) — entity_type='product'
+### 11.4 `seo_entity_product` 🆕 v1.11 (42 cols) — entity_type='product' · **0 rows** (2026-08-24)
 
-Product master for skincare/supplements/medical devices that are productized offerings. Bridges DR-024.
-Key fields: `product_sku`, `product_brand_id`, `gtin`, `manufacturer_name`, `product_category`, `ingredients_list_inci text[]`, `claims_marketing text[]`, `claims_substantiated text[]`, `price_thb numrange`, `pack_size`, `unit_count`, `storage_conditions`, `shelf_life_months`, `is_prescription_only`, `is_otc`, `is_supplement`, `regulatory_registration_no`, `regulatory_registration_country`.
+Product master for productized offerings. Bridges DR-024. 🔴 Empty despite 4 `product`-typed entities in the graph.
+Key fields *(corrected 2026-08-24 against live schema)*: `gtin`, `sku`, `manufacturer_part_number`, `product_name`, `product_slug`, `brand_owner_name`, `brand_owner_org_fp`, `is_own_brand_product`, `product_category`, `product_subcategory`, `product_form`, `ingredients_fps`, `key_active_ingredients`, `inactive_ingredients`, `allergen_warnings`, `free_from_claims`, `size_value`, `size_unit`, `variants`, `price_min`/`price_max`/`price_typical`/`currency`/`price_per_unit`, `thai_fda_reg_no`, `thai_fda_type`, `regulatory_status`, `requires_prescription`, `pregnancy_safe`, `breastfeeding_safe`, `pediatric_safe`, `pediatric_min_age_years`, `contraindications`, `certifications`, `schema_product_type`, `is_discontinued`, `launch_date`, `discontinued_date`. **Not live:** `product_sku`, `product_brand_id`, `manufacturer_name`, `ingredients_list_inci`, `claims_marketing`, `claims_substantiated`, `price_thb`, `pack_size`, `unit_count`, `storage_conditions`, `shelf_life_months`, `is_prescription_only`, `is_otc`, `is_supplement`, `regulatory_registration_no`, `regulatory_registration_country`.
 
-### 11.5 `seo_entity_condition` 🆕 v1.11 (40 cols, +2 v1.19 DR-033) — entity_type='condition' (T1 CRITICAL)
+### 11.5 `seo_entity_condition` 🆕 v1.11 (42 cols) — entity_type='condition' (T1 CRITICAL) · **125 rows** (2026-08-24) *(count corrected 2026-08-24 — was documented as 40)*
 
 ICD-11 / ICD-10 / ICD-10-CM / SNOMED CT / MeSH. **T1 page template binding** — every condition page pulls from this. CRITICAL for medical content authority. **DR-033 ICD coding set:** `icd11_code` (ICD-11-MMS, primary) · `icd10_code` (WHO base / ICD-10-TM) · `icd10_cm_code` (US clinical-mod) · `icd10_codes_related[]` — emitted together in `MedicalCondition.code[]`, ICD-11 first.
-Key fields: `icd11_code` 🆕 v1.19, `icd10_code` (WHO base), `icd10_cm_code` 🆕 v1.19, `icd10_codes_related[]`, `snomed_ct_id`, `mesh_id`, `umls_cui`, `condition_category`, `body_system text[]`, `severity_levels jsonb`, `prevalence_estimate text`, `typical_age_onset numrange`, `symptoms_list_fps text[]` (FK → entity_graph), `risk_factors_list_fps text[]`, `diagnosis_methods text[]`, `treatment_options_fps text[]`, `prognosis text`, `is_chronic boolean`, `is_emergency boolean`, `is_contagious boolean`, `is_genetic boolean`, `who_classification`.
+Key fields *(corrected 2026-08-24 against live schema)*: `icd11_code` 🆕 v1.19, `icd10_code` (WHO base), `icd10_cm_code` 🆕 v1.19, `icd10_codes_related[]`, `snomed_ct_id`, `mesh_id`, `umls_cui`, `wikidata_qid`, `condition_category`, `body_system`, `is_chronic`, `is_acute`, `is_recurrent`, `is_lifestyle_related`, `prevalence_global_pct`, `prevalence_thailand_pct`, `prevalence_source`, `incidence_per_100k_yearly`, `mortality_rate_pct`, `severity_levels`, `symptoms`, `symptom_entities_fps`, `early_warning_signs`, `related_anatomy_fps`, `treatment_drugs_fps`, `treatment_procedures_fps`, `prevention_strategies`, `affected_age_groups`, `gender_predominance`, `risk_factors`, `diagnostic_methods`, `diagnostic_tests_fps`, `patient_explanation_th`, `patient_explanation_en`, `common_misconceptions`, `search_volume_proxy`, `load_from`, `load_source`. **Not live:** `prevalence_estimate`, `typical_age_onset`, `symptoms_list_fps`, `risk_factors_list_fps`, `diagnosis_methods`, `treatment_options_fps`, `prognosis`, `is_emergency`, `is_contagious`, `is_genetic`, `who_classification`.
 
-### 11.5a `seo_entity_symptom` 🔒 v1.21 BUILT (DR-036) — entity_type='symptom' (T1) · 29 cols
+### 11.5a `seo_entity_symptom` 🔒 v1.21 BUILT (DR-036) — entity_type='symptom' (T1) · 31 cols · **21 rows** (2026-08-24) *(column count corrected 2026-08-24 — was documented as 29; live adds `load_from` + `load_source`)*
 
 > **Built 2026-06-04** (migration `eywa_w11_06_dr036_v21_entity_symptom`). Sibling extension to §11.5 `seo_entity_condition`, split out per **DR-036** (Bible §25.3 Core CPT 7 `symptom`). 1:1 with `seo_entity_graph` rows where `type='symptom'` — already a valid `entity_type` enum value (§4.1), so **no enum/discriminator change** was required. Numbered **11.5a** (deliberately *not* folded into the 11.6–11.10 sequence) to preserve the existing cross-references to §11.6–§11.10.
 >
 > **Pattern:** mirrors `seo_entity_condition` — `entity_fp text NOT NULL UNIQUE` FK → `seo_entity_graph.entity_fingerprint` ON DELETE CASCADE, PK `id uuid DEFAULT gen_random_uuid()`, RLS-enabled (`eywa_authenticated_full_access`), S-only, one row per symptom entity. Drops condition-only fields (`prevalence_*`, `incidence_*`, `mortality_rate_pct`, `is_chronic`/`is_acute`/`is_recurrent`/`is_lifestyle_related`); keeps the coding + anatomy fields and adds symptom-specific character + YMYL-safety fields.
 
-**Key fields (29 cols)** — `id`, `entity_fp` (FK). **Coding:** `snomed_ct_id` (symptoms lead with SNOMED CT), `icd11_code` (ICD-11-MMS), `icd10_code` (WHO base — R-codes where applicable), `icd10_codes_related text[]`, `mesh_id`, `umls_cui`, `wikidata_qid`. **Classification:** `symptom_category`, `body_system text[]`, `related_anatomy_fps text[]` (→ `seo_entity_anatomy`). **Character:** `severity_scale` (CHECK `mild|moderate|severe|variable`), `typical_onset` (CHECK `acute|sudden|gradual|intermittent|variable`), `typical_duration`, `is_emergency_sign boolean`. **Relations:** `associated_conditions_fps text[]` (→ `seo_entity_condition`; reciprocal of `seo_entity_condition.symptom_entities_fps`), `accompanying_symptoms_fps text[]` (self-FK), `triggers_factors text[]`, `relieving_factors text[]`. **YMYL safety:** `red_flag_indicators text[]` (when to seek urgent care), `self_care_guidance`, `when_to_see_doctor`. **Patient-facing:** `patient_explanation_th`, `patient_explanation_en`, `common_misconceptions text[]`, `search_volume_proxy`. **Audit:** `created_at`, `updated_at`. **Schema-type emission:** `MedicalSignOrSymptom`, keyed off `post_type` (Bible §25.3, DR-036). **Edge:** `symptom_of` → parent `seo_entity_condition` (cross-CPT; vocab unchanged — DR-013/DR-014).
+**Key fields (31 cols — every name below confirmed live 2026-08-24)** — `id`, `entity_fp` (FK → `seo_entity_graph.entity_fingerprint`), plus `load_from` + `load_source`. **Coding:** `snomed_ct_id` (symptoms lead with SNOMED CT), `icd11_code` (ICD-11-MMS), `icd10_code` (WHO base — R-codes where applicable), `icd10_codes_related text[]`, `mesh_id`, `umls_cui`, `wikidata_qid`. **Classification:** `symptom_category`, `body_system text[]`, `related_anatomy_fps text[]` (→ `seo_entity_anatomy`). **Character:** `severity_scale` (CHECK `mild|moderate|severe|variable`), `typical_onset` (CHECK `acute|sudden|gradual|intermittent|variable`), `typical_duration`, `is_emergency_sign boolean`. **Relations:** `associated_conditions_fps text[]` (→ `seo_entity_condition`; reciprocal of `seo_entity_condition.symptom_entities_fps`), `accompanying_symptoms_fps text[]` (self-FK), `triggers_factors text[]`, `relieving_factors text[]`. **YMYL safety:** `red_flag_indicators text[]` (when to seek urgent care), `self_care_guidance`, `when_to_see_doctor`. **Patient-facing:** `patient_explanation_th`, `patient_explanation_en`, `common_misconceptions text[]`, `search_volume_proxy`. **Audit:** `created_at`, `updated_at`. **Schema-type emission:** `MedicalSignOrSymptom`, keyed off `post_type` (Bible §25.3, DR-036). **Edge:** `symptom_of` → parent `seo_entity_condition` (cross-CPT; vocab unchanged — DR-013/DR-014).
 
-### 11.6 `seo_entity_drug` 🆕 v1.11 (42 cols) — entity_type='drug'
+### 11.6 `seo_entity_drug` 🆕 v1.11 (44 cols) — entity_type='drug' · **9 rows** (2026-08-24) *(count corrected 2026-08-24 — was documented as 42)*
 
 RxNorm / ATC / Thai FDA registration.
-Key fields: `generic_name`, `brand_names text[]`, `inn_name`, `drug_class`, `atc_code`, `rxnorm_id`, `schedule_dea`, `thai_fda_registration_no`, `dosage_forms text[]`, `routes_of_administration text[]`, `mechanism_of_action text`, `pharmacokinetics jsonb`, `indications text[]`, `contraindications text[]`, `adverse_effects text[]`, `drug_interactions_fps text[]` (FK → seo_entity_drug self), `pregnancy_category`, `is_prescription`, `is_controlled`, `half_life_hours numrange`.
+Key fields *(corrected 2026-08-24 against live schema)*: `rxnorm_code`, `atc_code`, `mesh_id`, `wikidata_qid`, `generic_name`, `brand_names`, `chemical_name`, `drug_class`, `drug_subclass`, `dosage_forms`, `routes_of_administration`, `available_strengths`, `thai_fda_reg_no`, `thai_fda_status`, `prescription_required`, `controlled_substance_class`, `requires_special_program`, `indications_fps`, `indications_text`, `off_label_uses`, `contraindications_fps`, `contraindications_text`, `side_effects_common`, `side_effects_serious`, `pregnancy_category`, `breastfeeding_category`, `pediatric_use`, `pediatric_min_age_years`, `geriatric_considerations`, `drug_interactions_fps` (self-FK), `food_interactions`, `typical_dosing_adult`, `max_daily_dose`, `duration_typical`, `mechanism_of_action`, `half_life_hours`, `bioavailability_pct`, `is_generic_available`, `load_from`, `load_source`. **Not live:** `inn_name`, `rxnorm_id`, `schedule_dea`, `thai_fda_registration_no`, `pharmacokinetics`, `indications`, `contraindications`, `adverse_effects`, `is_prescription`, `is_controlled`.
 
-### 11.7 `seo_entity_anatomy` 🆕 v1.11 (25 cols) — entity_type='anatomy'
+### 11.7 `seo_entity_anatomy` 🆕 v1.11 (27 cols) — entity_type='anatomy' · **21 rows** (2026-08-24) *(count corrected 2026-08-24 — was documented as 25)*
 
 FMA (Foundational Model of Anatomy) / UBERON. Self-FK hierarchy for body system tree.
-Key fields: `fma_id`, `uberon_id`, `terminologia_anatomica`, `parent_anatomy_fp` (self-FK), `body_system`, `body_region`, `is_organ boolean`, `is_tissue boolean`, `is_cell boolean`, `function_summary text`, `related_conditions_fps text[]` (FK → seo_entity_condition).
+Key fields *(corrected 2026-08-24 against live schema)*: `fma_id`, `uberon_id`, `terminologia_anatomica`, `mesh_id`, `wikidata_qid`, `anatomical_name_latin`, `anatomical_name_th`, `common_name_th`, `body_system`, `anatomical_region`, `anatomy_type`, `parent_anatomy_fp` (self-FK), `parent_anatomy_relation`, `child_anatomy_fps`, `connected_to_fps`, `innervated_by_fps`, `vascularized_by_fps`, `affected_by_conditions_fps`, `target_of_procedures_fps`, `illustration_url`, `model_3d_url`, `load_from`, `load_source`. **Not live:** `body_region`, `is_organ`, `is_tissue`, `is_cell`, `function_summary`, `related_conditions_fps`.
 
-### 11.8 `seo_entity_organization` 🆕 v1.11 (34 cols) — entity_type='organization'
+### 11.8 `seo_entity_organization` 🆕 v1.11 (34 cols) — entity_type='organization' · **21 rows** (2026-08-24)
 
 External organizations (WHO, IAOMT, IABDM, ทันตแพทยสภา, A4M, etc.) — DISTINCT from `brands` table which is internal EYWA brands.
-Key fields: `organization_name`, `legal_name`, `org_type` (`'professional_association'`,`'regulatory_body'`,`'research_institute'`,`'government'`,`'ngo'`,`'university'`), `country_of_origin`, `founding_year`, `wikidata_id`, `official_url`, `headquarters_address`, `notable_publications text[]`, `is_credentialing_body boolean`, `accredited_specialties text[]`, `member_count_estimate`, `mission_statement`.
+Key fields *(corrected 2026-08-24 against live schema)*: `legal_name`, `common_name`, `aliases`, `wikidata_qid`, `ringgold_id`, `ror_id`, `organization_type`, `organization_subtype`, `industry_focus`, `is_for_profit`, `headquarters_country_code`, `headquarters_city`, `headquarters_address`, `operates_in_countries`, `founding_date`, `founders`, `parent_organization_fp`, `subsidiaries_fps`, `authority_tier`, `is_government_authority`, `is_who_recognized`, `accredits`, `official_website`, `wikipedia_url_en`, `wikipedia_url_th`, `same_as_urls`, `is_own_brand_org`, `linked_brand_id`, `used_as_citation_source`, `citation_count_in_corpus`. **Not live:** `organization_name`, `org_type`, `country_of_origin`, `founding_year`, `wikidata_id`, `official_url`, `notable_publications`, `is_credentialing_body`, `accredited_specialties`, `member_count_estimate`, `mission_statement` — the discriminator column is `organization_type`, not `org_type`, so the enum previously listed here could not be re-verified either.
 
-### 11.9 `seo_entity_lab_test` 🆕 v1.11 (36 cols) — entity_type='lab_test'
+### 11.9 `seo_entity_lab_test` 🆕 v1.11 (36 cols) — entity_type='lab_test' · **0 rows** (2026-08-24)
 
-LOINC / CPT. Lab test definitions for biomarker entities.
-Key fields: `loinc_code`, `cpt_code`, `test_name`, `test_category`, `specimen_type` (`'blood'`,`'urine'`,`'saliva'`,`'tissue'`,`'breath'`,`'stool'`), `reference_range_units`, `reference_range_low`, `reference_range_high`, `interpretation_low text`, `interpretation_normal text`, `interpretation_high text`, `clinical_significance text`, `typical_cost_thb_range numrange`, `is_fasting_required boolean`, `is_overnight_required boolean`, `result_turnaround_days`.
+LOINC / CPT. Lab test definitions for biomarker entities. 🔴 Empty, and no `lab_test`-typed entity exists in the graph.
+Key fields *(corrected 2026-08-24 against live schema)*: `loinc_code`, `cpt_code`, `snomed_ct_id`, `mesh_id`, `wikidata_qid`, `test_name`, `test_aliases`, `test_acronym`, `test_category`, `test_subcategory`, `test_type`, `sample_type`, `sample_volume`, `is_invasive`, `requires_fasting`, `fasting_hours_required`, `preparation_instructions`, `typical_duration_minutes`, `results_turnaround_hours`, `requires_appointment`, `indications`, `related_conditions_fps`, `related_anatomy_fps`, `screens_for_conditions_fps`, `reference_ranges`, `result_unit`, `requires_devices_fps`, `radiation_dose_msv`, `contraindications`, `pregnancy_safety`, `typical_cost_thb`, `insurance_typical_coverage`. **Not live:** `specimen_type` (it is `sample_type`), `reference_range_units`/`_low`/`_high` (one `reference_ranges` column), `interpretation_low`/`_normal`/`_high`, `clinical_significance`, `typical_cost_thb_range`, `is_fasting_required`, `is_overnight_required`, `result_turnaround_days`.
 
 ### 11.10 `seo_programmatic_templates` (12 cols) — template registry (NOT entity extension)
 
-> **Purpose:** Registry of page templates T1–T22 (SEO) + T-ADS-1 to T-ADS-5 (Ads LP per DR-026).
+> **Purpose:** Registry of page templates. **23 rows** live, measured 2026-08-24: `T1`–`T19` plus the variants `T6a`, `T8g`, `T12g`, `T12i`. *(corrected 2026-08-24 against live data — the registry does **not** run to T22, and it contains **zero** `T-ADS-*` rows, so the DR-026 ads templates exist only on paper. `applicable_brands`: 22 rows `['*']`, 1 row `['deezy-dental']`; `entity_type_required` is set on 4 rows (procedure ×2, condition, device) and NULL on 19.)*
+> ⚠️ This registry is a **global** T-code list, but `seo_website_page_master.content_format` is **per brand** (deezy uses `T2b`, which has no row here). Do not validate a page's `content_format` against this table — validate against the brand's own content-template document. *(added 2026-08-24 against live data.)*
 > **Sync:** S only (despite spec comment saying N↔S — no notion_id column built). Source of truth for human-readable templates lives in `Content_Templates_EYWA_v1_0.md` in spec repo; this table is the pipeline-consumed structured registry.
 > **Trigger:** `trg_set_fingerprint`, `trg_prevent_fingerprint_change`
 
 Columns: `id uuid`, `fingerprint text` (`tmpl_{ULID16}`), `fingerprint_display_name`, `template_name text`, `template_id text` (e.g. `'T1'`, `'T-ADS-3'`), `target_layer text` 🔴 **UNIMPLEMENTABLE as written — see mapping note** (nothing to join on: the page master has no `layer` column — Appendix H.3), `url_pattern text`, `page_template_blueprint jsonb` (the actual template structure: sections, schema rules, content requirements), `applicable_brands text[]`, `entity_type_required text`, `created_at`, `updated_at`.
 
 > 🔴 **`target_layer` mapping note** *(rewritten 2026-08-23 — `layer` column does not exist; see the reconciliation report)*
-> This column stores Bible Part 3.2 layers `L1`–`L7`, but `seo_website_page_master` has no `layer` column to match them against (Appendix H.3), so template↔page resolution cannot join here. Resolve on the taxonomy columns that do exist (§5.1) — `coalesce(page_category, page_type)`; `page_category` is the newer backfill column (not in the §5.1 listing, still empty on two of three brands), `page_type` the coarser fallback:
+> This column stores Bible Part 3.2 layers `L1`–`L7` and is populated on all 23 rows (L5×7, L4×4, L6×4, L2×3, L7×2, L1×2, L3×1, measured 2026-08-24), but `seo_website_page_master` has **no `layer` column** to match them against (Appendix H.3) — and there never will be one — so template↔page resolution cannot join here. Resolve on the taxonomy columns that do exist (§5.1) — `coalesce(page_category, page_type)`. `page_category` is now documented in the §5.1 listing and is **backfilled on all three brands** *(corrected 2026-08-24 against live data — the earlier "still empty on two of three brands" is out of date: vth-biodent 686/761, deezy-dental 776/869, smile-scape-clinic 707/728; 189 rows brand-wide are still NULL, which is exactly why `page_type` remains the fallback and must not be dropped)*:
 >
 > | Bible layer | Predicate on `seo_website_page_master` | Fit |
 > |---|---|---|
@@ -1538,13 +1601,15 @@ Columns: `id uuid`, `fingerprint text` (`tmpl_{ULID16}`), `fingerprint_display_n
 > **Companion Bible:** Part 29 (Ads Landing Page Track)
 > **Companion Templates:** v1.4 (T-ADS-1 through T-ADS-5)
 
+> 🔴 **DR-026 is DORMANT across both extension sets** *(measured 2026-08-24)*: `ads_template_id` NULL on all 2,358 page rows, `page_purpose` only ever `seo_organic`/`utility`, `ad_active` false on all 22,710 keyword rows, `ad_priority_tier` `'none'` on all 22,710. All 12 columns exist and are correct; none carries an ad landing page. Re-measure with `select count(*) from seo_x_ads_keywords_contextual_master where ad_active`.
+
 ### 12.1 `seo_website_page_master` extensions (already detailed in §5.1 "Ads LP track" subsection)
 
-6 columns: `page_purpose`, `ads_template_id`, `index_directive`, `conversion_event_primary`, `conversion_event_secondary[]`, `campaign_id` (Phase 0 stub).
+6 columns: `page_purpose`, `ads_template_id`, `index_directive`, `conversion_event_primary`, `conversion_event_secondary[]`, `campaign_id` (Phase 0 stub). *(all 6 confirmed live 2026-08-24)*
 
 ### 12.2 `seo_x_ads_keywords_contextual_master` extensions (already detailed in §6.1 "DR-026 Ads track")
 
-6 columns: `seo_active`, `ad_active`, `ad_intent_score`, `ad_match_type_preferred`, `ad_landing_page_fp`, `ad_priority_tier`.
+6 columns: `seo_active`, `ad_active`, `ad_intent_score`, `ad_match_type_preferred`, `ad_landing_page_fp`, `ad_priority_tier`. *(all 6 confirmed live 2026-08-24)*
 
 ### 12.3 Future: `seo_campaigns` Universal Master Table (Phase 1, DR-027 — NOT IN v1.18)
 
@@ -1561,11 +1626,11 @@ Architecture sketch reserved for DR-027 lock. Stub column `seo_website_page_mast
 > **Purpose:** Canonical store for image metadata + R2 location + PDPA consent state. One row per image across all brands.
 > **Sync:** N↔S (Notion master `🖼️ Media Library`, Supabase mirror via n8n; binaries pushed to R2 during sync)
 > **PK:** `id uuid` (DEFAULT `gen_random_uuid()`).
-> **Volume:** 100s–10000s per brand at maturity (every page-rendered image registered).
+> **Volume:** 100s–10000s per brand at maturity — 🔴 **0 rows**, measured 2026-08-24. The table exists (37 columns, confirmed live) but no image has ever been registered, so the PDPA consent gate, the consent-expiry cron and the R2 fields below have nothing to act on. *(corrected 2026-08-24 against live schema)*
 > **Bible:** §18.1.2 row 14 · §18.1.3 parity notes · DR-035 (R2 path) · DR-038 (this table)
 > **Brand pattern:** Family-B operational (per DR-037 ruling) — `brand_id uuid NOT NULL` FK with `ON DELETE CASCADE`, NOT `brand_scope[]`. Per-brand operational data, not knowledge-graph entity.
 
-#### Columns (37)
+#### Columns (37) *(confirmed 2026-08-24 against live schema — count and every column name below match the live table)*
 
 **Identity (DR-008 Two-Column, 3):**
 - `id uuid` PK, DEFAULT `gen_random_uuid()`
@@ -1687,7 +1752,7 @@ CREATE EXTENSION IF NOT EXISTS vector;
 
 | Extension | Used by |
 |---|---|
-| `uuid-ossp` | All tables with UUID PK (all 40 base tables) |
+| `uuid-ossp` | All tables with UUID PK (all 43 EYWA base tables) *(corrected 2026-08-24 — the doc's own total is 43, not 40)* |
 | `pgcrypto` | DR-008 fingerprint generators (`gen_random_uuid` → ULID16) |
 | `pg_trgm` | EUG (Entity Uniqueness Guard) v2.0; fuzzy matching in dedupe scripts |
 | `unaccent` | DR-010 `brand_slug` normalization; DR-008 display_name generation |
@@ -1716,31 +1781,36 @@ Every fingerprinted table has two columns:
 | `seo_branches` | `brch_` | (auto) | `brch_...` |
 | `seo_authors_reviewers` | `auth_` | (auto) | `auth_...` |
 | `seo_doctor_assignments` | `docasg_` | (auto) | `docasg_...` |
-| `seo_topic_cluster_master` | `tcls_` | (auto) | `tcls_...` |
-| `seo_citations` | `cite_` | (auto) | `cite_...` |
-| `seo_page_citations` | `pcit_` | (auto) | `pcit_...` |
-| `seo_entity_relationships` | `edge_` | (auto) | `edge_...` |
-| `seo_editorial_reviews` | `erev_` | (auto) | `erev_...` |
-| `seo_page_internal_links` | `plnk_` | (auto) | `plnk_...` |
-| `seo_reviews` | `rev_` | (auto) | `rev_...` |
-| `seo_directory_listings` | `dirlist_` | (auto) | `dirlist_...` |
-| `seo_gbp_posts` | `gbppost_` | (auto) | `gbppost_...` |
-| `seo_brand_mentions` | `bmen_` | (auto) | `bmen_...` |
-| `seo_llm_citations` | `llmc_` | (auto) | `llmc_...` |
-| `seo_llm_query_simulations` | `llmq_` | (auto) | `llmq_...` |
-| `seo_programmatic_templates` | `tmpl_` | (auto) | `tmpl_...` |
-| `seo_x_voice_search` | `vsrch_` | (auto) | `vsrch_...` |
+| `seo_topic_cluster_master` | `clst_` ⚠️ | (auto) | `clst_FDD80BDCE00946A0` *(corrected 2026-08-24 against live data — the doc said `tcls_`)* |
+| `seo_citations` | `cite_` | (auto) | `cite_005DB7BA4E864B7B` ✅ verified live 2026-08-24 |
+| ~~`seo_page_citations`~~ | 🔴 **none** | — | 🔴 *(corrected 2026-08-24 against live schema — **this table has no `fingerprint` or `fingerprint_display_name` column at all**; a `pcit_` prefix does not exist. It is the one junction that never received DR-008 two-column identity. Join on `(page_fp, citation_fp)` — see §4.4.)* |
+| `seo_entity_relationships` | `erel_` ⚠️ | (auto) | `erel_27CFB90655A84B87` *(corrected 2026-08-24 against live data — the doc said `edge_`)* |
+| `seo_editorial_reviews` | `edrv_` ⚠️ | (auto) | `edrv_25C411303ED44224` *(corrected 2026-08-24 against live data — the doc said `erev_`)* |
+| `seo_page_internal_links` | `pil_` ⚠️ | (auto) | `pil_3AF0672CF8924DD7` *(corrected 2026-08-24 against live data — the doc said `plnk_`)* |
+| `seo_payer_partners` | `payp_` | (auto) | `payp_39F7418781F34DD9` ✅ verified live 2026-08-24 |
+| `seo_reviews` | `rev_` | (auto) | `rev_...` — ⚠️ unverified: table is empty, no live fingerprint to read |
+| `seo_directory_listings` | `dirlist_` | (auto) | `dirlist_...` — ⚠️ unverified: table is empty |
+| `seo_gbp_posts` | `gbppost_` | (auto) | `gbppost_...` — ⚠️ unverified: table is empty |
+| `seo_brand_mentions` | `bmen_` | (auto) | `bmen_...` — ⚠️ unverified: table is empty |
+| `seo_llm_citations` | `llmc_` | (auto) | `llmc_...` — ⚠️ unverified: table is empty |
+| `seo_llm_query_simulations` | `llmq_` | (auto) | `llmq_...` — ⚠️ unverified: table is empty |
+| `seo_programmatic_templates` | `tmpl_` | (auto) | `tmpl_0928802692DD4B54` ✅ verified live 2026-08-24 |
+| `seo_x_voice_search` | `vsrch_` | (auto) | `vsrch_...` — ⚠️ unverified: table is empty |
+
+> *(added 2026-08-24)* Prefixes marked ✅ were read from live rows. The four ⚠️ corrections above were all cases where the documented prefix appears in **no** live row — four of the six populated satellite tables had the wrong prefix on file. The remaining `⚠️ unverified` rows sit on empty tables: the prefix is whatever `fn_set_fingerprint_generic` was given at creation, which PostgREST cannot show. `seo_local_rankings` and `seo_entity_embeddings` also have no fingerprint columns and never appear in this registry, correctly.
+>
+> ⚠️ *(added 2026-08-24)* **Three tables are not single-prefix — do not build a CHECK regex from this table alone.** Live: `seo_entity_relationships` = `erel_` ×1,084 **+ `erl_` ×5**; `seo_editorial_reviews` = `edrv_` ×2,048 **+ `rev_` ×47**; `seo_page_internal_links` = `pil_` ×16,481 **+ `lnk_` ×83**. The minority prefixes are legacy rows from before the generic trigger was standardized; an anchored `^erel_` / `^edrv_` / `^pil_` validator rejects 135 rows that are already in the database. `brands`, `seo_branches`, `seo_authors_reviewers`, `seo_doctor_assignments`, `seo_entity_graph`, `seo_website_page_master`, `seo_citations`, `seo_payer_partners` and `seo_programmatic_templates` are uniform across every live row.
 
 ### Display Name Formulas
 
 | Table | Display Name Pattern |
 |---|---|
-| `brands` | `{fp_last_6}::{brand_slug}` |
-| `seo_brand_centers` | `{fp_last_6}::{brand_id}::{center_slug}` |
-| `seo_entity_graph` | `{fp_last_6}::{entity_slug}` |
-| `seo_website_page_master` | `{fp_last_6}::{brand_slug}::{slug}` |
-| `seo_branches` | `{fp_last_6}::{brand_slug}::{branch_slug}` |
-| `seo_doctor_assignments` | `{fp_last_6}::{brand_slug}::{author_name}::{role}` |
+| `brands` | `{fp_last_6}::{brand_slug}` ✅ verified live 2026-08-24 (`5F45CF::vth-biodent`) |
+| `seo_brand_centers` | `{fp_last_6}::{brand_id}::{center_slug}` — ⚠️ unverified: table is empty |
+| `seo_entity_graph` | `{fp_last_6}::{entity_slug}` ✅ verified live 2026-08-24 (`D24EAF::horizontal-bone-deficiency`) |
+| `seo_website_page_master` | `{fp_last_6}::{slug}` *(corrected 2026-08-24 against live data — live values read `A943E6::myofunction-tmj`; there is no `{brand_slug}` segment)* |
+| `seo_branches` | `{fp_last_6}::{branch_slug}` *(corrected 2026-08-24 against live data — live values read `AB47E2::lamlukka-khlong-2`; there is no `{brand_slug}` segment. 36 of 37 rows match exactly; the 37th, `3745F1::rangsit-klong-2`, is a stale display name left behind by a `branch_slug` rename.)* |
+| `seo_doctor_assignments` | `{fp_last_6}::{role_at_brand}` *(corrected 2026-08-24 against live data — live values read `6E40BA::medical_director`; all 262 rows are fingerprint + role only, with no `{brand_slug}` or `{author_name}` segment)* |
 | Others | `{fp_last_6}::{primary_text_key}` |
 
 ### Standard Trigger Triplet (DR-008)
@@ -1906,7 +1976,7 @@ EUG v2.0 deferred to a follow-up release. Current state (v1.18):
   - Surface candidates to operator review queue
   - Auto-block if exact match (cosine < 0.02 + trigram > 0.95)
 
-Tables ready: `seo_entity_embeddings` (9 cols, HNSW index deferred).
+Tables ready: `seo_entity_embeddings` (9 cols, HNSW index deferred) — **684 rows against 732 entities as of 2026-08-24**, so the embeddings half of the v2.0 plan is effectively populated and only the index + the guard logic are missing. *(corrected 2026-08-24 against live data — this appendix was written when the table was empty.)* Two duplicate-detection views already exist and are not mentioned anywhere in this document: `v_entity_near_duplicates` (trigram) and `v_entity_semantic_duplicates` (embedding), plus `v_keyword_near_duplicates` and `v_page_title_near_duplicates`.
 DR ref: DR-011 (EUG Two-Wave Approach v1.2).
 
 ---
@@ -2006,11 +2076,11 @@ Recent migration waves applied to live DB (verified via `supabase_migrations.sch
 | 11 | `seo_editorial_reviews` | ✍️ | Editorial Reviews | `eed92b9e-f0f0-4b70-8380-9797dd438808` | `37bbe9c6-bf3c-8157-8a50-c2523930dddf` |
 | 12 | `seo_page_internal_links` | 🔗 | Page Internal Links | `553c5000-84e1-429d-8715-262892649ab9` | `37bbe9c6-bf3c-81c8-9740-dccb0f432c95` |
 | 13 | `seo_x_ads_keywords_contextual_master` | 🔑 | Keyword Hub | `325dc4e2-1689-80b4-ad0b-ef69e2499d0b` | `37bbe9c6-bf3c-81cf-9ad3-c98c48c70cae` |
-| 14 🆕 | `seo_media_assets` ⚠️ **pending DR** | 🖼️ | Media Library (multi-brand DAM) | `656514e1-274f-4ea5-8aab-576d66858a27` | `37cbe9c6-bf3c-8130-b636-d7e1c0cf874a` |
+| 14 🆕 | `seo_media_assets` | 🖼️ | Media Library (multi-brand DAM) | `656514e1-274f-4ea5-8aab-576d66858a27` | `37cbe9c6-bf3c-8130-b636-d7e1c0cf874a` |
 
 Env-var form: `n8n-flows/notion_db_ids.the_gifted.env.template`.
 
-> ⚠️ **Row 14 — Supabase target table NOT YET SHIPPED.** Media Library was canonicalized as federation-canonical N↔S DB #14 per Bible v3.31 (operator clarification 2026-06-11). The planned Supabase mirror table `seo_media_assets` is referenced in the n8n pipeline (Notion sync fields: `Supabase ID`, `Synced at`) but **does not yet exist in the public schema** — verified 2026-06-11. **Pending action:** create central DR (promote from SmileScape's SS-DR-015/016) canonicalizing `seo_media_assets` table → Schema v1.23+ migration.
+> ✅ **Row 14 — the Supabase table SHIPPED** *(corrected 2026-08-24 against live schema)*. `seo_media_assets` exists in `public` with 37 columns (§13.1), built by migration `eywa_w11_08` on 2026-06-11 — the same day the ⚠️ note below was written, which is why the two disagreed. The note's "does not yet exist in the public schema — verified 2026-06-11" and its "pending action: create central DR" are **both discharged**: DR-038 is the central DR. What remains open is data, not schema: the table holds **0 rows**, so the Notion mirror has never synced an asset.
 
 ### J.3 Column-level property naming conventions
 
@@ -2050,7 +2120,7 @@ The Gifted Synapse (greenfield canonical mirror, 2026-06-11+):
 
 | # | Item | VT Intelligence | The Gifted | Live Supabase | Recommended Fix |
 |---|---|---|---|---|---|
-| 1 | `seo_entity_graph.entity_subtype` enum | `framework / axis / health-belief` ⚠️ | `framework / axis / general` ✅ | `chk_concept_subtype` allows `framework / axis / general` | Sync code maps `health-belief` → `general`; OR migrate vt_intelligence rows + ALTER select options |
+| 1 | `seo_entity_graph.entity_subtype` enum | `framework / axis / health-belief` ⚠️ | `framework / axis / general` ✅ | `chk_concept_subtype` allows `framework / axis / general` — *(confirmed 2026-08-24; §4.1 has been corrected to match. The column is NULL in all 732 rows, so no row needs migrating today)* | Sync code maps `health-belief` → `general`; OR migrate vt_intelligence rows + ALTER select options |
 | 2 | Brand DB `Workspace` select | `vt_intelligence / other` | `vt_intelligence / the_gifted_synapse / other` | n/a (jsonb-only) | Add `the_gifted_synapse` to vt_intelligence Brand DB via `API-update-a-data-source` |
 | 3 | Entity Graph drift-detection symmetry | has `Supabase Synced At` (date) + `Notion → Supabase Needs Sync` (formula) | missing both | n/a (computed in Notion) | Add equivalent date + formula to the_gifted Entity Graph |
 
@@ -2089,6 +2159,8 @@ When onboarding new team workspaces per Bible §18.7.8, the connection step must
 **END OF SCHEMA OVERVIEW v1.19**
 
 > Generated 2026-05-30 from full audit against live Supabase project `lffcbeszjqzioobqfdav` (v1.18); v1.19 delta (DR-033, W11.4) verified live 2026-06-02. Cross-referenced against DECISION_RECORDS.md (DR-001 through DR-033), Bible v3.19, and Handover v1.18.
+>
+> **Column-level re-verification 2026-08-24** against the same live project via the PostgREST OpenAPI schema + live row queries: all 43 EYWA tables confirmed present, 18 documented column counts corrected, 4 fingerprint prefixes corrected, and ~25 allowed-value lists replaced with the values actually in the data. Corrections carry an inline dated marker. **Not covered:** CHECK constraint bodies, trigger existence, index lists, RLS policies and partition layout — PostgREST cannot read them, so every such statement in this document still dates from 2026-05-30.
 >
 > For schema corrections: file an issue in the spec repo or amend via DR-NNN process. Direct edits to this document without a DR are discouraged (the doc is meant to mirror live DB; live DB is the source of truth, this doc is the human-readable index).
 

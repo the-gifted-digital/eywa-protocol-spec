@@ -23,8 +23,8 @@
 |---|---|---|
 | **สเปกกลาง** | ฉบับนี้ (กระบวนการ + กติกา + สัญญาของเกต) | `eywa-protocol-spec/` |
 | | `Keyword_Assignment_SOP_v1_0.md` — B-rule §4 · intent matrix §5 | `eywa-protocol-spec/` |
-| | `Citation_Pool_SOP_v1_0.md` — G1–G11 + locator round-trip | `eywa-protocol-spec/` |
-| | `Content_Templates_EYWA_v1_0.md` — T1–T22 | `eywa-protocol-spec/` |
+| | `Citation_Pool_SOP_v1_0.md` — G1–G15 + locator round-trip *(corrected 2026-08-24: G12–G15 มีจริงและรันใน `run-citation-qa-gates.py`)* | `eywa-protocol-spec/` |
+| | `Content_Templates_EYWA_v1_0.md` — T1–T19 + T2a–T2e + T6a · โค้ดเทมเพลตตรวจกับทะเบียนของแบรนด์ ไม่ใช่รายการ T-code กลาง (DR-057 §5) *(corrected 2026-08-24 against live schema)* | `eywa-protocol-spec/` |
 | **ของแบรนด์** | `docs/CONTENT-WRITING-SOP.md` — ขั้นตอนพร้อมคิวรีจริงของแบรนด์ | `<brand>/docs/` |
 | | `docs/template-block-standards.md` — §A สภาพข้อมูล · §B block ต่อ template · exemplar | `<brand>/docs/` |
 | **เครื่องมือ** | `brief` · `check:keywords` · `check:density` · `scan:headings` · `check:links` · `gen:links` · `stamp:live` | `<brand>/web/scripts/` |
@@ -68,7 +68,7 @@ B10 (ห้ามคีย์เวิร์ดฟอรัมเป็น prima
 
 ### P3 · `is not null` ≠ มีข้อมูล
 
-`related_searches` เป็น `not null` ครบ 1,509 แถว **แต่ว่างทั้งหมด** เอกสารเวอร์ชันแรกเช็คแค่ null แล้วเขียนว่า "มีครบ" ส่งคนเขียนไปหาคอลัมน์ว่าง
+`seo_x_ads_keyword_serp_competitors.related_searches` ฝั่ง VTH เป็น `not null` ครบ 1,509 แถว **แต่ว่างทั้งหมด** เอกสารเวอร์ชันแรกเช็คแค่ null แล้วเขียนว่า "มีครบ" ส่งคนเขียนไปหาคอลัมน์ว่าง *(corrected 2026-08-24 against live schema: คอลัมน์นี้ไม่ได้อยู่บน page master · ยังจริงอยู่ — VTH BioDent 1,509 แถว ว่าง 1,509 · ทั้งตาราง 13,666 แถว ไม่ว่างแค่ 522)*
 
 ```sql
 btrim(col::text) not in ('','[]','{}','null','""')
@@ -78,7 +78,7 @@ btrim(col::text) not in ('','[]','{}','null','""')
 
 ### P4 · ตัวเลขในเอกสารเน่า คิวรีคือความจริง
 
-`competitors_content_json` ขยับ **729 → 1,044 ภายในวันเดียว** เพราะ ETL ยังโหลดอยู่ เอกสารที่ระบุจำนวนแถวจะผิดเสมอในที่สุด
+`competitors_content_json` ขยับ **729 → 1,044 ภายในวันเดียว** เพราะ ETL ยังโหลดอยู่ เอกสารที่ระบุจำนวนแถวจะผิดเสมอในที่สุด — เลขคู่นั้นเป็น**สไลซ์ของ VTH** (จาก 1,509 แถว) ณ 2026-08-24 กลายเป็น **1,504 จาก 1,509** ส่วนทั้งตารางคือ **13,644 จาก 13,666** ยิงเอาเองด้วย `select count(*) from seo_x_ads_keyword_serp_competitors where competitors_content_json is not null` (เติม `and brand='VTH BioDent'` ถ้าจะเอาสไลซ์แบรนด์) อย่าอ่านตัวเลขนี้ *(corrected 2026-08-24 against live schema · แก้รอบสอง: รอบแรกเอาเลขทั้งตารางมาสวมเป็น "ตัวเลขเดียวกัน" กับเลขสไลซ์แบรนด์)*
 
 > เขียนตัวเลขได้ **แต่ต้องมีวันที่กำกับและคิวรีอยู่ข้าง ๆ** และต้องบอกว่าให้ยิงคิวรีแทนการอ่านตัวเลข
 
@@ -123,6 +123,8 @@ join seo_website_page_master p on p.page_fingerprint = l.to_page_fp
 where l.anchor_text <> p.seo_title;     -- ต้องได้ 0
 ```
 
+🔴 **เกตนี้ยังยิงไม่ออก** — คิวรีข้างบนตามที่เขียน วัด 2026-08-24 ได้ **9,754 จาก 16,564 แถว** (deezy 5,794 · smilescape 2,804 · vth 1,156) เพราะ `seo_page_internal_links.anchor_variant_type` เป็นคำศัพท์ 4 ค่าที่**ตั้งใจ**ให้ anchor ต่างจาก title (`partial` 9,402 · `topical` 4,430 · `branded` 2,066 · `exact` 524 · NULL 142) — ขาดคำตัดสินของ operator ว่าเกตนี้ครอบลิงก์ชุดไหน (ต่อให้จำกัดที่ `exact` ก็ยังไม่ตรง 419 จาก 524 แถว) · และ `<>` เองยังนับไม่ครบซ้ำอีกชั้น: deezy มี **95 แถวที่ `seo_title` เป็น NULL** ซึ่ง `<>` คืน NULL แล้วหล่นออกจากผลเงียบ ๆ — เขียนเป็น `is distinct from` ได้ **9,849** *(corrected 2026-08-24 against live schema · แก้รอบสอง: รอบแรกลง 9,849 ให้คิวรีที่เขียนด้วย `<>` ซึ่งคืน 9,754)*
+
 ### P8 · แถวที่ขาด locator ตัวใดตัวหนึ่ง คือแถวที่จะถูกสร้างซ้ำ
 
 AAOMS position paper อยู่ในสระมาตลอด มี DOI แต่ `pubmed_pmid` เป็น null → คนที่ค้นด้วย PMID หาไม่เจอ **สร้างใหม่ซ้ำสองใบ** และใบนั้นทำ migration ล้มที่ unique constraint
@@ -166,6 +168,8 @@ alter table seo_website_page_master add constraint chk_page_status
 
 ยิง UPDATE ค่าผิดเข้าไปจริงหลังใส่ constraint เพื่อพิสูจน์ว่ามันกันได้ (P14) — อย่าอ่าน definition แล้วสรุป
 
+constraint นี้ **ใส่ไปแล้ว** — `chk_page_status` อยู่บน `seo_website_page_master.status` และโดเมนปิดจริง วัด 2026-08-24: 2,358 แถวมีแค่ `Planned` 1,513 · `Live` 742 · `Merged` 102 · `Dropped` 1 ไม่เหลือ `Published` สักแถว *(corrected 2026-08-24 against live schema)*
+
 ### P14 · เอกสารบอกกฎ ระบบบังคับอีกอย่าง — ต้องยิงของจริงถึงจะรู้
 
 P1 บอกว่ากฎต้องมีตัวบังคับ **P14 คืออีกด้านของเหรียญ: ตัวบังคับที่มีอยู่ อาจทำมากกว่าหรือน้อยกว่าที่เอกสารเขียนไว้**
@@ -190,6 +194,8 @@ P1 บอกว่ากฎต้องมีตัวบังคับ **P14 �
 | 2 | แถวที่รอดคือแถวที่มาจาก**แบรนด์ที่ไปไกลที่สุด** (`load_from`) — ไม่ใช่แถวที่มีหน้ามากกว่า |
 | 3 | slug ที่ปลดระวางเก็บไว้เป็น `aliases.merged_from` บนแถวที่รอด · แถวเดิม `status='merged'` **ห้ามลบ** |
 | 4 | แบรนด์ที่ตามหลังต้อง dedupe คลัสเตอร์ตัวเองกับแบรนด์ที่นำหน้า **ก่อน**เริ่มใช้ |
+
+🔴 **ข้อ 3 รันได้แค่ตารางเดียว** — `aliases.merged_from` (jsonb) + `status='merged'` มีจริงเฉพาะ `seo_topic_cluster_master` (merged 7 จาก 58 แถว) · `seo_entity_graph` ไม่มีคอลัมน์ `status` ต้องใช้ `entity_lifecycle='merged'` แทน (23 จาก 732 แถว) และ `aliases` ที่นั่นเป็น text ธรรมดา ไม่ใช่ jsonb · `seo_citations` ไม่มีทั้งสองคอลัมน์ — ยังไม่มีที่บันทึกการยุบเลย ข้อ 1/2 (`brand_scope` · `load_from`) รันได้ครบทั้งสามตาราง *(corrected 2026-08-24 against live schema)*
 
 🔴 **ตรวจข้อมูลบนแถวที่กำลังจะแพ้ก่อนเสมอ** VTH 2026-08-03: แถวที่ปลดระวางถือ `descriptions` ทั้ง en+th อยู่แถวเดียว ส่วนแถวที่จะรอดไม่มีเลย ยุบตรง ๆ = ทำลาย prose ชุดเดียวที่มีของหัวข้อนั้นแบบเงียบ ๆ ต้องย้ายมาก่อนปลดระวาง
 
@@ -281,4 +287,4 @@ target ที่ผ่าน gate ตอน assign ยัง**ใช้ไม่
 
 ---
 
-**References:** DR-045 · `Keyword_Assignment_SOP_v1_0.md` §4/§5 · `Citation_Pool_SOP_v1_0.md` G1–G11 · `Content_Templates_EYWA_v1_0.md` T1–T22 · reference implementation `eywa-vth-biodent/docs/` + `eywa-vth-biodent/web/scripts/`
+**References:** DR-045 · DR-057 · `Keyword_Assignment_SOP_v1_0.md` §4/§5 · `Citation_Pool_SOP_v1_0.md` G1–G15 · `Content_Templates_EYWA_v1_0.md` T1–T19 + T2a–T2e + T6a *(corrected 2026-08-24 against live schema)* · reference implementation `eywa-vth-biodent/docs/` + `eywa-vth-biodent/web/scripts/`

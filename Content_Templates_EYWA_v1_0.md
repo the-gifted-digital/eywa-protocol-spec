@@ -1,10 +1,10 @@
 # 📝 Content Templates — EYWA™ PROTOCOL
 
 > **Companion document to** EYWA Bible v3.19 + Schema Overview v1.15
-> **Universal Content Production Standards across 13 brands × 6 verticals**
+> **Universal Content Production Standards across 20 brand rows × 6 verticals** *(brand count corrected 2026-08-24 against live schema: `select count(*) from brands` = 20; only three of them — deezy-dental 869, vth-biodent 761, smile-scape-clinic 728 — carry page rows today. "6 verticals" is not recorded in any column and was left unverified.)*
 
 **Version:** v1.9 (2026-06-13 — ➕ §4.6 Content Tension Model (answer-first ↔ hook) + §4.7 Block Data-Readiness & Fallback Framework per DR-039; ➕ examples/T5-service-SKELETON.md; examples/T1 §13–16 trust-footer order fix. Additive — T1-T22 + T-ADS-X block taxonomy structurally unchanged. v1.8 DR-034 + v1.7 DR-029 remain in force.)
-**Status:** **LOCKED 2026-05-12** for T1-T22 (Universal Content Template Standard per DR-020); T-ADS-X (DR-026) Proposed status retained until 2026-06-21 lock
+**Status:** **LOCKED 2026-05-12** for the SEO template family of §3.1–§3.3 (Universal Content Template Standard per DR-020) — *the "T1-T22" shorthand is inaccurate: this document defines T1–T19 plus T2a–T2e and T6a, and has never defined T20/T21/T22 (corrected 2026-08-24)*. Codes are validated per-brand, not against this list — see the registry note in §3. T-ADS-X (DR-026) is **still Proposed and now DORMANT** — the 2026-06-21 lock target passed without a lock and no row uses the track *(status corrected 2026-08-24 against live schema; DR-057 §9)*.
 **Companion to:** Bible v3.24 + Schema Overview v1.20 + DECISION_RECORDS v1.25
 **Format:** Append-only with semantic versioning (v1.0 → v1.5 backward compatible)
 
@@ -130,7 +130,7 @@ Added concepts from operator's pre-spec OSA Master Example doc (cross-checked, n
 **Lock มาตรฐาน + เปิดช่อง tweak ตาม content type** — ใช้ร่วมกับ Bible (philosophy) และ Schema (database).
 
 **Scope:**
-- 25 content type templates (ครอบคลุม 6 verticals × 13 brands)
+- 25 content type templates — a REFERENCE vocabulary; per DR-057 each brand validates against its own registry, not this list (§3) *(corrected 2026-08-24)*
 - ~25 universal section building blocks (lego architecture)
 - EEAT requirement matrix (locked)
 - Customization hooks per brand
@@ -157,7 +157,7 @@ Added concepts from operator's pre-spec OSA Master Example doc (cross-checked, n
                           │
 ┌─────────────────────────────────────────────────────────────┐
 │ Layer 2: Content Type Templates (25 templates)              │
-│ - Core Universal (12) | T2 Variants (5) | Specialized (7)   │
+│ - Core Universal (13) | T2 Variants (5) | Specialized (7)   │
 │ - Define: required/recommended/optional blocks per type     │
 └─────────────────────────────────────────────────────────────┘
                           ▲
@@ -325,7 +325,9 @@ B02_quick_facts_table:
   reference_doc_includes:
     - "All 25 templates with concrete render examples (real EYWA brand context)"
     - "Universal Icon Taxonomy (35+ icons mapped to use cases)"
-    - "Group A (16 templates with Quick Facts) / B (4 alternative blocks) / C (3 skip)"
+    - "Group A (18 templates with Quick Facts) / B (4 alternative blocks) / C (3 skip)"
+      # corrected 2026-08-24: counted the headings in that file — Group A holds 18
+      # (T1,T2,T2a-e,T3,T4,T5,T6,T6a,T7,T12,T14,T15,T16,T17), and 18+4+3 = the 25 claimed
     - "Validation checklist per template"
     - "Status: Approved 2026-05-10 (operator review)"
 
@@ -716,6 +718,8 @@ editorial_marker_convention:
   numbering: "Sequential within page (Citable #1, #2, ...)"
   strip_on_publish: true (markers are editorial-only, not rendered)
   log_to: seo_citable_inventory table (future Phase 1G — derived from page_master content)
+  # 🔴 still not created — verified 2026-08-24 against live schema (228 tables, none by that name).
+  #    Citables are tracked only in the Part 2 Citation Map (§7.6) today.
   
   examples:
     - "📌 Citable #5 — 🟢 Pattern A: ผู้ป่วย OSA ที่ใช้ CPAP ลด AHI 80%..."
@@ -738,6 +742,8 @@ editorial_marker_convention:
 ### 2.9 Predicted Prompts Bank 🆕 v1.1
 
 **The off-render planning artifact** — questions we predict users will ask AI engines about this page's topic. Lives in seo_predicted_prompts table, NOT rendered on the page.
+
+> 🔴 **Neither `seo_predicted_prompts` nor `seo_ai_prompt_test_results` has been created** *(verified 2026-08-24 against live schema — 228 tables, neither present; they were deferred to Schema v1.11 and never shipped)*. The DDL below is a proposal, not a description of the database. Every step of the `ai_testing_pipeline` that reads or writes them is 🔴 unrunnable until they exist.
 
 ```yaml
 B26_predicted_prompts_bank:
@@ -977,14 +983,51 @@ cross_brand_quality_check:
 ## 3. Layer 2 — Content Type Templates (25)
 
 > **📌 `layer_mapping:` → `page_category:` — rewritten 2026-08-23; the page master has no `layer` column (see the reconciliation report).**
-> Every template header below now names **`page_master.page_category`** values instead of L1–L7. Match them as `coalesce(page_category, page_type)` — `page_category` is backfilled on VTH only, so a predicate written in `page_category` alone returns zero rows on Deezy and Smile-Scape and passes vacuously.
-> **Confidence:** exact for `condition_pillar` (was L4) and `evidence_case` (was L7); **approximate** for every other value — the mapping keys on what the content IS, and `sitemap_section` (which zone it lives in) disagrees on a real share of rows. Where a template's old L-number has no column value at all, the header says so inline.
+> Every template header below now names **`page_master.page_category`** values instead of L1–L7. Match them as `coalesce(page_category, page_type)` — the column is backfilled on all three brands, but not to completion: deezy-dental 776/869, smile-scape-clinic 707/728, vth-biodent 686/761 non-NULL *(corrected 2026-08-24 against live schema — the earlier "backfilled on VTH only, returns zero rows on Deezy and Smile-Scape" no longer holds; the `coalesce` is still required, for the 189 NULL rows)*. Live count: `select brand_id, count(page_category), count(*) from seo_website_page_master group by 1`.
+> **Confidence:** exact for `condition_pillar` (was L4) and `evidence_case` (was L7 — all 135 `evidence_case` rows sit in `sitemap_section` '7', measured 2026-08-24); **approximate** for every other value — the mapping keys on what the content IS, and `sitemap_section` (which zone it lives in) disagrees on a real share of rows. Where a template's old L-number has no column value at all, the header says so inline.
 > **🔴 Gone entirely:** old L6 (protocol / aftercare / how-to). No value of `page_category`, `node_tier` or `sitemap_section` isolates it — those pages sit inside `service_page` and `knowledge_article`, indistinguishable. T17 and the §4.5.3 rules that depended on it are marked accordingly. (T10/T18's "L6 Local" used the number in a different, local-pages sense — not this one.)
 > **Length targets:** the numeric range in each header IS the target. Bible §9.8's table is keyed by layer, so its per-layer key no longer resolves; the `(Bible §9.8)` citations are kept as provenance only.
 > **Tier words:** "pillar" / "supporting" in the old values were `node_tier` (how important), never layer (what it is).
-> **T-ADS-1..5** never carried this field and still don't — §3.4 keys them on `page_purpose: ads_lp` instead.
+> **T-ADS-1..5** never carried this field and still don't — §3.4 keys them on `page_purpose` instead. *(corrected 2026-08-24 against live schema: the value is `ads_landing`, not `ads_lp` — see §3.4.)*
 
-### 3.1 Core Universal Templates (12)
+> **📌 T-codes are a PER-BRAND REGISTRY, not a global list — DR-057 (2026-08-23), `content_format` column comment.** *(added 2026-08-24 against live schema)*
+> Each brand designs its own templates, so the vocabularies may legitimately differ and diverge completely. **Validation is membership in that brand's own registry, never membership in the list below.** What is forbidden is a code with no definition anywhere: every code a brand writes into `seo_website_page_master.content_format` must resolve in that brand's own content-template document. Any code→category or code→schema map must be keyed by **brand and code**, never by code alone.
+> This document is therefore the **shape** of a registry plus the EYWA reference vocabulary. Two consequences: a template defined here that a brand does not use is not an error, and a code a brand uses that is not defined here is a gap **in that brand's registry**, not a code to be added here by default.
+>
+> **Live usage — `select brand_id, content_format, count(*) from seo_website_page_master group by 1,2` (measured 2026-08-24, 2,358 rows: deezy-dental 869 · smile-scape-clinic 728 · vth-biodent 761). Re-run it rather than trusting these numbers.**
+>
+> | Code | deezy-dental | smile-scape-clinic | vth-biodent | total |
+> |------|---:|---:|---:|---:|
+> | T1 | 90 | 108 | 72 | 270 |
+> | T2 | — | 33 | 19 | 52 |
+> | T2b | 151 | — | — | 151 |
+> | T4 | 21 | 66 | 71 | 158 |
+> | T5 | 18 | 213 | 166 | 397 |
+> | T6 | 101 | 150 | 354 | 605 |
+> | T6a | 38 | — | — | 38 |
+> | T7 | 18 | — | — | 18 |
+> | T8 | 55 | 38 | 31 | 124 |
+> | T8g | 11 | — | — | 11 |
+> | T9 | 8 | 7 | 1 | 16 |
+> | T10 | 99 | 2 | 10 | 111 |
+> | T11 | 21 | 24 | — | 45 |
+> | T12 | 57 | 34 | — | 91 |
+> | T12i | 1 | — | — | 1 |
+> | T13 | 13 | 16 | — | 29 |
+> | T14 | 1 | — | — | 1 |
+> | T15 | 7 | — | — | 7 |
+> | T16 | 26 | 27 | — | 53 |
+> | T17 | 17 | — | — | 17 |
+> | T18 | 99 | 10 | 21 | 130 |
+> | T19 | 12 | — | — | 12 |
+> | *(NULL)* | 5 | — | 16 | 21 |
+>
+> **⚪ Defined below, used by no brand:** `T3`, `T2a`, `T2c`, `T2d`, `T2e` — zero rows across all 2,358, measured 2026-08-24. They stay in this document as reference definitions (T2a/T2c/T2d/T2e are aesthetic / wellness / physio / genomic verticals no brand with page rows has launched yet); a brand adopting one copies it into its own registry. Do not write a validation rule that expects them.
+> **⚪ Also dormant:** `T-ADS-1..5` — `ads_template_id` is NULL on all 2,358 rows and no row carries `page_purpose = 'ads_landing'` (measured 2026-08-24). DR-026 is dormant per DR-057 §9.
+> **🔴 Used by a brand, undefined here:** `T8g` (deezy-dental, 11 rows) and `T12i` (deezy-dental, 1 row). Under the ruling these belong in deezy's own registry, so this document does not define them — but nothing in this repo points at that registry, so the "every code has a definition" rule cannot currently be checked for deezy.
+
+### 3.1 Core Universal Templates (13) <!-- corrected 2026-08-24: 13 headers follow (T1–T6, T6a, T7–T12); 13 + 5 (§3.2) + 7 (§3.3) = the 25 in the section title -->
+
 
 #### T1 — Medical Condition (โรค/ภาวะ)
 
@@ -1036,7 +1079,7 @@ reference_implementation: |
 purpose: "Clinical procedure page — generic, applies across verticals"
 schema_org_type: MedicalProcedure
 secondary_schemas: [Service, Article]
-page_category: service_page (primary) | condition_pillar  # rewritten 2026-08-23 (was L2 money | L4 pillar) — approximate; §3 note
+page_category: procedure_pillar  # corrected 2026-08-24 against live schema: all 52 T2 rows carry procedure_pillar, none carries service_page or condition_pillar (was "service_page (primary) | condition_pillar", rewritten 2026-08-23 from L2|L4); §3 note
 length_target: 2,000-3,500 words
 eeat_required: YES
 
@@ -1065,7 +1108,9 @@ recommended_blocks:
 allowed_tweaks: "Pricing block can defer to T13 link if pricing is complex"
 ```
 
-#### T3 — Diagnostic Procedure / Test
+#### T3 — Diagnostic Procedure / Test ⚪ no brand uses this code
+
+> ⚪ **Unused — zero `content_format = 'T3'` rows across all 2,358 pages, three brands** *(measured 2026-08-24 against live schema)*. Diagnostic pages that exist are filed as T2/T2b/T4 instead. Reference definition only; do not write a rule that expects it. Re-check with `select count(*) from seo_website_page_master where content_format = 'T3'`.
 
 ```yaml
 purpose: "Test/screening page — Sleep Study, ABI, CBCT, hormone panel, etc."
@@ -1092,7 +1137,7 @@ allowed_tweaks: "B15 simplified or omitted if no aftercare needed (e.g., simple 
 purpose: "Equipment/technology page — Fotona, Waterlase, EMFACE, CPAP machines"
 schema_org_type: MedicalDevice
 secondary_schemas: [Product, Article]
-page_category: technology_page  # rewritten 2026-08-23 (was L3) — approximate: category and sitemap_section disagree on ~26% of VTH device pages; §3 note
+page_category: technology_page  # rewritten 2026-08-23 (was L3) — approximate: category and sitemap_section disagree on 22 of 71 VTH T4 rows (31%, corrected 2026-08-24 against live schema — was '~26%'); §3 note
 length_target: 1,500-2,500 words
 eeat_required: YES (device claims need clinical reviewer)
 
@@ -1220,7 +1265,7 @@ example_pages:
 purpose: "Head-to-head — must take stance, not neutral list"
 schema_org_type: Article
 secondary_schemas: [FAQPage]
-page_category: condition_pillar | knowledge_article  # rewritten 2026-08-23 (was L4|L5) — knowledge_article approximate; §3 note
+page_category: knowledge_article  # corrected 2026-08-24 against live schema: 12 of 18 T7 rows carry knowledge_article and the other 6 are NULL; condition_pillar has zero rows (was "condition_pillar | knowledge_article"); §3 note
 length_target: 1,500-2,500 words
 eeat_required: YES (recommendation = health choice)
 
@@ -1362,7 +1407,7 @@ allowed_tweaks: "EXTREMELY high — institutional pages are brand-voice driven"
 purpose: "Navigational hub — collects related sub-pages or anchor sections"
 schema_org_type: CollectionPage
 secondary_schemas: [FAQPage (if FAQ-style), DefinedTermSet (if glossary)]
-page_category: (unmapped — ⚠️ no page_category value denotes a navigational hub)  # rewritten 2026-08-23 (was "L3", but Bible L3 = technology_page, which a FAQ/glossary/topic hub is not); §3 note
+page_category: knowledge_article  # corrected 2026-08-24 against live schema: all 91 T12 rows carry knowledge_article — the "unmapped" note was wrong. The hub-ness is carried by page_role='hub' (derived from the tree), NOT by page_category, so a rule that needs "is a hub" reads page_role; §3 note
 length_target: 1,500-2,500 words  # rewritten 2026-08-23 — literal target; Bible §9.8's per-layer key ("L3") no longer resolves
 eeat_required: REQUIRED if individual hub items are YMYL
 
@@ -1394,7 +1439,9 @@ allowed_tweaks: "Hub design varies — FAQ vs Glossary vs Topic each tweak block
 
 ### 3.2 T2 Vertical Variants (5)
 
-#### T2a — Aesthetic Procedure
+> ⚪ **Of the five, only T2b has rows** — deezy-dental 151. `T2a`, `T2c`, `T2d`, `T2e` are at zero across all 2,358 pages *(measured 2026-08-24 against live schema; `select content_format, count(*) from seo_website_page_master where content_format like 'T2%' group by 1`)*. They stay as reference definitions for the aesthetic / wellness / physio / genomic verticals; per DR-057 a brand adopting one copies it into its own registry. No validation rule should expect them.
+
+#### T2a — Aesthetic Procedure ⚪ no brand uses this code
 
 ```yaml
 purpose: "Cosmetic/aesthetic — Botox, fillers, EMFACE, NightLase, ortho cosmetic"
@@ -1417,13 +1464,15 @@ required_blocks:
     B17, B25, B18, B19, B22, B20, B21
 ```
 
-#### T2b — Dental Procedure
+#### T2b — Dental Procedure — deezy-dental registry only
+
+> ⚪ **151 rows on deezy-dental, zero on the other two brands** *(measured 2026-08-24 against live schema)*. This is DR-057's worked example of a legitimate per-brand divergence — smile-scape-clinic and vth-biodent file the same kind of page as T2.
 
 ```yaml
 purpose: "Dental-specific — implant, ortho, root canal, crown, extraction"
 schema_org_type: MedicalProcedure (DentalProcedure subtype)
 secondary_schemas: [Service]
-page_category: service_page | condition_pillar  # rewritten 2026-08-23 (was L2|L4) — approximate; §3 note
+page_category: service_page | procedure_pillar  # corrected 2026-08-24 against live schema: 118 service_page + 24 procedure_pillar + 9 NULL = 151; condition_pillar has zero rows (was "service_page | condition_pillar"); §3 note
 length_target: 2,500-4,000 words (often complex multi-visit)
 eeat_required: YES
 
@@ -1439,7 +1488,7 @@ required_blocks:
     B17, B25, B18, B19, B22, B20, B21
 ```
 
-#### T2c — Wellness Program / Multi-Session Protocol
+#### T2c — Wellness Program / Multi-Session Protocol ⚪ no brand uses this code
 
 ```yaml
 purpose: "Multi-session — Men's Vitality programs, Detox, Hair regrowth"
@@ -1461,7 +1510,7 @@ required_blocks:
     B17, B19, B25, B18, B22, B20, B21
 ```
 
-#### T2d — Physiotherapy / Rehab Program
+#### T2d — Physiotherapy / Rehab Program ⚪ no brand uses this code
 
 ```yaml
 purpose: "Recovery/rehab — PRP knee, post-stroke rehab, Cerebrolysin program"
@@ -1483,7 +1532,7 @@ required_blocks:
     B25, B18, B22, B20, B21
 ```
 
-#### T2e — Genomic / Precision Test
+#### T2e — Genomic / Precision Test ⚪ no brand uses this code
 
 ```yaml
 purpose: "DNA-based test — Genowell signature"
@@ -1513,7 +1562,7 @@ required_blocks:
 purpose: "Pure price-list — ราคาครอบ/ขูดหินปูน/ฟอกฟัน list-style"
 schema_org_type: WebPage
 secondary_schemas: [PriceSpecification (multiple), Service]
-page_category: service_page  # rewritten 2026-08-23 (was "L4 intent capture") — ⚠️ approximate: no page_category value denotes a price-list page; §3 note
+page_category: service_page  # rewritten 2026-08-23 (was "L4 intent capture") — ⚠️ approximate: no page_category value denotes a price-list page. Live 2026-08-24: 14 of 29 T13 rows carry service_page, 13 are NULL, 1 condition_pillar, 1 technology_page; §3 note
 length_target: 800-1,500 words
 eeat_required: NOT REQUIRED if pure prices, REQUIRED if explains procedure
 
@@ -1537,7 +1586,7 @@ required_blocks:
 purpose: "Date-sensitive — Clinical Updates, viral trends, research news"
 schema_org_type: NewsArticle
 secondary_schemas: [Article]
-page_category: knowledge_article + node_tier C/D  # rewritten 2026-08-23 (was "L5 supporting" — "supporting" is a node_tier word, not a category) — approximate; §3 note
+page_category: knowledge_article + node_tier C/D  # rewritten 2026-08-23 (was "L5 supporting" — "supporting" is a node_tier word, not a category) — 🔴 unverifiable: the single live T14 row has page_category NULL (measured 2026-08-24), so nothing confirms or refutes this; §3 note
 length_target: 800-2,000 words (typically shorter)
 eeat_required: REQUIRED + dateModified critical
 
@@ -1565,7 +1614,7 @@ allowed_tweaks: "Should be retired/archived once no longer current — scheduled
 purpose: "Interactive — STOP-BANG, Epworth Scale, OSA risk quiz, oral health checker"
 schema_org_type: WebApplication (or Quiz custom type)
 secondary_schemas: [WebPage]
-page_category: (unmapped — ⚠️ no page_category value denotes an interactive tool)  # rewritten 2026-08-23 (was "L4 lead magnet"); §3 note
+page_category: knowledge_article  # corrected 2026-08-24 against live schema: all 7 T15 rows carry knowledge_article — the "unmapped" note was wrong, though the value still does not say "interactive tool"; §3 note
 length_target: 600-1,500 words supporting copy
 eeat_required: YES (clinical scoring → health guidance)
 
@@ -1610,7 +1659,7 @@ allowed_tweaks: "Brand-specific implementation — insurance varies by clinic ag
 purpose: "Post-op care, what to expect day 1-7, maintenance routines"
 schema_org_type: HowTo
 secondary_schemas: [MedicalTherapy]
-page_category: service_page OR knowledge_article  # rewritten 2026-08-23 (was "L4 supporting | L7 supporting")
+page_category: service_page OR knowledge_article  # rewritten 2026-08-23 (was "L4 supporting | L7 supporting"); live 2026-08-24: all 17 T17 rows carry service_page — knowledge_article is possible but unused
 # 🔴 UNIMPLEMENTABLE as written — see mapping note: this is the old L6 protocol/aftercare page, and no column isolates it —
 #   such pages are stored as service_page (sitemap_section 3) or knowledge_article (section 6) with nothing to tell them apart.
 length_target: 1,000-2,000 words
@@ -1639,7 +1688,7 @@ example_pages:
 purpose: "Hyper-local [service]×[branch] — auto-templated for SEO scale"
 schema_org_type: MedicalBusiness
 secondary_schemas: [Service, Place, LocalBusiness]
-page_category: local_landing | local_service | local_programmatic  # rewritten 2026-08-23 (was "L6 Local" — local sense, NOT the protocol layer) — approximate; the Bible files these as Type C "layers 2, 3" and they sit outside the plain service_page predicate; §3 note
+page_category: local_landing | local_programmatic | local_service_page  # rewritten 2026-08-23 (was "L6 Local" — local sense, NOT the protocol layer); *(corrected 2026-08-24 against live schema: `local_service` has zero rows — derive-page-role-category.py ALIAS folds it into `local_landing`. Live: local_programmatic 99 · local_landing 11 · local_service_page 6 · NULL 14 = 130)* — approximate; the Bible files these as Type C "layers 2, 3" and they sit outside the plain service_page predicate; §3 note
 length_target: 800-1,500 words  # rewritten 2026-08-23 — literal target; Bible §9.8's per-layer key ("L6") no longer resolves
 eeat_required: YES (branch doctor surface as Person/Physician)
 
@@ -1671,8 +1720,12 @@ example_pages:
   - All multi-branch brand combinations
 
 scale_consideration: |
-  Deezy alone has 68 pages today + 99+ candidates.
-  All multi-branch brands (Deezy 33, Trin Wellness 3, VTH 2, etc.) benefit.
+  Deezy has 99 T18 pages today (corrected 2026-08-24 against live schema — was "68 today + 99+ candidates");
+  smile-scape-clinic 10, vth-biodent 21. Count with
+  `select brand_id, count(*) from seo_website_page_master where content_format='T18' group by 1`.
+  Branch rows behind them (seo_branches, 37 total, 2026-08-24): deezy-dental 33, smile-scape-clinic 2,
+  vth-biodent 2 — corrected from "Deezy 33, Trin Wellness 3, VTH 2": Trin Wellness has no branch rows
+  and no page rows in this database at all.
   Critical to enforce uniqueness or face thin-page penalty per DR-016.
 ```
 
@@ -1682,7 +1735,7 @@ scale_consideration: |
 purpose: "Time-sensitive offer / promotion / package"
 schema_org_type: Offer
 secondary_schemas: [Product, Service]
-page_category: service_page  # rewritten 2026-08-23 (was "L4 commercial") — ⚠️ approximate: no page_category value denotes a time-boxed offer page; §3 note
+page_category: service_page  # rewritten 2026-08-23 (was "L4 commercial") — 🔴 unverifiable: all 12 live T19 rows have page_category NULL (measured 2026-08-24), so this row is a proposal, not a description. No page_category value denotes a time-boxed offer page; §3 note
 length_target: 600-1,200 words
 eeat_required: NOT REQUIRED (operational), author signoff RECOMMENDED for trust
 
@@ -1708,21 +1761,27 @@ schema_emit_offer:
 
 ### 3.4 Ads Landing Page Family (T-ADS — 5 templates) 🆕 v1.4
 
-> **Per DR-026 (Proposed 2026-05-12) + Bible Part 29** — parallel implementation track to SEO templates (T1-T22). Same dimensional backbone but conversion-optimized blocks, single primary CTA, minimal navigation.
+> **Per DR-026 (Proposed 2026-05-12; still Proposed and now marked DORMANT by DR-057 §9 — status corrected 2026-08-24 against live schema) + Bible Part 29** — parallel implementation track to the SEO templates of §3.1–§3.3 (the "T1-T22" range names codes T20/T21/T22 that this document has never defined). Same dimensional backbone but conversion-optimized blocks, single primary CTA, minimal navigation.
 >
 > **CRITICAL — YMYL evidence rules UNCHANGED:** Bible Part 23 (Medical Content Excellence) citation tiers + editorial review workflow apply IDENTICALLY to T-ADS-1/2/3/4 when medical claims are present. Moving a claim to `/lp/` does NOT reduce legal/regulatory exposure.
+
+> ⚪ **The whole T-ADS track is DORMANT — DR-057 §9 (2026-08-23).** *(status corrected 2026-08-24 against live schema)*
+> `ads_template_id` is NULL on all 2,358 page rows; no row carries `page_purpose = 'ads_landing'` (live values: `seo_organic` 2,276, `utility` 82); `ad_active` is false on all 22,710 rows of `seo_x_ads_keywords_contextual_master`. The spec below is retained as written — it just has no rows to govern yet. Re-check with `select page_purpose, count(*) from seo_website_page_master group by 1` and `select count(*) from seo_website_page_master where ads_template_id is not null`.
 
 **Family characteristics (all T-ADS templates):**
 
 ```yaml
 url_convention: /lp/{campaign-or-offer-slug}/
-default_index_directive: noindex_lp  # operator override allowed
+default_index_directive: noindex  # operator override allowed
+  # corrected 2026-08-24 against live schema — `noindex_lp` is not a value of index_directive.
+  # Column comment: index / noindex / index_no_follow / noindex_no_follow. Live rows: index 2,321, noindex 37.
 nav_treatment: stripped or minimal — no full site nav
 cta_count: ONE primary CTA, repeated 2-3x
 required_columns_on_page_master:
-  - page_purpose: ads_lp
-  - ads_template_id: T-ADS-{N}
-  - index_directive: noindex_lp (default)
+  - page_purpose: ads_landing   # corrected 2026-08-24 — was `ads_lp`, which is not a value of the column.
+                                # Taxonomy: seo_organic (default) / ads_landing / hybrid / utility / legal / thank_you. 0 rows so far.
+  - ads_template_id: T-ADS-{N}  # 🔴 dormant — NULL on all 2,358 rows (2026-08-24)
+  - index_directive: noindex (default)   # corrected 2026-08-24 — was `noindex_lp`
   - conversion_event_primary: (see §29.5)
   - campaign_id: TEXT stub per §29.11 naming convention
 ymyl_gate: Part 23 review for medical claims (UNCHANGED)
@@ -2073,7 +2132,11 @@ hook_4_block_reordering:
 
 tracking:
   page_master.content_brief: "DR-017 — captures any tweaks at design phase"
-  page_master.template_id: "future column — locks which template was used"
+                             # exists, but 0 of 2,358 rows are populated (measured 2026-08-24)
+  page_master.content_format: "the live column that locks which template was used — corrected
+                               2026-08-24 against live schema; `template_id` was never added and
+                               is not needed. Companion: content_format_name (human-readable).
+                               Per DR-057 the value is validated against the BRAND's registry."
 ```
 
 ### 4.5 Cross-Cutting Editorial Standards 🆕 v1.1
@@ -2159,9 +2222,16 @@ tier_3_ai_only:
   forbidden_for: "Medical YMYL content (T1, T2, T2a-e, T3, T4, T6a, T7, T8, T17)"
   cost: "Lowest"
   enforcement: "DB CHECK: medical YMYL templates require translation_tier IN ('tier_1', 'tier_2')"
+  # 🔴 UNIMPLEMENTABLE as written — the column the CHECK names does not exist.
+  #    corrected 2026-08-24 against live schema: seo_website_page_master has 93 columns and
+  #    `translation_tier` is not one of them. The rubric still governs the editorial decision;
+  #    only the DB enforcement clause cannot run until a column is added.
 
 tier_storage:
-  column: page_master.translation_tier (text — proposed v1.11)
+  column: page_master.translation_tier — 🔴 DOES NOT EXIST (proposed for v1.11, never shipped;
+          verified 2026-08-24 against the live 93-column table). Nearest live columns are
+          `translation_status` (pending/in_progress/approved/live) and `page_language`,
+          neither of which records the tier. Tier is currently unrecorded anywhere in the DB.
   default: "tier_1" if not specified
 ```
 
@@ -2213,8 +2283,17 @@ Extends §4.5.3 Cannibalization Shield from **between-page** separation to **wit
 ```yaml
 # §4.5.3 = separation ระหว่างหน้า (page_category: identity / service_page / condition_pillar / knowledge_article / evidence_case) — rewritten 2026-08-23
 # §4.5.4 = separation ภายในหน้าเดียว (body section vs FAQ block)
-# PAA source: seo_x_ads_keyword_serp_competitors.paa_questions (text[])
-#   ⚠️ Audited schema v1.20 — NOT people_also_ask_json (ไม่มี column นั้นจริง).
+# PAA source: seo_x_ads_keyword_serp_competitors.people_also_ask_json (jsonb)
+#   corrected 2026-08-24 against live schema — this is the exact inverse of what v1.8 recorded.
+#   `paa_questions` does NOT exist on that table; `people_also_ask_json` does, and holds the data:
+#   13,666 rows — but only 488 of them actually hold questions. The other 13,178 hold an empty
+#   array `[]`, and NOT ONE row is SQL NULL, so `is not null` is NOT the presence test — it matches
+#   all 13,666 (re-measured 2026-08-24; an earlier 2026-08-24 note called the 488 'non-NULL', which
+#   is the same class of error this section exists to catch). Presence test: `people_also_ask_json
+#   <> '[]'::jsonb`. The sibling columns behave the same way: paa_ai_content_json holds real
+#   content on 217 rows (13,415 empty, 34 NULL) and related_searches on 522 (13,144 empty,
+#   0 NULL) — all measured 2026-08-24.
+#   The v1.8 changelog line stays as written — it records what that version shipped.
 
 principle: |
   1 question = 1 canonical answer location ในหน้า.
@@ -2262,13 +2341,17 @@ coverage_floor:
 
 # ── Source Fallback Chain (re-mapped to audited schema v1.20) ─
 faq_source_fallback_chain:
-  tier_1_paa_present:        # paa_questions text[] มีข้อมูล
-    source: "seo_x_ads_keyword_serp_competitors.paa_questions (text[])"
+  tier_1_paa_present:        # people_also_ask_json jsonb มีข้อมูล (corrected 2026-08-24)
+    # 🔴 ยังไม่เคยยิงจริง — intent_source_tier = 'paa' มี 0 แถวทั้งฐาน (วัด 2026-08-24, DR-057 §3).
+    #    กฎยังถูกต้อง แต่ไม่มีหน้าไหนเดินมาทางนี้จนกว่า crawl PAA จะเขียนค่าลงคอลัมน์
+    source: "seo_x_ads_keyword_serp_competitors.people_also_ask_json (jsonb)"  # corrected 2026-08-24 against live schema
     body: "understanding-PAA → H3 ภายใน required blocks"
     faq:  "decision-PAA + 8-intent gaps ที่ PAA ไม่ครอบคลุม"
     floor: "page ≥8 intents | FAQ ≥3 Q&A"
     intent_source_tier: 'paa'
-  tier_2_derived:            # paa_questions ว่าง แต่มี signal อื่น
+  tier_2_derived:            # people_also_ask_json = '[]' (ว่าง) แต่มี signal อื่น
+    # ชื่อคอลัมน์แก้ 2026-08-24 — `paa_questions` ไม่มีอยู่จริง (ดูหัวข้อ §4.5.4 ด้านบน);
+    # "ว่าง" ที่ว่าคือ empty array ไม่ใช่ NULL — 13,178 จาก 13,666 แถวเป็นแบบนี้
     sources_priority:
       - "seo_x_ads_keywords_contextual_master.keyword_painpoint"
       - "seo_x_ads_keywords_contextual_master.predicted_serp_features"
@@ -2281,13 +2364,24 @@ faq_source_fallback_chain:
     body: "เขียนตาม template sections ปกติ (ไม่ force PAA mapping)"
     faq:  "8-intent template เต็ม = baseline (FAQ เป็นพระเอกแทน PAA)"
     floor: "page ≥8 intents | FAQ ≥8 Q&A"
-    intent_source_tier: 'template_only'
-    flag: "content_gap_flag = true (seo_entity_graph)"
+    intent_source_tier: 'template_only'   # ค่าที่ใช้จริงมากสุด — 2,259 แถว (2026-08-24)
+    flag: "content_gap_flag = true (seo_entity_graph)"   # ยืนยันแล้วว่ามีคอลัมน์นี้จริง (2026-08-24)
+
+  # ── ชั้นที่ 4 ที่ของจริงมี แต่เอกสารเดิมไม่มี — DR-057 §3 ────
+  tier_brand:                # เพิ่ม 2026-08-24 ตามฐานจริง ไม่ใช่ข้อเสนอใหม่
+    intent_source_tier: 'brand'
+    note: |
+      88 แถวใช้ค่านี้อยู่แล้ว (2026-08-24) — brand/navigational intent ที่ไม่ได้มาจาก PAA
+      และไม่ได้ derive จาก painpoint. DR-057 §3 รับเป็นค่าที่สี่อย่างเป็นทางการ
+      การกระจายตัวจริง: template_only 2,259 · brand 88 · derived 11 · paa 0
+      นับใหม่ด้วย: select intent_source_tier, count(*) from seo_website_page_master group by 1
 
 # ── สถานะ checked vs not-checked (seo_website_page_master.paa_checked_at) ──
 paa_checked_semantics:
+  # วัด 2026-08-24: paa_checked_at ไม่ NULL เพียง 139 จาก 2,358 แถว — อีก 2,219 หน้ายังไม่เคยตรวจ
   paa_checked_at_NULL:        "ยังไม่เคย crawl → trigger PAA crawl ก่อน (ไม่ใช่ tier-3)"
-  paa_checked_at_SET_empty:   "ตรวจแล้ว paa_questions ว่าง → ตรวจแล้วไม่มี PAA จริง → tier-2/3"
+  paa_checked_at_SET_empty:   "ตรวจแล้ว people_also_ask_json = '[]' → ตรวจแล้วไม่มี PAA จริง → tier-2/3"
+  # ชื่อคอลัมน์แก้ 2026-08-24 — `paa_questions` ไม่มีอยู่จริงบน seo_x_ads_keyword_serp_competitors
   rationale: "แยก 'ตรวจแล้วไม่มี' ออกจาก 'ยังไม่ตรวจ' — คนละ action"
 
 qa_check_per_page:
@@ -2332,7 +2426,7 @@ qa_check_per_page:
 | 🟠 **First-party-preferred** | B10/B11a Brand Stance · B12 Clinical Insight · §10 Patient Journey · B16 Before/After · Pattern A clinic-data citables | **Skip + flag for backfill** (page still ships). *Optional:* external-evidence fallback (Tier 1-2 citation instead of first-party — lower LLMO power). **Never fabricate first-party stats.** | ✅ | `content_gap` |
 | 🟢 **Conditional / Optional** | B09 (1 option → skip) · B25a (chronic-only → skip) · severity table · etc. | **Skip silently** when genuinely N/A; justify in Dev Notes | ✅ | `na_justified` |
 
-**Mechanism — `content_gaps[]`.** Each page carries an array of `{ block, tier, reason, fallback_used, owner, due }` → feeds a **Content-Completeness report** so operators backfill 🟠 gaps over time; 🔴 entries block release. Stored in `seo_website_page_master.content_gaps jsonb` (Schema follow-up) or, for static-stack brands, page frontmatter.
+**Mechanism — `content_gaps[]`.** Each page carries an array of `{ block, tier, reason, fallback_used, owner, due }` → feeds a **Content-Completeness report** so operators backfill 🟠 gaps over time; 🔴 entries block release. Stored in `seo_website_page_master.content_gaps jsonb` — 🔴 **that column does not exist** *(corrected 2026-08-24 against live schema: 93 columns, no `content_gaps`)*, so today the array lives only in page frontmatter on the static-stack brands and there is no DB-side Content-Completeness report. The tier rules below still govern publish behaviour; only the DB storage half is missing.
 
 **Why a tier, not just "optional".** A young brand often lacks first-party data (clinic stats, patient cases, a formulated stance). Without this framework it would either ship empty block shells, fabricate stats (a compliance + trust failure), or block publication on data it does not have. The tier makes the safe path deterministic: trust / compliance / core-answer can **never** silently vanish (🔴); brand-voice depth degrades gracefully and is tracked for upgrade (🟠); genuinely-N/A blocks disappear cleanly (🟢).
 
@@ -2341,6 +2435,8 @@ qa_check_per_page:
 ## 5. EEAT Requirement Matrix (LOCKED)
 
 ### 5.1 Required vs Not Required
+
+> ⚪ Five rows of this matrix govern codes **no brand currently writes**: T3, T2a, T2c, T2d, T2e — zero rows across all 2,358 pages *(measured 2026-08-24 against live schema; see the registry note in §3)*. The requirements stand for whichever brand adopts them; do not build an EEAT gate that expects those codes to appear.
 
 | Template | Author | Medical Reviewer | Last Reviewed | Reasoning |
 |----------|--------|------------------|---------------|-----------|
@@ -2395,14 +2491,25 @@ phase_1_2026_05_to_2026_08:
     
 phase_2_2026_09_onwards:
   level: HARD BLOCK (database CHECK constraint)
+  # 🔴 UNIMPLEMENTABLE as written — every column this CHECK names is absent.
+  #    corrected 2026-08-24 against live schema (seo_website_page_master, 93 columns):
+  #    no schema_org_type (the live column is `schema_markup_type`), no medical_reviewer_fp,
+  #    no last_reviewed_at. Reviewer identity is not stored on the page row at all.
+  # 🔑 And the premise is superseded: DR-057 §6 rules that a page the operator approves and
+  #    sets status='Live' IS medically reviewed. `has_medical_review` is set from that act,
+  #    never gated on rows in seo_editorial_reviews. Live: 2,057 true / 301 false of 2,358.
+  #    A rewritten gate would key on (status='Live' AND has_medical_review) — not on a reviewer FK.
   action: |
-    DB-level enforcement on seo_website_page_master:
+    DB-level enforcement on seo_website_page_master — the constraint below CANNOT be created
+    as written; it is kept to record the intent, not as runnable DDL:
     CHECK (
       schema_org_type NOT IN ('MedicalCondition', 'MedicalProcedure', 
                                'MedicalTherapy', 'MedicalDevice', ...)
       OR (medical_reviewer_fp IS NOT NULL AND last_reviewed_at IS NOT NULL)
     )
   prerequisite: "All clinics onboarded their doctors as seo_authors_reviewers records"
+              # that table exists and holds 184 rows (2026-08-24): deezy-dental 181,
+              # smile-scape-clinic 2, vth-biodent 1 by brand_scope
 ```
 
 ---
@@ -2473,12 +2580,17 @@ phase_2_2026_09_onwards:
 failure_1_admin_author:
   symptom: '"author": {"name": "advthdent"}'
   cause: "AIOSEO/Yoast emits WP user as author"
-  fix: "Override via eywa-schema-pipeline plugin reading medical_reviewer_fp"
+  fix: "Override via eywa-schema-pipeline plugin reading the reviewer of record"
+  # corrected 2026-08-24 against live schema — there is no medical_reviewer_fp column
+  # on seo_website_page_master; see §9.3.
 
 failure_2_no_reviewedBy:
   symptom: 'Article schema missing "reviewedBy" property'
   cause: "Schema plugin doesn't know about medical reviewer concept"
-  fix: "Custom JSON-LD injection from page_master.medical_reviewer_fp"
+  fix: "Custom JSON-LD injection from the reviewer of record"
+  # corrected 2026-08-24 against live schema — page_master has no `medical_reviewer_fp`.
+  # Reviewer identity lives in seo_authors_reviewers (184 rows) and is linked per page through
+  # seo_editorial_reviews / seo_doctor_assignments, not by a column on the page row.
 
 failure_3_lastReviewed_visual_only:
   symptom: 'Page shows "Reviewed: May 2026" but schema lacks lastReviewed'
@@ -2515,6 +2627,9 @@ post_publish_audit:
   schedule: "Monthly automated audit"
   tool: "Google Rich Results Test API + custom validator"
   alert: "Pages drifting from spec flagged in seo_governance_audit table"
+  # 🔴 that table does not exist — corrected 2026-08-24 against live schema (228 tables, none by
+  #    that name). Nearest live table is seo_data_quality_metrics. The monthly audit has nowhere
+  #    to write until one is chosen, so this alert step cannot run.
 ```
 
 ### 6.4 Schema Tier Architecture (1/2/3) 🆕 v1.1
@@ -2533,6 +2648,11 @@ tier_1_site_level:
   changes_per_page: false
   
 tier_2_page_level:
+  # 📌 The DB column that records this, `schema_markup_type`, holds ONE bare value per row —
+  #    the brace-set form '{MedicalCondition,MedicalWebPage}' is retired (DR-057 §1) and 0 of
+  #    2,358 rows still carry it (measured 2026-08-24). The pairs listed below describe the two
+  #    @graph nodes the page EMITS; a rule reading the column must expect a scalar, and must
+  #    compare against the first/primary type only.
   scope: "Renders per-page (template-specific)"
   rendering_method: "ACF field group → JSON-LD generator"
   schemas_by_template:
@@ -2852,7 +2972,10 @@ weaknesses_to_avoid:
 ```yaml
 notion_database: "Content Production"
 required_properties:
-  - template_id (select: T1, T2, T2a, ..., T19)
+  - template_id (select) — the option list is THAT BRAND'S registry, not a shared T1..T19 list
+    # corrected 2026-08-24 per DR-057 §5. Live vocabularies differ: deezy-dental writes 21 codes
+    # including T2b/T6a/T8g/T12i; smile-scape-clinic 13; vth-biodent 9. Mirrors
+    # seo_website_page_master.content_format.
   - content_brief (long text — DR-017)
   - assigned_author (relation → Authors DB)
   - assigned_medical_reviewer (relation → Authors DB)
@@ -2889,24 +3012,40 @@ eywa_schema_pipeline_plugin:
   enforcement:
     - Block deprecated 7 schemas (per DR-019)
     - Validate AggregateRating compliance
-    - Inject medical_reviewer_fp → Person/Physician schema
+    - Inject the reviewer of record → Person/Physician schema
+      # corrected 2026-08-24 — no medical_reviewer_fp column exists; the reviewer is resolved
+      # from seo_authors_reviewers (184 rows), and DR-057 §6 makes status='Live' the trigger
 ```
 
 ### 9.3 Supabase (Data Layer)
 
 ```yaml
+# corrected 2026-08-24 against live schema — seo_website_page_master has 93 columns.
 page_master_columns_already_exist:
-  - author_fp (FK → seo_authors_reviewers)          # NOTE: neither column exists on page_master today
-  - medical_reviewer_fp (FK → seo_authors_reviewers) # verified 2026-08-23 against the live 93-column table
-  - last_reviewed_at (timestamptz)
-  - schema_org_type (text)
-  - schema_markup_planned (jsonb)
-  - content_brief (text — DR-017)
-  - viability_assessment (jsonb — DR-016)
+  - content_brief (text — DR-017)         # exists · 0 of 2,358 rows populated
+  - viability_assessment (jsonb — DR-016) # exists · 1,455 of 2,358 rows populated
+  - content_format (text)                 # the template code · PER BRAND (DR-057 §5)
+  - content_format_name (text)            # human-readable companion
+  - has_medical_review (boolean)          # DR-057 §6 · Live implies true · 2,057 true / 301 false
+  - schema_markup_type (text)             # bare scalar · 0 brace-set rows remain (DR-057 §1)
+  - intent_source_tier (text) + paa_checked_at (timestamptz)   # DR-034 · see §4.5.4
+
+page_master_columns_that_DO_NOT_EXIST:   # 🔴 named by earlier versions of this doc and by
+                                         #    Schema Overview v1.10 §5.1 — none of them shipped
+  - author_fp
+  - medical_reviewer_fp
+  - last_reviewed_at
+  - schema_org_type          # the live name is schema_markup_type
+  - schema_markup_planned
+  - translation_tier         # §4.5.2
+  - content_gaps             # §4.7
+  - template_version         # §10 Q6
+  # Consequence: no column on the page row identifies the reviewer or the review date, so every
+  # rule in §5.3 / §6.2 that reads one is 🔴 unimplementable until such a column is added.
 
 future_columns_pending:
-  - template_id (text — to be added under DR-020 if locked)
-  - eeat_compliance_status (computed jsonb)
+  - template_id — ❌ withdrawn 2026-08-24: `content_format` already does this and shipped
+  - eeat_compliance_status (computed jsonb) — still not present
 
 future_constraint_pending:
   - CHECK enforcement (phase 2 — see §5.3)
@@ -2921,8 +3060,10 @@ Q1_template_count_too_many:
   question: "25 templates — is this overengineering?"
   answer_default: |
     No. Each template addresses a real page type found in actual sitemaps:
-    - 13 brands × 6 verticals = high diversity
-    - Deezy alone has 13 page types covered
+    - 20 brand rows in `brands`, three of them with page rows = high diversity
+      (corrected 2026-08-24 against live schema — was "13 brands")
+    - Deezy alone uses 21 distinct content_format codes (plus 5 rows with none) across
+      12 page_category values (measured 2026-08-24 — was "13 page types")
     - Templates compose from blocks (not from scratch) — adoption cost low
     - Skip templates not relevant to brand (Aesthetic brand may skip T2b Dental)
 
@@ -2936,6 +3077,11 @@ Q3_eeat_phase_2_timing:
   question: "When to flip from soft warn to hard block?"
   recommend: "withdrawn 2026-08-23 — gate on the measured prerequisite, not a calendar date"
   prerequisite: "≥80% of brand clinic doctors registered in seo_authors_reviewers (the table seo_authors does not exist)"
+  measured: |
+    seo_authors_reviewers holds 184 rows on 2026-08-24 — brand_scope deezy-dental 181,
+    smile-scape-clinic 2, vth-biodent 1. The ratio itself is NOT computable from this database:
+    nothing records how many clinic doctors each brand has, so the 80% threshold has no
+    denominator and this prerequisite cannot be evaluated as written.
 
 Q4_t6_t6a_overlap:
   question: "Concept vs Guide — risk of confusion?"
@@ -2961,6 +3107,9 @@ Q6_template_versioning:
     - v1.0 → v1.1: backward compatible (block additions OK)
     - v1.0 → v2.0: breaking (block removal/rename)
     Template version stored in page_master.template_version jsonb
+    # 🔴 column does not exist — verified 2026-08-24 against the live 93-column table.
+    #    Version is currently recorded only in `snapshot_version` (a planning-snapshot string
+    #    such as 'eywa-b3.19-s1.15-t1.5-h1.13-dr1.13'), which is not per-template.
 ```
 
 ---
@@ -2974,6 +3123,7 @@ Q6_template_versioning:
 - DR-017 (page_master.content_brief — captures block tweaks)
 - DR-019 (Schema Strategy — Two-Purpose Taxonomy + EEAT enforcement)
 - Schema Overview v1.10 §5.1 (page_master columns: author_fp, medical_reviewer_fp, last_reviewed_at)
+  — 🔴 none of those three columns exists on the live table (verified 2026-08-24, 93 columns); cited as provenance only, see §9.3
 - Reference content sample: `/legacy/Sitemap Deezy/VTH Biodent/ตัวอย่างเนื้อหา 355be9c6bf3c806fadabe4828a694200.md`
 - Live audit sample: https://www.vthbiodent.com/mouth-biomapping/ (audited 2026-05-10)
 - Deezy sitemap (gap analysis source): `/legacy/Sitemap Deezy/Deezy Dental/deezy-sitemap.md`

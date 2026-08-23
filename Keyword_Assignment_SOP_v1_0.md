@@ -1,6 +1,8 @@
 # 📌 EYWA Protocol — Keyword Assignment SOP
 
 > **เวอร์ชัน:** 1.1 (universal) · **ประกาศใช้:** 2026-07-28 · **สถานะ:** 🔒 Locked
+> **v2.1 (2026-08-24):** ตรวจชื่อตาราง/ชื่อคอลัมน์และตัวเลขทุกตัวกับฐานจริง แล้วแก้ในที่ — ทุกจุดที่แก้ติดป้าย *(corrected 2026-08-24 against live schema)* · ไม่แตะโครงเรื่องและไม่แตะประวัติเวอร์ชัน · **รอบตรวจซ้ำวันเดียวกัน** สุ่ม re-query ตัวเลขที่แก้ไปแล้วกับฐานจริง พบผิด 3 จุดและแก้ทับ: §6.4 ข้อ 2 (นับ 13 คู่ทั้งที่ของจริง 4 คู่ — ลืมตัดกรณีหน้าเดียวกัน) · §8b Migration trigger (อ้างว่า note อยู่ที่ 9.1/9.10 ของจริงอยู่ที่ 9.8/9.11 ซึ่ง Merged ไปแล้ว) · §7 รายการค่าจริงของ `keyword_use_as`
+>
 > **v2.0 (2026-08-23):** 🔴 **back-port ruling ที่ตกค้างอยู่ในสำเนาของ VTH เท่านั้น 5 ข้อ** — §4.1 veto ของคนเขียน · §5.0 ตารางคีย์เวิร์ดเป็น time-series ต้องอ่านแถว `snapshot_date` ล่าสุด · §5.1 intent 3 ชั้น (snapshot=hard · contextual=soft · ไม่มี=soft เข้าคิว backfill) · §5.2 ข้อยกเว้นระดับหมวด · §5.3 ชื่อยาคุมที่การเขียนไม่ใช่ที่คีย์ · ruling ออกเมื่อ 2026-08-09 แต่ไม่เคยเข้าฉบับ universal ทั้งที่ไฟล์นี้ถูกแก้อีก 3 ครั้งหลังจากนั้น (v1.6/v1.7/v1.9) — deezy และ smile-scape จึงไม่เคยเห็นกฎเหล่านี้
 >
 > **v1.9 (2026-08-16):** เพิ่มบทเรียน **L30** — FK จับ *เขียน* ผิดคีย์ได้ แต่จับ *อ่าน* ผิดคีย์ไม่ได้ · query ที่คืน 0 เพราะถามผิดคีย์ หน้าตาเหมือน "ไม่มีของเดิม" แล้ว unbind ก็ no-op เงียบ ๆ · **เกตที่ผ่านได้ทั้งจาก "สะอาดจริง" และจาก "ไม่ได้ตรวจ" ไม่ใช่เกต** (จาก vth-biodent ตอบกลับ broadcast L28)
@@ -17,6 +19,7 @@
 > **v1.2:** เพิ่มบทเรียน L17–L19 (convention ของ seo_title/meta_description · baseline vs final · การคุมถ้อยคำ meta บนหน้า legal_review)
 > **v1.1:** เพิ่ม §8.5 ตำแหน่งหมวดราคาในผัง · §13 โครงสร้าง & ลำดับเนื้อหา + วิธี renumber · บทเรียน L13–L16
 > **ขอบเขต:** **UNIVERSAL** — ทุกแบรนด์ที่ใช้ `seo_website_page_master` + `seo_x_ads_keywords_contextual_master`
+> ⚠️ ตารางร่วมทั้งสองไม่ได้มีแค่ 3 แบรนด์: `seo_website_page_master` มี **2,358 แถว / 3 แบรนด์** (deezy-dental 869 · vth-biodent 761 · smile-scape-clinic 728) แต่ `seo_x_ads_keywords_contextual_master` มี **22,710 แถว / 8 แบรนด์** (VTH BioDent 2,129) — ทุก query ต้องกรองแบรนด์เสมอ และคอลัมน์ที่ใช้กรองคนละชื่อกัน (`brand_id` slug บนหน้า · `brand` ชื่อเต็มบนคีย์) *(corrected 2026-08-24 against live schema)*
 > **ที่มา:** field-tested กับ VTH BioDent (726 หน้า / 1,509 คีย์, 2026-07-27→28) — reference implementation + ETL ที่รันจริงอยู่ที่ `eywa-vth-biodent/content-plan/`
 > **Companion:** DR-042 (Entity Reuse-First) · Bible §2.6 EGP · Schema v1.23 §5.1
 >
@@ -63,7 +66,7 @@
 
 **หมายเหตุ P2 — entity ไม่บังคับสำหรับหน้าโครงสร้าง**
 `page_type ∈ {home, about, pillar (hub ระดับหมวด), knowledge_article ที่เป็น index/glossary, evidence_case index, contact, branch_landing, local_landing}` ไม่ต้องมี entity
-ให้ผูก `cluster_id` แทน + ตั้ง `intent_source_tier='brand'` — VTH มี 63 หน้าในกลุ่มนี้ (เช่น 5.1 Sleep & Airway, 6.3.x Glossary, 8.x Contact, 9.1 Local hub) การบังคับ tag entity จะได้ mapping มั่ว
+ให้ผูก `cluster_id` แทน + ตั้ง `intent_source_tier='brand'` — VTH มี **57 หน้า**ในกลุ่มนี้ (`brand_id='vth-biodent' and status not in ('Merged','Dropped') and primary_entity_fp is null`) *(corrected 2026-08-24 against live schema — เดิมเขียน 63)* (เช่น 5.1 Sleep & Airway, 6.3.x Glossary, 8.x Contact, 9.1 Local hub) การบังคับ tag entity จะได้ mapping มั่ว
 
 หน้าเชิงเนื้อหาที่ยังไม่ผ่าน P2 → **ปล่อย `target_keyword_fp` ว่างไว้** ห้าม assign มั่ว
 
@@ -74,7 +77,7 @@
 | Tier | เงื่อนไข | ใช้ได้ไหม |
 |---|---|---|
 | **R1** | `keyword.primary_entity_fp = page.primary_entity_fp` | ✅ ใช้ก่อนเสมอ |
-| **R2** | entity ของคีย์เป็น parent/child ของ entity หน้า (`seo_entity_relationships`: is_a / part_of / subtype_of) | ✅ ใช้เมื่อ R1 หมด |
+| **R2** | entity ของคีย์เป็น parent/child ของ entity หน้า (`seo_entity_relationships.edge_type` ∈ `broader_than` / `part_of` / `is_a`) *(corrected 2026-08-24 against live schema — `subtype_of` ไม่มีในฐาน 0 แถว ส่วน `broader_than` คือขอบลำดับชั้นตัวหลัก 271 แถว ตกหล่นจากรายการเดิม)* | ✅ ใช้เมื่อ R1 หมด |
 | **R3** | อยู่ `cluster_id` เดียวกับหน้า | ⚠️ ใช้ได้ แต่ต้องติด `flag_review='kw-r3'` ให้คนตรวจ |
 | **R4** | นอกเหนือจากนั้น | ❌ ห้าม ทั้ง primary และ semantic |
 
@@ -183,6 +186,8 @@ for (const r of rows) {
 มาตลอด คือใครมาทีหลังชนะโดยไม่ดูวันที่เลย ตอนตรวจ 2026-08-09 ยังไม่พังเพราะบังเอิญ
 1 fingerprint มีแถวเดียว (1,754/1,754) — แต่มันคือบั๊กที่รออยู่ พอ ETL เริ่มเก็บย้อนหลังจริง
 กฎ §5 จะเริ่มตัดสินด้วยแถวที่หยิบมาแบบสุ่ม โดยไม่มีอะไรส่งเสียง
+🔴 **บั๊กที่รออยู่มาถึงแล้ว** — `seo_x_ads_keywords_monthly_market_snapshot` มี 24,610 แถวต่อ 22,807 คู่ (fingerprint, brand)
+คือ **1,803 คู่ที่มีมากกว่า 1 แถว** วัด 2026-08-24 · เงื่อนไข "บังเอิญปลอดภัย" หมดอายุแล้ว ต้องอ่านแถวล่าสุดจริงเท่านั้น *(corrected 2026-08-24 against live schema)*
 `page-brief.mjs` ทำถูกอยู่แล้ว (`.order('snapshot_date', { ascending: false })`) จึงเป็นที่เดียวที่ต้องแก้
 
 ---
@@ -221,7 +226,7 @@ for (const r of rows) {
 กฎที่ไม่มีข้อมูลให้ตรวจ ต้องรายงานว่า "ตรวจไม่ได้" ไม่ใช่ "ผ่าน"
 
 **เมื่อไม่มั่นใจ ให้คนตัดสิน แล้วเขียนไว้** — กลไกคือ `INTENT EXEMPTION` ใน `reconciliation_notes`
-ซึ่งมีใช้อยู่แล้ว 11 หน้า ตัวอย่างที่เขียนไว้ดีคือ `vth-6.2.8.1`:
+ซึ่งมีใช้อยู่แล้ว **14 หน้าของ VTH · 26 หน้าทั้งฐาน** (`reconciliation_notes ilike '%INTENT EXEMPTION%'`) *(corrected 2026-08-24 against live schema — เดิมเขียน 11)* ตัวอย่างที่เขียนไว้ดีคือ `vth-6.2.8.1`:
 *"ลูก 4 ขวบ นอนกรน is labelled transactional but it is a question a parent types, and the page
 answers it. DFS intent labels are unreliable for Thai question-shaped queries; the page type is right."*
 คำตัดสินของคนต้องเขียนเหตุผลไว้เสมอ — exemption ที่ไม่บอกว่าทำไม คือการเปลี่ยนกฎแบบเงียบ ๆ
@@ -272,11 +277,12 @@ target อยู่ใน title/meta/H1 สองข้อนี้ชนกั�
 - ตอบด้วย**หลักการและการส่งต่อ** เช่น "เรื่องนี้เป็นการตัดสินใจของแพทย์ผู้สั่งยา" แทนคำแนะนำตรง
 - ห้ามเปรียบเทียบยาว่าตัวไหนดีกว่า ห้ามระบุขนาด ห้ามบอกว่ากินเมื่อไหร่เท่าไหร่
 
-หน้าที่กระทบ (target ที่มีคำเกี่ยวกับยา 10 หน้า · semantic 5): `6.10.10` ปวดฟัน กินยาพารา ได้ไหม ·
+หน้าที่กระทบ (target ที่มีคำเกี่ยวกับยา 10 หน้า · semantic 5): `6.10.10` ปวดฟัน กินยาไรดี ·
 `6.9.2` ยาละลายลิ่มเลือด ถอนฟัน · `6.9.3` ยากระดูกพรุน รากฟันเทียม · `6.9.10` ยาปฏิชีวนะก่อนทำฟัน ·
-`6.9.12` แพ้ยาชา ทำฟัน · `6.5.13` faq sedation ยาชา · `6.5.16` อุดฟัน ฉีดยาชาไหม ·
+`6.9.12` แพ้ยาชา ทำฟัน · `6.5.13` faq sedation ยาชา · `6.5.16` อุดฟัน ฉีดยาชาไหม (Live) ·
 `6.2.8.5` ยาสงบประสาทเด็ก ทำฟัน · `3.4.1.17` โบท็อกกัดฟัน (Live) ·
 `3.4.1.3.2` ฉีดสเตียรอยด์ ข้อต่อขากรรไกร (Live)
+*(corrected 2026-08-24 against live schema — target ของ 6.10.10 ในฐานคือ `ปวดฟัน กินยาไรดี` ไม่ใช่ `ปวดฟัน กินยาพารา ได้ไหม` · 6.5.16 เป็น Live แล้ว รวมเป็น 3 หน้า Live ที่กฎนี้บังคับอยู่จริง)*
 
 ---
 
@@ -327,12 +333,12 @@ $$;
 | Local §9 | 1 (ต้องมี geo) | 3–6 |
 | Concept / brand-nav | 1 (อนุญาต v=0) | 0–5 |
 
-### 6.4 ข้อจำกัดเชิงโครงสร้าง (บังคับที่ DB)
+### 6.4 ข้อจำกัดเชิงโครงสร้าง (🔴 ข้อ 2–3 **ไม่ได้บังคับที่ DB** ต้องรันเป็นเกต)
 
-1. **1 primary : 1 หน้า ทั่วทั้งแบรนด์** — unique index บน `(brand_id, kw_norm(keyword))`
-2. คีย์ที่เป็น primary ของหน้าใดแล้ว **ห้ามเป็น semantic ของหน้าอื่น**
-3. คีย์เดียวกันเป็น semantic ได้หลายหน้า — แต่ไม่เกิน 3 หน้า
-4. หน้าที่ยังไม่มี primary ต้องมี `flag_review` เสมอ (ไม่มีสถานะ "ว่างเงียบ")
+1. **1 primary : 1 หน้า ทั่วทั้งแบรนด์** — normalize ด้วย `kw_norm()` แล้วเทียบ · คอลัมน์แบรนด์ของ `seo_x_ads_keywords_contextual_master` ชื่อ **`brand`** (ค่าเป็นชื่อเต็ม เช่น `VTH BioDent`) ส่วน `brand_id` (slug) อยู่บน `seo_website_page_master` — เขียน gate ให้ตรงตาราง *(corrected 2026-08-24 against live schema)* · วัด 2026-08-24: ไม่มี target ซ้ำหลัง normalize ทั้ง 3 แบรนด์ (0/0/0)
+2. คีย์ที่เป็น primary ของหน้าใดแล้ว **ห้ามเป็น semantic ของหน้าอื่น** — 🔴 **ไม่มี constraint บังคับ** ต้องพึ่ง Q7 ใน §10 เท่านั้น · วัด 2026-08-24: ละเมิดจริง **4 คู่ (ทุกสถานะ)** — vth-biodent 1 คู่ (`อุปกรณ์ นอนกรน` primary ของ 3.4.2.12/Merged ไปโผล่เป็น semantic ที่ 3.4.2.2/Live) · deezy-dental 3 คู่ — และเหลือ **2 คู่ที่ทั้งสองฝั่งยัง active** (deezy-dental ทั้งคู่ · vth-biodent 0) *(corrected 2026-08-24 — รอบตรวจซ้ำ: ตัวเลข "13 คู่ (vth 8 · deezy 5)" ที่ลงไว้ก่อนหน้าในวันเดียวกันนับรวมหน้าที่ใส่ primary ของ**ตัวเอง**ลงใน `semantic_keywords_fps[]` ของตัวเอง 11 แถว (vth 8 · deezy 3) ซึ่งไม่ใช่ "หน้าอื่น" จึงไม่เข้าข้อนี้ · query ต้องมีเงื่อนไข `sem.page_fingerprint <> tgt.page_fingerprint` เสมอ)*
+3. คีย์เดียวกันเป็น semantic ได้หลายหน้า — แต่ไม่เกิน 3 หน้า · 🔴 **ไม่มี constraint บังคับ** วัด 2026-08-24 มี 3 คีย์ของ deezy-dental เกินเพดาน *(corrected 2026-08-24 against live schema)*
+4. หน้าที่ยังไม่มี primary ต้องมี `flag_review` เสมอ (ไม่มีสถานะ "ว่างเงียบ") — วัด 2026-08-24: VTH ผ่าน 0 แถว
 
 ---
 
@@ -340,11 +346,11 @@ $$;
 
 หน้าเชิงคอนเซปต์ (§2 ปรัชญา, §3.1–3.4 signature MBM/ABM/BFB, §4.9, §6.1.1) **กำหนด target keyword ที่ volume 0 ได้** — แต่ต้อง:
 
-1. ตั้ง `keywords.keyword_use_as = 'brand_nav'`
-2. ตั้ง `page_master.intent_source_tier = 'brand'`
+1. 🔴 ติดธงที่ **`page_master.flag_review`** ให้มีคำว่า `brand-nav` (ขีดกลาง) *(corrected 2026-08-24 against live schema — เดิมสั่งเขียน `keywords.keyword_use_as = 'brand_nav'` ซึ่ง **ไม่เคยมีสักแถวในฐาน**: ค่าที่คอลัมน์นั้นถืออยู่จริงคือ target_keyword 1,967 · semantic_keyword 3,550 · excluded 212 แถว · NULL 16,979 แถว และมีค่าหลงเหลืออีก 2 แถว (`seo` · `🟡 Used as Semantic`) ที่ไม่ใช่ค่าใช้งาน)*
+2. ตั้ง `page_master.intent_source_tier = 'brand'` — ค่านี้มีอยู่จริง 88 แถว (VTH 87) วัด 2026-08-24
 3. **ไม่นับหน้าเหล่านี้ใน KPI organic ranking/traffic** — วัดด้วย branded search + assisted conversion แทน
 
-ปัจจุบัน VTH มี 26 หน้าในกลุ่มนี้ ถ้าไม่ติดธง รายงานจะอ่านเหมือนหน้าพัง 26 หน้า
+ปัจจุบัน VTH มี **27 หน้า**ในกลุ่มนี้ (`flag_review ilike '%brand-nav%'`, active) *(corrected 2026-08-24 against live schema — เดิมเขียน 26)* ถ้าไม่ติดธง รายงานจะอ่านเหมือนหน้าพัง 27 หน้า
 
 ---
 
@@ -381,7 +387,7 @@ DFS pull (Thailand/th, 2026-07-27):
 
 **ข้อสรุปเชิงนโยบาย:**
 - หน้า `/pricing/` **มีไว้เพื่อ UX + conversion + เป็น single source of truth ของราคา** ไม่ใช่หน้าล่า organic head term
-- primary = `อัตราค่าบริการ ทันตกรรม` (50/mo) ตั้ง `intent_source_tier='brand'` — **ไม่นับใน KPI organic ranking**
+- primary = `อัตราค่าบริการ ทันตกรรม` ตั้ง `intent_source_tier='brand'` — **ไม่นับใน KPI organic ranking** · *(corrected 2026-08-24 against live schema — snapshot ล่าสุดใน `v_keyword_market_latest` ให้ `volume_recent_12m = 0` และ `volume_avg_48m = 0` ไม่ใช่ 50/mo ตามที่ pull ได้ 2026-07-27 · ข้อสรุปเชิงนโยบายไม่เปลี่ยน มีแต่แน่นขึ้น)*
 - มูลค่า organic จริงของหน้านี้มาจาก **section ระดับบริการ** (passage/anchor) ไม่ใช่จากหัวหน้า
 
 ### 8.3 ใครเป็นเจ้าของคีย์ `X ราคา` — ตัดสินด้วย SERP รายคำ
@@ -390,8 +396,9 @@ DFS pull (Thailand/th, 2026-07-27):
 overlap = |urls(X) ∩ urls(X ราคา)| / N      โดย N = min(จำนวน url ที่เก็บได้ของทั้งสองคำ)
 ```
 
-**แหล่งข้อมูล:** `seo_x_ads_keyword_serp_competitors.competitor_url_list` (12,157 แถว) — SERP ไม่ผูกกับแบรนด์ ใช้แถวของแบรนด์พี่น้อง (Deezy Dental 3,568 คีย์) เทียบได้เลยเมื่อ keyword ตรงกัน
-**ความครอบคลุมปัจจุบัน:** คีย์ VTH 260/1,694 ตัว (15%) มี SERP แล้ว · ในจำนวน target ที่ assign ไปแล้ว 73/230 ตัวมี SERP
+**แหล่งข้อมูล:** `seo_x_ads_keyword_serp_competitors.competitor_url_list` (**13,666 แถว** วัด 2026-08-24) — SERP ไม่ผูกกับแบรนด์ ใช้แถวของแบรนด์พี่น้อง (Deezy Dental 3,568 คีย์) เทียบได้เลยเมื่อ keyword ตรงกัน *(corrected 2026-08-24 against live schema — เดิมเขียน 12,157 แถว)*
+**ความครอบคลุมปัจจุบัน (วัด 2026-08-24 — ตัวเลขนี้ไหลตลอด ให้ query ใหม่ทุกครั้ง):** คีย์ VTH **1,509/2,129 ตัว (71%)** มี SERP แล้ว · ในจำนวน target ที่ assign ไปแล้ว **221/623 ตัว**มี SERP
+> query: นับ `distinct fingerprint` ใน `seo_x_ads_keyword_serp_competitors where brand='VTH BioDent'` เทียบกับ `seo_x_ads_keywords_contextual_master where brand='VTH BioDent'` · ฝั่ง target นับ `distinct target_keyword_fp` ของ `seo_website_page_master where brand_id='vth-biodent' and status not in ('Merged','Dropped')` *(corrected 2026-08-24 against live schema — เดิมเขียน 260/1,694 และ 73/230)*
 **ข้อควรระวัง:** แต่ละแถวเก็บ url ไว้ 7 รายการ (ไม่ใช่ top10) และ snapshot ต่างวันกันได้ถึง 2 เดือน — ผลที่ก้ำกึ่ง (0.5–0.7) ให้ pull SERP ใหม่ก่อนตัดสิน
 
 | overlap | เจ้าของ (primary/semantic) | สร้างหน้าใหม่? |
@@ -423,7 +430,11 @@ overlap = |urls(X) ∩ urls(X ราคา)| / N      โดย N = min(จำ�
 | เคลือบฟลูออไรด์ ราคา (3 คำ) | ~1,430 | 3.7.2.2 | `/pricing/fluoride/` · 3.7.2.2 ถือ `เคลือบฟลูออไรด์` (5,650) |
 | ตัด เหงือก ราคา | 995 | 3.7.6.6 | section `#gingivectomy` ในหน้ารวม (ยังไม่ถึงเกณฑ์ promote) |
 
-> ยังไม่มี SERP ของ `ตัด เหงือก ราคา` และ `เคลือบฟลูออไรด์` (คำเปล่า) ในตาราง — ต้อง pull ก่อนยืนยัน 2 แถวล่าง
+> ~~ยังไม่มี SERP ของ `ตัด เหงือก ราคา` และ `เคลือบฟลูออไรด์` (คำเปล่า) ในตาราง — ต้อง pull ก่อนยืนยัน 2 แถวล่าง~~
+> ✅ **pull แล้ว** ทั้งสองคำมีแถวใน `seo_x_ads_keyword_serp_competitors` ของ VTH BioDent *(corrected 2026-08-24 against live schema)*
+>
+> 🔴 **คอลัมน์ "primary ปัจจุบัน" ในตารางข้างบนตกรุ่นแล้ว — แผนถูกรันไปแล้ว** วัด 2026-08-24: คำราคาทั้งชุดย้ายไปหน้าลูกของ hub จริง
+> `ขูดหินปูน ราคา`→`8.4.1` /pricing/scaling · `ฟอกสีฟัน ราคา`→`8.4.2` · `ฟันปลอม ราคา`→`8.4.3` · `เคลือบฟลูออไรด์ ราคา`→`8.4.4` · `ตัด เหงือก ราคา`→`8.4.6` (ได้หน้าเต็ม ไม่ใช่ section) · และ `3.7.6.1` ถือ `ขูดหินปูน` · `3.7.4` ถือ `ฟอกสีฟัน` ตามที่วางไว้ *(corrected 2026-08-24 against live schema)*
 
 ### 8.4 ข้อบังคับเชิงเทคนิค
 
@@ -433,8 +444,8 @@ overlap = |urls(X) ∩ urls(X ราคา)| / N      โดย N = min(จำ�
 4. **§9 Local**: หน้าสาขาไม่ทำตารางราคาซ้ำ ให้ลิงก์เข้าหน้ารวม (ยกเว้นราคาต่างกันจริงตามสาขา)
 5. แสดง **"เริ่มต้น X" + ช่วงราคา + เงื่อนไข** แทนราคาตายตัวรายเคส
 
-**ข้อมูลปัจจุบัน (VTH):** คีย์กลุ่มราคา 107 ตัว มี v ≥ 500 เพียง 8 ตัว · มี 34 คีย์ราคาเป็น primary ของหน้า §3 อยู่แล้ว — ชุด 34 ตัวนี้เข้า audit ก่อนเป็นลำดับแรก
-คีย์ราคา 106 ตัวมี `primary_entity_fp` แล้ว 95 ตัว (ขาด 11) — **ไม่ใช่ตัวบล็อก** ส่วนคอลัมน์ `primary_entity_name` เป็น null ทั้งตาราง (denormalized ไม่เคย backfill) ให้ backfill ใน step 0 ส่วน C3
+**ข้อมูลปัจจุบัน (VTH — วัด 2026-08-24 ตัวเลขไหลตลอด ให้ query ใหม่):** คีย์กลุ่มราคา **103 ตัว** (`brand='VTH BioDent' and keyword like '%ราคา%'`) มี v ≥ 500 เพียง **7 ตัว** · มี **11 คีย์ราคาเป็น primary ของหน้าใดหน้าหนึ่ง** และเหลือเพียง **1 ตัวที่ยังนั่งอยู่บนหน้า §3** — ชุดนี้เข้า audit ก่อนเป็นลำดับแรก *(corrected 2026-08-24 against live schema — เดิมเขียน 107 / 8 / 34 ตัวบนหน้า §3 ซึ่งย้ายไป §8.4.x เกือบหมดแล้ว)*
+คีย์ราคา 103 ตัวมี `primary_entity_fp` แล้ว **92 ตัว (ขาด 11)** — **ไม่ใช่ตัวบล็อก** ส่วนคอลัมน์ `primary_entity_name` **backfill แล้ว ไม่ได้ null ทั้งตาราง**: VTH 1,532/2,129 แถวมีค่า (ทั้งฐาน 7,854/22,710) *(corrected 2026-08-24 against live schema — เดิมเขียน 106/95 และ "null ทั้งตาราง")*
 
 > ⚠️ **Compliance:** การโฆษณาราคาสถานพยาบาลอยู่ภายใต้ พ.ร.บ.สถานพยาบาล พ.ศ. 2541 ม.38 (โฆษณาสถานพยาบาลต้องได้รับอนุมัติจากผู้อนุญาต) — ครอบคลุมทั้งหน้ารวม **และ price block ที่ฝังในหน้าบริการ** ต้องยื่นในคำขอเดียวกัน ตั้ง `legal_review_required = true` ทุกหน้าที่แสดงราคา
 
@@ -443,14 +454,15 @@ overlap = |urls(X) ∩ urls(X ราคา)| / N      โดย N = min(จำ�
 
 ### 8.5 หมวดราคาอยู่ตรงไหนในผังไซต์
 
-**ให้อยู่ใต้ §8 (Contact & Support) เป็น `8.10` + ลูก `8.10.x` — ไม่ตั้งเป็น section ใหม่**
+**ให้อยู่ใต้ §8 (Contact & Support) เป็น sub-section + ลูกของมัน — ไม่ตั้งเป็น section ใหม่**
+🔴 *(corrected 2026-08-24 against live schema — เลข node จริงคือ **`8.4` + ลูก `8.4.1`–`8.4.11`** (slug `/pricing`, `/pricing/<service>`) ส่วน `8.10` ที่เอกสารเดิมระบุไว้ถูกใช้โดยหน้า **International Patients** อยู่แล้ว · ยึดเลขจาก DB ตาม §13.5 ข้อ 1 ไม่ใช่จากเอกสาร)*
 
 | เหตุผล | รายละเอียด |
 |---|---|
 | รักษาโครง 8-section | Bible §4.2 กำหนด 8-section universal · การเพิ่ม section ใหม่ให้หมวดราคา (7–10 หน้า) ทำให้โครงหลุดมาตรฐานและแบรนด์อื่นลอกตาม |
 | อยู่กลุ่มเดียวกับหน้าสิทธิ/เบิกจ่าย | "เท่าไหร่ · จ่ายยังไง · เบิกได้ไหม" เป็น job เดียวกันของคนไข้ ต้องลิงก์ถึงกันสองทาง |
 | §8 คือ utility / pre-visit cluster | อยู่ร่วมกับ First Visit · Self-Assessment · International Patients ได้ตามธรรมชาติ |
-| ระดับความสำคัญตรงกับข้อมูล | head term ของหมวด (`อัตราค่าบริการ ทันตกรรม` ระดับ 50/mo ในตลาดไทย) ไม่ใช่ pillar — มูลค่าอยู่ที่ section ระดับบริการ |
+| ระดับความสำคัญตรงกับข้อมูล | head term ของหมวด (`อัตราค่าบริการ ทันตกรรม` — snapshot ล่าสุดให้ `volume_recent_12m = 0` วัด 2026-08-24 *(corrected 2026-08-24 against live schema — เดิมเขียน 50/mo)*) ไม่ใช่ pillar — มูลค่าอยู่ที่ section ระดับบริการ |
 
 **URL แยกจากผัง** — slug ยังเป็น `/pricing/...` ที่ root ได้ตามปกติ · `sitemap_section` เป็นเรื่องผังข้อมูล/nav ไม่ใช่ path
 **nav:** footer / utility nav เท่านั้น ไม่ขึ้น main nav แข่งกับ Services
@@ -485,9 +497,11 @@ overlap = |urls(X) ∩ urls(X ราคา)| / N      โดย N = min(จำ�
 
 ### สถานะปัจจุบัน (2 สาขา — interim)
 
-ตอนนี้ 9.8–9.15 ถือคำ near-me อยู่ (`ขูดหินปูน ใกล้ฉัน` → 9.10 · `ฟอกสีฟัน ใกล้ฉัน` → 9.9 ฯลฯ) เพราะยังไม่มีคีย์ geo ของ พระราม 3 / Park 11 ในคลัง (ยิง DFS แล้ว `จัดฟัน พระราม 3` / `หมอฟัน พระราม 3` ไม่มีข้อมูล)
+หน้าที่ถือคำ near-me อยู่จริง (วัด 2026-08-24): **9.1 · 9.7 · 9.9 · 9.10 · 9.15 · 9.18 · 9.20 — 7 หน้า** และ **9.1 hub ถือ head term `ทําฟัน ใกล้ฉัน` แล้วตามกฎ L2** ส่วน 9.2–9.6 / 9.8 / 9.11–9.14 / 9.16–9.17 / 9.19 / 9.21 เป็น `Merged` ไปแล้ว (14 หน้า) *(corrected 2026-08-24 against live schema — เดิมเขียนช่วง "9.8–9.15" ซึ่งกินหน้า Merged และตกหน้าที่ถือคำจริงไปหลายหน้า)* เพราะยังไม่มีคีย์ geo ของ พระราม 3 / Park 11 ในคลัง (ยิง DFS แล้ว `จัดฟัน พระราม 3` / `หมอฟัน พระราม 3` ไม่มีข้อมูล)
 
-> ⚠️ **Migration trigger:** เมื่อเปิด**สาขาที่ 3** ให้ย้ายคำ near-me ทั้งหมดขึ้นไปที่ 9.1 hub ทันที แล้วให้หน้าสาขาทั้งหมดถือคีย์ geo แทน — บันทึกไว้ใน `note_brief` ของหน้า 9.8–9.15 แล้ว
+คลังคำ near-me ของ VTH มี **23 คำ** และ **assign เป็น primary ไปแล้ว 7 คำ** (`brand='VTH BioDent' and keyword like '%ใกล้ฉัน%'`) *(corrected 2026-08-24 against live schema)*
+
+> ⚠️ **Migration trigger:** เมื่อเปิด**สาขาที่ 3** ให้ย้ายคำ near-me ทั้งหมดขึ้นไปที่ 9.1 hub ทันที แล้วให้หน้าสาขาทั้งหมดถือคีย์ geo แทน — 🔴 ตรวจ 2026-08-24 (รอบซ้ำ): ข้อความนี้อยู่ใน `note_brief` ของ **9.8 และ 9.11 เท่านั้น ซึ่งทั้งคู่เป็น `Merged` ไปแล้ว** ส่วนหน้าที่ถือคำ near-me อยู่จริงตอนนี้ (9.1 · 9.7 · 9.9 · 9.10 · 9.15 · 9.18 · 9.20) **ไม่มีหน้าไหนบันทึกไว้เลย** — ต้องย้ายข้อความนี้ลง `note_brief` ของหน้า active ก่อน ไม่งั้น trigger ตายไปพร้อมหน้าที่ถูกยุบ *(corrected 2026-08-24 — ฉบับก่อนหน้าในวันเดียวกันเขียนว่า 9.1 และ 9.10 มีข้อความนี้อยู่จริง ซึ่งไม่ตรงกับฐาน: query `note_brief ilike '%สาขาที่ 3%'` คืน 9.8 · 9.11 เท่านั้น)*
 
 ---
 
@@ -499,24 +513,27 @@ overlap = |urls(X) ∩ urls(X ราคา)| / N      โดย N = min(จำ�
 2. volume รวมของคีย์เหลือ **≥ 300/เดือน**
 3. SERP overlap กับหน้าเดิมของ entity **< 0.6**
 
-**backlog ที่คำนวณได้แล้วจากข้อมูลจริง (VTH — 36 entity ผ่านเกณฑ์ข้อ 1):**
+**backlog ที่คำนวณได้จากข้อมูลจริง (VTH — วัด 2026-08-24: **26 entity** ผ่านเกณฑ์ข้อ 1 · ในนั้น **20 entity** ผ่านเกณฑ์ข้อ 2 ด้วย):**
 
-| entity | หน้าปัจจุบัน | คีย์ในคลัง | volume รวม |
+> ตัวเลขชุดนี้ไหลทุกครั้งที่ assign คีย์ — **อย่าอ่านเป็นค่าคงที่ ให้คำนวณใหม่**: คีย์ของ `brand='VTH BioDent'` ที่ไม่ปรากฏใน `target_keyword_fp` และไม่อยู่ใน `semantic_keywords_fps[]` ของหน้า active ใด ๆ · group by `primary_entity_fp` · volume จาก `v_keyword_market_latest.volume_recent_12m`
+> *(corrected 2026-08-24 against live schema — เดิมเขียน 36 entity พร้อมตารางที่ค่าเคลื่อนไปทุกช่อง เช่น Dental Scaling & Cleaning ที่เคยขึ้นว่า 1 หน้า / 52 คีย์ / 49,172 ตอนนี้เป็น 4 หน้า / 13 คีย์ / 813)*
+
+| entity | หน้าปัจจุบัน | คีย์เหลือในคลัง | volume รวม |
 |---|--:|--:|--:|
-| Dental Scaling & Cleaning | 1 | 52 | 49,172 |
-| Gingival Swelling | 1 | 45 | 27,781 |
-| Enamel Remineralization | 1 | 37 | 10,680 |
-| Snoring | 1 | 51 | 9,803 |
-| Tooth Discoloration | 1 | 35 | 9,702 |
-| Dental Filling | 1 | 59 | 8,650 |
-| Loose Tooth | 1 | 25 | 8,137 |
-| Toothache | 1 | 68 | 7,296 |
+| Canker Sore (Aphthous Ulcer) | 1 | 18 | 4,702 |
+| Impacted Tooth | 2 | 26 | 3,309 |
+| Insomnia | 2 | 5 | 2,235 |
+| Toothache | 1 | 60 | 2,087 |
+| Halitosis (Bad Breath) | 1 | 35 | 2,070 |
+| Dental Filling | 3 | 36 | 1,969 |
+| Gingival Swelling | 1 | 29 | 1,906 |
+| Over-the-Counter Pain Relief | 1 | 7 | 1,291 |
 
 หน้าใหม่ต้องระบุ intent ที่ **ต่างจาก pillar เดิมชัดเจน** ในช่อง `page_purpose` ก่อนอนุมัติ
 
 ---
 
-## 10. QA gates (รันทุกครั้งหลัง assign — ต้องผ่านทั้ง 8 ข้อ)
+## 10. QA gates (รันทุกครั้งหลัง assign — ต้องผ่านทั้ง 9 ข้อ) *(corrected 2026-08-24 — ตารางมี Q1–Q9 ตั้งแต่ v1.4 แต่หัวข้อยังเขียน 8)*
 
 | # | เช็ค | เกณฑ์ผ่าน |
 |---|---|---|
@@ -525,7 +542,7 @@ overlap = |urls(X) ∩ urls(X ราคา)| / N      โดย N = min(จำ�
 | Q3 | intent ขัด matrix ข้อ 5 | 0 แถว |
 | Q4 | หน้า §9 ที่ primary ไม่มี geo/near-me | 0 แถว |
 | Q5 | หน้าลูกถือคีย์กว้างกว่าหน้าแม่ | 0 แถว |
-| Q6 | primary v=0 ที่ไม่ได้ติดธง `brand_nav` | 0 แถว |
+| Q6 | primary v=0 ที่ไม่ได้ติดธง `brand-nav` ใน `page_master.flag_review` *(corrected 2026-08-24 against live schema — ธงจริงเขียนด้วยขีดกลาง ไม่ใช่ `brand_nav`)* | 0 แถว |
 | Q7 | คีย์ที่เป็น primary แล้วไปโผล่เป็น semantic ที่อื่น | 0 แถว |
 | Q8 | entity เดียวกันมี primary >1 หน้า โดย SERP overlap ≥0.6 | 0 แถว (ไม่งั้น = cannibalization) |
 | **Q9** | **คีย์ใกล้ซ้ำระดับ trigram ที่ทั้งสองฝั่งเป็น primary** (L24) | 0 แถว หรือมีคำอธิบายรายคู่ |
@@ -594,7 +611,7 @@ where brand = :brand and page_a is not null and page_b is not null and kw_simila
 | L8 | **Google Ads ไม่คืน volume ≠ ไม่มีคนค้น** | `รีเทนเนอร์` / `คอมโพสิต วีเนียร์` ไม่มีข้อมูล แต่ **SERP มีจริงและเป็น service-type** (`รีเทนเนอร์` มีหน้าบริการ 3/7 ผล) | เจอ volume ว่าง ให้ดู SERP ก่อนตัดทิ้ง · ตั้งเป็น primary ได้ + โน้ตว่ารอ GSC |
 | L9 | **คำพ้องรูปปนเข้ามาเงียบ ๆ** | `วีเนียร์ หิน/ลายไม้/พลายวู้ด` = วัสดุก่อสร้าง · `เหงือก ฉลาม/ปลาทอง` = เหงือกปลา · `ลิฟท์ ขากรรไกร` = แม่แรงยกรถ — รวม 18 คำ | triage รอบแรกต้องดูตาเปล่าเสมอ อย่าเชื่อ entity tagging อย่างเดียว |
 | L10 | **เลข node ชนของเดิม** | เสนอ 5.6.20 / 6.9.10 / 8.7 โดยดูจากรายการที่ filter มา — ชนหน้าที่มีอยู่จริงทั้ง 4 | ก่อนจอง node ใหม่ ให้ `select max(...)` จาก DB เสมอ ไม่ใช่จากเอกสาร |
-| L11 | **constraint ของ schema ไม่ตรงกับที่คิด** | `intent_source_tier` รับแค่ `paa/derived/template_only` — ธง "ไม่นับ KPI organic" ต้องใช้ `page_purpose='utility'` แทน · `compliance_max_tier` เป็น generated column | อ่าน `pg_constraint` ก่อนออกแบบ field mapping |
+| L11 | **constraint ของ schema ไม่ตรงกับที่คิด** | `intent_source_tier` รับแค่ `paa/derived/template_only` — ธง "ไม่นับ KPI organic" ต้องใช้ `page_purpose='utility'` แทน · `compliance_max_tier` เป็น generated column · 🔴 *(corrected 2026-08-24 against live schema — ทุกวันนี้ `intent_source_tier` รับค่าที่ **4 คือ `brand`** และมีใช้จริง 88 แถว (VTH 87) ส่วน `paa` **0 แถว ไม่เคยถูกเขียนเลย** · §2 / §4.1 / §7 ที่สั่งให้ตั้ง `'brand'` จึงรันได้จริง ไม่ใช่ข้อขัดแย้ง · `page_purpose='utility'` ยังมีอยู่ 82 แถว ใช้คู่กันได้)* | อ่าน `pg_constraint` ก่อนออกแบบ field mapping |
 | L12 | **DB มี constraint ที่ช่วยเราอยู่แล้ว** | insert หน้าราคาไม่ผ่านเพราะคีย์ยังผูกกับหน้าเดิม — 1 keyword : 1 page ถูกบังคับที่ DB จริง | อย่ามองว่าเป็น error ให้มองว่าเป็น gate ที่ทำงาน แล้วปลดคีย์เดิมก่อน |
 | L13 | **`kw_norm()` จับคำไทยที่ไม่เว้นวรรคไม่ได้** | `ฟันปลอม ทั้งปาก` กับ `ฟันปลอมทั้งปาก` เป็นคำเดียวกันในสายตาผู้ค้น แต่ normalize ออกมาคนละค่า (token เดียว vs สอง token) → QA Q1 ไม่จับ | เสริม gate: เทียบเวอร์ชัน **ลบช่องว่างทั้งหมด** (`replace(kw,' ','')`) ควบคู่กับ token-sort · เจอคู่แบบนี้ให้ตัวหนึ่งเป็น semantic |
 | L14 | **QA gate ที่ผูกกับเลข section จะพังเมื่อย้ายหมวด** | ย้ายหมวดราคา §10 → §8.10 แล้ว gate Q4c (`section <> '10'`) รายงาน false positive 6 หน้า | เขียน gate ให้ผูกกับ **คุณสมบัติของหน้า** (slug prefix / page_purpose) ไม่ใช่เลข section |
@@ -608,7 +625,7 @@ where brand = :brand and page_a is not null and page_b is not null and kw_simila
 | L22 | **byline บนเทมเพลต ≠ editorial review record** | VTH โชว์ชื่อหมอครบทุกหน้า EEAT แต่ `seo_editorial_reviews` มี **0 แถว** ของแบรนด์ ขณะที่ Deezy มี 666 | ผูก reviewer ให้ครบทุกหน้าตั้งแต่แผน · และ **ห้ามบันทึก `approved=true` ให้หน้าที่ยังไม่มีเนื้อหา** — หน้า Planned ได้แค่ `pending` เพราะ field นี้เป็นสิ่งที่ผู้ตรวจอ่านตามตัวอักษร |
 | L23 | **เจอข้อบกพร่องแบบมีทิศทาง ให้ตรวจทิศตรงข้ามทันที** | ปิดลิงก์ที่ *ชี้เข้า* หน้า Merged 373 เส้นแล้วประกาศจบ — อีกสามรอบถัดมาถึงพบว่ามี 595 เส้น *วิ่งออกจาก* หน้าเดียวกันนั้น รวม 968 เส้นกำลังออกเว็บจริง | เกตทุกข้อที่ถามความสัมพันธ์ ต้องถามทั้งสองปลาย (DR-049) · และเทียบตัวเลขปลายทาง: from-page ใน export ต้องเท่ากับจำนวนหน้า active พอดี |
 | L24 | **Q1 สองชั้นของ L13 จับ "การสลับลำดับคำไทยที่ไม่เว้นวรรค" ไม่ได้** | Smile Scape ผ่าน Q1 ทั้ง token-sort และ strip-เว้นวรรค แล้วประกาศ 0 — ชั้น `pg_trgm` พบ **13 คู่ที่ทั้งสองฝั่งเป็น primary ของคนละหน้า**: `รักษาโรคเหงือก` ⟷ `โรคเหงือก รักษา` (0.72) · `ผ่าตัดรากฟันเทียม` ⟷ `รากฟันเทียม ผ่าตัด` (0.76) · `คลินิกสไมล์สเคป` ⟷ `สไมล์สเคป คลินิก` (0.78) · เหตุผลเชิงกลไก: token-sort ต้องมีช่องว่างถึงจะตัดคำได้ ส่วน strip-เว้นวรรคเทียบสตริงตรงตัวจึงแพ้ทันทีเมื่อลำดับคำต่าง | **Q1 ต้องมีชั้นที่ 3** (= Q9 ใน §10) — `v_keyword_near_duplicates` sim ≥ 0.70 โดยตัดคู่ที่ฝั่งหนึ่งเป็น substring ของอีกฝั่งออก · **ห้าม auto-fix** มี false positive (`ค่ารากฟันเทียม` ⟷ `ผ่ารากฟันเทียม` 0.765 ต่างอักษรเดียวแต่คนละความหมาย) |
-| L25 | **dedupe ที่ใช้แต่การเทียบสตริงจะประกาศ "สะอาด" ทั้งที่ยังซ้ำ** | Smile Scape ยุบ entity/cluster ด้วยชื่อ · token-sort · ICD จนเกตขึ้น 0 ทุกข้อ — พอรันชั้น embedding ทีหลังเจอของจริงอีก 4 รายการ: `social-security-dental-benefit "(TH)"` (17 หน้า · 9 คีย์) · `bone-graft-implant` (deezy ซ้ำกับตัวเอง) · `tmj-disorder` ที่ loader รอบหลังเขียนทับให้ไปนั่งผิดคลัสเตอร์ · และคู่ subtype ที่ต้องผูก edge แทนยุบ | รัน **ทั้ง 4 view ก่อน**เริ่ม dedupe ทุกรอบ · เกตปิดงานเพิ่ม 3 ข้อ: trigram-pair = 0 · semantic `cluster_conflict` = 0 · **embedding ที่ยังชี้ entity `lifecycle='merged'` = 0** (ยุบ entity ต้อง `delete from seo_entity_embeddings` ด้วย ไม่งั้น view ชูซากขึ้นมาซ้ำทุกรอบ) |
+| L25 | **dedupe ที่ใช้แต่การเทียบสตริงจะประกาศ "สะอาด" ทั้งที่ยังซ้ำ** | Smile Scape ยุบ entity/cluster ด้วยชื่อ · token-sort · ICD จนเกตขึ้น 0 ทุกข้อ — พอรันชั้น embedding ทีหลังเจอของจริงอีก 4 รายการ: `social-security-dental-benefit "(TH)"` (17 หน้า · 9 คีย์) · `bone-graft-implant` (deezy ซ้ำกับตัวเอง) · `tmj-disorder` ที่ loader รอบหลังเขียนทับให้ไปนั่งผิดคลัสเตอร์ · และคู่ subtype ที่ต้องผูก edge แทนยุบ | รัน **ทั้ง 4 view ก่อน**เริ่ม dedupe ทุกรอบ · เกตปิดงานเพิ่ม 3 ข้อ: trigram-pair = 0 · semantic `cluster_conflict` = 0 · **embedding ที่ยังชี้ entity `seo_entity_graph.entity_lifecycle='merged'` = 0** *(corrected 2026-08-24 against live schema — ชื่อคอลัมน์คือ `entity_lifecycle` ไม่ใช่ `lifecycle` · ค่า `merged` มีอยู่จริง 23 แถว)* (ยุบ entity ต้อง `delete from seo_entity_embeddings` ด้วย ไม่งั้น view ชูซากขึ้นมาซ้ำทุกรอบ) |
 | L26 | **similarity เป็นตัวกรองผู้ต้องสงสัย ไม่ใช่ตัวตัดสิน assign — ห้าม auto-assign คีย์ด้วยคะแนน** | Smile Scape (Wave 16g) จะปิดช่องว่าง 259 หน้าโดยยืมคำที่ "วัดแล้ว" ซึ่งผูก `primary_entity_fp` เดียวกัน (186 หน้าเข้าเงื่อนไข 8,334 คู่) แต่พังสองชั้น: (ก) **มีแค่ 1,401 คู่ที่เป็นคำของแบรนด์ตัวเอง** ที่เหลือเป็นของอีก 2 แบรนด์ในตารางร่วม — assign ไปคือทำ brand scope พัง (ข) แม้กรองเหลือคำของตัวเอง + guard 3 ชั้น + ตัด substring + ล็อก intent ตามหมวดแล้ว เหลือ 14 คู่ และคุณภาพยังไม่ผ่าน เพราะ trigram จับ *สตริง* ไม่จับ *ความหมาย*: `รากฟันเทียมหลุด` ← `รากฟันเทียม ดีไหม` · `รากฟันเทียมทำจากอะไร` ← `รากฟันเทียม กินอะไรไม่ได้` · `ปลูกกระดูกล้มเหลว` ← `ปลูกกระดูก เจ็บไหม` · `All-on-4 คืออะไร` ← `all on 4 ราคา` | ใช้ similarity ตั้ง *ผู้สมัคร* ได้ แต่ **ต้องมีคนอ่านยืนยันว่าตรงหัวข้อจริงก่อน assign ทุกคู่** · การยืมคำข้ามแบรนด์ในตารางร่วมต้องสร้างแถวของแบรนด์ตัวเอง + วัดเอง (`borrowed_from_fp`) ห้ามชี้ `target_keyword_fp` ไปที่แถวของแบรนด์อื่น · กฎเดียวกับ citation: ขยาย matcher ให้ครอบคลุมขึ้นเมื่อพูล "ดูบาง" คือทางที่ผูกของผิดเข้าหน้า |
 | L27 | **`COMMENT ON COLUMN` บอก *เจตนา* ไม่ได้การันตี *ของที่อยู่จริง* — ก่อนประกาศว่าข้อมูลเสีย ให้ select ตัวอย่างจริงมาดูและเทียบข้ามแบรนด์ก่อน** | Smile Scape (Wave 16k) ตรวจ route-back โดยอ่าน COMMENT ของ `seo_website_page_master.planned_outbound_fps` ที่เขียนว่าเก็บ *"text[] of page_fingerprint values"* แล้ว join กับคอลัมน์ `fingerprint` (ฟอร์แมต `page_{ULID16}`) → ได้ 0 ทุกช่อง เกือบสรุปว่าเป็นดาต้าเสีย 535 แถวและเกือบเขียนทับ · ของจริงคือทั้ง `planned_outbound_fps` และ `seo_page_internal_links.from_page_fp/to_page_fp` ใช้ id แบบ **`<brand>-<sitemap_node_id>`** (`smilescape-3.13` · `vth-6.2.12.1`) เหมือนกันทั้ง 2 แบรนด์ ทั้ง 2 ตาราง **16,457 ลิงก์ ไม่มีสักแถวที่ใช้ `page_`** — COMMENT ล้าสมัย ไม่ใช่ข้อมูลผิด | กฎ "อ่าน COMMENT ก่อนเขียนค่า" ยังคงอยู่ แต่เพิ่มขาที่สอง: **ก่อน `update`/ประกาศ defect เพราะข้อมูลไม่ตรง COMMENT ให้ (1) select ตัวอย่างจริง (2) นับสัดส่วนฟอร์แมตทั้งตาราง (3) เทียบกับแบรนด์อื่นในตารางร่วม** · ถ้าทุกแบรนด์ทำเหมือนกันหมด = convention ที่ COMMENT ตามไม่ทัน การ "แก้ให้ตรง COMMENT" คือการทำพัง · แจ้ง operator ให้อัปเดต COMMENT แทน |
 | L28 | **`seo_website_page_master` มีคีย์ 2 ตัวที่เรียกว่า "fingerprint" ได้ทั้งคู่ และตารางบริวารตั้งชื่อคอลัมน์ว่า `page_fp` เฉย ๆ — ใส่ผิดตัวแล้วแถวหลุดเงียบ เพราะไม่มี FK จริงบังคับ** | Smile Scape (Wave 16y) รัน orphan gate เจอ `seo_page_citations` 3 แถวของ **vth-biodent** ผูก `page_fp = 'page_942B5270A0314DAB'` (= คอลัมน์ `fingerprint` ฟอร์แมต `page_{ULID16}`) แทน `'vth-4.4.4'` (= `page_fingerprint`) · แถวสร้างวันเดียวกับที่ตรวจเจอ แปลว่าเซสชันที่กำลังทำแบรนด์นั้นเพิ่งพลาด และไม่มีอะไรเตือน — หน้ายังอยู่ครบ citation ยังอยู่ครบ แต่ join ไม่ติด หน้าจึงกลายเป็น "ไม่มีหลักฐาน" ทั้งที่ผูกไว้แล้ว · นับทั้งฐาน: `seo_page_citations` 6,306/6,309 และ `seo_editorial_reviews` 2,095/2,095 ใช้ `page_fingerprint` = **นั่นคือมาตรฐานที่ใช้จริง** ส่วน 3 แถวนั้นคือของผิด ไม่ใช่ของถูกที่มาก่อนกาล · น่าสับสนเป็นพิเศษเพราะ COMMENT ของ `fingerprint` เขียนว่า *"IMMUTABLE machine ID … Do NOT treat page_fingerprint as stable identity; use fingerprint for that"* ซึ่งอ่านแล้วชวนให้เอา `fingerprint` ไปผูก | **คีย์ผูกของตารางบริวารทุกตัวคือ `page_fingerprint`** (`{brand_prefix}-{sitemap_node_id}`) — `seo_page_citations.page_fp` · `seo_editorial_reviews.page_fp` · `seo_page_internal_links.from_page_fp/to_page_fp` · `parent_page_fp` · `planned_outbound_fps` · ส่วน `fingerprint` (`page_{ULID16}`) ใช้เป็น identity ที่ไม่เปลี่ยนสำหรับ audit / อ้างข้ามเซสชัน **เท่านั้น ห้ามเอาไปผูก** · เหตุผลที่ต้องเป็นแบบนี้: §13.3 renumber ออกแบบมาให้ไล่อัปเดต 7 จุดที่ถือ `page_fingerprint` อยู่แล้ว ถ้าบางแถวแอบใช้ `fingerprint` มันจะรอด renumber ไปเงียบ ๆ แล้วไปโผล่เป็น orphan ทีหลัง · **เกตบังคับก่อนปิดงานทุกรอบ:** `select count(*) from <satellite> s where not exists (select 1 from seo_website_page_master p where p.page_fingerprint = s.page_fp)` ต้องเป็น **0 ทุกแบรนด์ ไม่ใช่แค่แบรนด์ตัวเอง** (ตารางร่วม แบรนด์อื่นพังก็เห็นจากที่นี่) · ถ้าเจอ **ให้แก้ด้วยการเขียนคีย์ใหม่ ห้ามลบแถว** — ของที่ผูกไว้ถูกต้องอยู่แล้ว ผิดแค่รูปคีย์ · **✅ 2026-08-16 แก้ที่รากแล้ว: ใส่ FK จริง 7 ตัว** (migration `add_real_fks_to_page_master`) ทุกตัว `ON UPDATE CASCADE` · `ON DELETE` = CASCADE สำหรับแถวลูกแท้ (citations · reviews · links) และ **SET NULL** สำหรับแถวที่มีชีวิตของตัวเอง (`parent_page_fp` · `ad_landing_page_fp` · `optimized_for_page_fp`) — ⚠️ `parent_page_fp` ห้ามเป็น CASCADE เด็ดขาด ลบ hub เดียวจะลบทั้งกิ่ง · **บทเรียนซ้อน: คำถามที่ควรถามตั้งแต่แรกคือ "ทำไมไม่เป็น FK" ไม่ใช่ "จะเขียนเกตจับ orphan ยังไง"** — ในตารางเดียวกันนั้น `citation_fp` มี FK ครบมาตลอด มีแต่ฝั่ง `page_fp` ที่ไม่มี = ช่องโหว่ ไม่ใช่การตัดสินใจ · เหตุผลเชิงประวัติที่ทำให้เลี่ยง FK คือ `page_fingerprint` เปลี่ยนค่าตอน renumber ซึ่ง **`ON UPDATE CASCADE` แก้ได้และทำให้ §13.3 ดีขึ้น** (เขียนที่เดียว บริวารตามเอง เหลือไล่มือแค่ `planned_outbound_fps` เพราะ `text[]` ทำ FK กับสมาชิกใน array ไม่ได้) · **ผลที่ ETL ทุกแบรนด์ต้องรู้: ต้อง insert หน้าก่อนบริวารเสมอ ไม่งั้น `foreign_key_violation`** — พังดัง ๆ ดีกว่าหลุดเงียบ |
@@ -631,12 +648,12 @@ where brand = :brand and page_a is not null and page_b is not null and kw_simila
 
 ## ภาคผนวก — ลำดับงานหลัง SOP อนุมัติ
 
-0. tag `primary_entity_fp` ให้คีย์ 230 ตัวที่ค้าง + หน้า 63 หน้าที่ไม่มี entity
+0. tag `primary_entity_fp` ให้คีย์ **196 ตัว**ที่ค้าง + หน้า **57 หน้า**ที่ไม่มี entity (VTH, active) *(corrected 2026-08-24 against live schema — เดิมเขียน 230 / 63)*
 1. สร้าง view `entity → keywords` (volume/intent/SERP/KD) = คลังตั้งต้น
 2. รัน rule engine ตาม SOP นี้ → เขียนผลลง staging ก่อน
 3. รัน QA gates ข้อ 10 → แก้ → merge
 4. ส่วนเกิน → ข้อเสนอหน้าใหม่ตามข้อ 9
-5. §9 Local — **ไม่ต้อง pull ใหม่** ตรวจแล้วคลังมีคีย์ near-me อยู่ 27 ตัว ติด entity ครบ (ขูดหินปูน ใกล้ฉัน 4,808 · ฟอกสีฟัน ใกล้ฉัน 1,125 · คลินิก ขูดหินปูน ใกล้ฉัน 1,057 ฯลฯ) แต่ **assign ไปแล้วแค่ 3 ตัว และ 2 ใน 3 ผิดหน้า** (6.4.7 หน้า evidence, 6.2.3.4 หน้าเปรียบเทียบ) — ปัญหาอยู่ที่การ assign ไม่ใช่ supply
+5. §9 Local — **ไม่ต้อง pull ใหม่** ตรวจแล้วคลังมีคีย์ near-me อยู่ **23 ตัว** (ขูดหินปูน ใกล้ฉัน 4,808 ฯลฯ) และ **assign เป็น primary ไปแล้ว 7 ตัว** ลงหน้า 9.x ทั้งหมด *(corrected 2026-08-24 against live schema — เดิมเขียน 27 ตัว / assign 3 ตัวและ 2 ใน 3 ผิดหน้า ซึ่งแก้ไปแล้ว)* — ปัญหาอยู่ที่การ assign ไม่ใช่ supply
    เพิ่มจาก DFS pull 2026-07-27: `ทําฟัน ใกล้ฉัน` (18,100 · KD 1) — head term ของ near-me ที่ไม่มีในคลังเดิม
 
 ## 13. โครงสร้างและลำดับเนื้อหาในไซต์แมป (Sitemap Structure & Reading Flow)
@@ -677,7 +694,7 @@ PHASE 1  page_fingerprint → 'zzz-<new_node>'   (+ parent_page_fp, links.from, 
 PHASE 2  'zzz-<new_node>' → 'vth-<new_node>'   (+ sitemap_node_id)
 ```
 
-**ต้องอัปเดต 7 จุดทุกครั้ง** — ไม่มีจุดใดใน 5–7 ที่มี FK คุม เขียนผิดแล้วเงียบ:
+**ต้องอัปเดต 7 จุดทุกครั้ง** — 🔴 *(corrected 2026-08-24 against live schema — ตั้งแต่ migration `add_real_fks_to_page_master` (2026-08-16) จุด 1–6 มี **FK จริงพร้อม `ON UPDATE CASCADE`** แล้ว: `seo_page_citations.page_fp` · `seo_editorial_reviews.page_fp` · `seo_page_internal_links.from_page_fp/to_page_fp` · `parent_page_fp` (self, ON DELETE SET NULL) — บริวารตามเองตอน rename · **เหลือจุดเดียวที่ยังไม่มี FK คุมคือจุด 7 `planned_outbound_fps`** เพราะเป็น `text[]` ทำ FK กับสมาชิกใน array ไม่ได้ · ตรวจ 2026-08-24: orphan ของ `seo_page_citations` = 0 และ `seo_editorial_reviews` = 0)*:
 
 | # | จุด | เจอพลาดจริง |
 |---|---|---|

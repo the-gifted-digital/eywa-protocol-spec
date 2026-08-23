@@ -36,7 +36,7 @@ EYWA™ is a registered trademark of **The Gifted Digital Marketing Co., Ltd.** 
 |----------|---------|-------|--------|
 | `PROJECT_MEMORY.md` | Project context for AI sessions + onboarding | ~880 | 🧠 Memory (local-only, gitignored) |
 | `EYWA_PROTOCOL_v3_33.md` | The Bible — full specification | ~27,800 | 🔒 Active (v3.34) |
-| `Schema_Overview_EYWA_v1_23.md` | Database schema companion (43 live base tables, Group 11 NEW media_assets) | ~2,000 | 🔒 Active (v1.23) |
+| `Schema_Overview_EYWA_v1_23.md` | Database schema companion (Group 11 NEW media_assets) — **43 EYWA canonical base tables**, all 43 verified present 2026-08-24 *(re-corrected 2026-08-24: the original "43 live base tables" was RIGHT and had been replaced with a raw `public` count. `public` also holds 14 non-EYWA/scratch tables — `logs_2025`/`logs_2026`, `fbads_*`, `tsa_*`, `web_lead`, `ss_kw_seed_*` — so a raw count reads **57** base tables excluding backups and **222** including them. The raw number drifts; the canonical 43 does not — `select count(*) from information_schema.tables where table_schema='public' and table_type='BASE TABLE' and table_name not like '\_%' and table_name !~ '(bak\|backup)'`)* | ~2,000 | 🔒 Active (v1.23) |
 | `EYWA_HANDOVER.md` | Operating manual for Claude/AI | ~3,100 | 🔒 Active (v1.19) |
 | `DECISION_RECORDS.md` | Architecture decision log | ~5,300 | 🔒 Active (v1.37) |
 | `Keyword_Assignment_SOP_v1_0.md` | SOP — เลือกคีย์เวิร์ดหลัก/รอง ผูกเข้าหน้า (DR-043) + บทเรียน L1–L23 | ~540 | 🔒 Active (v1.3) |
@@ -73,15 +73,15 @@ Most recent decisions (full detail + rationale in [`DECISION_RECORDS.md`](./DECI
 
 | DR | Status | What | Schema |
 |----|--------|------|--------|
-| **DR-036** Split `condition` / `symptom` CPTs 🔒 | 2026-06-04 (Locked) | Tier-1 Core 8→9; `symptom` its own CPT (sibling to `condition`, like `treatment`↔`procedure`); shared `/by-concern/` base; greenfield/additive | **v1.21** — new `seo_entity_symptom` (29 cols, built `eywa_w11_06`); Bible §25 (v3.26) |
+| **DR-036** Split `condition` / `symptom` CPTs 🔒 | 2026-06-04 (Locked) | Tier-1 Core 8→9; `symptom` its own CPT (sibling to `condition`, like `treatment`↔`procedure`); shared `/by-concern/` base; greenfield/additive | **v1.21** — new `seo_entity_symptom` (**31 cols** live 2026-08-24, was 29 at build; migration `eywa_w11_06_dr036_v21_entity_symptom`) *(corrected 2026-08-24 against live schema)*; Bible §25 (v3.26) |
 | **DR-035** Image Storage & Delivery (Astro / Cloudflare R2) | 2026-06-04 (Locked) | Astro brands: image binaries on Cloudflare (R2 + Transformations / Images), Supabase stores only the URL | — (Bible v3.25, no DDL) |
 | **DR-034** Intra-Page Answer Routing (PAA × FAQ) | 2026-06-03 (Locked) | §4.5.4 — understanding-PAA → body, decision-PAA → FAQ; tiered FAQ floor; PAA subordinate to the locked template | **v1.20** — `page_master` +`intent_source_tier`, `paa_checked_at` |
 | **DR-033** ICD Dual-Coding Standard | 2026-06-02 | `MedicalCondition.code[]` = ICD-11-MMS → ICD-10 → ICD-10-CM → SNOMED | v1.19 — `seo_entity_condition` +`icd11_code`, `icd10_cm_code` |
-| **DR-032** Multi-Center Hospital Brand Pattern | 2026-05-25 | `brand_structure: monolithic \| multi_center` chosen upfront at onboarding | v1.18 — `seo_brand_centers` + `center_slug`; Bible §25.13 (v3.24) |
+| **DR-032** Multi-Center Hospital Brand Pattern 🔴 DORMANT | 2026-05-25 | `brand_structure: monolithic \| multi_center` chosen upfront at onboarding — **no brand has ever chosen `multi_center`**: all 20 `brands` rows are `monolithic` and `seo_brand_centers` holds 0 rows (2026-08-24), so every rule keyed on a center never fires *(corrected 2026-08-24 against live schema)* | v1.18 — `seo_brand_centers` + `center_slug` (both exist, both unused); Bible §25.13 (v3.24) |
 | **DR-031** Google Generative AI Search Alignment | 2026-05-24 | llms.txt deprioritized; query fan-out + audience-first framing | — (Bible v3.23, no DDL) |
 | **DR-030** Sensitive Topic Compliance | 2026-05-20 | Product × Content tier matrix + `positioning_mode` | v1.17 — `page_master` +6 compliance cols |
 
-> **Brand snapshot:** new brands inherit the current stack via `templates/brand-config.template.json` → `eywa_spec_snapshot` (defaulted to the versions above; locked set = DR-001..022 + 024/025/028..036, DR-026 Proposed). New brands bootstrap with **9 Tier-1 CPTs** (incl. `symptom` per DR-036). Earlier waves — DR-024/025 schema catch-up (v3.15 / v1.11), DR-028 Brand Genesis Protocol, DR-029 Universal Brand Design System — see the `DECISION_RECORDS.md` changelog.
+> **Brand snapshot:** new brands inherit the current stack via `templates/brand-config.template.json` → `eywa_spec_snapshot` (defaulted to the versions above; locked set = DR-001..022 + 024/025/028..036, DR-026 Proposed — 🔴 **DR-026 ads track is DORMANT, not merely proposed**: its columns exist on `seo_website_page_master` (`page_purpose`, `ads_template_id`, `index_directive`, `conversion_event_primary`) but `ad_active` is false on all 22,710 rows of `seo_x_ads_keywords_contextual_master`, so nothing downstream of it runs *(corrected 2026-08-24 against live schema)*). New brands bootstrap with **9 Tier-1 CPTs** (incl. `symptom` per DR-036). Earlier waves — DR-024/025 schema catch-up (v3.15 / v1.11), DR-028 Brand Genesis Protocol, DR-029 Universal Brand Design System — see the `DECISION_RECORDS.md` changelog.
 
 ---
 
@@ -127,9 +127,9 @@ Real-world feedback from VTH BioDent (Naphannop S.) surfaced 4 process gaps in t
 3. **Bidirectional Consistency Validation** — reciprocal detection trigger, anchor diversity warning, orphan detection, authority depth check
 4. **Cross-Brand Link Governance** — `is_cross_brand=true` REQUIRES `cross_brand_justification` + `from_page.cross_brand_approved=true`
 
-**Schema v1.11 deferred additions:**
-- 12 new columns on `seo_website_page_master`
-- New table `seo_page_internal_links` (~22 columns)
+**Schema v1.11 deferred additions:** — 🔴 **no longer deferred; both are live** (measured 2026-08-24) *(corrected 2026-08-24 against live schema)*
+- 12 new columns on `seo_website_page_master` — present
+- New table `seo_page_internal_links` (~22 columns) — present, **28 columns / 16,564 rows**
 - New migrations: `009_add_linking_strategy_cols.sql` + `010_create_seo_page_internal_links.sql` (Phase 1A.3)
 
 **HYBRID rationale:**
@@ -230,7 +230,7 @@ Operational governance enhancements based on expert review feedback. Adds **enfo
 - ✅ **DR-012** — Edge Vocabulary Evolution Policy
 - 🔧 **Bible header fix** — corrected from v3.11 → v3.13
 - 🔧 **brands table** — now follows Two-Column Identity Pattern (per DR-008)
-- 🔧 **entity_fingerprint** — explicitly marked as legacy (use `fingerprint` going forward)
+- 🔧 **entity_fingerprint** — explicitly marked as legacy (use `fingerprint` going forward) · 🔴 **that "legacy" reading is not how the live database works** — `seo_entity_graph.entity_fingerprint` is populated on all 732 rows, carries its own UNIQUE key, and is the value `seo_website_page_master.primary_entity_fp` points at; it is load-bearing and must not be dropped *(corrected 2026-08-24 against live schema)*
 
 **Entity Uniqueness Guard (EUG) — 3-Layer Architecture:**
 
@@ -266,6 +266,8 @@ eug_v2_0_roadmap:
   activation: "Phase 2 (when seo_entity_embeddings live)"
   cost: "~$0.015/month at typical scale"
 ```
+
+🔴 **EUG never shipped — this design has no live implementation.** Measured 2026-08-24: `normalize_entity_slug`, `check_alias_collision` and `find_similar_entities` do not exist in the database (zero functions match), and `seo_entity_graph` carries no UNIQUE on `(entity_slug, brand_scope_primary)` — the column `brand_scope_primary` does not exist either. What IS live: the `pg_trgm` extension plus `idx_entity_name_trgm`, so layer 3b is buildable but unbuilt. The v2.0 prerequisite is already met (`seo_entity_embeddings` holds 684 rows, `vector` extension installed). *(corrected 2026-08-24 against live schema)*
 
 **Edge Vocabulary Evolution Policy:**
 
@@ -366,20 +368,20 @@ See `PHASE_1_DECISIONS.md` for full Phase 1 summary.
 
 ## 🏗️ Active Phase: Phase 1 — Supabase Database Foundation
 
-**Status:** 🟡 Documentation locked, migrations pending
+**Status:** 🟢 Built and in production — **217 migrations applied**, latest `20260823181413` (measured 2026-08-24; the count keeps growing, re-read it with `select count(*), max(version) from supabase_migrations.schema_migrations`). The database holds 2,358 page rows across three brands (deezy-dental 869 · vth-biodent 761 · smile-scape-clinic 728), 742 of them Live. *(corrected 2026-08-24 against live schema; previously read "🟡 Documentation locked, migrations pending", which `PHASE_1_DECISIONS.md` already contradicted)*
 
 **Scope:**
 - ✅ Schema upgrade (Bible v3.14 / Schema v1.10)
 - ✅ Two-Column Identity Pattern adoption (now includes brands table)
 - ✅ Two-Tier Multilingual Strategy
 - ✅ brand_slug standardization
-- ✅ Entity Uniqueness Guard (EUG) v1.0 design 🆕 v3.13
+- ✅ Entity Uniqueness Guard (EUG) v1.0 **design only** — 🔴 not implemented: none of its functions or constraints exist in the database *(corrected 2026-08-24 against live schema)*
 - ✅ Edge Vocabulary Evolution Policy 🆕 v3.13
 - ✅ Sitemap Design Quality Gates (DR-015..018) 🆕 v3.14
-- ⏳ Migration files (29 SQL files planned across Phases 1A-1D + 1A.2)
-- ⏳ Helper functions (`generate_ulid()`, fingerprint generators, triggers, EUG functions)
+- ✅ Migration files — the 29-file plan below was never executed under those filenames; the live history holds **217 applied migrations** under no single convention: 60 `deezy_*`, 46 `vth_*`, 37 `eywa_w*` wave migrations (`eywa_w11_06_dr036_v21_entity_symptom`, `eywa_w11_08_dr038_v23_media_assets_canonical`) and 74 free-form (`add_*`, `create_*`, `split_page_type_into_category_and_role`, …). None carries a `NNN_*.sql` filename *(corrected 2026-08-24 against live schema; re-corrected the same day — an intermediate edit described all 217 as "named per wave", true of only 37)*
+- ⚠️ Helper functions — **partially** live: `generate_ulid16()` (not `generate_ulid()`), `generate_fingerprint()`, `check_fingerprints()` and the `fn_set_fingerprint_*` / `fn_prevent_fingerprint_change` triggers all exist. 🔴 **The EUG functions do not** — see the EUG note above *(corrected 2026-08-24 against live schema)*
 
-**Migration Plan (29 files):** 🔄 v3.14/v1.10
+**Migration Plan (29 files):** 🔄 v3.14/v1.10 — 🔴 **historical plan, superseded**: no migration in the live history carries any of these filenames *(corrected 2026-08-24 against live schema)*
 
 - Phase 1A: Foundation (6 migrations) — non-breaking column additions + helpers + **EUG** 🆕 v3.13
 - Phase 1A.2: Sitemap Design Quality Gates (2 migrations) 🆕 v3.14 — content_brief + 3 reconciliation/viability columns
@@ -426,16 +428,16 @@ See `EYWA_HANDOVER.md` Section 6 + `PHASE_1_DECISIONS.md` for details.
 | **DR-010** | **Brand Scope Architecture** | 🔒 **Locked** |
 | **DR-011** | **Entity Uniqueness Guard (Two-Wave)** | 🔒 **Locked (NEW v3.13)** |
 | **DR-012** | **Edge Vocabulary Evolution Policy** | 🔒 **Locked (NEW v3.13)** |
-| **DR-013** | **Edge Vocabulary v3.5 Expansion (causes + contraindicates)** | 🌱 **Proposed (review until 2026-05-20)** |
-| **DR-014** | **Concept Entity Subtype Lock (framework + axis)** | 🌱 **Proposed (review until 2026-05-20)** |
+| **DR-013** | **Edge Vocabulary v3.5 Expansion (causes + contraindicates)** | 🌱 Proposed (review date 2026-05-20 long past) — 🔴 **but shipped in the data**: `causes`, `caused_by` and `contraindicates` are three of the 10 `edge_type` values in use across 1,089 rows of `seo_entity_relationships`, and `edge_evidence_citation` / `medical_reviewer_signoff_at` / `medical_reviewer_fp` columns exist *(corrected 2026-08-24 against live schema)* |
+| **DR-014** | **Concept Entity Subtype Lock (framework + axis)** | 🌱 Proposed (review date 2026-05-20 long past) — 🔴 **but shipped in the DDL**: `CHECK chk_concept_subtype` on `seo_entity_graph` allows `framework \| axis \| general` today *(corrected 2026-08-24 against live schema)* |
 | **DR-015** | **Brand Scope Market Reconciliation Pattern** | 🔒 **Locked (NEW v1.4)** |
 | **DR-016** | **Page Viability Assessment / Thin Page Detection** | 🔒 **Locked (NEW v1.4)** |
 | **DR-017** | **Page Content Brief Field** | 🔒 **Locked (NEW v1.4)** |
 | **DR-018** | **Page Content Length Standards** | 🔒 **Locked (NEW v1.4)** |
 | **DR-019** | **Schema Strategy for Post-Rich-Results Era (FAQ/HowTo/AggregateRating)** | 🌱 **Proposed (NEW v1.5 — review until 2026-06-07)** |
-| **DR-020** | **Universal Content Template Standard (25 templates × ~25 blocks)** | 🌱 **Proposed (NEW v1.6 — review until 2026-06-07)** |
-| **DR-021** | **Internal Linking Architecture (HYBRID — page strategy + junction)** | 🌱 **Proposed (NEW v1.7 — review until 2026-06-07)** |
-| DR-022..026 | Various (WordPress hosting, Supabase tier, migration repo, Notion sync scope, branch testing, etc.) | ⏳ Placeholder |
+| **DR-020** | **Universal Content Template Standard (25 templates × ~25 blocks)** | 🔒 Locked 2026-05-12 (per the document table at the top of this file) — live: `content_format` T-codes on 2,337 of 2,358 page rows, per-brand vocabularies *(corrected 2026-08-24 against live schema; row previously read "Proposed — review until 2026-06-07")* |
+| **DR-021** | **Internal Linking Architecture (HYBRID — page strategy + junction)** | 🌱 Proposed (review date 2026-06-07 long past) — 🔴 **but shipped**: `seo_page_internal_links` exists with 28 columns and 16,564 rows, and the page-level strategy columns (`authority_weight`, `link_equity_score`, `orphan_risk_score`, `crawl_depth`, `anchor_strategy_mode`, `cross_brand_*`, …) are on `seo_website_page_master` *(corrected 2026-08-24 against live schema)* |
+| DR-022..026 | Various (WordPress hosting, Supabase tier, migration repo, Notion sync scope, branch testing, etc.) | ⏳ Placeholder — 🔴 DR-026 (ads track) is **DORMANT**, not merely unwritten: its page columns exist but `ad_active` is false on all 22,710 keyword rows *(corrected 2026-08-24 against live schema)* |
 
 See `DECISION_RECORDS.md` for full rationale.
 
@@ -443,17 +445,19 @@ See `DECISION_RECORDS.md` for full rationale.
 
 ## 📐 Schema Overview
 
-The EYWA database schema (v1.11) consists of **37 tables organized into 9 groups**:
+The EYWA database schema (**v1.23** — the companion file is `Schema_Overview_EYWA_v1_23.md`; "v1.11" here was stale) consists of **11 groups over 43 EYWA canonical base tables**, all 43 verified present 2026-08-24 *(corrected 2026-08-24 against live schema; re-corrected the same day — an intermediate edit read "9 groups over 57 live base tables", which counted `public`'s non-EYWA tables instead of the schema)*.
 
-1. **Group 1 — Core Identity** (brands, seo_authors_reviewers, seo_doctor_assignments, seo_branches) — *ชื่อเดิม seo_authors / seo_brand_doctors / seo_brand_branches ไม่มีอยู่จริง แก้ 2026-08-23*
+🔴 **The 9-group numbering below is the superseded v1.11-era organization.** Its numbers and themes no longer line up with the companion's §2 11-group table, where Group 5 = Performance Fact Tables, Group 6 = Backlinks & Off-Page and Group 8 = Data Quality & Governance. Read §2 of `Schema_Overview_EYWA_v1_23.md` as authoritative; the list below is kept only so each stale rule can be marked:
+
+1. **Group 1 — Core Identity** (brands, seo_authors_reviewers, seo_doctor_assignments, seo_branches) — *ชื่อเดิม seo_authors / seo_brand_doctors / seo_brand_branches ไม่มีอยู่จริง แก้ 2026-08-23* — all four verified present *(2026-08-24)*
 2. **Group 2 — Knowledge Graph** (seo_entity_graph, seo_entity_relationships, seo_topic_cluster_master)
 3. **Group 3 — Content Pages** (seo_website_page_master)
 4. **Group 4 — Citations** (seo_citations, seo_page_citations, seo_editorial_reviews)
-5. **Group 5 — Keywords** (seo_x_ads_keywords_contextual_master + analytics)
-6. **Group 6 — Logs & Audits** (seo_governance_audit, seo_kpi_baseline)
-7. **Group 7 — AI Operations** (seo_entity_embeddings, seo_ai_citation_tracking, seo_ai_query_log)
-8. **Group 8 — Scoring & Authority** (seo_brand_authority_scores, seo_cluster_health_scores, seo_entity_authority_scores, seo_eeat_scores)
-9. **Group 9 — Operations** (translations, schema_changes, etc.)
+5. **Group 5 — Keywords** (seo_x_ads_keywords_contextual_master + analytics: seo_x_ads_keywords_x_url_daily_logs, seo_x_ads_keywords_monthly_market_snapshot, seo_x_ads_keyword_serp_competitors)
+6. **Group 6 — Logs & Audits** — 🔴 **rule cannot run: neither `seo_governance_audit` nor `seo_kpi_baseline` exists.** The one populated audit surface is `seo_schema_changes` (DDL audit log, 54 rows); `seo_data_quality_metrics` exists but holds **0 rows**, so it governs nothing yet. The KPI/log volume `seo_kpi_baseline` was meant to carry lives in `seo_x_ads_keywords_x_url_daily_logs` (**151,471 rows**, physical `logs_2026`; `logs_2025` is empty) — which the companion files under **Group 5 — Performance Fact Tables**, and both governance tables under **Group 8**, not here *(corrected 2026-08-24 against live schema; re-corrected the same day — an intermediate edit named the empty `seo_data_quality_metrics` as a live surface and missed the log table entirely)*
+7. **Group 7 — AI Operations** (seo_entity_embeddings, **seo_llm_citations** ← named seo_ai_citation_tracking here, **seo_llm_query_simulations** ← named seo_ai_query_log here, seo_brand_mentions) *(corrected 2026-08-24 against live schema)*
+8. **Group 8 — Scoring & Authority** — 🔴 **rule cannot run: none of `seo_brand_authority_scores` / `seo_cluster_health_scores` / `seo_entity_authority_scores` / `seo_eeat_scores` exists.** Zero tables in the database match score/authority/eeat naming; scoring lives in columns on existing tables (e.g. page_master `authority_weight`, `link_equity_score`, `orphan_risk_score`) *(corrected 2026-08-24 against live schema)*
+9. **Group 9 — Operations** (**seo_schema_changes** ← named schema_changes here, seo_programmatic_templates; 🔴 no `translations` table exists — translation is a column set on `seo_website_page_master`: `page_language`, `translation_status`, `translations_versions_fps`, `source_translation_fp`) *(corrected 2026-08-24 against live schema)*
 
 **Schema Appendices:**
 

@@ -25,12 +25,13 @@
 | **condition** | `seo_entity_condition` | `icd10_code` (WHO) · `icd10_cm_code` (CM) · `icd11_code` (MMS) · `mesh_id` · `umls_cui` · `snomed_ct_id` |
 | **symptom** | `seo_entity_symptom` | `icd10_code` · `icd11_code` · `mesh_id` · `umls_cui` · `snomed_ct_id` |
 | **anatomy** | `seo_entity_anatomy` | `fma_id` · `uberon_id` · `mesh_id` |
-| **lab_test** | `seo_entity_lab_test` | `loinc_code` · `snomed_ct_id` · `mesh_id` |
+| **lab_test** | `seo_entity_lab_test` | `loinc_code` · `snomed_ct_id` · `mesh_id` — 🔴 **กฎนี้ยังยิงไม่ออก:** ตารางมี 0 แถว และ `seo_entity_graph` ไม่มี entity ชนิด `lab_test` เลยสักตัว *(corrected 2026-08-24 against live schema)* |
 | **drug** | `seo_entity_drug` | `rxnorm_code` · `atc_code` · `mesh_id` |
 | **procedure · treatment · device** | **ไม่มีรหัส ICD** | — |
 
 `seo_entity_graph` เก็บได้เฉพาะ `wikidata_id` · `wikipedia_url` · `schema_org_type`
 คอลัมน์ `seo_entity_graph.icd_10_code` **ปลดระวางแล้ว** (เคยเก็บค่า ICD-10-CM ปนกับ WHO ICD-10 ที่อยู่อีกตาราง)
+คอลัมน์ยังไม่ถูก drop — ยังอยู่ในตารางและ NULL ครบ 732/732 แถว ส่วน **คอมเมนต์ของคอลัมน์ใน DB ยังบรรยายว่าใช้งานอยู่** ("Emitted in MedicalCondition.code[]") ยังไม่ได้อัปเดตตาม DR-050 — คนอ่าน `\d+` จะเข้าใจผิด *(corrected 2026-08-24 against live schema)*
 
 ### 1.1 ทำไม procedure / treatment / drug ห้ามมี ICD
 
@@ -120,6 +121,18 @@ P2892 (UMLS CUI) · P5806 (SNOMED CT) · P1550 (Orphanet) · P667 (ICPC) · P672
 | P4338 · P267 · P3345 | `loinc_code` · `atc_code` · `rxnorm_code` |
 
 > ⚠️ P7329 คือ **MMS** ซึ่งเป็นรหัสที่คนอ้างจริง (`DA0E.3`) · P7807 คือ **Foundation** ซึ่งเป็นเลขยาว (`1109546957`) ใช้เป็น fallback เท่านั้น — ตรวจ property กับ API ก่อนใช้เสมอ อย่าจำเอา
+> fallback นี้ **ลงจริงแล้ว 7 แถว** (condition 5 · symptom 2 เป็นเลขล้วน) ทั้งที่คอมเมนต์ของคอลัมน์ `icd11_code` ใน DB ระบุว่าเป็น `ICD-11-MMS stem code` และ JSON-LD จะประกาศ `codingSystem="ICD-11-MMS"` — ยังไม่มีคำตัดสินว่าจะย้ายหรือทิ้ง *(corrected 2026-08-24 against live schema)*
+
+**ความครอบคลุมจริงของแต่ละ mapping — วัด 2026-08-24** (รันใหม่ได้ด้วย `count(*) filter (where <col> is not null)` ต่อตาราง):
+
+| ตาราง (แถว) | ค่าที่เติมแล้ว |
+|---|---|
+| `seo_entity_graph` (732) | `wikidata_id` 158 · `wikipedia_url` 128 |
+| `seo_entity_condition` (125) | `icd10_code` 97 · `icd10_cm_code` 109 · `icd11_code` 73 · `mesh_id` 41 · `umls_cui` 43 · `snomed_ct_id` 5 |
+| `seo_entity_symptom` (21) | `icd10_code` 19 · `icd11_code` 8 · `mesh_id` 7 · `umls_cui` 6 · `snomed_ct_id` 1 |
+| `seo_entity_anatomy` (21) | `fma_id` 15 · `uberon_id` 18 · `mesh_id` 16 |
+| `seo_entity_drug` (9) | `rxnorm_code` 2 · `atc_code` 4 · `mesh_id` 5 |
+| `seo_entity_lab_test` (0) | 🔴 ไม่มีแถว — แถว P4338 → `loinc_code` ในตารางข้างบนจึงไม่เคยทำงาน |
 
 ### 3.2 จาก WHO — ICD-10 → ICD-11
 
@@ -213,14 +226,21 @@ select count(*) from seo_entity_graph where icd_10_code is not null;   -- คอ
 -- subtype row ที่ไม่มี entity รองรับ
 select count(*) from seo_entity_condition c
   where not exists (select 1 from seo_entity_graph e where e.entity_fingerprint=c.entity_fp);
--- (ทำซ้ำกับ symptom · anatomy · drug · lab_test · organization · procedures · devices)
+-- (ทำซ้ำกับ symptom · anatomy · drug · lab_test · organization · procedures · devices
+--  · product · ingredients — สองตารางท้ายมีจริงในสคีมาแต่ยัง 0 แถว วัด 2026-08-24)
 
 -- Q-id ที่ไม่ใช่รูปแบบ Q<ตัวเลข>
 select count(*) from seo_entity_graph where wikidata_id is not null and wikidata_id !~ '^Q[0-9]+$';
 
 -- residual code หลุดเข้ามา
-select count(*) from seo_entity_condition where icd11_code ~ '\\.Z$';
+select count(*) from seo_entity_condition where icd11_code ~ '\.Z$';
+-- ^ backslash เดียว: `standard_conforming_strings = on` บนฐานนี้ ทำให้ '\\.Z$' กลายเป็น regex
+--   ที่หา backslash จริง → คืน 0 เสมอ เกตผ่านทั้งที่ไม่ได้ตรวจอะไร
+--   ตรวจสดแล้ว: 'MD11.Z' ~ '\.Z$' = true · 'MD11.Z' ~ '\\.Z$' = false
+--   *(corrected 2026-08-24 against live schema)*
 ```
+
+วัดจริง 2026-08-24 — ทั้งห้าเกตคืน **0** ครบ (`seo_entity_graph` 732 แถว · Q-id ซ้ำ 0 · Q-id ผิดรูป 0 · `icd_10_code` not null 0 · orphan subtype 0 ทุกตาราง · residual `.Z` 0 เมื่อรันด้วย regex ที่แก้แล้ว) *(corrected 2026-08-24 against live schema)*
 
 ---
 
@@ -228,12 +248,19 @@ select count(*) from seo_entity_condition where icd11_code ~ '\\.Z$';
 
 | กลุ่ม | ตัวอย่าง | เหตุผล |
 |---|---|---|
-| ชื่อโปรแกรมของแบรนด์ | `mbm-*` · `bfb` · `pncl` · `structural-facial-longevity-program` | ไม่มีในสารานุกรม |
-| ชื่อรุ่น/ยี่ห้อเครื่องมือ | `nemostudio` · `x-guide` · `fotona-lightwalker` · `aoralscan` | เดียวกัน (ยกเว้นบริษัทผู้ผลิตซึ่งมี item จริง) |
+| ชื่อโปรแกรมของแบรนด์ | `mbm-*` · `breath-face-brain-*` · `pncl-*` · `structural-facial-longevity-program` | ไม่มีในสารานุกรม (slug `bfb` ไม่มีอยู่จริง แต่ตระกูลนี้มี **สองแถว** ไม่ใช่แถวเดียว: `breath-face-brain-method` "Breath·Face·Brain Method" และ `breath-face-brain-stages` "BFB 4-Stage Sequence" — ทั้งคู่ `brand_scope={vth-biodent}` *(corrected 2026-08-24 against live schema)*) |
+| ชื่อรุ่น/ยี่ห้อเครื่องมือ | `nemostudio` · `x-guide-dynamic-navigation` · `fotona-lightwalker` · `aoralscan` | เดียวกัน (ยกเว้นบริษัทผู้ผลิตซึ่งมี item จริง — slug `x-guide` เปล่า ๆ ก็ไม่มีอยู่จริงเหมือน `bfb` ตัวที่มีคือ `x-guide-dynamic-navigation` *(corrected 2026-08-24 against live schema)*) |
 | concept ทางการตลาด | `retest-protocol` · `pncl-dashboard` | เดียวกัน |
 | `person` | ทีมแพทย์ของแบรนด์ | ใช้ `sameAs` ของหน้าโปรไฟล์แทน |
 
-VTH: 306 จาก 715 entity อยู่ในกลุ่มนี้ และ **ถูกต้องแล้วที่ว่าง** — การบังคับให้มีคือทางที่ทำให้โปรแกรมลดการอักเสบไปชี้ Persona 4
+`seo_entity_graph` เป็นตาราง **ที่ใช้ร่วมกันทุกแบรนด์ ไม่ใช่ของ VTH** — วัด 2026-08-24 มี 732 แถว (665 แถว `brand_scope = '{*}'` · เฉพาะ vth-biodent 38 · smile-scape-clinic 25 · deezy-dental 4) และ **574 แถวไม่มี `wikidata_id`**
+
+ตัวเลขนี้ขยับทุกรอบ harvest → ให้รันเอา ไม่ต้องอ้างค่าคงที่:
+`select count(*) from seo_entity_graph where wikidata_id is null;`
+
+ส่วน "306 จาก 715" ของ 2026-08-07 คือ **ส่วนย่อยที่คนตัดสินแล้วว่าว่างถูกแล้ว** ซึ่งไม่มี query ไหนคืนค่าได้เอง (ต้องอ่านชื่อทีละตัวว่าเข้ากลุ่มไหนในตารางข้างบน) จึงตรวจซ้ำอัตโนมัติไม่ได้ *(corrected 2026-08-24 against live schema)*
+
+ที่เหลือยังเหมือนเดิม: entity กลุ่มนี้ **ถูกต้องแล้วที่ว่าง** — การบังคับให้มีคือทางที่ทำให้โปรแกรมลดการอักเสบไปชี้ Persona 4
 
 ---
 

@@ -965,7 +965,7 @@ Documentation patch — ปิดช่องว่างเดียวที�
   - `seo_ai_response_analysis` (per-citation deep analysis + ranking signals)
   - `seo_ai_platforms` (extensible AI platform registry — chatgpt, perplexity, claude, gemini, grok, copilot, deepseek, qwen, mistral, meta_ai, google_ai_overview, ...)
   - `seo_ai_agent_visits` (AI browsing agent crawl tracking — Layer 5 prep)
-  - `seo_voice_search_queries` (voice/chatbot conversational AI)
+  - `seo_x_voice_search` (voice/chatbot conversational AI)
 - ➕ Section 1.8: AI Era Preparation (Layer 4-5 expansion)
 - ➕ Part 13 sections 11.13-11.18:
   - 13.13 Prompt Prediction Methodology
@@ -1613,7 +1613,7 @@ Phase 4 (Year 2+): Frontier
 
 ```
 brand (multi-vertical)
-  └── seo_cluster_master (SKOS controlled vocabulary)
+  └── seo_topic_cluster_master (SKOS controlled vocabulary)
        ├── Cross-vertical clusters (acne, ingredient-actives, ...)
        ├── Vertical-specific clusters (dental-implant, ...)
        ├── Content format clusters (clinical-guides, glossary)
@@ -4472,7 +4472,7 @@ Tier 1 — Planning & Control (Notion ↔ Supabase mirror):
     8. seo_doctor_assignments  (junction)    ⭐ cross-brand + cross-branch
     9. seo_citations                         ⭐ Pattern A-E + external
    10. seo_page_citations    (junction)      ⭐ write-once-cite-many
-   11. seo_page_templates                    ⭐ programmatic Type C
+   11. seo_programmatic_templates                    ⭐ programmatic Type C
   
   Reference 1:
    12. seo_layer_schema_mapping              ⭐ page_category → Schema.org validation *(rewritten 2026-08-23 — `layer` column does not exist; see the reconciliation report)* 🔴 **ตารางนี้ไม่มีอยู่จริง** (ตรวจ 2026-08-23: `seo_layer_schema_mapping` ไม่อยู่ใน schema) — กฎ Layer→Schema จึงไม่เคยถูกบังคับใช้เลย ต้องสร้างตารางก่อนหรือย้ายกฎไปอยู่ในโค้ดเกต
@@ -6927,7 +6927,7 @@ case_4_pillar_must_be_long:
 
 # PART 5: Database Schema Architecture
 
-> **The neural substrate of EYWA™ PROTOCOL** — 37 tables organized into 9 groups that together form the Knowledge Graph + operational analytics system that powers AI-era SEO for healthcare brands. *(v3.15 — restored 9 tables per DR-024 + DR-025; was 28 in v3.14)*
+> **The neural substrate of EYWA™ PROTOCOL** — 43 base tables live (42 `seo_*` + `brands`), organized into 9 groups that together form the Knowledge Graph + operational analytics system that powers AI-era SEO for healthcare brands. *(v3.15 — restored 9 tables per DR-024 + DR-025; was 28 in v3.14)* *(corrected 2026-08-24 against live schema — text said 37 while the group tally below adds to 42. The 43rd is `seo_media_assets` (37 cols, 0 rows), which DR-038 shipped as **Group 11 (Media Assets)** — see the v3.32 changelog — but the 9-group diagram below was never widened to absorb it. Do not hardcode this again — the count is `SELECT count(*) FROM information_schema.tables WHERE table_schema='public' AND (table_name LIKE 'seo\_%' OR table_name='brands') AND table_name !~ '(_bak|_backup|bak_[0-9]|backup_[0-9])'`)*
 >
 > 📊 **Companion Document:** ดู `Schema_Overview EYWA v1.20` สำหรับ full DDL + column descriptions ครบทุกตาราง  
 > Bible Part 5 เน้น **WHY และ Architecture** — Schema_Overview เน้น **WHAT — full schema + descriptions**
@@ -6974,6 +6974,10 @@ Tier 1 — Critical Operational:
   examples: brands, page_master, entity_graph, citations, daily_logs
   governance: strict — schema changes require full review (Part 15)
   count: 16 tables
+  # 🔴 corrected 2026-08-24 against live schema: the three tier counts below sum to 28,
+  #    but 43 base tables are live. This 3-tier split has never been reconciled against
+  #    the table list and no column records a table's tier — treat the counts as stale
+  #    labels, not an inventory. The group tally in §5.2 is the one that matches the DB.
 
 Tier 2 — Intelligence/Analytics:
   characteristic: insight generation, weekly-touched
@@ -7041,6 +7045,16 @@ Tier 3 — Audit/Reference:
      v3.24 (DR-032) — Group 1 +seo_brand_centers (multi-center hospital pattern)
      v3.26 (DR-036) — Group 9 +seo_entity_symptom (Tier-1 split from condition)
      Total live tables verified 2026-06-05 vs Schema_Overview v1.18 + DR-036 Schema v1.21.
+     Re-verified 2026-08-24 against the live schema: the 9 group counts above are all
+     correct and still sum to 42, but 43 base tables exist — seo_media_assets (0 rows) is
+     DR-038's Group 11 and was never folded into this 9-group diagram. 16 of the 43 hold zero
+     rows on every brand — 15 of the 42 above, plus seo_media_assets: seo_brand_centers,
+     seo_reviews, seo_directory_listings, seo_gbp_posts, seo_local_rankings,
+     seo_media_assets, seo_backlinks_data, seo_backlinks_links, seo_llm_citations,
+     seo_brand_mentions, seo_llm_query_simulations, seo_x_voice_search,
+     seo_data_quality_metrics, seo_entity_product, seo_entity_lab_test,
+     seo_entity_ingredients — "the table exists" is not "the group is running".
+     (corrected 2026-08-24 against live schema)
 ```
 
 ### Required PostgreSQL Extensions
@@ -7077,10 +7091,10 @@ Optional:
   - สาขาเป็น first-class entity (ไม่ใช่แค่ field ใน brand)
   - Authority signals (license, accreditation) ต้อง verifiable
 
-→ ต้องมี 4 ตารางที่ทำงานร่วมกัน
+→ ต้องมี 9 ตารางที่ทำงานร่วมกัน   # corrected 2026-08-24 against live schema (was "4"; the list below has 9)
 ```
 
-### Tables in This Group (8 tables)
+### Tables in This Group (9 tables) *(corrected 2026-08-24 against live schema — header said 8, list has 9)*
 
 ```yaml
 1. brands
@@ -7093,7 +7107,11 @@ Optional:
    
 3. seo_brand_centers  🆕 v3.24 (DR-032)
    role: Center subdivision ของแบรนด์ที่ brand_structure='multi_center'
-         (เช่น vitality-hospital → Vital Sleep / Vital Brain / 7 centers)
+   status: 🔴 DORMANT — ตารางมีจริงแต่ 0 แถว · brands ทั้ง 20/20 เป็น 'monolithic' ·
+           page_master.center_slug NULL ครบ 2,358/2,358 · กฎ multi-center ทุกข้อจึงยังไม่เคยยิง
+           (corrected 2026-08-24 against live schema — ข้อความเดิมยกตัวอย่าง
+            "vitality-hospital → Vital Sleep / Vital Brain / 7 centers" เป็น 7 center ที่ใช้งานอยู่
+            ซึ่งไม่มีอยู่ในฐาน · DR-057 ข้อ 8 ตัดสินว่า track นี้ dormant)
    sync: N↔S
    ref:  ดู §25.13 Multi-Center Brand Architecture
    
@@ -7125,7 +7143,12 @@ Optional:
    ref:  ดู Schema_Overview §3.9 (full DDL) + DR-037
 ```
 
-### Representative DDL — `brands` (live-verified 2026-06-05, 20 cols)
+### Representative DDL — `brands` (live-verified 2026-06-05, 20 cols; **now 31 cols / 20 rows** — re-measured 2026-08-24)
+
+> *(corrected 2026-08-24 against live schema)* Eleven columns have landed since the 2026-06-05
+> verification and are missing from the DDL below: `notion_synced_at`, `cloudflare_account_email`,
+> `cloudflare_account_id`, `cloudflare_zone_id`, `cloudflare_r2_bucket`, `gtm_container_id`,
+> `ga4_measurement_id`, `bq_dataset`, `tsa_phase`, `tsa_events_live`, `tsa_verified_at`.
 
 > v3.27 inventory reconciliation: replaced v3.14-era 23-col aspirational stub with the actual live schema. 9 columns from the old example never landed (`vertical_family`, `healthcare_format`, `medical_specialty[]`, `primary_branch_id`, `accreditations`, `medical_advisory_board_url`, `wikidata_id`, `wikidata_verified_at`, `knowledge_panel_status`) — preserved in `Schema_Overview_EYWA_v1_18.md` Appendix H. New columns landed via DR-008 (v1.8), DR-010 (v1.9), DR-030 (v1.17), DR-032 (v1.18).
 
@@ -7140,7 +7163,17 @@ CREATE TABLE brands (
 
   -- Identity metadata
   company                text,                                   -- legal entity
-  status                 text,                                   -- 'ACTIVE' / 'IN ACTIVE' / 'PENDING'
+  status                 text,                                   -- ⚠️ corrected 2026-08-24 against
+                                                                 -- live schema: no CHECK, and the
+                                                                 -- live values are NOT ACTIVE /
+                                                                 -- IN ACTIVE / PENDING. Of 20 rows:
+                                                                 -- '' on 13, 'active' on 6, and
+                                                                 -- 'active\n' (trailing newline)
+                                                                 -- on 1. `WHERE status = 'active'`
+                                                                 -- therefore drops 14 of 20 brands
+                                                                 -- silently — compare on
+                                                                 -- lower(trim(status)) until the
+                                                                 -- data is cleaned.
   brand_description      text,                                   -- for schema.org
   brand_web_url          text,                                   -- canonical homepage
 
@@ -7165,8 +7198,15 @@ CREATE TABLE brands (
                                                                  --  ads_strategy, forbidden_claims[], approved_claims_source}
 
   -- DR-032 v1.18 — Multi-Center Brand Structure
-  brand_structure        text NOT NULL DEFAULT 'monolithic'      -- 'monolithic' (default, all existing brands)
-                         CHECK (brand_structure IN ('monolithic','multi_center')),  -- or 'multi_center' (opt-in for hospitals)
+  brand_structure        text NOT NULL DEFAULT 'monolithic'      -- 'monolithic' (default) or
+                         CHECK (brand_structure IN ('monolithic','multi_center')),  -- 'multi_center'
+                                                                 -- 🔴 DORMANT: 'monolithic' on all
+                                                                 -- 20 brands, seo_brand_centers has
+                                                                 -- 0 rows, page_master.center_slug
+                                                                 -- is NULL on all 2,358 rows.
+                                                                 -- No brand is multi-center and
+                                                                 -- none ever has been (DR-057 ข้อ 8;
+                                                                 -- measured 2026-08-24).
 
   -- Lifecycle
   created_at             timestamptz NOT NULL DEFAULT now(),
@@ -7223,18 +7263,28 @@ CREATE UNIQUE INDEX brands_notion_id_key    ON brands(notion_id) WHERE notion_id
    sync: N↔S
    
 2. seo_topic_cluster_master
-   role: Hub-and-spoke cluster definitions
-   key_constraints: pillar-cluster ratio 8-25 (Bible Part 3)
+   role: Hub-and-spoke cluster definitions (58 แถว วัด 2026-08-24 — active 46 / merged 7 / deprecated 5)
+   key_constraints: 🔴 pillar-cluster ratio 8-25 (Bible Part 3) เป็นกฎบรรณาธิการ ไม่ใช่ constraint —
+                    ไม่มี CHECK หรือ trigger ตัวไหนบังคับ ratio นี้ในฐานจริง
+                    CHECK ที่มีจริง: chk_status (active|deprecated|merged|split) ·
+                    cluster_type (topical|content_format|audience|section_meta|campaign|general) ·
+                    chk_no_self_parent
    sync: N↔S
+   # corrected 2026-08-24 against live schema
    
 3. seo_citations
    role: Master ของแหล่งอ้างอิง — peer-reviewed, guidelines, gov, textbook
    key_features:
-     - evidence_tier 1-6 (Bible Part 23.1)
-     - schema_evidence_level (EvidenceLevelA/B/C)
-     - citation_freshness_status (auto-computed per tier)
-     - conflict_of_interest_disclosed
+     - citation_tier 1-6 (Bible Part 23.1) — คอลัมน์ชื่อ citation_tier ไม่ใช่ evidence_tier
+     - citation_authority_weight + authority_breakdown jsonb + authority_formula_version
+       ('eywa-authority-1.0' บน 529/551 แถว)
+     - verification_status (unverified/verified/broken_link/paywalled/retracted)
+     - study_type · brand_scope[] · is_retracted · last_verified_at · maintenance_log
    sync: N↔S
+   # corrected 2026-08-24 against live schema: `evidence_tier`, `schema_evidence_level`,
+   # `citation_freshness_status` และ `conflict_of_interest_disclosed` ไม่มีอยู่ในตารางจริง
+   # (41 คอลัมน์ · 551 แถว วัด 2026-08-24) — กฎที่อ้างสี่ชื่อนี้ยิงไม่ออก 🔴
+   # freshness ต้องคำนวณจาก publication_year/publication_date เอง ไม่มีคอลัมน์เก็บสถานะไว้
    
 4. seo_page_citations
    role: Junction (page ↔ citation) with pattern + context
@@ -7249,7 +7299,22 @@ CREATE TABLE seo_entity_graph (
   entity_fingerprint text UNIQUE,                 -- e.g., 'entity:niacinamide'
   entity_name text,
   entity_slug text,
-  entity_type text,                               -- 15 types: condition/symptom/procedure/treatment/device/concept/product/drug/ingredient/anatomy/specialty/lab_test/biomarker/person/organization
+  entity_type text,                               -- corrected 2026-08-24 against live schema.
+                                                  -- Live distinct values (732 rows): concept 154,
+                                                  -- procedure 142, condition 127, treatment 119,
+                                                  -- device 73, organization 25, anatomy 21,
+                                                  -- symptom 21, specialty 19, technology 12,
+                                                  -- drug 9, person 6, product 4.
+                                                  -- 'technology' was missing from the old list of 15;
+                                                  -- 'ingredient' and 'lab_test' are documented but
+                                                  -- unused; 🔴 'biomarker' does not exist as a value
+                                                  -- and no extension table hosts it, so every rule
+                                                  -- keyed on entity_type='biomarker' is UNIMPLEMENTABLE.
+                                                  -- ⚠️ The column COMMENT names a 14-value CHECK that
+                                                  -- omits 'person' — yet 6 rows hold it. The COMMENT's
+                                                  -- list is therefore NOT the live constraint; read
+                                                  -- the constraint before writing a validator against
+                                                  -- either. (measured 2026-08-24)
   
   -- Hierarchy (self-reference)
   parent_entity_fp text,
@@ -7267,23 +7332,36 @@ CREATE TABLE seo_entity_graph (
   brand_scope_name text,
   
   -- Vertical filtering (Bible Part 14)
-  applicable_verticals text[],
+  -- 🔴 applicable_verticals text[] — DOES NOT EXIST. corrected 2026-08-24 against live schema:
+  --    no column on seo_entity_graph carries vertical scope, so every vertical-filter rule
+  --    written against it is UNIMPLEMENTABLE. Brand scoping is brand_scope[] only.
   
   -- External knowledge graph linkage
   wikipedia_url text,
   wikidata_id text,                               -- Q-number
-  icd_10_code text,                               -- WHO base ICD-10 (ICD-10-TM aligned); universal entity code + fingerprint key. Full per-condition coding set (ICD-11-MMS + ICD-10-CM) lives on seo_entity_condition per DR-033
-  mesh_id text,
-  snomed_id text,
-  cas_number text,                                -- CAS Registry (chemicals)
+  icd_10_code text,                               -- NULL on all 732 rows (measured 2026-08-24).
+                                                  -- DR-050 §2 retired this store; per-condition coding
+                                                  -- lives on seo_entity_condition. Do not write it back.
+  -- 🔴 mesh_id / snomed_id / cas_number — DO NOT EXIST (corrected 2026-08-24 against live schema)
   
   -- AI-ready fields
   ai_entity_summary text,                         -- 2-3 sentence summary for AI citation
-  entity_description_long text,
+  -- 🔴 entity_description_long — DOES NOT EXIST (corrected 2026-08-24 against live schema)
   
   -- Authority + lifecycle
-  entity_authority_score numeric,                 -- 0-100
-  entity_lifecycle text,                          -- 'active'/'deprecated'/'merged' (Bible Part 7)
+  entity_authority_score numeric,                 -- ⚠️ documented 0-100 everywhere, POPULATED 0-10.
+                                                  -- Measured 2026-08-24: 730 non-null, min 0.3,
+                                                  -- max 7.94, no row above 8. Any threshold written
+                                                  -- on a 0-100 reading (e.g. "promote entities ≥ 70")
+                                                  -- selects zero rows on every brand, forever.
+                                                  -- (corrected 2026-08-24 against live schema)
+  entity_lifecycle text,                          -- corrected 2026-08-24 against live schema: NOT the
+                                                  -- cluster state machine. Live values are a demand
+                                                  -- trajectory — Mature 299, growing 203, mature 124,
+                                                  -- Growing 59, merged 23, emerging 16, Emerging 1,
+                                                  -- NULL 7. No CHECK; casing is mixed, so normalise
+                                                  -- (lower()) before grouping. 'active'/'deprecated'
+                                                  -- never appear.
   programmatic_eligible boolean DEFAULT false,    -- Type C generation eligibility
   
   -- Graph relationships
@@ -7322,25 +7400,43 @@ CREATE TABLE seo_entity_relationships (
   to_entity_fp text NOT NULL 
     REFERENCES seo_entity_graph(entity_fingerprint) ON DELETE CASCADE,
   
-  -- Edge type (controlled vocabulary — 14 enum values for 10 logical edges + inverses)
-  edge_type text NOT NULL 
-    CHECK (edge_type IN (
-      'parent_of', 'child_of',           -- pair 1: hierarchy
-      'subtype_of',                       -- 2: is-a
-      'treats', 'treated_by',             -- pair 3: clinical (treats → Condition only)
-      'symptom_of',                       -- 4: clinical, directional
-      'uses', 'used_by',                  -- pair 5: composition
-      'alternative_to',                   -- 6: peer (undirected)
-      'part_of', 'contains',              -- pair 7: composition
-      'requires_assessment',              -- 8: clinical pre-req
-      'evidenced_by',                     -- 9: documentary
-      'related_to'                        -- 10: generic (undirected)
-    )),
+  -- Edge type (controlled vocabulary)
+  -- 🔴 corrected 2026-08-24 against live schema. The 14-value list below is NOT what the
+  --    database holds: rows exist carrying values it omits, so the CHECK as printed cannot
+  --    be the live one. Measured 2026-08-24 over 1,089 rows, the actual distinct values are:
+  --      related_to 427 · broader_than 271 · treats 166 · requires 58 · symptom_of 54 ·
+  --      part_of 51 · is_a 30 · contraindicates 21 · causes 6 · caused_by 5
+  --    Only treats / symptom_of / part_of / related_to are shared with the old list.
+  --    Any rule keyed on 'parent_of', 'child_of', 'subtype_of', 'treated_by', 'uses',
+  --    'used_by', 'alternative_to', 'contains', 'requires_assessment' or 'evidenced_by'
+  --    matches zero rows and always has. Read the live CHECK before writing an edge.
+  --    The v3.4 design vocabulary is kept here as the record of intent, NOT as live DDL:
+  --      'parent_of','child_of'        -- pair 1: hierarchy      (live equivalent: broader_than)
+  --      'subtype_of'                  -- 2: is-a                (live equivalent: is_a)
+  --      'treats','treated_by'         -- pair 3: clinical       (live: treats only)
+  --      'symptom_of'                  -- 4: clinical, directional  (live ✓)
+  --      'uses','used_by'              -- pair 5: composition    (live: requires)
+  --      'alternative_to'              -- 6: peer (undirected)   (no live equivalent)
+  --      'part_of','contains'          -- pair 7: composition    (live: part_of only)
+  --      'requires_assessment'         -- 8: clinical pre-req    (live: requires)
+  --      'evidenced_by'                -- 9: documentary         (no live equivalent)
+  --      'related_to'                  -- 10: generic (undirected)  (live ✓)
+  --    Live-only, undocumented until now: contraindicates, causes, caused_by.
+  edge_type text NOT NULL,
   
   -- Edge metadata (optional)
-  edge_strength numeric DEFAULT 1.0,     -- 0-1, สำหรับ ranking
+  edge_strength smallint,                 -- corrected 2026-08-24 against live schema: smallint on a
+                                          -- 1-3 scale, NOT numeric 0-1 and NO default. Measured
+                                          -- 2026-08-24: NULL on 1,052 of 1,089 rows; the 37 that are
+                                          -- set hold 2 (28), 1 (6), 3 (3). Writing 0.8 or 0 per the
+                                          -- old text raises a constraint violation. Consequence:
+                                          -- 🔴 the evidence trigger that fires at edge_strength >= 2
+                                          -- sees 37 rows out of 1,089 — it is effectively dark.
   edge_note text,                         -- "off-label", "comorbidity", "synergy"
-  bidirectional_synced boolean DEFAULT false,
+  -- 🔴 bidirectional_synced — DOES NOT EXIST (corrected 2026-08-24 against live schema).
+  --    Live columns instead: edge_evidence_score (NULL 1,089/1,089), edge_evidence_citation
+  --    (set on 27 of 1,089 — the 21 contraindicates edges + 6 related_to; re-measured 2026-08-24),
+  --    medical_reviewer_signoff_at, medical_reviewer_fp, status, load_from, load_source.
   
   -- Brand scoping (edge อาจ apply เฉพาะบาง brand)
   brand_scope text[] DEFAULT '{*}',
@@ -7377,8 +7473,14 @@ CREATE INDEX idx_edge_brand_scope
     # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
   - Tier A-D (crawl depth)
   - Funnel stage (awareness/consideration/decision/retention)
-  - Page-Branch relationship 4 patterns (Bible Part 4.5)
-  - Editorial workflow (5-stage tracking)
+  - 🔴 Page-Branch relationship 4 patterns (Bible Part 4.5) — UNIMPLEMENTABLE as written:
+    page_branch_relationship / branch_id / branch_tags / programmatic_template_id
+    ไม่มีอยู่ในตารางจริงสักคอลัมน์ (93 คอลัมน์ วัด 2026-08-24) กฎ 4-pattern ทั้งชุดจึงไม่เคยยิง
+    (corrected 2026-08-24 against live schema)
+  - Editorial workflow — 🔴 เอกสารบอก 5 stage แต่ seo_editorial_reviews จริงมี review_stage
+    เพียง 3 ค่า: pre_publication 1,317 · plan_cleared 724 · post_publication 54
+    และ review_type เพียง 2 ค่า: medical 2,022 · editorial 73 (2,095 แถว วัด 2026-08-24)
+    (corrected 2026-08-24 against live schema)
 ```
 
 ### Tables in This Group
@@ -7386,20 +7488,31 @@ CREATE INDEX idx_edge_brand_scope
 ```yaml
 1. seo_website_page_master
    role: ตารางหลักของทุก page — identity + page_category/tier/funnel + branch + cluster + entity + SEO + editorial
-   columns: 60+ (largest table by columns)
+   columns: 93 (largest table by columns) · 2,358 rows — deezy-dental 869 / vth-biodent 761 /
+            smile-scape-clinic 728 (measured 2026-08-24 against live schema; was "60+")
    key_features:
      - page_category ตาม Bible Part 3 Neural Authority (was "layer (1-7)" — approximate, see §3.2 mapping)
        # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
-     - page_branch_relationship 4 patterns (Bible Part 4.5)
+     - 🔴 page_branch_relationship 4 patterns (Bible Part 4.5) — คอลัมน์ไม่มีอยู่จริง จึงยิงไม่ออก
+       (corrected 2026-08-24 against live schema)
      - cross_brand sharing fields
      - multilingual translation tracking (WPML)
-     - schema_markup_type[]
-     - reviewer_id + has_medical_review (Bible Part 23.4)
+     - schema_markup_type — **scalar text ไม่ใช่ text[]** (DR-057 ข้อ 1; smile-scape 728 แถวถูก
+       migrate จากรูป '{A,B}' แล้ว) · เขียนกฎด้วย `=` ได้ (corrected 2026-08-24 against live schema)
+     - has_medical_review (Bible Part 23.4) — 🔴 ไม่มีคอลัมน์ `reviewer_id` ในตารางนี้
+       (corrected 2026-08-24 against live schema)
    sync: N↔S
    
 2. seo_editorial_reviews
-   role: 5-stage editorial workflow tracking (Bible Part 23.4)
-   stages:
+   role: editorial workflow tracking (Bible Part 23.4)
+   # corrected 2026-08-24 against live schema — the 5-stage ladder below is the DESIGN.
+   # Live data (2,095 rows, measured 2026-08-24) implements only two of its names:
+   #   review_type:  medical 2,022 · editorial 73        (no seo_llmo, no legal, no final_publish)
+   #   review_stage: pre_publication 1,317 · plan_cleared 724 · post_publication 54
+   #   review_status: pending 1,636 · approved 459
+   #   review_score: NULL on all 2,095 rows — any gate reading it is 🔴 UNIMPLEMENTABLE
+   # 'legal_compliance' (Part 32.3) has 0 rows while 139 pages carry legal_review_required=true.
+   stages (design, not live):
      1. medical_accuracy (Licensed MD)
      2. editorial (Senior writer)
      3. seo_llmo (SEO Lead)
@@ -7422,7 +7535,12 @@ CREATE TABLE seo_website_page_master (
   page_name text,
   slug text,
   canonical_url text,
-  status text,                                    -- 'draft'/'in_review'/'active'/'archived'/'redirected'
+  status text,                                    -- corrected 2026-08-24 against live schema:
+                                                  -- CHECK chk_page_status is Planned | Live | Merged
+                                                  -- | Dropped (NULL allowed). Measured 2026-08-24:
+                                                  -- Planned 1,513 · Live 742 · Merged 102 · Dropped 1.
+                                                  -- 'draft'/'in_review'/'active'/'archived'/
+                                                  -- 'redirected' would all be rejected by the CHECK.
   
   -- Neural Authority Architecture (Bible Part 3) ⭐
   -- rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
@@ -7441,16 +7559,51 @@ CREATE TABLE seo_website_page_master (
   page_type text,                                 -- 'pillar'/'supporting'/'service'/'branch_landing'/...
   
   -- Branch relationship (Bible Part 4.5) ⭐
-  page_branch_relationship text,                  -- 'brand_wide'/'branch_landing'/'local_programmatic'/'brand_wide_tagged'
-  branch_id uuid,                                 -- FK to seo_branches.id
-  branch_tags text[],                             -- for Type D (brand-wide tagged)
-  programmatic_template_id uuid,                  -- FK to seo_programmatic_templates
+  -- 🔴 corrected 2026-08-24 against live schema: NONE of the four columns below exists on
+  --    seo_website_page_master (93 columns, checked 2026-08-24). The whole §4.5 four-pattern
+  --    model is UNIMPLEMENTABLE as written — nothing records which pattern a page follows,
+  --    and the consistency rules in §19.3 that branch on it have never fired once.
+  --    The nearest live handles are page_category ('branch_landing', 'local_programmatic',
+  --    'local_landing', 'local_service_page') and seo_branches, which is a separate table.
+  -- page_branch_relationship text,               -- 'brand_wide'/'branch_landing'/'local_programmatic'/'brand_wide_tagged'
+  -- branch_id uuid,                              -- FK to seo_branches.id
+  -- branch_tags text[],                          -- for Type D (brand-wide tagged)
+  -- programmatic_template_id uuid,               -- FK to seo_programmatic_templates
   
   -- Sitemap hierarchy (Bible Part 4)
-  sitemap_node_id text,                           -- '4.2.1' style hierarchical ID
-  sitemap_section text,
+  sitemap_node_id text,                           -- '4.2.1' style hierarchical ID. Its LEADING
+                                                  -- SEGMENT is what the citation minimum keys on
+                                                  -- (MIN_PER_LAYER in run-citation-qa-gates.py).
+  sitemap_section text,                           -- corrected 2026-08-24 against live schema:
+                                                  -- a NUMBER as text, '1'..'9', on ALL THREE
+                                                  -- brands since the 2026-08-23 normalisation
+                                                  -- (deezy-dental previously stored slugs:
+                                                  -- home, our-uniqueness, services, technology,
+                                                  -- treatment-by-concern, knowledge, case-studies,
+                                                  -- branches-support, hyper-local). Live spread:
+                                                  -- 3→658 · 6→617 · 5→444 · 8→196 · 7→135 ·
+                                                  -- 9→126 · 4→115 · 2→62 · 1→5; non-numeric 0.
+                                                  -- ⚠️ This is a ZONE — where a page sits — never
+                                                  -- a substitute for page_category when the rule
+                                                  -- asks what a page IS. See §3.2.
   parent_page_fp text,
   cluster_id text,
+  intent_source_tier text,                        -- DR-034 + DR-057 ข้อ 3. Four values:
+                                                  -- paa | derived | template_only | brand.
+                                                  -- `brand` is a legitimate fourth tier (88 rows);
+                                                  -- earlier three-value CHECKs in the docs were
+                                                  -- wrong. ⚠️ `paa` has ZERO rows and has never
+                                                  -- been written — live: template_only 2,259 ·
+                                                  -- brand 88 · derived 11. Any rule that treats
+                                                  -- tier-1 PAA evidence as the normal case is
+                                                  -- describing something that has not happened.
+                                                  -- The PAA source is
+                                                  -- seo_x_ads_keyword_serp_competitors.
+                                                  -- people_also_ask_json — there is no
+                                                  -- `paa_questions` column anywhere.
+                                                  -- (corrected 2026-08-24 against live schema)
+  paa_checked_at timestamptz,                     -- DR-034: last PAA crawl. NULL = never checked
+                                                  -- (trigger a crawl, do not read it as tier 3).
   
   -- Knowledge Graph linkage
   primary_entity_fp text,
@@ -7461,8 +7614,23 @@ CREATE TABLE seo_website_page_master (
   -- SEO metadata
   seo_title text,
   meta_description text,
-  schema_markup_type text[],
-  content_format text[],
+  schema_markup_type text,                        -- corrected 2026-08-24 against live schema:
+                                                  -- scalar text, NOT text[]. DR-057 ข้อ 1 ตัดสินให้ใช้
+                                                  -- รูป bare scalar ('MedicalCondition') ทั้ง 3 แบรนด์
+                                                  -- และ smile-scape 728 แถวถูก migrate ออกจากรูป
+                                                  -- '{A,B}' แล้ว — เขียนกฎด้วย `=` ได้ปลอดภัย
+  content_format text,                            -- corrected 2026-08-24 against live schema: scalar
+                                                  -- text, NOT text[] — และ **โค้ดเทมเพลตเป็นของแต่ละ
+                                                  -- แบรนด์** (DR-057 ข้อ 5). วัด 2026-08-24:
+                                                  --   vth-biodent: T6 354, T5 166, T1 72, T4 71, T8 31,
+                                                  --     T18 21, T2 19, T10 10, T9 1, NULL 16
+                                                  --   deezy-dental: T2b 151, T6 101, T18 99, T10 99,
+                                                  --     T1 90, T12 57, T8 55, T6a 38, T16 26, … T14 1
+                                                  --   smile-scape-clinic: T5 213, T6 150, T1 108,
+                                                  --     T4 66, T8 38, T12 34, T2 33, … T10 2
+                                                  -- 🔴 ห้าม validate ด้วยรายการ T-code กลาง — deezy ใช้
+                                                  -- T2b/T6a/T8g/T12i ที่แบรนด์อื่นไม่มี. ตรวจกับทะเบียน
+                                                  -- ของแบรนด์นั้นเท่านั้น และ map ทุกตัวต้องคีย์ด้วย brand_id.
   
   -- Cross-brand (Bible Part 10)
   cross_brand_role text,
@@ -7477,12 +7645,21 @@ CREATE TABLE seo_website_page_master (
   wpml_page_id numeric,
   
   -- Editorial & Quality (Bible Part 23.4)
-  reviewer_id uuid,                               -- FK to seo_authors_reviewers
-  has_medical_review boolean DEFAULT false,
+  -- 🔴 reviewer_id uuid — DOES NOT EXIST on this table (corrected 2026-08-24 against live schema).
+  --    The reviewer link lives on seo_editorial_reviews.reviewer_fp → seo_authors_reviewers.
+  has_medical_review boolean DEFAULT false,       -- OPERATOR RULING (DR-057 ข้อ 6, 2026-08-23):
+                                                  -- a page the operator approves and sets Live IS
+                                                  -- medically reviewed. Live implies true — set it and
+                                                  -- emit the reviewer into schema markup. Do NOT gate
+                                                  -- this on rows in seo_editorial_reviews. Measured
+                                                  -- 2026-08-24: true 2,057 / false 301.
+                                                  -- (corrected 2026-08-24 against live schema)
   flag_review text,
-  review_cycle text,                              -- 'quarterly'/'semi_annual'/'annual'
+  review_cycle text,                              -- monthly/quarterly/semiannual/annual
   published_date timestamptz,
-  last_content_review_at timestamptz,
+  -- 🔴 last_content_review_at timestamptz — DOES NOT EXIST (corrected 2026-08-24 against live
+  --    schema). KPI #2 (Content Freshness, Part 20.2) reads this column and therefore cannot be
+  --    computed at all today. The nearest live anchors are published_date and updated_at.
   
   -- Indexing & Robots
   robots_directive text,
@@ -7499,13 +7676,17 @@ CREATE TABLE seo_website_page_master (
   --  page_category is NOT constrained: its vocabulary is still open while backfill runs,
   --  and 'supporting'/'pillar' rows inherited from page_type belong to no category yet.)
   CONSTRAINT valid_tier CHECK (node_tier IN ('A','B','C','D')),
-  CONSTRAINT valid_branch_relationship CHECK (
-    page_branch_relationship IN ('brand_wide','branch_landing','local_programmatic','brand_wide_tagged')
-  )
+  -- 🔴 CONSTRAINT valid_branch_relationship — cannot exist: it names a column that is not on the
+  --    table. Kept here as the record of intent, not as live DDL.
+  --    (corrected 2026-08-24 against live schema)
+  -- CONSTRAINT valid_branch_relationship CHECK (
+  --   page_branch_relationship IN ('brand_wide','branch_landing','local_programmatic','brand_wide_tagged')
+  -- )
+  CONSTRAINT chk_page_status CHECK (status IS NULL OR status IN ('Planned','Live','Merged','Dropped'))
 );
 ```
 
-→ **Full DDL with all 60+ columns** : ดู `Schema_Overview v1.0 Section 5.1`  
+→ **Full DDL with all 93 columns** *(count measured 2026-08-24 against live schema; was "60+")* : ดู `Schema_Overview v1.0 Section 5.1`  
 → **`seo_editorial_reviews` full schema** : ดู `Schema_Overview v1.0 Section 5.2`
 
 ---
@@ -7530,6 +7711,20 @@ SEO ที่จริงจังต้องมี keyword intelligence เป
 1. seo_x_ads_keywords_contextual_master
    role: Master keyword — intent, painpoint, funnel stage, anxiety level
    primary_key: fingerprint (text)
+   scope: 🔴 **8 แบรนด์ 22,710 แถว ไม่ใช่ 3 แบรนด์** (วัด 2026-08-24) — Deezy Dental 6,269 ·
+          VitalSleep and Wellness 4,412 · The Face by Vertex 3,586 · VitalSleep Clinic 3,478 ·
+          VTH BioDent 2,129 · Smile Scape Clinic 1,786 · TC Smile Dental 784 · Clearisma 266.
+          ตารางนี้กว้างกว่า page_master ที่มี 3 แบรนด์ · cleanup ใด ๆ ที่สมมติว่า "มีแค่ 3 แบรนด์"
+          จะลบแถวของอีก 5 แบรนด์ (corrected 2026-08-24 against live schema)
+   funnel_stage: ⚠️ **คนละคำกับฝั่ง page_master — อย่าเทียบตรง ๆ** (วัด 2026-08-24)
+          ตารางคีย์เวิร์ดเก็บค่า **ขึ้นต้นตัวใหญ่และไม่มี retention**: Awareness 7,201 ·
+          Consideration 6,968 · Decision 3,361 · NULL 4,616 · สตริง 'None' (ไม่ใช่ NULL) 563 ·
+          'Ambiguous' 1 · ไม่มี CHECK
+          ฝั่ง page_master เป็นตัวเล็กสี่ค่า awareness | consideration | decision | retention
+          (top/mid/bottom **RETIRED** ตาม DR-057 ข้อ 2 · migrate แล้ว 2026-08-23)
+          🔴 `WHERE funnel_stage = 'awareness'` บนตารางคีย์เวิร์ดได้ 0 แถว — ต้อง lower() ก่อน
+          เทียบเสมอ และต้องกัน 563 แถวที่เก็บคำว่า 'None' ไว้เป็นข้อความ
+          (corrected 2026-08-24 against live schema)
    sync: N↔S
    
 2. seo_x_ads_keywords_monthly_market_snapshot
@@ -7551,12 +7746,18 @@ SEO ที่จริงจังต้องมี keyword intelligence เป
      - ai_analysis_json (auto-generated competitive analysis)
    sync: S only
    
-4. seo_voice_search_queries
+4. seo_x_voice_search
+   # corrected 2026-08-24 against live schema — the table is named `seo_x_voice_search`.
+   # `seo_x_voice_search` returns 404; every query written against that name has failed silently.
    role: Voice/conversational queries (Siri, Alexa, Google Assistant, Gemini Voice)
-   key_features:
-     - is_emergency_query → triggers Bible Part 23.2 emergency patterns
-     - assistant_seen_in[] (which AI assistants surfaced)
-   sync: S only
+   status: 🔴 DORMANT — 0 แถว (วัด 2026-08-24) · ยังไม่เคยมีข้อมูลเข้าเลย
+   live_columns: fingerprint · fingerprint_display_name · parent_keyword_fp · voice_query ·
+     query_language · query_intent · conversational_form · triggered_assistants ·
+     expected_answer_format · current_answer_source · optimized_for_page_fp ·
+     is_featured_snippet · featured_snippet_url · is_in_pasf · query_volume_estimate · last_tested_at
+   # 🔴 `is_emergency_query` และ `assistant_seen_in[]` ไม่มีอยู่จริง — ค่าที่ใกล้ที่สุดคือ
+   #    triggered_assistants (assistants ที่ทริกเกอร์) และไม่มีคอลัมน์ไหนธง emergency
+   #    กฎ Part 23.2 emergency pattern ที่คีย์ด้วย is_emergency_query จึง UNIMPLEMENTABLE
 ```
 
 ### Note: Rich Market Intelligence Patterns
@@ -7631,7 +7832,11 @@ migration_strategy:
 ```yaml
 1. seo_x_ads_keywords_x_url_daily_logs
    role: Daily performance snapshot per (keyword × URL)
-   columns: 130+ comprehensive metrics
+   columns: 125 · 151,471 rows (measured 2026-08-24 against live schema; text said "130+"
+            columns and "~90K rows/year")
+   word_count: `plain_text_word_count` อยู่ที่ตารางนี้ และ **NULL ทุกแถว** (วัด 2026-08-24) —
+            DR-057 ข้อ 7 ตัดสินว่านี่คือคอลัมน์เดียวที่วัด word count และให้ซ่อมที่ crawl ETL
+            🔴 ห้ามเพิ่มคอลัมน์ word_count ที่ page master — ไม่มี และจะไม่มี
    themes:
      - GSC (clicks, impressions, CTR, ranking)
      - GA4 organic + total × mobile/desktop breakdowns
@@ -7643,8 +7848,9 @@ migration_strategy:
    
 2. seo_local_rankings
    role: Local SERP rankings per (keyword × location × branch)
+   status: 🔴 DORMANT — 0 แถว (วัด 2026-08-24)
    key_features:
-     - map_pack_position (1-3 = visible)
+     - 🔴 map_pack_position — ไม่มีคอลัมน์นี้ (corrected 2026-08-24 against live schema)
      - is_in_local_pack_three
      - competitors_in_map_pack jsonb
      - distance_to_branch_km
@@ -7684,6 +7890,10 @@ Backlinks ยังเป็น signal ที่ Google + AI engines weight อ�
 
 ```yaml
 1. seo_backlinks_data
+   status: 🔴 DORMANT — 0 แถว · seo_backlinks_links ก็ 0 แถว (วัด 2026-08-24). ทั้งกลุ่มนี้
+           ยังไม่เคยรับข้อมูล จึงไม่มี input ให้ factor "External Authority" ของ
+           entity_authority_score (Part 27.2.1) และ toxic-link sweep
+           (corrected 2026-08-24 against live schema)
    role: Aggregate backlink stats per (URL × snapshot date)
    key_metrics:
      - total_backlinks, referring_domains, dofollow_count
@@ -7708,15 +7918,19 @@ Backlinks ยังเป็น signal ที่ Google + AI engines weight อ�
 
 ## 5.9 Group 7 — AI Operations & Embeddings
 
-> **Bible Reference:** Part 21 (AI Operations & Embedding Strategy), Part 13 (LLMO Playbook), Part 20 (KPIs #11, #12, #13)
+> **Bible Reference:** Part 21 (AI Operations & Embedding Strategy), Part 13 (LLMO Playbook), Part 20 (KPIs #8, #9, #10, #11 — the AI/LLMO layer) *(corrected 2026-08-24 — was "#11, #12, #13"; #12/#13 are Knowledge-Graph-health KPIs in Part 20.5, not AI-visibility ones)*
 
 ### Why This Group
 
 ```
 ในยุค AI Search (2026+) — การวัด SEO success ต้องวัด:
   1. Brand mention rate ใน AI engines (KPI #11)
-  2. AI citation rate ของ URL เรา (KPI #12)
-  3. Share-of-voice เทียบ competitors (KPI #13)
+  2. AI citation rate ของ URL เรา (KPI #8)
+     # corrected 2026-08-24: เดิมเขียน "KPI #12" ซึ่ง Part 20.5 ใช้เป็น Entity Coverage Score
+     # AI Citation Rate คือ KPI #8 (Part 20.4)
+  3. 🔴 Share-of-voice เทียบ competitors — **ไม่มี KPI หมายเลขไหนนิยามไว้**
+     # corrected 2026-08-24: เดิมเขียน "KPI #13" ซึ่ง Part 20.5 ใช้เป็น Entity Connectivity Score
+     # Part 20 มี 15 KPI และไม่มีข้อไหนวัด share-of-voice — ข้อนี้ยังไม่ถูกนิยาม
 
 → ต้อง automated probing system + tracking schema
 → ต้อง vector embeddings สำหรับ RAG + semantic search
@@ -7724,35 +7938,44 @@ Backlinks ยังเป็น signal ที่ Google + AI engines weight อ�
 
 ### Tables in This Group
 
+> 🔴 **Whole-group status, corrected 2026-08-24 against live schema:** the three tracking tables
+> in this group hold **0 rows each** — `seo_brand_mentions`, `seo_llm_citations`,
+> `seo_llm_query_simulations`. KPIs #8–#11 (Part 20.4) read them, so all four report 0/0 and have
+> never measured anything. `seo_entity_embeddings` is the one live table here: 684 rows.
+
 ```yaml
 1. seo_brand_mentions
-   role: Track เมื่อ brand ถูกพูดถึงใน AI engines
+   role: Track เมื่อ brand ถูกพูดถึงใน AI engines (0 rows, 2026-08-24)
    tracked_engines: ChatGPT, Perplexity, Gemini, Claude, Copilot, Meta AI, Mistral
-   key_dimensions:
-     - mention_position (1=first mentioned)
-     - mention_sentiment (positive/neutral/negative)
-     - mention_recommendation_strength (top_recommendation/option/alternative)
-     - is_first_in_list, is_only_brand_mentioned
-     - wikidata_referenced (high trust signal)
-     - accreditation_referenced
+   # corrected 2026-08-24 against live schema — NONE of mention_position, mention_sentiment,
+   # mention_recommendation_strength, is_first_in_list, is_only_brand_mentioned,
+   # wikidata_referenced or accreditation_referenced exists. Live columns are:
+   live_columns: brand_id · source_platform · source_url · source_title · source_author ·
+     source_domain · source_authority_score · mention_text · mention_context · is_linked ·
+     link_target_page_fp · sentiment · sentiment_score · mention_type · language_code ·
+     is_thai_specific · mentioned_at · detected_at
    sync: S only
    
 2. seo_llm_citations
-   role: Track เมื่อ AI cite URL ของเรา (with or without brand mention)
-   key_features:
-     - cited_excerpt (exact quote AI used)
-     - pattern_type (A-F per Bible Part 6 — measures pattern effectiveness)
-     - citation_quality_score (0-100)
-     - linked_brand_mention_id (co-occurrence tracking)
+   role: Track เมื่อ AI cite URL ของเรา (with or without brand mention) (0 rows, 2026-08-24)
+   # corrected 2026-08-24 against live schema — cited_excerpt, pattern_type,
+   # citation_quality_score and linked_brand_mention_id DO NOT EXIST. 🔴 The Pattern A-F
+   # effectiveness measurement (Bible Part 6) has no column to record a pattern on, so it is
+   # UNIMPLEMENTABLE as written. Live columns are:
+   live_columns: brand_id · llm_platform · llm_model_version · prompt_text · prompt_category ·
+     prompt_intent · response_text · was_cited · citation_position · cited_url · cited_page_fp ·
+     citation_context · brand_mentioned · brand_sentiment · competitors_cited ·
+     source_domains_cited · query_language · test_geography · test_run_id · tested_at
    sync: S only
    
 3. seo_llm_query_simulations
-   role: Run simulated queries on AI engines เพื่อ probe brand visibility
-   key_features:
-     - query_persona (patient_first_time/caregiver/researcher/...)
-     - query_intent_type (best_in_category/comparison/symptom_check/...)
-     - response_text + response_citations_raw
-     - cost_usd (API metering)
+   role: Run simulated queries on AI engines เพื่อ probe brand visibility (0 rows, 2026-08-24)
+   # corrected 2026-08-24 against live schema — query_persona, query_intent_type,
+   # response_citations_raw and cost_usd DO NOT EXIST (no API cost metering column at all).
+   live_columns: brand_id · simulation_name · prompt_template · prompt_variables ·
+     target_intent · target_funnel_stage · target_entity_fp · expected_citation_pages_fps ·
+     expected_brand_mention · total_runs · successful_citations · citation_rate ·
+     brand_mention_rate · last_run_at · next_scheduled_run · is_active
    sync: S only (system-generated)
    
 4. seo_entity_embeddings
@@ -7797,21 +8020,26 @@ CREATE INDEX idx_embeddings_hnsw ON seo_entity_embeddings
 ```yaml
 1. seo_data_quality_metrics
    role: Measure quality across 5 DAMA dimensions per table/column/record
-   key_features:
-     - quality_dimension (completeness/consistency/validity/uniqueness/freshness)
-     - threshold_target/warning/critical
-     - status (good/warning/critical) auto-computed
-     - failing_records_count + sample
+   status: 🔴 **0 แถว** (วัด 2026-08-24) — ทั้ง Part 19 framework ยังไม่เคยวัดอะไรเลยสักครั้ง
+           ตัวเลข "Overall Score: 87.3% [HEALTHY]" ที่พิมพ์ไว้ใน §19.5 ไม่มีที่มาในฐานข้อมูล
+   # corrected 2026-08-24 against live schema — quality_dimension, threshold_target,
+   # threshold_warning, threshold_critical, failing_records_count ไม่มีอยู่จริง
+   # ตารางจริงมี 13 คอลัมน์ เก็บ metric ทีละตัวแบบ key/value ไม่ใช่ทีละ dimension:
+   live_columns: metric_name · metric_category · metric_value · metric_value_jsonb ·
+     threshold_min · threshold_max · status · target_table_name · target_brand_id ·
+     scope_description · computed_at · computation_duration_ms
    sync: S only (system-generated)
    
 2. seo_schema_changes
-   role: Audit trail ของทุกการเปลี่ยน schema (Bible Part 15)
-   key_features:
-     - forward_sql + rollback_sql
-     - bible_section_reference (traceability)
-     - approval workflow (proposed → approved → executed)
-     - pre_execution_checks_passed
-     - rollback_executed_at + rollback_reason
+   role: Audit trail ของทุกการเปลี่ยน schema (Bible Part 15) — 54 แถว (วัด 2026-08-24)
+   # corrected 2026-08-24 against live schema — forward_sql, rollback_sql,
+   # bible_section_reference, pre_execution_checks_passed, rollback_executed_at ไม่มีอยู่จริง
+   # และ 🔴 ไม่มีคอลัมน์ approval เลย: ไม่มี proposed/approved/executed state, ไม่มี approver
+   # → workflow อนุมัติที่ Part 15 บรรยายไว้ บันทึกในตารางนี้ไม่ได้ UNIMPLEMENTABLE as written
+   live_columns: change_type · table_name · column_name · index_name · constraint_name ·
+     migration_version · migration_name · related_dr_id · spec_version · description ·
+     ddl_statement (ทางเดียว ไม่มีคู่ rollback) · performed_by · performed_at · duration_ms ·
+     rolled_back · rolled_back_at · rollback_reason
    sync: S only (audit log)
 ```
 
@@ -7839,6 +8067,7 @@ Entity แต่ละประเภทมี metadata เฉพาะที่
 
 ```yaml
 1. seo_entity_ingredients
+   status: 🔴 0 rows (2026-08-24) — and `ingredient` is not among the entity_type values in use
    role: Extended metadata for ingredient entities
    key_fields:
      - INCI name, INN name, CAS number, chemical formula
@@ -7873,17 +8102,28 @@ Entity แต่ละประเภทมี metadata เฉพาะที่
    relevant_verticals: aesthetic, dental, surgical
    
 4. seo_programmatic_templates
-   role: Templates สำหรับสร้าง programmatic pages (Type C/D)
-   key_features:
-     - URL pattern + title pattern + content blocks (with variables)
-     - Required + optional variables
-     - Eligibility rules
-     - Quality gates (editorial/medical/legal review required flags)
-     - Pages_generated_count tracking
+   role: Templates สำหรับสร้าง programmatic pages (Type C/D) — 23 แถว (วัด 2026-08-24)
+   # corrected 2026-08-24 against live schema — ตารางจริงมี 12 คอลัมน์เท่านั้น:
+   live_columns: fingerprint · fingerprint_display_name · template_name · template_id ·
+     target_layer · url_pattern · page_template_blueprint · applicable_brands ·
+     entity_type_required · created_at · updated_at
+   # 🔴 title pattern, required/optional variables, eligibility rules, quality-gate flags
+   #    (editorial/medical/legal review required) และ pages_generated_count **ไม่มีอยู่จริง**
+   #    → quality gate ที่เอกสารบอกว่าอยู่บนเทมเพลต บังคับไม่ได้ UNIMPLEMENTABLE as written
+   # หมายเหตุ: `target_layer` เป็นคอลัมน์เดียวในฐานที่ยังชื่อ "layer" — เป็นคนละเรื่องกับ
+   #    page_master.layer ที่ไม่มีและจะไม่มี (กฎหน้าเว็บคีย์ด้วย coalesce(page_category, page_type))
+   # 🔴 ไม่มีคอลัมน์ programmatic_template_id บน page_master ให้ผูกกลับ — ตารางนี้ยัง orphan
    used_by: Type C (local programmatic), Type D (brand-wide tagged)
 ```
 
-→ **Full schemas + all 22-24 columns per extension table** : ดู `Schema_Overview v1.0 Section 11`
+→ **Full schemas per extension table** : ดู `Schema_Overview v1.0 Section 11`
+
+*(corrected 2026-08-24 against live schema — "22-24 columns per extension table" is wrong; the ten
+extensions range from 24 to 44 columns and three of them hold zero rows. Measured 2026-08-24,
+columns / rows: condition 42/125 · procedures 27/145 · devices 24/64 · symptom 31/21 ·
+anatomy 27/21 · organization 34/21 · drug 44/9 · **ingredients 29/0** · **lab_test 36/0** ·
+**product 42/0**. Three verticals in §5.11 — the ingredient deep-dives especially — describe a
+table that has never had a row in it.)*
 
 ---
 
@@ -7891,33 +8131,51 @@ Entity แต่ละประเภทมี metadata เฉพาะที่
 
 ### Citation Tier Mapping (Bible Part 23.1)
 
-ตาราง `seo_citations.evidence_tier` ใช้ค่า 1-6 ตาม hierarchy:
+ตาราง `seo_citations.**citation_tier**` ใช้ค่า 1-6 ตาม hierarchy
+*(corrected 2026-08-24 against live schema — คอลัมน์ชื่อ `citation_tier` ไม่ใช่ `evidence_tier`;
+`evidence_tier` ไม่มีอยู่จริง และ `schema_evidence_level` ก็ไม่มี — EvidenceLevel ที่เขียนไว้ข้างล่าง
+เป็นค่าที่ต้อง derive ตอน render schema ไม่ใช่คอลัมน์ที่อ่านได้)*
+
+**ฉบับจริงคือ COMMENT ของคอลัมน์ในฐาน** (DR-057 ข้อ 4) เพราะเกต G5 (`check:citations`) ใน CI
+ของทั้งสามแบรนด์ยึดอันนั้น — แถวที่ tier ไม่ตรงจะทำให้ CI ของแบรนด์อื่นหยุด deploy ตามไปด้วย
+การกระจายจริง 551 แถว วัด 2026-08-24: tier 1 → 288 · 2 → 38 · 3 → 50 · 4 → 16 · 5 → 57 · 6 → 102
 
 ```yaml
 Tier 1 — Highest (EvidenceLevelA):
+  study_type: systematic_review · meta_analysis · systematic_review_and_meta_analysis · cochrane_review
   sources: Cochrane Reviews, Systematic Reviews, Meta-analyses
-  schema_evidence_level: EvidenceLevelA
   freshness: ≤ 5 years
 
 Tier 2 — High (EvidenceLevelA single, B multiple):
+  study_type: rct · randomized_controlled_trial · cohort_study
+  # corrected 2026-08-24 against live schema: plain `cohort_study` sits at tier 2, not tier 5.
   sources: RCTs (PubMed peer-reviewed), Phase 3 trials
   freshness: ≤ 7 years
 
 Tier 3 — Strong (EvidenceLevelB):
+  study_type: clinical_guideline · consensus_guideline · clinical_practice_guideline
   sources: Medical Society Guidelines (AAD, AAOMS, AASM, สมาคมแพทย์เฉพาะทาง)
   freshness: track latest version
 
 Tier 4 — Strong (EvidenceLevelB):
+  study_type: law · regulation · regulatory_document · report · fact_sheet · survey_report · genetic_association
   sources: WHO, CDC, NIH, NHS, NICE, MOH Thailand, FDA
   freshness: ≤ 3 years for stats
 
 Tier 5 — Moderate (EvidenceLevelC):
-  sources: Observational studies, cohort studies (PubMed)
+  study_type: cross_sectional · in_vitro · retrospective_cohort · prospective_cohort ·
+              case_series · clinical_study · pilot_study
+  sources: Observational studies (PubMed)
   freshness: ≤ 7 years
 
 Tier 6 — Foundational (no evidence level):
+  study_type: narrative_review · textbook · manufacturer_document · expert_opinion · consensus_statement
   sources: Textbooks, expert consensus, hospital case data
   freshness: textbook ≤ 5 years
+
+# ยังไม่มีฐานตัดสิน: scoping_review (พูลมี 3 ใบ ตั้ง 1/5/6 อย่างละใบ) · other (กระจายทั้ง 1/3/5/6)
+# ⚠️ ทิศทางของสเกล: tier 1 = แข็งที่สุด. กฎที่เขียนว่า "reject citation tier < 3" จึงปฏิเสธหลักฐาน
+#    ที่แข็งที่สุด — ตรวจทิศทางก่อนคัดลอกเกณฑ์ไปใช้ (corrected 2026-08-24 against live schema)
 ```
 
 ### Schema.org MedicalEvidenceLevel Output
@@ -8341,8 +8599,18 @@ content_quality_gate_v3_1:
 ## 7.4 Cross-Vertical Cluster Sharing Rules
 
 ### กฎพื้นฐาน
+
+> 🔴 **corrected 2026-08-24 against live schema:** `seo_topic_cluster_master` มี 29 คอลัมน์ และ
+> **ไม่มีทั้ง `applicable_verticals` และ `vertical_specific`** — กฎทั้งหมดใน §7.4 ที่คีย์ด้วยสองชื่อนี้
+> จึงยิงไม่ออก ไม่เคยยิงเลย. คอลัมน์ scope ที่มีจริงคือ **`brand_scope` text[]** (`{*}` = ใช้ร่วมทั้ง
+> ตาราง · รายชื่อแบรนด์ = ส่วนตัวของแบรนด์นั้น) และ **`brand_scope_primary`**.
+> ถ้าต้องการแยกตาม vertical จริง ๆ ต้องเพิ่มคอลัมน์ก่อน — ตอนนี้ vertical ไม่มีที่เก็บที่ชั้น cluster
+> อ่านข้อ 1-2 เป็น *เจตนาของดีไซน์* ไม่ใช่กฎที่บังคับได้วันนี้
+
 1. **Default คือ universal** — cluster ใหม่ตั้ง `applicable_verticals = ['*']`
+   → live equivalent: `brand_scope = '{*}'`
 2. **vertical_specific = TRUE** เฉพาะกรณีที่ cluster หมายถึง concept ที่ไม่มีนอก vertical นั้น
+   → live equivalent: `brand_scope = '{<brand-slug>}'` (per-brand, ไม่ใช่ per-vertical)
 3. **เปลี่ยน scope ของ cluster** ต้องผ่าน Schema Change Governance (Part 15)
 
 ### Decision Tree
@@ -9122,7 +9390,10 @@ MedicalWebPage (this page)
 
 ## 7.6 Cluster Lifecycle States
 
-> **Why this section:** Cluster ใน `seo_cluster_master` ไม่ใช่สิ่งคงที่ — มัน **เกิด, ใช้งาน, เสื่อม, รวมกัน** ตลอดเวลา. ต้องมี state machine ที่ชัดเจนเพื่อ governance + ป้องกัน orphan clusters + ป้องกัน duplicate clusters
+> **Why this section:** Cluster ใน `seo_topic_cluster_master` ไม่ใช่สิ่งคงที่ — มัน **เกิด, ใช้งาน, เสื่อม, รวมกัน** ตลอดเวลา. ต้องมี state machine ที่ชัดเจนเพื่อ governance + ป้องกัน orphan clusters + ป้องกัน duplicate clusters
+>
+> *(corrected 2026-08-24 against live schema — ตารางชื่อ `seo_topic_cluster_master`;
+> `seo_cluster_master` ไม่มีอยู่จริง query ตามชื่อนั้นได้ 404 ทุกครั้ง · 58 แถว วัด 2026-08-24)*
 
 ### 7.6.1 State Diagram
 
@@ -9149,12 +9420,19 @@ MedicalWebPage (this page)
 
 ### 7.6.2 State Definitions
 
+*(corrected 2026-08-24 against live schema — the column is `seo_topic_cluster_master.status`,
+constrained by `chk_status` to **active | deprecated | merged | split**. `pending_review` is NOT in
+the constraint: writing it raises a violation, so the entry state below cannot be recorded and the
+5-check gate in §7.7 has no state to park a proposal in. `split` is live but undocumented here.
+Live distribution: active 46 · merged 7 · deprecated 5.)*
+
 | State | Meaning | Can Use? | UI Indicator |
 |-------|---------|----------|--------------|
 | `active` | Cluster อยู่ใน active rotation, สร้าง content ใหม่ได้ | ✅ Yes | 🟢 Green badge |
-| `pending_review` | Cluster ใหม่, รอ governance approval | ⚠️ Limited (draft only) | 🟡 Yellow badge |
+| 🔴 `pending_review` | Cluster ใหม่, รอ governance approval — **ไม่อยู่ใน CHECK ห้ามเขียน** | ⚠️ Limited (draft only) | 🟡 Yellow badge |
 | `deprecated` | กำลังถูก retire — ห้าม assign content ใหม่, content เก่ายังใช้อยู่ได้ | ❌ No (warn user) | 🔴 Red badge |
 | `merged` | ถูกรวมกับ cluster อื่น — auto-redirect ไป target cluster | ❌ No (auto-handled) | ⚫ Gray badge |
+| `split` | แตกออกเป็นหลาย cluster — **มีใน CHECK แต่เอกสารไม่เคยนิยาม** (corrected 2026-08-24) | ❌ No | ⚫ Gray badge |
 
 ### 7.6.3 State Transitions (Allowed)
 
@@ -9192,14 +9470,18 @@ active → deprecated:
   process:
     1. Flag in monthly review (Part 7.8)
     2. Stakeholder discussion (1-2 weeks)
-    3. Update entity_lifecycle = 'deprecated'
+    3. Update **status** = 'deprecated'   # corrected 2026-08-24: column is `status`
     4. Notion notification to content team
     5. Plan migration of existing content (3-6 months grace)
 
 deprecated → merged:
   trigger: "All content migrated to target cluster"
   required:
-    - target cluster_id specified in seo_cluster_master.merged_into_id
+    - target cluster recorded in `aliases` jsonb as {"merged_from": ["<retired-slug>"]} on the
+      surviving row (DR-046)   # corrected 2026-08-24: seo_cluster_master.merged_into_id does
+                               # not exist — there is no column that points at the merge target
+    - repoint every page_master.cluster_id and entity_graph.topic_cluster_id in the SAME
+      transaction (DR-047: cluster_master is the source of truth, those two are cached pointers)
     - URL redirects 301 set up
     - Internal links updated
   finality: "merged = terminal state, no more changes"
@@ -9208,16 +9490,21 @@ deprecated → merged:
 ### 7.6.5 Database Field Mapping
 
 ```sql
--- seo_cluster_master
-entity_lifecycle text  -- enum: 'active' | 'pending_review' | 'deprecated' | 'merged'
-merged_into_id uuid    -- FK self-reference, NOT NULL when state='merged'
-deprecated_at timestamptz  -- when entered 'deprecated' state
-merged_at timestamptz      -- when entered 'merged' state
+-- seo_topic_cluster_master   (corrected 2026-08-24 against live schema)
+status text  -- CHECK chk_status: 'active' | 'deprecated' | 'merged' | 'split'
+             -- 🔴 NOT named entity_lifecycle. `entity_lifecycle` exists only on
+             --    seo_entity_graph, where it means something else entirely — a demand
+             --    trajectory (Mature/Growing/Emerging/Declining). Do not conflate them.
+             -- 🔴 'pending_review' is not in the constraint; see §7.6.2.
 
-CONSTRAINT check_lifecycle_consistency CHECK (
-  (entity_lifecycle = 'merged' AND merged_into_id IS NOT NULL) OR
-  (entity_lifecycle != 'merged' AND merged_into_id IS NULL)
-);
+-- 🔴 merged_into_id / deprecated_at / merged_at DO NOT EXIST on this table.
+--    Merge provenance is recorded in the `aliases` jsonb as {"merged_from": ["<retired-slug>"]}
+--    per DR-046 — search there before creating a cluster. There is no timestamp for entering
+--    'deprecated' or 'merged'; only updated_at moves.
+-- 🔴 CONSTRAINT check_lifecycle_consistency cannot exist either — it references merged_into_id.
+--    Consequence: nothing at the database level forces a merged cluster to name its target, and
+--    a merge that forgets to write aliases.merged_from leaves the row pointing nowhere.
+--    The constraint that DOES exist is chk_no_self_parent on parent_cluster_fp.
 ```
 
 ### 7.6.6 Cross-References
@@ -9226,7 +9513,7 @@ CONSTRAINT check_lifecycle_consistency CHECK (
 |-------|----------|
 | 5 creation rules (gate before pending_review → active) | 7.7 |
 | Review cycles (ongoing audit) | 7.8 |
-| seo_cluster_master schema | Schema_Overview EYWA v1.0 |
+| `seo_topic_cluster_master` schema *(corrected 2026-08-24 — not `seo_cluster_master`)* | Schema_Overview EYWA v1.0 |
 | Schema change logging | Part 15 — Schema Change Governance |
 
 ---
@@ -9241,15 +9528,27 @@ CONSTRAINT check_lifecycle_consistency CHECK (
 
 ### 7.7.1 The 5 Mandatory Checks
 
+> 🔴 **Column-name correction, 2026-08-24 against live schema.** The five SQL audits below are
+> written against a table and a set of columns that do not exist. Live equivalents:
+> `seo_cluster_master` → **`seo_topic_cluster_master`** · `cluster_id` → **`cluster_slug`** ·
+> `pref_label` → **`cluster_name`** · `alt_labels[]` → **`aliases`** (jsonb, not text[]) ·
+> `broader_id` → **`parent_cluster_fp`** (self-FK to `fingerprint`) · `hierarchy_path` →
+> **`hierarchy_level`** (smallint; NULL on 23 of 58 rows) · `definition`/`scope_note` →
+> **`descriptions`** (jsonb, multilingual) · `related_cluster_ids` — no equivalent, does not exist.
+> On `seo_entity_graph`, `intended_cluster_id` does not exist either; the live pointer is
+> **`topic_cluster_id`**, and it is a single slot on a row shared by every brand, so Check 2
+> counts entities already assigned — it cannot count entities merely *planned* for a cluster.
+> As written, all five audits error out; none of them has ever gated an insert.
+
 ```
-ก่อน INSERT INTO seo_cluster_master, ต้องผ่านทั้ง 5 ข้อ:
+ก่อน INSERT INTO seo_topic_cluster_master, ต้องผ่านทั้ง 5 ข้อ:
 
 ╔══════════════════════════════════════════════════════════════╗
 ║ Check 1: ไม่มี cluster เดิมที่ครอบคลุม topic นี้                  ║
 ║                                                                ║
 ║   SQL audit:                                                   ║
 ║   SELECT cluster_id, pref_label, alt_labels[]                  ║
-║   FROM seo_cluster_master                                      ║
+║   FROM seo_topic_cluster_master                                      ║
 ║   WHERE pref_label ILIKE '%proposed_label%'                    ║
 ║      OR proposed_label = ANY(alt_labels)                       ║
 ║      OR cluster_id IN (related_cluster_ids of nearby clusters);║
@@ -9365,13 +9664,18 @@ Step 3: Governance approval (per brand_scope rules above)
    ├── If approved → trigger insert
    └── If rejected → log reason, return to step 1
 
-Step 4: n8n insert into seo_cluster_master
-   ├── INSERT with entity_lifecycle = 'pending_review'
+Step 4: n8n insert into seo_topic_cluster_master
+   ├── 🔴 INSERT with status = 'pending_review' — **REJECTED by chk_status** (corrected
+   │     2026-08-24 against live schema). The constraint allows only
+   │     active | deprecated | merged | split, so the two-step "insert as pending, activate
+   │     after grace period" flow cannot be executed as written. Either hold the proposal
+   │     outside the table (Notion) until approved and insert directly as 'active', or add
+   │     'pending_review' to the constraint first.
    ├── Logged in seo_schema_changes
    └── Update Notion: 'active' (after 24h grace period)
 
 Step 5: Activation
-   ├── Update entity_lifecycle = 'active'
+   ├── Update status = 'active'   # corrected 2026-08-24: column is `status`, not entity_lifecycle
    ├── Notify content team
    └── Cluster พร้อม assign entities + create content
 ```
@@ -9395,7 +9699,7 @@ Step 5: Activation
 | Review cycles (post-creation) | 7.8 |
 | SKOS standards (ISO 25964) | Part 1.2 — International Standards |
 | Approval process audit log | Part 15 — Schema Change Governance |
-| seo_cluster_master schema spec | Schema_Overview EYWA v1.0 |
+| `seo_topic_cluster_master` schema spec *(corrected 2026-08-24 — not `seo_cluster_master`)* | Schema_Overview EYWA v1.0 |
 
 ---
 
@@ -11404,7 +11708,7 @@ Compliance/PDPA แยกชัด         | ❌            | ✅ Separate
 
 **Phase 2: Foundation Setup (2-4 สัปดาห์)**
 1. Add vertical/sub_vertical values to controlled lists
-2. Create new clusters in seo_cluster_master (if needed)
+2. Create new clusters in seo_topic_cluster_master (if needed)
 3. Update existing cluster `applicable_verticals` (if shared)
 4. Set up CPT registration for vertical-specific types
 5. Create brand entity in `brands`
@@ -12042,7 +12346,7 @@ positioning_value:
 - ALTER seo_entity_graph: add entity_type, applicable_verticals, type_properties
 - CREATE 9 extension tables
 - ALTER brands: add vertical, sub_vertical, business_model
-- ALTER seo_cluster_master: add applicable_verticals, vertical_specific
+- ALTER seo_topic_cluster_master: add applicable_verticals, vertical_specific
 - ALTER seo_authors_reviewers, seo_citations
 
 ### Phase 2: Data migration (2-4 weeks)
@@ -12811,7 +13115,7 @@ R=Responsible, A=Accountable, C=Consulted, I=Informed
 | Brand-linked Citables per Pillar | ≥ 3 (Pattern A) | manual audit | Content Lead |
 | **🆕 Brand Stance Citables per Pillar** | ≥ 1 (Pattern E) | manual audit | Content Lead |
 | Freshness Status "fresh" | ≥ 70% pages | freshness_status field | SEO Lead |
-| Orphan Pages | 0 | seo_internal_links | Dev |
+| Orphan Pages | 0 | seo_page_internal_links | Dev |
 | Schema Valid | 100% | Rich Results Test + Flow F2 | Dev |
 | Doctor Review % | 100% (medical pages) | reviewed_by_id NULL check | SEO Lead |
 | Predicted Prompts coverage | ≥ 15 per pillar | seo_predicted_prompts | Content Lead |
@@ -13478,7 +13782,7 @@ Code-switching:
 → Optimize content for code-switched queries
 ```
 
-### Storage in `seo_voice_search_queries`
+### Storage in `seo_x_voice_search`
 
 Day 1: empty table
 Phase 1-2: manual entry of observed/test queries
@@ -15098,10 +15402,10 @@ Notify Notion: Article tracked
 | Supabase Table | Notion DB Name | Sync Direction | Frequency |
 |---|---|---|---|
 | `brands` | "Brand Registry" | Two-way | On change |
-| `seo_cluster_master` | "SEO Clusters" | Two-way | On change |
+| `seo_topic_cluster_master` | "SEO Clusters" | Two-way | On change |
 | `seo_authors_reviewers` | "Authors & Reviewers" | Two-way | On change |
 | `seo_citations` | "Citation Library" | Two-way (from Notion mostly) | On change |
-| `seo_keyword_master` | "Keywords" | Two-way | On change |
+| `seo_x_ads_keywords_contextual_master` | "Keywords" | Two-way | On change |
 | `seo_website_page_master` (status) | "Content Pipeline" | Two-way | On change |
 | `seo_schema_changes` | "Schema Governance" | Notion → Supabase | On change |
 
@@ -15111,7 +15415,7 @@ Notify Notion: Article tracked
 |---|---|---|
 | `seo_llm_citations` (aggregated) | "AI Citation Health" | Daily |
 | `seo_brand_mentions` (aggregated) | "Brand Mention Monitor" | Daily |
-| `seo_internal_links` (analyzed) | "Link Coverage Report" | Weekly |
+| `seo_page_internal_links` (analyzed) | "Link Coverage Report" | Weekly |
 | Cross-table KPI rollup | "Monthly SEO KPIs" | Monthly |
 
 ### Category γ: Pure Supabase (No Notion mirror) — 18 tables
@@ -15268,7 +15572,7 @@ Validate SKOS hierarchy (no cycles, max 3 levels)
     ↓
 Validate applicable_verticals controlled values
     ↓
-IF valid: Upsert Supabase seo_cluster_master
+IF valid: Upsert Supabase seo_topic_cluster_master
 ELSE: Comment back in Notion with error details
     ↓
 Auto-create Thai translation row in seo_cluster_translations
@@ -15713,7 +16017,7 @@ Parse voice query data:
   └─ Intent classification
   └─ Match to predicted_prompts (find similar)
     ↓
-Insert seo_voice_search_queries
+Insert seo_x_voice_search
     ↓
 If matched_predicted_prompt_id:
   └─ Update prompt's actual_test_results
@@ -15983,7 +16287,7 @@ Views:
 ```yaml
 Database name: SEO Clusters
 Workspace: Knowledge
-Sync: Two-way to seo_cluster_master
+Sync: Two-way to seo_topic_cluster_master
 
 Properties:
   - Name (Title)                        # → pref_label
@@ -16596,7 +16900,7 @@ common_failures:
 exceptions:
   
   flat_data_no_hierarchy:
-    examples: seo_citations, seo_keyword_master, seo_authors_reviewers
+    examples: seo_citations, seo_x_ads_keywords_contextual_master, seo_authors_reviewers
     reason: No parent → no need for Two-Phase
     pattern: Simple bidirectional sync
   
@@ -16740,12 +17044,12 @@ seo_authors:
   example: "sht7::dr-noppadol::dr. noppadol rangsiyakul"
   refresh_triggers: [author_slug, full_name]
 
-seo_brand_doctors:
+seo_doctor_assignments:
   formula: "{fp[-6:]}::{brand_slug}::{doctor_slug}"
   example: "tiu8::vth-biodent::dr-noppadol"
   refresh_triggers: [brand_slug, doctor_slug]
 
-seo_brand_branches:
+seo_branches:
   formula: "{fp[-6:]}::{brand_slug}::{branch_slug}"
   example: "ujv9::vth-biodent::sukhumvit-flagship"
   refresh_triggers: [brand_slug, branch_slug]
@@ -17038,7 +17342,14 @@ when_to_use_neither:
 
 # PART 19: Data Quality Framework
 
-> **Why this Part exists:** ระบบที่มี structure ดีไม่ได้แปลว่ามี data ดี. Part 19 เป็น **operational framework** สำหรับวัด+รักษา quality ของข้อมูลใน 21 tables ของเรา. ไม่มี Part นี้ = ทำ schema สวยแต่ data เน่า → optimize ไม่ได้
+> **Why this Part exists:** ระบบที่มี structure ดีไม่ได้แปลว่ามี data ดี. Part 19 เป็น **operational framework** สำหรับวัด+รักษา quality ของข้อมูลใน **43 base tables** ของเรา *(corrected 2026-08-24 against live schema — เดิมเขียน 21)*. ไม่มี Part นี้ = ทำ schema สวยแต่ data เน่า → optimize ไม่ได้
+>
+> 🔴 **สถานะจริงของ framework นี้ (วัด 2026-08-24): ยังไม่เคยรันเลยสักครั้ง.**
+> `seo_data_quality_metrics` มี **0 แถว** ทุกแบรนด์ ทุกตาราง ทุกช่วงเวลา — ไม่มี measurement,
+> ไม่มี alert, ไม่มี dashboard ที่มีข้อมูลจริงอยู่เบื้องหลัง. ตัวเลข `Overall Score: 87.3%
+> [HEALTHY]` ที่พิมพ์ไว้ใน §19.5 **ไม่มีที่มาในฐานข้อมูล**. อ่านพาร์ทนี้เป็น *ข้อกำหนดของสิ่งที่จะสร้าง*
+> ไม่ใช่รายงานของสิ่งที่กำลังทำงานอยู่ — และก่อนสร้าง ต้องแก้ชื่อคอลัมน์ใน §19.3/§19.4 ก่อน
+> เพราะหลายตัวไม่มีอยู่จริง (ดูมาร์ก 🔴 ในแต่ละบล็อก)
 >
 > **Standard:** ตาม DAMA-DMBOK + ISO/IEC 25012 (Data Quality Model) — universal
 
@@ -17083,11 +17394,16 @@ per_table_score:
   └─ target: ≥ 90% for Tier 1 tables, ≥ 70% for Tier 2
 
 universal_examples:
-  - seo_website_page_master: page_category, node_tier, funnel_stage, schema_org_type ต้อง NOT NULL
+  - seo_website_page_master: page_category, node_tier, funnel_stage, **schema_markup_type** ต้อง NOT NULL
     # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
-    # note: page_category is still 0% populated on two of three brands — read via
-    #       coalesce(page_category, page_type) until the backfill lands
-  - brands: vertical_family, healthcare_format ต้อง NOT NULL
+    # corrected 2026-08-24 against live schema — คอลัมน์ฝั่งหน้าชื่อ schema_markup_type
+    #   (`schema_org_type` อยู่บน seo_entity_graph เท่านั้น)
+    # fill จริง 2026-08-24: page_category 2,169/2,358 · node_tier 2,352/2,358 ·
+    #   funnel_stage 2,353/2,358 — read via coalesce(page_category, page_type) จนกว่า backfill จะครบ
+  - 🔴 brands: `vertical_family` และ `healthcare_format` **ไม่มีอยู่จริงทั้งคู่**
+    (corrected 2026-08-24 against live schema — brands มี 31 คอลัมน์ ไม่มีสองตัวนี้)
+    ตัวที่มีจริงและควรบังคับ NOT NULL: brand_slug, fingerprint, brand_structure
+    ⚠️ `compliance_profile` มีจริงแต่ NULL ครบ 20/20 แบรนด์ → default tier ที่ §32 อ้าง ไม่มี input
   - seo_entity_graph: entity_type, schema_org_type ต้อง NOT NULL
 ```
 
@@ -17099,18 +17415,25 @@ definition: "Do related records align without conflict?"
 types:
   referential_integrity:
     ├─ All FK references valid (no orphan FK)
+    │  # live FK targets on page_fingerprint (7 real FKs since 2026-08-16): seo_page_citations ·
+    │  # seo_editorial_reviews · seo_page_internal_links (from/to) · parent_page_fp (self) ·
+    │  # seo_x_ads_keywords_contextual_master.ad_landing_page_fp · seo_x_voice_search.optimized_for_page_fp
     ├─ Junction table records have valid both-side records
-    └─ check: Type B/C pages → branch_id exists in seo_branches
+    └─ 🔴 "Type B/C pages → branch_id exists in seo_branches" — UNIMPLEMENTABLE: page_master has
+       no branch_id (corrected 2026-08-24 against live schema)
   
   business_rule_consistency:
-    ├─ Type A page → branch_id IS NULL ✓
-    ├─ Type C page → must have programmatic_template_id
-    ├─ page_category='condition_pillar' → schema_org_type IN MedicalCondition/Symptom
+    ├─ 🔴 Type A page → branch_id IS NULL — no such column (corrected 2026-08-24)
+    ├─ 🔴 Type C page → must have programmatic_template_id — no such column (corrected 2026-08-24)
+    ├─ page_category='condition_pillar' → **schema_markup_type** IN MedicalCondition/Symptom
     │  # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
+    │  # corrected 2026-08-24: the page-side column is schema_markup_type, a bare scalar on all
+    │  # three brands since the 2026-08-23 migration, so `=` comparison is now safe (DR-057 ข้อ 1)
     └─ check via CHECK constraint + validation triggers
   
   cross_record_consistency:
-    ├─ brand has 1 healthcare_format → all pages should align
+    ├─ 🔴 "brand has 1 healthcare_format → all pages should align" — brands has no
+    │  healthcare_format column (corrected 2026-08-24 against live schema)
     └─ cluster has pillar tier=B → at least 1 page in cluster has tier=B
 
 target: > 95% (consistency violations are critical)
@@ -17181,22 +17504,30 @@ definition: "Each real-world entity is represented once"
 
 deduplication_rules:
   url_uniqueness:
-    ├─ full_url (in seo_website_page_master) must be unique per brand
-    └─ check: SELECT full_url, COUNT(*) GROUP BY full_url HAVING COUNT > 1
+    ├─ 🔴 `full_url` does not exist (corrected 2026-08-24 against live schema).
+    │  Key on `slug` per brand instead — unique by convention, not by constraint.
+    └─ check: SELECT brand_id, slug, COUNT(*) FROM seo_website_page_master
+              GROUP BY 1,2 HAVING COUNT(*) > 1
 
   entity_uniqueness:
-    ├─ entity_fingerprint must be globally unique
-    ├─ entity_name within same vertical should be unique (case-insensitive)
-    └─ aliases should not overlap across entities
+    ├─ entity_fingerprint must be globally unique — ✅ UNIQUE, and LOAD-BEARING:
+    │  it is the join key used by page_master.primary_entity_fp, related_entities_fps,
+    │  keywords.primary_entity_fp and seo_entity_relationships. **Never drop it.**
+    ├─ 🔴 "entity_name within same vertical" — no vertical column exists on seo_entity_graph,
+    │  so the qualifier cannot be applied (corrected 2026-08-24 against live schema)
+    └─ aliases should not overlap across entities — `aliases` is jsonb here, not text[]
   
   branch_uniqueness:
     ├─ (brand_id, branch_slug) unique
     └─ geo coordinates: 2+ branches at exact same lat/lng = suspect
-
+       # live columns are `latitude` / `longitude` (+ geo_point), not geo_lat / geo_lng
+  
   doctor_uniqueness:
-    ├─ author_fingerprint globally unique
-    ├─ same person across brands = same author_id (cross-brand)
-    └─ License number cross-check (TMC)
+    ├─ author fingerprint globally unique — the column is `fingerprint`, not `author_fingerprint`
+    ├─ same person across brands = same row, joined through seo_doctor_assignments
+    └─ 🔴 License number cross-check (TMC) — `medical_license_verified_at` is NULL on all 184
+       rows and `credential_types` is set on 4 of 184 (measured 2026-08-24), so this check has
+       no anchor to run against. An expired licence keeps its byline on Live pages indefinitely.
 
 duplicate_detection_methods:
   ├─ Exact match (SELECT...COUNT)
@@ -17210,35 +17541,50 @@ target: < 1% duplicate rate per table
 
 ## 19.3 Per-Table Quality Specifications
 
-### `seo_website_page_master` (Most Critical — 1,000-1,500 rows (typical mid-size))
+### `seo_website_page_master` (Most Critical — **2,358 rows**, measured 2026-08-24: deezy-dental 869 / vth-biodent 761 / smile-scape-clinic 728)
 
 ```yaml
 required_fields_for_completeness:
   tier_1_critical:                        # MUST have
     - page_fingerprint (PK)
     - brand_id (FK)
-    - full_url
+    - 🔴 full_url — DOES NOT EXIST (corrected 2026-08-24 against live schema).
+      Use `slug` (+ `canonical_url` when it differs from the composed brand URL).
     - page_category (was layer 1-7)   # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
-    - node_tier (A/B/C/D)
-    - funnel_stage
-    - page_branch_relationship (A/B/C/D)
-    - schema_org_type
-    - status (active/draft/archived)
+      # live fill 2026-08-24: 2,169/2,358 set, 189 NULL — read via coalesce(page_category, page_type)
+    - node_tier (A/B/C/D)             # live: C 1,416 · D 530 · B 319 · A 87 · NULL 6
+    - funnel_stage                    # live: consideration 1,066 · awareness 682 · decision 560 ·
+                                      # retention 45 · NULL 5. top/mid/bottom RETIRED (DR-057 ข้อ 2)
+    - 🔴 page_branch_relationship (A/B/C/D) — DOES NOT EXIST. The whole §4.5 four-pattern model
+      has no column, so this completeness check can never pass or fail. (corrected 2026-08-24)
+    - 🔴 schema_org_type — the page-side column is named `schema_markup_type` (scalar text).
+      `schema_org_type` exists only on seo_entity_graph. (corrected 2026-08-24)
+    - status — CHECK is Planned | Live | Merged | Dropped, NOT active/draft/archived.
+      Live 2026-08-24: Planned 1,513 · Live 742 · Merged 102 · Dropped 1. (corrected 2026-08-24)
   
   tier_1_high_priority:                   # SHOULD have
     - cluster_id
     - sitemap_node_id
-    - title (SEO)
+    - 🔴 title (SEO) — the column is `seo_title`. (corrected 2026-08-24)
     - meta_description
-    - confidence_score
+    - 🔴 confidence_score — DOES NOT EXIST anywhere in the schema. Every rule that gates on it
+      (including the §19.7 backfill "< 0.7 → manual review" and the publish gate below) is
+      UNIMPLEMENTABLE as written, and the two thresholds the docs give for it contradict each
+      other anyway (>0.3 vs <0.7 flags REVIEW). (corrected 2026-08-24 against live schema)
   
   tier_2_optional:                        # NICE to have
-    - schema_markup_type[]
-    - content_format[]
-    - content_summary
+    - schema_markup_type      # scalar text, not text[] — DR-057 ข้อ 1
+    - content_format          # scalar text, not text[]; vocabulary is PER BRAND — DR-057 ข้อ 5
+    - 🔴 content_summary — DOES NOT EXIST. Nearest live: `content_brief` (NULL on all 2,358 rows)
+      and `note_brief`. (corrected 2026-08-24 against live schema)
 
 consistency_rules:
   rule_1_branch_relationship:
+    🔴 UNIMPLEMENTABLE as written (corrected 2026-08-24 against live schema) — all four columns
+       this rule reads (page_branch_relationship, branch_id, branch_tags,
+       programmatic_template_id) are absent from seo_website_page_master. The rule has reported
+       "0 violations" since it was written, which reads as "clean" and means "never checked".
+       Kept below as the record of intent; do not report it as passing.
     IF page_branch_relationship = 'brand_wide':
       branch_id IS NULL
       branch_tags IS NULL
@@ -17277,26 +17623,47 @@ freshness_thresholds:
   evidence_case:                  30 days (cases freshness signal)
 
 uniqueness_checks:
-  - full_url UNIQUE per brand_id
+  - slug UNIQUE per brand_id        # corrected 2026-08-24: `full_url` does not exist
   - page_fingerprint GLOBALLY UNIQUE
   - title near-duplicate (Levenshtein < 5) → flag REVIEW
+    # the live view v_page_title_near_duplicates already computes this — use it
 
 quality_gate_for_publish:
   ├─ structurally_complete = true
-  ├─ schema_type_validated = true
-  ├─ confidence_score ≥ 0.7
-  └─ at least 1 inbound link planned
+  │  # 🔴 the definition in Part 3/4 reads `layer IS NOT NULL AND node_tier IS NOT NULL AND
+  │  # funnel_stage IS NOT NULL`. `layer` does not exist, so by the document's own definition
+  │  # all 2,358 pages are "structurally incomplete" — including the 742 already Live.
+  │  # Read it as coalesce(page_category, page_type) IS NOT NULL AND node_tier IS NOT NULL
+  │  # AND funnel_stage IS NOT NULL. (corrected 2026-08-24 against live schema)
+  ├─ schema_type_validated = true    # no column records this; it is a check result, not a field
+  ├─ 🔴 confidence_score ≥ 0.7 — column does not exist anywhere. This gate has never run.
+  │  (corrected 2026-08-24 against live schema)
+  └─ at least 1 inbound link planned  # required_min_inbound + seo_page_internal_links
 
 failure_threshold: < 90% completeness → block publish workflow
 ```
 
-### `brands` (15 rows — small but critical)
+### `brands` (**20 rows**, measured 2026-08-24 — small but critical)
 
 ```yaml
+# 🔴 corrected 2026-08-24 against live schema — five of the six fields this block requires do not
+#    exist on `brands` (31 columns): vertical_family, healthcare_format, medical_specialty[],
+#    primary_branch_id, schema_org_type. The whole vertical classification was deferred to v2.0
+#    and never landed, so both consistency rules below are UNIMPLEMENTABLE and have always
+#    reported clean. Kept as the record of intent.
 required_fields:
   tier_1: [brand_name, vertical_family, schema_org_type, status]
   tier_1_for_healthcare: [healthcare_format, medical_specialty[]]
   tier_1_for_local_seo: [primary_branch_id (computed)]
+
+# What IS live and worth checking instead:
+required_fields_live:
+  tier_1: [brand_name (PK), brand_slug (UNIQUE), fingerprint (UNIQUE), brand_structure, status]
+  # ⚠️ `status` is dirty: '' on 13 rows, 'active' on 6, and one row holds 'active\n' with a
+  #    trailing newline. `WHERE status = 'active'` therefore silently drops most of the estate.
+  #    Compare with trim(status) until the data is cleaned.
+  compliance: [positioning_mode, compliance_profile]   # compliance_profile NULL on all 20 rows
+  structure:  [brand_structure]   # 'monolithic' on all 20 — no brand is multi_center (DR-057 ข้อ 8)
 
 consistency_rules:
   IF vertical_family = 'healthcare':
@@ -17309,76 +17676,117 @@ consistency_rules:
 target: 100% completeness (small table — manual review feasible)
 ```
 
-### `seo_entity_graph` (400-500 rows (typical mid-size))
+### `seo_entity_graph` (**732 rows**, measured 2026-08-24)
 
 ```yaml
 required_fields:
   - entity_fingerprint (PK)
   - entity_name
-  - entity_type[]
-  - schema_org_type
-  - applicable_verticals[]
+  - entity_type          # scalar text, NOT entity_type[] (corrected 2026-08-24)
+  - schema_org_type      # NULL on 70 of 732 rows (measured 2026-08-24)
+  - 🔴 applicable_verticals[] — DOES NOT EXIST (corrected 2026-08-24 against live schema)
 
 consistency_rules:
-  IF entity_type contains 'condition':
+  IF entity_type = 'condition':
     schema_org_type = 'MedicalCondition'
-    icd_11_code OR icd_10_code IS NOT NULL  # ≥1 required; DR-033: populate BOTH when available (ICD-11-MMS primary; + icd_10_cm_code for intl/EN SEO)
-  IF entity_type contains 'procedure':
+    🔴 "icd_11_code OR icd_10_code IS NOT NULL" — UNIMPLEMENTABLE here: `icd_11_code` does not
+       exist on seo_entity_graph and `icd_10_code` is NULL on all 732 rows. DR-050 §2 moved the
+       coding set to seo_entity_condition; DR-033's instruction to populate it back on the graph
+       is superseded — following it recreates the dual-store conflict DR-050 removed.
+       Run the check against seo_entity_condition (125 rows) instead.
+  IF entity_type = 'procedure':
     schema_org_type IN ('MedicalProcedure', 'MedicalTherapy')
 
 freshness:
-  entity_authority_score: 30 days
+  entity_authority_score: 30 days   # ⚠️ populated 0-10, not 0-100 — see Part 27.2.1
   related_entities_fps: 90 days
 
 uniqueness:
   - entity_fingerprint UNIQUE
-  - (entity_name, primary_vertical) near-duplicate detection
+  - 🔴 "(entity_name, primary_vertical)" — no primary_vertical column. Use the live views
+    v_entity_near_duplicates (trigram) and v_entity_semantic_duplicates (embeddings, 684 rows
+    available) — both exist today and neither is wired to a gate.
+    (corrected 2026-08-24 against live schema)
 ```
 
-### `seo_x_ads_keywords_contextual_master` (10,000-15,000 rows (typical))
+### `seo_x_ads_keywords_contextual_master` (**22,710 rows across 8 brands**, measured 2026-08-24)
 
 ```yaml
+# 🔴 corrected 2026-08-24 against live schema — four of the five required fields do not exist.
+#    The PK is `fingerprint`, not `keyword_fingerprint`; volume and difficulty live on the
+#    monthly snapshot table (seo_x_ads_keywords_monthly_market_snapshot: volume_recent_12m,
+#    volume_avg_48m, competition_index, …), not on the master; and there is no
+#    keyword_geographic_intent / location_modifier / target_branch_id column at all, so the
+#    'local' consistency rule cannot fire.
 required_fields:
-  - keyword_fingerprint (PK)
+  - fingerprint (PK)
   - keyword
-  - search_volume_latest
-  - keyword_difficulty_score
-  - keyword_geographic_intent
+  - brand            # FK → brands.brand_name; 8 distinct values, see Part 5.6
+  - search_intent · funnel_stage · qualitative_kd_number   # the live intent/difficulty fields
 
 freshness:
-  search_volume_latest: 30 days (refresh from DataForSEO)
-  keyword_difficulty_score: 30 days
+  volume metrics: 30 days (refresh from DataForSEO into the monthly snapshot table)
+  qualitative_kd_number: 30 days
 
 consistency:
   IF keyword_geographic_intent = 'local':
     location_modifier IS NOT NULL OR target_branch_id IS NOT NULL
+    # 🔴 all three columns absent — rule kept as intent only
 ```
 
 ### Other tables (summary)
 
+*(column names below corrected 2026-08-24 against live schema; row counts measured the same day)*
+
 ```yaml
-seo_branches:
-  required: [branch_fingerprint, brand_id, branch_name, address, geo_lat, geo_lng]
-  freshness: business_hours weekly, gbp_place_id monthly
+seo_branches:                          # 37 rows
+  required: [branch_fingerprint, brand_id, branch_name, address, latitude, longitude]
+  # corrected: geo_lat/geo_lng → latitude/longitude (plus geo_point). Live hours column is
+  # `opening_hours` (+ special_hours), not business_hours.
+  freshness: opening_hours weekly, gbp_place_id monthly
 
-seo_authors_reviewers:
-  required: [author_fingerprint, author_name, schema_org_type, medical_specialty[]]
-  consistency: IF schema_org_type = 'Physician' → credentials NOT NULL
+seo_authors_reviewers:                 # 184 rows
+  required: [fingerprint, full_name, primary_specialty, specialties[]]
+  # corrected: author_fingerprint → fingerprint · author_name → full_name ·
+  # medical_specialty[] → specialties[] · 🔴 there is NO schema_org_type on this table, so the
+  # "IF schema_org_type = 'Physician'" rule below cannot fire. Use credential_types /
+  # board_certifications, both live — credential_types is populated on 4 of 184 rows.
+  consistency: IF credential_types indicates a physician → medical_license_number NOT NULL
   freshness: bio annual, photo_url annual
+  # ⚠️ medical_license_verified_at is NULL on all 184 rows — no annual re-verification anchor
 
-seo_doctor_assignments:
-  required: [author_id, brand_id, role, assignment_status]
-  consistency: assignment_status in ('active','inactive','leave')
+seo_doctor_assignments:                # 262 rows
+  required: [author_id, brand_id, role_at_brand]
+  # corrected: role → role_at_brand · 🔴 assignment_status DOES NOT EXIST, so the
+  # "in ('active','inactive','leave')" rule is UNIMPLEMENTABLE. Live substitute: ended_at IS NULL
+  # means currently assigned (there is also is_primary_role).
+  # ✅ `author_id` IS live and correct — a real uuid FK → seo_authors_reviewers(id), populated on
+  #    all 262 rows. `author_fp` is a second, parallel text key (auth_{ULID16}) also populated on
+  #    all 262. Both work; author_id is the declared FK, so joins should use it.
+  #    (verified 2026-08-24 — an earlier pass of this note swapped author_id out as if it were
+  #     one of the missing columns. It is not.)
   uniqueness: (author_id, brand_id, branch_id)
 
-seo_citations:
-  required: [citation_id, citation_type, title]
-  consistency: IF citation_type starts with 'external' → url IS NOT NULL
+seo_citations:                         # 551 rows
+  required: [fingerprint, citation_type, title]
+  # corrected: citation_id → fingerprint
+  consistency: IF the source is external → url IS NOT NULL
+  # 🔴 no citation_type value starts with 'external' — the 14 live values are meta_analysis,
+  # systematic_review, expert_opinion, clinical_guideline, cohort_study, rct, other,
+  # regulatory_document, cross_sectional, case_series, industry_publication, textbook,
+  # case_control, case_report. The prefix test never matches. Test on url/doi/pubmed_pmid instead.
   freshness: external citations expire after 5 years (medical sources)
+  # ⚠️ publication_year holds 4 Buddhist-era values (2510, 2541, 2566, 2566) in a Gregorian
+  # column (measured 2026-08-24) — any freshness filter reads those as far-future and never
+  # expires them. Detect with: WHERE publication_year >= 2500
 
-seo_topic_cluster_master:
-  required: [cluster_id, cluster_name, lifecycle_state]
-  consistency: IF parent_cluster_id NOT NULL → cluster_depth = parent + 1
+seo_topic_cluster_master:              # 58 rows
+  required: [cluster_slug, cluster_name, status]
+  # corrected: cluster_id → cluster_slug · lifecycle_state → status
+  # (CHECK chk_status: active | deprecated | merged | split — live: active 46, merged 7, deprecated 5)
+  consistency: IF parent_cluster_fp NOT NULL → hierarchy_level = parent hierarchy_level + 1
+  # corrected: parent_cluster_id → parent_cluster_fp · cluster_depth → hierarchy_level
+  # ⚠️ hierarchy_level is NULL on 23 of 58 rows, so the rule is unevaluable for 40% of the table.
 ```
 
 ---
@@ -17437,7 +17845,23 @@ table_quality_score:
 
 ### Database Schema for Quality Tracking
 
+> 🔴 **The table below is NOT the table that exists** *(corrected 2026-08-24 against live schema)*.
+> `seo_data_quality_metrics` is live with **13 columns and 0 rows**, and it stores **one metric per
+> row** (key/value), not one row per table-measurement with five dimension columns. Live shape:
+>
+> `id · metric_name · metric_category · metric_value · metric_value_jsonb · threshold_min ·
+> threshold_max · status · target_table_name · target_brand_id (FK → brands.id) ·
+> scope_description · computed_at · computation_duration_ms`
+>
+> Mapping if you implement against what is there: `completeness_pct` etc. become five rows with
+> `metric_category='completeness'`…, `overall_score` a sixth; `health_band` → `status`;
+> `table_name` → `target_table_name`; `brand_id` → `target_brand_id`; `measured_at` →
+> `computed_at`; `issue_breakdown` → `metric_value_jsonb`. There is **no** `total_records`,
+> `records_with_issues`, `critical_issues` or `measurement_method` column, and no
+> `valid_pct` CHECK. The DDL below is kept as the design of record.
+
 ```sql
+-- DESIGN, not live. See the correction note above.
 CREATE TABLE seo_data_quality_metrics (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   
@@ -17480,18 +17904,24 @@ CREATE INDEX idx_quality_metrics_table_time
 
 ### Dashboard Overview
 
+> 🔴 **The scores below are illustrative mock-ups, not measurements** *(corrected 2026-08-24
+> against live schema)*. `seo_data_quality_metrics` holds **0 rows**, so no overall score, no
+> per-table score and no health band has ever been computed for any brand. The figures "87.3%",
+> "82.1%", "98.7%" and "91.5%" have no source in the database and must not be quoted as status.
+> Row counts, which ARE measurable, are corrected in the sketch below.
+
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│  📊 DATA QUALITY HEALTH — All Tables — 2026-05-04           │
+│  📊 DATA QUALITY HEALTH — All Tables — LAYOUT SKETCH ONLY   │
 ├─────────────────────────────────────────────────────────────┤
-│  Overall Score: 87.3% [HEALTHY]                             │
+│  Overall Score: — (no measurement rows exist)               │
 │                                                              │
-│  By Table:                                                   │
-│    seo_website_page_master  82.1% [HEALTHY]   ⚠️ 1,000-1,500 rows (typical mid-size) │
-│    brands                   98.7% [EXCELLENT] ✅  15 rows   │
-│    seo_entity_graph         91.5% [EXCELLENT] ✅ 400-500 rows (typical mid-size)   │
-│    seo_branches             —    NEW — pending data         │
-│    seo_topic_cluster_master —    NEW — pending data         │
+│  By Table:                    (row counts measured 2026-08-24)│
+│    seo_website_page_master   — pending measurement · 2,358 rows │
+│    brands                    — pending measurement ·    20 rows │
+│    seo_entity_graph          — pending measurement ·   732 rows │
+│    seo_branches              — pending measurement ·    37 rows │
+│    seo_topic_cluster_master  — pending measurement ·    58 rows │
 │  ...                                                         │
 └─────────────────────────────────────────────────────────────┘
 ```
@@ -17500,19 +17930,24 @@ CREATE INDEX idx_quality_metrics_table_time
 
 ```sql
 -- View: data_quality_summary
-SELECT 
-  table_name,
-  ROUND(AVG(completeness_pct), 1) AS completeness,
-  ROUND(AVG(consistency_pct), 1) AS consistency,
-  ROUND(AVG(accuracy_pct), 1) AS accuracy,
-  ROUND(AVG(timeliness_pct), 1) AS timeliness,
-  ROUND(AVG(uniqueness_pct), 1) AS uniqueness,
-  ROUND(AVG(overall_score), 1) AS overall,
-  MAX(measured_at) AS last_measured
+-- 🔴 corrected 2026-08-24 against live schema — this query errors today: none of
+--    completeness_pct / consistency_pct / accuracy_pct / timeliness_pct / uniqueness_pct /
+--    overall_score / measured_at / table_name are columns on seo_data_quality_metrics.
+--    Against the live 13-column shape (metric per row) the equivalent is:
+SELECT
+  target_table_name,
+  ROUND(AVG(metric_value) FILTER (WHERE metric_category = 'completeness'), 1) AS completeness,
+  ROUND(AVG(metric_value) FILTER (WHERE metric_category = 'consistency'),  1) AS consistency,
+  ROUND(AVG(metric_value) FILTER (WHERE metric_category = 'accuracy'),     1) AS accuracy,
+  ROUND(AVG(metric_value) FILTER (WHERE metric_category = 'timeliness'),   1) AS timeliness,
+  ROUND(AVG(metric_value) FILTER (WHERE metric_category = 'uniqueness'),   1) AS uniqueness,
+  ROUND(AVG(metric_value) FILTER (WHERE metric_name = 'overall_score'),    1) AS overall,
+  MAX(computed_at) AS last_measured
 FROM seo_data_quality_metrics
-WHERE measured_at > now() - interval '7 days'
-GROUP BY table_name
+WHERE computed_at > now() - interval '7 days'
+GROUP BY target_table_name
 ORDER BY overall ASC;  -- worst first
+-- Returns 0 rows until the measurement job is actually written and scheduled.
 ```
 
 ---
@@ -17585,14 +18020,22 @@ priority: HIGHEST
 fields_to_backfill:
   # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
   - page_category (was layer 1-7) — AI classification + manual review.
-    Two of three brands are at 0% today, and ~135 rows still sit in page_type's
-    generic 'supporting'/'pillar' buckets, which belong to no category.
-  - node_tier (A/B/C/D) — based on traffic + business value
-  - funnel_stage — based on intent analysis
-  - page_branch_relationship — automated detection from URL pattern
+    Measured 2026-08-24: **2,169 of 2,358 rows set** — deezy-dental 776/869,
+    vth-biodent 686/761, smile-scape-clinic 707/728. The "0% on two of three brands"
+    note from 2026-08-23 is superseded; the remaining 189 NULLs are the gap.
+    Keep reading via coalesce(page_category, page_type) until it reaches 2,358.
+    (corrected 2026-08-24 against live schema)
+  - node_tier (A/B/C/D) — based on traffic + business value (2,352/2,358 set)
+  - funnel_stage — based on intent analysis (2,353/2,358 set)
+  - 🔴 page_branch_relationship — no such column; nothing to backfill into
+    (corrected 2026-08-24 against live schema)
 
 method:
   1. AI auto-classify (System Instruction Section XII)
+  2. 🔴 steps 2 and 3 gate on `confidence_score`, which does not exist on any table — there is
+     nowhere to write the classifier's confidence, so the manual-review split cannot be applied
+     as written. Add the column or route on a value the classifier returns in-process.
+     (corrected 2026-08-24 against live schema)
   2. confidence_score < 0.7 → manual review
   3. confidence_score ≥ 0.7 → auto-apply with audit log
   4. Strategy Lead reviews Tier A promotions
@@ -17605,9 +18048,13 @@ target: 100% Tier 1 completeness end of Week 2
 ```yaml
 priority: HIGH
 fields_to_backfill:
-  - schema_org_type — match page_category expectation   # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
+  - schema_markup_type — match page_category expectation   # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
+    # corrected 2026-08-24: the page-side column is schema_markup_type (scalar text since the
+    # 2026-08-23 smile-scape migration); schema_org_type lives on seo_entity_graph
   - cluster_id — assign to existing or create new clusters
   - sitemap_node_id — generate per hierarchy
+    # ⚠️ 73 deezy-dental rows carry NULL here (measured 2026-08-24); the citation gate falls
+    # back to sitemap_section for them rather than defaulting the quota to 0
 
 method:
   1. page_category → Schema validation (per Part 5 mapping / §3.2)
@@ -17623,8 +18070,11 @@ quality_gate: schema_type_validated = true for all pages
 priority: MEDIUM
 fields_to_backfill:
   - meta_description (where missing)
-  - content_summary (auto-generated from first paragraph)
-  - planned_inbound_count (rollup from cluster relations)
+  - 🔴 content_summary — no such column. Nearest live: `content_brief` (NULL on all 2,358 rows)
+    or `note_brief`. (corrected 2026-08-24 against live schema)
+  - 🔴 planned_inbound_count — no such column. The live equivalents are `required_min_inbound`
+    (the floor) and a COUNT over seo_page_internal_links.to_page_fp (the actual, 16,564 rows).
+    (corrected 2026-08-24 against live schema)
 
 method:
   - Automated where possible (content extraction, rollup)
@@ -17635,6 +18085,8 @@ method:
 
 ```yaml
 pre_v30_baseline:
+  # 🔴 all four figures below are estimates, never measured — seo_data_quality_metrics has 0 rows
+  #    (2026-08-24). Do not cite them as a baseline that was observed.
   - completeness_pct: ~40% (estimated, mostly missing page_category/cluster)   # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
   - consistency_pct: ~70%
   - timeliness_pct: ~50%
@@ -17680,11 +18132,14 @@ quarterly:
 
 ```
 ✅ 5 Universal Quality Dimensions (DAMA + ISO/IEC 25012)
-✅ Per-table specifications for all 21 tables
+⚠️ Per-table specifications — written for 5 of the 43 live base tables, and several of those
+   specs name columns that do not exist (see the 🔴 marks in §19.3)
+   (corrected 2026-08-24 against live schema — the old line claimed "all 21 tables")
 ✅ Quality scoring algorithm (weighted dimensions)
-✅ Database schema for quality tracking (seo_data_quality_metrics)
-✅ Dashboard + alert workflows
-✅ Backfill strategy for existing pages (1,000-1,500 typical)
+⚠️ Database schema for quality tracking — the table exists but its live shape differs from the
+   DDL in §19.4, and it holds 0 rows (measured 2026-08-24)
+🔴 Dashboard + alert workflows — specified, never built. No measurement has ever run.
+⚠️ Backfill strategy for existing pages (live count 2,358, measured 2026-08-24)
 
 → Result: structure ดีของเรา + data quality ดี = optimization ที่วัดผลได้จริง
 ```
@@ -17803,7 +18258,12 @@ target:
   needs_work: 60-74%
   critical:  < 60%
 
-source: page_master.last_content_review_at vs threshold per page_category
+source: 🔴 UNIMPLEMENTABLE as written (corrected 2026-08-24 against live schema) —
+        `page_master.last_content_review_at` does not exist. seo_website_page_master has
+        93 columns and none of them records a content-review date; the closest live anchors
+        are `published_date` and `updated_at`, and `seo_editorial_reviews.completed_at` for
+        pages that have a review row. KPI #2 has therefore never been computed. Pick one of
+        those substitutes or add the column — but do not report this KPI as measured.
 ```
 
 ### KPI #3 — E-E-A-T Coverage
@@ -17821,11 +18281,15 @@ target:
   critical:  < 70%
 
 requirements_per_page:
-  - reviewer_id IS NOT NULL (linked to seo_authors_reviewers)
-  - at least 1 row in seo_page_citations (≥ 1 citation)
-  - byline visible on page (frontend rendering)
+  - a reviewer is attached — 🔴 NOT via `page_master.reviewer_id`, which does not exist
+    (corrected 2026-08-24 against live schema). The live link is
+    `seo_editorial_reviews.reviewer_fp` → `seo_authors_reviewers.fingerprint`, joined on
+    `seo_editorial_reviews.page_fp = seo_website_page_master.page_fingerprint`.
+  - at least 1 row in seo_page_citations (≥ 1 citation) — count `status = 'active'` only;
+    4,310 of 6,626 bindings are active, the other 2,316 are 'removed' (measured 2026-08-24)
+  - byline visible on page (frontend rendering) — no column records this; it is a render fact
 
-source: page_master + seo_page_citations + seo_authors_reviewers
+source: page_master + seo_page_citations + seo_editorial_reviews + seo_authors_reviewers
 
 priority_categories:
   # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
@@ -17965,6 +18429,10 @@ target:
 
 source: 
   - seo_llm_citations table (auto-tracked via Flow D1)
+    🔴 0 rows as of 2026-08-24 — KPI #8 has never been measured. So have #9 and #11, which
+    read seo_llm_citations and seo_brand_mentions (also 0 rows). A dashboard showing 0%
+    here is reporting "no data collected", not "no citations earned".
+    (corrected 2026-08-24 against live schema)
   - Manual query simulation (Part 21 spec)
 
 per_platform_breakdown:
@@ -18056,7 +18524,11 @@ definition: "% of priority entities that have associated content"
 formula:
   entity_coverage = entities_with_active_pages / total_priority_entities × 100
 
-priority_entities = entities marked as 'high' or 'critical' priority in seo_entity_graph
+priority_entities = 🔴 UNSELECTABLE as written (corrected 2026-08-24 against live schema):
+  seo_entity_graph has no priority column, so nothing marks an entity 'high' or 'critical'.
+  36 columns, none of them a priority. The denominator therefore has to be all 732 entities,
+  or a priority list has to be added. Note `entity_lifecycle` is a demand trajectory
+  (Mature/Growing/Emerging/Declining, mixed casing) — it is not a priority field.
 
 target:
   excellent: ≥ 80%
@@ -18109,7 +18581,13 @@ target:
   needs_work: 50-69%
   critical:  < 50%
 
-source: seo_topic_cluster_master.cluster_health_status (from Part 5 view)
+source: 🔴 `seo_topic_cluster_master.cluster_health_status` does not exist, and neither does the
+        Part 5 view (corrected 2026-08-24 against live schema). The live columns are
+        `cluster_health_score` (numeric, populated 0-10 — see 27.5.1), `cluster_health_breakdown`
+        jsonb, `cluster_health_formula_version` and `cluster_health_computed_at`. Compute the
+        healthy/undersized/oversized bands from a page count per cluster_slug instead:
+        `SELECT cluster_id, count(*) FROM seo_website_page_master
+         WHERE status <> 'Merged' GROUP BY cluster_id` against the 58 live clusters.
 ```
 
 ### KPI #15 — Sitemap Health Score
@@ -18245,23 +18723,26 @@ display: Notion embed + Metabase
 
 ## 20.7 Data Sources Mapping (Where Each KPI Comes From)
 
-| KPI | Primary Source | Secondary | Refresh |
-|-----|---------------|-----------|---------|
-| 1. Citable Density | page_master + content scraping | manual audit | Weekly |
-| 2. Freshness | page_master.last_content_review_at | n8n flow | Daily |
-| 3. E-E-A-T Coverage | page_citations + authors | — | Weekly |
-| 4. Organic Traffic | GA4 | — | Daily |
-| 5. Keyword Coverage | GSC + Ahrefs | DataForSEO | Daily |
-| 6. Click Depth | page_master + computed | crawl audit | Weekly |
-| 7. Topical Authority | GSC + competitors | Ahrefs | Monthly |
-| 8. AI Citation Rate | seo_llm_citations | query sim | Weekly |
-| 9. Entity Citation | seo_llm_citations | — | Weekly |
-| 10. Answer Inclusion | manual review | LLM judge | Weekly |
-| 11. Brand Mention | seo_brand_mentions | — | Weekly |
-| 12. Entity Coverage | entity_graph + page_master | — | Weekly |
-| 13. Connectivity | entity_graph relations | — | Weekly |
-| 14. Cluster Health | topic_cluster_master | — | Weekly |
-| 15. Sitemap Health | computed (Part 4.10) | — | Weekly |
+*(corrected 2026-08-24 against live schema — the ⚠️ column records whether the source can be read
+today. Four KPIs cannot be computed at all: #2 has no column, #8/#9/#11 have empty tables.)*
+
+| KPI | Primary Source | Secondary | Refresh | ⚠️ |
+|-----|---------------|-----------|---------|----|
+| 1. Citable Density | page_master + content scraping | manual audit | Weekly | needs a crawl feed |
+| 2. Freshness | 🔴 page_master.last_content_review_at — **column does not exist** | n8n flow | Daily | UNIMPLEMENTABLE |
+| 3. E-E-A-T Coverage | page_citations + seo_editorial_reviews + authors | — | Weekly | reviewer link is on editorial_reviews, not page_master |
+| 4. Organic Traffic | GA4 | — | Daily | MoM, not YoY — see 27.8 |
+| 5. Keyword Coverage | GSC + Ahrefs | DataForSEO | Daily | — |
+| 6. Click Depth | page_master.crawl_depth + computed | crawl audit | Weekly | 2,251/2,358 rows populated, values 0-5 |
+| 7. Topical Authority | GSC + competitors | Ahrefs | Monthly | competitor ratio — NOT the 0-10 cluster_topical_authority column |
+| 8. AI Citation Rate | seo_llm_citations | query sim | Weekly | 🔴 table has 0 rows |
+| 9. Entity Citation | seo_llm_citations | — | Weekly | 🔴 table has 0 rows |
+| 10. Answer Inclusion | manual review | LLM judge | Weekly | no table backs this |
+| 11. Brand Mention | seo_brand_mentions | — | Weekly | 🔴 table has 0 rows |
+| 12. Entity Coverage | entity_graph + page_master | — | Weekly | no priority column — denominator is all 732 entities |
+| 13. Connectivity | entity_graph relations | — | Weekly | 1,089 edges ÷ 732 entities = 1.49 |
+| 14. Cluster Health | topic_cluster_master | — | Weekly | count pages per cluster; cluster_health_status does not exist |
+| 15. Sitemap Health | computed (Part 4.10) | — | Weekly | — |
 
 ---
 
@@ -18833,7 +19314,9 @@ step_3_classify_results:
 
 step_4_calculate_metrics:
   - AI Citation Rate (KPI #8)
-  - Entity Coverage (KPI #9)
+  - Entity **Citation** Coverage (KPI #9)
+    # corrected 2026-08-24 — the short label "Entity Coverage" is KPI #12 (Knowledge Graph
+    # layer, % of entities that have a page). KPI #9 is % of entities CITED by AI.
   - Answer Inclusion (KPI #10)
   - Brand Mention Rate (KPI #11)
 ```
@@ -19103,6 +19586,21 @@ Elite SEO: "what kind of citation" = trust signal weight
 
 ### The 6-Tier Evidence Hierarchy
 
+> ✅ **Verified 2026-08-24 against the live column COMMENT and all 551 rows.** This hierarchy is
+> the authoritative one — DR-057 ข้อ 4 settled that the DB comment is the source of record because
+> gate G5 (`check:citations`) enforces it in CI for all three brands, and a mistagged row stops
+> everyone's deploy. Three fixes to what was written here:
+> - **`citation_tier` is the column name**, not `evidence_tier` (which does not exist).
+> - **`schema_org_evidence_level` is not a column** — the EvidenceLevelA/B/C values below are
+>   derived at schema-render time. Nothing stores them, so no query can filter on them.
+> - **Plain `cohort_study` sits at tier 2, not tier 5.** Tier 5 covers `retrospective_cohort` /
+>   `prospective_cohort` / `cross_sectional` / `in_vitro` / `case_series` / `clinical_study` /
+>   `pilot_study`. Part 27.6.1 had tier 3 labelled "cohort study" — that was wrong and is fixed there.
+>
+> Live distribution (551 rows, 2026-08-24): t1 288 · t2 38 · t3 50 · t4 16 · t5 57 · t6 102.
+> ⚠️ Direction: **tier 1 is the strongest**. A rule phrased "reject citation tier < 3" rejects the
+> best evidence in the pool. Check the direction before copying any threshold.
+
 ```yaml
 TIER 1 — Highest Evidence (Cochrane / Systematic Reviews / Meta-Analyses)
   examples:
@@ -19144,9 +19642,13 @@ TIER 4 — Government / Public Health Bodies
   schema_org_evidence_level: EvidenceLevelB
   preferred_for: epidemiology, public health stats, regulatory info
 
-TIER 5 — Peer-Reviewed Observational / Cohort Studies
+TIER 5 — Peer-Reviewed Observational Studies
+  study_type (live): cross_sectional · in_vitro · retrospective_cohort · prospective_cohort ·
+                     case_series · clinical_study · pilot_study
   examples:
-    - PubMed cohort studies (STROBE-compliant)
+    - Retrospective / prospective cohort studies (STROBE-compliant)
+      # corrected 2026-08-24 against live schema: a citation typed plainly `cohort_study`
+      # belongs at TIER 2, not here. Only the qualified retro/prospective forms sit at tier 5.
     - Case-control studies
     - Cross-sectional surveys
   freshness_rule: ≤ 7 years
@@ -19196,13 +19698,22 @@ priority_order_when_choosing:
 
 minimum_per_page_category:
   # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
-  condition_pillar:                 ≥ 3 citations, at least 1 in Tier 1-3
-  knowledge_article:                ≥ 3 citations, at least 1 in Tier 1-3
+  # ⚠️ corrected 2026-08-24: the gate that actually runs in CI does NOT key on page_category.
+  #    run-citation-qa-gates.py keys on the leading segment of `sitemap_node_id`
+  #    (MIN_PER_LAYER = {"5": 3, "6": 3, "3": 2, "4": 2, "7": 1}), falling back to
+  #    `sitemap_section` when node_id is empty. sitemap_section is numeric '1'..'9' on all three
+  #    brands since the 2026-08-23 deezy migration, so the fallback now works estate-wide.
+  #    The categories below are the editorial intent; the zone numbers are what enforces it.
+  #    A page in the right category but the wrong zone gets the wrong floor — check both.
+  condition_pillar:                 ≥ 3 citations, at least 1 in Tier 1-3   # zones 5, 6
+  knowledge_article:                ≥ 3 citations, at least 1 in Tier 1-3   # zones 5, 6
   🔴 Protocol_Pages:                ≥ 2 citations, at least 1 in Tier 2-3
      UNIMPLEMENTABLE as written — see mapping note: these rows are indistinguishable
      from service_page / knowledge_article, so they get whichever floor those carry
-  service_page + procedure_pillar:  ≥ 2 citations (Tier 3-4 acceptable)
-  evidence_case:                    ≥ 1 citation (often hospital data Tier 6)
+  service_page + procedure_pillar:  ≥ 2 citations (Tier 3-4 acceptable)   # zones 3, 4
+  evidence_case:                    ≥ 1 citation (often hospital data Tier 6)  # zone 7
+  # zones 1, 2, 8, 9 carry no citation floor in the live gate — a page moved there loses its
+  # minimum silently (corrected 2026-08-24 against the gate script + live schema)
 
 forbidden:
   ✗ Wikipedia as primary source (use as starting point only)
@@ -19401,13 +19912,23 @@ extra_caution_required_for:
 
 ### License Verification Workflow
 
+> 🔴 **Column-name and status correction, 2026-08-24 against live schema.** The field names below
+> are not the live ones. On `seo_authors_reviewers` (184 rows) the equivalents are
+> `medical_license_number` · `medical_license_country` · `medical_license_verified_at` ·
+> `board_certifications` (jsonb) · `credential_types` (text[]) · `is_active` (boolean).
+> There is no `tmc_license_number`, `specialty_board_cert[]`, `active_status`,
+> `verification_method`, `license_jurisdiction`, `license_authority` or `npi_number`.
+> **And the workflow has never run:** `medical_license_verified_at` is NULL on **all 184 rows**
+> and `credential_types` is set on **4 of 184**. "Re-verify annually" has no anchor to count from,
+> so an expired licence keeps its byline on Live pages indefinitely.
+
 ```yaml
 for_thai_medical_authors:
   required_fields:
-    - tmc_license_number (แพทยสภา) — verifiable
-    - tmc_license_verified_at (timestamp)
-    - specialty_board_cert[] (สมาคมเฉพาะทาง)
-    - active_status (active/inactive/retired)
+    - tmc_license_number (แพทยสภา) — verifiable      # live: medical_license_number
+    - tmc_license_verified_at (timestamp)             # live: medical_license_verified_at (0/184 set)
+    - specialty_board_cert[] (สมาคมเฉพาะทาง)          # live: board_certifications jsonb
+    - active_status (active/inactive/retired)         # live: is_active boolean (two states, not three)
   
   verification_process:
     1. Author submits license info
@@ -19573,6 +20094,9 @@ STAGE_3_SEO_LLMO_Optimization:
   sla: 2 business days
 
 STAGE_4_Legal_Compliance:
+  # 🔴 corrected 2026-08-24 against live schema — `review_type='legal_compliance'` has **0 rows**
+  #    in 2,095, while 139 pages carry legal_review_required=true (deezy 45, vth 8,
+  #    smile-scape 86). This stage has never produced a single record for any brand.
   reviewer: Legal/Compliance Officer
   checklist:
     ☐ No false advertising claims
@@ -19606,7 +20130,29 @@ STAGE_5_Final_Publish_Gate:
 
 Each stage produces a record:
 
+> 🔴 **The DDL below is not the live table** *(corrected 2026-08-24 against live schema)*.
+> `seo_editorial_reviews` has 22 columns and 2,095 rows. Differences that break queries:
+> - `page_id uuid → page_master(id)` does not exist. The real FK (since 2026-08-16) is
+>   **`page_fp` → `seo_website_page_master(page_fingerprint)`**, ON UPDATE CASCADE / ON DELETE CASCADE.
+> - `stage integer 1-5` does not exist, and neither does `CONSTRAINT valid_stage`. The live column
+>   is **`review_stage` text**, holding three values: `pre_publication` 1,317 · `plan_cleared` 724 ·
+>   `post_publication` 54. **The 5-stage ladder above is not recorded anywhere** — there is no
+>   column that distinguishes medical accuracy from editorial polish from SEO from legal, beyond
+>   `review_type`, which holds only `medical` (2,022) and `editorial` (73).
+> - `reviewer_id uuid` → **`reviewer_fp` text**.
+> - `reviewed_at` → **`started_at` / `completed_at`**; `status` → **`review_status`**
+>   (live values: `pending` 1,636 · `approved` 459 — no 'rejected', no 'revisions_requested').
+> - `checklist_completed jsonb` → **`findings` jsonb** + `e_e_a_t_compliance` jsonb;
+>   `notes` → **`recommendations`**; `blocking_issues text[]` → **`blocking_issues_count` smallint**
+>   (a count, not the list — the issues themselves are not stored).
+> - `review_score` exists but is **NULL on all 2,095 rows**.
+>
+> Consequence: Stages 3, 4 and 5 have no representation in the data at all, so "all previous
+> sign-offs present" cannot be checked by query. Per DR-057 ข้อ 6, publication readiness is carried
+> by `page_master.has_medical_review` + operator approval to Live — **not** by rows in this table.
+
 ```sql
+-- DESIGN, not live. See the correction note above for the real column names.
 CREATE TABLE seo_editorial_reviews (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   page_id uuid REFERENCES seo_website_page_master(id),
@@ -23306,7 +23852,7 @@ class EywaSchemaValidationTest extends WP_UnitTestCase {
 | Edge vocabulary (drives Layer 2 mapping) | Part 2.7 |
 | Entity Polymorphism (storage strategy) | Part 2.5 |
 | WordPress code reference (existing functions) | Appendix D.1 (generate_schema) |
-| Knowledge Graph Health KPIs | Part 20.5 (KPI #13) |
+| Knowledge Graph Health KPIs | Part 20.5 (KPIs #12–#15) | <!-- corrected 2026-08-24: 20.5 defines four KPIs, not just #13 -->
 | Editorial review (Layer 3 manual gate) | Part 23.4 |
 | AI Citation tracking (downstream signal) | Part 13.5, Part 21.4 |
 
@@ -23314,7 +23860,12 @@ class EywaSchemaValidationTest extends WP_UnitTestCase {
 
 # PART 27: EYWA Scoring Framework
 
-> **Why this section:** Bible Parts 1-26 ครอบคลุม **architecture + content + implementation** ครบ — แต่ระบบยังขาดอย่างหนึ่ง: **ตัวเลขที่ deterministic** ที่บอกว่า "entity นี้แข็งแค่ไหน?" หรือ "page นี้ E-E-A-T ครบไหม?". ปัจจุบันมี field เช่น `entity_authority_score (0-100)` ใน schema — แต่ไม่มี formula ระบุไว้ว่าคำนวณยังไง. ผลคือถ้า implementer 2 คนทำ system → ได้ตัวเลขต่างกัน → "Universal" claim พังทันที. Part 27 อุดช่องนี้ด้วย **EYWA Scoring Framework** — ระบบ scoring ของเราเอง ที่ transparent + auditable + deterministic + iterable
+> **Why this section:** Bible Parts 1-26 ครอบคลุม **architecture + content + implementation** ครบ — แต่ระบบยังขาดอย่างหนึ่ง: **ตัวเลขที่ deterministic** ที่บอกว่า "entity นี้แข็งแค่ไหน?" หรือ "page นี้ E-E-A-T ครบไหม?". ปัจจุบันมี field เช่น `entity_authority_score` ใน schema — แต่ไม่มี formula ระบุไว้ว่าคำนวณยังไง.
+*(corrected 2026-08-24 against live schema: คอลัมน์นี้ documented 0-100 แต่ **populated 0-10**
+— 730 แถว min 0.3 max 7.94. เรื่องเดียวกันเกิดกับ `cluster_health_score` (0-8.19),
+`cluster_topical_authority` (0-6.76) และ `citation_authority_weight` (0-9.0). ทุก threshold
+ในพาร์ทนี้ที่เขียนบนสเกล 0-100 จึงเป็นจริงเสมอหรือเท็จเสมอ ไม่เคยเลือกอะไรได้จริง —
+ดูกล่องแก้ไขในแต่ละหัวข้อ)* ผลคือถ้า implementer 2 คนทำ system → ได้ตัวเลขต่างกัน → "Universal" claim พังทันที. Part 27 อุดช่องนี้ด้วย **EYWA Scoring Framework** — ระบบ scoring ของเราเอง ที่ transparent + auditable + deterministic + iterable
 
 ## 27.1 Philosophy & Honest Framing
 
@@ -23433,9 +23984,15 @@ compute_timing:
 
 caching:
   storage: 
-    - score value: in main entity row
-    - factor breakdown: in entity.score_breakdown jsonb
-    - formula version: in entity.score_formula_version
+    - score value: in main entity row — seo_entity_graph.entity_authority_score ✅ exists
+    - 🔴 factor breakdown: `entity.score_breakdown` jsonb DOES NOT EXIST on seo_entity_graph
+    - 🔴 formula version: `entity.score_formula_version` DOES NOT EXIST on seo_entity_graph
+    # corrected 2026-08-24 against live schema. The transparency requirement below ("Admin should
+    # see factor breakdown for any score") therefore cannot be met for entities — the breakdown is
+    # discarded on every nightly recompute. Only seo_citations implements the pattern properly, with
+    # authority_breakdown jsonb + authority_formula_version + authority_computed_at; and
+    # seo_topic_cluster_master with cluster_health_breakdown + _formula_version + _computed_at.
+    # Copy that three-column shape onto seo_entity_graph before claiming the score is auditable.
   invalidation:
     - On dependent data change (page count, edge count, citation update)
     - Manual refresh via WP-CLI command
@@ -23447,7 +24004,18 @@ transparency:
 
 ## 27.2 Entity-Level Scores
 
-### 27.2.1 entity_authority_score (0-100) — `entity_authority_formula_v1.0`
+### 27.2.1 entity_authority_score — `entity_authority_formula_v1.0`
+
+> 🔴 **SCALE CORRECTION (2026-08-24, measured against live schema).** This section, the column
+> COMMENT in the database, and every threshold written elsewhere all say **0-100**. The column is
+> **populated 0-10**: 730 non-null rows, min **0.3**, max **7.94**, not one row above 8.
+> Consequence: `entity_authority_score >= 70` ("promote authoritative entities") selects **zero
+> rows on every brand and always has**, and reads to a human as "no entity is authoritative enough"
+> rather than "the threshold is on the wrong scale". Until the values are recomputed on 0-100,
+> **divide any 0-100 threshold in this Part by 10** before using it, or state the scale explicitly.
+> The formula below returns 0-100 by construction — it is not the code that produced the live
+> values. Re-measure before trusting either: `SELECT min(entity_authority_score),
+> max(entity_authority_score) FROM seo_entity_graph;`
 
 **Purpose:** วัด "อำนาจ" ของ entity ใน knowledge graph — ใช้ใน:
 - Ranking related entities (สำหรับ Related Block)
@@ -23551,7 +24119,20 @@ def entity_authority_score_v1_0(entity_fp: str, brand_id: str) -> dict:
 41-60   Established   → Healthy, maintain
 61-80   Strong        → Authority entity, leverage in marketing
 81-100  Dominant      → Pillar entity, central to brand
+
+🔴 corrected 2026-08-24 against live schema — on the values actually stored (0.3-7.94) every
+   one of the 730 entities lands in the first band, "Emerging". Divided by the 10× scale gap,
+   the live distribution is roughly: Emerging <2.0, Growing 2-4, Established 4-6, Strong 6-8,
+   Dominant >8 (no row reaches it). Do not read a band off this table without first checking
+   which scale the row was written on.
 ```
+
+> ⚠️ **Two of the six factors have no input at all** *(measured 2026-08-24)*:
+> Factor 5 External Authority reads `seo_backlinks_links`, which holds **0 rows**, and Factor 6
+> AI Citation Rate reads `seo_llm_citations`, which holds **0 rows**. Both contribute a hard 0 to
+> every entity, capping the achievable score at 70 of 100 even once the scale is fixed. 🔴 The
+> composite is therefore not comparable to the interpretation bands above until those two feeds
+> exist.
 
 ### 27.2.2 entity_freshness_score (0-1) — `entity_freshness_formula_v1.0`
 
@@ -23613,7 +24194,15 @@ def entity_completeness_score_v1_0(entity_fp: str) -> float:
 
 ## 27.3 Edge-Level Scores
 
-### 27.3.1 edge_strength (0-1) — `edge_strength_formula_v1.0`
+### 27.3.1 edge_strength — `edge_strength_formula_v1.0`
+
+> 🔴 **SCALE CORRECTION (2026-08-24, measured against live schema).** `seo_entity_relationships.
+> edge_strength` is a **smallint on a 1-3 scale with a CHECK**, not `numeric` 0-1 and with no
+> default. The function below returns fractions (0.7, 0.95, 0.85…) — **writing its output back
+> raises a constraint violation**, and so does writing 0. Measured 2026-08-24: NULL on 1,052 of
+> 1,089 rows; the 37 that are set hold 2 (28 rows), 1 (6), 3 (3). Read 1 = weak, 2 = moderate,
+> 3 = absolute. Keep the formula as the ranking heuristic it is, but map its 0-1 result onto
+> 1/2/3 before it touches the column.
 
 **Purpose:** วัดความ "แน่น" ของ relationship — ใช้ใน:
 - Related entity ranking (สูง → priority)
@@ -23641,17 +24230,24 @@ def edge_strength_v1_0(edge_record: Edge) -> float:
     else:                             strength *= 0.85  # uncited
     
     # Adjustment 3: Edge type-specific
+    # 🔴 corrected 2026-08-24 against live schema — 10 of the 13 keys below match NO live row.
+    #    Live edge_type values (1,089 rows, measured 2026-08-24): related_to 427, broader_than 271,
+    #    treats 166, requires 58, symptom_of 54, part_of 51, is_a 30, contraindicates 21,
+    #    causes 6, caused_by 5. Only treats / symptom_of / part_of / related_to are covered, so
+    #    598 of 1,089 edges fall through to the 0.8 default — including every contraindication.
     edge_type_modifier = {
-        'parent_of': 1.0, 'child_of': 1.0,            # structural — strong
-        'subtype_of': 1.0,
-        'treats': 0.95, 'treated_by': 0.95,            # clinical — strong
+        # live keys
+        'broader_than': 1.0,                           # structural — strong (was 'parent_of')
+        'is_a': 1.0,                                   # (was 'subtype_of')
+        'treats': 0.95,                                # clinical — strong
         'symptom_of': 0.95,
-        'uses': 0.95, 'used_by': 0.95,
-        'part_of': 1.0, 'contains': 1.0,
-        'requires_assessment': 0.9,
-        'evidenced_by': 0.95,
-        'alternative_to': 0.85,                        # less certain
+        'requires': 0.9,                               # (was 'uses'/'requires_assessment')
+        'part_of': 1.0,
+        'contraindicates': 1.0,                        # clinical hard stop — never discount
+        'causes': 0.95, 'caused_by': 0.95,
         'related_to': 0.7,                             # generic — weakest
+        # design-only keys, no live rows: parent_of, child_of, subtype_of, treated_by,
+        # uses, used_by, alternative_to, contains, requires_assessment, evidenced_by
     }.get(edge_record.edge_type, 0.8)
     strength *= edge_type_modifier
     
@@ -23661,6 +24257,17 @@ def edge_strength_v1_0(edge_record: Edge) -> float:
 ### 27.3.2 edge_evidence_score (0-1) — `edge_evidence_formula_v1.0`
 
 **Purpose:** วัดว่า edge ถูก backed up by evidence ดีแค่ไหน
+
+> 🔴 **Almost no input, and none where the formula reads it** *(re-measured 2026-08-24 against
+> live schema)*. `seo_entity_relationships.edge_evidence_citation` is set on **27 of 1,089
+> rows** — all 21 `contraindicates` edges (each at `edge_strength` 2, which is what
+> `trg_validate_edge_evidence` requires) plus 6 `related_to`. Every other edge is NULL,
+> including all **231 medical-claim edges** the formula below is meant to score
+> (treats 166, symptom_of 54, causes 6, caused_by 5) — so it still returns 0.0 for all of them.
+> `edge_evidence_score` itself is NULL on all 1,089 rows: the function has never been run.
+> *(An earlier pass of this note said the citation column was NULL on all 1,089 rows. It is not
+> — the contraindication backfill landed. Re-measure before quoting either number:
+> `SELECT edge_type, count(edge_evidence_citation) FROM seo_entity_relationships GROUP BY 1;`)*
 
 ```python
 def edge_evidence_score_v1_0(edge_id: str) -> float:
@@ -23692,6 +24299,20 @@ def edge_evidence_score_v1_0(edge_id: str) -> float:
 **Purpose:** Implement Google's E-E-A-T framework — drives KPI #3 (E-E-A-T Coverage)
 
 **Reference:** Google Search Quality Evaluator Guidelines (December 2022)
+
+> 🔴 **Column reality check (2026-08-24, measured against live schema).** This function reads
+> nine attributes that do not exist anywhere in the database: `page.reviewed_by_id`,
+> `page.citation_count`, `page.years_practice_referenced`, `page.medical_disclaimer_shown`,
+> `page.last_reviewed_within_12_months`, `page.has_methodology_section`,
+> `page.author_bio_visible`, `page.contact_info_visible`, `page.last_modified_visible`. On
+> `seo_authors_reviewers` it also reads `has_specialty_credentials`, `years_experience`,
+> `publications_count` and `is_principal_doctor_at_brand` — none of which exist either.
+> As written the score cannot be computed at all. Live substitutes that DO exist:
+> reviewer link → `seo_editorial_reviews.reviewer_fp`; citation count → `COUNT(*)` over
+> `seo_page_citations WHERE page_fp = … AND status = 'active'`; review recency →
+> `seo_editorial_reviews.completed_at`; credentials → `seo_authors_reviewers.credential_types`
+> (populated on 4 of 184 rows) and `board_certifications`. The remaining six are page-render
+> facts that no table records — they need a crawl feed, not a column lookup.
 
 ```python
 def e_e_a_t_score_v1_0(page_id: str) -> dict:
@@ -23863,9 +24484,20 @@ def page_freshness_score_v1_0(page_id: str) -> float:
 
 ## 27.5 Cluster-Level Scores
 
-### 27.5.1 cluster_health_score (0-100) — `cluster_health_formula_v1.0`
+### 27.5.1 cluster_health_score — `cluster_health_formula_v1.0`
 
 **Purpose:** Drives KPI #14 (Cluster Health). อ้างอิงรูจาก Bible Part 7
+
+> 🔴 **SCALE CORRECTION (2026-08-24, measured against live schema).** Documented 0-100 here and in
+> the column COMMENT; **populated 0-10** — all 58 clusters, min **0.0**, max **8.19**, mean 5.17.
+> An alert written as "warn below 60" fires on **every cluster, permanently**, which is
+> indistinguishable from a broken alert and has been ignored accordingly. The KPI #14 target of
+> ≥70 (27.8) is unreachable by construction. Re-measure before trusting either number:
+> `SELECT min(cluster_health_score), max(cluster_health_score), avg(cluster_health_score)
+> FROM seo_topic_cluster_master;`
+>
+> Factor 3 below ("Avg Entity Authority — already 0-100, no normalization needed") is the likely
+> origin of the 10× gap: it averages `entity_authority_score`, which is itself on 0-10.
 
 ```python
 def cluster_health_score_v1_0(cluster_id: str) -> dict:
@@ -23895,7 +24527,10 @@ def cluster_health_score_v1_0(cluster_id: str) -> dict:
         e.entity_authority_score for e in entities if e.entity_authority_score
     ])
     avg_authority = avg_authority or 0
-    # Already 0-100, no normalization needed
+    # 🔴 corrected 2026-08-24 against live schema: this comment is the bug. entity_authority_score
+    #    is populated 0-10 (max 7.94 over 730 rows), NOT 0-100, so this factor contributes at most
+    #    ~8 of its 25 available points and drags the whole composite onto a 0-10 range.
+    #    Multiply by 10 here, or fix the source column — but do not leave both on different scales.
     
     # ─── Factor 4: Internal Linking Density (25%) ───
     # How well-connected are entities within cluster?
@@ -23926,9 +24561,16 @@ def cluster_health_score_v1_0(cluster_id: str) -> dict:
     }
 ```
 
-### 27.5.2 cluster_topical_authority (0-100) — `cluster_topical_authority_formula_v1.0`
+### 27.5.2 cluster_topical_authority — `cluster_topical_authority_formula_v1.0`
 
 **Purpose:** วัดว่า brand มี topical authority ใน cluster แค่ไหน — drives KPI #7
+
+> 🔴 **SCALE CORRECTION (2026-08-24, measured against live schema).** Documented 0-100; **populated
+> 0-10** — all 58 clusters, min **0.0**, max **6.76**, mean 4.20. The KPI #7 target of ≥60 in 27.8
+> is unreachable by construction, so that KPI has read "trailing" for every cluster since it was
+> written. Also note Factors 2 and 3 (SERP visibility, backlink profile) draw on DataForSEO and
+> `seo_backlinks_*`, and `seo_backlinks_data`/`seo_backlinks_links` hold **0 rows** — Factor 3
+> contributes a hard 0 today.
 
 ```python
 def cluster_topical_authority_v1_0(cluster_id: str, brand_id: str) -> float:
@@ -23953,9 +24595,23 @@ def cluster_topical_authority_v1_0(cluster_id: str, brand_id: str) -> float:
 
 ## 27.6 Citation-Level Scores
 
-### 27.6.1 citation_authority_weight (0-1) — `citation_authority_formula_v1.0`
+### 27.6.1 citation_authority_weight — `eywa-authority-1.0`
 
 **Purpose:** Convert citation tier (1-6 from Bible Part 23.1) + freshness to weight
+
+> 🔴 **SCALE + VERSION CORRECTION (2026-08-24, measured against live schema).**
+> - **Scale:** documented 0-1; **populated 0.0-9.0** — 529 non-null rows (22 NULL), **526 of
+>   them above 1.0**. A gate written as "require weight ≥ 0.7" therefore passes 526 of the 529
+>   it can see: the only three it stops are the three rows sitting at exactly 0.0. It looks
+>   strict and admits everything. Divide by 10 or restate the threshold on 0-10.
+>   *(re-measured 2026-08-24; an earlier pass of this note said "524 of 527" — both figures
+>   were wrong. `SELECT count(*) FILTER (WHERE citation_authority_weight > 1.0), count(citation_authority_weight) FROM seo_citations;`)*
+> - **Version tag:** the value stored in `seo_citations.authority_formula_version` is
+>   **`eywa-authority-1.0`** (529 of 551 rows; 22 NULL), not `citation_authority_formula_v1.0`.
+>   The per-factor breakdown is in `seo_citations.authority_breakdown` jsonb.
+> - **Measured weight by tier (2026-08-24):** t1 avg 8.07 (2.0-9.0) · t2 7.04 (2.0-8.2) ·
+>   t3 6.79 (0.0-8.5) · t4 6.03 (3.8-7.3) · t5 5.04 (3.6-6.1) · t6 3.97 (1.5-5.0).
+>   Monotone in tier, as intended — only the range is ten times the documented one.
 
 ```python
 def citation_authority_weight_v1_0(citation: Citation) -> float:
@@ -23963,13 +24619,19 @@ def citation_authority_weight_v1_0(citation: Citation) -> float:
     
     # ─── Tier-based base weight (Bible Part 23.1) ───
     # Reference: Cochrane GRADE evidence hierarchy
+    # 🔴 corrected 2026-08-24 against live schema — tiers 3 and 4 were labelled with the wrong
+    #    study designs. The DB column COMMENT is the authoritative scale (DR-057 ข้อ 4) because
+    #    gate G5 in CI enforces it for all three brands. Verified against the 551 live rows:
+    #    tier 3 holds clinical_guideline / consensus_guideline / clinical_practice_guideline,
+    #    tier 4 holds law / regulation / regulatory_document / report / fact_sheet /
+    #    survey_report, and plain cohort_study sits at tier 2 — not tier 3.
     tier_weights = {
-        1: 1.00,   # Meta-analysis / systematic review (highest)
-        2: 0.85,   # RCT
-        3: 0.70,   # Cohort study
-        4: 0.55,   # Authoritative guidelines (WHO, NIH, ADA)
-        5: 0.40,   # Observational / case series
-        6: 0.25,   # Foundational textbook / consensus
+        1: 1.00,   # Systematic review / meta-analysis / Cochrane review (highest)
+        2: 0.85,   # RCT · randomized_controlled_trial · cohort_study
+        3: 0.70,   # Clinical guidelines (medical societies) — was mislabelled "Cohort study"
+        4: 0.55,   # Government / regulatory: law, regulation, report, fact_sheet, survey_report
+        5: 0.40,   # Observational: cross_sectional, in_vitro, retro/prospective cohort, case_series
+        6: 0.25,   # Narrative review / textbook / expert opinion / consensus statement
     }
     base = tier_weights.get(citation.tier, 0.10)
     
@@ -24017,6 +24679,9 @@ def brand_authority_score_v1_0(brand_id: str) -> dict:
     
     # ─── Factor 3: Avg E-E-A-T Coverage (20%) ───
     # % of pages with reviewer + ≥1 citation (KPI #3)
+    # 🔴 corrected 2026-08-24 against live schema: p.reviewed_by_id and p.citation_count are not
+    #    columns on seo_website_page_master. Use seo_editorial_reviews.reviewer_fp for the reviewer
+    #    and COUNT(*) over seo_page_citations WHERE page_fp = … AND status = 'active' for the count.
     pages = get_brand_pages(brand_id)
     eeat_compliant = sum(1 for p in pages 
                           if p.reviewed_by_id and p.citation_count >= 1)
@@ -24099,18 +24764,48 @@ def ai_citation_readiness_v1_0(brand_id: str) -> float:
 
 ## 27.8 KPI Formula Reference (15 KPIs from Part 20)
 
+> 🔴 **ID COLLISIONS — corrected 2026-08-24.** Five entries below were *different metrics* wearing a
+> Part 20 KPI number, so two dashboards could both be labelled "KPI 6" and show unrelated things,
+> both looking reasonable. **Part 20 is the definition of record for what a KPI number means.**
+> Where the formula here measured something else, the entry is renamed to a non-numbered auxiliary
+> metric and the real Part 20 formula is stated alongside. Nothing has been deleted.
+>
+> | KPI | Part 20 says (definitional) | 27.8 used to compute | Resolution |
+> |---|---|---|---|
+> | #6 | internal link **depth** by tier (Part 20.3) | avg internal **inbound count** per page | inbound count → `AUX_inbound_link_density` |
+> | #7 | topical authority as **competitor ratio > 1.5** (Part 20.3) | `cluster_topical_authority` avg ≥ 60 | cluster score → `AUX_cluster_topical_authority_avg` |
+> | #9 | **% of entities** cited at least once (Part 20.4) | avg AI citations **per entity** | per-entity avg → `AUX_ai_citations_per_entity` |
+> | #10 | **% of citations** where our content is referenced (Part 20.4) | % queries with brand in AI Overview | AI-Overview share → `AUX_ai_overview_presence` |
+> | #14 | **% of clusters** with healthy pillar ratio (Part 20.5) | `cluster_health_score` avg ≥ 70 | cluster score → `AUX_cluster_health_avg` |
+>
+> Targets also diverge on #1, #2, #3, #12, #13 and #15 (Part 20 is stricter on every one). Those
+> are the same metric with two thresholds, not two metrics — **use the Part 20 target**; the
+> looser numbers below are kept as the recorded v1.0 baselines.
+>
+> ⚠️ Four of the fifteen cannot be computed at all today *(measured 2026-08-24)*: **#2** reads
+> `page_master.last_content_review_at`, a column that does not exist; **#8, #9, #11** read
+> `seo_llm_citations` / `seo_brand_mentions`, which hold 0 rows.
+
 ```yaml
 # Explicit formulas for all 15 KPIs
 
 KPI_1_citable_density:
   formula: avg(brand_linked_citables_count) per page across brand
-  target: ≥3 per page with page_category IN ('service_page','procedure_pillar',
+  target: Part 20.2 is definitional at ≥7/page; the ≥3 recorded here is the looser v1.0 baseline.
+          # corrected 2026-08-24 — two targets for one metric, plus a third (4 = full marks) in
+          # Content_Templates. Use the Part 20 figure. Measured reality is far below either:
+          # deezy 1.73, vth 1.28, smile-scape 2.52 citables per page (audit 2026-08-23).
+          for page_category IN ('service_page','procedure_pillar',
           'technology_page','condition_pillar','knowledge_article')
           # rewritten 2026-08-23 — layer column does not exist; see the reconciliation report
   
 KPI_2_freshness:
   formula: pct_pages_freshness_score >= 0.65
-  target: ≥80%
+  target: Part 20.2 is definitional at ≥85%; ≥80% here is the looser v1.0 baseline.
+  # 🔴 UNIMPLEMENTABLE today (corrected 2026-08-24 against live schema): both Part 20.2 and
+  #    page_freshness_score_v1_0 anchor on page_master.last_content_review_at, a column that does
+  #    not exist. Nothing else records a content-review date on the page row. Substitute
+  #    published_date / updated_at, or add the feed — but do not report this KPI as measured.
 
 KPI_3_eeat_coverage:
   formula: pct_pages_with(reviewer + citations>=1)
@@ -24120,32 +24815,62 @@ KPI_3_eeat_coverage:
 
 KPI_4_organic_traffic:
   source: GA4
-  formula: monthly organic sessions
-  growth_target: +15% YoY
+  formula: month-over-month organic sessions growth   # per Part 20.3, which is definitional
+  growth_target: ≥ +15% MoM
+  # corrected 2026-08-24 — this entry read "+15% YoY" while Part 20.3 defines KPI #4 as MoM.
+  # Same number, different period = a target roughly 12× harder or easier depending which you read.
 
 KPI_5_keyword_rankings:
   source: DataForSEO SERP API
   formula: count(keywords ranking pos_1) + count(keywords ranking pos_2_3 × 0.5)
   target: brand-specific
 
-KPI_6_internal_links:
+KPI_6_internal_link_depth:
+  formula: pct(pages meeting the crawl_depth ceiling for their node_tier)
+           # A ≤3, B ≤4, C ≤5, D ≤6 — per Part 20.3, which is definitional for KPI #6
+  source: seo_website_page_master.crawl_depth (live 0-5 over 2,251 rows, 2026-08-24) + node_tier
+  target: ≥95% per tier
+  # corrected 2026-08-24 — this slot previously held the inbound-count metric below, which is a
+  # different measurement. Both are useful; only one may wear the number 6.
+
+AUX_inbound_link_density:            # NOT a numbered KPI — auxiliary metric
   formula: avg(internal_inbound_count) per page
+  source: seo_page_internal_links (16,564 rows, 2026-08-24)
   target: ≥3
 
 KPI_7_topical_authority:
+  formula: cluster ranking strength ÷ target_competitors_avg    # per Part 20.3 (definitional)
+  target: >1.5 = dominant · 1.0-1.5 = competitive · <1.0 = trailing
+  # corrected 2026-08-24 — this slot previously held the cluster-score average below.
+
+AUX_cluster_topical_authority_avg:   # NOT a numbered KPI — auxiliary metric
   formula: cluster_topical_authority_v1_0 averaged across clusters
-  target: ≥60
+  target: 🔴 the recorded target ≥60 is on a 0-100 reading; the column is populated 0-10
+          (58 clusters, max 6.76, mean 4.20, measured 2026-08-24) so it can never be met.
+          Use ≥6 on the live scale, or recompute the column onto 0-100 first.
 
 KPI_8_ai_citation_rate:
   source: AI monitoring
   formula: ai_citations_count / total_branded_queries × 100
   target: ≥30%
 
-KPI_9_entity_citation:
+KPI_9_entity_citation_coverage:
+  formula: entities_cited_at_least_once / total_priority_entities × 100   # per Part 20.4
+  target: ≥50%
+  source: seo_llm_citations — 🔴 0 rows (2026-08-24), so this reads 0% for every brand
+  # corrected 2026-08-24 — this slot previously held the per-entity average below.
+
+AUX_ai_citations_per_entity:         # NOT a numbered KPI — auxiliary metric
   formula: avg(ai_citations_per_entity) for brand entities
   target: ≥1 per top-tier entity per month
 
 KPI_10_answer_inclusion:
+  formula: answers_with_our_content_referenced / total_citations × 100    # per Part 20.4
+  target: ≥60%
+  # corrected 2026-08-24 — this slot previously held the AI-Overview presence metric below.
+  # The two differ in denominator: KPI #10 is a share OF OUR CITATIONS, not of target queries.
+
+AUX_ai_overview_presence:            # NOT a numbered KPI — auxiliary metric
   formula: pct_target_queries with brand in AI Overview / featured snippet
   target: ≥20%
 
@@ -24156,19 +24881,28 @@ KPI_11_brand_mention_rate:
 
 KPI_12_entity_coverage:
   formula: pct_entities_with_page (per brand)
-  target: ≥75%
+  target: Part 20.5 is definitional at ≥80%; ≥75% here is the looser v1.0 baseline.
 
 KPI_13_connectivity:
   formula: avg_edges_per_entity
-  target: ≥3
+  target: Part 20.5 is definitional at ≥7 connections/entity; ≥3 here is the looser v1.0 baseline.
+  # measured 2026-08-24: 1,089 edges ÷ 732 entities = 1.49 per entity — below both targets.
 
-KPI_14_cluster_health:
+KPI_14_cluster_completeness:
+  formula: healthy_clusters / total_clusters × 100                       # per Part 20.5
+           # healthy = 8 ≤ supporting_pages ≤ 25
+  target: ≥85% healthy
+  # corrected 2026-08-24 — this slot previously held the cluster-score average below.
+
+AUX_cluster_health_avg:              # NOT a numbered KPI — auxiliary metric
   formula: cluster_health_score_v1_0 averaged
-  target: ≥70 across all clusters
+  target: 🔴 the recorded target ≥70 is on a 0-100 reading; the column is populated 0-10
+          (58 clusters, max 8.19, mean 5.17, measured 2026-08-24) so it can never be met.
+          Use ≥7 on the live scale, or recompute the column onto 0-100 first.
 
 KPI_15_sitemap_health:
   formula: Bible Part 4.10 sitemap_health_score (already defined)
-  target: ≥75
+  target: Part 20.5 is definitional at ≥90; ≥75 here is the looser v1.0 baseline.
 ```
 
 ## 27.9 Computation Strategy
@@ -24225,7 +24959,11 @@ BEGIN
   SELECT AVG(c.cnt) INTO v_avg_citations FROM (
     SELECT pm.id, COUNT(pc.id) as cnt
     FROM seo_website_page_master pm
-    LEFT JOIN seo_page_citations pc ON pm.id = pc.page_id
+    LEFT JOIN seo_page_citations pc ON pc.page_fp = pm.page_fingerprint
+    -- corrected 2026-08-24 against live schema: seo_page_citations has no page_id column and
+    -- page_master.id is referenced by nothing. The real FK (since 2026-08-16) is
+    -- seo_page_citations.page_fp → seo_website_page_master.page_fingerprint.
+    -- Add "AND pc.status = 'active'" if removed bindings should not count (2,316 of 6,626 are).
     WHERE pm.primary_entity_fp = p_entity_fp AND pm.brand_id = p_brand_id
     GROUP BY pm.id
   ) c;
@@ -25640,7 +26378,16 @@ per_brand_multilingual_costs:
 
 # PART 29: Ads Landing Page Track 🆕 v3.16
 
-> **Per DR-026 (Proposed 2026-05-12)** — parallel implementation track to SEO. Same dimensional backbone (`seo_page_master` + `seo_x_ads_keywords_contextual_master` + `seo_entity_graph`); additive columns; dedicated template family `T-ADS-X`.
+> 🔴 **TRACK STATUS: DORMANT** *(DR-057 ข้อ 9, confirmed 2026-08-24 against live schema)* — this
+> track has never been switched on. `ad_active` is **false on all 22,710 keyword rows**;
+> `ad_priority_tier` is `none` on all 22,710; `ad_match_type_preferred` and `ad_intent_score` are
+> NULL on all 22,710; `ads_template_id` is NULL on all 2,358 pages; `campaign_id` is set on
+> exactly **1** page. The only live signal is 67 smile-scape keywords with `ad_landing_page_fp`
+> pointing at ordinary indexable organic pages — ads that predate this track and happen to match.
+> Read Part 29 as the specification for when the track is turned on, not as a description of
+> anything running. Every "MUST" below is currently unenforced.
+>
+> **Per DR-026 (Proposed 2026-05-12)** — parallel implementation track to SEO. Same dimensional backbone (`seo_website_page_master` + `seo_x_ads_keywords_contextual_master` + `seo_entity_graph`); additive columns; dedicated template family `T-ADS-X`. *(corrected 2026-08-24: the page table is `seo_website_page_master`; `seo_page_master` returns 404 — the short name is used throughout this Part and is wrong everywhere it appears.)*
 >
 > **Companion DRs:** DR-026 (this Part), DR-027 (Future Phase 1: `seo_campaigns` Universal Master)
 > **Companion Schema:** v1.12 (additive columns; no new tables in Phase 0)
@@ -25667,31 +26414,49 @@ EYWA's SEO track (Parts 1-28) optimizes for organic discoverability, topical aut
 
 ## 29.2 Page Purpose Taxonomy
 
-DR-026 introduces the `page_purpose` enum on `seo_page_master`:
+DR-026 introduces the `page_purpose` enum on `seo_website_page_master`:
+
+> 🔴 **Value-name correction, 2026-08-24 against live schema.** The enum values `ads_lp` and
+> `dual_use` used throughout this Part **are not the live vocabulary**. The column COMMENT names
+> `seo_organic` (default) · `ads_landing` · `hybrid` · `utility` · `legal` · `thank_you`, and the
+> only values present in 2,358 rows are **`seo_organic` (2,276)** and **`utility` (82)** —
+> `utility` is undocumented in this Part despite being live on 82 pages. Every rule written as
+> `page_purpose = 'ads_lp'` or `'dual_use'` matches zero rows and always will. Use `ads_landing`
+> and `hybrid`, and add `utility` / `legal` / `thank_you` to this table before relying on it.
 
 ```yaml
 page_purpose:
   seo_organic:
     description: Pure SEO page — indexed, hub-spoke, topical authority
-    template_family: T1-T22
+    template_family: T1-T22   # per brand — see DR-057 ข้อ 5; deezy uses T2b where others use T2
     index_directive: index
     nav_treatment: full site nav
     cta_count: multiple soft
+    live_count: 2,276 of 2,358 (2026-08-24)
 
-  ads_lp:
+  ads_landing:                # ← live name; this Part called it `ads_lp`
     description: Pure Ads landing page — conversion-optimized
     template_family: T-ADS-1 to T-ADS-5
-    index_directive: noindex_lp (default; operator can override)
+    index_directive: noindex (default; operator can override)
     nav_treatment: stripped or minimal
     cta_count: ONE primary, repeated 2-3x
+    live_count: 0 (2026-08-24)
 
-  dual_use:
+  hybrid:                     # ← live name; this Part called it `dual_use`
     description: Page serves both SEO + Ads
     template_family: hybrid (see §29.6)
     index_directive: index
     nav_treatment: full site nav
     cta_count: dominant primary + supporting SEO depth
     eligibility_gate: §29.6 (6 criteria)
+    live_count: 0 (2026-08-24)
+
+  utility:                    # ← live on 82 pages, undocumented until now (corrected 2026-08-24)
+    description: Non-editorial pages (nav/utility/system) that carry no SEO objective
+    live_count: 82 of 2,358 (2026-08-24)
+
+  legal: {live_count: 0}      # ← in the column COMMENT, unused
+  thank_you: {live_count: 0}  # ← in the column COMMENT, unused
 ```
 
 ## 29.3 URL Convention
@@ -25721,16 +26486,22 @@ dual_use:    existing SEO URL (no change — flagged via page_purpose)
 
 ## 29.4 Index Directive
 
-`index_directive` enum on `seo_page_master`:
+`index_directive` enum on `seo_website_page_master`:
+
+> 🔴 **Value-name correction, 2026-08-24 against live schema.** The live vocabulary (column
+> COMMENT) is **`index` · `noindex` · `index_no_follow` · `noindex_no_follow`**. `noindex_lp` and
+> `dual` do not exist and would be rejected/ignored. Live values on 2,358 rows: `index` 2,321 ·
+> `noindex` 37. Note also that `robots_directive` is a separate, legacy, free-text column holding
+> the rendered string — **when the two disagree, `index_directive` wins**.
 
 | Value | `<meta robots>` | Sitemap.xml | Use case |
 |-------|----------------|------------|----------|
-| `index` | `index, follow` | included | Default for `seo_organic` + `dual_use` |
-| `noindex_lp` | `noindex, follow` | EXCLUDED | Default for `ads_lp` — link equity flows |
-| `noindex_nofollow` | `noindex, nofollow` | EXCLUDED | A/B variants, ephemeral test pages |
-| `dual` | `index, follow` | included | Rare — `dual_use` confirmed dual-serving |
+| `index` | `index, follow` | included | Default for `seo_organic` + `hybrid` (live: 2,321 rows) |
+| `noindex` | `noindex, follow` | EXCLUDED | Default for `ads_landing` — link equity flows (live: 37 rows) |
+| `noindex_no_follow` | `noindex, nofollow` | EXCLUDED | A/B variants, ephemeral test pages (live: 0) |
+| `index_no_follow` | `index, nofollow` | included | Rare (live: 0) |
 
-**Default policy:** `ads_lp` pages with `index_directive=noindex_lp` are EXCLUDED from XML sitemap. Operator can override for evergreen LPs that should compete in organic SERP as well.
+**Default policy:** `ads_landing` pages with `index_directive=noindex` are EXCLUDED from XML sitemap. Operator can override for evergreen LPs that should compete in organic SERP as well. Keep `in_xml_sitemap` in agreement — `noindex` + `in_xml_sitemap = true` is contradictory.
 
 ## 29.5 Conversion Event Taxonomy
 
@@ -25751,11 +26522,18 @@ Maps to:
 - **Meta Pixel Standard Events** (Lead, Contact, Subscribe, CompleteRegistration, Purchase)
 - **GA4 events** (`generate_lead`, `contact`, `add_to_cart`, custom names per brand)
 
-Every `ads_lp` page MUST declare `conversion_event_primary` at page-master row creation. `conversion_event_secondary` is optional (max 3 — discourage over-tracking).
+Every `ads_landing` page MUST declare `conversion_event_primary` at page-master row creation. `conversion_event_secondary` is optional (max 3 — discourage over-tracking).
+
+> ⚠️ **Live values do not match this taxonomy** *(measured 2026-08-24)*. `conversion_event_primary`
+> holds `line_follow` on 2,224 pages, `call_click` on 36, NULL on 98 — all of them `seo_organic`
+> or `utility` pages, none of them ads landing pages. `lead_form`, `booking`, `download`,
+> `package_view` and `add_to_cart` have never been written. There is no CHECK constraint on the
+> column, so the taxonomy is a convention, not an enum.
 
 ## 29.6 Dual-Use Eligibility Criteria
 
-A page can be marked `page_purpose='dual_use'` ONLY when ALL 6 criteria are satisfied:
+A page can be marked `page_purpose='hybrid'` ONLY when ALL 6 criteria are satisfied
+*(corrected 2026-08-24 against live schema — the live value is `hybrid`, not `dual_use`)*:
 
 | # | Criterion | Measurement |
 |---|-----------|-------------|
@@ -25788,43 +26566,67 @@ ad_intent_score smallint
     3  = informational research
     1  = pure educational, no commercial intent
   default: NULL (operator scores during KW research; required before ad_active=true)
+  live: 🔴 NULL on all 22,710 rows (2026-08-24) — criterion 1 of §29.6, which reads
+        "ad_intent_score ≥ 7", therefore selects nothing and never has
 
-ad_match_type_preferred enum (exact | phrase | broad | broad_modified)
+ad_match_type_preferred enum (exact | phrase | broad | broad_modified | negative)
   description: Planning-time preference; actual platform match enforced at campaign level
+  live: NULL on all 22,710 rows (2026-08-24). `negative` is in the column COMMENT and was
+        missing from this list. (corrected 2026-08-24 against live schema)
 
 ad_landing_page_fp text nullable
-  description: FK → seo_page_master.fingerprint — the LP intended for this KW (Phase 0; Phase 1 moves to seo_campaign_keywords M2M)
+  description: FK → **seo_website_page_master.page_fingerprint** — the LP intended for this KW
+        (Phase 0; Phase 1 moves to seo_campaign_keywords M2M)
+  # corrected 2026-08-24 against live schema: the FK targets `page_fingerprint` (the
+  # "{brand_prefix}-{sitemap_node_id}" key, e.g. smilescape-5.14.6), NOT `.fingerprint`
+  # (the immutable page_{ULID16} id). Writing a ULID here fails the FK.
+  live: set on 67 of 22,710 rows, all smile-scape, all pointing at indexable organic pages
 
-ad_priority_tier enum (t1 | t2 | t3 | none)
+ad_priority_tier enum (tier_1 | tier_2 | tier_3 | experimental | none)
+  # corrected 2026-08-24 against live schema — the values are `tier_1`/`tier_2`/`tier_3`,
+  # not `t1`/`t2`/`t3`, and `experimental` was missing from this list.
   semantic:
-    t1 = always-on hero KW (top budget priority)
-    t2 = supporting (sustained budget)
-    t3 = exploratory / testing
-    none = SEO-only (no ad)
+    tier_1       = always-on hero KW (top budget priority)
+    tier_2       = supporting (sustained budget)
+    tier_3       = exploratory / testing
+    experimental = unproven, ring-fenced budget
+    none         = SEO-only (no ad)
+  live: `none` on all 22,710 rows (2026-08-24)
 ```
 
 **Dual-flag pattern:** A keyword can have `seo_active=true` AND `ad_active=true` simultaneously — that is the canonical "shared use" case. `seo_active` should default true (most KWs in EYWA are SEO-led). `ad_active` defaults false (Ads is opt-in per KW).
 
+> 🔴 **The canonical shared-use case has never occurred** *(measured 2026-08-24)*: `ad_active` is
+> false on all **22,710** rows across all **8** brands in this table, so `seo_active AND ad_active`
+> returns 0. `seo_active` is true on 22,436 and false on 274.
+
 ## 29.8 Page Schema Extensions (per DR-026)
 
-Additive columns on `seo_page_master`:
+Additive columns on `seo_website_page_master`
+*(names and values corrected 2026-08-24 against live schema — see §29.2 and §29.4)*:
 
 ```yaml
-page_purpose enum (seo_organic | ads_lp | dual_use)
+page_purpose enum (seo_organic | ads_landing | hybrid | utility | legal | thank_you)
   default: seo_organic
+  live: seo_organic 2,276 · utility 82 (2026-08-24)
 
 ads_template_id text nullable
   values: T-ADS-1 | T-ADS-2 | T-ADS-3 | T-ADS-4 | T-ADS-5 | T-DUAL-{N} (future hybrid)
-  required_when: page_purpose IN (ads_lp, dual_use)
+  required_when: page_purpose IN (ads_landing, hybrid)
+  live: 🔴 NULL on all 2,358 rows — no CHECK enforces the T-ADS vocabulary, and the
+        "required_when" rule has never had a row to fire on
 
-index_directive enum (index | noindex_lp | noindex_nofollow | dual)
+index_directive enum (index | noindex | index_no_follow | noindex_no_follow)
   default: index
+  live: index 2,321 · noindex 37 (2026-08-24)
 
-conversion_event_primary enum (lead_form | call_click | line_follow | booking | download | package_view | add_to_cart)
-  required_when: page_purpose IN (ads_lp, dual_use)
+conversion_event_primary (no CHECK — convention only)
+  documented values: lead_form | call_click | line_follow | booking | download | package_view | add_to_cart
+  required_when: page_purpose IN (ads_landing, hybrid)
+  live: line_follow 2,224 · call_click 36 · NULL 98 (2026-08-24)
 
 conversion_event_secondary text[] nullable
-  constraint: max 3 entries
+  constraint: max 3 entries — 🔴 not enforced by any CHECK; convention only
 
 campaign_id text nullable
   description: TRANSITIONAL STUB — Phase 0 placeholder for campaign association
@@ -25893,11 +26695,13 @@ seo_campaign_performance_snapshot: daily per campaign per platform (mirrors keyw
 
 When DR-027 ships:
 
-1. Parse distinct values of `seo_page_master.campaign_id` (TEXT stub) across all brand rows
+1. Parse distinct values of `seo_website_page_master.campaign_id` (TEXT stub) across all brand rows
+   *(corrected 2026-08-24 — table name; and the parse yields exactly one value today:
+   `invis-10year-2026` on 1 of 2,358 rows, so this migration step is currently a no-op)*
 2. Create `seo_campaigns` rows for each distinct campaign label
 3. Populate `seo_campaign_pages` junction from existing `page_master` rows where `campaign_id IS NOT NULL`
 4. Populate `seo_campaign_keywords` from any KW rows already flagged `ad_active=true` with `ad_landing_page_fp` set
-5. Replace `seo_page_master.campaign_id text` with `campaign_fp text FK → seo_campaigns` (alter column type with mapping)
+5. Replace `seo_website_page_master.campaign_id text` with `campaign_fp text FK → seo_campaigns` (alter column type with mapping) *(corrected 2026-08-24 — table name)*
 
 **Naming convention for Phase 0 `campaign_id` (CRITICAL for clean migration):**
 
@@ -25959,8 +26763,8 @@ step_4_optimization:
 | Page Viability (criterion for dual_use) | Part 4.14 + DR-016 |
 | Medical content + Citation tiers | Part 23 (UNCHANGED for Ads LPs) |
 | CWV standards (dual_use gate) | Part 19 |
-| KW master table | Schema v1.12 §6 (current location of `seo_x_ads_keywords_contextual_master`) |
-| Page master table | Schema v1.12 §5.1 |
+| KW master table | Schema v1.12 §6 (`seo_x_ads_keywords_contextual_master` — 8 brands, 22,710 rows, measured 2026-08-24) |
+| Page master table | Schema v1.12 §5.1 (`seo_website_page_master` — 3 brands, 2,358 rows) |
 | Future Campaign Master | DR-027 (Proposed) + Part 29.11 |
 | Schema additions ship together | Schema v1.12 §29 (Ads-LP additive columns) |
 | Templates T-ADS-1 to T-ADS-5 | Content_Templates v1.4 §T-ADS |
@@ -26830,6 +27634,23 @@ Per DR-029, existing brands (13 brand repos + eywa-marketing) retrofit at their 
 > Established per **DR-030 (Locked 2026-05-20)**. Two-dimensional tier matrix (Product Regulatory × Content Topic) applied at the page level. Brands where regulatory tier ≠ content YMYL tier (supplements, cosmetics, mental wellness, recovery brands) use this layer; baseline brands inherit defaults and incur zero overhead.
 >
 > First applied brand: **HP100** (post-rehab recovery supplement, Mode A open-identity) — see `brands/eywa-hp100/docs/brand-concept.md`.
+>
+> ⚠️ **Implementation status, measured 2026-08-24 against live schema — the layer is half-built:**
+> - `product_regulatory_tier`: set on 1,432 of 2,358 pages, **and every one of them is tier 1**.
+>   The dimension exists but has never distinguished anything.
+> - `content_topic_tier`: set on 1,534 — t1 871 · t3 377 · t2 241 · t4 45. This one is real.
+> - `compliance_max_tier` (generated): t1 872 · t3 377 · t2 241 · t4 45 · NULL 823.
+>   The `>= 3` reviewer-routing gate can therefore fire on 422 pages and is **structurally unable
+>   to fire on the 823 with no tier at all**.
+> - `sensitive_topic_flag`: none 943 · high 300 · medium 258 · low 1 · NULL 856. `critical` unused.
+> - `legal_review_required`: true on 139 pages (deezy 45, vth 8, smile-scape 86) — while
+>   `review_type='legal_compliance'` has **0 rows** in 2,095. The flag has never produced a record.
+> - 🔴 `target_audience_segment`: **NULL on all 2,358 rows.** Every gate in §32.7 is an AND whose
+>   second half is always NULL, so the Ads brand-safety gate cannot fire even on the 300
+>   high-sensitivity pages.
+> - 🔴 `brands.compliance_profile`: **NULL on all 20 brands.** The per-brand defaults this Part
+>   depends on have no input, which is why one brand carries 728 pages with no tier at all.
+> - 🔴 `seo_reviews`: **0 rows** — the entire PDPA testimonial workflow in §32.6 has no data.
 
 ---
 
@@ -26880,6 +27701,9 @@ Compliance intensity per page = max(Product Tier, Content Tier)
 
 ### `seo_website_page_master` — 6 NEW columns
 
+*(all six shipped and are live as written — verified 2026-08-24. Fill rates are in the status box
+at the top of this Part; `target_audience_segment` is the one that is entirely empty.)*
+
 ```sql
 ALTER TABLE seo_website_page_master
   ADD COLUMN product_regulatory_tier smallint
@@ -26895,6 +27719,8 @@ ALTER TABLE seo_website_page_master
 ```
 
 ### `seo_reviews` (testimonials) — 3 NEW columns
+*(the columns shipped; the table holds **0 rows** on every brand as of 2026-08-24, so the entire
+PDPA consent/anonymisation workflow in §32.6 has never processed a record)*
 
 ```sql
 ALTER TABLE seo_reviews
@@ -26917,6 +27743,11 @@ ALTER TABLE brands
 
 Adds `'legal_compliance'` to existing CHECK constraint (now 7 values: medical/editorial/fact_check/seo/translation/final/legal_compliance).
 
+> ⚠️ *(corrected 2026-08-24 against live schema)* Of those 7 values, only **two are ever written**:
+> `medical` (2,022 rows) and `editorial` (73). `legal_compliance`, `fact_check`, `seo`,
+> `translation` and `final` have **0 rows each** in 2,095 — while 139 pages carry
+> `legal_review_required = true`. The constraint may accept seven values; the workflow produces two.
+
 ---
 
 ## 32.4 Editorial Review Workflow Mapping
@@ -26929,6 +27760,13 @@ Adds `'legal_compliance'` to existing CHECK constraint (now 7 values: medical/ed
 | **4** | **MD + legal + อย./regulator signoff** | 1 only (gov + clinical) | strict whitelist per legal review |
 
 ### Trigger logic (n8n flow per DR-021 reciprocal pattern)
+
+> ⚠️ *(corrected 2026-08-24 against live schema)* The `>= 3` arm can fire on 422 pages today, but
+> **823 pages have `compliance_max_tier` NULL** and NULL is not `>= 3` — a page with no tier
+> silently skips reviewer routing rather than failing loudly. 105 of the 422 that DO qualify have
+> no editorial-review row at all, so the flow is not running even where it can. And
+> `review_stage: 'pending'` below is not a live value: `review_stage` holds
+> pre_publication / plan_cleared / post_publication; **pending is a `review_status`**, not a stage.
 
 ```yaml
 on_page_master_insert_or_update:
@@ -26948,7 +27786,11 @@ on_page_master_insert_or_update:
 
 ## 32.5 Positioning Mode Definitions
 
-Set on `brands.positioning_mode`:
+Set on `brands.positioning_mode` — the column exists as documented.
+*(⚠️ measured 2026-08-24: the column is **NULL on 19 of 20 brands** — exactly one row carries
+`baseline` — and `brands.compliance_profile`, the companion column this Part reads for per-brand
+defaults, is **NULL on all 20**. Neither input exists yet, so none of the modes below is driving
+any default today.)*
 
 | Mode | Description | When to use |
 |---|---|---|
@@ -26976,7 +27818,16 @@ When `seo_reviews.is_sensitive_recovery_testimonial=true`:
 
 Sensitive content has Ads consequences:
 
+> 🔴 **This gate has never fired and cannot fire** *(corrected 2026-08-24 against live schema)*.
+> It is an AND of two conditions; the second reads `target_audience_segment`, which is **NULL on
+> all 2,358 pages**. NULL never satisfies an array-contains test, so the gate returns 0 even for
+> the 300 pages flagged `sensitive_topic_flag = 'high'`. It reports clean because it never ran.
+> Until `target_audience_segment` is populated, treat the first condition alone as the gate, or
+> route by `sensitive_topic_flag` + `compliance_max_tier` instead.
+> (Moot in practice today — `ad_active` is false on all 22,710 keyword rows; DR-057 ข้อ 9.)
+
 - **`sensitive_topic_flag IN ('high','critical')` + audience segment includes recovery/mental-health-clinical/etc.** → `ad_active=false` default on related keywords in `seo_x_ads_keywords_contextual_master`
+  *(note: `critical` has never been written — live flag values are none 943 · high 300 · medium 258 · low 1 · NULL 856)*
 - **LegitScript cert** (for addiction-recovery-adjacent keywords) → operator manually unlocks `ad_active=true` per keyword after cert verified
 - **Country-specific bans** (T4 categories) → never `ad_active=true` without lawyer signoff documented in `decision_records.md`
 
@@ -26994,7 +27845,7 @@ Sensitive content has Ads consequences:
 
 | Brand cohort | Action |
 |---|---|
-| **Baseline brands** (dental, aesthetics, wellness clinics) | Set `product_regulatory_tier=1`, `content_topic_tier_default=1`, `positioning_mode='baseline'` — zero behavioral change |
+| **Baseline brands** (dental, aesthetics, wellness clinics) | Set `product_regulatory_tier=1`, `content_topic_tier_default=1`, `positioning_mode='baseline'` — zero behavioral change<br>⚠️ *(2026-08-24)* this retrofit is incomplete: 926 pages still have no `product_regulatory_tier` and 824 no `content_topic_tier` — one brand's 728 pages carry neither, yet 86 of them are flagged `legal_review_required=true`: a flag with no severity behind it |
 | **Healthcare-adjacent brands** (existing supplements, vitamins) | Operator audit at next Stage gate — flag content_topic_tier per page if any YMYL pages exist; default `compliance_profile` per brand-config |
 | **New sensitive brands** (HP100 onwards) | Mandatory full profile at Pre-Stage 1 bootstrap before brand-concept.md finalization |
 
@@ -27018,6 +27869,17 @@ Sensitive content has Ads consequences:
 ## Appendix A: Quick Reference Cards
 
 ### A.1 Entity Type Quick Selector (reconciled to 15 types)
+
+> ⚠️ *(corrected 2026-08-24 against live schema — this selector predates the Part 5.3
+> reconciliation.)* The `entity_type` column COMMENT names **14** values and `biomarker` is
+> **not one of them**, so the biomarker row below is not selectable. Two of the 14 —
+> `ingredient` and `lab_test` — have zero rows, and their extension tables
+> (`seo_entity_ingredients`, `seo_entity_lab_test`, and `seo_entity_product`) are empty.
+> ⚠️ Conversely `person` is live on 6 rows but is **absent from the COMMENT's list**, which
+> proves the list is not the live constraint — read the constraint itself before trusting it.
+> Live spread over 732 rows: concept 154 · procedure 142 · condition 127 · treatment 119 ·
+> device 73 · organization 25 · anatomy 21 · symptom 21 · specialty 19 · technology 12 ·
+> drug 9 · person 6 · product 4. See Part 5.3 for the authoritative list.
 
 | ถ้าเป็น... | entity_type | Extension/CPT | Schema.org |
 |---|---|---|---|
@@ -27085,13 +27947,13 @@ Sensitive content has Ads consequences:
 | # | Table | Purpose | Section |
 |---|-------|---------|---------|
 | 1 | `brands` | Multi-brand registry + vertical/specialty metadata | 3.2 |
-| 2 | `seo_cluster_master` | SKOS controlled vocabulary (cross-vertical taxonomy) | 3.6.3 |
+| 2 | `seo_topic_cluster_master` | SKOS controlled vocabulary (cross-vertical taxonomy) | 3.6.3 |
 | 3 | `seo_entity_graph` | Universal entity store (polymorphic via entity_type) | 3.3 |
 | 4 | `seo_authors_reviewers` | E-E-A-T credentials & reviewer chain | 3.6.1 |
 | 5 | `seo_citations` | Source registry (PubMed, CIR, SCCS, etc.) | 3.6.2 |
 | 6 | `seo_website_page_master` | Page taxonomy & URL structure | 3.6.4 |
-| 7 | `seo_internal_links` | Internal link graph (hub-spoke enforcement) | 3.6.4 |
-| 8 | `seo_keyword_master` | Keyword-entity mapping | 3.6.4 |
+| 7 | `seo_page_internal_links` | Internal link graph (hub-spoke enforcement) | 3.6.4 |
+| 8 | `seo_x_ads_keywords_contextual_master` | Keyword-entity mapping | 3.6.4 |
 | 9 | `seo_llm_citations` | AI citation tracking (ChatGPT/Perplexity/Claude/Gemini) | 3.6.4 |
 | 10 | `seo_brand_mentions` | Cross-platform brand mention tracking (Everywhere SEO) | 3.6.5 |
 
@@ -27111,7 +27973,7 @@ KEY FIELDS:
 RELATIONSHIPS: parent of all brand-scoped data
 ```
 
-**Table 2: `seo_cluster_master`** — SKOS taxonomy
+**Table 2: `seo_topic_cluster_master`** — SKOS taxonomy
 ```sql
 PRIMARY KEY: id (UUID)
 UNIQUE: fingerprint
@@ -27177,9 +28039,9 @@ KEY FIELDS:
 seo_website_page_master:    page_id, primary_entity_fp, topical_cluster_id,
                             content_format_id, reviewed_by_fp, cited_sources_fps[],
                             url, title, meta, schema_org_type, vertical
-seo_internal_links:         from_page_id, to_page_id, anchor_text, link_type,
+seo_page_internal_links:         from_page_id, to_page_id, anchor_text, link_type,
                             cluster_relation
-seo_keyword_master:         keyword, search_volume, intent, mapped_entity_fp,
+seo_x_ads_keywords_contextual_master:         keyword, search_volume, intent, mapped_entity_fp,
                             mapped_pages[], applicable_verticals[]
 seo_llm_citations:          query, ai_platform, was_cited, position, snippet,
                             cited_url, brand_id, audit_date
@@ -27525,7 +28387,7 @@ COST NOTE: Auto-tracking requires paid tool ($24-99/mo per location)
 | 30 | `seo_ai_response_analysis` | Per-citation deep analysis + ranking signals | Phase 1-2 | 3.11.2 |
 | 31 | `seo_ai_platforms` | Extensible AI platform registry (15+ platforms) | Day 1 | 3.11.3 |
 | 32 | `seo_ai_agent_visits` | AI browsing agent tracking (Layer 5 prep) | Phase 2-3 | 3.11.4 |
-| 33 | `seo_voice_search_queries` | Voice/chatbot conversational AI | Phase 2-3 | 3.11.5 |
+| 33 | `seo_x_voice_search` | Voice/chatbot conversational AI | Phase 2-3 | 3.11.5 |
 
 #### Schema Summary — Category E
 
@@ -27607,7 +28469,7 @@ KEY FIELDS:
 PURPOSE: Track AI agent crawls, prepare for Layer 5 AI agent era
 ```
 
-**Table 33: `seo_voice_search_queries`** — Voice + conversational
+**Table 33: `seo_x_voice_search`** — Voice + conversational
 ```sql
 PRIMARY KEY: id (UUID)
 FK: brand_id, source_platform_id, matched_predicted_prompt_id
@@ -27699,7 +28561,7 @@ PURPOSE: Audit trail for all Major schema changes
        ┌────────┴─────────┬──────────────────┐
        ▼                  ▼                  ▼
   ┌──────────┐  ┌──────────────────┐  ┌─────────────┐
-  │internal_ │  │seo_keyword_master│  │seo_citations│
+  │internal_ │  │seo_x_ads_keywords_contextual_master│  │seo_citations│
   │links     │  └──────────────────┘  └─────────────┘
   └──────────┘
 
@@ -27722,8 +28584,8 @@ PURPOSE: Audit trail for all Major schema changes
 
 | Priority | Vertical Use Case | Tables to Build First |
 |----------|-------------------|----------------------|
-| 🔴 **Day 1 (Essential — every project)** | All | brands, seo_cluster_master, seo_entity_graph, seo_authors_reviewers, seo_citations |
-| 🔴 **Week 1 (Core SEO)** | All | seo_website_page_master, seo_internal_links, seo_keyword_master |
+| 🔴 **Day 1 (Essential — every project)** | All | brands, seo_topic_cluster_master, seo_entity_graph, seo_authors_reviewers, seo_citations |
+| 🔴 **Week 1 (Core SEO)** | All | seo_website_page_master, seo_page_internal_links, seo_x_ads_keywords_contextual_master |
 | 🟡 **Week 2-4 (LLMO)** | All | seo_llm_citations, seo_brand_mentions, seo_schema_changes |
 | 🔴 **Week 2 (the brand skincare)** | Skincare media | seo_entity_ingredient, seo_entity_product, seo_entity_condition |
 | 🟡 **Month 2 (the brand expansion)** | Skincare media | seo_entity_organization, seo_entity_drug |
@@ -27762,7 +28624,7 @@ Step 4: Migrate data from _local fields
 
 Step 5: Drop old _local fields
   ALTER TABLE seo_entity_graph DROP name_local, description_local, aliases_local;
-  ALTER TABLE seo_cluster_master DROP pref_label_local, alt_labels_local;
+  ALTER TABLE seo_topic_cluster_master DROP pref_label_local, alt_labels_local;
   ALTER TABLE seo_authors_reviewers DROP bio_local;
 
 Step 6: Update seo_website_page_master
@@ -27805,8 +28667,8 @@ Step 1: Update brands table
                           knowledge_graph_namespace, parent_org_id,
                           medical_specialties[], primary_specialty;
 
-Step 2: Update seo_cluster_master
-  ALTER TABLE seo_cluster_master ADD applicable_verticals[],
+Step 2: Update seo_topic_cluster_master
+  ALTER TABLE seo_topic_cluster_master ADD applicable_verticals[],
                                      vertical_specific;
 
 Step 3: Update seo_entity_graph (CRITICAL)
