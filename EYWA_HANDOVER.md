@@ -467,6 +467,38 @@ Bible v3.16 ships with **Part 29 — Ads Landing Page Track** per DR-026 (Propos
 
 ## 🎯 Section 1 — Project Setup Checklist (ก่อนเริ่มทุกอย่าง)
 
+### 1.-1 🔴 เกตที่ทุกแบรนด์ต้องต่อสาย — ไม่ใช่ทางเลือก *(2026-08-24)*
+
+ก่อนอย่างอื่น: เกตอยู่ที่ `eywa-protocol-spec/scripts/citation-gates/` **ที่เดียว** ห้ามคัดลอกเข้า repo
+ของแบรนด์ · อ่าน `scripts/citation-gates/README.md` แล้วใส่ทั้งหกบรรทัดนี้ใน `web/package.json`
+
+```json
+"check:citations":         "python3 ../../../eywa-protocol-spec/scripts/citation-gates/run-citation-qa-gates.py --brand <brand_id>",
+"check:citation-usage":    "python3 ../../../eywa-protocol-spec/scripts/citation-gates/verify-page-citation-usage.py --brand <brand_id>",
+"check:content-citations": "python3 ../../../eywa-protocol-spec/scripts/citation-gates/audit-content-locators.py --root src/content --brand <brand_id>",
+"check:anchors":           "python3 ../../../eywa-protocol-spec/scripts/citation-gates/audit-anchor-text.py --brand <brand_id>",
+"check:template-registry": "python3 ../../../eywa-protocol-spec/scripts/citation-gates/check-template-registry.py --brand <brand_id>",
+"check:keyword-collisions":"python3 ../../../eywa-protocol-spec/scripts/citation-gates/check-keyword-collisions.py --brand <brand_id>"
+```
+
+`<brand_id>` คือ **slug** (`vth-biodent`) ไม่ใช่ชื่อเต็ม (`VTH BioDent`)
+
+สองอย่างที่ต้องมีคู่กัน ไม่งั้นเกตรันไม่ได้เลยทั้งชุด:
+
+- **`.secrets/supabase.env`** ที่มี `SUPABASE_SERVICE_KEY=` — เป็นไฟล์ที่ gitignore ไว้ **ห้าม commit
+  ห้ามคัดลอกข้ามแบรนด์** · smile-scape-clinic มีแต่ `README.md` ในโฟลเดอร์นั้น จึงรันเกตไม่ได้สักตัว
+- **`content-plan/template-registry.json`** — นิยาม `content_format` ของแบรนด์ตัวเอง ·
+  โค้ดเทมเพลตเป็น **สตริงอะไรก็ได้** (DR-057) ไม่ต้องขึ้นต้นด้วย `T` ไม่ต้องเท่ากับแบรนด์อื่น ·
+  ที่ห้ามคือโค้ดที่ไม่มีนิยาม · ดูแบบที่ `scripts/citation-gates/template-registry.example.json`
+
+แล้วรัน `npm run gates:verify` (`shasum -a 256 -c MANIFEST.sha256`) เพื่อยืนยันว่าสำเนาเกตไม่ถูกแก้
+
+> **กฎข้อเดียวที่เกตทุกตัวเข้ารหัสไว้:** เกตที่คืนศูนย์เพราะตรวจแล้วไม่เจอ กับเกตที่คืนศูนย์เพราะ
+> **ตรวจไม่ได้** ต้องไม่หน้าตาเหมือนกัน · ถ้าเห็น `PASS` แล้วไม่รู้ว่ามันตรวจกี่แถว ให้ถือว่ายังไม่รู้ผล ·
+> 2026-08-24 กวาดทั้งไดเรกทอรีเจอ **18 จุด**ที่ผ่านมาตลอดโดยไม่ได้ตรวจอะไรเลย
+
+---
+
 ### 1.0 New Brand? Start with Bootstrap Kit 🆕 v1.8
 
 > **If bootstrapping a brand-new brand repo from scratch**, follow:

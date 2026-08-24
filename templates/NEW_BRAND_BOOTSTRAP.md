@@ -225,6 +225,36 @@ npm run brief -- <page_fingerprint>                 # ใบสั่งงา�
 "stamp:live":     "node --env-file-if-exists=../.secrets/supabase.env scripts/stamp-live.mjs"
 ```
 
+#### 🔴 แล้วเกตร่วมอีกหกตัว — ข้อนี้เคยหายไปจากคู่มือนี้ *(เพิ่ม 2026-08-24)*
+
+สี่บรรทัดข้างบนเป็นเกตของแบรนด์เอง · **เกตที่ทุกแบรนด์ต้องรันชุดเดียวกัน**อยู่คนละที่ และคู่มือฉบับก่อน
+ไม่ได้พูดถึงเลยสักตัว แบรนด์ที่ทำตามจนจบจึงได้ repo ที่ไม่มีเกต citation อยู่เลย
+
+```json
+"check:citations":          "python3 ../../../eywa-protocol-spec/scripts/citation-gates/run-citation-qa-gates.py --brand <brand_id>",
+"check:citation-usage":     "python3 ../../../eywa-protocol-spec/scripts/citation-gates/verify-page-citation-usage.py --brand <brand_id>",
+"check:content-citations":  "python3 ../../../eywa-protocol-spec/scripts/citation-gates/audit-content-locators.py --root src/content --brand <brand_id>",
+"check:anchors":            "python3 ../../../eywa-protocol-spec/scripts/citation-gates/audit-anchor-text.py --brand <brand_id>",
+"check:template-registry":  "python3 ../../../eywa-protocol-spec/scripts/citation-gates/check-template-registry.py --brand <brand_id>",
+"check:keyword-collisions": "python3 ../../../eywa-protocol-spec/scripts/citation-gates/check-keyword-collisions.py --brand <brand_id>",
+"gates:verify":             "cd ../../../eywa-protocol-spec/scripts/citation-gates && shasum -a 256 -c MANIFEST.sha256"
+```
+
+- **`<brand_id>` คือ slug** (`vth-biodent`) ไม่ใช่ชื่อเต็ม (`VTH BioDent`)
+- **ห้ามคัดลอกสคริปต์เข้า repo ของแบรนด์** — สำเนาที่แยกไปจะ drift เงียบ ๆ ซึ่งเป็นเหตุที่
+  ไดเรกทอรีนั้นมี `MANIFEST.sha256` และ `gates:verify`
+- ต้องมี **`.secrets/supabase.env`** ที่มี `SUPABASE_SERVICE_KEY=` ไม่งั้นรันไม่ได้สักตัว ·
+  ไฟล์นี้ gitignore ไว้ **ห้าม commit ห้ามคัดลอกข้ามแบรนด์** (smile-scape-clinic มีแต่ `README.md`
+  ในโฟลเดอร์นั้น จึงยังรันเกตไม่ได้เลยจนถึงวันนี้)
+
+#### `content-plan/template-registry.json` — ต้องมีก่อน `check:template-registry` จะทำงาน
+
+นิยาม `content_format` ของแบรนด์ตัวเอง · **โค้ดเป็นสตริงอะไรก็ได้** (DR-057) ไม่ต้องขึ้นต้นด้วย `T`
+ไม่ต้องเท่ากับแบรนด์อื่น — ของจริงตอนนี้ vth-biodent 9 โค้ด · smile-scape 13 · deezy 21 รวม
+`T2b`/`T6a`/`T8g`/`T12i` ที่ไม่มีใครอื่นใช้ · **ที่ห้ามคือโค้ดที่ไม่มีนิยาม**
+
+คัดแบบจาก `eywa-protocol-spec/scripts/citation-gates/template-registry.example.json`
+
 #### 🔴 ต่อ `stamp-live` เข้า CI — ไม่ใช่ให้คนรันมือ
 
 ```yaml

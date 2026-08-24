@@ -1,7 +1,7 @@
 # Citation & page gates — canonical copies
 
-These nine scripts are the gates the Citation Pool SOP and Bible Part 23.1 describe. They are
-**brand-agnostic**: every one takes `--brand <brand_id>`, and none of them contains a brand's page
+These eleven scripts are the gates the Citation Pool SOP and Bible Part 23.1 describe. They are
+**brand-agnostic**: every one takes `--brand <brand_id>` — the slug, `vth-biodent` not `VTH BioDent`. `audit-content-locators.py` used to filter on `brand_name` instead while every caller passed a slug, so it matched nothing and its DB-backed check silently evaluated zero references on every CI run; it now accepts either spelling and **exits** on a brand that matches no page, rather than printing a clean report, and none of them contains a brand's page
 list, keyword list or exemption list. That was not always true — until 2026-08-24
 `run-citation-qa-gates.py` carried two `vth-` fingerprints in a Python dict, inside a gate all three
 brands run. Exemptions now live in the data, as `CITATION EXEMPTION` in a page's
@@ -60,6 +60,14 @@ shasum -a 256 *.py > MANIFEST.sha256
 | `reconcile-citation-tiers.py` | tier drift against `citation_type` |
 | `compute-citation-authority.py` | writes `citation_authority_weight` from tier, recency and OpenAlex FWCI — never hand-enter that column |
 | `derive-page-role-category.py` | writes `page_category` and `page_role`; prints, never guesses, the rows it cannot resolve |
+| `check-template-registry.py` | a `content_format` code the brand's own `content-plan/template-registry.json` does not define, or a `page_category` that code may not carry. Codes are ARBITRARY per-brand strings — no `T` prefix is required and no two brands need the same set |
+| `check-keyword-collisions.py` | two pages bidding for the same query. Proposes which should yield, on volume, and **never writes `target_keyword_fp`** |
+
+`eywa_supabase.py` is not a gate — it is the shared PostgREST helper every gate imports, and the
+single definition of the project URL and the credential lookup (env → `EYWA_SECRETS_ENV` → walk up
+for `.secrets/supabase.env`). Its `fetch()` always sends `order=`, because LIMIT/OFFSET without
+ORDER BY has no stability guarantee and a gate that silently pages over a subset reports on that
+subset as though it were the table.
 
 ## The rule these encode
 
