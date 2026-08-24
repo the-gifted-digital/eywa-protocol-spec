@@ -51,6 +51,15 @@ CATEGORY_VALUES = {
     "knowledge_article", "evidence_case", "doctor_profile",
     "branch_landing", "local_landing", "local_programmatic", "local_service",
     "local_service_page",
+    # DR-059, 2026-08-24. Added to the schema doc and to the brands' data the same
+    # day and NOT here, which broke this script in two places at once: 52 rows
+    # carrying a valid category fell through to "unknown" and were printed as "no row
+    # of this brand states a category", which was no longer true — and because the
+    # same set gates the sibling vote below, the pricing templates could never resolve
+    # no matter how many times the data was written. eywa-deezy found it.
+    # `page_category` has no CHECK constraint, so this set is the only thing standing
+    # between a typo and a silently unresolvable row.
+    "pricing_page",
 }
 # Legacy spellings folded into the controlled value.
 ALIAS = {"local_service": "local_landing"}

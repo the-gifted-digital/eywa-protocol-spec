@@ -99,6 +99,97 @@ def fetch(url, attempts=3):
     raise last
 
 
+# NOT adjacent to a hyphen on either side. "Global burden of severe periodontitis in
+# 1990-2010" states a study period, not a publication year, and the first version of
+# this check read both ends as claimed years and failed three correct VTH references
+# that had scored 0.80 on title agreement.
+YEAR_RE = re.compile(r"(?<![\d\-–])((?:19|20)\d{2})(?![\d\-–])")
+# Epub-ahead-of-print means a label written from the online record and a PubMed record
+# carrying the print year can differ by one. Anything wider is not a rounding difference.
+YEAR_SLACK = 1
+
+
+# "Surname AB," / "Surname AB." / "Surname AB et al" — the initials must be FOLLOWED by
+# punctuation or "et al", which is what separates a person from an organisation.
+# "International RDC/TMD Consortium Network" matched the naive pattern as surname
+# "International" with initials "RDC", and outvoted the one page that credited
+# Schiffman correctly — the check inventing the disagreement it then reported.
+SURNAME_RE = re.compile(
+    r"\b([A-ZÀ-Ý][A-Za-zÀ-ÿ'’\-]{2,})\s+[A-Z]{1,3}(?=[,.]|\s+et\s+al)")
+# Belt and braces: words that open an organisation's name and never a person's.
+ORG_WORDS = {"international", "american", "european", "national", "world", "royal",
+             "academy", "association", "consortium", "network", "society",
+             "federation", "college", "institute", "committee", "workshop"}
+
+
+def claimed_surname(label):
+    """The first author surname a label credits, or None if it credits nobody.
+
+    Matches the "Surname AB" shape academic labels use. A claim-style label in Thai
+    names nobody and returns None, which is correct — it makes no claim to contradict.
+    """
+    m = SURNAME_RE.search(label or "")
+    if not m:
+        return None
+    sn = m.group(1).lower()
+    return None if sn in ORG_WORDS else sn
+
+
+def sibling_disagreements(by_url):
+    """Labels that credit a different author than their siblings on the same locator.
+
+    eywa-deezy's idea, 2026-08-24, and the cheapest of the three signals: it needs no
+    API call at all, so it still works when PubMed and Crossref are unreachable — the
+    exact situation in which the other two checks correctly refuse to conclude
+    anything. PMID 32383274 is cited on 26 pages as Sanz, the EFP S3 guideline, and on
+    one page as Chapple, a different consensus paper two years earlier. Twenty-six
+    against one settles which side is wrong without asking anybody.
+
+    Reported, never blocking. The majority is evidence, not proof — a locator could in
+    principle be mislabelled on 26 pages and right on the 27th, and a gate that decides
+    that by counting would be wrong in exactly the case worth catching.
+    """
+    out = []
+    for url, entries in sorted(by_url.items()):
+        claims = {}
+        for slug, label in entries:
+            sn = claimed_surname(label)
+            if sn:
+                claims.setdefault(sn, []).append((slug, label))
+        if len(claims) < 2:
+            continue
+        ranked = sorted(claims.items(), key=lambda kv: -len(kv[1]))
+        top, top_rows = ranked[0]
+        for sn, rows in ranked[1:]:
+            # Only when the majority is decisive. Two against two says nothing.
+            if len(top_rows) >= 3 * max(1, len(rows)):
+                for slug, label in rows:
+                    out.append((slug, label, url, sn, top, len(top_rows), len(rows)))
+    return out
+
+
+def year_contradicts(label, year):
+    """True when the label states a year and none of them is the paper's.
+
+    eywa-deezy, 2026-08-24: smile-aesthetics-guide labelled a PMID
+    "de Geus JL, At-home vs in-office bleaching ... Oper Dent. 2016." The PMID is
+    Centenaro GG 2026, a randomised trial on hydrogen-peroxide concentration — wrong
+    author, wrong journal, wrong study type, ten years out. It sailed past this gate
+    because both papers are about bleaching and the titles share enough tokens to
+    score 0.50 against a 0.34 floor, so it never reached the author comparison.
+
+    A year is an integer. There is no fuzzy matching to tune and no API call to make
+    beyond the one already made, and on its own it catches the case the title
+    comparison and the author comparison both missed.
+    """
+    if not year:
+        return False
+    stated = YEAR_RE.findall(label or "")
+    if not stated:
+        return False
+    return all(abs(int(s) - int(year)) > YEAR_SLACK for s in stated)
+
+
 def identifies_by_author_year(label, authors, year):
     """Does this label name the paper the way an academic citation names it?
 
@@ -220,6 +311,7 @@ def db_backed_keys(brand):
 def main(root, brand, skip_db, out_json):
     backed = {} if skip_db else db_backed_keys(brand)
     seen, wrong, unresolved, unbacked, label_form = {}, [], [], [], []
+    by_url = {}   # url -> [(slug, label)] · ป้อน sibling_disagreements ซึ่งไม่ต้องต่อเน็ต
     # 2026-08-24: this globbed "*/th/*.yaml" and so audited Thai content only. vth-biodent
     # writes ten languages — 183 of its 367 files, half the brand, were never checked while the
     # gate reported clean. deezy missed 147. A brand whose content is not laid out as
@@ -238,6 +330,7 @@ def main(root, brand, skip_db, out_json):
     # two of eywa-deezy's builds on a fake reference nobody can fix without deleting the
     # scaffolding. Two gates disagreeing about whether the same file counts is worse than
     # either answer on its own.
+    demo_n = sum(1 for f in files if os.path.basename(f) == "demo.yaml")
     files = [f for f in files if os.path.basename(f) != "demo.yaml"]
     langs = sorted({os.path.basename(os.path.dirname(f)) for f in files})
     for f in files:
@@ -246,6 +339,7 @@ def main(root, brand, skip_db, out_json):
         if not m:
             continue
         for label, url in PAIR_RE.findall(m.group(1)):
+            by_url.setdefault(url.rstrip("/").lower(), []).append((slug, label))
             if (label, url) in seen:
                 kind, ident, title, authors, year = seen[(label, url)]
             else:
@@ -254,6 +348,12 @@ def main(root, brand, skip_db, out_json):
                 time.sleep(0.15)
             if title is None:
                 unresolved.append((slug, label, url))
+            elif title and year_contradicts(label, year):
+                # Checked BEFORE the title comparison, because the whole point is that a
+                # high-scoring title is exactly how this class hides.
+                wrong.append((slug, label, url,
+                              "%s  [ปีจริง %s]" % (title, year),
+                              round(agreement(label, title), 2)))
             elif title and agreement(label, title) < MATCH_FLOOR:
                 # Two findings, not one. Both disagree with the resolved title and
                 # both used to land in `wrong` and block the build, which is how 16
@@ -269,8 +369,15 @@ def main(root, brand, skip_db, out_json):
             if not skip_db and slug in backed and ("%s:%s" % (kind, ident)) not in backed[slug]:
                 unbacked.append((slug, label, url))
 
-    print("content locator audit — %d files across %d dirs (%s), %d distinct label+url pairs"
-          % (len(files), len(langs), ", ".join(langs[:12]) or "-", len(seen)))
+    # Say the demo count out loud. vth-biodent ships 200 demo.yaml — 20 template
+    # collections in each of 10 languages — against 170 real content files, so excluding
+    # them more than halves the number and shrinks the language list from twelve
+    # directories to four. Printed without explanation that reads exactly like content
+    # having gone missing, which is how I misread my own output for several minutes.
+    print("content locator audit — %d content files across %d dirs (%s)%s, %d distinct label+url pairs"
+          % (len(files), len(langs), ", ".join(langs[:12]) or "-",
+             " · ข้าม demo.yaml %d ไฟล์ (scaffolding ของเทมเพลต)" % demo_n if demo_n else "",
+             len(seen)))
     if not files:
         # Zero files and zero findings look identical in a summary line. Say which one this is.
         print("🔴 R0_no_content — ไม่พบไฟล์ .yaml ใต้ %s" % root)
@@ -311,6 +418,16 @@ def main(root, brand, skip_db, out_json):
         print("        open it by hand — a DOI that is permanently gone is a real problem.")
         for slug, label, url in unresolved:
             print("        %-28s %s" % (slug, url))
+    disagree = sibling_disagreements(by_url)
+    if disagree:
+        print("WARN  label ให้เครดิตคนละคนกับพี่น้องที่ locator เดียวกัน — %d" % len(disagree))
+        print("        ไม่ต้องเรียก API เลย · เสียงข้างมากคือหลักฐาน ไม่ใช่ข้อพิสูจน์ — ตรวจด้วยตา")
+        for slug, label, url, mine, top, ntop, nmine in disagree[:10]:
+            print("        %-26s อ้าง '%s' (%d หน้า) · อีก %d หน้าอ้าง '%s'"
+                  % (slug, mine, nmine, ntop, top))
+            print("          %s" % url)
+        if len(disagree) > 10:
+            print("        ... อีก %d" % (len(disagree) - 10))
     if unbacked:
         print("WARN  no active seo_page_citations row backs this reference — %d" % len(unbacked))
         for slug, label, url in unbacked[:20]:
