@@ -107,11 +107,39 @@ def edit_distance(a, b, cap=3):
     return prev[-1]
 
 
+# The four values search_intent is documented to hold. Everything else in that column —
+# "Ambiguous", "Mixed Intent" — is the labeller saying it could not decide, which is an
+# absence of an answer and not an answer two rows can agree on.
+INTENT_VOCAB = {"informational", "commercial", "transactional", "navigational"}
+
+
 def semantic_verdict(ka, kb):
-    """same | different | unknown — from stored columns, never from a guess."""
-    ia, ib = (ka.get("search_intent") or "").strip(), (kb.get("search_intent") or "").strip()
-    ea, eb = (ka.get("primary_entity_fp") or "").strip(), (kb.get("primary_entity_fp") or "").strip()
+    """same | different | unknown — from stored columns, never from a guess.
+
+    Compared case-INSENSITIVELY, reported by smile-scape-clinic on 2026-08-26. The
+    docstring at the top of this file writes the vocabulary in lower case; the data is
+    written both ways, and which way depends on the brand: vth-biodent and deezy-dental
+    store 2,129 and 3,625 rows all capitalised, while smile-scape stores 215 capitalised
+    against 373 lower — "Informational" 70 vs "informational" 227 inside one brand.
+    A case-sensitive `==` therefore called that brand's own rows "different", meaning
+    "genuinely different demand, do not propose", which is the opposite of true. The two
+    brands whose data happens to be internally consistent never saw it.
+
+    Normalising 18,140 rows across eight brands to work around a one-line comparison
+    would be the wrong way round, and smile-scape said so rather than doing it.
+
+    A value outside INTENT_VOCAB returns "unknown", not "same". Two rows both labelled
+    "Ambiguous" agree on nothing except that nobody could tell — 25 such rows on
+    vth-biodent, 51 on deezy — and "same" would send them to an automatic proposal on
+    the strength of a shrug.
+    """
+    ia = (ka.get("search_intent") or "").strip().casefold()
+    ib = (kb.get("search_intent") or "").strip().casefold()
+    ea = (ka.get("primary_entity_fp") or "").strip().casefold()
+    eb = (kb.get("primary_entity_fp") or "").strip().casefold()
     if not ia or not ib or not ea or not eb:
+        return "unknown"
+    if ia not in INTENT_VOCAB or ib not in INTENT_VOCAB:
         return "unknown"
     return "same" if (ia == ib and ea == eb) else "different"
 

@@ -3,7 +3,7 @@
 > **Append-only architectural decision log.** Each record explains WHY a decision was made — not just WHAT.
 
 **Document Version:** 1.37  
-**Last Updated:** 2026-08-24 — DR-059/060/061 landed 2026-08-24; DR-057/058 landed 2026-08-23; on 2026-08-24 every checkable claim in this file (table name, column name, allowed-value list, threshold, row count, status) was re-run against the live database. Corrections are appended in place and marked *(corrected 2026-08-24 against live schema)* — locked bodies are untouched. A second pass re-queried the corrections themselves and fixed four of them (deezy `page_category` 773→776 and the brand-wide NULL count 192→189; `schema_markup_type` 2,358→2,357 scalar rows / 27→26 distinct values; `periodontal-gum` "0 rows" narrowed to 0 pages and 0 entities, the deprecated cluster row survives; smile-scape's "0 uncited Live pages" flagged as vacuous — that brand has no Live page at all).  
+**Last Updated:** 2026-08-26 — DR-062 landed 2026-08-26 (เสนอโดย smile-scape); DR-059/060/061 landed 2026-08-24; DR-057/058 landed 2026-08-23; on 2026-08-24 every checkable claim in this file (table name, column name, allowed-value list, threshold, row count, status) was re-run against the live database. Corrections are appended in place and marked *(corrected 2026-08-24 against live schema)* — locked bodies are untouched. A second pass re-queried the corrections themselves and fixed four of them (deezy `page_category` 773→776 and the brand-wide NULL count 192→189; `schema_markup_type` 2,358→2,357 scalar rows / 27→26 distinct values; `periodontal-gum` "0 rows" narrowed to 0 pages and 0 entities, the deprecated cluster row survives; smile-scape's "0 uncited Live pages" flagged as vacuous — that brand has no Live page at all).  
 **Format:** Reverse chronological (newest first)
 
 ---
@@ -31,6 +31,38 @@
 ---
 
 ## Decisions Log
+
+### [DR-062] — `insurance_page` เป็นหมวดกลางใน `page_category` (2026-08-26) 🔒📐
+
+**Status:** **🔒 Locked 2026-08-26** — เสนอและลงมือโดย smile-scape-clinic (spec `3b932bb`) · vth ตรวจแล้วรับ
+
+**Scope:** **UNIVERSAL** — `seo_website_page_master.page_category` · **Gate:** `check:template-registry` · `gen:page-taxonomy`
+
+**Context:**
+
+รูปแบบเดียวกับที่ **DR-059** ปิดให้เรื่องหน้าราคา · หน้าเรื่องสิทธิ์/ประกัน/การเบิกจ่ายไม่ใช่ทั้ง
+`knowledge_article` และไม่ใช่ทั้ง `service_page` · sibling vote จึงตัดสินไม่ได้ตลอดกาล และปล่อยให้แถว
+`T16` ค้างเป็น ambiguous — smile-scape 21 แถว · deezy 11 แถว
+
+สองแบรนด์ลงหมวดคนละอย่างกับแถวชนิดเดียวกัน ซึ่ง**คือหน้าตาของ vocabulary ที่ขาดคำ เมื่อมองจากข้างใน**:
+ข้อมูลไม่ได้ขัดกันเอง คำที่จะใช้เรียกมันต่างหากที่ยังไม่มี
+
+**Decision:**
+
+1. **เพิ่ม `insurance_page`** เป็นค่าที่ใช้ได้ใน `page_category`
+2. **ลงใน `CATEGORY_VALUES` ของ `derive-page-role-category.py` ด้วย ไม่ใช่แค่ในข้อมูล** — DR-059
+   ถูกเติมลงข้อมูลและเอกสารในวันเดียวกันแต่ไม่ได้เติมลงเซตนั้น ผลคือแถวที่ถูกต้องตกไปเป็น "unknown"
+   **และ**เซตเดียวกันคุม sibling vote อยู่ ทำให้เทมเพลตนั้นไม่มีวัน resolve · ห้ามซ้ำรอยเดิม
+
+**สภาพจริง 2026-08-26 (วัดสด):** `insurance_page` **27 แถว ทั้งหมดเป็น smile-scape** และทั้งหมดเป็น `T16` ·
+🔴 **deezy ยังมี T16 อีก 15 แถวที่ยังเป็น `knowledge_article`** — ปลดได้ด้วยวิธีเดียวกัน แต่เป็นสิทธิ์ของ deezy
+
+**Consequences:** smile-scape derive ได้ 728 · กำกวม 0 · ไม่รู้ 0 · `page_category` ยังไม่มี CHECK
+constraint เหมือนเดิม เซตใน Python จึงยังเป็นด่านเดียวที่กันคำสะกดผิด
+
+**References:** [[DR-059]] (รูปแบบเดียวกัน เรื่องหน้าราคา) · [[DR-057]] · smile-scape spec commit `3b932bb`
+
+---
 
 ### [DR-061] — `references[].label` ระบุเปเปอร์ได้ทั้งสองแบบ: ชื่อเรื่อง หรือ นามสกุลผู้เขียน+ปี (2026-08-24) 🔒📐
 
