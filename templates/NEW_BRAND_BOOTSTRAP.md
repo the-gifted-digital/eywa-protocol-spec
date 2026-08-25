@@ -56,44 +56,83 @@ This creates: `docs/` (with signature-programs/), `content-plan/` (with archive/
 - `deployment/cloudflare/r2-media.template.md` 🆕 v1.4 — **Astro / Cloudflare brands only** (DR-040 + DR-035 + DR-038): per-brand R2 bucket `{brand-slug}-media` + object-key/folder naming + delivery. Copy → rename to `r2-media.md` → fill placeholders. **WP brands skip** (WordPress serves its own media).
 - `docs/heading-semantics-conformance.template.md` 🆕 v1.5 — **EVERY brand, both stacks** (DR-041 / Bible §9.9): per-brand heading + landmark conformance record. Copy → rename to `heading-semantics-conformance.md` → fill the component→level inventory + per-release verification log + brand-choice deviations. Points at §9.9 (doesn't restate the rules); re-run the checklist each release.
 
-### Step 1.2 — 🔴 `web/` — โครง skeleton **ไม่มีเว็บอยู่ในนั้น** *(เพิ่ม 2026-08-25)*
+### Step 1.2 — 🔴 เลือก stack ก่อน: WordPress หรือ Astro *(เพิ่ม 2026-08-25)*
 
-`folder-skeleton/` สร้าง `theme/elementor-templates-overrides/` กับ `deployment/acf-overrides/`
-ซึ่งเป็นโครงยุค WordPress · **ไม่มี `web/` ไม่มีอะไรที่เป็น Astro เลยสักไฟล์** แต่ Step 5.5 สั่ง
-`cp … web/scripts/` และ Step 6 รัน `npm run` — ทั้งสองขั้นทำงานใน `web/` ที่ไม่มีขั้นไหนสร้าง
+`folder-skeleton/` สร้างโครงยุค WordPress ให้ (`theme/`, `deployment/acf-overrides/`)
+แต่**ไม่มี `web/` และไม่มีอะไรที่เป็น Astro เลยสักไฟล์** ขณะที่ Step 5.5 สั่ง `cp … web/scripts/`
+และ Step 6 รัน `npm run` — ทั้งสองขั้นทำงานใน `web/` ที่ไม่มีขั้นไหนสร้าง
 
-แบรนด์ที่เดินตามคู่มือฉบับก่อนจนจบจึงได้โครงโฟลเดอร์ที่**ไม่มีเว็บอยู่ในนั้น** ทั้งที่ทุกแบรนด์
-ที่ยังเดินอยู่ตอนนี้เป็น **Astro บน Cloudflare Workers** ไม่มีแบรนด์ไหนใช้ Elementor แล้ว
+**ทั้งสอง stack ใช้ได้ ต้องเลือกที่ขั้นนี้ และบันทึกไว้ใน `docs/changelog.md`**
+
+| | WordPress | Astro |
+|---|---|---|
+| `theme/` · `deployment/acf-overrides/` | **เก็บ** | ลบทิ้งได้ |
+| `web/` | ไม่ต้องมี | **ต้องสร้าง — ดูด้านล่าง** |
+| Step 5.5 / Step 6 | ข้าม (สคริปต์ PAMREL อยู่ใน `web/`) | ทำ |
+| เกตร่วมทั้ง 6 | ยังต้องมี — รันจากที่ไหนก็ได้ที่มี `.secrets/supabase.env` | รันจาก `web/` |
+| media | WordPress เสิร์ฟเอง — ข้าม `r2-media.template.md` | R2 ต่อ brand · คัด `r2-media.template.md` |
+
+> เกตร่วมทั้งหกอ่านจาก **ฐานข้อมูล** ไม่ได้อ่านจากเว็บ · แบรนด์ WordPress ก็ต้องต่อสายเหมือนกัน
+> ต่างแค่ที่วางคำสั่ง (`package.json` ของ `web/` หรือ `Makefile`/สคริปต์ที่ราก)
+
+---
+
+#### ทาง A — WordPress
+
+ไม่ต้องทำอะไรเพิ่มในขั้นนี้ · ข้ามไป Step 1.5 · แต่ **ยังต้องต่อเกตร่วมทั้ง 6 ตัว** ตามที่ Step 5.5
+ระบุ (วางไว้ที่ไหนก็ได้ที่รันจากรากของ repo แบรนด์ได้ และมี `.secrets/supabase.env`)
+
+---
+
+#### ทาง B — Astro
 
 **ยังไม่มีแม่แบบ Astro และจงใจไม่ทำ** — `web/` ของจริงคือ 138 ไฟล์ (smile-scape) ถึง 724 ไฟล์
 (vth-biodent) แม่แบบตายตัวขนาดนั้นจะเน่าเร็วกว่าที่ใครจะมาอัปเดตทัน · คัดจากแบรนด์ที่ใกล้ที่สุดแทน
 
 ```bash
 # เลือกต้นแบบตามความใกล้ ไม่ใช่ตามความใหญ่
-#   eywa-smile-scape  — เล็กที่สุด 37 component 2 template · เหมาะกับแบรนด์ที่เริ่มจากศูนย์
-#   eywa-vth-biodent  — 102 component 23 template 22 script · เหมาะเมื่อรู้แล้วว่าต้องใช้เยอะ
+#   eywa-smile-scape  — 37 component · 2 template · 0 script  · เริ่มจากศูนย์
+#   eywa-vth-biodent  — 102 component · 23 template · 22 script · รู้แล้วว่าต้องใช้เยอะ
 REF=eywa-smile-scape
 rsync -a --exclude node_modules --exclude dist --exclude .astro \
       --exclude 'src/content/*' ../$REF/web/ web/
 mkdir -p web/src/content
 ```
 
-**แล้วเปลี่ยน 6 อย่างนี้ ไม่เปลี่ยนแล้วสคริปต์จะอ่านข้อมูลแบรนด์อื่น:**
+##### 🔴 เช็คเวอร์ชัน Astro ปัจจุบันเสมอ — อย่าเชื่อเลขในเอกสารนี้
+
+```bash
+npm view astro version          # เลขจริง ณ วันที่คุณอ่าน
+```
+
+> **ตัวเลข ณ 2026-08-25** — แบรนด์ที่มีอยู่ทั้งสามติดตั้ง **7.0.3** จริง · ล่าสุดบน npm **7.2.6**
+> · เลขคู่นี้จะล้าสมัยแน่นอน คำสั่งข้างบนคือแหล่งอ้างอิง ไม่ใช่บรรทัดนี้
+
+**กับดัก:** `package.json` ของแบรนด์ต้นแบบเขียน `"astro": "^7.0.3"` และถูกตรึงจริงที่ 7.0.3
+ด้วย `package-lock.json` · caret แปลว่า `npm install` ที่ไม่มี lockfile จะได้ **7.x ล่าสุด** ทันที
+แบรนด์ใหม่จึงได้ Astro คนละตัวกับแบรนด์ที่มันคัดมา **โดยไม่มีอะไรบอก**
+
+เลือกอย่างจงใจ แล้วบันทึกใน `docs/changelog.md`:
+
+- **ตามต้นแบบ** — คัด `package-lock.json` มาด้วย แล้ว `npm ci` · ปลอดภัยสุด แต่รับ tech debt
+  ของต้นแบบมาทั้งก้อน
+- **เอาล่าสุด** — ลบ `package-lock.json` แล้ว `npm install` · ต้องรัน **`npm run build` + เกตทั้งชุด
+  ให้ผ่านก่อนเขียนหน้าแรก** เพราะ minor ของ Astro เคยเปลี่ยนพฤติกรรม content collection มาแล้ว
+  · ถ้าเลือกทางนี้และเขียวหมด **บอกแบรนด์อื่นด้วย** — แปลว่าอัปเกรดได้
+
+##### แล้วเปลี่ยน 6 อย่างนี้ ไม่เปลี่ยนแล้วสคริปต์จะอ่านข้อมูลแบรนด์อื่น
 
 | # | ที่ไหน | เปลี่ยนเป็นอะไร |
 |---|---|---|
 | 1 | `web/package.json` — ทุกบรรทัด `--brand` | `brand_id` ของแบรนด์ตัวเอง (slug ไม่ใช่ชื่อเต็ม) |
-| 2 | `web/src/data/*.json` | ลบทิ้งให้หมด แล้ว `npm run gen:*` ใหม่ — ไฟล์พวกนี้ generate จาก DB ของแบรนด์ต้นแบบ |
+| 2 | `web/src/data/*.json` | ลบทิ้งให้หมด แล้ว `npm run gen:*` ใหม่ — generate จาก DB ของแบรนด์ต้นแบบ |
 | 3 | `web/astro.config.*` · `wrangler.*` | domain · CF account · R2 bucket ของแบรนด์ตัวเอง |
 | 4 | `web/src/styles/` · design tokens | ของแบรนด์ตัวเอง (`design/tokens/*.json` ใน skeleton คือจุดเริ่ม) |
 | 5 | `web/scripts/*.mjs` | ดู Step 5.5 ตาราง 6 ข้อ — `BRAND` · fingerprint prefix · `SITE` · `SKIP` |
 | 6 | `web/src/content/` | **ลบเนื้อหาของแบรนด์ต้นแบบให้เกลี้ยง** เก็บไว้แต่ `demo.yaml` ซึ่งเป็น scaffolding ของเทมเพลต |
 
-🔴 **`smile-scape` มี `web/scripts/` เป็น 0 ไฟล์** — ถ้าคัดจากมัน ต้องดึงสคริปต์จาก vth เพิ่มตาม Step 5.5
-
-> **โครงยุค WordPress ที่ skeleton ยังสร้างอยู่** — `theme/elementor-templates-overrides/`,
-> `deployment/acf-overrides/` — ลบทิ้งได้ทันทีถ้าแบรนด์เป็น Astro (คือทุกแบรนด์ตอนนี้) ·
-> ยังไม่ถอดออกจาก skeleton เพราะยังไม่ได้ตรวจว่ามีแบรนด์เก่าที่ยังใช้อยู่หรือไม่
+🔴 **`smile-scape` มี `web/scripts/` เป็น 0 ไฟล์** — คัดจากมันต้องดึงสคริปต์จาก vth เพิ่มตาม Step 5.5
+(เป็นส่วนหนึ่งของเหตุที่แบรนด์นั้นยังรันเกตไม่ได้)
 
 ---
 
