@@ -60,6 +60,13 @@ CATEGORY_VALUES = {
     # `page_category` has no CHECK constraint, so this set is the only thing standing
     # between a typo and a silently unresolvable row.
     "pricing_page",
+    # DR-062, 2026-08-26, requested by smile-scape-clinic. Same shape of hole DR-059
+    # closed for pricing: an insurance/coverage page is neither a knowledge article nor
+    # a service page, so the sibling vote could never settle and left every T16 row
+    # ambiguous — 21 on smile-scape, 11 on deezy. Both brands had rows split across
+    # knowledge_article and service_page, which is what a missing category looks like
+    # from the inside: the data is not inconsistent, the vocabulary was short a word.
+    "insurance_page",
 }
 # Legacy spellings folded into the controlled value.
 ALIAS = {"local_service": "local_landing"}
