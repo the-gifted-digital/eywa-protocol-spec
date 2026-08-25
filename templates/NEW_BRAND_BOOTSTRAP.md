@@ -56,6 +56,47 @@ This creates: `docs/` (with signature-programs/), `content-plan/` (with archive/
 - `deployment/cloudflare/r2-media.template.md` 🆕 v1.4 — **Astro / Cloudflare brands only** (DR-040 + DR-035 + DR-038): per-brand R2 bucket `{brand-slug}-media` + object-key/folder naming + delivery. Copy → rename to `r2-media.md` → fill placeholders. **WP brands skip** (WordPress serves its own media).
 - `docs/heading-semantics-conformance.template.md` 🆕 v1.5 — **EVERY brand, both stacks** (DR-041 / Bible §9.9): per-brand heading + landmark conformance record. Copy → rename to `heading-semantics-conformance.md` → fill the component→level inventory + per-release verification log + brand-choice deviations. Points at §9.9 (doesn't restate the rules); re-run the checklist each release.
 
+### Step 1.2 — 🔴 `web/` — โครง skeleton **ไม่มีเว็บอยู่ในนั้น** *(เพิ่ม 2026-08-25)*
+
+`folder-skeleton/` สร้าง `theme/elementor-templates-overrides/` กับ `deployment/acf-overrides/`
+ซึ่งเป็นโครงยุค WordPress · **ไม่มี `web/` ไม่มีอะไรที่เป็น Astro เลยสักไฟล์** แต่ Step 5.5 สั่ง
+`cp … web/scripts/` และ Step 6 รัน `npm run` — ทั้งสองขั้นทำงานใน `web/` ที่ไม่มีขั้นไหนสร้าง
+
+แบรนด์ที่เดินตามคู่มือฉบับก่อนจนจบจึงได้โครงโฟลเดอร์ที่**ไม่มีเว็บอยู่ในนั้น** ทั้งที่ทุกแบรนด์
+ที่ยังเดินอยู่ตอนนี้เป็น **Astro บน Cloudflare Workers** ไม่มีแบรนด์ไหนใช้ Elementor แล้ว
+
+**ยังไม่มีแม่แบบ Astro และจงใจไม่ทำ** — `web/` ของจริงคือ 138 ไฟล์ (smile-scape) ถึง 724 ไฟล์
+(vth-biodent) แม่แบบตายตัวขนาดนั้นจะเน่าเร็วกว่าที่ใครจะมาอัปเดตทัน · คัดจากแบรนด์ที่ใกล้ที่สุดแทน
+
+```bash
+# เลือกต้นแบบตามความใกล้ ไม่ใช่ตามความใหญ่
+#   eywa-smile-scape  — เล็กที่สุด 37 component 2 template · เหมาะกับแบรนด์ที่เริ่มจากศูนย์
+#   eywa-vth-biodent  — 102 component 23 template 22 script · เหมาะเมื่อรู้แล้วว่าต้องใช้เยอะ
+REF=eywa-smile-scape
+rsync -a --exclude node_modules --exclude dist --exclude .astro \
+      --exclude 'src/content/*' ../$REF/web/ web/
+mkdir -p web/src/content
+```
+
+**แล้วเปลี่ยน 6 อย่างนี้ ไม่เปลี่ยนแล้วสคริปต์จะอ่านข้อมูลแบรนด์อื่น:**
+
+| # | ที่ไหน | เปลี่ยนเป็นอะไร |
+|---|---|---|
+| 1 | `web/package.json` — ทุกบรรทัด `--brand` | `brand_id` ของแบรนด์ตัวเอง (slug ไม่ใช่ชื่อเต็ม) |
+| 2 | `web/src/data/*.json` | ลบทิ้งให้หมด แล้ว `npm run gen:*` ใหม่ — ไฟล์พวกนี้ generate จาก DB ของแบรนด์ต้นแบบ |
+| 3 | `web/astro.config.*` · `wrangler.*` | domain · CF account · R2 bucket ของแบรนด์ตัวเอง |
+| 4 | `web/src/styles/` · design tokens | ของแบรนด์ตัวเอง (`design/tokens/*.json` ใน skeleton คือจุดเริ่ม) |
+| 5 | `web/scripts/*.mjs` | ดู Step 5.5 ตาราง 6 ข้อ — `BRAND` · fingerprint prefix · `SITE` · `SKIP` |
+| 6 | `web/src/content/` | **ลบเนื้อหาของแบรนด์ต้นแบบให้เกลี้ยง** เก็บไว้แต่ `demo.yaml` ซึ่งเป็น scaffolding ของเทมเพลต |
+
+🔴 **`smile-scape` มี `web/scripts/` เป็น 0 ไฟล์** — ถ้าคัดจากมัน ต้องดึงสคริปต์จาก vth เพิ่มตาม Step 5.5
+
+> **โครงยุค WordPress ที่ skeleton ยังสร้างอยู่** — `theme/elementor-templates-overrides/`,
+> `deployment/acf-overrides/` — ลบทิ้งได้ทันทีถ้าแบรนด์เป็น Astro (คือทุกแบรนด์ตอนนี้) ·
+> ยังไม่ถอดออกจาก skeleton เพราะยังไม่ได้ตรวจว่ามีแบรนด์เก่าที่ยังใช้อยู่หรือไม่
+
+---
+
 ### Step 1.5 — Decide `brand_structure` 🆕 v1.8 (DR-032 Locked 2026-05-25)
 
 **Every new brand MUST pick one of two structures at bootstrap time.** This decision drives subsequent Steps 2-6 + sitemap design (Phase E) + WordPress permalink architecture.
@@ -210,7 +251,8 @@ cp ../eywa-vth-biodent/web/scripts/stamp-live.mjs           web/scripts/
 
 ```bash
 cd web
-SUPABASE_SERVICE_KEY=xxx npm run check:keywords     # exit 1 ถ้ามีหน้าไหน target ชน B-rule
+npm run check:keywords                              # exit 1 ถ้ามีหน้าไหน target ชน B-rule
+#   key มาจาก .secrets/supabase.env — อย่าพิมพ์ key ลงบรรทัดคำสั่ง มันตกไปอยู่ใน shell history
 npm run brief -- <page_fingerprint>                 # ใบสั่งงานของหน้าแรก
 ```
 
