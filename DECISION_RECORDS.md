@@ -3,7 +3,7 @@
 > **Append-only architectural decision log.** Each record explains WHY a decision was made — not just WHAT.
 
 **Document Version:** 1.37  
-**Last Updated:** 2026-08-26 — DR-062 landed 2026-08-26 (เสนอโดย smile-scape); DR-059/060/061 landed 2026-08-24; DR-057/058 landed 2026-08-23; on 2026-08-24 every checkable claim in this file (table name, column name, allowed-value list, threshold, row count, status) was re-run against the live database. Corrections are appended in place and marked *(corrected 2026-08-24 against live schema)* — locked bodies are untouched. A second pass re-queried the corrections themselves and fixed four of them (deezy `page_category` 773→776 and the brand-wide NULL count 192→189; `schema_markup_type` 2,358→2,357 scalar rows / 27→26 distinct values; `periodontal-gum` "0 rows" narrowed to 0 pages and 0 entities, the deprecated cluster row survives; smile-scape's "0 uncited Live pages" flagged as vacuous — that brand has no Live page at all).  
+**Last Updated:** 2026-08-27 — DR-063 landed 2026-08-27 (รายงานโดย deezy); DR-062 landed 2026-08-26 (เสนอโดย smile-scape); DR-059/060/061 landed 2026-08-24; DR-057/058 landed 2026-08-23; on 2026-08-24 every checkable claim in this file (table name, column name, allowed-value list, threshold, row count, status) was re-run against the live database. Corrections are appended in place and marked *(corrected 2026-08-24 against live schema)* — locked bodies are untouched. A second pass re-queried the corrections themselves and fixed four of them (deezy `page_category` 773→776 and the brand-wide NULL count 192→189; `schema_markup_type` 2,358→2,357 scalar rows / 27→26 distinct values; `periodontal-gum` "0 rows" narrowed to 0 pages and 0 entities, the deprecated cluster row survives; smile-scape's "0 uncited Live pages" flagged as vacuous — that brand has no Live page at all).  
 **Format:** Reverse chronological (newest first)
 
 ---
@@ -31,6 +31,51 @@
 ---
 
 ## Decisions Log
+
+### [DR-063] — `Review` เป็นแท็ก index ไม่ใช่ข้อเท็จจริงว่างานทำอะไร · conduct ชนะ pubtype (2026-08-27) 🔒🩺
+
+**Status:** **🔒 Locked 2026-08-27** — operator มอบให้ตัดสินตาม best practice · eywa-deezy รายงานและตรวจซ้ำ
+
+**Scope:** **UNIVERSAL** — สระ citation ใช้ร่วมทุกแบรนด์ · **Gates:** `verify-citation-locators.py` · `reconcile-citation-tiers.py` · **SOP:** Citation_Pool_SOP §2
+
+**Context:**
+
+SOP §2 เขียนว่า *"ต้องอ่านบทคัดย่อจริง**หรือ** `article_types` จาก PubMed ก่อนตั้งค่า"* — **ไม่ได้บอกว่า
+อันไหนชนะเมื่อขัดกัน** และคำเตือนที่ยกไว้เป็นทิศตรงข้าม (ชื่อเรื่องว่า SR แต่รวมแต่งานในสัตว์ = อย่าเป่าขึ้น)
+ไม่ใช่ทิศนี้ (ทำ SR จริงแต่ index ไม่แท็ก = ควรกดลงไหม)
+
+deezy พบสี่แถวที่เกตให้ T6 ทั้งที่บทคัดย่อแสดง conduct ของ systematic review เต็มรูป · ทั้งสี่แท็ก
+`['Journal Article','Review']` เหมือนกันหมด
+
+```
+38248221  PROSPERO CRD4 · PRISMA · random-effects · heterogeneity · risk of bias
+38920855  PRISMA · MEDLINE/Embase · random-effects · meta-analysis
+37251724  JBI risk-of-bias · meta-analysis · systematic search
+34776943  random-effects pooling 8 studies · I2 · systematic search
+```
+
+**Decision:**
+
+1. **conduct ชนะ pubtype** — `Review` ล้วนโดยไม่มี `Systematic Review`/`Meta-Analysis` **ไม่ให้ tier**
+   `tier_from_pubtypes()` คืน `None` ทั้งสองสคริปต์ · เดิมคืน `6, expert_opinion` ซึ่งเป็น
+   **ความล้มเหลวรูปเดียวกับกิ่ง `Journal Article` ที่กันไว้แล้ว ต่างแค่มันคืนค่าจึงอ่านเหมือนคำตอบ**
+2. **แยก `PUBTYPE_UNDERTAGGED` ออกจาก `UNCLASSIFIED`** — อันแรกคือ MEDLINE บอกแค่ `Review`
+   ซึ่งมีขั้นตอนถัดไปชัด (อ่านบทคัดย่อ) · อันหลังคือไม่มี type ใช้ได้เลย · ยุบรวมกันจะซ่อนอันที่แก้ได้
+   ไว้หลังอันที่แก้ไม่ได้
+3. 🔴 **regex จับ conduct เป็นตัวชูธง ห้ามใช้ขับการตัดสิน** — รอบที่ผลิตรายการข้างบนพลาด `38132412`
+   เพราะคำว่า `databases` กับ `were used` มีคำคั่น · **ตัวตรวจอัตโนมัติที่เชื่อถือได้พอจะกด tier ยังไม่มี**
+4. **"ไม่มีบทคัดย่อ" ต้องพิสูจน์ ไม่ใช่อนุมานจากค่าว่าง** — 2026-08-27 ผมรายงานว่า `34776943`
+   ไม่มีบทคัดย่อ ของจริงมี 1,948 ตัวอักษร · `.text` ของ ElementTree คืนเฉพาะข้อความก่อน child
+   ตัวแรก และบทคัดย่อนั้นขึ้นต้นด้วย `<b>` · **ค่าว่างมีสองสาเหตุ และหนึ่งในนั้นคือโค้ดเรา**
+
+**Consequences:** deezy คืน 4 แถวเป็น T1 ตามเดิม (ไม่ต้องแก้) และ **คืน `24672258` จาก T6 กลับเป็น T1**
+พร้อมแก้โน้ตบนหน้า `first-dental-visit` ที่บันทึกไว้ว่า "แก้ระดับหลักฐาน tier 1 → 6" ·
+`38132412` ยังต้องอ่าน full text ตัดสิน — SOP §2 ห้ามกด tier เพราะข้อจำกัดของหลักฐาน (in vitro)
+ให้เขียนลง `key_findings` แทน
+
+**References:** [[DR-061]] · Citation_Pool_SOP §2 · spec `f19a2bf` `109cc8c` `14e3091`
+
+---
 
 ### [DR-062] — `insurance_page` เป็นหมวดกลางใน `page_category` (2026-08-26) 🔒📐
 

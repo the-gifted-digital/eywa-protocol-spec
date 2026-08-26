@@ -62,8 +62,29 @@ def tier_from_pubtypes(pt):
         return 2, "rct"
     if s & {"Practice Guideline", "Guideline", "Consensus Statement"}:
         return 3, "clinical_guideline"
-    if s & {"Review", "Introductory Journal Article"}:
-        return 6, "expert_opinion"
+    # DR-063 (2026-08-27). "Review" is an INDEX tag, not a finding about how the work
+    # was done, and MEDLINE applies it to narrative reviews and to systematic reviews it
+    # did not separately tag as "Systematic Review". Returning 6/expert_opinion from it
+    # was the same fault this function already guards against one branch below — a
+    # specific tier printed under a header that reads as derived fact — except it
+    # returned a value instead of None, so it looked like an answer.
+    #
+    # eywa-deezy found it on four rows. All four carry ['Journal Article', 'Review'] and
+    # all four show systematic-review conduct in the abstract: PROSPERO CRD4 with PRISMA
+    # and random-effects pooling (38248221), PRISMA with MEDLINE/Embase and random
+    # effects (38920855), JBI risk-of-bias with meta-analysis (37251724), and
+    # random-effects pooling of eight studies with I2 reported (34776943). Under the old
+    # branch the gate called every one of them tier 6, and G7 — which fails a page with
+    # no tier 1-3 evidence — would have gone red on pages whose evidence is strong.
+    #
+    # So: no tier from "Review" alone. The caller reports PUBTYPE_UNDERTAGGED and a
+    # person reads the abstract. That is slower and it is the only thing that works —
+    # a regex over abstracts is not a substitute either, as the run that produced the
+    # list above missed 38132412's three-database search because the words "databases"
+    # and "were used" had other words between them.
+    if s & {"Review", "Introductory Journal Article"} and not s & {
+            "Systematic Review", "Meta-Analysis", "Network Meta-Analysis"}:
+        return None
     if s & {"Case Reports"}:
         return 6, "case_report"
     if s & {"Letter", "Comment", "Editorial"}:
