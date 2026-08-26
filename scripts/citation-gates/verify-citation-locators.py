@@ -53,6 +53,25 @@ def overlap(a, b):
 UNREACHABLE = object()
 
 
+def full_text(el, path):
+    """All the text under a child element, tails included.
+
+    findtext() and .text return only the text BEFORE the first child, so a title
+    carrying inline markup — <i> for species names, <sup>/<sub> for formulae — comes
+    back short or empty. Measured across the 543 PMIDs in the pool: three titles were
+    truncated and one was empty. PMID 30746447 opens with
+    "<i>Porphyromonas gingivalis</i> in Alzheimer's disease brains", so findtext gave ""
+    against a 132-character title, agreement scored 0.00, and a correct citation was
+    reported TITLE_MISMATCH — whose documented remedy is to strip the locator.
+
+    eywa-deezy found the same fault in how I was reading abstracts (PMID 34776943 has a
+    1,948-character abstract that .text reported as empty) and asked me to check the
+    gates. This is what that check found.
+    """
+    node = el.find(path)
+    return " ".join("".join(node.itertext()).split()) if node is not None else ""
+
+
 def fetch_pubmed(pmids):
     """Batch efetch. Returns {pmid: {title, journal, year, pubtypes}}."""
     out = {}
@@ -76,8 +95,7 @@ def fetch_pubmed(pmids):
                 if not pmid:
                     continue
                 out[pmid] = {
-                    "title": " ".join(((a.findtext(".//ArticleTitle")
-                                        or a.findtext(".//BookTitle") or "").split())),
+                    "title": full_text(a, ".//ArticleTitle") or full_text(a, ".//BookTitle"),
                     "journal": (a.findtext(".//Journal/ISOAbbreviation")
                                 or a.findtext(".//Book/Publisher/PublisherName") or ""),
                     "year": (a.findtext(".//PubDate/Year")
