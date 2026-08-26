@@ -77,11 +77,37 @@ async function embedBatch(texts) {
   throw new Error('OpenAI: still failing after 3 attempts');
 }
 
-const { data: entities, error } = await db
-  .from('seo_entity_graph')
-  .select('entity_fingerprint, entity_name, entity_type, topic_cluster_id, ai_entity_summary, entity_lifecycle')
-  .neq('entity_lifecycle', 'merged');
-if (error) { console.error(error); process.exit(1); }
+// Fetch every row, then decide what to skip in JS. The filter used to be
+// `.neq('entity_lifecycle', 'merged')`, which had two faults on one line, both found
+// by eywa-deezy on 2026-08-26 and both confirmed against the live table:
+//
+//   1. It is case-sensitive, and the column is not. 359 of 732 rows (49%) are not
+//      lower case — Mature 299, Growing 59, Emerging 1 alongside mature 124,
+//      growing 203, emerging 16. The 23 merged rows happen to be lower case today, so
+//      the filter works right now by luck. The next merge that writes 'Merged' slips
+//      straight through and the tombstone gets embedded into the semantic index.
+//   2. `entity_lifecycle <> 'merged'` is NULL, not TRUE, when the column is NULL, so
+//      PostgREST silently dropped the 7 rows with no lifecycle. 732 rows in, 702 out,
+//      and nothing said where the other 30 went.
+//
+// Paginated for the same reason the shared PostgREST helper is: the table is at 732
+// and the default response cap is 1000, so this is one growth spurt away from
+// embedding a subset and reporting on it as though it were the graph.
+const entities = [];
+for (let from = 0; ; from += 1000) {
+  const { data, error } = await db
+    .from('seo_entity_graph')
+    .select('entity_fingerprint, entity_name, entity_type, topic_cluster_id, ai_entity_summary, entity_lifecycle')
+    .order('entity_fingerprint')
+    .range(from, from + 999);
+  if (error) { console.error(error); process.exit(1); }
+  entities.push(...(data ?? []));
+  if (!data || data.length < 1000) break;
+}
+const merged = entities.filter((e) => (e.entity_lifecycle ?? '').trim().toLowerCase() === 'merged');
+const live = entities.filter((e) => (e.entity_lifecycle ?? '').trim().toLowerCase() !== 'merged');
+console.log(`entities ${entities.length} · merged skipped ${merged.length} · to consider ${live.length}` +
+            ` · no lifecycle ${entities.filter((e) => !e.entity_lifecycle).length} (kept — absent is not merged)`);
 
 const { data: existing } = await db
   .from('seo_entity_embeddings')
@@ -89,7 +115,7 @@ const { data: existing } = await db
 const known = new Map((existing ?? []).map((r) => [r.entity_fp, r]));
 
 const work = [];
-for (const e of entities) {
+for (const e of live) {
   if (!e.entity_fingerprint) continue;              // no slug = nothing the FK can point at
   const text = sourceText(e);
   const h = hash(text);
