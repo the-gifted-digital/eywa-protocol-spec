@@ -17,7 +17,7 @@ Usage
     python3 verify-citation-locators.py pool.tsv > verdicts.tsv
 
 Output columns: fingerprint, verdict, locator, stored_title, source_title
-Verdicts: PASS | TITLE_MISMATCH | DOI_PMID_CONFLICT | UNREACHABLE | NOT_FOUND | NO_LOCATOR
+Verdicts: PASS | TITLE_MISMATCH | TITLE_INCOMPLETE | DOI_PMID_CONFLICT | UNREACHABLE | NOT_FOUND | NO_LOCATOR
 
 TITLE_MISMATCH is not automatically a fabrication — a stored title that is a
 human paraphrase will also trip it. Read every one. Rule of thumb: if the source
@@ -211,6 +211,24 @@ def main(path, threshold=0.34):
             src = rec["title"] if rec else None
         else:
             print("\t".join([fp, "NO_LOCATOR", "", title, "", ""]))
+            continue
+
+        # PASS means the overlap cleared MATCH_FLOOR. It does NOT mean the stored title
+        # is the title. eywa-deezy diffed stored against source character by character
+        # across their 47 PubMed rows after the findtext fix and found one that had
+        # PASSed for months reading "A systematic review and-analysis" — the word "meta"
+        # sat in inline markup their intake tool had dropped, and they had already
+        # written it up as a typo in PubMed's own record rather than a fault in their
+        # pipeline. A threshold cannot catch that: 0.34 leaves plenty of room to lose a
+        # word. Running the same diff over vth's 543 rows found one, on the same PMID
+        # whose title findtext could not read at all.
+        # Warns, never blocks — a stored title that is a deliberate human paraphrase is
+        # allowed under DR-061, and this cannot tell the two apart. It says what differs
+        # and lets a person decide.
+        if src and " ".join((title or "").split()).strip().rstrip(".").lower() \
+                != " ".join(src.split()).strip().rstrip(".").lower() \
+                and overlap(title, src) >= threshold:
+            print("\t".join([fp, "TITLE_INCOMPLETE", locator, title, src, tier or ""]))
             continue
 
         if src is None:
