@@ -17,7 +17,7 @@ Usage
     python3 verify-citation-locators.py pool.tsv > verdicts.tsv
 
 Output columns: fingerprint, verdict, locator, stored_title, source_title
-Verdicts: PASS | TITLE_MISMATCH | NOT_FOUND | NO_LOCATOR
+Verdicts: PASS | TITLE_MISMATCH | DOI_PMID_CONFLICT | UNREACHABLE | NOT_FOUND | NO_LOCATOR
 
 TITLE_MISMATCH is not automatically a fabrication — a stored title that is a
 human paraphrase will also trip it. Read every one. Rule of thumb: if the source
@@ -83,6 +83,11 @@ def fetch_pubmed(pmids):
                     "year": (a.findtext(".//PubDate/Year")
                              or a.findtext(".//Book/PubDate/Year") or ""),
                     "pubtypes": [p.text for p in a.iter("PublicationType")],
+                    # The DOI PubMed itself links to this PMID. Free — it is already in
+                    # the response — and it is the only way to check a DOI on a row that
+                    # also carries a PMID. See the conflict branch in main().
+                    "doi": next((i.text for i in a.iter("ArticleId")
+                                 if (i.get("IdType") or "").lower() == "doi" and i.text), ""),
                 }
         time.sleep(0.4)
     return out
@@ -160,6 +165,23 @@ def main(path, threshold=0.34):
                 src = rec["title"]
                 t, name = tier_from_pubtypes(rec["pubtypes"])
                 tier = "T%d/%s" % (t, name) if t else "UNCLASSIFIED"
+                # A row carrying BOTH locators had only ever had one of them checked.
+                # This branch used to be `if pmid: ... elif doi: ...`, so on any row with
+                # a PMID the DOI was skipped entirely — 521 of the 613 rows in the shared
+                # pool. Two of them were wrong and had been sitting at
+                # verification_status='verified': cite_7B4BB347ECAE4D71 held Sanz's DOI
+                # against Polak's PMID and title (eywa-deezy found it), and
+                # cite_07FB9899456B4030 held a DOI that 404s at Crossref (found only by
+                # running this comparison across the whole pool).
+                # The check costs nothing — PubMed returns its own DOI in the same
+                # response — and it is reported before the title comparison, because the
+                # title matches perfectly in exactly this failure.
+                ours = (doi or "").strip().lower()
+                theirs = (rec.get("doi") or "").strip().lower()
+                if ours and theirs and ours != theirs:
+                    print("\t".join([fp, "DOI_PMID_CONFLICT", locator, title,
+                                      "stored %s · PubMed links %s" % (ours, theirs), tier or ""]))
+                    continue
         elif doi:
             rec, locator = fetch_crossref(doi), "DOI:" + doi
             time.sleep(0.25)
