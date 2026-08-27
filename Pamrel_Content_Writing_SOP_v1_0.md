@@ -1,6 +1,6 @@
 # ✍️ PAMREL — EYWA Content Writing System
 
-> **เวอร์ชัน:** 1.4 · **ประกาศใช้:** 2026-07-31 · **v1.4:** เพิ่ม P16 (slug เป็น NOT NULL ที่ต้องเติมเอง — จาก eywa-deezy 2026-08-27) · **v1.3:** เพิ่ม P15 (ตารางแชร์ — ใครชนะตอนชื่อซ้ำ) + ขยาย P5 (layout render ฟิลด์ที่ schema ไม่ประกาศ) + ขยาย P13 (ปิดโดเมน status) — จาก VTH 2026-08-03 · **v1.2:** เพิ่ม P14 (เอกสาร ≠ การบังคับใช้ — จาก cutover VTH) · **v1.1:** เพิ่ม P13 (stamp:live) + ขั้น deploy ใน pipeline · **สถานะ:** 🔒 Locked
+> **เวอร์ชัน:** 1.4 · **ประกาศใช้:** 2026-07-31 · **v1.5:** แก้ P16 — เกณฑ์ `NOT NULL`+ไม่มี default ให้ false positive · ที่ถูกคือ input/output ของ trigger (แก้โดย eywa-deezy 2026-08-27) · **v1.4:** เพิ่ม P16 · **v1.3:** เพิ่ม P15 (ตารางแชร์ — ใครชนะตอนชื่อซ้ำ) + ขยาย P5 (layout render ฟิลด์ที่ schema ไม่ประกาศ) + ขยาย P13 (ปิดโดเมน status) — จาก VTH 2026-08-03 · **v1.2:** เพิ่ม P14 (เอกสาร ≠ การบังคับใช้ — จาก cutover VTH) · **v1.1:** เพิ่ม P13 (stamp:live) + ขั้น deploy ใน pipeline · **สถานะ:** 🔒 Locked
 > **ขอบเขต:** **UNIVERSAL** — ทุกแบรนด์ที่ใช้ `seo_website_page_master` + `seo_x_ads_keywords_contextual_master` + `seo_citations`
 > **ที่มา:** field-tested กับ VTH BioDent — 16 หน้า / 4 รอบทดลองแบบมีตัวควบคุม (2026-07-29 → 07-31)
 > **Companion:** DR-045 (ฉบับนี้) · DR-043 Keyword Assignment · DR-044 Citation Pool · DR-020 Content Templates
@@ -201,24 +201,48 @@ P1 บอกว่ากฎต้องมีตัวบังคับ **P14 �
 
 หลังยุบต้อง regen สิ่งที่ฝัง `cluster_id` ไว้ (เช่น `gen:page-context` → tracking payload) และอัปเดตเอกสารแผนที่อ้าง slug เดิม **ยกเว้นบันทึก audit ที่ลงวันที่ไว้** ซึ่งเป็นบันทึกของสิ่งที่เคยจริง ไม่ใช่ของที่ต้องแก้ย้อนหลัง
 
-### P16 · trigger สร้าง fingerprint ให้ แต่ไม่สร้าง slug ให้ — เป็น `NOT NULL` ที่ต้องเติมเอง
+### P16 · `fingerprint` เป็น output · `slug` เป็น input ของการ derive — ชื่อคอลัมน์หลอก
 
-รายงานจาก session `eywa-deezy` (2026-08-27) · ตรงกับที่ Schema Appendix G ของ `EYWA_HANDOVER.md` บอกไว้เอง:
+`seo_entity_graph` · `seo_citations` · `seo_entity_relationships` — ทั้งสามตารางมี `NOT NULL` โดยไม่มี `column_default` อยู่หลายคอลัมน์ และ **`fingerprint` กับ `fingerprint_display_name` ก็อยู่ในกลุ่มนั้นด้วย ทั้งที่ trigger เติมให้จริง**
 
 ```
-trg_set_fingerprint_brand                            →  สร้าง fingerprint ให้
-trg_normalize_entity_slug BEFORE INSERT/UPDATE OF entity_slug   →  ยิงเมื่อมีค่าส่งมาแล้ว
+seo_citations             fn_set_fingerprint_generic('cite', 'citation_slug', 'title')
+seo_entity_relationships  fn_set_fingerprint_generic('erel', 'edge_type', 'edge_type')
+seo_entity_graph          fn_set_fingerprint_entity_graph()
 ```
 
-**normalize ≠ generate** trigger ตัวหลังจัดรูปแบบให้เมื่อมีค่า แต่ไม่ได้เติมค่าให้เมื่อไม่มี — insert ที่ไม่ส่ง slug มาจึงถูกปฏิเสธด้วย `23502 · null value in column "entity_slug"` ทั้งที่ `fingerprint` กับ `fingerprint_display_name` ถูกสร้างให้เรียบร้อยแล้ว **ครึ่งหนึ่งของแถวถูกเติมอัตโนมัติ อีกครึ่งไม่ถูกเติม และไม่มีอะไรบอกว่าเส้นแบ่งอยู่ตรงไหน**
+```sql
+IF NEW.fingerprint IS NULL THEN  NEW.fingerprint := 'ent_' || generate_ulid16();  END IF;
+IF NEW.fingerprint_display_name IS NULL THEN
+   NEW.fingerprint_display_name := right(fingerprint,6) || '::' ||
+        COALESCE(NEW.entity_slug, slugify(NEW.entity_name), 'unknown');
+END IF;
+```
 
-รูปเดียวกันเกิดกับ `seo_citations.citation_slug` วันก่อนหน้า — **สองตาราง ห่างกันวันเดียว** จึงไม่ใช่เรื่องเฉพาะตาราง
+**อาร์กิวเมนต์ตัวที่สองคือ `citation_slug` — trigger *อ่าน* มันเพื่อประกอบ display name ไม่มีบรรทัดไหนเขียน slug เลย**
 
-> **เวลา insert เข้าตารางแชร์: อย่าอนุมานว่าอะไรถูกเติมให้** ยิง insert ขั้นต่ำหนึ่งครั้งแล้วอ่าน error ให้ครบ หรือดู `information_schema.columns` ว่าคอลัมน์ไหน `NOT NULL` และไม่มี `column_default` — คอลัมน์เหล่านั้นคือของที่ต้องส่งมาเอง แม้ชื่อจะดูเป็น derived field ก็ตาม
->
-> นี่คือ **P14 ในรูปของ schema**: trigger ที่ *มีอยู่* ไม่ได้แปลว่าทำสิ่งที่ชื่อมันชวนให้คิด
+> `citation_slug` และ `entity_slug` ไม่ใช่ derived field ที่ระบบเติม **มันคือ input ของการ derive** ชื่อคอลัมน์คือสิ่งที่หลอก เพราะอ่านเหมือน output
 
-⚠️ ยังไม่ได้ยิงคิวรียืนยันสด (connector Supabase หลุดตอนที่บันทึกนี้เขียน) — หลักฐานที่มีคือรายงานจาก session Deezy + ตาราง trigger ใน Handover ที่สอดคล้องกัน **ถ้ายิงแล้วพบว่าต่างจากนี้ ให้แก้ที่นี่**
+#### วิธีตรวจ
+
+`NOT NULL` + ไม่มี `column_default` **ยังไม่ใช่คำตอบ** — `information_schema` มองไม่เห็น trigger จึงแยก "ระบบเติมให้" กับ "ต้องส่งเอง" ไม่ออก
+
+อ่าน `pg_get_triggerdef` ของ BEFORE INSERT trigger บนตารางนั้น แล้วแบ่ง:
+
+| | |
+|---|---|
+| คอลัมน์ที่ trigger **เขียน** (`fingerprint` · `fingerprint_display_name`) | **output — ห้ามส่ง** · `trg_prevent_fingerprint_change` รออยู่ตอน UPDATE |
+| คอลัมน์ที่ trigger **อ่าน** (ตัวที่ถูกส่งเป็นอาร์กิวเมนต์ slug) | **input — ต้องส่งเอง** ไม่งั้น `23502` |
+
+`trg_normalize_entity_slug BEFORE INSERT/UPDATE **OF entity_slug**` เข้ากันพอดี — normalize ยิงเมื่อมีค่าแล้ว · generate ไม่เคยแตะ slug เลย **เส้นแบ่งไม่ได้อยู่ที่ตาราง แต่อยู่ที่ว่าคอลัมน์นั้นเป็น input หรือ output ของ fingerprint**
+
+#### ที่มา — และบทเรียนซ้อนอยู่ในนั้น
+
+รายงานจาก `eywa-deezy` 2026-08-27 (`23502` บน `entity_slug` · รูปเดียวกับ `citation_slug` วันก่อนหน้า)
+
+ฉบับแรกของ P16 เขียนเกณฑ์ว่า *"หา `NOT NULL` ที่ไม่มี `column_default` นั่นคือของที่ต้องส่งเอง"* — เขียนจากตาราง trigger ในเอกสารโดยไม่ได้ทดสอบ `eywa-deezy` ยิง insert จริงแล้วชี้ว่าเกณฑ์นั้นจะสั่งให้คนส่ง `fingerprint` เอง ซึ่งไม่จำเป็นและชน `trg_prevent_fingerprint_change` ตอน UPDATE
+
+**P16 ฉบับแรกละเมิด P14 ในเนื้อของตัวเอง** — อ่าน schema doc แล้วสรุปพฤติกรรมระบบ แทนที่จะยิงของจริง กฎที่บอกว่า "อย่าเชื่อเอกสาร" ถูกเขียนขึ้นจากเอกสาร และผิดด้วยเหตุผลที่ตัวมันเองเตือนไว้
 
 ---
 
