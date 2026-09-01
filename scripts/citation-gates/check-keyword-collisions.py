@@ -35,6 +35,28 @@ Anything else                -> genuinely different demand. Report, do not propo
 Either column empty          -> ESCALATE. Not "no collision" — unknown, and the
                                 operator was explicit: ถ้าสงสัยให้ตรงมาให้ฉัน verify.
 
+WHAT THE SEMANTIC LAYER CANNOT SEE, AND THE ONE CASE THAT IS SAFE TO CLEAR ANYWAY
+Both columns describe the keyword. Neither describes the page. smile-scape-clinic
+reported on 2026-08-26 that 19 of its 21 K3w pairs had two different page_category
+values while agreeing on both keyword columns — รากฟันเทียม and รากฟันเทียม ราคา are
+both commercial, both Dental Implant, and sit on a T2 procedure_pillar and a T13
+pricing_page respectively. The semantic layer calls that "same" and hands it to the
+volume tie-break, which is being asked to arbitrate a split somebody designed.
+
+That is not a harmless extra row. The one such pair this gate could decide —
+ขูดหินปูน ราคา 15,350 against ขูดหินปูน 12,325 — produced a confident proposal to
+demote ขูดหินปูน to semantic, taking a procedure pillar's own name and giving it to a
+price leaf. Better volume data would have made that proposal more certain, not less
+wrong. See `pricing_split`, which clears this one shape and nothing else: every other
+category difference still goes to the operator, because a knowledge_article and a
+condition_pillar on one entity really can cannibalise and no column says which wins.
+
+VOLUME IS READ TWICE
+`volume_recent_12m` first, `volume_avg_48m` when it ties — the same snapshot row holds
+both, and batches routinely return 0 for the recent column on head terms whose 48-month
+average is in the thousands. A 0 like that is a reading that did not arrive. A null is
+not a zero either, and never decides a pair on its own. See `propose`.
+
 FINDINGS
   K1_duplicate_target_fp    two pages in one brand carry the identical
                             target_keyword_fp. Blocks — this is not a judgement call.
@@ -49,6 +71,13 @@ FINDINGS
                             semantic layer could not run. Listed separately and never
                             folded into the others — a comparison that could not be
                             made must not read as a comparison that found nothing.
+
+CLEARED PAIRS
+Three layers drop a pair before it is ever filed: keywords differing only in digits
+(an enumeration, not a collision), a pillar and its pricing page, and a semantic
+verdict of "different". Run with --verbose to list them with the reason attached.
+Until 2026-08-26 the only trace was a count, which is not something a reviewer can
+find a bug in.
 
 Usage:
     python3 check-keyword-collisions.py --brand vth-biodent
@@ -79,6 +108,56 @@ NEAR_MAX_DIST = 2
 # ratio is what separates the two, so containment only counts when the shorter keyword
 # is most of the longer one. Below this it is a head term and its own long tail.
 CONTAIN_MIN_RATIO = 0.6
+
+# Copied from v_seo_keyword_pool.is_price_intent so the gate and the view agree on what
+# a price query is. If one changes, change both — this gate reads the base tables, not
+# the view, because it needs the snapshot history the view collapses to one row.
+PRICE_INTENT_RE = re.compile(
+    r"ราคา|กี่บาท|เท่าไหร่|กี่ตัง|ค่าใช้จ่าย|ค่ารักษา|อัตราค่าบริการ")
+
+# The categories that mean "this page exists to answer a different kind of question
+# about the same subject". Only pricing is mechanical enough to clear automatically:
+# a pricing hub owning "X ราคา" while the pillar owns "X" is the documented shape of
+# T13, not two pages fighting. Every other category difference still reaches the
+# operator — a knowledge_article and a condition_pillar on the same entity genuinely
+# can cannibalise, and no column says which way that one goes.
+PRICING_CATEGORY = "pricing_page"
+
+
+def pricing_split(pa, ra, pb, rb):
+    """True when this pair is a pillar and its pricing page, which is architecture.
+
+    Reported by smile-scape-clinic on 2026-08-26: 19 of its 21 K3w pairs had two
+    different page_category values, and the gate had no way to see that because
+    semantic_verdict reads only the keyword's intent and entity. Both columns agree
+    for รากฟันเทียม (commercial / Dental Implant) and รากฟันเทียม ราคา (commercial /
+    Dental Implant) — identical by every column the semantic layer owns, while one
+    page is a T2 procedure_pillar and the other a T13 pricing_page.
+
+    Left unhandled this is worse than noise. The one pair that gate could decide,
+    ขูดหินปูน ราคา 15,350 against ขูดหินปูน 12,325, produced a confident proposal to
+    move ขูดหินปูน to semantic — which would take a procedure pillar's own name away
+    and hand it to a price leaf. More volume would only have made that proposal surer.
+
+    Deliberately narrow: exactly one side is the pricing page, the categories differ,
+    and the keyword sitting on the pricing page is the one carrying price intent. A
+    pricing page targeting a non-price keyword is somebody's real decision to look at,
+    not something to wave through.
+    """
+    ca = (pa.get("page_category") or "").strip()
+    cb = (pb.get("page_category") or "").strip()
+    if not ca or not cb or ca == cb:
+        return False
+    if (ca == PRICING_CATEGORY) == (cb == PRICING_CATEGORY):
+        return False
+    priced = ra if ca == PRICING_CATEGORY else rb
+    return bool(PRICE_INTENT_RE.search(priced.get("keyword") or ""))
+
+
+def catfmt(p):
+    """node + category, for a finding row. Absent category is shown, never blank."""
+    return "%s %s" % (p.get("sitemap_node_id") or p.get("page_fingerprint"),
+                      p.get("page_category") or "ไม่มี category")
 
 
 def norm(s):
@@ -153,7 +232,8 @@ def main():
     k = eywa_supabase.key()
     pages = [p for p in eywa_supabase.fetch(
         "seo_website_page_master",
-        "page_fingerprint,slug,status,seo_title,target_keyword_fp,brand_id,brand_name",
+        "page_fingerprint,slug,status,seo_title,target_keyword_fp,brand_id,brand_name,"
+        "page_category,sitemap_node_id",
         "&limit=6000", k) if p.get("brand_id") == a.brand and p.get("status") != "Merged"]
     if not pages:
         seen = sorted({str(p.get("brand_id")) for p in eywa_supabase.fetch(
@@ -171,15 +251,21 @@ def main():
     # Latest snapshot per keyword. Rows accumulate monthly, so take the newest date.
     vol = {}
     for r in eywa_supabase.fetch(
-            SNAP_TABLE, "fingerprint,snapshot_date,volume_recent_12m", "&limit=40000", k):
+            SNAP_TABLE, "fingerprint,snapshot_date,volume_recent_12m,volume_avg_48m",
+            "&limit=40000", k):
         fp, d = r["fingerprint"], r.get("snapshot_date") or ""
         if fp not in vol or d > vol[fp][0]:
-            vol[fp] = (d, r.get("volume_recent_12m"))
-    volume = {fp: v for fp, (_d, v) in vol.items()}
+            vol[fp] = (d, r.get("volume_recent_12m"), r.get("volume_avg_48m"))
+    volume = {fp: v for fp, (_d, v, _w) in vol.items()}
+    volume48 = {fp: w for fp, (_d, _v, w) in vol.items()}
 
     def vfmt(fp):
         v = volume.get(fp)
         return "vol —" if v is None else "vol %s" % v
+
+    def vfmt48(fp):
+        w = volume48.get(fp)
+        return "48m —" if w is None else "48m %s" % w
 
     targets = [p for p in pages if p.get("target_keyword_fp")]
     print("keyword collisions — %s · %d หน้า (%d มี target keyword) · keyword pool %d"
@@ -214,15 +300,45 @@ def main():
             uniq.append((fp, row, norm(row["keyword"]), by_fp[fp][0]))
 
     def propose(fa, fb):
-        """Which keyword should stay the target. Volume decides, per the operator."""
+        """Which keyword should stay the target. Volume decides, per the operator.
+
+        Two readings of volume, in order. `volume_recent_12m` first, because recent
+        demand is what a page will be published into. When it ties, `volume_avg_48m`
+        from the same snapshot row breaks the tie: smile-scape-clinic reported on
+        2026-08-26 that 461 of 525 rows in one batch carry volume_recent_12m = 0 while
+        127 of those same rows carry a positive volume_avg_48m — รากฟันเทียม reads
+        0 recent against 3,450 over four years, and a head term in that market has not
+        gone to zero. A 0 there is a reading that did not come back, not a measurement
+        of no demand, and the pattern is not one brand's: deezy-dental has 896 such
+        rows in its 2026-08-12 batch, topping out at 90,688. Ignoring the second column
+        sent eight decidable pairs to the operator as "เท่ากัน".
+
+        A missing reading is not a zero, so a null on one side never decides anything —
+        it is reported as what it is and the operator gets the row.
+        """
         va, vb = volume.get(fa), volume.get(fb)
-        if va is None or vb is None:
+        if va is not None and vb is not None and va != vb:
+            hi, lo = (fa, fb) if va > vb else (fb, fa)
+            return ("เสนอ: '%s' เป็น target (%s) · '%s' ลงเป็น semantic (%s)"
+                    % (kws[hi]["keyword"], vfmt(hi), kws[lo]["keyword"], vfmt(lo)))
+        wa, wb = volume48.get(fa), volume48.get(fb)
+        if va == vb and wa is not None and wb is not None and wa != wb:
+            hi, lo = (fa, fb) if wa > wb else (fb, fa)
+            return ("เสนอ (12m เสมอที่ %s — ตัดด้วย 48m): '%s' เป็น target (%s) · "
+                    "'%s' ลงเป็น semantic (%s)"
+                    % (va, kws[hi]["keyword"], vfmt48(hi), kws[lo]["keyword"], vfmt48(lo)))
+        # Say which side is actually missing. The old text read "ไม่มี volume ทั้งสองฝั่ง"
+        # on a condition that fires when EITHER side is null, so a pair like
+        # peri-implantitis (131) against peri-implantitis วินิจฉัย (—) was reported as
+        # having nothing to compare when one side had a number all along.
+        if va is None and vb is None:
             return "ไม่มี volume ทั้งสองฝั่ง — ตัดสินไม่ได้ ส่งให้ operator"
-        if va == vb:
-            return "volume เท่ากัน — ตัดสินไม่ได้ ส่งให้ operator"
-        hi, lo = (fa, fb) if va > vb else (fb, fa)
-        return ("เสนอ: '%s' เป็น target (%s) · '%s' ลงเป็น semantic (%s)"
-                % (kws[hi]["keyword"], vfmt(hi), kws[lo]["keyword"], vfmt(lo)))
+        if va is None or vb is None:
+            has, lacks = (fb, fa) if va is None else (fa, fb)
+            return ("มี volume ข้างเดียว: '%s' %s · '%s' ยังไม่มีค่า — "
+                    "ค่าว่างไม่ใช่ศูนย์ ตัดสินไม่ได้ ส่งให้ operator"
+                    % (kws[has]["keyword"], vfmt(has), kws[lacks]["keyword"]))
+        return ("volume เท่ากันทั้ง 12m และ 48m (%s) — ตัดสินไม่ได้ ส่งให้ operator" % va)
 
     for i in range(len(uniq)):
         fa, ra, na, pa = uniq[i]
@@ -251,6 +367,13 @@ def main():
                 cleared.append("%s | %s (ต่างกันแค่ตัวเลข — เป็นชุด ไม่ใช่ชน)"
                                % (ra["keyword"], rb["keyword"]))
                 continue
+            # Architecture, not collision — see pricing_split. Cleared before the
+            # semantic layer runs, because the semantic layer is exactly what cannot
+            # see it: both keywords carry the same intent and the same entity.
+            if pricing_split(pa, ra, pb, rb):
+                cleared.append("%s | %s (หน้าราคาแยกจากหน้าหลัก — %s vs %s)"
+                               % (ra["keyword"], rb["keyword"], catfmt(pa), catfmt(pb)))
+                continue
             verdict = semantic_verdict(ra, rb)
             if verdict == "different":
                 # The semantic layer did its job: same-looking strings, different intent
@@ -260,8 +383,12 @@ def main():
                 cleared.append("%s | %s" % (ra["keyword"], rb["keyword"]))
                 continue
             row = ("%s | %s" % (ra["keyword"], rb["keyword"]),
-                   "%s %s / %s %s" % (pa["page_fingerprint"], pa["status"],
-                                      pb["page_fingerprint"], pb["status"]),
+                   # Category on the row. Without it the operator re-derives, per run,
+                   # the one fact that decides most of these: a pillar and a knowledge
+                   # article about the same entity are not after the same visit.
+                   "%s %s [%s] / %s %s [%s]"
+                   % (pa["page_fingerprint"], pa["status"], catfmt(pa),
+                      pb["page_fingerprint"], pb["status"], catfmt(pb)),
                    propose(fa, fb) if verdict == "same"
                    else "intent หรือ entity ว่าง — เทียบเชิงความหมายไม่ได้")
             findings["K6_escalate" if verdict == "unknown" else kind].append(row)
@@ -329,6 +456,17 @@ def main():
                     if any("ส่งให้ operator" in str(x) for x in h))
     print("blocking: %d · ต้องให้ operator ตัดสิน: %d · ชั้นความหมาย/ตำแหน่งเคลียร์ให้ %d คู่"
           % (blocking, undecided, len(cleared)))
+    # Every clearing rule here suppresses a pair a human would otherwise have read, and
+    # until now the only trace was a count. A rule nobody can inspect is a rule nobody
+    # can find a bug in — the pricing-split rule added on 2026-08-26 clears nine pairs
+    # on smile-scape alone, and "trust the number 78" is not a review.
+    if a.verbose and cleared:
+        print("\nเคลียร์แล้ว %d คู่ (ไม่ต้องตัดสิน — แสดงไว้ให้ตรวจว่ากฎเคลียร์ถูกตัว):"
+              % len(cleared))
+        for c in sorted(cleared):
+            print("  · %s" % c)
+    elif cleared:
+        print("  (--verbose เพื่อดูว่ากฎไหนเคลียร์คู่ไหน)")
     print("เกตนี้เสนออย่างเดียว ไม่เขียน target_keyword_fp — การสลับเจ้าของคีย์เป็นการตัดสินใจ")
     return 1 if blocking else 0
 

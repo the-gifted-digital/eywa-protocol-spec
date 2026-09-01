@@ -2,8 +2,8 @@
 
 > **Append-only architectural decision log.** Each record explains WHY a decision was made — not just WHAT.
 
-**Document Version:** 1.38  
-**Last Updated:** 2026-08-28 — DR-054 ได้ addendum "page churn" (รายงานโดย deezy): หน้าที่ยังอยู่แต่ `page_fingerprint` ขยับตอนรื้อผัง ทำให้ประวัติแตกสอง id โดยไม่มีอะไรฟ้อง · 2026-08-27 — DR-063 landed 2026-08-27 (รายงานโดย deezy); DR-062 landed 2026-08-26 (เสนอโดย smile-scape); DR-059/060/061 landed 2026-08-24; DR-057/058 landed 2026-08-23; on 2026-08-24 every checkable claim in this file (table name, column name, allowed-value list, threshold, row count, status) was re-run against the live database. Corrections are appended in place and marked *(corrected 2026-08-24 against live schema)* — locked bodies are untouched. A second pass re-queried the corrections themselves and fixed four of them (deezy `page_category` 773→776 and the brand-wide NULL count 192→189; `schema_markup_type` 2,358→2,357 scalar rows / 27→26 distinct values; `periodontal-gum` "0 rows" narrowed to 0 pages and 0 entities, the deprecated cluster row survives; smile-scape's "0 uncited Live pages" flagged as vacuous — that brand has no Live page at all).  
+**Document Version:** 1.39  
+**Last Updated:** 2026-08-28 — DR-064 landed 2026-08-26 (เสนอโดย smile-scape): หน้าราคาที่แยกจากหน้าหลักไม่ใช่คีย์ชนกัน และ volume อ่านสองคอลัมน์ · 2026-08-28 — DR-054 ได้ addendum "page churn" (รายงานโดย deezy): หน้าที่ยังอยู่แต่ `page_fingerprint` ขยับตอนรื้อผัง ทำให้ประวัติแตกสอง id โดยไม่มีอะไรฟ้อง · 2026-08-27 — DR-063 landed 2026-08-27 (รายงานโดย deezy); DR-062 landed 2026-08-26 (เสนอโดย smile-scape); DR-059/060/061 landed 2026-08-24; DR-057/058 landed 2026-08-23; on 2026-08-24 every checkable claim in this file (table name, column name, allowed-value list, threshold, row count, status) was re-run against the live database. Corrections are appended in place and marked *(corrected 2026-08-24 against live schema)* — locked bodies are untouched. A second pass re-queried the corrections themselves and fixed four of them (deezy `page_category` 773→776 and the brand-wide NULL count 192→189; `schema_markup_type` 2,358→2,357 scalar rows / 27→26 distinct values; `periodontal-gum` "0 rows" narrowed to 0 pages and 0 entities, the deprecated cluster row survives; smile-scape's "0 uncited Live pages" flagged as vacuous — that brand has no Live page at all).  
 **Format:** Reverse chronological (newest first)
 
 ---
@@ -31,6 +31,64 @@
 ---
 
 ## Decisions Log
+
+### [DR-064] — หน้าราคาที่แยกจากหน้าหลักไม่ใช่คีย์ชนกัน · และ volume อ่านสองคอลัมน์ (2026-08-26) 🔒📐
+
+**Status:** **🔒 Locked 2026-08-26** — เสนอและลงมือโดย smile-scape-clinic · รอ deezy/vth ตรวจรับ
+
+**Scope:** **UNIVERSAL** — **Gate:** `check-keyword-collisions.py` (K3w/K4w) · ไม่แตะข้อมูล
+
+**Context:**
+
+ชั้น semantic ของเกตอ่านสองคอลัมน์ คือ `search_intent` และ `primary_entity_fp` **ทั้งคู่อธิบายคีย์
+ไม่มีคอลัมน์ไหนอธิบายหน้า** ผลคือคู่ที่ถูกออกแบบให้แยกกันตั้งแต่ต้นถูกตัดสินว่า "คำเดียวกัน"
+
+```
+รากฟันเทียม        commercial · Dental Implant · หน้า 3.2      procedure_pillar (T2)
+รากฟันเทียม ราคา   commercial · Dental Implant · หน้า 5.13.1.7 pricing_page   (T13)
+```
+
+ทุกคอลัมน์ที่ชั้น semantic เป็นเจ้าของตรงกันหมด แล้วคู่นี้ก็ตกไปที่ชั้น volume ซึ่งถูกใช้ตัดสินการ
+แยกที่มีคนตั้งใจแยกไว้แล้ว · smile-scape วัดได้ **19 จาก 21 คู่ K3w หน้าสองฝั่งคนละ `page_category`**
+
+🔴 **ไม่ใช่แค่แถวเกิน** — คู่เดียวที่เกตตัดสินได้เองคือ `ขูดหินปูน ราคา` 15,350 ชนะ `ขูดหินปูน` 12,325
+เกตจึงเสนอให้ปลด `ขูดหินปูน` ลงเป็น semantic **ซึ่งจะยึดชื่อของ procedure_pillar ไปให้หน้าราคา**
+ข้อมูล volume ที่ครบกว่าเดิมจะทำให้ข้อเสนอนั้น*มั่นใจขึ้น* ไม่ได้ทำให้ถูกขึ้น
+
+**Decision:**
+
+1. **`pricing_split` เคลียร์คู่หน้าหลัก-หน้าราคา ก่อนชั้น semantic จะรัน** — เงื่อนไขแคบโดยตั้งใจ:
+   ฝั่งใดฝั่งหนึ่ง (ฝั่งเดียว) เป็น `pricing_page` · `page_category` สองฝั่งต่างกัน · และคีย์ที่อยู่บน
+   หน้าราคาคือคีย์ที่ติด price intent · **หมวดที่ต่างกันแบบอื่นยังส่งให้ operator ทั้งหมด** เพราะ
+   `knowledge_article` กับ `condition_pillar` บน entity เดียวกันแย่งกันเองได้จริง และไม่มีคอลัมน์ไหนบอกว่าใครควรชนะ
+2. **`propose()` อ่าน volume สองคอลัมน์** — `volume_recent_12m` ก่อน · เสมอเมื่อไรใช้ `volume_avg_48m`
+   จากแถว snapshot เดียวกัน · แบตช์คืน 0 ให้คอลัมน์ recent บนหัวคำที่ค่าเฉลี่ย 48 เดือนอยู่หลักพันเป็นเรื่องปกติ
+   (smile-scape 461/525 แถวใน 2026-07-17 · deezy 896 แถวใน 2026-08-12 สูงสุด 90,688) **0 แบบนั้นคือค่าที่ไม่ได้กลับมา ไม่ใช่การวัดว่าไม่มีดีมานด์**
+3. **null ไม่ใช่ 0 และไม่ตัดสินอะไรเลย** — ข้อความเดิม "ไม่มี volume ทั้งสองฝั่ง" ยิงตอนเงื่อนไขจริงคือ
+   `va is None or vb is None` · คู่อย่าง `peri-implantitis` (131) กับ `peri-implantitis วินิจฉัย` (—)
+   จึงอ่านว่าไม่มีอะไรให้เทียบ ทั้งที่ข้างหนึ่งมีเลขมาตลอด
+4. **`--verbose` ต้องแสดงคู่ที่ถูกเคลียร์พร้อมเหตุผล** — ก่อนหน้านี้ร่องรอยเดียวคือตัวเลขนับ
+   กฎที่ตรวจสอบไม่ได้คือกฎที่ไม่มีใครหาบั๊กเจอ
+
+**สภาพจริง 2026-08-26 (วัดสด ทั้งสามแบรนด์):**
+
+```
+smile-scape-clinic   K3w 21→12 · operator 19→10 · cleared 69→78
+deezy-dental         K3w 23→17 · operator 16→ 6 · cleared 283→290
+vth-biodent          K3w 20→17 · operator 13→12 · cleared 58→62
+```
+
+blocking ยัง 0 ทั้งสามแบรนด์ · ไม่มีคู่ไหนย้ายจาก "รายงาน" ไปเป็น "เคลียร์" โดยผิด — บน smile-scape
+มีป้าย pricing split 10 คู่ แต่ยอดเคลียร์ +9 เพราะ `จัดฟัน | ราคาจัดฟัน` เดิมถูกชั้น semantic เคลียร์อยู่แล้ว
+
+**Consequences:** เกตยังเสนออย่างเดียว ไม่เขียน `target_keyword_fp` เหมือนเดิม · `PRICE_INTENT_RE`
+คัดมาจาก `v_seo_keyword_pool.is_price_intent` **แก้ที่ไหนต้องแก้ทั้งสองที่** เพราะเกตอ่านตารางดิบ
+ไม่ได้อ่าน view (ต้องการประวัติ snapshot ที่ view ยุบเหลือแถวเดียว)
+
+**References:** [[DR-059]] (หน้าราคาเป็นหมวดของตัวเอง — DR นี้คือผลที่ตามมาฝั่งเกต) · [[DR-062]] ·
+smile-scape ยังเปิดค้าง: `volume` ที่ว่างไม่ได้ปิดกั้น K3w แต่จะสำคัญตอนจัดลำดับว่าจะเขียนหน้าไหนก่อน
+
+---
 
 ### [DR-063] — `Review` เป็นแท็ก index ไม่ใช่ข้อเท็จจริงว่างานทำอะไร · conduct ชนะ pubtype (2026-08-27) 🔒🩺
 
