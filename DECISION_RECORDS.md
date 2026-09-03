@@ -2,8 +2,8 @@
 
 > **Append-only architectural decision log.** Each record explains WHY a decision was made — not just WHAT.
 
-**Document Version:** 1.39  
-**Last Updated:** 2026-08-28 — DR-064 landed 2026-08-26 (เสนอโดย smile-scape): หน้าราคาที่แยกจากหน้าหลักไม่ใช่คีย์ชนกัน และ volume อ่านสองคอลัมน์ · 2026-08-28 — DR-054 ได้ addendum "page churn" (รายงานโดย deezy): หน้าที่ยังอยู่แต่ `page_fingerprint` ขยับตอนรื้อผัง ทำให้ประวัติแตกสอง id โดยไม่มีอะไรฟ้อง · 2026-08-27 — DR-063 landed 2026-08-27 (รายงานโดย deezy); DR-062 landed 2026-08-26 (เสนอโดย smile-scape); DR-059/060/061 landed 2026-08-24; DR-057/058 landed 2026-08-23; on 2026-08-24 every checkable claim in this file (table name, column name, allowed-value list, threshold, row count, status) was re-run against the live database. Corrections are appended in place and marked *(corrected 2026-08-24 against live schema)* — locked bodies are untouched. A second pass re-queried the corrections themselves and fixed four of them (deezy `page_category` 773→776 and the brand-wide NULL count 192→189; `schema_markup_type` 2,358→2,357 scalar rows / 27→26 distinct values; `periodontal-gum` "0 rows" narrowed to 0 pages and 0 entities, the deprecated cluster row survives; smile-scape's "0 uncited Live pages" flagged as vacuous — that brand has no Live page at all).  
+**Document Version:** 1.40  
+**Last Updated:** 2026-09-04 — DR-065/066 landed 2026-09-04 (เสนอโดย smile-scape): content_topic_tier สำหรับ vertical คลินิก · A3 ไม่ใช้กับลิงก์นำทาง · และ §32.4 ของ DR-030 ได้หมายเหตุแก้: คอลัมน์ Citation Tier เขียนจากสเกลคนละอันกับ Bible 23.1 ที่มันอ้าง · 2026-08-28 — DR-064 landed 2026-08-26 (เสนอโดย smile-scape): หน้าราคาที่แยกจากหน้าหลักไม่ใช่คีย์ชนกัน และ volume อ่านสองคอลัมน์ · 2026-08-28 — DR-054 ได้ addendum "page churn" (รายงานโดย deezy): หน้าที่ยังอยู่แต่ `page_fingerprint` ขยับตอนรื้อผัง ทำให้ประวัติแตกสอง id โดยไม่มีอะไรฟ้อง · 2026-08-27 — DR-063 landed 2026-08-27 (รายงานโดย deezy); DR-062 landed 2026-08-26 (เสนอโดย smile-scape); DR-059/060/061 landed 2026-08-24; DR-057/058 landed 2026-08-23; on 2026-08-24 every checkable claim in this file (table name, column name, allowed-value list, threshold, row count, status) was re-run against the live database. Corrections are appended in place and marked *(corrected 2026-08-24 against live schema)* — locked bodies are untouched. A second pass re-queried the corrections themselves and fixed four of them (deezy `page_category` 773→776 and the brand-wide NULL count 192→189; `schema_markup_type` 2,358→2,357 scalar rows / 27→26 distinct values; `periodontal-gum` "0 rows" narrowed to 0 pages and 0 entities, the deprecated cluster row survives; smile-scape's "0 uncited Live pages" flagged as vacuous — that brand has no Live page at all).  
 **Format:** Reverse chronological (newest first)
 
 ---
@@ -31,6 +31,147 @@
 ---
 
 ## Decisions Log
+
+### [DR-065] — `content_topic_tier` สำหรับคลินิกบริการทางการแพทย์ (2026-09-04) 🔒🩺
+
+**Status:** **🔒 Locked 2026-09-04** — เสนอและลงมือโดย smile-scape-clinic · operator รับหลักการ · รอ deezy/vth ตรวจรับ
+
+**Scope:** **UNIVERSAL** สำหรับ vertical "คลินิกที่ให้บริการรักษา" — `seo_website_page_master.content_topic_tier` + `sensitive_topic_flag`
+
+**Bible Reference:** ขยาย Part 32.2 (ไม่แทนที่) — เพิ่ม vertical ที่ตารางเดิมไม่ครอบ
+
+**Context:**
+
+[[DR-030]] §1 และ Bible §32.2 นิยาม T1–T4 ด้วย**ตัวอย่างโดเมนอาหารเสริม/เครื่องสำอางล้วน** —
+beauty tutorial · recipes · ingredient deep-dive · skin type guide · addiction recovery ·
+banned-ingredient comparison · DR-030 เกิดจาก HP100 (อาหารเสริมหลังบำบัดยาเสพติด)
+**ไม่มีตัวอย่างของคลินิกที่ให้บริการรักษาจริงเลยสักบรรทัด**
+
+และกลไกค่าตั้งต้นระดับแบรนด์ที่ DR-030 อ้างถึงไม่เคยถูกใช้: `brands.compliance_profile` = **NULL
+ทั้ง 20 แบรนด์** · `positioning_mode` = NULL ทั้งสามแบรนด์ทันตกรรม (วัด 2026-09-04)
+
+ผลคือแบรนด์ทันตกรรมสองแบรนด์ตีความคนละแบบโดยไม่มีอะไรตัดสิน:
+deezy-dental กรอก 759 หน้าด้วยกฎ `page_category` ล้วน (service/condition/procedure = T3 ยกกระดาน ·
+insurance/pricing = T4) ขณะที่ smile-scape ไม่กรอกเลยสักหน้า
+
+🔴 **การอ่านแบบ deezy ตั้งบาร์ที่ตัวเองทำไม่ถึง** — 371 หน้า T3 (บาร์ = citation tier 1-2)
+มี **108 หน้าไม่มี citation tier 1-2 สักใบ** และ 99 หน้าไม่มี citation เลย · T4 37 หน้า ไม่มี 6
+
+**Decision:**
+
+**หลักการเดียวที่ tier นี้เกรด:**
+
+> **"ผู้อ่านจะเอาหน้านี้ไปทำอะไรกับร่างกายตัวเอง ตอนที่ไม่มีทันตแพทย์อยู่ตรงนั้น"**
+
+ไม่ใช่ความเสี่ยงเชิงพาณิชย์/โฆษณา (นั่นคือ `legal_review_required` ซึ่งเป็นคอลัมน์ของตัวเอง)
+และไม่ใช่ `page_category` (ซึ่งบอกรูปแบบหน้า ไม่ได้บอกว่าผู้อ่านจะทำอะไร)
+
+**ตารางตัดสิน — ตรวจตามลำดับ หยุดที่ข้อแรกที่ตรง:**
+
+| # | เงื่อนไข | tier | `sensitive_topic_flag` |
+|---|---|---|---|
+| 1 | `page_category ∈ {home, about, contact, branch_landing, doctor_profile, pricing_page}` **และ** `legal_review_required = true` | **T1** | `medium` |
+| 2 | `page_category ∈` เซตเดียวกัน (ที่เหลือ) | **T1** | `none` |
+| 3 | `page_category = insurance_page` — สิทธิ์/ความคุ้มครองของผู้จ่ายรายที่สาม | **T2** | `medium` |
+| 4 | ชน**ยาที่ต้องมีผู้สั่งจ่ายหรือผู้ให้ยาที่มีใบอนุญาต** — ดมยาสลบ · sedation · ยาปฏิชีวนะ · ปรับขนาดยา · botulinum | **T4** | `critical` |
+| 5 | หน้า**ตัดสินความเร่งด่วน** — ฉุกเฉิน · เลือดไม่หยุด · ฝีหนอง · ปวดรุนแรง · สัญญาณเตือน · แพ้ยา | **T3** | `high` |
+| 6 | ประธานของหน้าเป็น**กลุ่มเปราะบาง/ผู้มีโรคประจำตัว** — ตั้งครรภ์ · เด็ก · ผู้สูงอายุ · เบาหวาน · หัวใจ · ยาละลายลิ่มเลือด · มะเร็ง · ไต/ตับ · ภูมิคุ้มกันต่ำ · กลัวหมอฟัน | **T3** | `high` |
+| 7 | หน้าให้**ชุดคำสั่งที่ผู้อ่านลงมือเองที่บ้าน**หลังหัตถการ (aftercare) | **T3** | `high` |
+| 8 | `page_category = condition_pillar` ที่เหลือ — หน้าโรค/อาการ ที่ผู้อ่านใช้ self-triage | **T3** | `high` |
+| 9 | ที่เหลือทั้งหมด — หัตถการ · เทคนิค · วัสดุ · เครื่องมือ · เคส · คู่มือ · การเปรียบเทียบ | **T2** | `medium` |
+
+**เส้นแบ่งที่ทำให้กฎนี้ต่างจากการอ่านด้วย `page_category`:** ข้อ 5–7 ดึงหน้า aftercare / ฉุกเฉิน /
+กลุ่มเปราะบางที่**ฝังอยู่ใน `service_page` และ `knowledge_article`** ขึ้น T3 ขณะที่หน้าเทคนิคผ่าตัดล้วน ๆ
+(CAF · VISTA · Sausage Technique) อยู่ T2 — คนลงมือคือหมอ ไม่ใช่ผู้อ่าน
+
+**สภาพจริง 2026-09-04 (เขียนครบแล้วบน smile-scape 727 หน้า):**
+
+```
+T1 `none`      32   หน้าองค์กร
+T1 `medium`    17   หน้าราคา + รับประกัน ที่ legal_review_required=true
+T2 `medium`   439   insurance 27 + หัตถการ/เทคนิค/วัสดุ/เคส/คู่มือ 412
+T3 `high`     223   ฉุกเฉิน 39 · กลุ่มเปราะบาง 86 · aftercare 32 · condition_pillar 66
+T4 `critical`  16   ยาที่ต้องมีผู้สั่งจ่าย
+              727   compliance_max_tier (generated) เติมครบ · ≥3 = 239 หน้า
+```
+
+🔴 **ทดลองก่อนเขียนแล้วดักได้ 2 จุด — ทั้งคู่เป็น substring collision ที่การอ่านผ่าน ๆ ไม่เห็น:**
+
+1. **`Straumann` มี `trauma` อยู่ข้างใน** (s-**trauma**-nn) ดันหน้าแบรนด์รากเทียม 15 หน้าขึ้น T3 ผิด ·
+   Neodent ติดด้วยเพราะหน้าเขียนว่า "ในเครือ Straumann" · แก้ด้วย word boundary `\mtrauma`
+2. **botulinum ไม่ติดข้อ 4** ทั้งที่เป็นยาควบคุมที่ต้องมีผู้สั่งจ่าย → เพิ่ม `botox|botulinum|โบทูล`
+
+ไล่ substring collision ที่เหลือครบ (`senior` `cyst` `cancer` `ตับ` `สูบ` `บวม` `recovery` `allerg`
+`infection` `radiation` `renal` `hepatic`) — **แมตช์ถูกหมด มีแค่ `trauma` ที่ผิด**
+**ใครนำกฎนี้ไปใช้ ต้องรัน dry-run แล้วอ่านผลก่อนเขียนเสมอ** ชุดคำของแต่ละแบรนด์ชนกันคนละแบบ
+
+**Consequences:**
+
+- ✅ `content_topic_tier` มีกฎที่ทำซ้ำได้สำหรับ vertical คลินิก · ไม่ต้องเดาจากตัวอย่างอาหารเสริม
+- ✅ 239 หน้าที่ `compliance_max_tier ≥ 3` เป็นชุดที่ระบุได้ว่าทำไม ไม่ใช่การเหมาทั้งหมวด
+- ⚠️ **หนี้หลักฐานจะมองเห็นทันที** — smile-scape มี 23 หน้าในโซนบังคับที่ยังไม่มี citation เลย
+  และ 86 หน้าไม่มี citation tier 1-3 · กฎนี้ไม่ได้*สร้าง*หนี้ แต่ทำให้*เห็น*
+- ⚠️ คอลัมน์ Citation Tier ของ §32.4 ใช้สเกลผิด (ดูหมายเหตุแก้ที่ §32.4) — บาร์จริงของแต่ละ tier
+  **ยังเขียนไม่ได้** จนกว่าจะแก้คอลัมน์นั้นด้วยศัพท์ `citation_type`
+- ⚠️ ไม่ครอบ vertical อื่น · ไม่ครอบแถวภาษาอื่น (smile-scape มีแต่ `page_language='th'` ทั้ง 727 แถว)
+  หน้า `/en/` ของ "ราคา All-on-X" คือเคส dental-tourism ตัวจริงที่ต้องตัดสินตอนสร้างแถว
+
+**Open questions (ยังไม่ตัดสิน):**
+
+- §32.4 สเกล citation — ใครรับรองการอ่านใหม่ · ถ้าตัดสินว่าตัวเลขคือของจริง กฎนี้ต้องเขียนบาร์ใหม่
+- `review_type='legal_compliance'` มี **0 แถวใน 2,099** ทั้งเฟเดอเรชัน ทั้งที่ DR-030 เพิ่มเข้า enum
+  ตั้งแต่ 2026-05-20 — T4 16 หน้าจึงเป็นธงที่ยังไม่มีปลายทาง
+- ความเสี่ยงโฆษณาสถานพยาบาล (ภาพก่อน-หลัง · คำรับประกัน · ตารางราคา) ไม่ได้อยู่ในคอลัมน์นี้และ
+  DR นี้ไม่แก้ให้ — ถ้าจะจัดการต้องมีฟิลด์ของตัวเอง
+
+**References:** [[DR-030]] (ตารางเดิมที่ DR นี้ขยาย) · [[DR-057]] §6 (Live = ผ่านการตรวจแล้ว —
+ทำให้ §32.4 เหลือแต่ routing ไม่บล็อกพับลิช) · Bible Part 32 · Bible Part 23.1 (`TIER_BY_TYPE`) ·
+ตารางตัดสินเต็มพร้อม regex: `brands/eywa-smile-scape/content-plan/decisions/draft-dr-content-topic-tier.md`
+
+---
+
+### [DR-066] — A3 anchor-is-page-name ไม่ใช้กับลิงก์นำทาง (2026-09-04) 🔒📐
+
+**Status:** **🔒 Locked 2026-09-04** — เสนอและลงมือโดย smile-scape-clinic · รอ deezy/vth ตรวจรับ
+
+**Scope:** **UNIVERSAL** — **Gate:** `audit-anchor-text.py` (A3) · ไม่แตะข้อมูล
+
+**Context:**
+
+A3 ถามว่า "ข้อความลิงก์เป็นวลีหรือเป็นชื่อเรื่อง" ซึ่งเป็นคำถามที่**มีคำตอบผิดได้เฉพาะกับลิงก์ในเนื้อความ**
+ป้ายเมนูและ breadcrumb **คือ**ชื่อหน้า นั่นคือหน้าที่ของมัน การเขียนใหม่ให้เป็น "วลี" ทำให้การนำทางแย่ลง
+
+เกตไม่เคย select `link_type` มาเลย จึงยิงเหมารวมทุกชนิดลิงก์
+
+**Decision:**
+
+1. **A3 ข้าม `link_type ∈ {navigational, breadcrumb}`** · `link_type` ถูกดึงมาเพื่อการนี้อย่างเดียว
+2. **`--verbose` ต้องแสดงเส้นที่ถูกเคลียร์พร้อมเหตุผล** ตามหลักเดียวกับ [[DR-064]] ข้อ 4
+3. ถ้าแบรนด์ไหนสร้าง `link_type` เชิงนำทางชนิดใหม่ ให้เพิ่มใน `NAV_LINK_TYPES` —
+   ทางเลือกอื่นคือปล่อยให้เมนูของแบรนด์นั้นตกกฎที่เขียนไว้สำหรับร้อยแก้ว
+
+**สภาพจริง 2026-09-04 (วัดสด ทั้งสามแบรนด์ ก่อน-หลัง):**
+
+```
+                         A3 (ก่อน → หลัง)      blocking rows (ก่อน → หลัง)
+smile-scape-clinic          22 →     0              22 →     0
+deezy-dental             3,316 → 2,541           3,375 → 2,600
+vth-biodent                  0 →     0               0 →     0
+```
+
+🔴 **ของ smile-scape เป็น false positive 100%** — ทั้ง 22 เส้นเป็น `navigational`
+(21 child-nav + 1 orphan-close) และเกต **FAIL** อยู่บนมันมาตลอด
+
+เคสที่กฎเขียนไว้จับจริงอยู่ที่ deezy: จาก 3,361 เส้นที่ข้อความลิงก์ = ชื่อหน้า
+**2,434 เส้นเป็น `contextual`** คือลิงก์กลางเนื้อความที่อ่านแล้วเหมือนชื่อเรื่องหล่นลงมาจริง ๆ
+กฎใหม่เก็บของพวกนั้นไว้ครบ ตัดเฉพาะ 775 เส้นที่ป้ายควรเป็นชื่อหน้าอยู่แล้ว
+
+**Consequences:** เกต anchor ไม่มี blocking เหลือบน smile-scape เป็นครั้งแรก ·
+deezy ยังเหลือ 2,600 blocking ซึ่งเป็นหนี้จริงของเขา ไม่ใช่ของที่กฎสร้างขึ้น
+
+**References:** [[DR-064]] (รูปแบบเดียวกัน — เกตอ่านฟิลด์เดียวโดยไม่เห็นฟิลด์ที่บอกว่ากฎใช้ได้ไหม)
+
+---
 
 ### [DR-064] — หน้าราคาที่แยกจากหน้าหลักไม่ใช่คีย์ชนกัน · และ volume อ่านสองคอลัมน์ (2026-08-26) 🔒📐
 
@@ -2024,7 +2165,22 @@ ALTER TABLE seo_editorial_reviews
 
 #### 3. Editorial Review Workflow Mapping
 
-| `compliance_max_tier` | Required Reviewers | Citation Tier (Bible 23.1) | Schema.org Type Restrictions |
+> 🔴 **คอลัมน์ Citation Tier ข้างล่างนี้เขียนจากสเกลคนละอัน — corrected 2026-09-04 by smile-scape-clinic.**
+> หัวคอลัมน์อ้าง Bible 23.1 แต่ตัวเลขทุกแถวขัดกับวงเล็บในบรรทัดเดียวกัน เมื่อแปลด้วยสเกลจริง
+> (`TIER_BY_TYPE` ใน `run-citation-qa-gates.py`: 1 systematic_review/meta_analysis · 2 rct ·
+> 3 clinical_guideline · 4 regulatory_document · 5 cohort/case_control/cross_sectional/case_series ·
+> 6 textbook/expert_opinion/case_report/editorial):
+>
+> - T3 เขียน "1-2 (PubMed, **clinical guidelines**)" แต่ `clinical_guideline` **คือ tier 3** — ตัวเลขตัดสิ่งที่วงเล็บระบุออก
+> - T4 เขียน "1 only (**gov** + clinical)" แต่ `regulatory_document` **คือ tier 4** — ตัดสิ่งที่วงเล็บระบุออกเช่นกัน
+> - T1 เขียน "3-4 (**popular science** OK)" แต่ tier 3-4 คือ guideline + regulatory ซึ่งเป็นแหล่งคุณภาพสูง
+>   ส่วน popular science คือ tier 6
+>
+> อ่านว่า **วงเล็บคือเจตนา ตัวเลขคือสเกล 4 ระดับที่ไม่มีอยู่จริง** · ยังไม่มีเกตไหนอ่าน `content_topic_tier`
+> (`grep -rl` ในโฟลเดอร์เกตได้ 0 ไฟล์) ข้อบกพร่องนี้จึงยังไม่เคยกัด แต่จะกัดวันที่มีคนทำบาร์ตามตัวบท
+> **ต้องเขียนคอลัมน์นี้ใหม่ด้วยศัพท์ `citation_type` ไม่ใช่ตัวเลข** ก่อนมีใครนำไปบังคับใช้
+
+| **compliance_max_tier** | Required Reviewers | Citation Tier (Bible 23.1) 🔴 *ดูหมายเหตุด้านบน* | Schema.org Type Restrictions |
 |---|---|---|---|
 | **1** | optional pharmacist/nutritionist | 3-4 (popular science OK) | any non-restricted |
 | **2** | pharmacist or nutritionist recommended | 2-3 (peer-reviewed preferred) | `DietarySupplement`, `Product`, no `Drug` |

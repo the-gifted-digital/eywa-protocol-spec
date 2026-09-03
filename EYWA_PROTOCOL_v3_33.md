@@ -27752,7 +27752,20 @@ Adds `'legal_compliance'` to existing CHECK constraint (now 7 values: medical/ed
 
 ## 32.4 Editorial Review Workflow Mapping
 
-| `compliance_max_tier` | Required Reviewers | Citation Tier (Bible §23.1) | Schema.org Restrictions |
+> 🔴 **คอลัมน์ Citation Tier ข้างล่างเขียนจากสเกลคนละอันกับ §23.1 ที่มันอ้าง — corrected 2026-09-04 by smile-scape-clinic.**
+> สเกลจริงคือ `TIER_BY_TYPE` ใน `scripts/citation-gates/run-citation-qa-gates.py`:
+> 1 systematic_review/meta_analysis · 2 rct · 3 clinical_guideline · 4 regulatory_document ·
+> 5 cohort/case_control/cross_sectional/case_series · 6 textbook/expert_opinion/case_report/editorial
+>
+> ทุกแถวตัวเลขขัดกับวงเล็บในบรรทัดเดียวกัน: T3 "1-2 (PubMed, **clinical guidelines**)" ตัด
+> `clinical_guideline` ที่เป็น tier 3 ออก · T4 "1 only (**gov** + clinical)" ตัด `regulatory_document`
+> ที่เป็น tier 4 ออก · T1 "3-4 (**popular science** OK)" ชี้ไปที่ guideline+regulatory ซึ่งเป็นแหล่ง
+> คุณภาพสูง ส่วน popular science คือ tier 6
+>
+> ยังไม่มีเกตไหนอ่าน `content_topic_tier` ข้อบกพร่องนี้จึงยังไม่เคยกัด **ต้องเขียนคอลัมน์นี้ใหม่
+> ด้วยศัพท์ `citation_type` ไม่ใช่ตัวเลข** ก่อนมีใครนำไปบังคับใช้ · ดู DR-066 References
+
+| `compliance_max_tier` | Required Reviewers | Citation Tier (Bible §23.1) 🔴 *ดูหมายเหตุด้านบน* | Schema.org Restrictions |
 |---|---|---|---|
 | **1** | optional pharmacist/nutritionist | 3-4 (popular science OK) | any non-restricted |
 | **2** | pharmacist OR nutritionist recommended | 2-3 (peer-reviewed preferred) | `DietarySupplement`, `Product`, no `Drug` |

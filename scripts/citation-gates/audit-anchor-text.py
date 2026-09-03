@@ -16,7 +16,9 @@ text agrees. These are the checks:
   BLOCKING
     A1  empty anchor
     A2  planning note leaked into the anchor (TBD, canonical, revision codes)
-    A3  anchor is the target's page_name verbatim — a title, not a phrase
+    A3  anchor is the target's page_name verbatim — a title, not a phrase.
+        Skips `navigational` and `breadcrumb` links: for those the title IS the
+        correct label. See NAV_LINK_TYPES.
     A4  anchor longer than MAX_LEN — house rule, keeps anchors sentence-sized
     A5  declared `exact` but the anchor does not contain the target keyword
 
@@ -47,6 +49,23 @@ MONOTONY_MIN_INBOUND = 5
 
 NOISE = re.compile(r"TBD|operator|canonical|rev\s*\d|v\d+\.\d+|20\d\d-\d\d|→|::|\bWave\b|⚠|🔴", re.I)
 
+# A3 asks whether an anchor is a phrase or a title. That question only has a wrong
+# answer for a link sitting inside prose. A menu entry and a breadcrumb crumb ARE the
+# page's title — that is what they are for, and rewriting them to a "phrase" makes the
+# navigation worse, not better.
+#
+# Reported by smile-scape-clinic on 2026-09-04: all 22 of its A3 rows are
+# `navigational` (21 child-nav + 1 orphan-close), i.e. 100% false positive, and the
+# gate was FAILing on them. The same query across the federation finds the case the
+# rule was actually written for sitting on another brand: of deezy-dental's 3,361
+# anchor-equals-page-name rows, 2,434 are `contextual` — in-body links that really do
+# read as a dropped title. Splitting on link_type keeps every one of those and drops
+# only the rows where the title is the correct label.
+#
+# link_type is fetched for this and nothing else. If a brand invents a new navigational
+# link_type, add it here — the alternative is that its menus start failing a prose rule.
+NAV_LINK_TYPES = frozenset(("navigational", "breadcrumb"))
+
 
 def keyword_of(page):
     v = page.get("target_keyword_fp")
@@ -73,7 +92,7 @@ def main():
     links = [l for l in fpf.fetch(
         "seo_page_internal_links",
         "id,from_page_fp,to_page_fp,anchor_text,anchor_variant_type,"
-        "surrounding_text_snippet,status",
+        "surrounding_text_snippet,status,link_type",
         "&limit=40000", k)
         if l["from_page_fp"] in pages and pages[l["from_page_fp"]].get("brand_id") == a.brand
         and l.get("status") != "deprecated"]
@@ -90,6 +109,7 @@ def main():
 
     findings = collections.defaultdict(list)
     inbound = collections.defaultdict(list)
+    cleared = []
 
     for l in links:
         anchor = (l.get("anchor_text") or "").strip()
@@ -103,7 +123,11 @@ def main():
             findings["A2_planning_note"].append((l["from_page_fp"], l["to_page_fp"], anchor))
         name = (target.get("page_name") or "").strip()
         if name and anchor == name:
-            findings["A3_is_page_name"].append((l["from_page_fp"], l["to_page_fp"], anchor))
+            if (l.get("link_type") or "").strip().lower() in NAV_LINK_TYPES:
+                cleared.append("%s → %s | %s (%s — ป้ายเมนู/breadcrumb ควรเป็นชื่อหน้า)"
+                               % (l["from_page_fp"], l["to_page_fp"], anchor, l.get("link_type")))
+            else:
+                findings["A3_is_page_name"].append((l["from_page_fp"], l["to_page_fp"], anchor))
         if len(anchor) > MAX_LEN:
             findings["A4_too_long"].append((l["from_page_fp"], l["to_page_fp"],
                                             "%d chars: %s" % (len(anchor), anchor)))
@@ -144,6 +168,15 @@ def main():
             print("          ... %d more (--verbose for all)" % (len(rows) - len(shown)))
     print("-" * 78)
     print("blocking rows: %d" % blocking)
+    # กฎที่เคลียร์เงียบ ๆ คือกฎที่ไม่มีใครหาบั๊กเจอ — เหตุผลเดียวกับที่
+    # check-keyword-collisions พิมพ์รายการ cleared ของมัน (DR-064 ข้อ 4)
+    if cleared:
+        if a.verbose:
+            print("\nA3 เคลียร์ให้ %d เส้น (ลิงก์นำทาง — ป้ายควรเป็นชื่อหน้า):" % len(cleared))
+            for c in sorted(cleared):
+                print("  · %s" % c)
+        else:
+            print("  A3 เคลียร์ให้ %d เส้นที่เป็นลิงก์นำทาง (--verbose เพื่อดู)" % len(cleared))
     return 1 if blocking else 0
 
 
