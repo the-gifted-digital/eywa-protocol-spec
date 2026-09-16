@@ -3,7 +3,7 @@
 > **Append-only architectural decision log.** Each record explains WHY a decision was made — not just WHAT.
 
 **Document Version:** 1.40  
-**Last Updated:** 2026-09-04 — DR-065/066 landed 2026-09-04 (เสนอโดย smile-scape): content_topic_tier สำหรับ vertical คลินิก · A3 ไม่ใช้กับลิงก์นำทาง · และ §32.4 ของ DR-030 ได้หมายเหตุแก้: คอลัมน์ Citation Tier เขียนจากสเกลคนละอันกับ Bible 23.1 ที่มันอ้าง · 2026-08-28 — DR-064 landed 2026-08-26 (เสนอโดย smile-scape): หน้าราคาที่แยกจากหน้าหลักไม่ใช่คีย์ชนกัน และ volume อ่านสองคอลัมน์ · 2026-08-28 — DR-054 ได้ addendum "page churn" (รายงานโดย deezy): หน้าที่ยังอยู่แต่ `page_fingerprint` ขยับตอนรื้อผัง ทำให้ประวัติแตกสอง id โดยไม่มีอะไรฟ้อง · 2026-08-27 — DR-063 landed 2026-08-27 (รายงานโดย deezy); DR-062 landed 2026-08-26 (เสนอโดย smile-scape); DR-059/060/061 landed 2026-08-24; DR-057/058 landed 2026-08-23; on 2026-08-24 every checkable claim in this file (table name, column name, allowed-value list, threshold, row count, status) was re-run against the live database. Corrections are appended in place and marked *(corrected 2026-08-24 against live schema)* — locked bodies are untouched. A second pass re-queried the corrections themselves and fixed four of them (deezy `page_category` 773→776 and the brand-wide NULL count 192→189; `schema_markup_type` 2,358→2,357 scalar rows / 27→26 distinct values; `periodontal-gum` "0 rows" narrowed to 0 pages and 0 entities, the deprecated cluster row survives; smile-scape's "0 uncited Live pages" flagged as vacuous — that brand has no Live page at all).  
+**Last Updated:** 2026-09-17 — DR-067 landed 2026-09-17 (เสนอโดย vth): หนึ่ง DOM ต่อคอมโพเนนต์ · h1 พอดีหนึ่ง · `data-cta-id` ไม่ซ้ำในหน้า — เกตห้ามยกเว้นโดย pattern · 2026-09-04 — DR-065/066 landed 2026-09-04 (เสนอโดย smile-scape): content_topic_tier สำหรับ vertical คลินิก · A3 ไม่ใช้กับลิงก์นำทาง · และ §32.4 ของ DR-030 ได้หมายเหตุแก้: คอลัมน์ Citation Tier เขียนจากสเกลคนละอันกับ Bible 23.1 ที่มันอ้าง · 2026-08-28 — DR-064 landed 2026-08-26 (เสนอโดย smile-scape): หน้าราคาที่แยกจากหน้าหลักไม่ใช่คีย์ชนกัน และ volume อ่านสองคอลัมน์ · 2026-08-28 — DR-054 ได้ addendum "page churn" (รายงานโดย deezy): หน้าที่ยังอยู่แต่ `page_fingerprint` ขยับตอนรื้อผัง ทำให้ประวัติแตกสอง id โดยไม่มีอะไรฟ้อง · 2026-08-27 — DR-063 landed 2026-08-27 (รายงานโดย deezy); DR-062 landed 2026-08-26 (เสนอโดย smile-scape); DR-059/060/061 landed 2026-08-24; DR-057/058 landed 2026-08-23; on 2026-08-24 every checkable claim in this file (table name, column name, allowed-value list, threshold, row count, status) was re-run against the live database. Corrections are appended in place and marked *(corrected 2026-08-24 against live schema)* — locked bodies are untouched. A second pass re-queried the corrections themselves and fixed four of them (deezy `page_category` 773→776 and the brand-wide NULL count 192→189; `schema_markup_type` 2,358→2,357 scalar rows / 27→26 distinct values; `periodontal-gum` "0 rows" narrowed to 0 pages and 0 entities, the deprecated cluster row survives; smile-scape's "0 uncited Live pages" flagged as vacuous — that brand has no Live page at all).  
 **Format:** Reverse chronological (newest first)
 
 ---
@@ -31,6 +31,65 @@
 ---
 
 ## Decisions Log
+
+### [DR-067] — หนึ่ง DOM ต่อคอมโพเนนต์ · หนึ่ง h1 ต่อหน้า · หนึ่ง `data-cta-id` ต่อหน้า (2026-09-17) 🔒📐🎯
+
+**Status:** **🔒 Locked 2026-09-17** — เสนอและลงมือโดย vth-biodent · รอ deezy/smile-scape ตรวจรับ
+
+**Scope:** **UNIVERSAL** — **Gates:** `scan:headings` · `scan:tracking` · ไม่แตะข้อมูล
+
+**Context:**
+
+`ServiceHero` (T5) ถูก "redesign เฉพาะมือถือ" โดยวาง DOM ชุดที่สองซ้อนลงไป (`md:hidden` / `hidden md:flex`)
+แทนการ restyle ตัวเดิม แต่ละชุดมี `<h1>` ปุ่ม CTA หลัก body ราคา และลิงก์รองของตัวเอง
+42 หน้า service ของ vth จึงส่ง `<h1>` สองตัวและ `data-cta-id="servicehero-primary"` สองปุ่มต่อหน้า
+มาหลายเดือน · `HeroSlider` หน้าแรก copy pattern นี้ไปทั้งดุ้น
+
+เกตทั้งสองตัวผ่านตลอด: `scan:headings` มี exemption เขียนไว้ให้ "responsive dual-skin hero" ตรง ๆ
+และ [[DR-055]] ข้อ 3 ห้าม id ซ้ำ**ข้ามตำแหน่ง**เท่านั้น ไม่ได้พูดถึงซ้ำ**ในหน้าเดียวกัน**
+
+ผลที่ต่างกัน: h1 สองตัวไม่มีผลต่อ Google และ AT เห็นตัวเดียว (อีกตัว `display:none`) — เป็นเรื่องมาตรฐาน
+(WHATWG ถอด document outline ออกจากสเปคปี 2022 · MDN: avoid more than one h1) และ Semrush เตือน
+ส่วน CTA id ซ้ำ**เป็นข้อบกพร่องของข้อมูล**: ปุ่มสองปุ่ม id เดียว location เดียว แยกไม่ออกใน bond join
+และนับซ้ำได้ ตัวเลขย้อนหลังของ id นั้นต้องถูกอ่านด้วยความระวัง
+
+**Decision:**
+
+1. **คอมโพเนนต์ที่ถือเนื้อหา render เนื้อหาครั้งเดียว** ทุก breakpoint · การจัด layout ต่างจอทำด้วย CSS
+   (`text-center md:text-left`, `w-full md:w-auto`, `order-*`, grid reorder) ไม่ใช่ DOM ชุดที่สอง ·
+   ชั้นตกแต่งล้วน (พื้นหลัง, gradient, blob, scrim) แยกตามจอได้ **ต่อเมื่อ `aria-hidden="true"`**
+2. **`<main>` มี `<h1>` หนึ่งตัวพอดี** · **`data-cta-id` ค่าหนึ่งปรากฏได้ไม่เกินหนึ่งครั้งต่อหน้า** —
+   ขยาย [[DR-055]] ข้อ 3 จาก "ห้ามซ้ำข้ามตำแหน่ง" เป็น "ห้ามซ้ำในหน้า" ด้วย
+3. **ข้อความต่างกันตามจอได้ ภายใต้ h1 ตัวเดียว** — สามระดับ เรียงจากที่ควรใช้ก่อน:
+   - ตัดบรรทัด/เว้นวรรค: `<br class="md:hidden">` หรือ `text-wrap: balance` — ไม่มีข้อความซ้ำใน DOM เลย
+   - ข้อความสั้น/ยาวคนละแบบ: span สองชุดใน h1 เดียว `<span class="md:hidden">…</span><span class="hidden md:inline">…</span>`
+     AT อ่านชุดเดียว (อีกชุด `display:none`) · Google เห็น textContent ทั้งสองชุด → **ต้องมีความหมายและคีย์เวิร์ดเดียวกัน**
+     ต่างได้แค่ความยาว ลำดับคำ หรือการเน้น ห้ามเป็นคนละ headline
+   - คนละหัวข้อจริง ๆ ตามจอ: **ห้าม** — นั่นคือคนละหน้า
+4. **เกตห้ามยกเว้นโดย pattern** (`md:hidden` + `md:flex` ฯลฯ) · ถ้าต้องยกเว้นคอมโพเนนต์ที่ยังแก้ไม่ทัน
+   ให้ยกเว้น**โดย marker ที่ตั้งชื่อ** (เช่น `data-hero-slider`) และจดไว้ในเกตว่ารอแก้อะไร —
+   exemption โดย pattern คือช่องที่เทมเพลตใหม่หลบเข้าไปได้โดยไม่มีใครเห็น
+5. **เกตที่แก้ต้องถูกพิสูจน์ว่ากัด**: สลับคอมโพเนนต์เก่ากลับ → ต้องแดง · ตัวใหม่ → ต้องเขียว ·
+   บันทึกตัวเลขทั้งสองข้างไว้ใน commit
+
+**สภาพจริง 2026-09-17 (vth · ก่อน → หลัง `dd911b9`):**
+
+```
+                            h1/หน้า     servicehero-primary/หน้า    scan:headings    scan:tracking
+42 หน้า service (T5)        2 → 1       2 → 1                       ผ่าน(ยกเว้น) → ผ่านจริง   ผ่าน(ไม่เช็ค) → ผ่านจริง
+พิสูจน์เกตกัด (สลับตัวเก่ากลับ)         52 หน้า H1x2 · servicehero-primary ×2 ทุกหน้า → EXIT 1 ทั้งคู่
+หน้าแรก HeroSlider          2 (ยกเว้นโดยชื่อ data-hero-slider / heroslider-cta — ค้าง)
+ภาพ hero ต่อจอ              1 → 1 (640w มือถือ / 1600w desktop · <picture media> ไม่เปลี่ยน)
+```
+
+**Consequences:** deezy และ smile-scape ต้องรันสองคำสั่งใน BROADCAST-2026-09-17 บน dist ของตัวเอง ·
+ถ้าเคย copy `ServiceHero`/`HeroSlider` ไป มีของนี้แน่ · ตัวเลข Tsaheylu ของ id ที่เคยซ้ำ ถือว่าไม่น่าเชื่อถือ
+จนกว่าจะเทียบกับวันที่แก้ · เกตของแต่ละแบรนด์ต้องได้สองเช็คใหม่ (h1 พอดี 1 · id ไม่ซ้ำในหน้า) และถอด exemption แบบ pattern
+
+**References:** [[DR-055]] (คำศัพท์ CTA · ข้อ 3 ที่ DR นี้ขยาย) · [[DR-054]] (Tsaheylu — ทำไม id ซ้ำถึงเป็นเรื่องข้อมูล ไม่ใช่เรื่องความสวยงาม) ·
+BROADCAST-2026-09-17-one-dom-per-hero.md · vth `dd911b9`
+
+---
 
 ### [DR-065] — `content_topic_tier` สำหรับคลินิกบริการทางการแพทย์ (2026-09-04) 🔒🩺
 
