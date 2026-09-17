@@ -270,7 +270,7 @@ These are the 4 Phase B output files per DR-022 (Lean Phase B).
 cp ../eywa-vth-biodent/docs/CONTENT-WRITING-SOP.md       docs/
 cp ../eywa-vth-biodent/docs/template-block-standards.md  docs/
 cp ../eywa-vth-biodent/web/scripts/check-keyword-rules.mjs  web/scripts/
-cp ../eywa-vth-biodent/web/scripts/page-brief.mjs           web/scripts/
+# page-brief.mjs ไม่ต้องคัดลอกแล้ว (DR-068) — ใช้สคริปต์กลาง: ดูกล่อง "brief กลาง" ด้านล่าง
 cp ../eywa-vth-biodent/web/scripts/keyword-density.mjs      web/scripts/
 cp ../eywa-vth-biodent/web/scripts/stamp-live.mjs           web/scripts/
 ```
@@ -279,12 +279,28 @@ cp ../eywa-vth-biodent/web/scripts/stamp-live.mjs           web/scripts/
 
 | # | ปรับอะไร | ทำไม |
 |---|---|---|
-| 1 | `brand_id` · fingerprint prefix · `ilike('brand', '%X%')` ในทุกสคริปต์ | ไม่ปรับ = อ่านข้อมูลแบรนด์อื่น |
+| 1 | `brand_id` · fingerprint prefix · `ilike('brand', '%X%')` ในสคริปต์ที่ยังเป็นสำเนาต่อแบรนด์ (`check-keyword-rules` · `keyword-density` · `stamp-live`) — **ไม่ใช่ `page-brief` ซึ่งเป็นสคริปต์กลางแล้ว (DR-068)** | ไม่ปรับ = อ่านข้อมูลแบรนด์อื่น · `ilike '%smile%'` เคยจับ "TC Smile Dental" |
 | 2 | **§A ยิงคิวรีใหม่ทั้งหมด** — ห้ามลอกตัวเลข | สภาพข้อมูลแต่ละแบรนด์ไม่เหมือนกัน และตัวเลขเน่าเร็ว (PAMREL P4) |
 | 3 | **§B ตรวจ layout ของแบรนด์เองว่า block ไหนไม่ render** | `grep -rl "<Component>" web/src/layouts/templates/` · VTH render `crisis` 2 template · Deezy 3 — **ต่างกันจริง** (P5) |
 | 4 | B11 exempt pattern ให้ตรงผัง section ของแบรนด์ | VTH = `^vth-9` · Deezy = `^deezy-(8\|9)\.` เพราะ §2.5 ของ Deezy คือ Medical Team ไม่ใช่ Local |
 | 5 | ตัดตัวอย่าง/บทเรียนที่เป็นของแบรนด์อื่นออก | เอกสารที่เล่าเคสของแบรนด์อื่นทำให้คนเขียนเชื่อผิด |
 | 6 | `stamp-live.mjs` — `BRAND` · `SITE` (host **production** ไม่ใช่ preview/staging) · `SKIP` (locale ทั้งหมด + route ที่ไม่ใช่แถวใน page_master เช่น `/lp/*` `/preview/*`) | `/lp/dental-implant/` มี slug ท้ายสุดเป็น `dental-implant` ซึ่งเป็นหน้าจริงอีกหน้า — ไม่ SKIP จะเขียนทับ canonical ของหน้านั้น |
+
+
+#### 📝 brief กลาง (DR-068 · 2026-09-17)
+
+`page-brief.mjs` ไม่ใช่ไฟล์ที่คัดลอกอีกต่อไป — สำเนาเดียวอยู่ที่ `eywa-protocol-spec/scripts/writer-brief/` รับ `--brand` และอนุมานค่าเฉพาะแบรนด์จากข้อมูล สิ่งที่แบรนด์ใหม่ต้องทำมีอย่างเดียว:
+
+```bash
+# 1. บอกสคริปต์กลางว่าแบรนด์นี้มีข้อยกเว้น/ข้อห้ามอะไร (ทุก key optional)
+cat > ../../eywa-protocol-spec/scripts/writer-brief/brands/<brand_id>.json <<'JSON'
+{ "local_sections": "^<prefix>-9", "forbidden_topics": [], "docs": { "sop": "docs/CONTENT-WRITING-SOP.md", "blocks": "docs/template-block-standards.md" } }
+JSON
+# 2. รันจาก web/ ของแบรนด์ (ให้สคริปต์เห็น src/lib/template-keys.ts + layouts)
+cd web && npm run brief -- <page_fingerprint>
+```
+
+เอกสาร 2 ไฟล์ (`CONTENT-WRITING-SOP.md` · `template-block-standards.md`) **ยังต้องคัดลอกและปรับ** — สคริปต์พ่นข้อมูล เอกสารบอกวิธีเขียน (Pamrel §4 สามชั้น)
 
 #### ✅ รันก่อนเขียนหน้าแรกเสมอ
 
@@ -292,7 +308,7 @@ cp ../eywa-vth-biodent/web/scripts/stamp-live.mjs           web/scripts/
 cd web
 npm run check:keywords                              # exit 1 ถ้ามีหน้าไหน target ชน B-rule
 #   key มาจาก .secrets/supabase.env — อย่าพิมพ์ key ลงบรรทัดคำสั่ง มันตกไปอยู่ใน shell history
-npm run brief -- <page_fingerprint>                 # ใบสั่งงานของหน้าแรก
+node ../../eywa-protocol-spec/scripts/writer-brief/page-brief.mjs --brand <brand_id> <page_fingerprint>   # ใบสั่งงานของหน้าแรก (สคริปต์กลาง DR-068 · รันจาก web/ เพื่อให้เห็น layout)
 ```
 
 > **Deezy รัน `check:keywords` ครั้งแรกเจอ 5 หน้าทันที** (3×B11 · 1×B3 · 1×B6) หลังจากที่กฎเหล่านั้นประกาศไว้เฉย ๆ มาหลายเดือน **สมมติว่าแบรนด์ใหม่ก็มี** จนกว่าเกตจะบอกว่าไม่มี
@@ -300,7 +316,7 @@ npm run brief -- <page_fingerprint>                 # ใบสั่งงา�
 #### เพิ่มใน `web/package.json`
 
 ```json
-"brief":          "node --env-file-if-exists=../.secrets/supabase.env scripts/page-brief.mjs",
+"brief":          "node --env-file-if-exists=../.secrets/supabase.env ../../eywa-protocol-spec/scripts/writer-brief/page-brief.mjs --brand <brand_id>",
 "check:keywords": "node --env-file-if-exists=../.secrets/supabase.env scripts/check-keyword-rules.mjs",
 "check:density":  "node scripts/keyword-density.mjs",
 "stamp:live":     "node --env-file-if-exists=../.secrets/supabase.env scripts/stamp-live.mjs"

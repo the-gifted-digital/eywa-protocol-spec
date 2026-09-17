@@ -2,8 +2,8 @@
 
 > **Append-only architectural decision log.** Each record explains WHY a decision was made — not just WHAT.
 
-**Document Version:** 1.40  
-**Last Updated:** 2026-09-17 — DR-067 landed 2026-09-17 (เสนอโดย vth): หนึ่ง DOM ต่อคอมโพเนนต์ · h1 พอดีหนึ่ง · `data-cta-id` ไม่ซ้ำในหน้า — เกตห้ามยกเว้นโดย pattern · 2026-09-04 — DR-065/066 landed 2026-09-04 (เสนอโดย smile-scape): content_topic_tier สำหรับ vertical คลินิก · A3 ไม่ใช้กับลิงก์นำทาง · และ §32.4 ของ DR-030 ได้หมายเหตุแก้: คอลัมน์ Citation Tier เขียนจากสเกลคนละอันกับ Bible 23.1 ที่มันอ้าง · 2026-08-28 — DR-064 landed 2026-08-26 (เสนอโดย smile-scape): หน้าราคาที่แยกจากหน้าหลักไม่ใช่คีย์ชนกัน และ volume อ่านสองคอลัมน์ · 2026-08-28 — DR-054 ได้ addendum "page churn" (รายงานโดย deezy): หน้าที่ยังอยู่แต่ `page_fingerprint` ขยับตอนรื้อผัง ทำให้ประวัติแตกสอง id โดยไม่มีอะไรฟ้อง · 2026-08-27 — DR-063 landed 2026-08-27 (รายงานโดย deezy); DR-062 landed 2026-08-26 (เสนอโดย smile-scape); DR-059/060/061 landed 2026-08-24; DR-057/058 landed 2026-08-23; on 2026-08-24 every checkable claim in this file (table name, column name, allowed-value list, threshold, row count, status) was re-run against the live database. Corrections are appended in place and marked *(corrected 2026-08-24 against live schema)* — locked bodies are untouched. A second pass re-queried the corrections themselves and fixed four of them (deezy `page_category` 773→776 and the brand-wide NULL count 192→189; `schema_markup_type` 2,358→2,357 scalar rows / 27→26 distinct values; `periodontal-gum` "0 rows" narrowed to 0 pages and 0 entities, the deprecated cluster row survives; smile-scape's "0 uncited Live pages" flagged as vacuous — that brand has no Live page at all).  
+**Document Version:** 1.41  
+**Last Updated:** 2026-09-17 — DR-068 proposed 2026-09-17 (เสนอโดย smile-scape): writer brief เป็นสคริปต์กลาง `scripts/writer-brief/` รับ `--brand` · เลิกคัดลอก `page-brief.mjs` ต่อแบรนด์ · DR-067 landed 2026-09-17 (เสนอโดย vth): หนึ่ง DOM ต่อคอมโพเนนต์ · h1 พอดีหนึ่ง · `data-cta-id` ไม่ซ้ำในหน้า — เกตห้ามยกเว้นโดย pattern · 2026-09-04 — DR-065/066 landed 2026-09-04 (เสนอโดย smile-scape): content_topic_tier สำหรับ vertical คลินิก · A3 ไม่ใช้กับลิงก์นำทาง · และ §32.4 ของ DR-030 ได้หมายเหตุแก้: คอลัมน์ Citation Tier เขียนจากสเกลคนละอันกับ Bible 23.1 ที่มันอ้าง · 2026-08-28 — DR-064 landed 2026-08-26 (เสนอโดย smile-scape): หน้าราคาที่แยกจากหน้าหลักไม่ใช่คีย์ชนกัน และ volume อ่านสองคอลัมน์ · 2026-08-28 — DR-054 ได้ addendum "page churn" (รายงานโดย deezy): หน้าที่ยังอยู่แต่ `page_fingerprint` ขยับตอนรื้อผัง ทำให้ประวัติแตกสอง id โดยไม่มีอะไรฟ้อง · 2026-08-27 — DR-063 landed 2026-08-27 (รายงานโดย deezy); DR-062 landed 2026-08-26 (เสนอโดย smile-scape); DR-059/060/061 landed 2026-08-24; DR-057/058 landed 2026-08-23; on 2026-08-24 every checkable claim in this file (table name, column name, allowed-value list, threshold, row count, status) was re-run against the live database. Corrections are appended in place and marked *(corrected 2026-08-24 against live schema)* — locked bodies are untouched. A second pass re-queried the corrections themselves and fixed four of them (deezy `page_category` 773→776 and the brand-wide NULL count 192→189; `schema_markup_type` 2,358→2,357 scalar rows / 27→26 distinct values; `periodontal-gum` "0 rows" narrowed to 0 pages and 0 entities, the deprecated cluster row survives; smile-scape's "0 uncited Live pages" flagged as vacuous — that brand has no Live page at all).  
 **Format:** Reverse chronological (newest first)
 
 ---
@@ -31,6 +31,43 @@
 ---
 
 ## Decisions Log
+
+### [DR-068] — Writer brief เป็นสคริปต์กลาง brand-agnostic ใน protocol repo (2026-09-17) 📝🧬
+
+**Status:** **Proposed → Accepted เมื่อผ่าน 3 แบรนด์** (เสนอโดย smile-scape · ทดสอบ smile-scape / vth-biodent / deezy-dental ในวันเดียวกัน)  
+**Bible Reference:** Pamrel_Content_Writing_SOP §1 ขั้น 1 `brief` · §4 สัญญาของเกต  
+**Schema Reference:** v1.23 (อ่านอย่างเดียว ไม่แตะ schema)
+
+**Context:**
+
+Pamrel SOP §4 กำหนดชั้นสาม: *สเปกกลาง = กฎ · เอกสารแบรนด์ = วิธีทำกับข้อมูลจริง · สคริปต์ = ตัวบังคับ* — แต่สคริปต์ `brief` (ใบสั่งงานต่อหน้า) ถูกทำครั้งแรกที่ VTH โดย hardcode `BRAND_ID`/`vth-`/`ilike('brand','%VTH%')` ไว้ในไฟล์ แล้ว `NEW_BRAND_BOOTSTRAP.md` Step 5.5 สั่งให้แบรนด์ใหม่ **คัดลอกไฟล์ไปแก้ 5 จุด "ไม่ปรับแล้วสคริปต์จะโกหกเงียบ ๆ"** ผลจริง 2026-09-17: VTH มีสคริปต์ · Deezy ไม่มี (เขียนมือจากเอกสาร) · smile-scape ไม่มีทั้งสคริปต์และเอกสาร — สามแบรนด์ สามสถานะ กับสิ่งที่สเปกบอกว่าต้องมีเหมือนกัน
+
+นี่คือชั้นเดียวกับที่ citation gates เคยเป็นก่อน 2026-08-24 (สำเนา 4 ที่ 3 เวอร์ชัน) และแก้ด้วยการย้ายเข้า `scripts/citation-gates/` รับ `--brand` — วิธีเดียวกันใช้ได้ที่นี่ เพราะทุกอย่างที่ brief อ่านอยู่ในตารางแชร์ที่มีคอลัมน์ `brand_id` อยู่แล้ว
+
+**Decision:**
+
+1. **`scripts/writer-brief/page-brief.mjs` เป็นสำเนาเดียว** — รับ `--brand <brand_id>` และ `<page_fingerprint|slug|sitemap_node_id>` · ไม่มี npm dependency (PostgREST ผ่าน `fetch`) จึงรันจากโฟลเดอร์ไหนก็ได้ · คีย์อ่านตามลำดับเดียวกับ `eywa_supabase.py` · ค่าเฉพาะแบรนด์ **อนุมานจากข้อมูล** (brand_name, prefix ของ fingerprint) และที่อนุมานไม่ได้อยู่ใน `scripts/writer-brief/brands/<brand_id>.json` (regex section local สำหรับ B11 · หัวข้อต้องห้ามของ operator · path เอกสารแบรนด์) — ไม่มีชื่อแบรนด์ใดใน `.mjs`
+2. brief ต้องพ่น **ขอบเขตของหลักฐาน** ไม่ใช่แค่รายชื่อ: `supports_claim` ของทุก citation ที่ผูกไว้ (ประโยคที่ผ่านการตรวจแล้วว่าหน้าพูดได้แค่ไหน) · ลิงก์ contextual ขาออกพร้อม anchor ที่วางแผนไว้ · entity ข้างเคียง · semantic keyword ที่ผูก · marker ใน `reconciliation_notes` (`CITATION EXEMPTION` · `ENTITY GAP` · `[no-target:` · `ยุบเข้า` · คำสั่ง `ห้าม` ของ operator)
+3. **เอกสารแบรนด์ 2 ไฟล์ยังเป็นของแบรนด์** (`docs/CONTENT-WRITING-SOP.md` · `docs/template-block-standards.md`) ตาม §4 — สคริปต์ไม่แทนเอกสาร · แต่ Step 5.5 ของ bootstrap เปลี่ยนจาก "คัดลอก `page-brief.mjs` แล้วแก้ 5 จุด" เป็น "สร้าง `brands/<brand_id>.json` แล้วเรียกสคริปต์กลาง"
+4. แบรนด์ที่มีสำเนาเก่า (VTH) เลิกใช้สำเนานั้นเมื่อผลเทียบส่วนต่อส่วนตรงกัน · ห้ามแก้สำเนาแบรนด์อีก
+
+**Rationale:**
+
+- ทางเลือก "คัดลอกแล้วแก้" ล้มเหลวเชิงประจักษ์แล้วสองครั้ง (gates ก่อน 08-24 · brief วันนี้) — สำเนาที่ drift ไม่มีอะไรฟ้อง
+- brief เป็นตัวเดียวที่พางานวางแผนทั้งหมด (entity/keyword/citation/link ที่ทำใน DB) ไปถึงคนเขียน — ถ้ามีไม่ครบทุกแบรนด์ งานวางแผนของแบรนด์นั้น "ไม่ถึงมือ" แม้จะทำเสร็จ
+- ค่าเฉพาะแบรนด์ที่อนุมานได้จากข้อมูล ห้ามให้คนพิมพ์ (ผิดแล้วอ่านข้อมูลแบรนด์อื่นเงียบ ๆ — `ilike '%smile%'` จับ "TC Smile Dental")
+
+**Consequences:**
+
+- ✅ Deezy ได้ brief โดยไม่ต้อง port · smile-scape ได้พร้อมเอกสาร · VTH เทียบแล้วเลิกสำเนา
+- ⚠️ brief จะขึ้นธง "ไม่มี SERP" ทุกหน้าของแบรนด์ที่ยังไม่ดึง snapshot (smile-scape 0 แถว ณ 2026-09-17) — ไม่ใช่บั๊ก คือสภาพข้อมูล
+- ⚠️ report "block ที่ layout ไม่ render" ต้องเห็น `web/src/lib/template-keys.ts` ของแบรนด์ — รันจาก `web/` ของแบรนด์ หรือส่ง `--web`
+- 📌 `MANIFEST.sha256` ของ `scripts/` ต้องครอบ `writer-brief/` ด้วย (คนดูแล gates)
+- 📌 ตามมา: template กลางของ `CONTENT-WRITING-SOP.md` (ยังไม่มี — Step 5.5 ยอมรับว่า "เนื้อในผูกกับข้อมูลจริงของแบรนด์") — ทำเมื่อแบรนด์ที่ 4 มาถึง
+
+**References:** Pamrel_Content_Writing_SOP §1/§4 · `scripts/citation-gates/README.md` (แบบอย่างการย้าย) · `templates/NEW_BRAND_BOOTSTRAP.md` Step 5.5 · BROADCAST-2026-09-17-writer-brief.md · [[DR-045]] (PAMREL universal) · [[DR-046]] (ตารางแชร์)
+
+---
 
 ### [DR-067] — หนึ่ง DOM ต่อคอมโพเนนต์ · หนึ่ง h1 ต่อหน้า · หนึ่ง `data-cta-id` ต่อหน้า (2026-09-17) 🔒📐🎯
 
