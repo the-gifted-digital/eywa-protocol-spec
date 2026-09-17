@@ -33,6 +33,8 @@ smile    0 หน้า                                              ← port �
 | `frenectomy` | smile (Planned page) | ยุบ `frenectomy-adult` ของ vth เข้า · รายการ 6 ข้อ · wikidata Q1953919 · summary ยาวกว่า |
 | `cbct-scan` | deezy | ไม่แตะ — แต่มี list ทั้งใน procedures และ devices (bridge ใช้ procedures) |
 
+**Addendum 18 ก.ย. (จาก deezy ผ่าน vth — session ของ smile ปิดอยู่ตอนแจ้ง):** deezy adopt แล้วในวันเดียว (eywa-deezy `1c9a226`, DZ-DR-072: 47 entity · 233 ข้อ · YAML 161 ไฟล์ลบ · เกต strict 0/0/0) และแตะแถวแชร์อีก 4: `full-mouth-rehab` (vth โหลดว่างไว้ → 6 ข้อ · vth รับ) · **`peri-implantitis-treatment` (smile โหลด → update)** · **`periodontal-treatment` (graph ของ smile ยังไม่มี ext row → insert)** · `dental-filling` (ไม่มีเจ้าของ → insert) — review copy `eywa-deezy/content-plan/contraindication-backfill-2026-09-18.md` · **smile-scape: ตรวจ 2 แถวของคุณ** ไม่เห็นด้วยข้อไหนแก้ที่ตารางแล้วแจ้ง
+
 ข้อเท็จจริงเดิมอยู่ครบทุกแถว · review copy รายข้อ: `eywa-vth-biodent/content-plan/contraindication-backfill-2026-09-17.md` + `contraindication-review-r2-2026-09-18.md` · ไม่เห็นด้วยข้อไหน แก้ที่ตารางแล้วแจ้ง
 
 ## ทำอะไรในเว็บของคุณ

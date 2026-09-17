@@ -1,0 +1,69 @@
+{
+ "implant-a": [
+  "single-implant",
+  "immediate-implant",
+  "mini-implant",
+  "multiple-implant"
+ ],
+ "implant-b": [
+  "all-on-4",
+  "all-on-6",
+  "implant-crown",
+  "implant-denture",
+  "peri-implantitis-treatment"
+ ],
+ "ortho": [
+  "metal-braces",
+  "ceramic-braces",
+  "lingual-braces",
+  "orthodontic-retainer",
+  "space-maintainer"
+ ],
+ "endo": [
+  "root-canal-treatment",
+  "rct-retreatment",
+  "single-visit-rct",
+  "post-core",
+  "local-anesthesia"
+ ],
+ "restorative": [
+  "dental-filling",
+  "composite-filling",
+  "amalgam-filling",
+  "inlay-onlay",
+  "dental-crown",
+  "dental-bridge"
+ ],
+ "prosth": [
+  "denture",
+  "complete-denture",
+  "partial-denture",
+  "removable-denture",
+  "fixed-denture",
+  "snap-on-denture"
+ ],
+ "cosmetic": [
+  "porcelain-veneer",
+  "dental-bonding",
+  "cosmetic-bonding",
+  "smile-makeover",
+  "zoom-whitening"
+ ],
+ "perio-surgery": [
+  "periodontal-treatment",
+  "gingivitis-treatment",
+  "jaw-cyst-surgery",
+  "full-mouth-rehab"
+ ],
+ "preventive": [
+  "dental-checkup",
+  "oral-cancer-screening",
+  "fluoride-treatment",
+  "dental-sealant"
+ ],
+ "pediatric": [
+  "pediatric-fluoride",
+  "pediatric-sealant",
+  "ssc-pedo"
+ ]
+}
