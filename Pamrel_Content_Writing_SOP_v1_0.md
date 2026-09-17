@@ -302,6 +302,18 @@ target ที่ผ่าน gate ตอน assign ยัง**ใช้ไม่
 
 ---
 
+### P18 · ข้อห้ามทางคลินิกมาจากตารางลูก — หน้าไม่เก็บสำเนา ไซต์อ่านผ่าน bridge (DR-069)
+
+"ใครห้ามทำ / ใครต้องประเมินก่อน" ของหัตถการ อุปกรณ์ หรือยา อยู่ที่เดียว: คอลัมน์ `contraindications` บนตารางลูกของ primary entity (`seo_entity_procedures` สำหรับ procedure/treatment · `seo_entity_devices` · `seo_entity_drug.contraindications_text`) · text[] ภาษาคนไข้ ≤ 8 ข้อ หนึ่งภาวะต่อข้อ ไม่มีชื่อการค้า/ขนาดยา/link markup · `load_source` ต่อท้าย PMID หรือที่มาทุกครั้งที่แก้
+
+**คนเขียนไม่พิมพ์ข้อห้ามลง YAML** — `contraindication:` เป็น key ที่ถูกปลดแล้ว · ไซต์ generate `src/data/entity-clinical.json` จากตาราง (`scripts/clinical-gates/gen-entity-clinical.mjs --brand <id>`) แล้ว `SafetyDisclosures` render รายการตาม `primaryEntity` ของหน้า **เฉพาะ template ที่หน้า "เป็น" หัตถการ/อุปกรณ์** (Service · Procedure · Diagnostic · Technology) · `schema.ts` ปล่อย array เดียวกันลง JSON-LD · บทความ (Knowledge/Guide/Comparison) ไม่แสดง แต่ลิงก์ไปหน้าหัตถการ
+
+ตอนเขียนหน้า ให้ **ดึงคอลัมน์นี้มาอ่านเป็น material** (query ตารางลูกใน Query C) เพื่อให้ `safety` / `whoFor` / FAQ ไม่พูดขัดกับรายการที่หน้าจะแสดง และ **ห้ามพิมพ์ซ้ำรายการนั้นลง `safety`** — safety ใช้กับความเสี่ยง ผลข้างเคียง ข้อจำกัดของข้อมูล ไม่ใช่ "ใครห้ามทำ" · ตารางว่าง = เขียนจาก citation ที่ผูกหน้าแล้ว**เขียนเข้าตาราง**ในเซสชันเดียวกัน (ไม่ใช่ลงหน้า) แล้ว regen bridge · อยากแก้คำ = แก้ตาราง
+
+**มาตรฐานอนุมัติ = หลักฐานสากล** (operator 2026-09-18): guideline/position paper ขององค์กรที่ยอมรับ · SR/MA ใน peer-reviewed journal · หรือข้อห้ามสัมบูรณ์ที่สอนกันทั่วไป → อนุมัติเมื่อที่มาอยู่ใน `load_source` ไม่ต้องเซ็นรายข้อ · narrative review/case report → ระดับ ≤2 "ประเมินก่อน" เท่านั้น · ข้อเท็จจริงเฉพาะคลินิกเป็น service fact ให้ operator ตอบ · edge `contraindicates` ของ DR-013 ยังเป็นสมุดหลักฐานสำหรับข้อที่ต้องการ evidence รายข้อ ไม่ใช่ทางเข้าบังคับ
+
+เกต: `check:clinical --strict --no-yaml` (bridge ต้องสด · ทุกหน้า Live ที่ primary เป็น procedure/treatment/device/drug ต้องมีรายการ · YAML ห้ามมีสำเนา · cap 8/15 · ซ้ำ FAIL) — ดู §4 · kit เติม/ตรวจตาราง `scripts/clinical-gates/review-kit/`
+
 ## 4. สัญญาของเกต — แบรนด์ต้องมีครบ
 
 | เกต | ต้องทำอะไร | exit 1 เมื่อ |
@@ -314,6 +326,8 @@ target ที่ผ่าน gate ตอน assign ยัง**ใช้ไม่
 | `check:keyword-collisions` | หาหน้าที่แย่ง query เดียวกัน (normalize · containment · edit distance · seo_title) แล้ว **เสนอ** ว่าใครควรเป็น target | มีหน้าถือ target_keyword_fp ซ้ำกัน |
 | `check:links` | canonical tie-breaker + related block ตรงแผน | assertion ล้ม |
 | `gen:links` | export แผนลิงก์ → JSON ที่ commit | — |
+| `gen:entity-clinical` | export รายการข้อห้ามจากตารางลูก → `src/data/entity-clinical.json` ที่ commit (DR-069) | — |
+| `check:clinical` | bridge ที่ commit == DB · ทุกหน้า Live ที่ primary เป็น procedure/treatment/device/drug มีรายการ (`--strict`) · YAML ไม่มี `contraindication:` (`--no-yaml`) · ≤ 15 ข้อ · ไม่ซ้ำ | bridge ล้าหลัง · หน้าไม่มีรายการ · สำเนาใน YAML · เกิน cap · ซ้ำ |
 | `stamp:live` | อ่าน `dist/` → flip `status` Planned→Live · `published_date` ครั้งแรกครั้งเดียว · `canonical_url` จาก path ที่ ship จริง | — (idempotent · exit 0 ถ้าไม่มี key) |
 
 ### 4.1 `references[].label` — เขียนได้สองแบบ แต่ต้องระบุเปเปอร์ได้ (DR-061)

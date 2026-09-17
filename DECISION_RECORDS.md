@@ -32,6 +32,47 @@
 
 ## Decisions Log
 
+### [DR-069] — ชั้นข้อห้ามทางคลินิก (contraindication): store เดียวในตารางลูก · bridge ต่อแบรนด์ · render บนหน้าที่ "เป็น" หัตถการ · อนุมัติด้วยหลักฐานสากล (2026-09-18) 🩺🧬
+
+**Status:** **Accepted บน vth-biodent (ครบวง 57 หน้า live) → Proposed ให้ deezy-dental / smile-scape-clinic adopt** (operator-directed 2026-09-17/18)  
+**Bible Reference:** DR-013 (edge `contraindicates` · sign-off) · DR-046 (ตารางแชร์) · Pamrel SOP P18 (ใหม่) · §4 สัญญาของเกต  
+**Schema Reference:** v1.23 — `seo_entity_procedures.contraindications` · `seo_entity_devices.contraindications` · `seo_entity_drug.contraindications_text` (อ่านอย่างเดียว ไม่แตะ schema)
+
+**Context:**
+
+"ใครห้ามทำ / ใครต้องประเมินก่อน" ของแต่ละหัตถการอยู่ **3 ที่ที่ไม่ผูกกัน** ในทุกแบรนด์ที่ port เทมเพลต T1–T22: (1) คอลัมน์ `contraindications` บนตารางลูก (backfill 2026-07 verify แล้ว แต่ไม่มีใครเปิด) · (2) array `contraindication:` ที่คนเขียนพิมพ์เองใน YAML ทุกหน้า (vth 43 หน้า 174 ข้อ · deezy 155 หน้า · smile 0) · (3) JSON-LD `MedicalProcedure.contraindication` ที่ `schema.ts` สร้างจาก (2) · **ไม่มี template ไหน render (2)** — `SafetyDisclosures` โค้ดเดียวกันทุกแบรนด์รับแค่ `safety` · ผล: ข้อมูลที่คนไข้ควรอ่านก่อนจองมองไม่เห็น ตารางที่ verify แล้วไม่ถูกใช้ และ structured data บรรยายสิ่งที่ไม่มีบนจอ (ผิดแนวทาง Google) · DR-013 ออกแบบ edge `contraindicates` พร้อม strength/evidence/sign-off ไว้ดี แต่ทั้งระบบมี 21 edge — ชั้นข้อความคือของที่ใช้จริง
+
+vth ทดลองแก้แบบ "ให้คนเขียนลอกจากตารางตรงตัว + เกตตรวจ" ก่อน (DR-VTH-012 ฉบับเช้า) แล้วเลิกในวันเดียวกัน: การลอกด้วยมือคือกลไกที่พังมาตั้งแต่แรก กฎ + เกตแค่ทำให้การลอกถูกควบคุม
+
+**Decision:**
+
+1. **store เดียว = คอลัมน์บนตารางลูกของ primary entity** (`procedures.contraindications` สำหรับ procedure/treatment · `devices.contraindications` · `drug.contraindications_text`) · text[] ภาษาคนไข้ · หนึ่งภาวะต่อหนึ่งข้อ · ≤ 8 ข้อ (cap `contraindicates` ของ DR-013: ≤8 warn ≤15 hard) · ไม่มีชื่อการค้า ไม่มีขนาดยา · ไม่มี link markup · เรียง strength 3 → 2 → 1 · `load_source` ต่อท้าย PMID/ที่มาทุกครั้งที่แก้
+2. **หน้าไม่เก็บสำเนา** — `contraindication:` ใน YAML ถูกปลดทุกแบรนด์ · ไซต์อ่านตารางผ่าน bridge ที่ commit `src/data/entity-clinical.json` (`scripts/clinical-gates/gen-entity-clinical.mjs`) · `SafetyDisclosures` render รายการ "ใครควรประเมินก่อน" ตาม `primaryEntity` ของหน้า · `schema.ts` ปล่อย array เดียวกัน → จอกับ JSON-LD เป็นการอ่านไฟล์เดียวกันครั้งเดียว
+3. **render เฉพาะหน้าที่ "เป็น" หัตถการ/อุปกรณ์** — Service · Procedure · Diagnostic · Technology · **ไม่ใช่** Knowledge/Guide/Comparison/CaseStudy (boilerplate ใน main content · ผิด intent ให้ข้อมูล · ไม่มี node MedicalProcedure ให้ผูก · ขยายพื้นผิวที่กฎหมายโฆษณาแตะ) — บทความลิงก์ไปหน้าหัตถการแทน
+4. **เกต `check:clinical`** (สัญญาของเกต §4): bridge ที่ commit ต้องเท่ากับ DB (FAIL) · ทุกหน้า Live ที่ primary เป็น procedure/treatment/device/drug ต้องมีรายการ (warn จนกว่า backfill รอบแรกจบ แล้ว `--strict`) · YAML ห้ามมี `contraindication:` (`--no-yaml`) · >15 ข้อ FAIL · ซ้ำในรายการ FAIL · `--self-test` ต้องทำให้เกตล้มได้ (P14)
+5. **มาตรฐานอนุมัติ = หลักฐานสากล** (operator 2026-09-18): ข้อที่อิง guideline/position paper ขององค์กรที่ยอมรับ (EFP · AAOMS · AASM/AADSM · ADA · AAP · NICE · BMJ Rapid Recs · WHO) หรือ SR/MA ในวารสาร peer-reviewed หรือข้อห้ามสัมบูรณ์ที่สอนกันทั่วไป (ติดเชื้อเฉียบพลันตรงจุด · แพ้วัสดุที่ยืนยัน) **ถือว่าอนุมัติแล้ว** เมื่อที่มาอยู่ใน `load_source` — ไม่ต้องเซ็นรายข้อ · ข้อที่มีแค่ narrative review/case report อยู่ได้แค่ระดับ ≤2 "ประเมินก่อน" · ข้อเท็จจริงเฉพาะคลินิก (ผลิตภัณฑ์ที่ใช้ · ทำเองหรือส่งต่อ) เป็น service fact ให้ operator ตอบ · **trigger sign-off ของ DR-013 บน edge ไม่แตะ** — bridge อ่านคอลัมน์ ไม่ใช่ edge
+6. **วิธีเติม/ตรวจตาราง** เป็น kit กลาง `scripts/clinical-gates/review-kit/`: brief ต่อ cluster (แถวเดิม + ข้อที่คนเขียนเคยพิมพ์ + citation ที่ผูกหน้า) → reviewer อ่าน abstract จริงจาก PubMed ทีละข้อ → JSON → generator ออก SQL (backup · update · load_source) → operator รันเองใน SQL editor → regen bridge → เกต · vth ทำ 2 รอบ (16 entity ใหม่ 117 ข้อ · 24 entity เดิม 153 ข้อ: reword 70 drop 5 add 78) ในวันเดียว
+7. **ตารางแชร์ → กติกา DR-046 ใช้กับรายการนี้ด้วย**: แบรนด์ที่แก้แถวที่แบรนด์อื่นโหลด (vth แก้ `deep-scaling` `scaling-polishing` ที่ deezy โหลด · `frenectomy` ที่ smile มีหน้า) ต้องเก็บข้อเท็จจริงเดิมไว้ครบ (reword/เพิ่มได้ ตัดต้องมีเหตุผลใน review copy) และแจ้งใน broadcast
+
+**Rationale:**
+
+- ข้อมูลนี้เป็น YMYL ตรงตัว: คนไข้ต้องเห็นก่อนตัดสินใจ กฎหมายโฆษณาสถานพยาบาลต้องการให้เปิดเผยตรงที่เสนอบริการ และ Google ต้องการให้ structured data ตรงกับที่แสดง — สามความต้องการนี้ตอบพร้อมกันด้วยการอ่านไฟล์เดียว
+- "store เดียว" ที่ทำงานคือ store ที่ผู้บริโภคอ่านโดยไม่ต้องอาศัยวินัยคน — bridge + เกต freshness ทำให้ตารางกับเว็บต่างกันไม่ได้แม้อยากให้ต่าง
+- เลือกต่อยอด text[] ที่มี 72 แถวจริง แทนบังคับทุกข้อเป็น edge DR-013 (21 edge หลัง 2 เดือน) — edge ยังเป็นสมุดหลักฐานสำหรับข้อที่ต้องการ evidence รายข้อ ไม่ใช่ทางเข้าบังคับ
+
+**Consequences:**
+
+- ✅ vth: 144 entity / 568 ข้อใน bridge · 57 หน้า render · JSON-LD == จอ 0 mismatch · เกต 3 ตัวใน CI (entity-binding · clinical strict/no-yaml · freshness) · YAML สำเนา 0
+- ⚠️ deezy: 155 หน้ามี `contraindication:` ใน YAML แบบเดิม และ component เดียวกันไม่ render — ต้อง port (component + templates + schema.ts + ลบ YAML + เกต) และ backfill entity ที่เกตชี้ · smile: 0 หน้า port ได้ทันที
+- ⚠️ `indication` ยังไม่มีคอลัมน์ในตารางลูก → ยัง YAML + schema-only ทุกแบรนด์ จนกว่าจะมีคอลัมน์ (คิว schema)
+- ⚠️ ชื่อคอลัมน์ไม่ตรงกัน (`contraindications` vs `contraindications_text` บน drug) — bridge ซ่อนไว้ ไม่แก้ schema ในรอบนี้
+- 📌 entity ชนิด condition/concept/specialty ไม่มีคอลัมน์ — หน้า service ที่ primary เป็นชนิดนี้ต้องแก้ Page Master ไปที่ treatment/procedure ที่หน้าพูดถึงจริง (vth เจอ `frenectomy-adult` → `frenectomy`, `botulinum-toxin-tmj` → `botox-tmj`)
+- 📌 `MANIFEST.sha256` ของ `scripts/` ต้องครอบ `clinical-gates/`
+
+**References:** DR-013 · DR-046 · DR-067 (เกตต้องกัดจริง) · vth `docs/decision-records.md` DR-VTH-012 (+2 amendments) · DR-VTH-013 · `scripts/clinical-gates/README.md` · `scripts/clinical-gates/review-kit/` · BROADCAST-2026-09-18-clinical-contraindication-layer.md · reference implementation `eywa-vth-biodent/web/src/components/blocks/SafetyDisclosures.astro` + `web/src/lib/schema.ts`
+
+---
+
 ### [DR-068] — Writer brief เป็นสคริปต์กลาง brand-agnostic ใน protocol repo (2026-09-17) 📝🧬
 
 **Status:** **Proposed → Accepted เมื่อผ่าน 3 แบรนด์** (เสนอโดย smile-scape · ทดสอบ smile-scape / vth-biodent / deezy-dental ในวันเดียวกัน)  
