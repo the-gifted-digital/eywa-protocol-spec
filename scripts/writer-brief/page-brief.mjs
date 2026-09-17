@@ -20,7 +20,7 @@
 // from the protocol repo, which has no node_modules of its own.
 //
 // It reads and never writes to the database. The page YAML is still authored by hand.
-import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync } from 'node:fs';
 import { dirname, resolve, join, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -327,16 +327,39 @@ const tplKey = (() => {
   if (!WEB) return null;
   const src = readFileSync(resolve(WEB, 'src/lib/template-keys.ts'), 'utf8');
   const rows = [...src.matchAll(/code:\s*'([^']+)',\s*key:\s*'([^']+)'/g)].map((m) => ({ code: m[1], key: m[2] }));
-  return rows.find((r) => r.code === page.content_format)?.key ?? null;
+  // Two rows may share one code (T12 = faq_hub AND glossary_hub). When they do, the page's
+  // content_format_name says which mode it is ("Hub: Glossary (glossary_hub)") — pick the key
+  // it names; fall back to the first row only when the name does not decide.
+  const same = rows.filter((r) => r.code === page.content_format);
+  if (!same.length) return null;
+  const name = (page.content_format_name ?? '').toLowerCase();
+  return same.find((r) => name.includes(r.key.toLowerCase()))?.key ?? same[0].key;
 })();
 
 let renderReport = null;
 if (WEB && tplKey) {
   const cap = tplKey[0].toUpperCase() + tplKey.slice(1);
-  const layout = resolve(WEB, `src/layouts/templates/${cap}.astro`);
-  const shell = resolve(WEB, 'src/layouts/templates/TemplateShell.astro');
+  // The layout file is not always `<Key>.astro`: smile-scape's `faq` key renders through
+  // `FaqPage.astro` (found 2026-09-17 while writing the brand block standards — every T12-faq
+  // brief had been skipping this report in silence). Look the file up case-insensitively and
+  // accept the `<Key>Page` spelling too, rather than guessing one name and moving on.
+  const tplDir = resolve(WEB, 'src/layouts/templates');
+  const layoutName = (() => {
+    if (!existsSync(tplDir)) return null;
+    const want = new Set([`${tplKey}.astro`, `${tplKey}page.astro`].map((n) => n.toLowerCase()));
+    return readdirSync(tplDir).find((n) => want.has(n.toLowerCase())) ?? null;
+  })();
+  const layout = layoutName ? resolve(tplDir, layoutName) : resolve(tplDir, `${cap}.astro`);
+  const shell = resolve(tplDir, 'TemplateShell.astro');
+  // A field name inside a comment is not a render. Branch.astro says "NOT a DoctorReview byline"
+  // in a comment and the bare word test called `byline` rendered — the one false negative that
+  // matters, because it hides a dropped block from the writer. Strip comments before testing.
+  const stripComments = (t) => t
+    .replace(/<!--[\s\S]*?-->/g, '')
+    .replace(/\/\*[\s\S]*?\*\//g, '')
+    .replace(/^\s*\/\/.*$/gm, '');
   if (existsSync(layout)) {
-    const text = readFileSync(layout, 'utf8') + '\n' + (existsSync(shell) ? readFileSync(shell, 'utf8') : '');
+    const text = stripComments(readFileSync(layout, 'utf8') + '\n' + (existsSync(shell) ? readFileSync(shell, 'utf8') : ''));
     const shared = readFileSync(resolve(WEB, 'src/content/_shared.ts'), 'utf8');
     const base = (shared.match(/export const baseFields[\s\S]*?\n\};/) ?? [''])[0];
     // Only CONTENT blocks can be "silently dropped" in the sense that matters. The rest of
@@ -346,7 +369,7 @@ if (WEB && tplKey) {
     const fields = [...base.matchAll(/^\s{2}([a-zA-Z]+):/gm)].map((m) => m[1]).filter((f) => !CONTROL.has(f));
     // Case-insensitive: some blocks render through a component named after the field.
     const rendered = fields.filter((f) => new RegExp(`\\b${f}\\b`, 'i').test(text));
-    renderReport = { layout: `${cap}.astro`, dropped: fields.filter((f) => !rendered.includes(f)) };
+    renderReport = { layout: layoutName ?? `${cap}.astro`, dropped: fields.filter((f) => !rendered.includes(f)) };
   }
 }
 

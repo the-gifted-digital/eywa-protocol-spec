@@ -117,3 +117,11 @@ depended on `@supabase/supabase-js`. This port:
   section number are the one thing the brief requires to stay identical across brands.
 - Everything else — tone, section order, the six B-rules, the `filled()`/`yn()` semantics, the
   calibration-note markers, the render-report logic — is unchanged.
+
+## Fixes on the first day (2026-09-17, found while writing smile-scape's block standards)
+
+- Layout lookup is case-insensitive and accepts `<Key>Page.astro` — smile-scape's `faq` key renders through `FaqPage.astro`, so every T12-faq brief had been skipping the render report in silence.
+- Two template rows can share one code (T12 = `faq` + `glossary`); the page's `content_format_name` decides which key, not the first row.
+- Comments are stripped before the "does the layout mention this field" test — `Branch.astro` says "NOT a DoctorReview byline" in a comment and the bare word test called `byline` rendered.
+- The calibration marker for operator prohibitions is `ห้ามพูด|ห้ามใช้|ห้ามเขียน|ห้ามใส่|ห้ามอ้าง`, not bare `ห้าม` (which hit half the notes on a page).
+- A citation whose `supports_claim` is empty, under 40 chars, or still the wave-binding note is printed as ⚠️ with its `key_findings`, not as a boundary — smile-scape had 59 + 130 such rows on the day the brief shipped.
