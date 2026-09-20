@@ -1,8 +1,8 @@
 # 📖 คัมภีร์ EYWA™ PROTOCOL
 ## The Universal Knowledge Graph SEO Specification for the AI Era
 
-**Version:** 3.34  
-**Last Updated:** 2026-06-21  
+**Version:** 3.35  
+**Last Updated:** 2026-09-20  
 **Trademark:** EYWA™ (Class 35+42, DIP Thailand, filed 2026-04-20)  
 **Created by:** The Gifted Digital Marketing Co., Ltd.  
 **Scope:** Universal standard สำหรับการบริหารจัดการ SEO + Knowledge Graph แบบ multi-vertical, multi-brand, multi-specialty, multi-lingual, multi-location, **AI-future-ready** ในยุค AI Search (2026+) — ครอบคลุม healthcare verticals (clinic ทุก specialty, hospital, dental, sleep medicine, aesthetic, wellness, healthcare media) extensible to other regulated YMYL niches  
@@ -143,6 +143,17 @@ Throughout this Bible:
 
 
 ## 📜 Changelog
+
+### v3.35 (2026-09-20) — DR-073/074/075: the AI side of Pillar 2 is measured; Category F reconciled to what exists 🤖📡
+
+Companion to **DR-073, DR-074, DR-075 (Accepted — live on vth-biodent + deezy-dental the day each was written)**. **Schema:** one new table (`seo_ai_agent_visits`), one new column (`tsa_bond.entry_referrer`), two new `tsa_param` rows (`agent_platform`, `entry_referrer`) and a third `tsa_param.surface` value `server_only`. Documentation reconciled against the live database so the same questions are not asked again:
+
+- ✅ **`seo_ai_agent_visits` is BUILT (DR-074)** — but as the reduced schema in the DR, not Appendix Table 32's aspirational one. Written by each brand's Worker from the request itself: platform, `agent_type` (retrieval / index / training — the retrieval fetch by `ChatGPT-User` / `Perplexity-User` / `Claude-User` **is the citation event**), path, status, Cloudflare country + network. No IP, no session, no behaviour columns, no "purpose" columns — those cannot be filled honestly from one request and were never built.
+- ❌ **Four Category F tables from v2.4 are SUPERSEDED, never built, and must not be created:** `seo_ai_platforms` → the closed list is `tsa_param.agent_platform` (a second registry for "which AI platform" is the hand-copied mirror DR-055 forbids) · `seo_predicted_prompts` → `seo_llm_query_simulations` already carries the prompt bank (prompt_template / variables / expected pages / citation_rate) · `seo_ai_response_analysis` → its columns already exist on `seo_llm_citations` (`citation_context`, `competitors_cited`, `brand_sentiment`) · `seo_x_voice_search` → out of scope until a voice surface exists. Every "Track ใน …" pointer below now says so inline.
+- ➕ **`ai_referral` is an acquisition channel (DR-073)** — ChatGPT appends `?utm_source=chatgpt.com` to every cited link; 4.3% of both brands' conversions had been sitting in `other_campaign`. `entry_source` gains `chatgpt` `perplexity` `gemini` `copilot` `claude`, spelled identically to `agent_platform`, so "the platform that READ us also SENT us" is a join.
+- ➕ **`entry_referrer` on the bond (DR-075)** — the external host at session start, for the sites no closed list names.
+- 🔄 **Reference implementations are federation contracts now:** `web/src/lib/channel.ts` and `web/worker/ai-agent.ts` in vth-biodent; deezy ports verbatim under a provenance header pinning the commit hash, with tests that go red on drift. Change there first, send the hash.
+- 📌 Still 0 rows and still the next thing: `seo_llm_query_simulations` / `seo_llm_citations` / `seo_brand_mentions` — the prompt-probing layer (KPI #8 / #11). The tables are right; the runner does not exist yet. Not a schema question.
 
 ### v3.34 (2026-06-21) — DR-041 Heading Hierarchy & Document-Semantics Standard (Universal) ♿🧭🔒
 
@@ -1456,7 +1467,7 @@ Tier 4 — AI translation only (ห้ามใช้ — Google penalizes)
 ### What "AI Future-Ready" means in v2.4
 
 **1. Multi-platform AI tracking (not just 4)**
-ไม่ hardcode platform names — use `seo_ai_platforms` registry to add platforms when they emerge
+ไม่ hardcode platform names — **(v3.35) the registry is the `tsa_param` row `agent_platform` (13 values, DR-074); `seo_ai_platforms` was never built and must not be.** Add a platform by extending that row, then the classifier in `web/worker/ai-agent.ts`.
 
 ```
 Tier 1 platforms tracked Day 1:
@@ -1489,7 +1500,7 @@ Detection methods:
 - Declared via robots.txt + bot directives
 - IP address patterns (Cloudflare bot intelligence)
 
-→ Track ใน `seo_ai_agent_visits` (Section 3.11.4)
+→ Track ใน `seo_ai_agent_visits` (Section 3.11.4) — **(v3.35) BUILT 2026-09-20 under DR-074 with the reduced schema in that DR; Worker-side UA classification, not IP patterns. Table 32's column list is historical.**
 
 **3. Voice & Conversational Search Optimization**
 2026+ Search modality split:
@@ -1520,7 +1531,7 @@ New workflow (prompt-first):
   → Citation in AI Overview, ChatGPT, Perplexity
 ```
 
-→ Track ใน `seo_predicted_prompts` (Section 3.11.1)
+→ Track ใน ~~`seo_predicted_prompts`~~ **`seo_llm_query_simulations` (v3.35, DR-074): the prompt bank lives there — `seo_predicted_prompts` was never built and is superseded.**
 
 ### Why "Build Now, Activate Later"
 
@@ -13118,7 +13129,7 @@ R=Responsible, A=Accountable, C=Consulted, I=Informed
 | Orphan Pages | 0 | seo_page_internal_links | Dev |
 | Schema Valid | 100% | Rich Results Test + Flow F2 | Dev |
 | Doctor Review % | 100% (medical pages) | reviewed_by_id NULL check | SEO Lead |
-| Predicted Prompts coverage | ≥ 15 per pillar | seo_predicted_prompts | Content Lead |
+| Predicted Prompts coverage | ≥ 15 per pillar | ~~seo_predicted_prompts~~ seo_llm_query_simulations (v3.35) | Content Lead |
 | **🆕 Brand Mentions volume** | ≥ 50/month | seo_brand_mentions + Flow D2 | SEO Lead |
 | Local Pack Top 3 (clinics) | ≥ 1 keyword | seo_local_rankings | SEO Lead |
 | GBP Reviews count | ≥ 10 new/month | seo_reviews + Flow E1 | Marketing |
@@ -13519,7 +13530,7 @@ Pattern C: REINFORCEMENT
 4. **Schema markup `citation` property** linking to authoritative papers
 5. **Wikipedia entry** for your brand (when justified) creates linking eligibility
 
-### Tracking via `seo_ai_response_analysis`
+### Tracking via ~~`seo_ai_response_analysis`~~ `seo_llm_citations` (v3.35: the analysis columns — `citation_context`, `competitors_cited`, `brand_sentiment`, `citation_position` — live on `seo_llm_citations`; a separate table was never built)
 
 ```sql
 -- Find queries where we're co-cited with competitors
@@ -13636,10 +13647,10 @@ Examples emerging:
 
 ### Day 1 preparations
 
-**1. Detect AI agents** (`seo_ai_agent_visits`)
-- Cloudflare Bot Management or similar
-- Custom user-agent analysis
-- Behavior pattern detection
+**1. Detect AI agents** (`seo_ai_agent_visits`) — **(v3.35) IMPLEMENTED, DR-074:** the Worker classifies the documented user-agent tokens (`web/worker/ai-agent.ts`, reference implementation in vth-biodent, ported verbatim by deezy) into `retrieval` / `index` / `training` and logs one row per HTML fetch on the apex. Non-AI agents are not logged at all. Spoof detection is `ip_country` + `as_org` from Cloudflare, not IP ranges. There is no behaviour-pattern detection and none is planned — a fetch is one request.
+- ~~Cloudflare Bot Management or similar~~ → Worker UA classifier (above)
+- ~~Custom user-agent analysis~~ → done
+- ~~Behavior pattern detection~~ → not built; a row is one request, not a session
 
 **2. Serve them well**
 - Don't block reasonable AI agent traffic
@@ -13694,6 +13705,8 @@ Beyond basic llms.txt, add:
 - Track MCP adoption in industry
 
 ### Track everything in `seo_ai_agent_visits`
+
+**(v3.35) Collecting since 2026-09-20 on both brands.** Two reading rules from DR-074: a `retrieval` fetch means the page was *read for an answer*, not *cited* in it — `seo_llm_citations` owns the word "cited"; and `training` / `index` volume is context, never a KPI. A brand that refuses training crawlers at the edge (deezy, DZ-DR-066) has zero `training` rows by design.
 
 Even if not analyzing now, **collect raw data**:
 - AI agent traffic doubled YoY
@@ -13783,6 +13796,8 @@ Code-switching:
 ```
 
 ### Storage in `seo_x_voice_search`
+
+**(v3.35) NOT BUILT — out of scope until a voice/chatbot surface exists. Do not create it ahead of one.**
 
 Day 1: empty table
 Phase 1-2: manual entry of observed/test queries
@@ -28396,15 +28411,15 @@ COST NOTE: Auto-tracking requires paid tool ($24-99/mo per location)
 
 | # | Table | Purpose | Phase | Section |
 |---|-------|---------|-------|---------|
-| 29 | `seo_predicted_prompts` | Prompt prediction bank (write content for prompts, not keywords) | Phase 1 | 3.11.1 |
-| 30 | `seo_ai_response_analysis` | Per-citation deep analysis + ranking signals | Phase 1-2 | 3.11.2 |
-| 31 | `seo_ai_platforms` | Extensible AI platform registry (15+ platforms) | Day 1 | 3.11.3 |
-| 32 | `seo_ai_agent_visits` | AI browsing agent tracking (Layer 5 prep) | Phase 2-3 | 3.11.4 |
-| 33 | `seo_x_voice_search` | Voice/chatbot conversational AI | Phase 2-3 | 3.11.5 |
+| 29 | ~~`seo_predicted_prompts`~~ | Prompt prediction bank (write content for prompts, not keywords) | **SUPERSEDED v3.35 — never built; use `seo_llm_query_simulations`** (DR-074) | 3.11.1 |
+| 30 | ~~`seo_ai_response_analysis`~~ | Per-citation deep analysis + ranking signals | **SUPERSEDED v3.35 — never built; columns live on `seo_llm_citations`** (DR-074) | 3.11.2 |
+| 31 | ~~`seo_ai_platforms`~~ | Extensible AI platform registry (15+ platforms) | **SUPERSEDED v3.35 — never built; the registry is `tsa_param.agent_platform`** (DR-074) | 3.11.3 |
+| 32 | `seo_ai_agent_visits` | AI browsing agent tracking (Layer 5 prep) | **BUILT 2026-09-20 (DR-074) — reduced schema, see Table 32 below** | 3.11.4 |
+| 33 | `seo_x_voice_search` | Voice/chatbot conversational AI | **NOT BUILT — out of scope until a voice surface exists (v3.35)** | 3.11.5 |
 
 #### Schema Summary — Category E
 
-**Table 29: `seo_predicted_prompts`**
+**Table 29: `seo_predicted_prompts`** — ❌ **SUPERSEDED (v3.35, DR-074): never created. `seo_llm_query_simulations` already holds the prompt bank (`prompt_template`, `prompt_variables`, `target_entity_fp`, `expected_citation_pages_fps`, `citation_rate`, `brand_mention_rate`, `next_scheduled_run`). The definition below is kept for the record only.**
 ```sql
 PRIMARY KEY: id (UUID)
 KEY FIELDS:
@@ -28423,7 +28438,7 @@ KEY FIELDS:
 PURPOSE: Move from keyword-first to prompt-first content design
 ```
 
-**Table 30: `seo_ai_response_analysis`**
+**Table 30: `seo_ai_response_analysis`** — ❌ **SUPERSEDED (v3.35, DR-074): never created. `seo_llm_citations` carries `citation_context`, `citation_position`, `competitors_cited`, `source_domains_cited`, `brand_sentiment`. Kept for the record only.**
 ```sql
 PRIMARY KEY: id (UUID)
 FK: llm_citation_id → seo_llm_citations
@@ -28442,7 +28457,7 @@ KEY FIELDS:
 PURPOSE: Why did AI cite us? Correlate page properties to citation outcomes
 ```
 
-**Table 31: `seo_ai_platforms`** — Registry of all AI platforms
+**Table 31: `seo_ai_platforms`** — ❌ **SUPERSEDED (v3.35, DR-074): never created and must not be. The registry is one governed row, `tsa_param.agent_platform` (13 values, `surface = server_only`), spelled identically to the AI values of `entry_source` (DR-073). Detection is code (`web/worker/ai-agent.ts`), not `detection_user_agents[]` in a table. Kept for the record only.**
 ```sql
 PRIMARY KEY: id (UUID)
 UNIQUE: platform_name
@@ -28463,7 +28478,33 @@ SEED DATA: 15+ platforms (chatgpt, perplexity, claude, gemini,
            google_ai_overview, siri, google_assistant, alexa, line_oa_ai)
 ```
 
-**Table 32: `seo_ai_agent_visits`** — Layer 5 preparation
+**Table 32: `seo_ai_agent_visits`** — ✅ **BUILT 2026-09-20 (DR-074). This is the live definition; the v2.4 draft it replaces is below it for the record.**
+```sql
+-- migration: eywa-vth-biodent/deployment/supabase-load/46_seo_ai_agent_visits.sql
+PRIMARY KEY: id (bigint identity)
+FK: brand_id → brands(brand_slug)                      -- federation table: every query filters brand_id
+COLUMNS:
+  visited_at timestamptz · visit_url text (PATH ONLY, no query) · http_status_code smallint
+  agent_platform text   -- governed: tsa_param.agent_platform (chatgpt claude perplexity gemini copilot
+                        --   meta_ai mistral duckduckgo apple amazon bytedance commoncrawl cohere)
+  agent_type text       -- CHECK IN ('retrieval','index','training'):
+                        --   retrieval = an assistant read the page to answer a user NOW = the citation event
+                        --   index     = the assistant's own search index visited
+                        --   training  = corpus collection; says nothing about answers
+  agent_token text      -- the UA token that matched (ChatGPT-User, OAI-SearchBot, GPTBot, …)
+  user_agent_string text · ip_country text (Cloudflare cf.country) · as_org text (cf.asOrganization) · referer text
+NOT STORED, ON PURPOSE: ip_address, session_id, behaviour, purpose, outcome, treatment — a row is one
+  request and never a person; country + network are enough to tell a real OpenAI/Anthropic fetch from a spoofed UA.
+WRITER: each brand's Worker, fire-and-forget, GET + text/html + apex host only. Non-AI UAs are not logged (not "other").
+READ VIA: v_ai_agent_visits_page — resolves path → page_master by tsa_page_slug() at read time (page moves keep history)
+  and derives content_locale from the path prefix.
+READING RULES: a retrieval fetch = READ for an answer, not CITED (seo_llm_citations owns "cited");
+  training/index volume is context, never a KPI; a brand blocking training crawlers at the edge has 0 training rows by design.
+INDEXES: (brand_id, visited_at desc) · (brand_id, agent_type, visited_at desc)
+```
+
+<details><summary>v2.4 draft (never built as written)</summary>
+
 ```sql
 PRIMARY KEY: id (UUID)
 FK: brand_id, page_id, agent_platform_id, citation_id (optional)
@@ -28481,8 +28522,9 @@ KEY FIELDS:
   - Action: agent_treatment (allowed/rate_limited/blocked/optimized)
 PURPOSE: Track AI agent crawls, prepare for Layer 5 AI agent era
 ```
+</details>
 
-**Table 33: `seo_x_voice_search`** — Voice + conversational
+**Table 33: `seo_x_voice_search`** — ⏸ **NOT BUILT (v3.35): out of scope until a voice/chatbot surface exists. Do not create ahead of one.**
 ```sql
 PRIMARY KEY: id (UUID)
 FK: brand_id, source_platform_id, matched_predicted_prompt_id

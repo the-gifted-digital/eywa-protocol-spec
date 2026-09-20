@@ -1,6 +1,6 @@
 # 📊 Schema Overview — EYWA™ PROTOCOL Database
 
-**Version:** v1.23 (2026-06-11) — DR-038 Canonicalize `seo_media_assets` (Group 11 NEW §13.1, BUILT) + Cloudflare config columns on `brands` (§3.1, BUILT) 🔒🖼️☁️
+**Version:** v1.24 (2026-09-20) — DR-074 `seo_ai_agent_visits` BUILT (Group 7 → 5 tables) + `tsa_bond.entry_referrer` (DR-075) + `tsa_param` surface `server_only`; four v2.4 AI tables declared superseded · previous: v1.23 (2026-06-11) — DR-038 Canonicalize `seo_media_assets` (Group 11 NEW §13.1, BUILT) + Cloudflare config columns on `brands` (§3.1, BUILT) 🔒🖼️☁️
 **Live database:** Supabase project `lffcbeszjqzioobqfdav` ("GTGT") · region `ap-northeast-1` · Postgres 17
 **Total base tables:** 43 EYWA canonical tables — all 43 confirmed present *(corrected 2026-08-24 against live schema: the count is right, the scope claim was not — `public` also holds non-EYWA tables `tsa_bond`/`tsa_bond_valued`/`tsa_call`/`tsa_event`/`tsa_page_product`/`tsa_param`/`tsa_product_map`/`tsa_product_value`, `fbads_account`/`fbads_daily`/`fbads_sync_log`, `web_lead`, `ss_kw_seed_wave16_20260806`, plus ~140 `_`-prefixed backup/scratch tables and 7 `v_` views. The live list is whatever `GET /rest/v1/` returns as OpenAPI definitions; do not hardcode a total)* — `seo_media_assets` §13.1 (Group 11) canonicalized 2026-06-11 via migration `eywa_w11_08` (DR-038); `brands` §3.1 +4 Cloudflare cols via `eywa_w11_09` (DR-038); `seo_payer_partners` §3.9 canonicalized 2026-06-08 via migration `eywa_w11_07` (DR-037); `seo_entity_symptom` §11.5a built 2026-06-04 via `eywa_w11_06`
 **Spec stack:** Bible v3.32 · Handover v1.18 · Decision Records v1.24
@@ -16,6 +16,17 @@
 ---
 
 ## Changelog
+
+### v1.24 (2026-09-20) — DR-073/074/075: AI-agent retrieval log built; four never-built AI tables retired 🤖📡
+
+Paired companion to **DR-073 / DR-074 / DR-075 (Accepted 2026-09-19/20, live on vth-biodent + deezy-dental)**. Reconciled against the live database on the day.
+
+- ➕ **Group 7 +1 → `seo_ai_agent_visits`** (§9.5, 12 cols, S only, written by each brand's Cloudflare Worker). Bible Table 32 rebuilt around what one request can honestly fill: `agent_platform` · `agent_type ∈ {retrieval, index, training}` · `agent_token` · path · status · Cloudflare `ip_country` + `as_org`. **No IP, no session, no behaviour/purpose/outcome columns** — a row is one request, never a person. View `v_ai_agent_visits_page` resolves path → `seo_website_page_master` via `tsa_page_slug()` and derives `content_locale`.
+- ➕ **`tsa_param` rows `agent_platform` (enum, 13 values) and `entry_referrer` (string, high cardinality)** under a new `surface` value **`server_only`** (CHECK now `ga4_dim | bq_only | server_only`). `entry_channel` +`ai_referral`; `entry_source` +`chatgpt` `perplexity` `gemini` `copilot` `claude`.
+- ➕ **`tsa_bond.entry_referrer text`** — external host at session start (DR-075).
+- ❌ **Declared SUPERSEDED, never built, must not be created:** `seo_ai_platforms` (→ `tsa_param.agent_platform`), `seo_predicted_prompts` (→ `seo_llm_query_simulations`), `seo_ai_response_analysis` (→ columns on `seo_llm_citations`); `seo_x_voice_search` stays unbuilt (out of scope). The Bible v3.35 appendix says the same inline.
+- 📌 `seo_brand_mentions` / `seo_llm_citations` / `seo_llm_query_simulations` still **0 rows** — correct tables, no runner yet (prompt probing, next).
+- 🗃️ Base tables 43 → **44**.
 
 ### v1.23 (2026-06-11) — DR-038 Canonicalize `seo_media_assets` + Cloudflare config on `brands` 🔒🖼️☁️
 
@@ -196,7 +207,7 @@ v1.10 → v1.0: see `archive/Schema_Overview_EYWA_v1_10.md` for the historical d
 | **Group 4** | Keyword & Search Intelligence | seo_x_ads_keywords_contextual_master, seo_x_ads_keywords_monthly_market_snapshot, seo_x_ads_keyword_serp_competitors, seo_x_voice_search (**4**) | N↔S (master) · S only (monthly_snapshot, serp_competitors) |
 | **Group 5** | Performance Fact Tables | seo_x_ads_keywords_x_url_daily_logs (alias for logs_YYYY partitions), seo_local_rankings (**2**) | S only |
 | **Group 6** | Backlinks & Off-Page | seo_backlinks_data, seo_backlinks_links (**2**) | S only (Ahrefs/Moz/DFS ingest) |
-| **Group 7** | AI Operations & Embeddings | seo_brand_mentions, seo_llm_citations, seo_llm_query_simulations, seo_entity_embeddings (**4**) | S only |
+| **Group 7** | AI Operations & Embeddings | seo_brand_mentions, seo_llm_citations, seo_llm_query_simulations, seo_entity_embeddings, **seo_ai_agent_visits (v1.24, DR-074)** (**5**) | S only |
 | **Group 8** | Data Quality & Governance | seo_data_quality_metrics, seo_schema_changes (**2**) | S only |
 | **Group 9** | Entity Extensions & Templates | seo_entity_ingredients, seo_entity_devices, seo_entity_procedures, seo_entity_product, seo_entity_condition, seo_entity_symptom, seo_entity_drug, seo_entity_anatomy, seo_entity_organization, seo_entity_lab_test, seo_programmatic_templates (**11**) | S only (built without notion_id despite spec comment; treat as S-only — see §11 intro). `seo_entity_symptom` built per DR-036 (§11.5a) |
 | **Group 10** | Ads Landing Page Track (column extensions only) | (no new tables; columns on page_master + keyword master) | — |
@@ -1426,7 +1437,9 @@ Typical fields: source_url, source_domain, target_url, target_page_fp, anchor_te
 
 ---
 
-## 9. Group 7 — AI Operations & Embeddings (4 tables)
+## 9. Group 7 — AI Operations & Embeddings (5 tables)
+
+> **v1.24 (2026-09-20):** `seo_ai_agent_visits` added (§9.5). Four AI tables the Bible v2.4 announced were **never built and are now formally superseded** — `seo_ai_platforms` → `tsa_param.agent_platform` · `seo_predicted_prompts` → `seo_llm_query_simulations` · `seo_ai_response_analysis` → columns on `seo_llm_citations` · `seo_x_voice_search` → out of scope. Do not create them; the questions they answered have homes.
 
 ### 9.1 `seo_brand_mentions` (22 cols)
 
@@ -1485,6 +1498,26 @@ Columns:
 - `is_stale boolean` — flag for re-embedding (e.g. when entity description changes)
 
 ---
+
+### 9.5 `seo_ai_agent_visits` (12 cols) — BUILT 2026-09-20, DR-074
+
+> **Purpose:** Every fetch of an HTML page on a brand's apex by a documented AI agent. `agent_type = retrieval` (ChatGPT-User · Perplexity-User · Claude-User · meta-externalfetcher · MistralAI-User · DuckAssistBot · Google-CloudVertexBot) is an assistant reading the page to answer a user **now** — the citation event, first-party and free. `index` and `training` are logged apart and are context, never a KPI.
+> **Sync:** S only — written by each brand's Cloudflare Worker (`web/worker/index.ts` + classifier `web/worker/ai-agent.ts`, reference implementation in vth-biodent, ported verbatim by deezy). Fire-and-forget; GET + `text/html` + apex host only; non-AI user agents are not logged at all.
+> **Status:** live on vth-biodent and deezy-dental since 2026-09-20; first real rows within minutes (OAI-SearchBot from Microsoft's network, Amazonbot from AWS).
+> **Migration:** `eywa-vth-biodent/deployment/supabase-load/46_seo_ai_agent_visits.sql`
+
+Columns:
+- Identity: `id bigint identity`, `brand_id` → `brands(brand_slug)`
+- Visit: `visited_at timestamptz`, `visit_url text` (path only, no query string), `http_status_code smallint`, `referer text`
+- Agent: `agent_platform text` (governed: `tsa_param.agent_platform`), `agent_type text` CHECK `('retrieval','index','training')`, `agent_token text` (the UA token that matched), `user_agent_string text`
+- Network: `ip_country text` (Cloudflare `cf.country`), `as_org text` (Cloudflare `cf.asOrganization`) — spoof detection without storing an IP
+- **Deliberately absent:** `ip_address`, `session_id`, behaviour, purpose, outcome, treatment (Bible Table 32's v2.4 draft) — cannot be filled honestly from one request
+
+Indexes: `(brand_id, visited_at desc)` · `(brand_id, agent_type, visited_at desc)`. RLS enabled, service role only.
+
+View **`v_ai_agent_visits_page`**: `+ content_locale` (from the path prefix), `slug = tsa_page_slug(visit_url)`, `page_fingerprint`, `page_type`, `cluster_id`, `primary_entity_fp`, `off_plan`. Group by `page_fingerprint` for "which content do assistants read", by `content_locale` for "in which language".
+
+Reading rules (DR-074): a retrieval fetch means *read for an answer*, not *cited* — `seo_llm_citations` owns "cited"; a brand that refuses training crawlers at the edge has zero `training` rows by design.
 
 ## 10. Group 8 — Data Quality & Governance (2 tables)
 

@@ -2,8 +2,8 @@
 
 > **Append-only architectural decision log.** Each record explains WHY a decision was made — not just WHAT.
 
-**Document Version:** 1.41  
-**Last Updated:** 2026-09-17 — DR-068 proposed 2026-09-17 (เสนอโดย smile-scape): writer brief เป็นสคริปต์กลาง `scripts/writer-brief/` รับ `--brand` · เลิกคัดลอก `page-brief.mjs` ต่อแบรนด์ · DR-067 landed 2026-09-17 (เสนอโดย vth): หนึ่ง DOM ต่อคอมโพเนนต์ · h1 พอดีหนึ่ง · `data-cta-id` ไม่ซ้ำในหน้า — เกตห้ามยกเว้นโดย pattern · 2026-09-04 — DR-065/066 landed 2026-09-04 (เสนอโดย smile-scape): content_topic_tier สำหรับ vertical คลินิก · A3 ไม่ใช้กับลิงก์นำทาง · และ §32.4 ของ DR-030 ได้หมายเหตุแก้: คอลัมน์ Citation Tier เขียนจากสเกลคนละอันกับ Bible 23.1 ที่มันอ้าง · 2026-08-28 — DR-064 landed 2026-08-26 (เสนอโดย smile-scape): หน้าราคาที่แยกจากหน้าหลักไม่ใช่คีย์ชนกัน และ volume อ่านสองคอลัมน์ · 2026-08-28 — DR-054 ได้ addendum "page churn" (รายงานโดย deezy): หน้าที่ยังอยู่แต่ `page_fingerprint` ขยับตอนรื้อผัง ทำให้ประวัติแตกสอง id โดยไม่มีอะไรฟ้อง · 2026-08-27 — DR-063 landed 2026-08-27 (รายงานโดย deezy); DR-062 landed 2026-08-26 (เสนอโดย smile-scape); DR-059/060/061 landed 2026-08-24; DR-057/058 landed 2026-08-23; on 2026-08-24 every checkable claim in this file (table name, column name, allowed-value list, threshold, row count, status) was re-run against the live database. Corrections are appended in place and marked *(corrected 2026-08-24 against live schema)* — locked bodies are untouched. A second pass re-queried the corrections themselves and fixed four of them (deezy `page_category` 773→776 and the brand-wide NULL count 192→189; `schema_markup_type` 2,358→2,357 scalar rows / 27→26 distinct values; `periodontal-gum` "0 rows" narrowed to 0 pages and 0 entities, the deprecated cluster row survives; smile-scape's "0 uncited Live pages" flagged as vacuous — that brand has no Live page at all).  
+**Document Version:** 1.42  
+**Last Updated:** 2026-09-20 — DR-073/074/075 accepted (Tsaheylu AI side: `ai_referral` channel · AI-agent retrieval log `seo_ai_agent_visits` · `entry_referrer` on the bond) — all three live on vth-biodent + deezy-dental the day they were written; 4 Category-F tables declared superseded, never built
 **Format:** Reverse chronological (newest first)
 
 ---
@@ -31,6 +31,65 @@
 ---
 
 ## Decisions Log
+
+### [DR-075] — `entry_referrer`: เว็บไหนส่งคนมา เก็บบน bond (2026-09-20)
+
+**Status:** **Accepted — live ทั้ง vth-biodent (bffcc64) และ deezy-dental (0be7110) วันเดียวกัน**  
+**Bible Reference:** ไม่มี (Tsaheylu อยู่นอก Bible — DR-054)  
+**Schema Reference:** `tsa_bond.entry_referrer text` · `tsa_param` แถว `entry_referrer` (surface `server_only`)
+
+**Context:** `entry_source` เป็น enum ปิดเพราะเป็น GA4 dimension — ถูกสำหรับ dimension ผิดสำหรับคำถาม "เว็บไหนส่งคนนี้มา" เมื่อคำตอบเป็นเว็บที่ไม่มีใครลิสต์ (กระทู้พันทิป, directory, เว็บพาร์ทเนอร์ที่เราไปวางลิงก์) คนแบบนั้นเป็น `referral`/`other` และโดเมนรอดอยู่ใน `tsa_bond.referrer` ก็ต่อเมื่อกดบนหน้าแรกที่ลง — เพราะ `referrer` คือ referrer ของ**หน้าที่กด** ซึ่งเป็นเว็บเราเองหลังเดินไป 1 หน้า
+
+**Decision:** 1 คอลัมน์ text บน bond = host ภายนอกตอน**เริ่ม session** (ตัด `www.` ไม่เก็บ path เพราะ URL กระทู้มีชื่อคนได้ · ว่างเมื่อ direct/internal) เก็บใน Layer B ส่งใน payload ของ `/go/*` · server-side เท่านั้น ไม่มี GA4 param ไม่แตะ GTM ไม่มีเพดาน cardinality · GA4 ยังตอบคำถามเดียวกันด้วย `session_source` — bond ได้คู่ของมันแล้ว
+
+**Rationale:** เก็บที่ session start เพราะเป็นข้อเท็จจริงเดียวที่ referrer ของหน้าที่กดให้ไม่ได้ · ไม่เป็น dimension เพราะโดเมนไม่มีที่สิ้นสุด · ลิงก์ที่เราวางเองยังต้องติด `utm_source=<site>&utm_medium=referral` — in-app browser (LINE/Facebook) ตัด referrer ทิ้ง คอลัมน์นี้คือตาข่ายใต้ tag ไม่ใช่ตัวแทน
+
+**Consequences:** ลำดับบังคับ: apply คอลัมน์ก่อน deploy Worker ที่ส่ง field — Worker ตั้งทุก key ใน allowlist ลงแถว คอลัมน์ที่ไม่มีทำให้ insert ล้ม**ทั้งแถว** ไม่ใช่แค่ field เดียว · reference implementation = `web/src/lib/channel.ts` (`referrerHost()`) ใน vth-biodent — เปลี่ยนที่นั่นก่อน ส่ง hash ให้ deezy (สัญญาเดียวกับ DR-073/074)
+
+**References:** DR-073 · DR-074 · `eywa-vth-biodent/docs/proposed-protocol-changes/DR-075-entry-referrer.md` · migration `deployment/supabase-load/47_tsa_bond_entry_referrer.sql`
+
+---
+
+### [DR-074] — AI-agent retrieval log: บันทึก citation event ตรงที่มันเกิด (2026-09-20)
+
+**Status:** **Accepted — ตารางกลาง apply แล้ว · Worker live vth-biodent (578ea94) + deezy-dental (e174741) · แถวจริงแรกภายในนาทีเดียว**  
+**Bible Reference:** Part 13 §3.11.4 ("Detect AI agents") · Appendix Table 32 — **ฉบับนี้แทนที่นิยามเดิมทั้งสอง** · Pillar 2 / KPI #8  
+**Schema Reference:** `seo_ai_agent_visits` (สร้างจริง 2026-09-20 — ลดจาก Table 32 เหลือคอลัมน์ที่ Worker เติมได้จริงจาก 1 request) · view `v_ai_agent_visits_page` · `tsa_param` แถว `agent_platform` + surface ใหม่ `server_only`
+
+**Context:** Pillar 2 คือ "ให้ AI อ้างเรา" แต่ไม่มีอะไรใน stack เห็นว่ามันเกิดขึ้น: GA4 ไม่รันบน bot · `ai_referral` (DR-073) ยิงก็ต่อเมื่อคนคลิกต่อ · prompt probing ถามว่า AI *จะ* ทำอะไร — ขณะที่หลักฐานชั้นแรกอยู่ตรงหน้า: เวลาคนถาม ChatGPT แล้วมันมาอ่านหน้าเราเพื่อตอบ request มาพร้อม UA ที่ประกาศชัด (`ChatGPT-User`, `Perplexity-User`, `Claude-User`) หนึ่ง request ต่อหนึ่งคำตอบ ตอนที่ตอบ **นั่นคือ citation event** ฟรี และเป็น first-party
+
+**Decision:**
+1. Worker บันทึกทุก fetch ที่เป็น `text/html` บน apex ซึ่ง UA เป็น AI agent ที่มีเอกสาร → `seo_ai_agent_visits` (brand_id · visited_at · visit_url path เท่านั้น · http_status_code · agent_platform · agent_type · agent_token · user_agent_string · ip_country · as_org · referer) — **ไม่เก็บ IP ไม่เก็บ session** แถวไม่ใช่คน · `ip_country`/`as_org` มาจาก Cloudflare ไว้แยก OpenAI จริง (US / Microsoft-OpenAI ASN) จาก UA ปลอม
+2. **`agent_type` 3 ค่า และนี่คือมูลค่าทั้งหมดของตาราง:** `retrieval` (ChatGPT-User · Perplexity-User · Claude-User · meta-externalfetcher · MistralAI-User · DuckAssistBot · Google-CloudVertexBot) = AI อ่านหน้านี้เพื่อตอบใคร**ตอนนี้** · `index` (OAI-SearchBot · PerplexityBot · Claude-SearchBot · Applebot · Amazonbot) · `training` (GPTBot · ClaudeBot · meta-externalagent · Applebot-Extended · Bytespider · CCBot · cohere-ai) · UA ที่ไม่ใช่ AI = ไม่บันทึกเลย ไม่ใช่ `other`
+3. **`agent_platform` govern ใน `tsa_param`** (13 ค่า) ไม่ใช่ตาราง registry `seo_ai_platforms` — ตารางนั้นมีในเอกสารแต่**ไม่เคยถูกสร้าง** และ registry ที่สองสำหรับ "AI platform ไหน" คือ hand-copied mirror ที่ DR-055 มีไว้กัน · 5 ค่าที่ซ้ำกับ `entry_source` สะกดเหมือนกันเป๊ะ → "platform ที่*อ่าน*เรา ส่งคนมาไหม" เป็น join · `copilot` อยู่ในลิสต์แต่**ไม่มีกฎจับ** — Microsoft ไม่มี token แยกสำหรับ Copilot มาเป็น bingbot; กฎที่แต่งเองจะบันทึก crawler ของ Bing เป็น assistant
+4. page identity resolve ตอนอ่านผ่าน `tsa_page_slug()` ใน view (เหมือน `v_tsa_bond_enriched`) — หน้าที่ย้ายในแผนไม่ทิ้งประวัติ · view เพิ่ม `content_locale` จาก path เพราะ `tsa_page_slug()` ตัด locale ทิ้ง
+5. ตารางบันทึก**สิ่งที่ถึง Worker**เท่านั้น — แบรนด์ที่บล็อก training crawler ที่ edge (deezy, DZ-DR-066) มี training rows = 0 คือ policy ทำงาน ไม่ใช่ Worker พัง
+
+**Rationale:** ชั้นเดียวที่ตอบ "AI หยิบหน้าไหนไปตอบ" โดยไม่พึ่งเครื่องมือภายนอกและไม่มีค่าใช้จ่าย · ต้องแยก retrieval/index/training เพราะ "GPTBot อ่านแล้ว" กับ "ChatGPT ใช้ตอบ" คนละข้อเท็จจริง และข้อหลังคือ Pillar
+
+**Consequences (กฎการอ่าน — จดไว้ก่อนมีใครเรียนรู้แพง):** retrieval fetch = ถูก*อ่าน*เพื่อตอบ ไม่ใช่ถูก*อ้าง* (probe layer เป็นเจ้าของคำว่า "cited") · ปริมาณ training/index ไม่ใช่ KPI — ขึ้นเมื่อ crawler ขยัน ไม่ใช่เมื่อ content ดี · reference implementation `web/worker/ai-agent.ts` ใน vth-biodent, deezy port verbatim + test pin hash · **ตารางที่ประกาศไว้ใน Category F แล้วไม่สร้าง (ทับด้วย DR นี้):** `seo_ai_platforms` → `tsa_param.agent_platform` · `seo_predicted_prompts` → ซ้ำกับ `seo_llm_query_simulations` (มี prompt_template/variables/expected pages อยู่แล้ว) · `seo_ai_response_analysis` → คอลัมน์มีอยู่แล้วใน `seo_llm_citations` (`citation_context`, `competitors_cited`, `brand_sentiment`) · `seo_x_voice_search` → นอกขอบเขตจนกว่าจะมี voice surface — Bible v3.35 บันทึกทั้ง 4 แล้ว
+
+**References:** DR-073 · DR-054/055 · DZ-DR-066 · `eywa-vth-biodent/docs/proposed-protocol-changes/DR-074-ai-agent-retrieval-log.md` · migration `deployment/supabase-load/46_seo_ai_agent_visits.sql` · review โดย deezy session 2026-09-20 (governance row · content_locale · index)
+
+---
+
+### [DR-073] — AI assistant เป็น acquisition channel: `ai_referral` + 5 ค่าใน `entry_source` (2026-09-19)
+
+**Status:** **Accepted — `tsa_param` เปลี่ยนแล้ว · classifier live ทั้ง vth-biodent (5010482) และ deezy-dental (c038191) · ประวัติแก้แล้วทั้งสองแบรนด์ (vth 3 · deezy 77)**  
+**Bible Reference:** Pillar 2 · KPI #8/#11 (Part 20.4)  
+**Schema Reference:** `tsa_param.entry_channel` +`ai_referral` (12 ค่า) · `tsa_param.entry_source` +`chatgpt` `perplexity` `gemini` `copilot` `claude` (19 ค่า)
+
+**Context:** ChatGPT ต่อ `?utm_source=chatgpt.com` (ไม่มี medium) ท้ายทุกลิงก์ที่มันอ้าง · classifier เห็น "source ที่ไม่รู้จัก ไม่มี medium" → `other_campaign` · ลิงก์ที่เปิดจากแอปไม่มี referrer เลย → tag คือสัญญาณเดียว · ผล: **deezy 77/1,771 bonds (4.3% และ = 100% ของ bucket other_campaign) · vth 3/70 (4.3%)** เป็นคนที่ ChatGPT ส่งมา convert ซึ่งไม่มีใครเคยอ่าน — GA4 เองจัด session พวกนี้เป็น "AI Assistant" อยู่แล้ว snapshot ของเราเถียง GA4 ทุกแถว · กับดักที่สอง: `gemini.google.com` ตรง regex search-host (`google\.`) → รายงานเป็น organic Google
+
+**Decision:** `entry_channel` เพิ่ม `ai_referral` (AI assistant ไม่จ่ายเงิน วางคู่ `organic_search`) · `entry_source` เพิ่ม 5 ค่า ตามชื่อใน `agent_platform` (DR-074) · ลำดับใน classifier: gclid → **tag เป็น AI + medium ไม่ใช่ paid → `ai_referral`** → medium block (paid + AI source → `other_campaign` **สงวนไว้สำหรับ `paid_ai` ที่ยังไม่ govern** — ไม่ใช่ `paid_search` ไม่ใช่ `ai_referral`) → referrer: internal → **AI host → `ai_referral`** → search host → social · **AI ต้องมาก่อน search host** ไม่งั้น gemini เป็น google · ลิสต์ปิด: assistant ที่ไม่อยู่ในลิสต์ = `other` จนกว่า `tsa_param` จะบอก · **GTM ไม่แตะ** — param เดิม tag เดิม ค่าใหม่ไหลผ่าน
+
+**Rationale:** ตารางกลางเปลี่ยนครั้งเดียว ทุกแบรนด์รันกติกาเดียวกัน ไม่งั้นรายงานข้ามแบรนด์เทียบ "AI ส่งมา" คนละนิยาม · แก้ประวัติได้เพราะ deterministic จากคอลัมน์ที่เก็บไว้ (`utm`, `referrer`) — ไม่ใช่การแต่งอดีต
+
+**Consequences:** `web/src/lib/channel.ts` ของ vth-biodent = **reference implementation ของ federation** — deezy port verbatim ใต้ header ที่ระบุ hash + test ที่แดงเมื่อ drift · ทุกการเปลี่ยน channel.ts ลงที่ vth ก่อน ส่ง hash ให้ deezy · DNI: `ai_referral` ไม่มีเบอร์ของตัวเอง ตกเบอร์แบรนด์เหมือน `direct` · GA4 จัด gemini เป็น Referral ของเราเป็น ai_referral — ส่วนต่างที่คาดไว้
+
+**References:** DR-054 · DR-055 · DR-046 · `BROADCAST-2026-09-19-ai-referral-channel.md` · `eywa-vth-biodent/docs/proposed-protocol-changes/DR-073-ai-referral-channel.md` · backfill deezy `deployment/supabase-load/72_dr073_ai_referral_backfill.sql`
+
+---
 
 ### [DR-069] — ชั้นข้อห้ามทางคลินิก (contraindication): store เดียวในตารางลูก · bridge ต่อแบรนด์ · render บนหน้าที่ "เป็น" หัตถการ · อนุมัติด้วยหลักฐานสากล (2026-09-18) 🩺🧬
 
