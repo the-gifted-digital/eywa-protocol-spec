@@ -395,9 +395,12 @@ const bHits = kw
   : [];
 
 // NEW: operator forbidden topics (config `forbidden_topics`) — checked against page_name,
-// seo_title, meta_description, the target keyword, and related entity names.
-const forbiddenHaystack = [page.page_name, page.seo_title, page.meta_description, kw?.keyword, ...relatedEntityNames]
-  .filter(Boolean).join('\n');
+// seo_title, meta_description, the target keyword, related entity names, and the SEMANTIC
+// keywords. The semantic list was the gap: those words are printed to the writer as things to
+// cover, so a banned term sitting there is read as an instruction to write about it (2026-10-04:
+// smile-scape had 9 such bindings, including บัตรทอง and ข้าราชการ terms, on 7 pages).
+const forbiddenHaystack = [page.page_name, page.seo_title, page.meta_description, kw?.keyword,
+  ...relatedEntityNames, ...semanticKeywords].filter(Boolean).join('\n');
 const forbiddenHits = (cfg.forbidden_topics ?? []).filter((t) => new RegExp(t.pattern, 'i').test(forbiddenHaystack));
 
 // notes: delimited by either " | " or a newline — split on both (2026-09-17 data check: real
