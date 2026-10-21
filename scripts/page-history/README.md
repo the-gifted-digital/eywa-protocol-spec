@@ -26,8 +26,9 @@ observation of a page is a baseline and writes no log rows.
 Each row carries `old_value`, `new_value`, `detected_at`, `prev_ok_at` (the change went live between
 `prev_ok_at` and `detected_at`), `change_date` (Asia/Bangkok) and `run_id`.
 
-**Failures.** A network error, timeout, 5xx, 404 or 410 only increments `consecutive_failures`; nothing is
-logged. After **3 consecutive failures** one `http_status` row is logged. A single blip never becomes a
+**Failures.** Every response that is not 2xx and not 304 (including 403, 429 and any 3xx that is not
+followed) and every network error or timeout counts as a failure: it only increments
+`consecutive_failures`; nothing is logged. After **3 consecutive failures** one `http_status` row is logged. A single blip never becomes a
 change. In state, `http_status` `0` means a fetch error (no HTTP response); it is logged as `'fetch_error'`.
 
 **Conditional GET.** If the previous observation of the same URL was healthy (2xx, no failures), the crawler
@@ -35,6 +36,10 @@ sends `If-None-Match` / `If-Modified-Since` from the stored `etag` / `last_modif
 parsing and logs nothing. After a failure or a URL change it fetches unconditionally.
 
 ## Running locally
+
+**Do not run it for a brand during that brand's nightly window (02:00 Asia/Bangkok).** Log ids are
+deterministic (`ON CONFLICT (id) DO NOTHING`), so an overlapping run cannot duplicate rows, but it wastes the
+scheduled run.
 
 ```bash
 cd scripts/page-history && npm ci
@@ -47,6 +52,10 @@ npm test
 Flags: `--brand <brand_id>` (slug, required), `--dry-run` (no DB writes), `--limit N` (first N pages).
 `--brands-dir <dir>` is a test hook that swaps the config directory. The last line of output is a JSON
 summary (`checked`, `ok`, `not_modified`, `failed`, `log_rows`).
+
+**Deleting pages.** A page with change-log rows (or notes) cannot be hard-deleted from
+`seo_website_page_master` (FK, NO ACTION). Archive it via `status` instead. Its `seo_page_live_state` row is
+disposable and is removed automatically if the page row is deleted (ON DELETE CASCADE).
 
 ## Brand config
 

@@ -7,5 +7,9 @@
   { "in": "HTTPS://Example.COM/Path/Keep-Case/", "out": "https://example.com/Path/Keep-Case" },
   { "in": "https://example.com/?q=1", "out": "https://example.com/" },
   { "in": "https://example.com#frag", "out": "https://example.com/" },
-  { "in": "https://wwwx.example.com/a", "out": "https://wwwx.example.com/a" }
+  { "in": "https://wwwx.example.com/a", "out": "https://wwwx.example.com/a" },
+  { "in": "https://www.vertexclinic.com/วีเนียร์/", "out": "https://vertexclinic.com/%E0%B8%A7%E0%B8%B5%E0%B9%80%E0%B8%99%E0%B8%B5%E0%B8%A2%E0%B8%A3%E0%B9%8C" },
+  { "in": "https://www.vertexclinic.com/%E0%B8%A7%E0%B8%B5%E0%B9%80%E0%B8%99%E0%B8%B5%E0%B8%A2%E0%B8%A3%E0%B9%8C/", "out": "https://vertexclinic.com/%E0%B8%A7%E0%B8%B5%E0%B9%80%E0%B8%99%E0%B8%B5%E0%B8%A2%E0%B8%A3%E0%B9%8C" },
+  { "in": "https://tcsmiledental.com/%e0%b8%9f%e0%b8%b1%e0%b8%99", "out": "https://tcsmiledental.com/%E0%B8%9F%E0%B8%B1%E0%B8%99" },
+  { "in": "https://example.com/blog/ฟัน-veneer/a%2fb c", "out": "https://example.com/blog/%E0%B8%9F%E0%B8%B1%E0%B8%99-veneer/a%2Fb c" }
 ]

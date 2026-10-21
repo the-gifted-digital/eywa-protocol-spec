@@ -37,8 +37,9 @@ test('unchanged ok writes nothing', () => {
 test('title change logs exactly one title row', () => {
   const prev = base();
   const { log } = run(prev, ok({}, { title: 'New' }));
+  assert.match(log[0].id, /^[0-9a-f]{8}-[0-9a-f]{4}-5[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/);
   assert.deepEqual(log, [{
-    page_fp: prev.page_fp, brand_id: prev.brand_id, field: 'title', old_value: 'T', new_value: 'New',
+    id: log[0].id, page_fp: prev.page_fp, brand_id: prev.brand_id, field: 'title', old_value: 'T', new_value: 'New',
     detected_at: T1.toISOString(), prev_ok_at: prev.last_ok_at, run_id: 'r1',
   }]);
 });
@@ -177,4 +178,14 @@ test('not_modified on never-OK page keeps it a baseline candidate', () => {
   const r = run(s, ok());
   assert.equal(r.log.length, 0);
   assert.equal(r.state.last_ok_at, T1.toISOString());
+});
+
+test('log row id is deterministic for the same transition and differs when prev_ok_at differs', () => {
+  const prev = base();
+  const a = run(prev, ok({}, { title: 'New' })).log[0];
+  const b = decide(prev, ok({}, { title: 'New' }), URL1, new Date('2026-10-03T00:00:00Z'), 'r2').log[0];
+  assert.equal(a.id, b.id); // same transition, different run/time -> same id
+  const c = run({ ...prev, last_ok_at: T1.toISOString() }, ok({}, { title: 'New' })).log[0];
+  assert.notEqual(a.id, c.id);
+  assert.notEqual(a.id, run(prev, ok({}, { title: 'Other' })).log[0].id);
 });

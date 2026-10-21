@@ -16,14 +16,25 @@
 --    scripts/page-history/fixtures/url-cases.json)
 --    lowercase scheme + host, drop leading www., drop query + fragment,
 --    drop one trailing '/' unless the path is just '/' (an empty path
---    becomes '/'). Nothing is decoded. Non-URL input is returned as is.
+--    becomes '/'). Then the PATH is percent-encoded canonically: every
+--    non-ASCII character becomes its UTF-8 bytes as %XX (uppercase hex)
+--    and every existing %xx escape gets uppercase hex. ASCII characters
+--    and escapes are otherwise untouched (%2F stays, spaces stay). So a
+--    decoded Thai path (page_master) and its %-encoded form (GSC) match.
+--    Nothing is decoded. Non-URL input is returned as is.
 -- ─────────────────────────────────────────────────────────────────────
 CREATE OR REPLACE FUNCTION seo_norm_url(u text) RETURNS text
 LANGUAGE sql IMMUTABLE STRICT PARALLEL SAFE AS $$
-  -- single expression (no FROM) so the planner can inline it
   SELECT CASE WHEN u !~ '^[A-Za-z][A-Za-z0-9+.-]*://' THEN u ELSE
            regexp_replace(lower(substring(u FROM '^([A-Za-z][A-Za-z0-9+.-]*://[^/?#]*)')), '^([a-z][a-z0-9+.-]*://)www\.', '\1')
-           || coalesce(nullif(regexp_replace(substring(u FROM '^[A-Za-z][A-Za-z0-9+.-]*://[^/?#]*([^?#]*)'), '/$', ''), ''), '/')
+           || coalesce(nullif((
+                SELECT string_agg(CASE WHEN length(m.t[1]) = 3 THEN upper(m.t[1])          -- existing %xx escape
+                                       WHEN ascii(m.t[1]) < 128 THEN m.t[1]                -- ASCII as is
+                                       ELSE upper(regexp_replace(encode(convert_to(m.t[1], 'UTF8'), 'hex'), '(..)', '%\1', 'g'))
+                                  END, '' ORDER BY m.n)
+                  FROM regexp_matches(regexp_replace(substring(u FROM '^[A-Za-z][A-Za-z0-9+.-]*://[^/?#]*([^?#]*)'), '/$', ''),
+                                      '%[0-9A-Fa-f]{2}|.', 'g') WITH ORDINALITY AS m(t, n)
+              ), ''), '/')
          END
 $$;
 
@@ -31,7 +42,7 @@ $$;
 -- 2. Tables
 -- ─────────────────────────────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS seo_page_live_state (
-  page_fp              text PRIMARY KEY REFERENCES seo_website_page_master(fingerprint),
+  page_fp              text PRIMARY KEY,   -- FK (ON DELETE CASCADE) added below, re-run safe
   brand_id             text NOT NULL,
   url                  text NOT NULL,
   http_status          int,
@@ -50,6 +61,13 @@ CREATE TABLE IF NOT EXISTS seo_page_live_state (
   last_ok_at           timestamptz,
   consecutive_failures int NOT NULL DEFAULT 0
 );
+
+-- State is disposable: deleting a page_master row drops its state. The log and
+-- notes keep NO ACTION, so a page with history cannot be hard-deleted
+-- (archive it via page_master.status instead).
+ALTER TABLE seo_page_live_state DROP CONSTRAINT IF EXISTS seo_page_live_state_page_fp_fkey;
+ALTER TABLE seo_page_live_state ADD CONSTRAINT seo_page_live_state_page_fp_fkey
+  FOREIGN KEY (page_fp) REFERENCES seo_website_page_master(fingerprint) ON DELETE CASCADE;
 
 CREATE TABLE IF NOT EXISTS seo_page_change_log (
   id          uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -143,11 +161,12 @@ WITH ev AS (
 lo AS (                   -- earliest GSC day any window needs; bounds every GSC scan
   SELECT min(change_date) - 28 AS d FROM ev
 ),
-gurl AS (                 -- normalise distinct GSC URLs, not rows
-  SELECT DISTINCT g.brand_id, g.page_url, seo_norm_url(g.page_url) AS nurl
-    FROM seo_gsc_query_daily g
-   WHERE g.brand_id IN (SELECT brand_id FROM ev) AND g.search_type = 'web'
-     AND g.snapshot_date >= (SELECT d FROM lo)
+gurl AS (                 -- normalise distinct GSC URLs, not rows (DISTINCT first, then the function)
+  SELECT d.brand_id, d.page_url, seo_norm_url(d.page_url) AS nurl
+    FROM (SELECT DISTINCT g.brand_id, g.page_url
+            FROM seo_gsc_query_daily g
+           WHERE g.brand_id IN (SELECT brand_id FROM ev) AND g.search_type = 'web'
+             AND g.snapshot_date >= (SELECT d FROM lo)) d
 ),
 page_urls AS (            -- every URL the page has had, normalised
   SELECT pm.fingerprint AS page_fp, seo_norm_url(pm.canonical_url) AS nurl

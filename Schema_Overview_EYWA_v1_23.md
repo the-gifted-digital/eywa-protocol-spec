@@ -1343,8 +1343,9 @@ Page cannot move to `status='Live'` until all required review rows have `approve
 > **DR:** DR-076 · **Proposal:** `proposals/2026-10-21-page-change-history.md` §4.1
 > **Volume:** 1 row per `status='Live'` page with a `canonical_url` (~1.5k at design time; 2–3k once legacy sites are imported).
 
-**Columns (18):** `page_fp text PK` → `seo_website_page_master.fingerprint` (the DR-008 `page_{ULID16}`, not legacy `page_fingerprint`; no cascade — history outlives the page row) · `brand_id` · `url` (URL fetched) · `http_status` · `final_url` (after redirects) · tracked fields `title`, `meta_description`, `h1`, `canonical`, `robots`, `schema_types text[]` (sorted), `content_hash` · conditional-GET cache `etag`, `last_modified` · `first_seen_at`, `last_checked_at`, `last_ok_at`, `consecutive_failures int`.
+**Columns (18):** `page_fp text PK` → `seo_website_page_master.fingerprint` (the DR-008 `page_{ULID16}`, not legacy `page_fingerprint`; `ON DELETE CASCADE` — state is disposable) · `brand_id` · `url` (URL fetched) · `http_status` · `final_url` (after redirects) · tracked fields `title`, `meta_description`, `h1`, `canonical`, `robots`, `schema_types text[]` (sorted), `content_hash` · conditional-GET cache `etag`, `last_modified` · `first_seen_at`, `last_checked_at`, `last_ok_at`, `consecutive_failures int`.
 **RLS:** enabled + `eywa_authenticated_full_access`.
+**FK:** `page_fp` → page_master `ON DELETE CASCADE` (state only; log and note keep NO ACTION, so a page with history cannot be hard-deleted — archive via `status`).
 
 ### 5.5 `seo_page_change_log` 🆕 v1.25 (DR-076) — append-only
 
@@ -1354,6 +1355,7 @@ Page cannot move to `status='Live'` until all required review rows have `approve
 
 **Columns (10):** `id uuid PK` · `page_fp` → `seo_website_page_master.fingerprint` · `brand_id` · `field` CHECK ∈ `url, final_url, http_status, title, meta_description, h1, canonical, robots, schema_types, content_hash` · `old_value jsonb`, `new_value jsonb` · `detected_at timestamptz` · `prev_ok_at` (last crawl that still saw the old value) · `change_date date` (**GENERATED**, `detected_at` in Asia/Bangkok — the event date used for impact) · `run_id`.
 **Indexes:** `(page_fp, detected_at DESC)`, `(brand_id, change_date)`.
+**Idempotent ids:** the crawler sets `id` = UUID (v5-shaped) from sha256 of `page_fp|field|prev_ok_at|old|new` and writes with `INSERT … ON CONFLICT (id) DO NOTHING`, so a re-detected transition (overlapping or re-run crawl) adds no row and never fires the immutability trigger.
 **Rules:** a fetch failure / 404 / 410 logs nothing until 3 consecutive failures, then one `http_status` row; redirects log `final_url` immediately; a `canonical_url` edit logs one `url` row.
 **Immutability:** `REVOKE UPDATE, DELETE, TRUNCATE` from `anon`/`authenticated`/`service_role` + trigger `trg_page_change_log_immutable` (BEFORE UPDATE OR DELETE, row) + `trg_page_change_log_no_truncate` (BEFORE TRUNCATE) → `fn_page_change_log_immutable()` raises. Triggers stop `service_role`, which bypasses RLS; "admin delete" = owner `postgres` disabling the trigger inside a reviewed migration.
 **RLS:** enabled + `eywa_authenticated_full_access`.
@@ -1369,7 +1371,7 @@ Page cannot move to `status='Live'` until all required review rows have `approve
 
 ### 5.7 DR-076 function and views 🆕 v1.25
 
-- **`seo_norm_url(text) → text`** — IMMUTABLE SQL: lowercase scheme + host, drop leading `www.`, drop query + fragment, drop one trailing `/` (empty path → `/`); nothing decoded; non-URL input returned as is. Mirrored in JS (shared cases in `scripts/page-history/fixtures/url-cases.json`).
+- **`seo_norm_url(text) → text`** — IMMUTABLE SQL: lowercase scheme + host, drop leading `www.`, drop query + fragment, drop one trailing `/` (empty path → `/`); path %-encoded canonically (non-ASCII → UTF-8 `%XX` uppercase, existing `%xx` → uppercase, ASCII untouched) so decoded Thai `canonical_url` matches %-encoded GSC `page_url`; nothing decoded; non-URL input returned as is. Mirrored in JS (shared cases in `scripts/page-history/fixtures/url-cases.json`).
 - **`v_page_change_events`** — one event = all log rows of one page on one `change_date`: `fields[]`, `event_kind` (`url_change` > `seo_meta` > `content` > `health`), `notes[]`.
 - **`v_page_change_impact`** — per event, GSC before = `[change_date−28, change_date)` vs after = `[change_date+3, change_date+31)`: clicks, impressions, CTR, impression-weighted position, absolute deltas (`d_clicks`, `d_ctr`, `d_pos`) plus brand-relative deltas (`ctr_delta_vs_brand`, `clicks_delta_vs_brand`), `status` (`pending` until the after window is covered by GSC data), `confidence`. GSC rows match by `seo_norm_url` against **every URL the page has ever had** (current `canonical_url` + `old_value`/`new_value` of `url`/`final_url` log rows). `url_change` events cap confidence at `medium`.
 - **`v_page_field_history`** — every value a field has had on a page with `live_from`/`live_to` and the introducing `change_date`; the rollback reader ("which title performed better?").

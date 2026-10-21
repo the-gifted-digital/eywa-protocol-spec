@@ -54,7 +54,8 @@ export async function saveResult(db, { log = [], states = [] }, { wait = sleep }
   for (const r of log) (byPage.get(r.page_fp) ?? byPage.set(r.page_fp, []).get(r.page_fp)).push(r);
   const stateOf = new Map(states.map((s) => [s.page_fp, s]));
   for (const [fp, rows] of byPage) {
-    await step(`${fp} log insert`, wait, () => db.from('seo_page_change_log').insert(rows));
+    // ON CONFLICT (id) DO NOTHING: ids are deterministic (diff.mjs logId), so a re-detected transition is a no-op.
+    await step(`${fp} log insert`, wait, () => db.from('seo_page_change_log').upsert(rows, { onConflict: 'id', ignoreDuplicates: true }));
     const st = stateOf.get(fp);
     if (st) await step(`${fp} state upsert`, wait, () => db.from('seo_page_live_state').upsert([st], { onConflict: 'page_fp' }));
     stateOf.delete(fp);

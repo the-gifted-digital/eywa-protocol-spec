@@ -20,7 +20,11 @@ BEGIN
     ('HTTPS://Example.COM/Path/Keep-Case/', 'https://example.com/Path/Keep-Case'),
     ('https://example.com/?q=1', 'https://example.com/'),
     ('https://example.com#frag', 'https://example.com/'),
-    ('https://wwwx.example.com/a', 'https://wwwx.example.com/a')
+    ('https://wwwx.example.com/a', 'https://wwwx.example.com/a'),
+    ('https://www.vertexclinic.com/วีเนียร์/', 'https://vertexclinic.com/%E0%B8%A7%E0%B8%B5%E0%B9%80%E0%B8%99%E0%B8%B5%E0%B8%A2%E0%B8%A3%E0%B9%8C'),
+    ('https://www.vertexclinic.com/%E0%B8%A7%E0%B8%B5%E0%B9%80%E0%B8%99%E0%B8%B5%E0%B8%A2%E0%B8%A3%E0%B9%8C/', 'https://vertexclinic.com/%E0%B8%A7%E0%B8%B5%E0%B9%80%E0%B8%99%E0%B8%B5%E0%B8%A2%E0%B8%A3%E0%B9%8C'),
+    ('https://tcsmiledental.com/%e0%b8%9f%e0%b8%b1%e0%b8%99', 'https://tcsmiledental.com/%E0%B8%9F%E0%B8%B1%E0%B8%99'),
+    ('https://example.com/blog/ฟัน-veneer/a%2fb c', 'https://example.com/blog/%E0%B8%9F%E0%B8%B1%E0%B8%99-veneer/a%2Fb c')
   ) v(i, o) LOOP
     IF seo_norm_url(r.i) IS DISTINCT FROM r.o THEN
       RAISE EXCEPTION 'seo_norm_url(%) = %, want %', r.i, seo_norm_url(r.i), r.o;
@@ -85,6 +89,23 @@ BEGIN
   -- change_date is the Asia/Bangkok date of detected_at
   IF (SELECT change_date FROM seo_page_change_log WHERE page_fp = fp) <> date '2026-01-01' THEN
     RAISE EXCEPTION 'change_date is not the Bangkok date';
+  END IF;
+END $$;
+
+-- 2b. Deterministic ids: re-inserting an existing id with ON CONFLICT (id) DO NOTHING
+--     is a silent no-op (no second row, no append-only trigger: no UPDATE happens)
+DO $$
+DECLARE fp text;
+BEGIN
+  SELECT fingerprint INTO fp FROM seo_website_page_master WHERE canonical_url = 'https://test.invalid/s';
+  INSERT INTO seo_page_change_log (id, page_fp, brand_id, field, old_value, new_value, detected_at, run_id)
+  VALUES ('00000000-0000-5000-8000-000000000001', fp, 'w-test-brand', 'h1', '"x"', '"y"', '2026-01-02 03:00+07', 'run-1');
+  INSERT INTO seo_page_change_log (id, page_fp, brand_id, field, old_value, new_value, detected_at, run_id)
+  VALUES ('00000000-0000-5000-8000-000000000001', fp, 'w-test-brand', 'h1', '"x"', '"y"', '2026-01-03 03:00+07', 'run-2')
+  ON CONFLICT (id) DO NOTHING;
+  IF (SELECT count(*) FROM seo_page_change_log WHERE id = '00000000-0000-5000-8000-000000000001') <> 1
+     OR (SELECT run_id FROM seo_page_change_log WHERE id = '00000000-0000-5000-8000-000000000001') <> 'run-1' THEN
+    RAISE EXCEPTION 'ON CONFLICT (id) DO NOTHING did not keep exactly the first row';
   END IF;
 END $$;
 
@@ -223,6 +244,56 @@ BEGIN
   IF (SELECT confidence FROM v_page_change_impact WHERE page_fp = fp) <> 'high' THEN
     RAISE EXCEPTION 'fully covered seo_meta event is not high confidence';
   END IF;
+END $$;
+
+-- 9. Percent-encoding: page_master holds the DECODED Thai path, GSC the %-encoded
+--    (uppercase hex) path, with www + trailing slash; they must match
+DO $$
+DECLARE fp text; v record;
+BEGIN
+  INSERT INTO seo_website_page_master (page_fingerprint, fingerprint_display_name, brand_id, status, canonical_url, slug)
+  VALUES ('w-test-thai-v', 'w-test::thai-v', 'w-test-brand-thai', 'Live', 'https://thai.invalid/วีเนียร์/', 'veneer') RETURNING fingerprint INTO fp;
+  INSERT INTO seo_page_change_log (page_fp, brand_id, field, old_value, new_value, detected_at, run_id)
+  VALUES (fp, 'w-test-brand-thai', 'title', '"a"', '"b"', '2026-08-01 03:00+07', 'test');
+  INSERT INTO seo_gsc_query_daily (brand_id, snapshot_date, search_type, query, page_url, clicks, impressions, ctr, position)
+  SELECT 'w-test-brand-thai', d::date, 'web', 'q5',
+         'https://www.thai.invalid/%E0%B8%A7%E0%B8%B5%E0%B9%80%E0%B8%99%E0%B8%B5%E0%B8%A2%E0%B8%A3%E0%B9%8C/', 1, 10, 0.1, 5
+  FROM generate_series(date '2026-07-04', date '2026-07-31', interval '1 day') d;
+  INSERT INTO seo_gsc_query_daily (brand_id, snapshot_date, search_type, query, page_url, clicks, impressions, ctr, position)
+  SELECT 'w-test-brand-thai', d::date, 'web', 'q5',
+         'https://www.thai.invalid/%E0%B8%A7%E0%B8%B5%E0%B9%80%E0%B8%99%E0%B8%B5%E0%B8%A2%E0%B8%A3%E0%B9%8C/', 2, 10, 0.2, 3
+  FROM generate_series(date '2026-08-04', date '2026-08-31', interval '1 day') d;
+  SELECT * INTO v FROM v_page_change_impact WHERE page_fp = fp;
+  IF v IS NULL OR v.impr_b <> 280 OR v.clicks_b <> 28 OR v.impr_a <> 280 OR v.clicks_a <> 56 THEN
+    RAISE EXCEPTION 'decoded Thai canonical_url did not match encoded GSC page_url: %', row_to_json(v);
+  END IF;
+END $$;
+
+-- 10. FKs: live_state cascades on page_master delete; log (and note) block it
+DO $$
+DECLARE fp_state text; fp_log text; ok boolean := false;
+BEGIN
+  INSERT INTO seo_website_page_master (page_fingerprint, fingerprint_display_name, brand_id, status, canonical_url, slug)
+  VALUES ('w-test-del-state', 'w-test::del-state', 'w-test-brand', 'Live', 'https://test.invalid/del-state', 'del-state') RETURNING fingerprint INTO fp_state;
+  INSERT INTO seo_website_page_master (page_fingerprint, fingerprint_display_name, brand_id, status, canonical_url, slug)
+  VALUES ('w-test-del-log', 'w-test::del-log', 'w-test-brand', 'Live', 'https://test.invalid/del-log', 'del-log') RETURNING fingerprint INTO fp_log;
+  INSERT INTO seo_page_live_state (page_fp, brand_id, url) VALUES
+    (fp_state, 'w-test-brand', 'https://test.invalid/del-state'),
+    (fp_log,   'w-test-brand', 'https://test.invalid/del-log');
+  INSERT INTO seo_page_change_log (page_fp, brand_id, field, old_value, new_value, detected_at, run_id)
+  VALUES (fp_log, 'w-test-brand', 'title', '"a"', '"b"', '2026-08-01 03:00+07', 'test');
+
+  DELETE FROM seo_website_page_master WHERE fingerprint = fp_state;
+  IF EXISTS (SELECT 1 FROM seo_page_live_state WHERE page_fp = fp_state) THEN
+    RAISE EXCEPTION 'live_state row survived its page_master delete';
+  END IF;
+
+  BEGIN
+    DELETE FROM seo_website_page_master WHERE fingerprint = fp_log;
+  EXCEPTION WHEN foreign_key_violation THEN
+    ok := true;
+  END;
+  IF NOT ok THEN RAISE EXCEPTION 'page_master row with change-log history was deleted'; END IF;
 END $$;
 
 DO $$ BEGIN RAISE NOTICE 'ALL PASS'; END $$;

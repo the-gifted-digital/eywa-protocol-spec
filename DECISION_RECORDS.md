@@ -67,6 +67,9 @@
 - **`url_change` confidence เพดาน medium** — Google ต้องใช้เวลา consolidate signal ไปยัง URL ใหม่ และ gap 3 วันมักสั้นเกินไป.
 - **`seo_gsc_query_daily` เปิด RLS แต่ไม่มี policy** — impact view คืนตัวเลขฝั่ง GSC ให้เฉพาะ `postgres` / `service_role` (role `authenticated` เห็นแถวว่าง).
 - Content change บันทึกเป็น hash เท่านั้น (ไม่มี body diff); rollback เป็นการเขียนค่าเดิมกลับแล้วถูกบันทึกเป็น event ใหม่ (history ยัง append-only); WP rollback push ผ่าน REST = ภายหลัง.
+- **Idempotent log ids:** crawler ตั้ง `id` = UUID จาก sha256 ของ `page_fp|field|prev_ok_at|old|new` แล้วเขียนด้วย `INSERT … ON CONFLICT (id) DO NOTHING` — transition เดิมที่ตรวจซ้ำ (run ซ้อน/รันซ้ำ) ไม่เพิ่มแถว และไม่ชน trigger append-only.
+- **`seo_norm_url()` percent-encoding:** path ถูก encode แบบ canonical (non-ASCII → UTF-8 `%XX` ตัวใหญ่, `%xx` เดิม → ตัวใหญ่, ASCII ไม่แตะ) ทั้ง SQL และ JS — `canonical_url` ภาษาไทยแบบ decoded (23 หน้า Live) จึง match กับ `page_url` ของ GSC ที่ encoded.
+- **FK:** `seo_page_live_state.page_fp` = `ON DELETE CASCADE` (state ทิ้งได้); log/note คง NO ACTION → หน้าที่มี history ลบ page_master แบบ hard ไม่ได้ ให้ archive ผ่าน `status`.
 - Actions minutes ใช้ร่วมกันทั้ง org (~1,000 นาที/เดือน ที่ ~8 brand) — เฝ้าดูเมื่อ brand เพิ่ม.
 
 **References:** [`proposals/2026-10-21-page-change-history.md`](./proposals/2026-10-21-page-change-history.md) · `scripts/page-history/README.md` · `.github/workflows/page-history.yml` · `templates/brand-workflows/page-history.caller.yml` · migration `migrations/2026-10-21_eywa_w12_01_dr076_page_change_history.sql` · DR-008 (page key = `fingerprint`)
