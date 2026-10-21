@@ -1,0 +1,47 @@
+# Reusable workflow: nightly live-page crawl for one brand. Called from a brand repo
+# (see templates/brand-workflows/page-history.caller.yml).
+name: page-history
+
+on:
+  workflow_call:
+    inputs:
+      brand_id:
+        type: string
+        required: true
+      spec_ref:
+        type: string
+        default: main
+    secrets:
+      SUPABASE_SERVICE_KEY:
+        required: true
+      EYWA_SPEC_READ_TOKEN:
+        required: true
+
+permissions:
+  contents: read
+
+# Two runs for one brand must never overlap (they could double-log a change).
+concurrency:
+  group: page-history-${{ inputs.brand_id }}
+  cancel-in-progress: false
+
+jobs:
+  crawl:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: the-gifted-digital/eywa-protocol-spec
+          ref: ${{ inputs.spec_ref }}
+          token: ${{ secrets.EYWA_SPEC_READ_TOKEN }}
+          path: spec
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci
+        working-directory: spec/scripts/page-history
+      - run: node crawl.mjs --brand ${{ inputs.brand_id }}
+        working-directory: spec/scripts/page-history
+        env:
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}

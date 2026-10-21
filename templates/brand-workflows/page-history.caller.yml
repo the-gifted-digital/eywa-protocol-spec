@@ -1,0 +1,16 @@
+# Copy to <brand-repo>/.github/workflows/page-history.yml and replace <BRAND_ID> with the
+# brand's slug (e.g. vth-biodent). Belongs in the BRAND repo, not in eywa-protocol-spec.
+# To stop crawling: delete this file, or remove the repo from the org secrets.
+name: page-history
+
+on:
+  schedule:
+    - cron: '0 19 * * *' # 02:00 Bangkok
+  workflow_dispatch:
+
+jobs:
+  page-history:
+    uses: the-gifted-digital/eywa-protocol-spec/.github/workflows/page-history.yml@main # pin a tag to freeze a version
+    with:
+      brand_id: <BRAND_ID>
+    secrets: inherit
