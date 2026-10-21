@@ -372,6 +372,10 @@ node ../../eywa-protocol-spec/scripts/writer-brief/page-brief.mjs --brand <brand
 
 ---
 
+### Step 5.9 — Page change history caller (DR-076, ~2 min)
+
+Copy `templates/brand-workflows/page-history.caller.yml` to `<brand-repo>/.github/workflows/page-history.yml`, replace `<BRAND_ID>` with the brand slug, and share the org secrets `SUPABASE_SERVICE_KEY` + `EYWA_SPEC_READ_TOKEN` with the repo (prerequisites are in the file header). The brand owns its schedule, on/off switch and version pin; the crawler code lives in `eywa-protocol-spec` (`scripts/page-history/`). Optional per-brand tuning: `scripts/page-history/brands/<brand_id>.json`.
+
 ### Step 6 — First commit (~1 min)
 
 ```bash
@@ -381,8 +385,8 @@ git commit -m "Brand bootstrap: eywa-{brand-id}
 Folder skeleton + brand-config + core docs initialized from
 templates/ baseline. Phase A brand-concept.md ready for editing.
 
-Spec snapshot pinned: Bible v3.34 / Schema v1.23 / Templates v1.9
-                      / Handover v1.19 / DR v1.31
+Spec snapshot pinned: Bible v3.36 / Schema v1.25 / Templates v1.9
+                      / Handover v1.19 / DR v1.43
 
 Per Handover §9.3 — eywa_spec_snapshot block records this entry point.
 Per DR-022 (Locked) — Lean Phase B workflow adopted from inception."

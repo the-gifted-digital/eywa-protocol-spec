@@ -1,8 +1,8 @@
 # 📖 คัมภีร์ EYWA™ PROTOCOL
 ## The Universal Knowledge Graph SEO Specification for the AI Era
 
-**Version:** 3.35  
-**Last Updated:** 2026-09-20  
+**Version:** 3.36  
+**Last Updated:** 2026-10-21  
 **Trademark:** EYWA™ (Class 35+42, DIP Thailand, filed 2026-04-20)  
 **Created by:** The Gifted Digital Marketing Co., Ltd.  
 **Scope:** Universal standard สำหรับการบริหารจัดการ SEO + Knowledge Graph แบบ multi-vertical, multi-brand, multi-specialty, multi-lingual, multi-location, **AI-future-ready** ในยุค AI Search (2026+) — ครอบคลุม healthcare verticals (clinic ทุก specialty, hospital, dental, sleep medicine, aesthetic, wellness, healthcare media) extensible to other regulated YMYL niches  
@@ -143,6 +143,16 @@ Throughout this Bible:
 
 
 ## 📜 Changelog
+
+### v3.36 (2026-10-21) — DR-076: ประวัติการเปลี่ยนแปลง SEO ระดับหน้า จากการ crawl หน้า live 📜🕷️
+
+Companion to **DR-076 (Locked 2026-10-21)**. **Schema v1.25:** 3 new tables (`seo_page_live_state`, `seo_page_change_log`, `seo_page_change_note`), function `seo_norm_url()`, 3 views (`v_page_change_events`, `v_page_change_impact`, `v_page_field_history`). Group 3 Page System 3 → 6. No existing table or trigger touched (nothing on `seo_website_page_master`).
+
+- ➕ **Change history is captured from the LIVE page, not from the DB.** GSC measures what Google sees, so the change date must be the date the edit went live. A nightly crawler (GitHub Actions) compares title / meta description / h1 / canonical / robots / JSON-LD types / content hash / http status / final URL with the last observation and appends one immutable row per changed field. No one has to tag edits; notes are optional extras. One code path covers Astro and WordPress.
+- 🔒 **Append-only by construction:** `REVOKE UPDATE/DELETE/TRUNCATE` + `BEFORE UPDATE OR DELETE` and `BEFORE TRUNCATE` triggers (the triggers stop `service_role`, which bypasses RLS). Views are `security_invoker` with `anon` revoked.
+- 📈 **`v_page_change_impact`:** 28 days before vs 28 days after (3-day recrawl gap) per change event, GSC totals matched by `seo_norm_url()` over every URL the page has ever had, brand-baseline deltas, `pending` / confidence flags. Absolute numbers are a lower bound (GSC anonymised queries are not in the query-sum).
+- 🧰 **Ownership (DR-076):** crawler code + reusable workflow live centrally in `scripts/page-history/` and `.github/workflows/page-history.yml`; each brand repo owns a ~10-line caller (`templates/brand-workflows/page-history.caller.yml`) = its own schedule, on/off switch, version pin. SQL is applied by the operator in the Supabase SQL editor.
+- ⚠️ Known limits: no backfill (history starts the day the crawler first runs); `final_url` redirect attribution; `seo_gsc_query_daily` has RLS with no policy, so impact views return GSC-based numbers only to `postgres` / `service_role`.
 
 ### v3.35 (2026-09-20) — DR-073/074/075: the AI side of Pillar 2 is measured; Category F reconciled to what exists 🤖📡
 
