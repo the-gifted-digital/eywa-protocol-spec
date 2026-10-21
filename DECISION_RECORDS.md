@@ -63,7 +63,8 @@
 **Consequences / known limits:**
 - **ไม่มี backfill** — history เริ่มวันที่ crawler รันครั้งแรก (การแก้ก่อนหน้า รวม round-1 fixes ตุลาคม อยู่นอกขอบเขต).
 - **GSC query-sum ต่ำกว่าจริง** — GSC ตัด query ที่ anonymised; ผลรวม query ต่อหน้าเป็น lower bound (เทียบภายในหน้าเดียวกันยังถูกต้อง).
-- **`final_url` redirect attribution** — การย้าย traffic หลัง redirect/slug change ใช้เวลา consolidate เกิน gap 3 วัน จึงจำกัด confidence ที่ medium.
+- **`final_url` redirect attribution** — ค่า `final_url` ถูก join เข้าชุด URL ของหน้า ดังนั้นถ้าหน้านี้ redirect ไปหน้าอื่นหรือหน้าแรก traffic GSC ของปลายทางจะถูกนับเป็นของหน้านี้ตั้งแต่นั้นเป็นต้นไป (ระบุไว้ใน `COMMENT ON VIEW v_page_change_impact`).
+- **`url_change` confidence เพดาน medium** — Google ต้องใช้เวลา consolidate signal ไปยัง URL ใหม่ และ gap 3 วันมักสั้นเกินไป.
 - **`seo_gsc_query_daily` เปิด RLS แต่ไม่มี policy** — impact view คืนตัวเลขฝั่ง GSC ให้เฉพาะ `postgres` / `service_role` (role `authenticated` เห็นแถวว่าง).
 - Content change บันทึกเป็น hash เท่านั้น (ไม่มี body diff); rollback เป็นการเขียนค่าเดิมกลับแล้วถูกบันทึกเป็น event ใหม่ (history ยัง append-only); WP rollback push ผ่าน REST = ภายหลัง.
 - Actions minutes ใช้ร่วมกันทั้ง org (~1,000 นาที/เดือน ที่ ~8 brand) — เฝ้าดูเมื่อ brand เพิ่ม.

@@ -36,7 +36,7 @@ EYWA™ is a registered trademark of **The Gifted Digital Marketing Co., Ltd.** 
 |----------|---------|-------|--------|
 | `PROJECT_MEMORY.md` | Project context for AI sessions + onboarding | ~880 | 🧠 Memory (local-only, gitignored) |
 | `EYWA_PROTOCOL_v3_33.md` | The Bible — full specification | ~27,800 | 🔒 Active (v3.36) |
-| `Schema_Overview_EYWA_v1_23.md` | Database schema companion (Group 11 NEW media_assets) — **43 EYWA canonical base tables**, all 43 verified present 2026-08-24 *(re-corrected 2026-08-24: the original "43 live base tables" was RIGHT and had been replaced with a raw `public` count. `public` also holds 14 non-EYWA/scratch tables — `logs_2025`/`logs_2026`, `fbads_*`, `tsa_*`, `web_lead`, `ss_kw_seed_*` — so a raw count reads **57** base tables excluding backups and **222** including them. The raw number drifts; the canonical 43 does not — `select count(*) from information_schema.tables where table_schema='public' and table_type='BASE TABLE' and table_name not like '\_%' and table_name !~ '(bak\|backup)'`)* | ~2,000 | 🔒 Active (v1.25) |
+| `Schema_Overview_EYWA_v1_23.md` | Database schema companion (Group 11 NEW media_assets) — **43 EYWA canonical base tables** *(47 as of v1.25; DR-076 tables pending operator apply)*, all 43 verified present 2026-08-24 *(re-corrected 2026-08-24: the original "43 live base tables" was RIGHT and had been replaced with a raw `public` count. `public` also holds 14 non-EYWA/scratch tables — `logs_2025`/`logs_2026`, `fbads_*`, `tsa_*`, `web_lead`, `ss_kw_seed_*` — so a raw count reads **57** base tables excluding backups and **222** including them. The raw number drifts; the canonical 43 does not — `select count(*) from information_schema.tables where table_schema='public' and table_type='BASE TABLE' and table_name not like '\_%' and table_name !~ '(bak\|backup)'`)* | ~2,000 | 🔒 Active (v1.25) |
 | `EYWA_HANDOVER.md` | Operating manual for Claude/AI | ~3,100 | 🔒 Active (v1.19) |
 | `DECISION_RECORDS.md` | Architecture decision log | ~5,300 | 🔒 Active (v1.43) |
 | `Keyword_Assignment_SOP_v1_0.md` | SOP — เลือกคีย์เวิร์ดหลัก/รอง ผูกเข้าหน้า (DR-043) + บทเรียน L1–L23 | ~540 | 🔒 Active (v1.3) |
@@ -449,7 +449,7 @@ See `DECISION_RECORDS.md` for full rationale.
 
 ## 📐 Schema Overview
 
-The EYWA database schema (**v1.25** — the companion file is `Schema_Overview_EYWA_v1_23.md`; "v1.11" here was stale) consists of **11 groups over 43 EYWA canonical base tables**, all 43 verified present 2026-08-24 *(corrected 2026-08-24 against live schema; re-corrected the same day — an intermediate edit read "9 groups over 57 live base tables", which counted `public`'s non-EYWA tables instead of the schema)*.
+The EYWA database schema (**v1.25** — the companion file is `Schema_Overview_EYWA_v1_23.md`; "v1.11" here was stale) consists of **11 groups over 43 EYWA canonical base tables**, *(47 as of v1.25; DR-076 tables pending operator apply)*, all 43 verified present 2026-08-24 *(corrected 2026-08-24 against live schema; re-corrected the same day — an intermediate edit read "9 groups over 57 live base tables", which counted `public`'s non-EYWA tables instead of the schema)*.
 
 🔴 **The 9-group numbering below is the superseded v1.11-era organization.** Its numbers and themes no longer line up with the companion's §2 11-group table, where Group 5 = Performance Fact Tables, Group 6 = Backlinks & Off-Page and Group 8 = Data Quality & Governance. Read §2 of `Schema_Overview_EYWA_v1_23.md` as authoritative; the list below is kept only so each stale rule can be marked:
 
