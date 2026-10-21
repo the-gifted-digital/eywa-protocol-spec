@@ -68,12 +68,18 @@ and repeat until the second run is clean.
 
 Brands call the reusable workflow `.github/workflows/page-history.yml`; copy
 `templates/brand-workflows/page-history.caller.yml` into the brand repo and fill in `<BRAND_ID>`. Runs for
-one brand never overlap (`concurrency`). Two **organization secrets** must be shared with the repo:
+one brand never overlap (`concurrency`).
 
-- `SUPABASE_SERVICE_KEY`: writes to the GTGT database. One place to rotate; a repo that leaves the org loses it.
-- `EYWA_SPEC_READ_TOKEN`: fine-grained token, read-only Contents on `eywa-protocol-spec` only. It exists
-  because a reusable workflow runs with the caller's `GITHUB_TOKEN`, which cannot check out another private
-  repo, so without it the called workflow could not fetch the crawler code.
+Prerequisites checklist (all three, or the run fails):
+
+- [ ] `eywa-protocol-spec` (private) has Settings → Actions → General → Access set to "Accessible from
+  repositories in the 'the-gifted-digital' organization". Without it the brand's `uses:` fails with
+  "workflow not found" before any step runs.
+- [ ] Org secret `SUPABASE_SERVICE_KEY`, shared with the repo: writes to the GTGT database. One place to
+  rotate; a repo that leaves the org loses it.
+- [ ] Org secret `EYWA_SPEC_READ_TOKEN`, shared with the repo: fine-grained token, read-only Contents on
+  `eywa-protocol-spec` only. It exists because a reusable workflow runs with the caller's `GITHUB_TOKEN`,
+  which cannot check out another private repo, so without it the called workflow could not fetch the crawler code.
 
 ## If your brand vendors a copy
 
@@ -89,7 +95,7 @@ either push your change up here so every brand gets it, or record why your brand
 Regenerate the manifest whenever you change a script here:
 
 ```bash
-shasum -a 256 *.mjs brands/_default.json > MANIFEST.sha256
+shasum -a 256 *.mjs brands/_default.json package.json package-lock.json > MANIFEST.sha256
 ```
 
 ## Handover scenarios

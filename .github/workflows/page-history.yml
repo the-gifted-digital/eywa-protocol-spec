@@ -36,12 +36,14 @@ jobs:
           ref: ${{ inputs.spec_ref }}
           token: ${{ secrets.EYWA_SPEC_READ_TOKEN }}
           path: spec
+          persist-credentials: false
       - uses: actions/setup-node@v4
         with:
           node-version: 22
       - run: npm ci
         working-directory: spec/scripts/page-history
-      - run: node crawl.mjs --brand ${{ inputs.brand_id }}
+      - run: node crawl.mjs --brand "$BRAND_ID"
         working-directory: spec/scripts/page-history
         env:
+          BRAND_ID: ${{ inputs.brand_id }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
