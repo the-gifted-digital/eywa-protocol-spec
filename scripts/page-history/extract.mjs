@@ -2,6 +2,10 @@ import { createHash } from 'node:crypto';
 import { parse } from 'node-html-parser';
 import { collapse, normText } from './normalize.mjs';
 
+// Join text nodes with a space at every tag boundary so the hash ignores source whitespace/minification.
+const textOf = (n) => (n.nodeType === 3 ? n.rawText.replace(/<[^>]*>/g, ' ') : // pre content arrives as one raw text node, strip its markup
+   ` ${n.childNodes.map(textOf).join(' ')} `);
+
 const STRIP = 'script, style, noscript, nav, header, footer, svg, iframe';
 
 function collectTypes(node, out) {
@@ -28,7 +32,7 @@ export function extractFields(html, cfg = {}) {
   for (const sel of [STRIP, ...(cfg.ignore_selectors ?? [])].filter(Boolean)) {
     main.querySelectorAll(sel).forEach((n) => n.remove());
   }
-  const text = normText(main.rawText) ?? '';
+  const text = normText(textOf(main)) ?? '';
 
   return {
     title: normText(root.querySelector('title')?.rawText),

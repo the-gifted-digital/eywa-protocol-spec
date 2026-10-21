@@ -49,3 +49,15 @@ test('missing tags give null, never throw', () => {
   );
   assert.doesNotThrow(() => extractFields('', {}));
 });
+
+test('content_hash identical for minified vs pretty-printed same page', () => {
+  const h = (html) => extractFields(html, {}).content_hash;
+  assert.equal(h('<main><p>a</p>\n<p>b</p></main>'), h('<main><p>a</p><p>b</p></main>'));
+  assert.equal(h('<main><ul><li>a</li><li>b</li></ul></main>'), h('<main>\n  <ul>\n    <li>a</li>\n    <li>b</li>\n  </ul>\n</main>'));
+  assert.notEqual(h('<main><p>a</p><p>b</p></main>'), h('<main><p>a</p><p>c</p></main>'));
+});
+
+test('content_hash ignores markup inside <pre>', () => {
+  const h = (c) => extractFields(`<main><pre><span class="${c}">x</span></pre></main>`, {}).content_hash;
+  assert.equal(h('a'), h('b'));
+});

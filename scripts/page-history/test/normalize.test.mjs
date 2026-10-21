@@ -17,3 +17,8 @@ test('normText', () => {
   assert.equal(normText(null), null);
   assert.equal(normText(undefined), null);
 });
+
+test('normText nbsp and Thai', () => {
+  assert.equal(normText('a&nbsp;b'), 'a b');
+  assert.equal(normText('สวัสดี  ครับ'), 'สวัสดี ครับ');
+});
