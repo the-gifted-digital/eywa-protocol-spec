@@ -20,10 +20,11 @@ alter default privileges in schema public grant all on tables to anon, authentic
 create table seo_website_page_master (
   id uuid primary key default gen_random_uuid(),
   fingerprint text unique not null default ('page_' || substr(md5(random()::text), 1, 16)),
+  page_fingerprint text not null unique, fingerprint_display_name text not null,
   brand_id text, status text, canonical_url text, slug text
 );
 create table seo_gsc_query_daily (
-  brand_id text, snapshot_date date, search_type text, query text, page_url text,
+  brand_id text not null, snapshot_date date not null, search_type text, query text not null, page_url text not null,
   page_slug text, clicks int, impressions int, ctr numeric, position numeric,
   loaded_at timestamptz default now(), query_norm text
 );`;

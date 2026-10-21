@@ -20,11 +20,11 @@
 -- ─────────────────────────────────────────────────────────────────────
 CREATE OR REPLACE FUNCTION seo_norm_url(u text) RETURNS text
 LANGUAGE sql IMMUTABLE STRICT PARALLEL SAFE AS $$
-  SELECT CASE WHEN m IS NULL THEN u ELSE
-           lower(m[1]) || '://' || regexp_replace(lower(m[2]), '^www\.', '')
-           || CASE WHEN m[3] IN ('', '/') THEN '/' ELSE regexp_replace(m[3], '/$', '') END
+  -- single expression (no FROM) so the planner can inline it
+  SELECT CASE WHEN u !~ '^[A-Za-z][A-Za-z0-9+.-]*://' THEN u ELSE
+           regexp_replace(lower(substring(u FROM '^([A-Za-z][A-Za-z0-9+.-]*://[^/?#]*)')), '^([a-z][a-z0-9+.-]*://)www\.', '\1')
+           || coalesce(nullif(regexp_replace(substring(u FROM '^[A-Za-z][A-Za-z0-9+.-]*://[^/?#]*([^?#]*)'), '/$', ''), ''), '/')
          END
-  FROM (SELECT regexp_match(u, '^([A-Za-z][A-Za-z0-9+.-]*)://([^/?#]*)([^?#]*)') AS m) s
 $$;
 
 -- ─────────────────────────────────────────────────────────────────────
@@ -95,7 +95,7 @@ CREATE POLICY eywa_authenticated_full_access ON seo_page_change_log  FOR ALL TO 
 DROP POLICY IF EXISTS eywa_authenticated_full_access ON seo_page_change_note;
 CREATE POLICY eywa_authenticated_full_access ON seo_page_change_note FOR ALL TO authenticated USING (true) WITH CHECK (true);
 
-REVOKE UPDATE, DELETE ON seo_page_change_log FROM anon, authenticated, service_role;
+REVOKE UPDATE, DELETE, TRUNCATE ON seo_page_change_log FROM anon, authenticated, service_role;
 
 -- service_role bypasses RLS but not triggers. "Admin delete" = the postgres
 -- owner disabling this trigger inside a reviewed migration.
@@ -109,13 +109,17 @@ CREATE OR REPLACE TRIGGER trg_page_change_log_immutable
   BEFORE UPDATE OR DELETE ON seo_page_change_log
   FOR EACH ROW EXECUTE FUNCTION fn_page_change_log_immutable();
 
+CREATE OR REPLACE TRIGGER trg_page_change_log_no_truncate
+  BEFORE TRUNCATE ON seo_page_change_log
+  FOR EACH STATEMENT EXECUTE FUNCTION fn_page_change_log_immutable();
+
 -- ─────────────────────────────────────────────────────────────────────
 -- 5. Views
 -- ─────────────────────────────────────────────────────────────────────
 
 -- One change event = all log rows of one page on one Bangkok date.
 -- Notes attach when created within the 14 days up to the change_date.
-CREATE OR REPLACE VIEW v_page_change_events AS
+CREATE OR REPLACE VIEW v_page_change_events WITH (security_invoker = true) AS
 SELECT l.page_fp,
        l.change_date,
        min(l.brand_id) AS brand_id,
@@ -132,9 +136,18 @@ FROM seo_page_change_log l
 GROUP BY l.page_fp, l.change_date;
 
 -- Before = [change_date-28, change_date); after = [change_date+3, change_date+31).
-CREATE OR REPLACE VIEW v_page_change_impact AS
+CREATE OR REPLACE VIEW v_page_change_impact WITH (security_invoker = true) AS
 WITH ev AS (
   SELECT * FROM v_page_change_events
+),
+lo AS (                   -- earliest GSC day any window needs; bounds every GSC scan
+  SELECT min(change_date) - 28 AS d FROM ev
+),
+gurl AS (                 -- normalise distinct GSC URLs, not rows
+  SELECT DISTINCT g.brand_id, g.page_url, seo_norm_url(g.page_url) AS nurl
+    FROM seo_gsc_query_daily g
+   WHERE g.brand_id IN (SELECT brand_id FROM ev) AND g.search_type = 'web'
+     AND g.snapshot_date >= (SELECT d FROM lo)
 ),
 page_urls AS (            -- every URL the page has had, normalised
   SELECT pm.fingerprint AS page_fp, seo_norm_url(pm.canonical_url) AS nurl
@@ -159,9 +172,11 @@ page_win AS (
          sum(g.position * g.impressions)   FILTER (WHERE g.snapshot_date >= e.change_date + 3) AS posw_a
     FROM ev e
     JOIN page_urls u ON u.page_fp = e.page_fp
+    JOIN gurl gu ON gu.brand_id = e.brand_id AND gu.nurl = u.nurl
     JOIN seo_gsc_query_daily g
-      ON g.brand_id = e.brand_id
-     AND seo_norm_url(g.page_url) = u.nurl
+      ON g.brand_id = gu.brand_id
+     AND g.page_url = gu.page_url
+     AND g.search_type = 'web'
      AND (g.snapshot_date >= e.change_date - 28 AND g.snapshot_date < e.change_date
           OR g.snapshot_date >= e.change_date + 3 AND g.snapshot_date < e.change_date + 31)
    GROUP BY e.page_fp, e.change_date
@@ -169,12 +184,15 @@ page_win AS (
 brand_daily AS (
   SELECT g.brand_id, g.snapshot_date, sum(g.clicks) AS clicks, sum(g.impressions) AS impr
     FROM seo_gsc_query_daily g
-   WHERE g.brand_id IN (SELECT brand_id FROM ev)
+   WHERE g.brand_id IN (SELECT brand_id FROM ev) AND g.search_type = 'web'
+     AND g.snapshot_date >= (SELECT d FROM lo)
    GROUP BY g.brand_id, g.snapshot_date
 ),
-brand_cov AS (
-  SELECT brand_id, min(snapshot_date) AS min_d, max(snapshot_date) AS max_d
-    FROM brand_daily GROUP BY brand_id
+brand_cov AS (            -- unbounded on purpose: min_d must be the brand's true first GSC day
+  SELECT g.brand_id, min(g.snapshot_date) AS min_d, max(g.snapshot_date) AS max_d
+    FROM seo_gsc_query_daily g
+   WHERE g.brand_id IN (SELECT brand_id FROM ev) AND g.search_type = 'web'
+   GROUP BY g.brand_id
 ),
 brand_win AS (
   SELECT e.page_fp, e.change_date,
@@ -226,13 +244,13 @@ SELECT page_fp, change_date, brand_id, event_kind, fields, notes,
 FROM m;
 
 COMMENT ON VIEW v_page_change_impact IS
-$$One row per change event (page_fp, change_date) with GSC before/after windows: before = [change_date-28, change_date), after = [change_date+3, change_date+31). GSC rows are matched by seo_norm_url against every URL the page has had (canonical_url + all url/final_url log values), so slug changes keep their before traffic. pos = impression-weighted average position. d_ctr and ctr_delta_vs_brand are absolute CTR deltas (page minus brand); clicks_delta_vs_brand is the page's relative click change minus the brand's (fractions, 0.1 = 10 points). status='ready' once brand GSC reaches change_date+30. confidence: low if either window < 100 impressions, another event on the page within ±31 days, or brand GSC starts after change_date-28; else medium for url_change; else high. CAVEAT: totals are summed from seo_gsc_query_daily (query x page x day), and GSC drops anonymised queries, so page totals UNDERCOUNT. Comparisons within one page are valid; absolute numbers are a lower bound.$$;
+$$One row per change event (page_fp, change_date) with GSC before/after windows: before = [change_date-28, change_date), after = [change_date+3, change_date+31). GSC rows are matched by seo_norm_url against every URL the page has had (canonical_url + all url/final_url log values), so slug changes keep their before traffic. pos = impression-weighted average position. d_ctr and ctr_delta_vs_brand are absolute CTR deltas (page minus brand); clicks_delta_vs_brand is the page's relative click change minus the brand's (fractions, 0.1 = 10 points). status='ready' once brand GSC reaches change_date+30. confidence: low if either window < 100 impressions, another event on the page within ±31 days, or brand GSC starts after change_date-28; else medium for url_change; else high. CAVEAT: totals are summed from seo_gsc_query_daily (query x page x day), and GSC drops anonymised queries, so page totals UNDERCOUNT. Comparisons within one page are valid; absolute numbers are a lower bound. Only search_type='web' rows are read. CAVEAT: final_url values join the page's URL set, so if this page redirects to another page or to the home page, that target's GSC traffic is attributed to this page from then on.$$;
 
 -- Every value a field has had on a page. The first row per (page, field) is
 -- the crawl baseline (old_value of the first change; live_from unknown, NULL).
 -- A value restored by a rollback appears again as its own row.
 -- change_date = the event that introduced the value (join to v_page_change_impact).
-CREATE OR REPLACE VIEW v_page_field_history AS
+CREATE OR REPLACE VIEW v_page_field_history WITH (security_invoker = true) AS
 WITH l AS (
   SELECT page_fp, brand_id, field, old_value, new_value, detected_at, change_date,
          lead(detected_at) OVER (PARTITION BY page_fp, field ORDER BY detected_at, id) AS next_at,
@@ -246,3 +264,5 @@ UNION ALL
 SELECT page_fp, brand_id, field, new_value AS value,
        detected_at AS live_from, next_at AS live_to, change_date
   FROM l;
+
+REVOKE ALL ON v_page_change_events, v_page_change_impact, v_page_field_history FROM anon;

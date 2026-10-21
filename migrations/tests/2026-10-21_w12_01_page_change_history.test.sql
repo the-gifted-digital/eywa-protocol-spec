@@ -29,21 +29,29 @@ BEGIN
 END $$;
 
 -- Test pages (fingerprint is set by the page_master default/trigger)
-INSERT INTO seo_website_page_master (brand_id, status, canonical_url, slug) VALUES
-  ('w-test-brand', 'Live', 'https://test.invalid/p',     'p'),
-  ('w-test-brand', 'Live', 'https://test.invalid/q',     'q'),
-  ('w-test-brand', 'Live', 'https://test.invalid/r-new', 'r-new'),
-  ('w-test-brand', 'Live', 'https://test.invalid/s',     's');
+INSERT INTO seo_website_page_master (page_fingerprint, fingerprint_display_name, brand_id, status, canonical_url, slug) VALUES
+  ('w-test-p',     'w-test::p',     'w-test-brand', 'Live', 'https://test.invalid/p',     'p'),
+  ('w-test-q',     'w-test::q',     'w-test-brand', 'Live', 'https://test.invalid/q',     'q'),
+  ('w-test-r-new', 'w-test::r-new', 'w-test-brand', 'Live', 'https://test.invalid/r-new', 'r-new'),
+  ('w-test-s',     'w-test::s',     'w-test-brand', 'Live', 'https://test.invalid/s',     's');
 
 -- 2. Append-only log: privileges revoked, UPDATE and DELETE raise
 DO $$
 DECLARE fp text; ok boolean;
 BEGIN
-  IF has_table_privilege('service_role', 'seo_page_change_log', 'UPDATE')
-     OR has_table_privilege('service_role', 'seo_page_change_log', 'DELETE')
-     OR has_table_privilege('authenticated', 'seo_page_change_log', 'UPDATE')
-     OR has_table_privilege('anon', 'seo_page_change_log', 'DELETE') THEN
-    RAISE EXCEPTION 'app roles still hold UPDATE/DELETE on seo_page_change_log';
+  IF EXISTS (SELECT 1 FROM unnest(ARRAY['anon', 'authenticated', 'service_role']) rl,
+                           unnest(ARRAY['UPDATE', 'DELETE', 'TRUNCATE']) pv
+             WHERE has_table_privilege(rl, 'seo_page_change_log', pv)) THEN
+    RAISE EXCEPTION 'an app role still holds UPDATE/DELETE/TRUNCATE on seo_page_change_log';
+  END IF;
+  IF has_table_privilege('anon', 'v_page_change_impact', 'SELECT')
+     OR has_table_privilege('anon', 'v_page_change_events', 'SELECT')
+     OR has_table_privilege('anon', 'v_page_field_history', 'SELECT') THEN
+    RAISE EXCEPTION 'anon can still read the change-history views';
+  END IF;
+  IF EXISTS (SELECT 1 FROM pg_class WHERE relname IN ('v_page_change_events', 'v_page_change_impact', 'v_page_field_history')
+             AND NOT coalesce(reloptions @> ARRAY['security_invoker=true'], false)) THEN
+    RAISE EXCEPTION 'a change-history view is not security_invoker';
   END IF;
 
   SELECT fingerprint INTO fp FROM seo_website_page_master WHERE canonical_url = 'https://test.invalid/s';
@@ -65,6 +73,14 @@ BEGIN
     ok := sqlerrm LIKE '%append-only%';
   END;
   IF NOT ok THEN RAISE EXCEPTION 'DELETE on seo_page_change_log did not raise append-only'; END IF;
+
+  ok := false;
+  BEGIN
+    TRUNCATE seo_page_change_log;
+  EXCEPTION WHEN others THEN
+    ok := sqlerrm LIKE '%append-only%';
+  END;
+  IF NOT ok THEN RAISE EXCEPTION 'TRUNCATE on seo_page_change_log did not raise append-only'; END IF;
 
   -- change_date is the Asia/Bangkok date of detected_at
   IF (SELECT change_date FROM seo_page_change_log WHERE page_fp = fp) <> date '2026-01-01' THEN
@@ -90,6 +106,10 @@ BEGIN
   INSERT INTO seo_gsc_query_daily (brand_id, snapshot_date, search_type, query, page_url, clicks, impressions, ctr, position)
   SELECT 'w-test-brand', d, 'web', 'q1', 'https://test.invalid/p', 500, 1000, 0.5, 1
   FROM unnest(ARRAY[date '2026-07-03', date '2026-08-01', date '2026-08-02', date '2026-08-03', date '2026-09-01']) d;
+  -- non-web search type inside both windows: must be ignored
+  INSERT INTO seo_gsc_query_daily (brand_id, snapshot_date, search_type, query, page_url, clicks, impressions, ctr, position)
+  VALUES ('w-test-brand', date '2026-07-10', 'image', 'q1', 'https://test.invalid/p', 500, 1000, 0.5, 1),
+         ('w-test-brand', date '2026-08-10', 'image', 'q1', 'https://test.invalid/p', 500, 1000, 0.5, 1);
 
   SELECT * INTO v FROM v_page_change_impact WHERE page_fp = fp AND change_date = date '2026-08-01';
   IF v IS NULL THEN RAISE EXCEPTION 'no impact row for the url event'; END IF;
@@ -187,8 +207,8 @@ END $$;
 DO $$
 DECLARE fp text;
 BEGIN
-  INSERT INTO seo_website_page_master (brand_id, status, canonical_url, slug)
-  VALUES ('w-test-brand-late', 'Live', 'https://late.invalid/x', 'x') RETURNING fingerprint INTO fp;
+  INSERT INTO seo_website_page_master (page_fingerprint, fingerprint_display_name, brand_id, status, canonical_url, slug)
+  VALUES ('w-test-late-x', 'w-test::late-x', 'w-test-brand-late', 'Live', 'https://late.invalid/x', 'x') RETURNING fingerprint INTO fp;
   INSERT INTO seo_page_change_log (page_fp, brand_id, field, old_value, new_value, detected_at, run_id)
   VALUES (fp, 'w-test-brand-late', 'title', '"a"', '"b"', '2026-08-01 03:00+07', 'test');
   INSERT INTO seo_gsc_query_daily (brand_id, snapshot_date, search_type, query, page_url, clicks, impressions, ctr, position)
@@ -206,5 +226,6 @@ BEGIN
 END $$;
 
 DO $$ BEGIN RAISE NOTICE 'ALL PASS'; END $$;
+SELECT 'ALL PASS' AS result;   -- the Supabase SQL editor may not show notices
 
 ROLLBACK;
