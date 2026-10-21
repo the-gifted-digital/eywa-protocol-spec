@@ -1,0 +1,11 @@
+[
+  { "in": "https://WWW.VthBiodent.com/team/dr-a/?utm_source=x#top", "out": "https://vthbiodent.com/team/dr-a" },
+  { "in": "https://deezydental.com/", "out": "https://deezydental.com/" },
+  { "in": "https://deezydental.com", "out": "https://deezydental.com/" },
+  { "in": "http://www.clearisma.com/a/b/", "out": "http://clearisma.com/a/b" },
+  { "in": "https://tcsmiledental.com/%E0%B8%9F%E0%B8%B1%E0%B8%99", "out": "https://tcsmiledental.com/%E0%B8%9F%E0%B8%B1%E0%B8%99" },
+  { "in": "HTTPS://Example.COM/Path/Keep-Case/", "out": "https://example.com/Path/Keep-Case" },
+  { "in": "https://example.com/?q=1", "out": "https://example.com/" },
+  { "in": "https://example.com#frag", "out": "https://example.com/" },
+  { "in": "https://wwwx.example.com/a", "out": "https://wwwx.example.com/a" }
+]
