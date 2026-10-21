@@ -68,11 +68,12 @@ test('fetch error logs fetch_error string', () => {
   let s = { ...base(), consecutive_failures: FAIL_THRESHOLD - 1 };
   const r = run(s, { kind: 'fail', http_status: null, error: 'dns' });
   assert.equal(r.log[0].new_value, 'fetch_error');
-  assert.equal(r.state.http_status, 'fetch_error');
+  assert.equal(r.state.http_status, 0);
 });
 
 test('first ok after only failures is a baseline', () => {
-  const prev = { ...base(), last_ok_at: null, first_seen_at: null, consecutive_failures: 2 };
+  let prev = decide(null, fail(), URL1, T0, 'r0', IDS).state;
+  prev = decide(prev, fail(), URL1, T0, 'r0').state;
   const { log, state } = run(prev, ok());
   assert.equal(log.length, 0);
   assert.equal(state.last_ok_at, T1.toISOString());
@@ -149,4 +150,31 @@ test('decide does not mutate prev or obs', () => {
   decide(prev, obs, 'https://example.com/z', T1, 'r1');
   decide(prev, deepFreeze(fail()), URL1, T1, 'r1');
   assert.equal(JSON.stringify([prev, obs]), before);
+});
+
+test('threshold after not_modified reset does not log identical http_status', () => {
+  for (const f of [fail(503), { kind: 'fail', http_status: null, error: 'dns' }]) {
+    let s = base();
+    for (let i = 0; i < 3; i++) s = run(s, f).state;
+    s = run(s, { kind: 'not_modified' }).state;
+    const logs = [];
+    for (let i = 0; i < 3; i++) { const r = run(s, f); logs.push(r.log.length); s = r.state; }
+    assert.deepEqual(logs, [0, 0, 0]);
+  }
+});
+
+test("recovery from fetch_error logs 'fetch_error' -> 200", () => {
+  const prev = { ...base(), http_status: 0, consecutive_failures: 3 };
+  const { log } = run(prev, ok());
+  assert.deepEqual(log.map((l) => [l.field, l.old_value, l.new_value]), [['http_status', 'fetch_error', 200]]);
+});
+
+test('not_modified on never-OK page keeps it a baseline candidate', () => {
+  let s = decide(null, fail(), URL1, T0, 'r0', IDS).state;
+  s = run(s, { kind: 'not_modified' }).state;
+  assert.equal(s.last_ok_at, null);
+  assert.equal(s.consecutive_failures, 1);
+  const r = run(s, ok());
+  assert.equal(r.log.length, 0);
+  assert.equal(r.state.last_ok_at, T1.toISOString());
 });
