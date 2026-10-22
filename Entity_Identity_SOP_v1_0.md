@@ -3,7 +3,7 @@
 **Version:** 1.0
 **Status:** 🔒 Locked 2026-08-07
 **Scope:** **UNIVERSAL** — ทุกแบรนด์ที่ใช้ `seo_entity_graph` และตาราง subtype
-**Decision record:** DR-050
+**Decision record:** DR-050 · แก้ไขโดย **DR-079** (2026-10-23: MeSH สำหรับ procedure/treatment/device, residual-code rule, ห้าม `--apply` แบบไม่อ่านผล)
 **Reference implementation:** `eywa-vth-biodent/web/scripts/{verify-entity-ids,harvest-entity-codes,map-icd10-to-icd11,gen-entity-schema}.mjs`
 
 ---
@@ -27,13 +27,14 @@
 | **anatomy** | `seo_entity_anatomy` | `fma_id` · `uberon_id` · `mesh_id` |
 | **lab_test** | `seo_entity_lab_test` | `loinc_code` · `snomed_ct_id` · `mesh_id` — 🔴 **กฎนี้ยังยิงไม่ออก:** ตารางมี 0 แถว และ `seo_entity_graph` ไม่มี entity ชนิด `lab_test` เลยสักตัว *(corrected 2026-08-24 against live schema)* |
 | **drug** | `seo_entity_drug` | `rxnorm_code` · `atc_code` · `mesh_id` |
-| **procedure · treatment · device** | **ไม่มีรหัส ICD** | — |
+| **procedure · treatment** | `seo_entity_procedures` | `mesh_id` เท่านั้น — **ไม่มีรหัส ICD** (DR-079) |
+| **device** | `seo_entity_devices` | `mesh_id` เท่านั้น — **ไม่มีรหัส ICD** (DR-079) |
 
 `seo_entity_graph` เก็บได้เฉพาะ `wikidata_id` · `wikipedia_url` · `schema_org_type`
 คอลัมน์ `seo_entity_graph.icd_10_code` **ปลดระวางแล้ว** (เคยเก็บค่า ICD-10-CM ปนกับ WHO ICD-10 ที่อยู่อีกตาราง)
 คอลัมน์ยังไม่ถูก drop — ยังอยู่ในตารางและ NULL ครบ 732/732 แถว ส่วน **คอมเมนต์ของคอลัมน์ใน DB ยังบรรยายว่าใช้งานอยู่** ("Emitted in MedicalCondition.code[]") ยังไม่ได้อัปเดตตาม DR-050 — คนอ่าน `\d+` จะเข้าใจผิด *(corrected 2026-08-24 against live schema)*
 
-### 1.1 ทำไม procedure / treatment / drug ห้ามมี ICD
+### 1.1 ทำไม procedure / treatment / device ห้ามมี ICD (และ MeSH ใช้แทน — DR-079)
 
 รหัสที่มักไปติดอยู่คือรหัสของ **โรคที่รักษา** ไม่ใช่ตัวตนของหัตถการ ตัวอย่างจริง:
 
@@ -46,6 +47,11 @@
 
 ถ้าปล่อยไว้แล้วต่อเข้า schema หน้าบริการจะประกาศ `MedicalCondition.code` ของโรคที่หน้านั้นไม่ได้พูดถึง
 ให้ย้ายเป็นความสัมพันธ์: `seo_entity_procedures.treats_conditions_fps`
+
+> **DR-079 (2026-10-23): MeSH เป็น identifier ของ procedure / treatment / device** — คอลัมน์ `mesh_id` บน `seo_entity_procedures` และ `seo_entity_devices` (CHECK `^[DC][0-9]{6,9}$`, descriptor `D…` หรือ supplementary concept `C…`, ไม่มี prefix). `mesh_id` ต้องระบุ **ตัวหัตถการ/อุปกรณ์เอง ไม่ใช่โรคที่รักษา** (กฎเดียวกับตารางข้างบน); ชื่อแบรนด์/ผลิตภัณฑ์ไม่มี MeSH. เลือก MeSH เพราะ ICD-11 ไม่มี chapter ของหัตถการ.
+> **รหัสยังอยู่ใน store เดิมของ DR-050** — ข้อเสนอตาราง `seo_entity_codes` ใหม่ถูกปฏิเสธเพราะซ้ำกับ "one store per fact".
+> ตัวเลข "1 จาก 741 entity มี ICD" ใน handover วัดคอลัมน์ `seo_entity_graph.icd_10_code` ที่ปลดระวางแล้ว ไม่ใช่ความครอบคลุมจริง (จริง: ICD-10 91/118 conditions ก่อนรอบ DR-079; หลังรอบ: active conditions ICD-10 (WHO) 78/115 · ICD-11 71 · MeSH 87; procedures MeSH 69 · devices 15).
+> คอลัมน์ `icd10_code` (WHO) ต้องเป็น **WHO ICD-10 เท่านั้น ยาวไม่เกิน 4 ตัวอักษร** — รหัส CM-only (G47.63, R06.83, K08.89, Z91.041 ...) อยู่ใน `icd10_cm_code` (DR-079)
 
 ---
 
@@ -174,6 +180,7 @@ ICD-10 ที่ลงท้าย `.8 other specified` / `.9 unspecified` จ�
 
 **กฎ:**
 1. ปฏิเสธทุกผลที่ title ตรงกับ `/unspecified|other specified|not elsewhere classified/i`
+   - **ข้อยกเว้น (DR-079, operator 2026-10-22):** ICD-10 "other" (`.8`) ใช้ได้เมื่อ **WHO ระบุ concept ของ entity ตามชื่อเป็น inclusion term** — F45.8 "Teeth-grinding" (bruxism) · F98.8 "Thumb-sucking" (oral habits) · K08.8 "Toothache NOS" · K03.8 "Sensitive dentine". ส่วน "unspecified" / `.Z` / `.Y` ยังห้ามเหมือนเดิม
 2. **ห้ามแมประดับ category สามหลัก** — `G47 → "Sleep-wake disorders, unspecified"` จริงกับทั้ง insomnia · apnea · bruxism พร้อมกัน ใส่เป็นรหัสของหน้าใดหน้าหนึ่งคือคำกล่าวที่ไม่มีเนื้อหา
 3. ตัวที่ title เจาะจงแต่ผิดเรื่อง ตัวกรองอัตโนมัติมองไม่เห็น → ต้องมีรายการ `REFUSED` ที่คนตัดสิน
 
@@ -201,7 +208,7 @@ ICD-10 ที่ลงท้าย `.8 other specified` / `.9 unspecified` จ�
 ## 6. ลำดับงาน (บังคับตามนี้)
 
 ```
-1.  verify:entity-ids            ← สามด่าน · report ก่อน แล้วค่อย --apply
+1.  verify:entity-ids            ← สามด่าน · report ก่อน · **ห้าม --apply proposal โดยไม่มีคนอ่าน** (ดู 6.1)
 2.  (คนตัดสิน)                   ← label mismatch + Q-id ชนกัน → บันทึกลง ADJUDICATED_KEEP
 3.  harvest:entity-codes         ← เก็บรหัสจาก item ที่ verify แล้ว · never-overwrite
 4.  map:icd11                    ← เติม ICD-11 ที่ยังว่างจากตารางเทียบ WHO
@@ -210,6 +217,10 @@ ICD-10 ที่ลงท้าย `.8 other specified` / `.9 unspecified` จ�
 ```
 
 ลำดับ 1 ต้องมาก่อน 3 เสมอ — **ทุกรหัสในขั้น 3 สืบทอดความถูกต้องของ Q-id ในขั้น 1**
+
+### 6.1 ห้าม `verify-entity-ids --apply` โดยไม่อ่านผล (DR-079 · W3.2b, 2026-10-22)
+
+`--apply` เขียน **ทุก** "proposed" id. รอบ `--all` 2026-10-22 มี proposal 21 รายการ **ผิด 12** — ห้างสรรพสินค้าฮ่องกง (emax-material), วารสาร (pediatric-dentistry, implantologist), "osteoporosis" สำหรับ alveolar-bone-loss, "anatomy" สำหรับ tooth-anatomy, บทความปี 1991 สำหรับ omfs. ให้ตัดสิน id ด้วยมือตามสามด่านใน §2 (อ่าน label + description) แล้วเขียนผ่าน migration ที่ **ไม่ทับค่าเดิม** (`wikidata_id` ต้องว่าง) — ดู `migrations/2026-10-22_w32b_wikidata_adjudicated.sql`. id เดิมที่ชี้ผิดต้อง clear (เช่น periodontal-surgery → "pedicled flap"). สคริปต์ harvest/verify ข้าม entity ที่เป็น `Merged`/`Dropped` และ harvest ปฏิเสธ Wikidata code ที่ผิดรูป
 
 ---
 
@@ -267,3 +278,5 @@ select count(*) from seo_entity_condition where icd11_code ~ '\.Z$';
 ## 9. Change control
 
 แก้ SOP นี้ได้เมื่อมี DR ใหม่อ้างถึงเท่านั้น · เพิ่มบทเรียนจากการรันจริงได้โดยไม่ต้องมี DR แต่ต้องระบุแบรนด์ + วันที่ + หลักฐาน
+
+- **2026-10-23 · DR-079:** §1 procedure/treatment/device → `mesh_id` (ตาราง ext ของตน) · §1.1 note รหัสคง store เดิม + ความครอบคลุมจริง · §4 residual-code rule (".8" ที่ WHO ระบุตามชื่อ) + `icd10_code` = WHO ≤ 4 ตัวอักษร · §6.1 ห้าม `--apply` แบบไม่อ่านผล. (header ของ migration เรียก DR นี้ว่า DR-078 = renumbered)

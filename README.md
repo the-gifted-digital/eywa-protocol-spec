@@ -4,11 +4,11 @@
 
 | 📖 Bible | 📊 Schema | 🏗️ Phase | ⚖️ License |
 |----------|-----------|-----------|-------------|
-| **v3.38** | **v1.26** | **1A Built ✅** | Proprietary |
+| **v3.39** | **v1.27** | **1A Built ✅** | Proprietary |
 
 <!-- Badges (render on GitHub.com): -->
-[![Bible](https://img.shields.io/badge/Bible-v3.38-blue?style=flat-square)](./EYWA_PROTOCOL_v3_33.md)
-[![Schema](https://img.shields.io/badge/Schema-v1.26-green?style=flat-square)](./Schema_Overview_EYWA_v1_23.md)
+[![Bible](https://img.shields.io/badge/Bible-v3.39-blue?style=flat-square)](./EYWA_PROTOCOL_v3_33.md)
+[![Schema](https://img.shields.io/badge/Schema-v1.27-green?style=flat-square)](./Schema_Overview_EYWA_v1_23.md)
 [![Migrations](https://img.shields.io/badge/Migrations-Phase%201A%20Built-success?style=flat-square)](./migrations/README.md)
 [![Phase](https://img.shields.io/badge/Phase-1%20Foundation-orange?style=flat-square)](./PHASE_1_DECISIONS.md)
 [![License](https://img.shields.io/badge/License-Proprietary-red?style=flat-square)]()
@@ -35,10 +35,10 @@ EYWA™ is a registered trademark of **The Gifted Digital Marketing Co., Ltd.** 
 | Document | Purpose | Lines | Status |
 |----------|---------|-------|--------|
 | `PROJECT_MEMORY.md` | Project context for AI sessions + onboarding | ~880 | 🧠 Memory (local-only, gitignored) |
-| `EYWA_PROTOCOL_v3_33.md` | The Bible — full specification | ~27,800 | 🔒 Active (v3.38) |
-| `Schema_Overview_EYWA_v1_23.md` | Database schema companion (Group 11 NEW media_assets) — **43 EYWA canonical base tables** *(47 as of v1.26; DR-078 tables pending operator apply)*, all 43 verified present 2026-08-24 *(re-corrected 2026-08-24: the original "43 live base tables" was RIGHT and had been replaced with a raw `public` count. `public` also holds 14 non-EYWA/scratch tables — `logs_2025`/`logs_2026`, `fbads_*`, `tsa_*`, `web_lead`, `ss_kw_seed_*` — so a raw count reads **57** base tables excluding backups and **222** including them. The raw number drifts; the canonical 43 does not — `select count(*) from information_schema.tables where table_schema='public' and table_type='BASE TABLE' and table_name not like '\_%' and table_name !~ '(bak\|backup)'`)* | ~2,000 | 🔒 Active (v1.26) |
+| `EYWA_PROTOCOL_v3_33.md` | The Bible — full specification | ~27,800 | 🔒 Active (v3.39) |
+| `Schema_Overview_EYWA_v1_23.md` | Database schema companion (Group 11 NEW media_assets) — **43 EYWA canonical base tables** *(47 as of v1.26; DR-078 tables pending operator apply)*, all 43 verified present 2026-08-24 *(re-corrected 2026-08-24: the original "43 live base tables" was RIGHT and had been replaced with a raw `public` count. `public` also holds 14 non-EYWA/scratch tables — `logs_2025`/`logs_2026`, `fbads_*`, `tsa_*`, `web_lead`, `ss_kw_seed_*` — so a raw count reads **57** base tables excluding backups and **222** including them. The raw number drifts; the canonical 43 does not — `select count(*) from information_schema.tables where table_schema='public' and table_type='BASE TABLE' and table_name not like '\_%' and table_name !~ '(bak\|backup)'`)* | ~2,000 | 🔒 Active (v1.27) |
 | `EYWA_HANDOVER.md` | Operating manual for Claude/AI | ~3,100 | 🔒 Active (v1.19) |
-| `DECISION_RECORDS.md` | Architecture decision log | ~5,300 | 🔒 Active (v1.45) |
+| `DECISION_RECORDS.md` | Architecture decision log | ~5,300 | 🔒 Active (v1.46) |
 | `Keyword_Assignment_SOP_v1_0.md` | SOP — เลือกคีย์เวิร์ดหลัก/รอง ผูกเข้าหน้า (DR-043) + บทเรียน L1–L23 | ~540 | 🔒 Active (v1.3) |
 | `Citation_Pool_SOP_v1_0.md` | SOP — สร้าง/ตรวจ/ผูก citation (DR-044) + บทเรียน C1–C20 | ~160 | 🔒 Active (v1.2) |
 | `Entity_Identity_SOP_v1_0.md` | SOP — ICD · Wikidata · Wikipedia → schema markup (DR-050) · สามด่านก่อนเชื่อ identifier + one-store-per-fact | ~200 | 🔒 Active (v1.0) |
@@ -58,10 +58,12 @@ EYWA™ is a registered trademark of **The Gifted Digital Marketing Co., Ltd.** 
 
 ---
 
-## 🆕 Latest Update — Bible v3.38 / Schema v1.26 (2026-10-23)
+## 🆕 Latest Update — Bible v3.39 / Schema v1.27 (2026-10-23)
 
 **Current spec stack — brands bump to these versions:**
-**Bible v3.38** · **Schema v1.26** · **Handover v1.19** · **Decision Records v1.45** · **Content_Templates v1.9** · **PHASE_1 v1.9**
+**Bible v3.39** · **Schema v1.27** · **Handover v1.19** · **Decision Records v1.46** · **Content_Templates v1.9** · **PHASE_1 v1.9**
+
+**DR-079 (Accepted 2026-10-23; applied 2026-10-22/23):** **Knowledge-graph data quality round (W3.0–W3.3)** — codes stay in the DR-050 stores (no `seo_entity_codes`); **MeSH** (`mesh_id`) becomes the identifier for procedures, treatments and devices; residual-code rule refined (WHO ".8" codes allowed when WHO lists the concept by name); `aliases` = one plain comma list (CHECK), `entity_lifecycle` Title case (CHECK + trigger, compare with `lower()`); 21 duplicate entities merged; 293 edges verified against international sources via new `evidence_verified_at/_by` (separate from MD sign-off; 85 `flagged_review` for brand clinicians). Schema v1.27 (no new table). Migration headers call it "DR-078" (renumbered). Brand sessions: read [`BROADCAST-2026-10-23-knowledge-graph-quality.md`](./BROADCAST-2026-10-23-knowledge-graph-quality.md).
 
 **DR-078 (Locked 2026-10-21; renumbered after merge with data-quality round 1):** **Page change history** — every SEO-relevant change on a live page (title, meta description, h1, canonical, robots, JSON-LD types, content hash, http status, final URL) is captured by a nightly **live-crawl** (GitHub Actions) and appended as one immutable row per field to `seo_page_change_log`; `v_page_change_impact` compares 28 days before vs after against GSC. Crawler + reusable workflow live centrally (`scripts/page-history/`, `.github/workflows/page-history.yml`); each brand repo owns a ~10-line caller (`templates/brand-workflows/page-history.caller.yml`). Schema v1.26 (Group 3: 3 → 6 tables, migration `2026-10-21_eywa_w12_01_dr078_page_change_history.sql` — **applied by operator via SQL editor, pending**). No backfill: history starts the day the crawler first runs. See [`proposals/2026-10-21-page-change-history.md`](./proposals/2026-10-21-page-change-history.md).
 
@@ -449,7 +451,7 @@ See `DECISION_RECORDS.md` for full rationale.
 
 ## 📐 Schema Overview
 
-The EYWA database schema (**v1.26** — the companion file is `Schema_Overview_EYWA_v1_23.md`; "v1.11" here was stale) consists of **11 groups over 43 EYWA canonical base tables**, *(47 as of v1.26; DR-078 tables pending operator apply)*, all 43 verified present 2026-08-24 *(corrected 2026-08-24 against live schema; re-corrected the same day — an intermediate edit read "9 groups over 57 live base tables", which counted `public`'s non-EYWA tables instead of the schema)*.
+The EYWA database schema (**v1.27** — the companion file is `Schema_Overview_EYWA_v1_23.md`; "v1.11" here was stale) consists of **11 groups over 43 EYWA canonical base tables**, *(47 as of v1.26; DR-078 tables pending operator apply)*, all 43 verified present 2026-08-24 *(corrected 2026-08-24 against live schema; re-corrected the same day — an intermediate edit read "9 groups over 57 live base tables", which counted `public`'s non-EYWA tables instead of the schema)*.
 
 🔴 **The 9-group numbering below is the superseded v1.11-era organization.** Its numbers and themes no longer line up with the companion's §2 11-group table, where Group 5 = Performance Fact Tables, Group 6 = Backlinks & Off-Page and Group 8 = Data Quality & Governance. Read §2 of `Schema_Overview_EYWA_v1_23.md` as authoritative; the list below is kept only so each stale rule can be marked:
 

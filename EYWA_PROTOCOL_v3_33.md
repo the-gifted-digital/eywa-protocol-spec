@@ -1,7 +1,7 @@
 # 📖 คัมภีร์ EYWA™ PROTOCOL
 ## The Universal Knowledge Graph SEO Specification for the AI Era
 
-**Version:** 3.38  
+**Version:** 3.39  
 **Last Updated:** 2026-10-23  
 **Trademark:** EYWA™ (Class 35+42, DIP Thailand, filed 2026-04-20)  
 **Created by:** The Gifted Digital Marketing Co., Ltd.  
@@ -143,6 +143,20 @@ Throughout this Bible:
 
 
 ## 📜 Changelog
+
+### v3.39 (2026-10-23) — DR-079: knowledge-graph data quality round (W3.0–W3.3) 🧹🧬🔗
+
+Companion to **DR-079 (Accepted 2026-10-23; applied to production 2026-10-22/23)**. **Schema v1.27:** no new table; `mesh_id` on `seo_entity_procedures` + `seo_entity_devices`, `evidence_verified_at/_by` on `seo_entity_relationships`, aliases and lifecycle CHECKs + `trg_normalise_entity_lifecycle`. The 8 migration headers (`migrations/2026-10-22_w30 … w33b`) call this "DR-078" — renumbered to DR-079 after DR-078 (page change history, v3.38) was taken.
+
+- 🧬 **Codes stay in the DR-050 stores**; a proposed `seo_entity_codes` table was rejected (duplicates "one store per fact"). The handover figure "1 of 741 entities has ICD" measured the retired `seo_entity_graph.icd_10_code`; real coverage was ICD-10 91/118 conditions.
+- 🔗 **MeSH is the identifier for procedures, treatments and devices** (amends DR-050 §1 / Entity_Identity_SOP §1): `mesh_id` `^[DC][0-9]{6,9}$`, names the thing itself, never the disease it treats; brand/product names get none. ICD-11 has no procedure chapter.
+- 📐 **Residual-code rule refined** (SOP §4): an ICD-10 ".8" code is allowed when WHO lists the concept by name (F45.8, F98.8, K08.8, K03.8); "unspecified"/.Z/.Y stay forbidden. WHO `icd10_code` holds WHO ICD-10 only (max 4 chars); CM-only codes go to `icd10_cm_code`.
+- 🧹 **Hygiene:** `aliases` stays TEXT as one plain comma list (CHECK `chk_entity_aliases_plain_list`); `entity_lifecycle` is Title case (Emerging/Growing/Mature/Merged/Dropped) with CHECK + normalising trigger — compare with `lower()`.
+- 🧬 **Dedupe (W3.1, DR-042):** 21 duplicate entities merged (16 reference columns repointed; `tsa_bond.primary_entity` deliberately untouched), 106 wrong aliases removed, 50 `is_a` edges. vth MBM module rows stay separate entities linked by `is_a`. 2 clusters left for a human.
+- 🔍 **Wikidata:** `verify-entity-ids.mjs --apply` must not be run blindly (12 of 21 proposals were wrong); ids adjudicated by hand.
+- 🩺 **Codes (W3.2d):** 183 ICD/MeSH fills/corrections from official sources; 43 MeSH ids for procedures/devices. Active conditions: ICD-10 (WHO) 78/115, ICD-11 71, MeSH 87; procedures MeSH 69, devices 15.
+- ✅ **Edge verification (W3.3):** `evidence_verified_at/_by` is separate from `medical_reviewer_signoff_*` (named clinician only). 293 `treats`/`symptom_of`/`is_a` edges reviewed: 164 verified, 29 retyped/reversed, 15 `deprecated` (clinically false), 85 `flagged_review` for brand clinicians. Edges are never deleted.
+- ⚠️ Open: W3.4 keyword→entity mislink review (after legacy brands bind target keywords); ~22 entities with wrong `entity_type`; `related_to` (426) retyping; 85 flagged edges need brand MD review; `v_keyword_near_duplicates` times out (materialized view candidate).
 
 ### v3.38 (2026-10-23) — DR-078: ประวัติการเปลี่ยนแปลง SEO ระดับหน้า จากการ crawl หน้า live 📜🕷️
 

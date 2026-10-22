@@ -2,8 +2,8 @@
 
 > **Append-only architectural decision log.** Each record explains WHY a decision was made — not just WHAT.
 
-**Document Version:** 1.45  
-**Last Updated:** 2026-10-23 — DR-078 accepted (page change history: live-crawl SEO change log, GitHub Actions, central code + brand-owned caller; renumbered after merge) · previously 2026-10-22 — DR-077 accepted (citation tier criteria: in vitro T6, cohort_study T5, `other` = unclassified, SR-guideline by conduct, unmapped study types) · DR-076 accepted (data-quality round 1: "one intent = one URL" enforced on semantic keywords by trigger · keyword conversion view is organic-only and keyword-level · `keyword_use_as` reconciled and released on delete) — applied to production 2026-10-21/22; amends brand DR `DR-EYWA-TSA-003` guidance
+**Document Version:** 1.46  
+**Last Updated:** 2026-10-23 — DR-079 accepted (knowledge-graph data-quality round W3.0–W3.3: codes stay in DR-050 stores, MeSH for procedure/device, dedupe, edge verification; migration headers say DR-078 = renumbered) · previously DR-078 accepted (page change history: live-crawl SEO change log, GitHub Actions, central code + brand-owned caller; renumbered after merge) · previously 2026-10-22 — DR-077 accepted (citation tier criteria: in vitro T6, cohort_study T5, `other` = unclassified, SR-guideline by conduct, unmapped study types) · DR-076 accepted (data-quality round 1: "one intent = one URL" enforced on semantic keywords by trigger · keyword conversion view is organic-only and keyword-level · `keyword_use_as` reconciled and released on delete) — applied to production 2026-10-21/22; amends brand DR `DR-EYWA-TSA-003` guidance
 **Format:** Reverse chronological (newest first)
 
 ---
@@ -31,6 +31,38 @@
 ---
 
 ## Decisions Log
+
+### [DR-079] — Knowledge-graph data quality round (W3.0–W3.3): รหัสอยู่ใน store เดิมของ DR-050 · MeSH สำหรับ procedure/device · dedupe · edge verification (2026-10-23)
+
+**Status:** **Accepted** (applied to production 2026-10-22/23) · Scope: **UNIVERSAL** · amends **DR-050** §1 (Entity_Identity_SOP) และ §4  
+**Bible Reference:** v3.39 changelog (ไม่มี Part ใหม่)  
+**Schema Reference:** v1.27 — `seo_entity_procedures.mesh_id` · `seo_entity_devices.mesh_id` · `seo_entity_relationships.evidence_verified_at/_by` · `chk_entity_aliases_plain_list` · `chk_entity_lifecycle` + `trg_normalise_entity_lifecycle` · `seo_entity_name_list()` ใช้ร่วมกัน · backup tables `bak_*_w3x`  
+**Note on numbering:** migration headers ของรอบนี้ (`migrations/2026-10-22_w30…w33b`) เขียนว่า "DR-078" — เลขนั้นถูกใช้โดย DR page change history ก่อนรอบนี้จะถูกบันทึก เอกสารจึง **renumber เป็น DR-079**; ไฟล์ migration ไม่ถูกแก้
+
+**Context:** handover ระบุว่า "1 จาก 741 entity มี ICD" แต่ตัวเลขนั้นวัดคอลัมน์ `seo_entity_graph.icd_10_code` ซึ่งปลดระวางแล้วตาม DR-050 — ความครอบคลุมจริงคือ ICD-10 91/118 conditions (หลายตัวเป็นรหัส CM ที่ไปอยู่ในคอลัมน์ WHO). นอกจากนี้ graph มีปัญหาคุณภาพที่ทำให้ dedupe/verification ทำไม่ได้: `aliases` เก็บ 3 รูปแบบ, `entity_lifecycle` ปนตัวพิมพ์เล็ก/ใหญ่, entity ซ้ำ, alias ผิด, Wikidata id ผิด, edge ไม่มีหลักฐานที่ตรวจแล้ว
+
+**Decision:**
+1. **รหัสอยู่ใน store ของ DR-050 ต่อไป** (`seo_entity_condition` / `_symptom` / `_drug` ...). ข้อเสนอตาราง `seo_entity_codes` ใหม่ **ถูกปฏิเสธ** — ซ้ำกับหลัก "one store per fact" ของ DR-050
+2. **MeSH เป็น identifier ของ procedure / treatment / device** (แก้ DR-050 §1 และ Entity_Identity_SOP §1): คอลัมน์ใหม่ `mesh_id` บน `seo_entity_procedures` และ `seo_entity_devices`, CHECK `^[DC][0-9]{6,9}$`. ระบุตัวหัตถการ/อุปกรณ์เอง **ไม่ใช่โรคที่รักษา**; ชื่อแบรนด์/ผลิตภัณฑ์ไม่มี MeSH. เลือก MeSH เพราะ ICD-11 ไม่มี chapter ของหัตถการ
+3. **Residual-code rule ปรับ** (แก้ SOP §4): ICD-10 "other" (.8) ใช้ได้เมื่อ WHO ระบุ concept ของ entity **ตามชื่อ** เป็น inclusion term (F45.8 "Teeth-grinding", F98.8 "Thumb-sucking", K08.8 "Toothache NOS", K03.8 "Sensitive dentine"); "unspecified" / .Z / .Y ยังห้าม. คอลัมน์ `icd10_code` (WHO) ต้องเป็น WHO ICD-10 เท่านั้น ยาวไม่เกิน 4 ตัวอักษร; รหัส CM-only (G47.63, R06.83, K08.89, Z91.041 ...) ไป `icd10_cm_code`
+4. **`aliases` คง TEXT** เป็น comma list ธรรมดา + CHECK `chk_entity_aliases_plain_list` (ห้ามมี `{ } "`) — เก็บเป็น text เพราะ n8n sync Supabase→Notion เขียนลง rich_text และ brand SQL ใช้ `string_to_array(aliases, ',')`. helper `seo_entity_name_list(name, aliases)`
+5. **`entity_lifecycle` เป็น Title case** (`Emerging` / `Growing` / `Mature` / `Merged` / `Dropped`) + CHECK `chk_entity_lifecycle` + BEFORE trigger `trg_normalise_entity_lifecycle` (script ที่เขียน `'merged'` ยังทำงาน). โค้ดที่เทียบ lifecycle ต้องใช้ `lower()`; view `v_entity_near_duplicates` และ `v_entity_semantic_duplicates` แก้แล้ว
+6. **Dedupe (W3.1)** ตาม DR-042: merge entity ซ้ำ 21 ตัว (repoint reference 16 คอลัมน์ รวม `seo_media_assets`, `seo_reviews.mentioned_entities_fps`, `condition.symptom_entities_fps`, `procedures.contraindication_entities_fps`, llm simulations; **`tsa_bond.primary_entity` ไม่ถูกเขียนทับโดยตั้งใจ** — เป็น event history), ลบ alias ผิด 106 รายการ, สร้าง `is_a` parent/child 50 edge. **ผู้ตัดสิน (operator):** แถว vth MBM module คงเป็น entity แยก ผูกกับ concept ร่วมด้วย `is_a` (ไม่ merge). เหลือ 2 cluster ให้คนตัดสิน (airway-biomapping vs mbm-airway-analysis; muscle- vs tmj-posture-recovery). W3.2c ยก list columns ของ 7 คู่ที่ merge ไปไว้ที่ winner; `root-canal-treatment` `anesthesia_required` / `requires_followup` แก้เป็น `true`
+7. **Wikidata:** ห้ามรัน `verify-entity-ids.mjs --apply` แบบไม่อ่านผล — มันเขียนทุก "proposed" id และ 12 จาก 21 ข้อเสนอผิด (ห้างสรรพสินค้า, วารสาร, 'osteoporosis' สำหรับ alveolar bone loss). id ถูกตัดสินด้วยมือ (w32b); id เดิมที่ผิด 1 ตัวถูกล้าง (periodontal-surgery → "pedicled flap")
+8. **รหัส (W3.2d):** เติม/แก้ ICD/MeSH 183 รายการสำหรับ condition/symptom จากแหล่งทางการเท่านั้น (WHO ICD-10 2019 + 10To11 map, ICD-11 MMS 2025-01, ICD-10-CM, NLM MeSH), MeSH 43 id สำหรับ procedure/device; ICD-11 7 ค่าเป็น WHO Foundation numeric id ไม่ใช่รหัส MMS; nickel-allergy `Z91.041` (แพ้สีย้อมรังสี) แก้เป็น `L23.0`. ความครอบคลุมของ condition ที่ active หลังรอบนี้: ICD-10 (WHO) 78/115, ICD-11 71, MeSH 87; procedures MeSH 69, devices 15
+9. **Edge verification (W3.3):** คอลัมน์ใหม่ `evidence_verified_at` / `evidence_verified_by` (`agent:<source>` หรือ `human:<fp>`) บน `seo_entity_relationships` — **แยกจาก** `medical_reviewer_signoff_*` ซึ่งยังสงวนไว้สำหรับแพทย์ที่ระบุชื่อ (operator: ตรวจกับแหล่งนานาชาติได้โดยไม่ต้องมี MD แต่ห้ามนำเสนอเป็นการรับรองของ MD). ตรวจ edge `treats` / `symptom_of` / `is_a` 293 เส้น เปิดทุกลิงก์ที่อ้าง (112 จาก 209 ต้องเปลี่ยน: หน้า search, ลิงก์ตาย, paper ผิด): verified 164, retype/กลับทิศ 29 (ส่วนมาก `symptom_of` → `caused_by`/`causes`), deprecated 15 (ผิดทางคลินิก เช่น apicoectomy treats peri-implantitis; Neodent is_a Straumann implant; awake/pediatric/stress bruxism is_a sleep bruxism → `is_a bruxism` ตาม 2018 international consensus), `flagged_review` 85 (ส่วนมากเป็น programme ของแบรนด์) ให้ MD ของแบรนด์. ใช้ status `deprecated` — **ไม่ลบ edge**
+10. **Scripts** (`scripts/entity-identity/`): harvest ส่ง MeSH ให้ procedure/treatment/device, ข้าม Merged/Dropped, อ่าน `icd10_codes_related` ก่อนเทียบ, ปฏิเสธรหัส Wikidata ที่ผิดรูป; verify ข้าม Merged/Dropped
+
+**Rationale:** one store per fact ลดทางเลือกที่ทำให้รหัสเพี้ยน; MeSH เป็นทางเดียวที่ฟรี นานาชาติ และครอบคลุมหัตถการ/อุปกรณ์; text + CHECK ปลอดภัยกว่าเปลี่ยนชนิดคอลัมน์ที่ sync อื่นพึ่งพา; การแยก "verified" ออกจาก "MD sign-off" ทำให้ตรวจเชิงหลักฐานได้โดยไม่ปลอมเป็นการรับรองทางคลินิก; ให้คนอ่าน label+description ของ Wikidata เพราะตัวอัตโนมัติผิดเกินครึ่ง
+
+**Consequences:**
+- Migrations ที่ apply แล้ว: `2026-10-22_w30_entity_graph_hygiene`, `w31_entity_dedupe`, `w32a_mesh_id_procedures_devices`, `w32b_wikidata_adjudicated`, `w32c_merged_ext_lists`, `w32d_entity_codes`, `w33a_edge_verification_columns`, `w33b_edge_verification`. Backup tables: `bak_entity_graph_w30_20261022`, `bak_w31_20261022_{graph,rels,pages,kw,ext}`, `bak_w32c_20261022`, `bak_w32d_20261022`, `bak_w33b_20261022`
+- ทุก brand session: เทียบ `entity_lifecycle` ด้วย `lower()`; ห้ามเขียน aliases เป็น array literal; ใช้ `mesh_id` บน procedure/device; edge `flagged_review` ต้องผ่าน MD ของแบรนด์; vth MBM คงแยก; ห้ามรัน `verify-entity-ids --apply` แบบไม่อ่านผล
+- **Open follow-ups:** W3.4 keyword→entity mislink review (หลัง legacy brands ผูก target keyword ครบ — session อื่นกำลังผูก target-only ให้ the-face-by-vertex, tc-smile-dental, clearisma; operator: semantic binding รอ re-allocation pass เต็มรอบ); ~22 entity ที่ `entity_type` ผิด (device/prosthesis เก็บเป็น procedure, material เป็น device, software เป็น device); retype `related_to` (426); 85 edge `flagged_review` รอ MD แบรนด์; `v_keyword_near_duplicates` ช้า (timeout) — ตัวเลือก materialized view
+
+**References:** DR-042 (entity dedupe), DR-050 (Entity Identity), DR-033 (ICD dual-coding), DR-013 (edge vocab), DR-078 (page change history — ไม่ถูกแก้), `Entity_Identity_SOP_v1_0.md`, `BROADCAST-2026-10-23-knowledge-graph-quality.md`, `migrations/2026-10-22_w30…w33b`
+
+---
 
 ### [DR-078] — Page change history: บันทึกการเปลี่ยนแปลง SEO ของแต่ละหน้าจากหน้า live (`seo_page_change_log`) (2026-10-21)
 

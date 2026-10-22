@@ -1,9 +1,9 @@
 # 📊 Schema Overview — EYWA™ PROTOCOL Database
 
-**Version:** v1.26 (2026-10-23) — DR-078 page change history: Group 3 Page System 3 → 6 tables (`seo_page_live_state`, `seo_page_change_log` append-only, `seo_page_change_note`) + `seo_norm_url()` + 3 views; migration written, applied by operator (pending) · previous: v1.25 (2026-10-22) — DR-076 data-quality round 1: `trg_page_keyword_no_reuse` + `idx_page_master_semantic_fps` on `seo_website_page_master`, `trg_release_keyword_use_as_on_delete`, view `v_page_keyword_conflicts`, `v_tsa_keyword_conversion` redefined (organic-only, keyword-level), `v_keyword_near_duplicates` + `match_reason`/`entity_fp`, function `seo_entity_name_list()` · previous: v1.24 (2026-09-20) — DR-074 `seo_ai_agent_visits` BUILT (Group 7 → 5 tables) + `tsa_bond.entry_referrer` (DR-075) + `tsa_param` surface `server_only`; four v2.4 AI tables declared superseded · previous: v1.23 (2026-06-11) — DR-038 Canonicalize `seo_media_assets` (Group 11 NEW §13.1, BUILT) + Cloudflare config columns on `brands` (§3.1, BUILT) 🔒🖼️☁️
+**Version:** v1.27 (2026-10-23) — DR-079 knowledge-graph data quality round (W3.0–W3.3): `mesh_id` on `seo_entity_procedures` + `seo_entity_devices`, `evidence_verified_at/_by` on `seo_entity_relationships`, `chk_entity_aliases_plain_list`, `chk_entity_lifecycle` + `trg_normalise_entity_lifecycle`; 8 migrations applied; no new base table (backup tables only) · previous: v1.26 (2026-10-23) — DR-078 page change history: Group 3 Page System 3 → 6 tables (`seo_page_live_state`, `seo_page_change_log` append-only, `seo_page_change_note`) + `seo_norm_url()` + 3 views; migration written, applied by operator (pending) · previous: v1.25 (2026-10-22) — DR-076 data-quality round 1: `trg_page_keyword_no_reuse` + `idx_page_master_semantic_fps` on `seo_website_page_master`, `trg_release_keyword_use_as_on_delete`, view `v_page_keyword_conflicts`, `v_tsa_keyword_conversion` redefined (organic-only, keyword-level), `v_keyword_near_duplicates` + `match_reason`/`entity_fp`, function `seo_entity_name_list()` · previous: v1.24 (2026-09-20) — DR-074 `seo_ai_agent_visits` BUILT (Group 7 → 5 tables) + `tsa_bond.entry_referrer` (DR-075) + `tsa_param` surface `server_only`; four v2.4 AI tables declared superseded · previous: v1.23 (2026-06-11) — DR-038 Canonicalize `seo_media_assets` (Group 11 NEW §13.1, BUILT) + Cloudflare config columns on `brands` (§3.1, BUILT) 🔒🖼️☁️
 **Live database:** Supabase project `lffcbeszjqzioobqfdav` ("GTGT") · region `ap-northeast-1` · Postgres 17
 **Total base tables:** 47 EYWA canonical tables *(v1.26: +3 DR-078 tables, 44 → 47; the 3 are written but pending operator apply — verify with the count query below once applied; the 2026-08-24 audit confirmed 43)* — 43 confirmed present at the 2026-08-24 audit *(corrected 2026-08-24 against live schema: the count is right, the scope claim was not — `public` also holds non-EYWA tables `tsa_bond`/`tsa_bond_valued`/`tsa_call`/`tsa_event`/`tsa_page_product`/`tsa_param`/`tsa_product_map`/`tsa_product_value`, `fbads_account`/`fbads_daily`/`fbads_sync_log`, `web_lead`, `ss_kw_seed_wave16_20260806`, plus ~140 `_`-prefixed backup/scratch tables and 7 `v_` views. The live list is whatever `GET /rest/v1/` returns as OpenAPI definitions; do not hardcode a total)* — `seo_media_assets` §13.1 (Group 11) canonicalized 2026-06-11 via migration `eywa_w11_08` (DR-038); `brands` §3.1 +4 Cloudflare cols via `eywa_w11_09` (DR-038); `seo_payer_partners` §3.9 canonicalized 2026-06-08 via migration `eywa_w11_07` (DR-037); `seo_entity_symptom` §11.5a built 2026-06-04 via `eywa_w11_06`
-**Spec stack:** Bible v3.38 · Handover v1.19 · Decision Records v1.45
+**Spec stack:** Bible v3.39 · Handover v1.19 · Decision Records v1.46
 **Audit method:** Last full drift audit vs live `information_schema` was **2026-05-30**. A cross-brand reconciliation on 2026-08-23 checked 2,317 documented claims against the live database and found 1,837 that no longer match, including 336 rules that cannot fire at all. **Every column count, allowed-value list and row count in this document was re-checked against the live PostgREST schema + live data on 2026-08-24**; corrections carry an inline `*(corrected 2026-08-24 against live schema)*` marker. Row counts drift daily — treat every number here as a measurement with a date, not a constant. Constraint definitions (CHECK bodies, trigger existence, index lists, partitions) are **not** reachable through PostgREST and remain unverified since 2026-05-30. See `eywa-vth-biodent/content-plan/` reconciliation report.
 
 > **Reader heads-up:** v1.18 is a **full rewrite + audit** of v1.10. Aspirational columns from v1.0–v1.10 that never shipped are dropped (or moved to **Appendix H — Deferred v2.0 Provisions**). Every column under each table reflects the live database. Two new DR waves landed in this version:
@@ -16,6 +16,18 @@
 ---
 
 ## Changelog
+
+### v1.27 (2026-10-23) — DR-079: knowledge-graph data quality round (W3.0–W3.3) 🧹🧬🔗
+
+Paired companion to **DR-079** (applied to production 2026-10-22/23). The headers of the 8 migrations (`migrations/2026-10-22_w30 … w33b`) call it "DR-078" — renumbered to DR-079 after DR-078 was taken by page change history. **No new base table; count stays 47.**
+
+- ➕ **`seo_entity_procedures.mesh_id text`** and **`seo_entity_devices.mesh_id text`** (§11.2, §11.3) — CHECK `chk_procedures_mesh_id` / `chk_devices_mesh_id` `^[DC][0-9]{6,9}$`. MeSH names the procedure/device itself, never the disease it treats (amends DR-050 §1). Codes stay in the DR-050 stores; a proposed `seo_entity_codes` table was rejected.
+- ➕ **`seo_entity_relationships.evidence_verified_at timestamptz`, `evidence_verified_by text`** (§4.5) — `chk_edge_evidence_verified_by` `^(agent|human):[a-z0-9_.-]+$`, `chk_edge_evidence_verified_pair` (both null or both set). Separate from `medical_reviewer_signoff_*`, which stays reserved for a named clinician. Status `deprecated` now used (15 edges) alongside `flagged_review` (85); edges are never deleted.
+- 🔒 **`seo_entity_graph.aliases`** stays `text`, one plain comma list; CHECK `chk_entity_aliases_plain_list` (`aliases !~ '[{}"]'`).
+- 🔒 **`seo_entity_graph.entity_lifecycle`** Title case only: CHECK `chk_entity_lifecycle` (`Emerging|Growing|Mature|Merged|Dropped`) + BEFORE trigger `trg_normalise_entity_lifecycle` → `fn_normalise_entity_lifecycle()` (scripts writing `'merged'` still work). `v_entity_near_duplicates` and `v_entity_semantic_duplicates` redefined to compare with `lower()`.
+- 🔁 **Data:** 21 duplicate entities merged (DR-042; references repointed in 16 columns; `tsa_bond.primary_entity` deliberately not rewritten), 106 wrong aliases removed, 50 `is_a` edges added; 183 ICD/MeSH fills and corrections for conditions/symptoms, 43 MeSH ids for procedures/devices; Wikidata ids adjudicated by hand; 293 `treats`/`symptom_of`/`is_a` edges verified (164 verified, 29 retyped/reversed, 15 deprecated, 85 `flagged_review`).
+- 🗃️ **Backup tables (not EYWA canonical, excluded from the 47-table count):** `bak_entity_graph_w30_20261022`, `bak_w31_20261022_{graph,rels,pages,kw,ext}`, `bak_w32c_20261022`, `bak_w32d_20261022`, `bak_w33b_20261022` (Appendix I). Drop after the operator confirms the data.
+- ⚠️ Known: `v_keyword_near_duplicates` times out (candidate for a materialized view); ~22 entities carry the wrong `entity_type`; `related_to` (426) not yet retyped.
 
 ### v1.26 (2026-10-23) — DR-078: page-level SEO change history (live-crawl) 📜🕷️
 
@@ -818,14 +830,14 @@ When `brand_structure='monolithic'`: unchanged DR-004 behavior `{brand_domain}/{
 | `brand_scope` `text[]` | DR-010 — brands this entity is in scope for (`['*']` = universal) |
 | `brand_scope_id` `text` | DR-008 single-brand fast path (NULL for multi-brand) |
 | `brand_scope_name` `text` | Denormalized brand name when single-brand |
-| `entity_lifecycle` `text` | `'Emerging'`, `'Growing'`, `'Mature'`, `'Declining'` |
+| `entity_lifecycle` `text` | `'Emerging'`, `'Growing'`, `'Mature'`, `'Merged'`, `'Dropped'` — Title case only 🆕 v1.27 (DR-079): CHECK `chk_entity_lifecycle` + BEFORE trigger `trg_normalise_entity_lifecycle` normalises any casing a script writes. Compare with `lower()`. *(`'Declining'` is not in the CHECK.)* |
 | `programmatic_eligible` `boolean` | True = OK to auto-spawn programmatic pages |
 | `wikipedia_url` `text` | sameAs trust signal |
 | `wikidata_id` `text` | Q-number for Google Knowledge Graph linkage |
 | `competing_entities` `text` | Plain-text notes on competitor entity targets |
 | `ai_entity_summary` `text` | AI-generated brief for Schema.org `description` |
 | `hreflang_group` `text` | Multilingual entity grouping |
-| `aliases` `text` ⚠️ | Plain text (NOT jsonb as some legacy docs claim) |
+| `aliases` `text` ⚠️ | Plain text (NOT jsonb as some legacy docs claim) — one comma list `a, b, c`; CHECK `chk_entity_aliases_plain_list` (no `{ } "`) 🆕 v1.27 (DR-079). Stays text: n8n Supabase→Notion sync writes it to a rich_text property and brand SQL uses `string_to_array(aliases, ',')`. Read with `seo_entity_name_list()` (F.10) |
 | `icd_10_code` `text` | WHO base ICD-10 (ICD-10-TM aligned for TH market) — **universal entity code + fingerprint key**. Emitted in `MedicalCondition.code[]` as `codingSystem:"ICD-10"`. Per **DR-033**, the full per-condition coding set (`icd11_code` ICD-11-MMS primary + `icd10_cm_code` US clinical-mod) lives on **`seo_entity_condition` §11.5** (built v1.19), not on this universal table. |
 | `content_gap_flag` `boolean` | True = entity surfaces but no canonical page yet |
 | `related_entities_fps` `text[]` | Array of fingerprints (for quick lookup; canonical edges live in seo_entity_relationships) |
@@ -1024,10 +1036,12 @@ Preserved in **Appendix H — Deferred v2.0 Provisions**.
 | `edge_strength smallint` | 1–5 operator scored |
 | `edge_evidence_score numeric` | 0.0–1.0, computed from linked citations |
 | `edge_evidence_citation text` | FK → seo_citations.fingerprint (required for `causes`, `treats`, `contraindicates` edges per `trg_validate_edge_evidence`) |
-| `medical_reviewer_signoff_at timestamptz` | Required for `contraindicates` edges per `trg_validate_medical_signoff` |
+| `medical_reviewer_signoff_at timestamptz` | Required for `contraindicates` edges per `trg_validate_medical_signoff`. Reserved for a named clinician — never stamped by an agent check |
+| `evidence_verified_at timestamptz` 🆕 v1.27 | DR-079 — when the edge was checked against international sources (MeSH tree, ICD, PubMed, guidelines). Not an MD sign-off |
+| `evidence_verified_by text` 🆕 v1.27 | `'agent:<source>'` (e.g. `agent:mesh`, `agent:pubmed`) or `'human:<person fp>'`; CHECK `chk_edge_evidence_verified_by`; `chk_edge_evidence_verified_pair` requires both columns set or both null |
 | `medical_reviewer_fp text` | FK → seo_authors_reviewers.fingerprint |
 | `brand_scope text[]` | |
-| `status text` | live values only: `'active'`, `'flagged_review'` *(corrected 2026-08-24 against live data)* |
+| `status text` | live values: `'active'`, `'flagged_review'` (needs a brand clinician), `'deprecated'` (clinically false or superseded — never deleted; reason in `edge_note`) *(`deprecated` used from v1.27 / DR-079; corrected 2026-08-24 against live data)* |
 | `notion_id text`, `notion_synced_at`, `sync_state` | N↔S |
 | `load_from text`, `load_source text` | *(added 2026-08-24 — live columns, never documented.)* DZ-DR-029 federation provenance |
 | `created_at`, `updated_at` | |
@@ -1621,11 +1635,13 @@ Key fields *(corrected 2026-08-24 against live schema)*: `inci_name`, `inci_alia
 ### 11.2 `seo_entity_devices` (24 cols) — entity_type='device' · **64 rows** (2026-08-24) *(count corrected 2026-08-24 — was documented as 22 cols)*
 
 FDA / CE / manufacturer registration. Used by medical device pages.
+**`mesh_id text` 🆕 v1.27 (DR-079)** — MeSH descriptor/supplementary concept (`^[DC][0-9]{6,9}$`, CHECK `chk_devices_mesh_id`) naming the device itself; brand/product names get none. 15 filled (2026-10-23).
 Key fields *(corrected 2026-08-24 against live schema)*: `manufacturer`, `manufacturer_org_fp`, `model_number`, `device_family`, `fda_clearance`, `fda_clearance_date`, `ce_mark`, `ce_mark_class`, `thai_fda_reg_no`, `regulatory_class`, `technology_category`, `wavelength_nm`, `clinical_indications`, `contraindications`, `treatment_areas`, `typical_session_duration_min`, `typical_sessions_required`, `downtime_days`, `load_from`, `load_source`. **Not live:** `fda_clearance_number`, `ce_mark_number`, `manufacturer_name`, `device_class`, `intended_use_statement`, `warnings`, `made_in_country`, `is_class_iii`, `is_implantable`, `approval_status`.
 
 ### 11.3 `seo_entity_procedures` (27 cols) — entity_type='procedure' · **145 rows** (2026-08-24) *(count corrected 2026-08-24 — was documented as 25 cols)*
 
 CPT codes + recovery + contraindications. **T2-medical-procedure template binding.**
+**`mesh_id text` 🆕 v1.27 (DR-079)** — identifier for procedures and treatments (`^[DC][0-9]{6,9}$`, CHECK `chk_procedures_mesh_id`); names the procedure itself, never the disease it treats. 69 filled (2026-10-23). No ICD code exists for these types.
 Key fields *(corrected 2026-08-24 against live schema)*: `cpt_code`, `cpt_alternate_codes`, `procedure_type`, `invasiveness_level`, `procedure_duration_min`/`_max`/`_typical`, `recovery_time_days`, `recovery_back_to_work_days`, `recovery_full_recovery_days`, `anesthesia_type`, `anesthesia_required`, `treats_conditions_fps`, `affects_anatomy_fps`, `uses_devices_fps`, `contraindications`, `contraindication_entities_fps`, `complications_common`, `success_rate_pct`, `requires_followup`, `followup_visits_typical`, `load_from`, `load_source`. **Not live:** `hcpcs_code`, `thai_procedure_code`, `procedure_category`, `typical_duration_minutes`, `pain_level`, `risks`, `pre_op_instructions`, `post_op_instructions`, `expected_outcomes`, `cost_range_thb`.
 
 > 🩺 **`contraindications` เป็น store เดียวของข้อห้ามที่หน้าเว็บแสดง (DR-069, 2026-09-18)** — text[] ภาษาคนไข้ ≤ 8 ข้อ หนึ่งภาวะต่อข้อ เรียง strength 3→2→1 ไม่มีชื่อการค้า/ขนาดยา/link markup · แบรนด์ generate `src/data/entity-clinical.json` จากคอลัมน์นี้ (+ `seo_entity_devices.contraindications` + `seo_entity_drug.contraindications_text` — ชื่อต่างกัน bridge ซ่อนให้) แล้ว render + JSON-LD จากไฟล์เดียว · `load_source` ต่อท้าย PMID/ที่มาทุกครั้งที่แก้ · ไม่มี `indication` คู่กัน (ยังอยู่ใน YAML ของหน้า) · vth ตรวจแล้ว 40 entity / 568 ข้อ (2026-09-17/18) · แถวเป็นของแชร์ — แก้แถวที่แบรนด์อื่นโหลดต้องเก็บข้อเท็จจริงเดิม + broadcast (DR-046)
@@ -2072,6 +2088,18 @@ A "translation group" is implicit: all pages sharing a `source_translation_fp` a
 | `release_keyword_use_as_on_page_delete()` | trigger `trg_release_keyword_use_as_on_delete` on `seo_website_page_master` |
 | `seo_entity_name_list(name text, aliases text) returns text[]` | `v_keyword_near_duplicates` — returns the entity name plus aliases, reading both formats found in `seo_entity_graph.aliases` (Postgres array literal `{a,b}`, 116 rows; comma list, 625 rows) |
 
+### F.11 Entity hygiene triggers 🆕 v1.27 (DR-079)
+
+| Object | Where | Purpose |
+|---|---|---|
+| `fn_normalise_entity_lifecycle()` | trigger `trg_normalise_entity_lifecycle` BEFORE INSERT/UPDATE on `seo_entity_graph` | maps any casing of `entity_lifecycle` to Title case so `chk_entity_lifecycle` never rejects a script writing `'merged'` |
+| `chk_entity_aliases_plain_list` | CHECK on `seo_entity_graph.aliases` | one plain comma list; no Postgres array literal, braces or quotes |
+| `chk_entity_lifecycle` | CHECK on `seo_entity_graph.entity_lifecycle` | `Emerging · Growing · Mature · Merged · Dropped` |
+| `chk_procedures_mesh_id`, `chk_devices_mesh_id` | CHECK on the two `mesh_id` columns | `^[DC][0-9]{6,9}$` |
+| `chk_edge_evidence_verified_by`, `chk_edge_evidence_verified_pair` | CHECK on `seo_entity_relationships` | verifier format; both verification columns set or both null |
+
+`seo_entity_name_list(name, aliases)` (F.10) now only ever sees the comma-list format for `seo_entity_graph`; the array-literal branch is kept for safety.
+
 ---
 
 ## Appendix G — Entity Uniqueness Guard (EUG) Implementation v2.0
@@ -2154,6 +2182,10 @@ Recent migration waves applied to live DB (verified via `supabase_migrations.sch
 | **W11.7b** | **2026-06-08** | **eywa_w11_07_dr037_v22_payer_partners_canonical** (in-place ALTER seo_payer_partners → canonical Group-1 §3.9; 71 Deezy rows migrated) | **DR-037** |
 | **W11.8** 🆕 | **2026-06-11** | **eywa_w11_08_dr038_v23_media_assets_canonical** (CREATE TABLE seo_media_assets — 37 cols, Group 11 NEW, PDPA gate, R2 fields) | **DR-038** |
 | **W11.9** 🆕 | **2026-06-11** | **eywa_w11_09_dr038_v23_brands_cloudflare_config** (brands +4 CF cols: account_email, account_id, zone_id, r2_bucket) | **DR-038** |
+| **W3.0** 🆕 | **2026-10-22** | `2026-10-22_w30_entity_graph_hygiene` (aliases plain list + CHECK, `entity_lifecycle` Title case + CHECK + trigger) · backup `bak_entity_graph_w30_20261022` | **DR-079** *(file header says DR-078)* |
+| **W3.1** 🆕 | **2026-10-22** | `2026-10-22_w31_entity_dedupe` (21 merges, 106 alias removals, 50 `is_a`; duplicate views fixed for `lower()`) · backups `bak_w31_20261022_{graph,rels,pages,kw,ext}` | **DR-079** (DR-042 procedure) |
+| **W3.2a–d** 🆕 | **2026-10-22** | `w32a_mesh_id_procedures_devices` · `w32b_wikidata_adjudicated` · `w32c_merged_ext_lists` (backup `bak_w32c_20261022`) · `w32d_entity_codes` (backup `bak_w32d_20261022`) | **DR-079** |
+| **W3.3a–b** 🆕 | **2026-10-22/23** | `w33a_edge_verification_columns` · `w33b_edge_verification` (backup `bak_w33b_20261022`) | **DR-079** |
 
 ---
 
