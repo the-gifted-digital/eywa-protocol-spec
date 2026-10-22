@@ -106,8 +106,10 @@ const wikiUrl = (ent) =>
 // ── load the entities in scope ───────────────────────────────────────────────
 let scope;
 if (ALL) {
+  // Merged/Dropped rows are redirects; they must not be proposed ids or counted (W3.0 made the casing Title case).
   const { data, error } = await db.from('seo_entity_graph')
-    .select('entity_fingerprint, entity_name, entity_type, wikidata_id, wikipedia_url');
+    .select('entity_fingerprint, entity_name, entity_type, wikidata_id, wikipedia_url')
+    .or('entity_lifecycle.is.null,entity_lifecycle.not.in.(Merged,Dropped)');
   if (error) { console.error(error); process.exit(1); }
   scope = data;
 } else {
