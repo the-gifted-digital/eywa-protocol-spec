@@ -1,7 +1,7 @@
 # 📖 คัมภีร์ EYWA™ PROTOCOL
 ## The Universal Knowledge Graph SEO Specification for the AI Era
 
-**Version:** 3.36  
+**Version:** 3.37  
 **Last Updated:** 2026-10-22  
 **Trademark:** EYWA™ (Class 35+42, DIP Thailand, filed 2026-04-20)  
 **Created by:** The Gifted Digital Marketing Co., Ltd.  
@@ -143,6 +143,18 @@ Throughout this Bible:
 
 
 ## 📜 Changelog
+
+### v3.37 (2026-10-22) — DR-077: citation tier criteria decided — in vitro, cohort, `other`, SR-guideline, unmapped study types 🧮📚
+
+Companion to **DR-077 (Accepted 2026-10-22; operator-approved)**. **Schema:** no version bump (Schema v1.25) — the `COMMENT` on `seo_citations.citation_tier` is replaced and the view `v_citation_type_mismatch` is dropped by an operator-run SQL file. Standards basis: Oxford CEBM 2011 and GRADE; tier still decided by conduct per DR-063.
+
+- 🧪 **`in_vitro` -> T6** (was T5 in the SOP, unmapped in the gate); `citation_type` stays `other`; never raised for a lab study that suits the claim. 10 rows (8 drop 5->6).
+- 🧬 **`cohort_study` as `study_type` -> T5**, same as `citation_type`; the "study_type cohort_study = T2" COMMENT/SOP line is withdrawn. 22 rows, 21 already T5; `p8-c3` to be verified on PubMed.
+- 🏷️ **`study_type='other'` is "not yet classified"**, not a valid final value for a row with a PMID (45 rows) — classify from PubMed.
+- 📑 **`systematic_review_guideline`** -> T1 only when the document reports its own full SR, else T3 (2 rows, both T3 now).
+- 🗺️ **Unmapped values decided:** `clinical_study`/`pilot_study` -> rct T2 if randomised else T5; `report` -> T4 if government/regulator else T6; `genetic_association`/MR -> T5; `patient_information_*` -> `patient_resource` T6.
+- 🔧 **Gate G14** (`run-citation-qa-gates.py`) now implements the above through `STUDY_TYPE_SYNONYM` + new `STUDY_TYPE_TIER`; only `report` and `other` stay unmapped (G14u). Citation_Pool_SOP §2 updated.
+- 📌 Open: data fixes via operator-run SQL after PubMed review, then re-run `compute-citation-authority.py`.
 
 ### v3.36 (2026-10-22) — DR-076: data-quality round 1 — one intent = one URL enforced on semantic keywords; keyword conversion is organic-only and keyword-level 🧹🔒
 
@@ -8169,8 +8181,8 @@ Tier 1 — Highest (EvidenceLevelA):
   freshness: ≤ 5 years
 
 Tier 2 — High (EvidenceLevelA single, B multiple):
-  study_type: rct · randomized_controlled_trial · cohort_study
-  # corrected 2026-08-24 against live schema: plain `cohort_study` sits at tier 2, not tier 5.
+  study_type: rct · randomized_controlled_trial · controlled_clinical_trial
+  # decided 2026-10-22 (DR-077): `cohort_study` is tier 5, not tier 2 (withdraws the 2026-08-24 note).
   sources: RCTs (PubMed peer-reviewed), Phase 3 trials
   freshness: ≤ 7 years
 
@@ -8180,22 +8192,25 @@ Tier 3 — Strong (EvidenceLevelB):
   freshness: track latest version
 
 Tier 4 — Strong (EvidenceLevelB):
-  study_type: law · regulation · regulatory_document · report · fact_sheet · survey_report · genetic_association
+  study_type: law · regulation · regulatory_document · report (government/regulator issuer only)
   sources: WHO, CDC, NIH, NHS, NICE, MOH Thailand, FDA
   freshness: ≤ 3 years for stats
 
 Tier 5 — Moderate (EvidenceLevelC):
-  study_type: cross_sectional · in_vitro · retrospective_cohort · prospective_cohort ·
-              case_series · clinical_study · pilot_study
+  study_type: cohort_study · retrospective_cohort · prospective_cohort · case_control ·
+              cross_sectional · survey_report · case_series · clinical_study · pilot_study ·
+              genetic_association · mendelian_randomization   # DR-077
   sources: Observational studies (PubMed)
   freshness: ≤ 7 years
 
 Tier 6 — Foundational (no evidence level):
-  study_type: narrative_review · textbook · manufacturer_document · expert_opinion · consensus_statement
-  sources: Textbooks, expert consensus, hospital case data
+  study_type: narrative_review · scoping_review · textbook · manufacturer_document · expert_opinion ·
+              consensus_statement · in_vitro · fact_sheet · patient_resource · report (non-government)
+  sources: Textbooks, expert consensus, lab/bench studies, hospital case data
   freshness: textbook ≤ 5 years
 
-# ยังไม่มีฐานตัดสิน: scoping_review (พูลมี 3 ใบ ตั้ง 1/5/6 อย่างละใบ) · other (กระจายทั้ง 1/3/5/6)
+# other = ยังไม่ได้จัดประเภท ไม่ใช่ประเภท — ห้ามเป็นค่าสุดท้ายของแถวที่มี PMID (DR-077)
+# systematic_review_guideline: ตัดสินจาก conduct — ทำ SR เองครบ → tier 1 · อ้าง SR คนอื่น → tier 3 (DR-077)
 # ⚠️ ทิศทางของสเกล: tier 1 = แข็งที่สุด. กฎที่เขียนว่า "reject citation tier < 3" จึงปฏิเสธหลักฐาน
 #    ที่แข็งที่สุด — ตรวจทิศทางก่อนคัดลอกเกณฑ์ไปใช้ (corrected 2026-08-24 against live schema)
 ```
@@ -19619,9 +19634,10 @@ Elite SEO: "what kind of citation" = trust signal weight
 > - **`citation_tier` is the column name**, not `evidence_tier` (which does not exist).
 > - **`schema_org_evidence_level` is not a column** — the EvidenceLevelA/B/C values below are
 >   derived at schema-render time. Nothing stores them, so no query can filter on them.
-> - **Plain `cohort_study` sits at tier 2, not tier 5.** Tier 5 covers `retrospective_cohort` /
->   `prospective_cohort` / `cross_sectional` / `in_vitro` / `case_series` / `clinical_study` /
->   `pilot_study`. Part 27.6.1 had tier 3 labelled "cohort study" — that was wrong and is fixed there.
+> - **`cohort_study` (plain or retro/prospective) is tier 5** — decided 2026-10-22 (DR-077), which
+>   withdraws the 2026-08-24 "plain cohort_study = tier 2" note. Tier 5 also covers `case_control` /
+>   `cross_sectional` / `case_series` / `clinical_study` / `pilot_study` / `genetic_association`;
+>   `in_vitro` is tier 6. Part 27.6.1 had tier 3 labelled "cohort study" — that was wrong and is fixed there.
 >
 > Live distribution (551 rows, 2026-08-24): t1 288 · t2 38 · t3 50 · t4 16 · t5 57 · t6 102.
 > ⚠️ Direction: **tier 1 is the strongest**. A rule phrased "reject citation tier < 3" rejects the
@@ -19673,8 +19689,8 @@ TIER 5 — Peer-Reviewed Observational Studies
                      case_series · clinical_study · pilot_study
   examples:
     - Retrospective / prospective cohort studies (STROBE-compliant)
-      # corrected 2026-08-24 against live schema: a citation typed plainly `cohort_study`
-      # belongs at TIER 2, not here. Only the qualified retro/prospective forms sit at tier 5.
+      # decided 2026-10-22 (DR-077): plain `cohort_study` also sits here at tier 5
+      # (withdraws the 2026-08-24 "tier 2" note). `in_vitro` moved to tier 6.
     - Case-control studies
     - Cross-sectional surveys
   freshness_rule: ≤ 7 years
@@ -24650,13 +24666,13 @@ def citation_authority_weight_v1_0(citation: Citation) -> float:
     #    gate G5 in CI enforces it for all three brands. Verified against the 551 live rows:
     #    tier 3 holds clinical_guideline / consensus_guideline / clinical_practice_guideline,
     #    tier 4 holds law / regulation / regulatory_document / report / fact_sheet /
-    #    survey_report, and plain cohort_study sits at tier 2 — not tier 3.
+    #    survey_report. DR-077 (2026-10-22): cohort_study is tier 5, in_vitro tier 6.
     tier_weights = {
         1: 1.00,   # Systematic review / meta-analysis / Cochrane review (highest)
-        2: 0.85,   # RCT · randomized_controlled_trial · cohort_study
+        2: 0.85,   # RCT · randomized_controlled_trial
         3: 0.70,   # Clinical guidelines (medical societies) — was mislabelled "Cohort study"
         4: 0.55,   # Government / regulatory: law, regulation, report, fact_sheet, survey_report
-        5: 0.40,   # Observational: cross_sectional, in_vitro, retro/prospective cohort, case_series
+        5: 0.40,   # Observational: cohort (incl. retro/prospective), case_control, cross_sectional, case_series
         6: 0.25,   # Narrative review / textbook / expert opinion / consensus statement
     }
     base = tier_weights.get(citation.tier, 0.10)

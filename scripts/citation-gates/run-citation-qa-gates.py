@@ -69,15 +69,26 @@ STUDY_TYPE_SYNONYM = {
     "regulation": "regulatory_document",
     "manufacturer_document": "industry_publication",
     "fact_sheet": "patient_resource",
+    "patient_information_page": "patient_resource",
+    "patient_information_leaflet": "patient_resource",
 }
-# Values left deliberately unmapped, because folding them would assert a study design nobody
-# has established: clinical_study, pilot_study, report, genetic_association, in_vitro, other.
-# G14u reports them rather than letting them pass as cross-checked.
+# DR-077 (2026-10-22): study_type values with no citation_type equivalent but a decided tier.
+# Consulted by study_tier() after the synonym fold. Randomised clinical_study/pilot_study rows
+# are respelled rct by the reviewer; the default for them is observational, tier 5.
+STUDY_TYPE_TIER = {
+    "clinical_study": 5, "pilot_study": 5,
+    "genetic_association": 5, "mendelian_randomization": 5,
+    "in_vitro": 6,  # bench/lab/ex-vivo/model; never raised, even when the design suits the claim
+}
+# Values left deliberately unmapped: `report` (T4 if the issuer is a government/regulator, else
+# T6 — the issuer is not in study_type) and `other` (means "not yet classified"; classify from
+# PubMed). G14u reports them rather than letting them pass as cross-checked.
 
 
 def study_tier(v):
     """Tier implied by study_type, after folding synonyms. None when unmappable."""
-    return TIER_BY_TYPE.get(STUDY_TYPE_SYNONYM.get(v, v))
+    v = STUDY_TYPE_SYNONYM.get(v, v)
+    return TIER_BY_TYPE.get(v, STUDY_TYPE_TIER.get(v))
 
 
 # Bible 23.1 minimum_per_layer, keyed by leading sitemap section.

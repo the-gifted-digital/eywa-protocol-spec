@@ -2,8 +2,8 @@
 
 > **Append-only architectural decision log.** Each record explains WHY a decision was made — not just WHAT.
 
-**Document Version:** 1.43  
-**Last Updated:** 2026-10-22 — DR-076 accepted (data-quality round 1: "one intent = one URL" enforced on semantic keywords by trigger · keyword conversion view is organic-only and keyword-level · `keyword_use_as` reconciled and released on delete) — applied to production 2026-10-21/22; amends brand DR `DR-EYWA-TSA-003` guidance
+**Document Version:** 1.44  
+**Last Updated:** 2026-10-22 — DR-077 accepted (citation tier criteria: in vitro T6, cohort_study T5, `other` = unclassified, SR-guideline by conduct, unmapped study types) · DR-076 accepted (data-quality round 1: "one intent = one URL" enforced on semantic keywords by trigger · keyword conversion view is organic-only and keyword-level · `keyword_use_as` reconciled and released on delete) — applied to production 2026-10-21/22; amends brand DR `DR-EYWA-TSA-003` guidance
 **Format:** Reverse chronological (newest first)
 
 ---
@@ -31,6 +31,35 @@
 ---
 
 ## Decisions Log
+
+### [DR-077] — Citation tier criteria: in vitro, cohort, other, SR-guideline, unmapped study types (2026-10-22)
+
+**Status:** **Accepted — operator-approved 2026-10-22; docs and gate map updated, data fixes pending (operator-run SQL after PubMed review)**  
+**Scope:** UNIVERSAL  
+**Bible Reference:** Part 23.1 (tier per citation_type) · Citation_Pool_SOP §2  
+**Schema Reference:** v1.25 — `seo_citations.citation_tier` COMMENT replaced; view `v_citation_type_mismatch` dropped
+
+**Context:** Tier is decided by conduct (DR-063: PubMed PublicationType + abstract; a bare "Review" tag decides nothing), but several `study_type` values had no decided tier, or two sources disagreed. `in_vitro` sat at T5 in the SOP table while gate G14 left it unmapped; `cohort_study` was T2 in the column COMMENT but T5 as `citation_type`; `study_type='other'` (45 rows) and `systematic_review_guideline` (2 rows) had no rule; `clinical_study`, `pilot_study`, `report`, `genetic_association` and the patient-information spellings were unmapped. The live COMMENT on `citation_tier` also predates DR-063 (says a "Review"-only tag means T6 "by rule" and "use reconcile-citation-tiers.py --apply"). View `v_citation_type_mismatch` (2026-10-21, DR-076) duplicated gate G14 with a divergent map.
+
+**Decision:** Standards basis: Oxford CEBM Levels of Evidence 2011 and GRADE.
+1. `in_vitro` (bench/lab/ex-vivo/model) -> **T6**; `citation_type` stays `other`. If a lab study is the right design for the claim (e.g. device/software accuracy) say so in `key_findings`; never raise the tier. 10 rows (8 drop 5->6).
+2. `cohort_study` as `study_type` -> **T5**, same as `citation_type`; the COMMENT/SOP line "study_type cohort_study = T2" is withdrawn. 22 rows, 21 already T5; `p8-c3` (recorded rct/T2) to be verified on PubMed.
+3. `other` as `study_type` is not a valid final value for a row with a PMID; it means "not yet classified" and is classified from PubMed. First-party clinic data without an external id may stay `citation_type='other'` / T6. 45 rows.
+4. `systematic_review_guideline`: if the document reports its own full SR (systematic search, PRISMA-like flow, appraisal) -> **T1**; otherwise T3 `clinical_guideline`. 2 rows, both currently T3.
+5. Unmapped values: `clinical_study`/`pilot_study` -> randomised = `rct` T2, else **T5** (default); `report` -> government/regulator issuer = T4, else T6; `genetic_association`/Mendelian randomisation -> **T5** (one row drops 4->5); `patient_information_page`/`patient_information_leaflet` -> fold to `patient_resource` T6.
+
+**Rationale:** CEBM 2011 ranks SR > RCT > cohort > case-series/case-control > mechanism-based reasoning; GRADE starts RCTs high and observational low, and downgrades indirect evidence such as lab work. That places bench work below observational human studies (T6), cohort with the other observational designs (T5), and genetic-association/MR as observational genetic epidemiology (T5). Deciding by conduct keeps DR-063 intact and avoids tier inflation from labels. Checked impact: no page fails gate G7 (>=1 tier 1-3 source) and every page citing `p8-c3` keeps >=1 other tier 1-3 source.
+
+**Consequences:**
+- `scripts/citation-gates/run-citation-qa-gates.py`: `STUDY_TYPE_SYNONYM` gains the two patient-information spellings; new `STUDY_TYPE_TIER` (clinical_study, pilot_study, genetic_association, mendelian_randomization -> 5; in_vitro -> 6) consulted by `study_tier()`. Only `report` and `other` remain unmapped (G14u). `systematic_review_guideline` stays -> `clinical_guideline`; reviewers re-spell rows that qualify for T1.
+- Citation_Pool_SOP §2 table and bullets updated.
+- The operator runs a SQL file that replaces the COMMENT on `seo_citations.citation_tier` and drops `v_citation_type_mismatch`.
+- Data fixes follow via operator-run SQL after PubMed review. Tier changes must keep `citation_tier == TIER_BY_TYPE[citation_type]` whenever citation_type is in `TIER_BY_TYPE` (enforced by `reconcile-citation-tiers.py`; `other` rows are left alone).
+- After tier changes re-run `compute-citation-authority.py` to refresh `citation_authority_weight`.
+
+**References:** DR-063, DR-076, Bible Part 23.1, Citation_Pool_SOP_v1_0 §2, Oxford CEBM Levels of Evidence (2011), GRADE.
+
+---
 
 ### [DR-076] — Data-quality round 1: one intent = one URL enforced on semantic keywords; organic-only keyword conversion (2026-10-22)
 
