@@ -9,6 +9,8 @@ import { fileURLToPath } from 'node:url';
 const here = (p) => fileURLToPath(new URL(p, import.meta.url));
 const MIGRATION = here('../../2026-10-21_eywa_w12_01_dr078_page_change_history.sql');
 const SELFTEST = here('../2026-10-21_w12_01_page_change_history.test.sql');
+const MIGRATION2 = here('../../2026-10-23_eywa_w12_02_dr078_impact_14_28.sql');
+const SELFTEST2 = here('../2026-10-23_w12_02_impact_14_28.test.sql');
 const FIXTURE = here('../../../scripts/page-history/fixtures/url-cases.json');
 
 // Minimal stand-ins for prod (Supabase GTGT). Only the columns the migration
@@ -57,6 +59,21 @@ await step("self-test raised 'ALL PASS'", async () => {
 await step('self-test rolled back', async () => {
   const { rows } = await db.query('select count(*)::int n from seo_page_change_log');
   if (rows[0].n !== 0) throw new Error(`${rows[0].n} rows left`);
+});
+
+await step('w12_02 migration (1st run)', () => db.exec(readFileSync(MIGRATION2, 'utf8')));
+await step('w12_02 migration (2nd run, idempotent)', () => db.exec(readFileSync(MIGRATION2, 'utf8')));
+await step('w12_01 self-test still passes on the new view', async () => {
+  notices.length = 0;
+  try { await db.exec(readFileSync(SELFTEST, 'utf8'), { onNotice }); }
+  catch (e) { await db.exec('rollback'); throw e; }
+  if (!notices.includes('ALL PASS')) throw new Error(`notices: ${JSON.stringify(notices)}`);
+});
+await step('w12_02 self-test', async () => {
+  notices.length = 0;
+  try { await db.exec(readFileSync(SELFTEST2, 'utf8'), { onNotice }); }
+  catch (e) { await db.exec('rollback'); throw e; }
+  if (!notices.includes('ALL PASS')) throw new Error(`notices: ${JSON.stringify(notices)}`);
 });
 
 console.log(failed ? 'RESULT: FAIL' : 'RESULT: PASS');

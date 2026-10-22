@@ -97,6 +97,7 @@ Phase 1A baseline complete: **39 EYWA tables across 9 groups** (per Schema v1.15
 
 ### Wave 12 — DR-078 page change history (1 migration + self-test, written 2026-10-21)
 - `2026-10-21_eywa_w12_01_dr078_page_change_history.sql` — DR-078: new tables `seo_page_live_state`, `seo_page_change_log` (append-only: REVOKE UPDATE/DELETE/TRUNCATE + immutability triggers), `seo_page_change_note`; function `seo_norm_url()`; views `v_page_change_events`, `v_page_change_impact`, `v_page_field_history` (`security_invoker`, `anon` revoked). Additive, idempotent; nothing existing altered. → Schema v1.26. **Applied by operator via Supabase SQL editor (pending).** Self-test: `tests/2026-10-21_w12_01_page_change_history.test.sql` (+ PGlite harness in `tests/pglite/`).
+- `2026-10-23_eywa_w12_02_dr078_impact_14_28.sql` — DR-078 amendment: `v_page_change_impact` gains a 14-day early read (`*14` columns, `status14`, `confidence14`) and 28-day `d_impr` / `pct_*`; existing columns unchanged (`CREATE OR REPLACE VIEW`). Self-test `tests/2026-10-23_w12_02_impact_14_28.test.sql`; PGlite harness runs both. Applied by operator via SQL editor (pending).
 
 ## Final State
 
