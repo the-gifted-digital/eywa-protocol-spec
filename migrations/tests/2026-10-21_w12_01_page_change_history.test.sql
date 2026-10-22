@@ -1,5 +1,5 @@
 -- =====================================================================
--- Self-test for 2026-10-21_eywa_w12_01_dr076_page_change_history.sql
+-- Self-test for 2026-10-21_eywa_w12_01_dr078_page_change_history.sql
 -- Assumes the migration is already applied. Everything runs inside one
 -- transaction that is ROLLED BACK, so nothing persists.
 -- Success = the output contains the notice 'ALL PASS'. Any failed assertion

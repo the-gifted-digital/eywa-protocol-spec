@@ -95,8 +95,8 @@ Phase 1A baseline complete: **39 EYWA tables across 9 groups** (per Schema v1.15
 
 > Source of truth = Supabase `schema_migrations`. This Wave 11 block catches the manifest up from the Phase-1A snapshot below.
 
-### Wave 12 — DR-076 page change history (1 migration + self-test, written 2026-10-21)
-- `2026-10-21_eywa_w12_01_dr076_page_change_history.sql` — DR-076: new tables `seo_page_live_state`, `seo_page_change_log` (append-only: REVOKE UPDATE/DELETE/TRUNCATE + immutability triggers), `seo_page_change_note`; function `seo_norm_url()`; views `v_page_change_events`, `v_page_change_impact`, `v_page_field_history` (`security_invoker`, `anon` revoked). Additive, idempotent; nothing existing altered. → Schema v1.25. **Applied by operator via Supabase SQL editor (pending).** Self-test: `tests/2026-10-21_w12_01_page_change_history.test.sql` (+ PGlite harness in `tests/pglite/`).
+### Wave 12 — DR-078 page change history (1 migration + self-test, written 2026-10-21)
+- `2026-10-21_eywa_w12_01_dr078_page_change_history.sql` — DR-078: new tables `seo_page_live_state`, `seo_page_change_log` (append-only: REVOKE UPDATE/DELETE/TRUNCATE + immutability triggers), `seo_page_change_note`; function `seo_norm_url()`; views `v_page_change_events`, `v_page_change_impact`, `v_page_field_history` (`security_invoker`, `anon` revoked). Additive, idempotent; nothing existing altered. → Schema v1.26. **Applied by operator via Supabase SQL editor (pending).** Self-test: `tests/2026-10-21_w12_01_page_change_history.test.sql` (+ PGlite harness in `tests/pglite/`).
 
 ## Final State
 
@@ -132,7 +132,7 @@ GENERATED columns:           5 (nap_match_score, has_inconsistency, engagement_r
 | DR-034 | Locked 2026-06-03 | `eywa_w11_05` (PAA × FAQ intent routing on `seo_website_page_master`) |
 | DR-036 | Locked 2026-06-04 | `eywa_w11_06_dr036_v21_entity_symptom` (additive `seo_entity_symptom`, 29 cols, Group 9) |
 | DR-037 | Locked 2026-06-08 | `eywa_w11_07_dr037_v22_payer_partners_canonical` (canonicalize `seo_payer_partners`, Group 1 8→9: `brand_id` text→uuid FK + DR-008 `payp_` identity; backport of brand-local DZ-DR-014, 71 rows migrated) |
-| DR-076 | Locked 2026-10-21 | `2026-10-21_eywa_w12_01_dr076_page_change_history` (3 tables Group 3 + `seo_norm_url()` + 3 views) — **applied by operator via SQL editor (pending)** |
+| DR-078 | Locked 2026-10-21 | `2026-10-21_eywa_w12_01_dr078_page_change_history` (3 tables Group 3 + `seo_norm_url()` + 3 views) — **applied by operator via SQL editor (pending)** |
 
 ## Outstanding Items
 

@@ -50,7 +50,7 @@ Each brand repo adds a 10-line caller workflow that runs nightly for its own `br
 
 ```
 eywa-protocol-spec/
-  migrations/2026-10-21_eywa_w12_01_dr076_page_change_history.sql       # DDL + views (user runs)
+  migrations/2026-10-21_eywa_w12_01_dr078_page_change_history.sql       # DDL + views (user runs)
   migrations/tests/2026-10-21_w12_01_page_change_history.test.sql       # BEGIN…ROLLBACK self-test (user runs)
   scripts/page-history/
     package.json                # deps + "test": "node --test"
@@ -67,7 +67,7 @@ eywa-protocol-spec/
     MANIFEST.sha256
   .github/workflows/page-history.yml                                    # reusable (workflow_call)
   templates/brand-workflows/page-history.caller.yml                     # copy into brand repos
-  DECISION_RECORDS.md, Schema_Overview_EYWA_v1_23.md, EYWA_PROTOCOL_v3_33.md, README.md, templates/*   # DR-076 fan-out
+  DECISION_RECORDS.md, Schema_Overview_EYWA_v1_23.md, EYWA_PROTOCOL_v3_33.md, README.md, templates/*   # DR-078 fan-out
 ```
 
 ---
@@ -75,7 +75,7 @@ eywa-protocol-spec/
 ### Task 1: Migration — tables, immutability, URL function, views
 
 **Files:**
-- Create: `migrations/2026-10-21_eywa_w12_01_dr076_page_change_history.sql`
+- Create: `migrations/2026-10-21_eywa_w12_01_dr078_page_change_history.sql`
 - Create: `migrations/tests/2026-10-21_w12_01_page_change_history.test.sql`
 - Create: `scripts/page-history/fixtures/url-cases.json`
 
@@ -150,8 +150,8 @@ eywa-protocol-spec/
 
 - [ ] **Step 7: Commit**
   ```bash
-  git add migrations/2026-10-21_eywa_w12_01_dr076_page_change_history.sql migrations/tests scripts/page-history/fixtures/url-cases.json
-  git commit -m "feat(schema): DR-076 page change history tables, immutability, impact views"
+  git add migrations/2026-10-21_eywa_w12_01_dr078_page_change_history.sql migrations/tests scripts/page-history/fixtures/url-cases.json
+  git commit -m "feat(schema): DR-078 page change history tables, immutability, impact views"
   ```
 
 ---
@@ -364,11 +364,11 @@ eywa-protocol-spec/
 
 ---
 
-### Task 7: DR-076 and spec version fan-out
+### Task 7: DR-078 and spec version fan-out
 
 **Files:**
 - Modify:
-  - `DECISION_RECORDS.md`: Document Version 1.42 → 1.43, plus new `### [DR-076]` at the top of the Decisions Log
+  - `DECISION_RECORDS.md`: Document Version 1.42 → 1.43, plus new `### [DR-078]` at the top of the Decisions Log
   - `Schema_Overview_EYWA_v1_23.md`: v1.24 → v1.25, Group 3 Page System +3 tables, §5 entries, Group table row
   - `EYWA_PROTOCOL_v3_33.md`: Version 3.35 → 3.36, plus a changelog entry
   - `README.md`: badges, file-status rows, Latest Update block
@@ -376,11 +376,11 @@ eywa-protocol-spec/
   - `migrations/README.md`: Wave 12 entry
 - Move: `proposals/2026-10-21-page-change-history.md` stays where it is; the DR links to it.
 
-- [ ] **Step 1:** Write DR-076 following the Format Template in `DECISION_RECORDS.md`, with `Scope: UNIVERSAL`. Content: the decision (live-crawl history, GitHub Actions, protocol-central / brand-caller ownership), the alternatives rejected (page_master trigger, n8n, Edge Function, per-brand vendored code by default), and the handover scenarios.
+- [ ] **Step 1:** Write DR-078 following the Format Template in `DECISION_RECORDS.md`, with `Scope: UNIVERSAL`. Content: the decision (live-crawl history, GitHub Actions, protocol-central / brand-caller ownership), the alternatives rejected (page_master trigger, n8n, Edge Function, per-brand vendored code by default), and the handover scenarios.
 - [ ] **Step 2:** Apply every version bump listed above. Do not rename files.
 - [ ] **Step 3: Verify residual versions.** Run `grep -rn "v1\.24\b\|1\.42\b\|3\.35\b" --include=*.md --include=*.json . | grep -v -i changelog`. Expected: only legitimate historical rows remain.
 - [ ] **Step 4: Commit**
   ```bash
   git add -A DECISION_RECORDS.md Schema_Overview_EYWA_v1_23.md EYWA_PROTOCOL_v3_33.md README.md templates migrations/README.md
-  git commit -m "protocol: v3.36 / schema v1.25 / DR v1.43 - DR-076 page change history"
+  git commit -m "protocol: v3.36 / schema v1.25 / DR v1.43 - DR-078 page change history"
   ```

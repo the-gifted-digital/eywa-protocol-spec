@@ -1,4 +1,4 @@
-// Local validation for the DR-076 migration in Postgres-in-WASM (PGlite).
+// Local validation for the DR-078 migration in Postgres-in-WASM (PGlite).
 // Stubs the prod objects the migration depends on, applies the migration twice
 // (idempotency), runs the self-test and checks it ends with 'ALL PASS'.
 // Usage: npm install && node run.mjs
@@ -7,7 +7,7 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
 const here = (p) => fileURLToPath(new URL(p, import.meta.url));
-const MIGRATION = here('../../2026-10-21_eywa_w12_01_dr076_page_change_history.sql');
+const MIGRATION = here('../../2026-10-21_eywa_w12_01_dr078_page_change_history.sql');
 const SELFTEST = here('../2026-10-21_w12_01_page_change_history.test.sql');
 const FIXTURE = here('../../../scripts/page-history/fixtures/url-cases.json');
 

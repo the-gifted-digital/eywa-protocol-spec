@@ -2,8 +2,8 @@
 
 > **Append-only architectural decision log.** Each record explains WHY a decision was made — not just WHAT.
 
-**Document Version:** 1.44  
-**Last Updated:** 2026-10-22 — DR-077 accepted (citation tier criteria: in vitro T6, cohort_study T5, `other` = unclassified, SR-guideline by conduct, unmapped study types) · DR-076 accepted (data-quality round 1: "one intent = one URL" enforced on semantic keywords by trigger · keyword conversion view is organic-only and keyword-level · `keyword_use_as` reconciled and released on delete) — applied to production 2026-10-21/22; amends brand DR `DR-EYWA-TSA-003` guidance
+**Document Version:** 1.45  
+**Last Updated:** 2026-10-23 — DR-078 accepted (page change history: live-crawl SEO change log, GitHub Actions, central code + brand-owned caller; renumbered after merge) · previously 2026-10-22 — DR-077 accepted (citation tier criteria: in vitro T6, cohort_study T5, `other` = unclassified, SR-guideline by conduct, unmapped study types) · DR-076 accepted (data-quality round 1: "one intent = one URL" enforced on semantic keywords by trigger · keyword conversion view is organic-only and keyword-level · `keyword_use_as` reconciled and released on delete) — applied to production 2026-10-21/22; amends brand DR `DR-EYWA-TSA-003` guidance
 **Format:** Reverse chronological (newest first)
 
 ---
@@ -31,6 +31,50 @@
 ---
 
 ## Decisions Log
+
+### [DR-078] — Page change history: บันทึกการเปลี่ยนแปลง SEO ของแต่ละหน้าจากหน้า live (`seo_page_change_log`) (2026-10-21)
+
+**Status:** **Locked 2026-10-21** (operator approved the design in session) · Scope: **UNIVERSAL** · Migration written, **applied by operator via SQL editor (pending)**  
+**Bible Reference:** v3.38 changelog (ไม่มี Part ใหม่)  
+**Schema Reference:** v1.26 — `seo_page_live_state` · `seo_page_change_log` · `seo_page_change_note` · `seo_norm_url()` · `v_page_change_events` · `v_page_change_impact` · `v_page_field_history` (Group 3 → 6 tables)
+
+**Context:** อยากให้แต่ละหน้ามี "สมุดแล็บ": แก้อะไร, ขึ้น live เมื่อไหร่, แล้ว performance ดีขึ้นไหม เพื่อรู้ว่าการแก้แบบไหนได้ผล และ rollback อันที่ไม่ได้ผล การวัดผลแม่นเท่ากับวันที่เปลี่ยนเท่านั้น และ GSC เห็น **หน้า live** ไม่ใช่ DB ของเรา — ถ้า log จากการเขียน `seo_website_page_master` วันที่จะเพี้ยน (DB แก้ก่อน deploy) และพึ่งวินัยคน/agent ที่ต้องจำ tag. `seo_schema_changes` ไม่ใช่ที่ของมัน (เป็น log ของ DDL/migration).
+
+**Decision:**
+1. **Capture จากหน้า live:** crawler รายวัน fetch `canonical_url` ของทุกหน้า `status='Live'` แล้วเทียบ title / meta_description / h1 / canonical / robots / JSON-LD `@type` / content_hash (+ `http_status`, `final_url`, `url`) กับ observation ล่าสุดใน `seo_page_live_state` ต่างกัน = append 1 แถวต่อ field ใน `seo_page_change_log` (`old_value`, `new_value`, `detected_at`, `prev_ok_at`, `change_date` Asia/Bangkok). ครั้งแรก = baseline ไม่เขียน log; fetch fail / 404 / 410 ต้องครบ 3 รอบติดกันถึงลง `http_status` 1 แถว (blip ไม่ใช่ change). ไม่มี backfill.
+2. **Impact:** `v_page_change_impact` — 28 วันก่อน vs 28 วันหลัง (เว้น 3 วัน recrawl), GSC รวมต่อหน้า match ด้วย `seo_norm_url()` กับทุก URL ที่หน้าเคยมี (slug change ยังเห็น before), มี brand baseline คุม seasonality, `pending` จนข้อมูลครบ, `confidence` low เมื่อ impressions < 100 / event ซ้อน / ข้อมูล GSC ไม่ครอบ before. Event ที่แตะ url/final_url = `url_change` เพดาน confidence medium.
+3. **Notes เป็นของเสริม:** `seo_page_change_note` (optional intent, `batch_id` สำหรับ bulk) ผูกกับ event ด้วย `page_fp` + ภายใน 14 วันก่อน `change_date`. History ครบโดยไม่ต้องมี note.
+4. **Runner = GitHub Actions** (1 job ต่อ brand วนทุกหน้า) — โค้ด crawler + **reusable workflow** อยู่ส่วนกลางใน `eywa-protocol-spec` (`scripts/page-history/`, `.github/workflows/page-history.yml`, `MANIFEST.sha256`); **แต่ละ brand repo เป็นเจ้าของ caller ~10 บรรทัด** (`templates/brand-workflows/page-history.caller.yml`): schedule/สวิตช์เปิดปิด/pin เวอร์ชันของตัวเอง. Brand ปรับ config ได้ที่ `scripts/page-history/brands/<brand_id>.json` แล้วส่ง use case กลับขึ้นมา (โมเดลเดียวกับ `citation-gates`, `writer-brief`).
+5. **SQL ผู้ใช้เป็นคนรัน** ใน Supabase SQL editor (Claude เขียน SQL + verify ด้วย read-only query ทีหลัง). Migration: `migrations/2026-10-21_eywa_w12_01_dr078_page_change_history.sql` (+ self-test `migrations/tests/`).
+
+**Alternatives rejected:**
+- **Trigger บน `seo_website_page_master`** — จับวันที่ DB แก้ ไม่ใช่วันที่ขึ้น live (GSC วัดจากหน้า live); ต้องมีทางแยกสำหรับ Astro กับ WordPress; พึ่งวินัยว่าทุกการแก้ต้องผ่าน page_master.
+- **n8n** — เลือก GitHub Actions แทน: 1 job ต่อ brand วนทุกหน้าได้ไม่ต้อง chunk, run ที่ fail ส่งอีเมลหาเจ้าของ, สคริปต์เดียวกันรัน local ได้.
+- **Supabase Edge Function + pg_cron** — CPU-per-request limit บังคับ chunking + cursor state + cron ถี่ = ชิ้นส่วนมากกว่าและ fail เงียบ.
+- **Vendored code ต่อ brand เป็นค่า default** — protocol repo คือ prototype/development centre (โมเดลเดียวกับ `citation-gates` ที่ใช้ `MANIFEST.sha256` กัน drift เงียบ); vendor เฉพาะตอน handover scenario 3.
+
+**Handover scenarios** (ผู้ใช้ยังไม่รู้ว่าจะเป็นแบบไหน ออกแบบให้รองรับทั้งสาม):
+1. *เรายังดูแล brand:* รันตามปกติ.
+2. *เราหยุด ส่งมอบเฉพาะ static site:* ลบไฟล์ workflow ของ brand (หรือลบ repository secret `SUPABASE_SERVICE_KEY` ของ repo นั้น) — build ของเว็บไม่ถูกแตะเพราะ crawler อ่านแค่ public site; history อยู่ใน DB เรา.
+3. *ส่งมอบทั้งระบบ:* เปลี่ยน `uses:` เป็นสำเนา vendored (ตรวจ manifest) **และต้องมี brand-scoped credential ก่อน** (service key ตัวกลางอ่าน/เขียนได้ทุก brand) + export rows ของ brand หรือชี้ไป DB ของเขา — ตั้งใจ **ไม่สร้างใน v1** สร้างเมื่อเกิด handover จริงครั้งแรก.
+
+**Security:** `seo_page_change_log` append-only = `REVOKE UPDATE, DELETE, TRUNCATE` จาก `anon`/`authenticated`/`service_role` + trigger `BEFORE UPDATE OR DELETE` และ `BEFORE TRUNCATE` (ดัก `service_role` ที่ bypass RLS แต่ไม่ bypass trigger; "admin delete" = owner `postgres` ปิด trigger ใน migration ที่ผ่านรีวิว). ทั้ง 3 ตารางเปิด RLS + `eywa_authenticated_full_access`. ทั้ง 3 view เป็น `security_invoker = true` + `REVOKE ALL FROM anon`. ไม่มี DB role ใหม่. Crawler ใช้ Supabase service key เป็น **org secret** (`SUPABASE_SERVICE_KEY`) + `EYWA_SPEC_READ_TOKEN` (fine-grained, read-only Contents บน `eywa-protocol-spec` เท่านั้น — reusable workflow รันด้วย `GITHUB_TOKEN` ของ caller ซึ่ง checkout private repo อื่นไม่ได้). Prerequisite: `eywa-protocol-spec` ต้อง private + Actions access = accessible จาก repo ใน org.
+
+**Consequences / known limits:**
+- **ไม่มี backfill** — history เริ่มวันที่ crawler รันครั้งแรก (การแก้ก่อนหน้า รวม round-1 fixes ตุลาคม อยู่นอกขอบเขต).
+- **GSC query-sum ต่ำกว่าจริง** — GSC ตัด query ที่ anonymised; ผลรวม query ต่อหน้าเป็น lower bound (เทียบภายในหน้าเดียวกันยังถูกต้อง).
+- **`final_url` redirect attribution** — ค่า `final_url` ถูก join เข้าชุด URL ของหน้า ดังนั้นถ้าหน้านี้ redirect ไปหน้าอื่นหรือหน้าแรก traffic GSC ของปลายทางจะถูกนับเป็นของหน้านี้ตั้งแต่นั้นเป็นต้นไป (ระบุไว้ใน `COMMENT ON VIEW v_page_change_impact`).
+- **`url_change` confidence เพดาน medium** — Google ต้องใช้เวลา consolidate signal ไปยัง URL ใหม่ และ gap 3 วันมักสั้นเกินไป.
+- **`seo_gsc_query_daily` เปิด RLS แต่ไม่มี policy** — impact view คืนตัวเลขฝั่ง GSC ให้เฉพาะ `postgres` / `service_role` (role `authenticated` เห็นแถวว่าง).
+- Content change บันทึกเป็น hash เท่านั้น (ไม่มี body diff); rollback เป็นการเขียนค่าเดิมกลับแล้วถูกบันทึกเป็น event ใหม่ (history ยัง append-only); WP rollback push ผ่าน REST = ภายหลัง.
+- **Idempotent log ids:** crawler ตั้ง `id` = UUID จาก sha256 ของ `page_fp|field|prev_ok_at|old|new` แล้วเขียนด้วย `INSERT … ON CONFLICT (id) DO NOTHING` — transition เดิมที่ตรวจซ้ำ (run ซ้อน/รันซ้ำ) ไม่เพิ่มแถว และไม่ชน trigger append-only.
+- **`seo_norm_url()` percent-encoding:** path ถูก encode แบบ canonical (non-ASCII → UTF-8 `%XX` ตัวใหญ่, `%xx` เดิม → ตัวใหญ่, ASCII ไม่แตะ) ทั้ง SQL และ JS — `canonical_url` ภาษาไทยแบบ decoded (23 หน้า Live) จึง match กับ `page_url` ของ GSC ที่ encoded.
+- **FK:** `seo_page_live_state.page_fp` = `ON DELETE CASCADE` (state ทิ้งได้); log/note คง NO ACTION → หน้าที่มี history ลบ page_master แบบ hard ไม่ได้ ให้ archive ผ่าน `status`.
+- Actions minutes ใช้ร่วมกันทั้ง org (~1,000 นาที/เดือน ที่ ~8 brand) — เฝ้าดูเมื่อ brand เพิ่ม.
+
+**References:** [`proposals/2026-10-21-page-change-history.md`](./proposals/2026-10-21-page-change-history.md) · `scripts/page-history/README.md` · `.github/workflows/page-history.yml` · `templates/brand-workflows/page-history.caller.yml` · migration `migrations/2026-10-21_eywa_w12_01_dr078_page_change_history.sql` · DR-008 (page key = `fingerprint`)
+
+---
 
 ### [DR-077] — Citation tier criteria: in vitro, cohort, other, SR-guideline, unmapped study types (2026-10-22)
 

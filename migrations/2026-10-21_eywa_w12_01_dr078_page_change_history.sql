@@ -1,5 +1,5 @@
 -- =====================================================================
--- 2026-10-21 · DR-076 · Page change history (live-crawl SEO change log)
+-- 2026-10-21 · DR-078 · Page change history (live-crawl SEO change log)
 -- Proposal: proposals/2026-10-21-page-change-history.md (§4.1, §4.3, §4.4)
 --
 -- New objects only. Nothing existing is altered; no trigger on page_master.
