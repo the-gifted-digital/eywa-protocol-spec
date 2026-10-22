@@ -77,6 +77,10 @@ const ROUTES = {
     mesh_id: (c) => val(c, 'P486'), wikidata_qid: (_c, qid) => qid,
   } },
   organization: { table: 'seo_entity_organization', map: { wikidata_qid: (_c, qid) => qid } },
+  // DR-078: MeSH is the identifier of what is done or used — never an ICD code (DR-050 §1.1).
+  procedure: { table: 'seo_entity_procedures', map: { mesh_id: (c) => val(c, 'P486') } },
+  treatment: { table: 'seo_entity_procedures', map: { mesh_id: (c) => val(c, 'P486') } },
+  device: { table: 'seo_entity_devices', map: { mesh_id: (c) => val(c, 'P486') } },
 };
 
 // ── load every entity that carries a verified Q-id ───────────────────────────
@@ -84,7 +88,10 @@ const rows = [];
 for (let from = 0; ; from += 1000) {
   const { data, error } = await db.from('seo_entity_graph')
     .select('entity_fingerprint, entity_name, entity_type, wikidata_id')
-    .not('wikidata_id', 'is', null).range(from, from + 999);
+    .not('wikidata_id', 'is', null)
+    // Merged/Dropped rows keep their old Q-id; harvesting them would recreate the subtype rows W3.1 removed.
+    .or('entity_lifecycle.is.null,entity_lifecycle.not.in.(Merged,Dropped)')
+    .range(from, from + 999);
   if (error) { console.error(error); process.exit(1); }
   rows.push(...data);
   if (data.length < 1000) break;
@@ -104,7 +111,10 @@ for (let i = 0; i < inScope.length; i += 40) {
 // ── load what we already store, so nothing is overwritten ────────────────────
 const existing = {};
 for (const [type, { table, map }] of Object.entries(ROUTES)) {
-  const cols = ['entity_fp', ...Object.keys(map)].join(', ');
+  // icd10_codes_related is written below but is not in the map; without it every run saw an empty
+  // list and rewrote the same rows.
+  const extraCols = table === 'seo_entity_condition' ? ['icd10_codes_related'] : [];
+  const cols = [...new Set(['entity_fp', ...Object.keys(map), ...extraCols])].join(', ');
   const { data, error } = await db.from(table).select(cols);
   if (error) { console.error(`${table}: ${error.message}`); continue; }
   existing[table] = new Map(data.map((d) => [d.entity_fp, d]));
@@ -132,7 +142,9 @@ for (const e of inScope) {
   }
   // ICD-10 related codes are a list on Wikidata; keep the extras beside the primary where the column exists.
   if (e.entity_type === 'condition') {
-    const related = [...new Set([...allVals(claims, 'P494'), ...allVals(claims, 'P4229')])];
+    // Wikidata sometimes holds malformed values ("K0202.", "K05.205.2,K05.305.3"); keep only well-formed codes.
+    const related = [...new Set([...allVals(claims, 'P494'), ...allVals(claims, 'P4229')])]
+      .filter((c) => /^[A-Z][0-9]{2}(\.[0-9A-Z]{1,4})?$/.test(c));
     const primary = new Set([patch.icd10_code ?? have?.icd10_code, patch.icd10_cm_code ?? have?.icd10_cm_code].filter(Boolean));
     const extra = related.filter((r) => !primary.has(r));
     const merged = [...new Set([...(have?.icd10_codes_related ?? []), ...extra])];

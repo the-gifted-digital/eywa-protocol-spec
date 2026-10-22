@@ -2,8 +2,8 @@
 
 > **Append-only architectural decision log.** Each record explains WHY a decision was made — not just WHAT.
 
-**Document Version:** 1.43  
-**Last Updated:** 2026-10-21 — DR-076 accepted (page change history: live-crawl SEO change log, GitHub Actions, central code + brand-owned caller); previously 2026-09-20 — DR-073/074/075 accepted (Tsaheylu AI side: `ai_referral` channel · AI-agent retrieval log `seo_ai_agent_visits` · `entry_referrer` on the bond) — all three live on vth-biodent + deezy-dental the day they were written; 4 Category-F tables declared superseded, never built
+**Document Version:** 1.44  
+**Last Updated:** 2026-10-22 — DR-077 accepted (citation tier criteria: in vitro T6, cohort_study T5, `other` = unclassified, SR-guideline by conduct, unmapped study types) · DR-076 accepted (data-quality round 1: "one intent = one URL" enforced on semantic keywords by trigger · keyword conversion view is organic-only and keyword-level · `keyword_use_as` reconciled and released on delete) — applied to production 2026-10-21/22; amends brand DR `DR-EYWA-TSA-003` guidance
 **Format:** Reverse chronological (newest first)
 
 ---
@@ -32,47 +32,66 @@
 
 ## Decisions Log
 
-### [DR-076] — Page change history: บันทึกการเปลี่ยนแปลง SEO ของแต่ละหน้าจากหน้า live (`seo_page_change_log`) (2026-10-21)
+### [DR-077] — Citation tier criteria: in vitro, cohort, other, SR-guideline, unmapped study types (2026-10-22)
 
-**Status:** **Locked 2026-10-21** (operator approved the design in session) · Scope: **UNIVERSAL** · Migration written, **applied by operator via SQL editor (pending)**  
-**Bible Reference:** v3.36 changelog (ไม่มี Part ใหม่)  
-**Schema Reference:** v1.25 — `seo_page_live_state` · `seo_page_change_log` · `seo_page_change_note` · `seo_norm_url()` · `v_page_change_events` · `v_page_change_impact` · `v_page_field_history` (Group 3 → 6 tables)
+**Status:** **Accepted — operator-approved 2026-10-22; docs and gate map updated, data fixes pending (operator-run SQL after PubMed review)**  
+**Scope:** UNIVERSAL  
+**Bible Reference:** Part 23.1 (tier per citation_type) · Citation_Pool_SOP §2  
+**Schema Reference:** v1.25 — `seo_citations.citation_tier` COMMENT replaced; view `v_citation_type_mismatch` dropped
 
-**Context:** อยากให้แต่ละหน้ามี "สมุดแล็บ": แก้อะไร, ขึ้น live เมื่อไหร่, แล้ว performance ดีขึ้นไหม เพื่อรู้ว่าการแก้แบบไหนได้ผล และ rollback อันที่ไม่ได้ผล การวัดผลแม่นเท่ากับวันที่เปลี่ยนเท่านั้น และ GSC เห็น **หน้า live** ไม่ใช่ DB ของเรา — ถ้า log จากการเขียน `seo_website_page_master` วันที่จะเพี้ยน (DB แก้ก่อน deploy) และพึ่งวินัยคน/agent ที่ต้องจำ tag. `seo_schema_changes` ไม่ใช่ที่ของมัน (เป็น log ของ DDL/migration).
+**Context:** Tier is decided by conduct (DR-063: PubMed PublicationType + abstract; a bare "Review" tag decides nothing), but several `study_type` values had no decided tier, or two sources disagreed. `in_vitro` sat at T5 in the SOP table while gate G14 left it unmapped; `cohort_study` was T2 in the column COMMENT but T5 as `citation_type`; `study_type='other'` (45 rows) and `systematic_review_guideline` (2 rows) had no rule; `clinical_study`, `pilot_study`, `report`, `genetic_association` and the patient-information spellings were unmapped. The live COMMENT on `citation_tier` also predates DR-063 (says a "Review"-only tag means T6 "by rule" and "use reconcile-citation-tiers.py --apply"). View `v_citation_type_mismatch` (2026-10-21, DR-076) duplicated gate G14 with a divergent map.
+
+**Decision:** Standards basis: Oxford CEBM Levels of Evidence 2011 and GRADE.
+1. `in_vitro` (bench/lab/ex-vivo/model) -> **T6**; `citation_type` stays `other`. If a lab study is the right design for the claim (e.g. device/software accuracy) say so in `key_findings`; never raise the tier. 10 rows (8 drop 5->6).
+2. `cohort_study` as `study_type` -> **T5**, same as `citation_type`; the COMMENT/SOP line "study_type cohort_study = T2" is withdrawn. 22 rows, 21 already T5; `p8-c3` (recorded rct/T2) to be verified on PubMed.
+3. `other` as `study_type` is not a valid final value for a row with a PMID; it means "not yet classified" and is classified from PubMed. First-party clinic data without an external id may stay `citation_type='other'` / T6. 45 rows.
+4. `systematic_review_guideline`: if the document reports its own full SR (systematic search, PRISMA-like flow, appraisal) -> **T1**; otherwise T3 `clinical_guideline`. 2 rows, both currently T3.
+5. Unmapped values: `clinical_study`/`pilot_study` -> randomised = `rct` T2, else **T5** (default); `report` -> government/regulator issuer = T4, else T6; `genetic_association`/Mendelian randomisation -> **T5** (one row drops 4->5); `patient_information_page`/`patient_information_leaflet` -> fold to `patient_resource` T6.
+
+**Rationale:** CEBM 2011 ranks SR > RCT > cohort > case-series/case-control > mechanism-based reasoning; GRADE starts RCTs high and observational low, and downgrades indirect evidence such as lab work. That places bench work below observational human studies (T6), cohort with the other observational designs (T5), and genetic-association/MR as observational genetic epidemiology (T5). Deciding by conduct keeps DR-063 intact and avoids tier inflation from labels. Checked impact: no page fails gate G7 (>=1 tier 1-3 source) and every page citing `p8-c3` keeps >=1 other tier 1-3 source.
+
+**Consequences:**
+- `scripts/citation-gates/run-citation-qa-gates.py`: `STUDY_TYPE_SYNONYM` gains the two patient-information spellings; new `STUDY_TYPE_TIER` (clinical_study, pilot_study, genetic_association, mendelian_randomization -> 5; in_vitro -> 6) consulted by `study_tier()`. Only `report` and `other` remain unmapped (G14u). `systematic_review_guideline` stays -> `clinical_guideline`; reviewers re-spell rows that qualify for T1.
+- Citation_Pool_SOP §2 table and bullets updated.
+- The operator runs a SQL file that replaces the COMMENT on `seo_citations.citation_tier` and drops `v_citation_type_mismatch`.
+- Data fixes follow via operator-run SQL after PubMed review. Tier changes must keep `citation_tier == TIER_BY_TYPE[citation_type]` whenever citation_type is in `TIER_BY_TYPE` (enforced by `reconcile-citation-tiers.py`; `other` rows are left alone).
+- After tier changes re-run `compute-citation-authority.py` to refresh `citation_authority_weight`.
+
+**References:** DR-063, DR-076, Bible Part 23.1, Citation_Pool_SOP_v1_0 §2, Oxford CEBM Levels of Evidence (2011), GRADE.
+
+---
+
+### [DR-076] — Data-quality round 1: one intent = one URL enforced on semantic keywords; organic-only keyword conversion (2026-10-22)
+
+**Status:** **Accepted — applied to production (GTGT `lffcbeszjqzioobqfdav`) 2026-10-21/22 and verified; migrations in `migrations/2026-10-21_w1a…w1d` and `2026-10-22_w5a…w5c`**  
+**Scope:** UNIVERSAL  
+**Bible Reference:** Part 20 (KPIs) · Keyword_Assignment_SOP §6.4 / §10 / §10.1 (one-intent rule, QA gates)  
+**Schema Reference:** v1.25 — `seo_website_page_master` triggers + index · `seo_x_ads_keywords_contextual_master` trigger · views `v_tsa_keyword_conversion` (redefined) · `v_page_keyword_conflicts` · `v_keyword_near_duplicates` (extended) · function `seo_entity_name_list()`
+
+**Context:** A data-quality audit of the production DB found four classes of defect, each silently corrupting a downstream read:
+1. `v_tsa_keyword_conversion` repeated the **page's** conversions on every keyword ranking that page and mixed all channels — a keyword with 1 impression showed the homepage's 34 LINE clicks. Brand DR `DR-EYWA-TSA-003` papered over it ("SUM only after collapsing to one row per slug"), which is unsafe advice: it pushes the apportioning problem onto every reader.
+2. `target_keyword_fp` was already globally unique (`uq_page_master_target_keyword_fp`), but **semantic keywords were not governed at all** — the same keyword sat on 2+ active pages of a brand, or equalled another page's (or its own) target. 807 keywords were in conflict; "one intent = one URL" was true only for targets.
+3. `seo_x_ads_keywords_contextual_master.keyword_use_as` had drifted from the pages (452 rows), and `trg_sync_keyword_use_as` ran on INSERT/UPDATE only, so deleting a page never released its keywords.
+4. Review gaps: no view listed keyword conflicts; `v_keyword_near_duplicates` missed pairs that are the same *entity* spelled differently (alias lists exist in two formats: 116 rows as Postgres array literal, 625 as comma list).
 
 **Decision:**
-1. **Capture จากหน้า live:** crawler รายวัน fetch `canonical_url` ของทุกหน้า `status='Live'` แล้วเทียบ title / meta_description / h1 / canonical / robots / JSON-LD `@type` / content_hash (+ `http_status`, `final_url`, `url`) กับ observation ล่าสุดใน `seo_page_live_state` ต่างกัน = append 1 แถวต่อ field ใน `seo_page_change_log` (`old_value`, `new_value`, `detected_at`, `prev_ok_at`, `change_date` Asia/Bangkok). ครั้งแรก = baseline ไม่เขียน log; fetch fail / 404 / 410 ต้องครบ 3 รอบติดกันถึงลง `http_status` 1 แถว (blip ไม่ใช่ change). ไม่มี backfill.
-2. **Impact:** `v_page_change_impact` — 28 วันก่อน vs 28 วันหลัง (เว้น 3 วัน recrawl), GSC รวมต่อหน้า match ด้วย `seo_norm_url()` กับทุก URL ที่หน้าเคยมี (slug change ยังเห็น before), มี brand baseline คุม seasonality, `pending` จนข้อมูลครบ, `confidence` low เมื่อ impressions < 100 / event ซ้อน / ข้อมูล GSC ไม่ครอบ before. Event ที่แตะ url/final_url = `url_change` เพดาน confidence medium.
-3. **Notes เป็นของเสริม:** `seo_page_change_note` (optional intent, `batch_id` สำหรับ bulk) ผูกกับ event ด้วย `page_fp` + ภายใน 14 วันก่อน `change_date`. History ครบโดยไม่ต้องมี note.
-4. **Runner = GitHub Actions** (1 job ต่อ brand วนทุกหน้า) — โค้ด crawler + **reusable workflow** อยู่ส่วนกลางใน `eywa-protocol-spec` (`scripts/page-history/`, `.github/workflows/page-history.yml`, `MANIFEST.sha256`); **แต่ละ brand repo เป็นเจ้าของ caller ~10 บรรทัด** (`templates/brand-workflows/page-history.caller.yml`): schedule/สวิตช์เปิดปิด/pin เวอร์ชันของตัวเอง. Brand ปรับ config ได้ที่ `scripts/page-history/brands/<brand_id>.json` แล้วส่ง use case กลับขึ้นมา (โมเดลเดียวกับ `citation-gates`, `writer-brief`).
-5. **SQL ผู้ใช้เป็นคนรัน** ใน Supabase SQL editor (Claude เขียน SQL + verify ด้วย read-only query ทีหลัง). Migration: `migrations/2026-10-21_eywa_w12_01_dr076_page_change_history.sql` (+ self-test `migrations/tests/`).
+- **Keyword conversion (w1a).** `v_tsa_keyword_conversion` is redefined (drop + create) to count only `tsa_bond.entry_channel = 'organic_search'`. `conversions_28d`, `sessions_28d`, `line_clicks_28d`, `call_clicks_28d` are now **keyword-level numerics**: the page's organic totals × the keyword's share of the page's GSC clicks over 28 days (`seo_gsc_query_daily`). New columns: `gsc_clicks_28d`, `gsc_click_share_28d`, `page_organic_conversions_28d`, `page_organic_line_clicks_28d`, `page_organic_call_clicks_28d`, `attribution_method` (`gsc_click_share_28d` | `none` | `unattributed_no_gsc_clicks`). **This amends `DR-EYWA-TSA-003`:** the keyword columns may be summed across keywords of a page (they apportion, they do not repeat); page totals are read from `page_organic_*`; all-channel totals are no longer in this view (query `tsa_bond` directly).
+- **Semantic cleanup (w5a).** Operator rule: *one intent = one URL per brand.* Every semantic keyword that sat on 2+ active pages of a brand, or equalled any page's target (including its own), was **removed from ALL pages listing it** (no winner picked — re-allocation decides); duplicates within an array collapsed; Merged/Dropped pages emptied. Result: 807 conflicting keywords; semantic entries deezy-dental 1,897→1,631, smile-scape-clinic 1,052→215, vth-biodent 1,291→455 (+89 entries on 24 Merged vth pages cleared), vitalsleep-clinic 294 unchanged. Backup `bak_page_semantic_20261022` (1,039 pages / 4,625 entries); the rollback statement is in the migration.
+- **Enforcement (w5b).** Trigger `trg_page_keyword_no_reuse` (BEFORE INSERT/UPDATE OF `target_keyword_fp`, `semantic_keywords_fps`, `status`, `brand_id` on `seo_website_page_master`; function `fn_enforce_page_keyword_no_reuse()`; supporting GIN index `idx_page_master_semantic_fps`) rejects: own target in own semantic list · duplicate inside the semantic list · semantic = another page's target · target/semantic already a semantic keyword of another active page in the same brand · a Merged/Dropped page carrying semantic keywords.
+- **`keyword_use_as` (w5c).** Reconciled to the pages: 420 `'semantic_keyword'` on no page → null · 29 targets null → `'target_keyword'` · 2 → `'semantic_keyword'` · 1 legacy `'🟡 Used as Semantic'` → null. `'excluded'` (212 rows) is operator-owned and never overwritten. New trigger `trg_release_keyword_use_as_on_delete` (AFTER DELETE on page master; function `release_keyword_use_as_on_page_delete()`).
+- **Review views (w1b, w1d).** `v_page_keyword_conflicts` — one row per (brand, keyword) used on 2+ active pages (target or semantic): `conflict_type`, `suggested_owner_fp`, `pages jsonb`; Merged/Dropped ignored; **expected 0 rows.** A view `v_citation_type_mismatch` was created 2026-10-21 (w1c) and is superseded by gate G14 — to be dropped. `v_keyword_near_duplicates` gains `match_reason` (`trigram` | `entity_alias` | `entity_alias+trigram`) and `entity_fp` (appended columns; 223 new alias pairs) via `seo_entity_name_list(name, aliases) returns text[]`.
 
-**Alternatives rejected:**
-- **Trigger บน `seo_website_page_master`** — จับวันที่ DB แก้ ไม่ใช่วันที่ขึ้น live (GSC วัดจากหน้า live); ต้องมีทางแยกสำหรับ Astro กับ WordPress; พึ่งวินัยว่าทุกการแก้ต้องผ่าน page_master.
-- **n8n** — เลือก GitHub Actions แทน: 1 job ต่อ brand วนทุกหน้าได้ไม่ต้อง chunk, run ที่ fail ส่งอีเมลหาเจ้าของ, สคริปต์เดียวกันรัน local ได้.
-- **Supabase Edge Function + pg_cron** — CPU-per-request limit บังคับ chunking + cursor state + cron ถี่ = ชิ้นส่วนมากกว่าและ fail เงียบ.
-- **Vendored code ต่อ brand เป็นค่า default** — protocol repo คือ prototype/development centre (โมเดลเดียวกับ `citation-gates` ที่ใช้ `MANIFEST.sha256` กัน drift เงียบ); vendor เฉพาะตอน handover scenario 3.
+**Rationale:** Apportioning by GSC click share is the least-wrong keyword-level split available without per-keyword conversion data; `attribution_method` makes the fallbacks explicit instead of inventing numbers. Enforcement went in the database because the rule had already failed as SOP text (only vitalsleep's importer applied a no-reuse rule). Removing from **all** pages — rather than keeping a "winner" — avoids a hidden ranking decision inside a cleanup; the later full re-allocation pass makes it properly. Citation mismatches are listed, not corrected: the tier is a judgement about the source, and an auto-fix would launder an unchecked claim.
 
-**Handover scenarios** (ผู้ใช้ยังไม่รู้ว่าจะเป็นแบบไหน ออกแบบให้รองรับทั้งสาม):
-1. *เรายังดูแล brand:* รันตามปกติ.
-2. *เราหยุด ส่งมอบเฉพาะ static site:* ลบไฟล์ workflow ของ brand (หรือลบ repository secret `SUPABASE_SERVICE_KEY` ของ repo นั้น) — build ของเว็บไม่ถูกแตะเพราะ crawler อ่านแค่ public site; history อยู่ใน DB เรา.
-3. *ส่งมอบทั้งระบบ:* เปลี่ยน `uses:` เป็นสำเนา vendored (ตรวจ manifest) **และต้องมี brand-scoped credential ก่อน** (service key ตัวกลางอ่าน/เขียนได้ทุก brand) + export rows ของ brand หรือชี้ไป DB ของเขา — ตั้งใจ **ไม่สร้างใน v1** สร้างเมื่อเกิด handover จริงครั้งแรก.
+**Consequences:**
+- **Semantic lists are thin** (see numbers above) until the re-allocation pass — expect lower internal-relevance coverage until then; not a regression, a deliberate reset.
+- **Importers must handle trigger errors.** Writes that violate the rule now fail (plain `raise exception` from `fn_enforce_page_keyword_no_reuse`, message starts `page <page_fingerprint>: …` and names the colliding keyword fp and page); a whole-statement bulk upsert fails as a unit. Each brand's import scripts must catch and report, and de-duplicate before write.
+- **Known limit: no lock.** Concurrent writes can race past the trigger; re-check `v_page_keyword_conflicts` after any bulk import.
+- Readers that summed `conversions_28d` per slug (per DR-EYWA-TSA-003) must stop collapsing; readers that expected all-channel totals must read `tsa_bond` directly. Deezy's repo file `deployment/supabase-load/43_tsaheylu_keyword_conversion.sql` still holds the old definition and must be updated.
+- **Open follow-ups (not done):** W3 knowledge graph (ICD/MeSH code table; entity dedupe — 283 alias names point to 2+ entities, producing wrong edges) · citation fixes (via gate G14) · `v_page_priority` · semantic re-allocation pass.
+- Verified on production after apply: conflicts = 0, `keyword_use_as` drift = 0, trigger tests blocked all four bad writes and allowed normal writes.
 
-**Security:** `seo_page_change_log` append-only = `REVOKE UPDATE, DELETE, TRUNCATE` จาก `anon`/`authenticated`/`service_role` + trigger `BEFORE UPDATE OR DELETE` และ `BEFORE TRUNCATE` (ดัก `service_role` ที่ bypass RLS แต่ไม่ bypass trigger; "admin delete" = owner `postgres` ปิด trigger ใน migration ที่ผ่านรีวิว). ทั้ง 3 ตารางเปิด RLS + `eywa_authenticated_full_access`. ทั้ง 3 view เป็น `security_invoker = true` + `REVOKE ALL FROM anon`. ไม่มี DB role ใหม่. Crawler ใช้ Supabase service key เป็น **org secret** (`SUPABASE_SERVICE_KEY`) + `EYWA_SPEC_READ_TOKEN` (fine-grained, read-only Contents บน `eywa-protocol-spec` เท่านั้น — reusable workflow รันด้วย `GITHUB_TOKEN` ของ caller ซึ่ง checkout private repo อื่นไม่ได้). Prerequisite: `eywa-protocol-spec` ต้อง private + Actions access = accessible จาก repo ใน org.
-
-**Consequences / known limits:**
-- **ไม่มี backfill** — history เริ่มวันที่ crawler รันครั้งแรก (การแก้ก่อนหน้า รวม round-1 fixes ตุลาคม อยู่นอกขอบเขต).
-- **GSC query-sum ต่ำกว่าจริง** — GSC ตัด query ที่ anonymised; ผลรวม query ต่อหน้าเป็น lower bound (เทียบภายในหน้าเดียวกันยังถูกต้อง).
-- **`final_url` redirect attribution** — ค่า `final_url` ถูก join เข้าชุด URL ของหน้า ดังนั้นถ้าหน้านี้ redirect ไปหน้าอื่นหรือหน้าแรก traffic GSC ของปลายทางจะถูกนับเป็นของหน้านี้ตั้งแต่นั้นเป็นต้นไป (ระบุไว้ใน `COMMENT ON VIEW v_page_change_impact`).
-- **`url_change` confidence เพดาน medium** — Google ต้องใช้เวลา consolidate signal ไปยัง URL ใหม่ และ gap 3 วันมักสั้นเกินไป.
-- **`seo_gsc_query_daily` เปิด RLS แต่ไม่มี policy** — impact view คืนตัวเลขฝั่ง GSC ให้เฉพาะ `postgres` / `service_role` (role `authenticated` เห็นแถวว่าง).
-- Content change บันทึกเป็น hash เท่านั้น (ไม่มี body diff); rollback เป็นการเขียนค่าเดิมกลับแล้วถูกบันทึกเป็น event ใหม่ (history ยัง append-only); WP rollback push ผ่าน REST = ภายหลัง.
-- **Idempotent log ids:** crawler ตั้ง `id` = UUID จาก sha256 ของ `page_fp|field|prev_ok_at|old|new` แล้วเขียนด้วย `INSERT … ON CONFLICT (id) DO NOTHING` — transition เดิมที่ตรวจซ้ำ (run ซ้อน/รันซ้ำ) ไม่เพิ่มแถว และไม่ชน trigger append-only.
-- **`seo_norm_url()` percent-encoding:** path ถูก encode แบบ canonical (non-ASCII → UTF-8 `%XX` ตัวใหญ่, `%xx` เดิม → ตัวใหญ่, ASCII ไม่แตะ) ทั้ง SQL และ JS — `canonical_url` ภาษาไทยแบบ decoded (23 หน้า Live) จึง match กับ `page_url` ของ GSC ที่ encoded.
-- **FK:** `seo_page_live_state.page_fp` = `ON DELETE CASCADE` (state ทิ้งได้); log/note คง NO ACTION → หน้าที่มี history ลบ page_master แบบ hard ไม่ได้ ให้ archive ผ่าน `status`.
-- Actions minutes ใช้ร่วมกันทั้ง org (~1,000 นาที/เดือน ที่ ~8 brand) — เฝ้าดูเมื่อ brand เพิ่ม.
-
-**References:** [`proposals/2026-10-21-page-change-history.md`](./proposals/2026-10-21-page-change-history.md) · `scripts/page-history/README.md` · `.github/workflows/page-history.yml` · `templates/brand-workflows/page-history.caller.yml` · migration `migrations/2026-10-21_eywa_w12_01_dr076_page_change_history.sql` · DR-008 (page key = `fingerprint`)
+**References:** Migrations `2026-10-21_w1a_v_tsa_keyword_conversion_organic_apportioned.sql` · `w1b_v_page_keyword_conflicts` · `w1d_keyword_near_duplicates_alias` · `2026-10-22_w5a_semantic_keyword_cleanup` · `w5b_page_keyword_no_reuse_trigger` · `w5c_keyword_use_as_reconcile` · `BROADCAST-2026-10-22-data-quality-round-1.md` · Keyword_Assignment_SOP §10.1 · brand DR `DR-EYWA-TSA-003` (amended) · DR-048 (head term vs corner term)
 
 ---
 

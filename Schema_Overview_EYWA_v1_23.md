@@ -1,9 +1,9 @@
 # 📊 Schema Overview — EYWA™ PROTOCOL Database
 
-**Version:** v1.25 (2026-10-21) — DR-076 page change history: Group 3 Page System 3 → 6 tables (`seo_page_live_state`, `seo_page_change_log` append-only, `seo_page_change_note`) + `seo_norm_url()` + 3 views; migration written, applied by operator (pending) · previous: v1.24 (2026-09-20) — DR-074 `seo_ai_agent_visits` BUILT (Group 7 → 5 tables) + `tsa_bond.entry_referrer` (DR-075) + `tsa_param` surface `server_only`; four v2.4 AI tables declared superseded · previous: v1.23 (2026-06-11) — DR-038 Canonicalize `seo_media_assets` (Group 11 NEW §13.1, BUILT) + Cloudflare config columns on `brands` (§3.1, BUILT) 🔒🖼️☁️
+**Version:** v1.25 (2026-10-22) — DR-076 data-quality round 1: `trg_page_keyword_no_reuse` + `idx_page_master_semantic_fps` on `seo_website_page_master`, `trg_release_keyword_use_as_on_delete`, view `v_page_keyword_conflicts`, `v_tsa_keyword_conversion` redefined (organic-only, keyword-level), `v_keyword_near_duplicates` + `match_reason`/`entity_fp`, function `seo_entity_name_list()` · previous: v1.24 (2026-09-20) — DR-074 `seo_ai_agent_visits` BUILT (Group 7 → 5 tables) + `tsa_bond.entry_referrer` (DR-075) + `tsa_param` surface `server_only`; four v2.4 AI tables declared superseded · previous: v1.23 (2026-06-11) — DR-038 Canonicalize `seo_media_assets` (Group 11 NEW §13.1, BUILT) + Cloudflare config columns on `brands` (§3.1, BUILT) 🔒🖼️☁️
 **Live database:** Supabase project `lffcbeszjqzioobqfdav` ("GTGT") · region `ap-northeast-1` · Postgres 17
-**Total base tables:** 47 EYWA canonical tables *(v1.25: +3 DR-076 tables, 44 → 47; the 3 are written but pending operator apply — verify with the count query below once applied; the 2026-08-24 audit confirmed 43)* — 43 confirmed present at the 2026-08-24 audit *(corrected 2026-08-24 against live schema: the count is right, the scope claim was not — `public` also holds non-EYWA tables `tsa_bond`/`tsa_bond_valued`/`tsa_call`/`tsa_event`/`tsa_page_product`/`tsa_param`/`tsa_product_map`/`tsa_product_value`, `fbads_account`/`fbads_daily`/`fbads_sync_log`, `web_lead`, `ss_kw_seed_wave16_20260806`, plus ~140 `_`-prefixed backup/scratch tables and 7 `v_` views. The live list is whatever `GET /rest/v1/` returns as OpenAPI definitions; do not hardcode a total)* — `seo_media_assets` §13.1 (Group 11) canonicalized 2026-06-11 via migration `eywa_w11_08` (DR-038); `brands` §3.1 +4 Cloudflare cols via `eywa_w11_09` (DR-038); `seo_payer_partners` §3.9 canonicalized 2026-06-08 via migration `eywa_w11_07` (DR-037); `seo_entity_symptom` §11.5a built 2026-06-04 via `eywa_w11_06`
-**Spec stack:** Bible v3.36 · Handover v1.19 · Decision Records v1.43
+**Total base tables:** 43 EYWA canonical tables — all 43 confirmed present *(corrected 2026-08-24 against live schema: the count is right, the scope claim was not — `public` also holds non-EYWA tables `tsa_bond`/`tsa_bond_valued`/`tsa_call`/`tsa_event`/`tsa_page_product`/`tsa_param`/`tsa_product_map`/`tsa_product_value`, `fbads_account`/`fbads_daily`/`fbads_sync_log`, `web_lead`, `ss_kw_seed_wave16_20260806`, plus ~140 `_`-prefixed backup/scratch tables and 7 `v_` views. The live list is whatever `GET /rest/v1/` returns as OpenAPI definitions; do not hardcode a total)* — `seo_media_assets` §13.1 (Group 11) canonicalized 2026-06-11 via migration `eywa_w11_08` (DR-038); `brands` §3.1 +4 Cloudflare cols via `eywa_w11_09` (DR-038); `seo_payer_partners` §3.9 canonicalized 2026-06-08 via migration `eywa_w11_07` (DR-037); `seo_entity_symptom` §11.5a built 2026-06-04 via `eywa_w11_06`
+**Spec stack:** Bible v3.37 · Handover v1.18 · Decision Records v1.44
 **Audit method:** Last full drift audit vs live `information_schema` was **2026-05-30**. A cross-brand reconciliation on 2026-08-23 checked 2,317 documented claims against the live database and found 1,837 that no longer match, including 336 rules that cannot fire at all. **Every column count, allowed-value list and row count in this document was re-checked against the live PostgREST schema + live data on 2026-08-24**; corrections carry an inline `*(corrected 2026-08-24 against live schema)*` marker. Row counts drift daily — treat every number here as a measurement with a date, not a constant. Constraint definitions (CHECK bodies, trigger existence, index lists, partitions) are **not** reachable through PostgREST and remain unverified since 2026-05-30. See `eywa-vth-biodent/content-plan/` reconciliation report.
 
 > **Reader heads-up:** v1.18 is a **full rewrite + audit** of v1.10. Aspirational columns from v1.0–v1.10 that never shipped are dropped (or moved to **Appendix H — Deferred v2.0 Provisions**). Every column under each table reflects the live database. Two new DR waves landed in this version:
@@ -17,15 +17,15 @@
 
 ## Changelog
 
-### v1.25 (2026-10-21) — DR-076: page-level SEO change history (live-crawl) 📜🕷️
+### v1.25 (2026-10-22) — DR-076: data-quality round 1 🧹🔒
 
-Paired companion to **DR-076 (Locked 2026-10-21)**. Migration `2026-10-21_eywa_w12_01_dr076_page_change_history.sql` (+ self-test) is written; **applied by the operator in the Supabase SQL editor — pending**, so the objects below are specified, not yet confirmed live.
+Paired companion to **DR-076 (Accepted — applied to production 2026-10-21/22, verified)**. No new base table (stays 44). Migrations: `migrations/2026-10-21_w1a…w1d`, `2026-10-22_w5a…w5c`.
 
-- ➕ **Group 3 +3 → `seo_page_live_state`** (§5.4, last observed state per page, keyed on `seo_website_page_master.fingerprint`), **`seo_page_change_log`** (§5.5, append-only, one row per changed field) and **`seo_page_change_note`** (§5.6, optional intent notes).
-- ➕ **Function `seo_norm_url(text)`** (§5.7) and **3 views** `v_page_change_events` · `v_page_change_impact` · `v_page_field_history` (§5.7), all `security_invoker`, `anon` revoked.
-- 🔒 `seo_page_change_log` is append-only: `REVOKE UPDATE, DELETE, TRUNCATE` + `BEFORE UPDATE OR DELETE` and `BEFORE TRUNCATE` triggers. Nothing existing is altered; no trigger on `seo_website_page_master`.
-- ⚠️ `seo_gsc_query_daily` has RLS enabled with no policy, so the GSC columns of `v_page_change_impact` are populated only for `postgres` / `service_role`.
-- 🗃️ Base tables 44 → **47** (the v1.24 header still read 43 while its own changelog said 44; both reconciled here, pending apply). Groups unchanged (11).
+- ➕ **§5.1 triggers:** `trg_page_keyword_no_reuse` (BEFORE INSERT/UPDATE OF `target_keyword_fp`, `semantic_keywords_fps`, `status`, `brand_id`) → `fn_enforce_page_keyword_no_reuse()`; GIN index `idx_page_master_semantic_fps`. "One intent = one URL per brand" now holds for semantic keywords. No lock — concurrent writes can race; re-check `v_page_keyword_conflicts`.
+- ➕ **§6.1 trigger:** `trg_release_keyword_use_as_on_delete` (AFTER DELETE on page master) → `release_keyword_use_as_on_page_delete()`. `keyword_use_as` reconciled (452 rows); `'excluded'` is operator-owned.
+- 🔄 **`v_tsa_keyword_conversion` REDEFINED** (Appendix K): organic-only; keyword-level apportioned numerics. **Breaking:** old "repeats on every keyword of the page" semantics are gone.
+- ➕ **Appendix K views:** `v_page_keyword_conflicts`; `v_keyword_near_duplicates` +`match_reason`, +`entity_fp`; function `seo_entity_name_list()` (F.10).
+- 🗃️ **Backup table** `bak_page_semantic_20261022` (1,039 pages / 4,625 entries) holds the pre-cleanup semantic lists; drop after the re-allocation pass is accepted.
 
 ### v1.24 (2026-09-20) — DR-073/074/075: AI-agent retrieval log built; four never-built AI tables retired 🤖📡
 
@@ -213,7 +213,7 @@ v1.10 → v1.0: see `archive/Schema_Overview_EYWA_v1_10.md` for the historical d
 |---|---|---|---|
 | **Group 1** | Brand & Organization | brands, seo_branches, seo_brand_centers 🆕 v1.18, seo_authors_reviewers, seo_doctor_assignments, seo_reviews, seo_directory_listings, seo_gbp_posts, seo_payer_partners 🆕 v1.22 (**9**) | N↔S (master) · S only (reviews/directory_listings/gbp_posts/payer_partners via API ingest / curated) |
 | **Group 2** | Knowledge Architecture | seo_entity_graph, seo_topic_cluster_master, seo_citations, seo_page_citations, seo_entity_relationships (**5**) | N↔S |
-| **Group 3** | Page System | seo_website_page_master, seo_editorial_reviews, seo_page_internal_links, **seo_page_live_state, seo_page_change_log, seo_page_change_note (v1.25, DR-076)** (**6**) | N↔S (master/reviews/links) · S only (3 history tables — written by the nightly crawler) |
+| **Group 3** | Page System | seo_website_page_master, seo_editorial_reviews, seo_page_internal_links (**3**) | N↔S |
 | **Group 4** | Keyword & Search Intelligence | seo_x_ads_keywords_contextual_master, seo_x_ads_keywords_monthly_market_snapshot, seo_x_ads_keyword_serp_competitors, seo_x_voice_search (**4**) | N↔S (master) · S only (monthly_snapshot, serp_competitors) |
 | **Group 5** | Performance Fact Tables | seo_x_ads_keywords_x_url_daily_logs (alias for logs_YYYY partitions), seo_local_rankings (**2**) | S only |
 | **Group 6** | Backlinks & Off-Page | seo_backlinks_data, seo_backlinks_links (**2**) | S only (Ahrefs/Moz/DFS ingest) |
@@ -223,7 +223,7 @@ v1.10 → v1.0: see `archive/Schema_Overview_EYWA_v1_10.md` for the historical d
 | **Group 10** | Ads Landing Page Track (column extensions only) | (no new tables; columns on page_master + keyword master) | — |
 | **Group 11** 🆕 v1.23 | Media Assets | seo_media_assets (**1**) | N↔S (Notion master 🖼️ Media Library; n8n → Cloudflare R2 + Supabase mirror per DR-038) |
 
-**Total: 47 EYWA canonical base tables** (incl. the 3 `seo_page_*` history tables of DR-076, v1.25, pending operator apply; `seo_ai_agent_visits` DR-074;  `seo_entity_symptom` built 2026-06-04 DR-036; `seo_payer_partners` canonicalized 2026-06-08 DR-037; `seo_media_assets` shipped 2026-06-11 DR-038). *(corrected 2026-08-24 against live schema — all 43 exist; `public` additionally holds non-EYWA tables and ~140 backup/scratch tables that this 43 does not count, see the header note.)*
+**Total: 43 EYWA canonical base tables** (incl. `seo_entity_symptom` built 2026-06-04 DR-036; `seo_payer_partners` canonicalized 2026-06-08 DR-037; `seo_media_assets` shipped 2026-06-11 DR-038). *(corrected 2026-08-24 against live schema — all 43 exist; `public` additionally holds non-EYWA tables and ~140 backup/scratch tables that this 43 does not count, see the header note.)*
 
 > **Note on Group 9 vs spec drift:** Spec comments on Group 9 tables mark them `N↔S`, but they were built without `notion_id` columns — practically these function as **S-only** lookup/detail tables (1:1 with entity_graph). v1.18 keeps the historical N↔S label in the spec comment but flags the practical S-only behavior here.
 
@@ -933,6 +933,7 @@ Preserved in **Appendix H — Deferred v2.0 Provisions**.
 
   Undecided: `scoping_review` (**3** rows live, tiered 1, 5 and 6 — the database comment's "2 rows, tiered 5 and 6" was measured 2026-08-18 and a third row has since landed) and `other` (spread across 1/3/5/6 — live 1=16, 3=10, 5=9, 6=10). Evidence limitations — a meta-analysis of animal studies, say — go in `key_findings`; never push the tier down instead. Live distribution 2026-08-24: tier 1 = 288 · 2 = 38 · 3 = 50 · 4 = 16 · 5 = 57 · 6 = 102.
 - `citation_type text` — *(corrected 2026-08-24 against live data — the old list was mostly values that do not occur.)* live values: `meta_analysis` (170), `systematic_review` (116), `expert_opinion` (80), `clinical_guideline` (49), `cohort_study` (40), `rct` (37), `other` (25), `regulatory_document` (14), `cross_sectional` (7), `case_series` (4), `industry_publication` (4), `textbook` (3), `case_control` (1), `case_report` (1)
+- *(decided 2026-10-22, DR-077)* the `COMMENT ON COLUMN seo_citations.citation_tier` is **replaced** (the old one predates DR-063: it called a "Review"-only PubMed tag tier 6 "by rule" and said to use `reconcile-citation-tiers.py --apply` by hand), and the view `v_citation_type_mismatch` is **dropped** (duplicated gate G14 with a divergent map). Tier criteria: Citation_Pool_SOP §2.
 - `study_type text` — drives `citation_tier` (see the scale above). **33** distinct live values *(re-measured 2026-08-24 — an earlier reading said 34 because it counted NULL as a value)*; the largest are `systematic_review` (121), `meta_analysis` (117), `narrative_review` (52), `other` (45, = *not yet classified*, not a real category), `rct` (20), `clinical_guideline` (19); 82 rows NULL. *(corrected 2026-08-24 against live data — `'cohort'` and `'animal'` are not live values; the live spellings are `retrospective_cohort` / `prospective_cohort` and `in_vitro`.)*
 - `country_of_origin text`, `language_code text`, `is_thai_specific boolean`
 
@@ -1055,7 +1056,7 @@ Preserved in **Appendix H — Deferred v2.0 Provisions**.
 
 ---
 
-## 5. Group 3 — Page System (6 tables)
+## 5. Group 3 — Page System (3 tables)
 
 > The page master + per-page editorial workflow + page↔page internal linking junction. Widest table outside the telemetry partitions (`seo_website_page_master` at **93 columns**; the daily-logs partitions carry 125). *(corrected 2026-08-24 against live schema — was "largest single table … at 88 columns")*
 
@@ -1230,6 +1231,7 @@ Preserved in **Appendix H — Deferred v2.0 Provisions**.
 - `trg_refresh_display_name_page_master` BEFORE UPDATE → refresh display_name when slug or brand_slug changes
 - `trg_prevent_fingerprint_change_page_master` BEFORE UPDATE OF fingerprint — DR-008
 - `trg_validate_page_center_slug` BEFORE INSERT/UPDATE OF center_slug → `fn_validate_page_center_slug()` (DR-032) — enforces monolithic→NULL rule and multi_center→exists rule
+- `trg_page_keyword_no_reuse` BEFORE INSERT/UPDATE OF `target_keyword_fp`, `semantic_keywords_fps`, `status`, `brand_id` → `fn_enforce_page_keyword_no_reuse()` 🆕 v1.25 (DR-076) — raises on: own target in own semantic list · duplicate inside the semantic list · semantic = another page's target · target/semantic already a semantic keyword of another active page of the same brand · Merged/Dropped page carrying semantic keywords. Backed by GIN index `idx_page_master_semantic_fps` on `semantic_keywords_fps`. `target_keyword_fp` global uniqueness is the older `uq_page_master_target_keyword_fp`. **Known limit:** no lock, concurrent writes can race — re-check `v_page_keyword_conflicts` (App. K) after bulk imports. Pre-cleanup lists: `bak_page_semantic_20261022`.
 
 #### DR-030 Editorial Review Auto-routing
 
@@ -1336,48 +1338,6 @@ Page cannot move to `status='Live'` until all required review rows have `approve
 - `trg_prevent_fingerprint_change` BEFORE UPDATE
 - `trg_internal_link_reciprocal` AFTER INSERT/UPDATE → `fn_check_reciprocal_link()` — auto-creates inverse link row when forward link is added
 
-### 5.4 `seo_page_live_state` 🆕 v1.25 (DR-076)
-
-> **Purpose:** Last observed live state of each page; the crawler diffs the next fetch against this row. First observation = baseline (no log rows).
-> **Sync:** S only (written by `scripts/page-history/`, GitHub Actions nightly)
-> **DR:** DR-076 · **Proposal:** `proposals/2026-10-21-page-change-history.md` §4.1
-> **Volume:** 1 row per `status='Live'` page with a `canonical_url` (~1.5k at design time; 2–3k once legacy sites are imported).
-
-**Columns (18):** `page_fp text PK` → `seo_website_page_master.fingerprint` (the DR-008 `page_{ULID16}`, not legacy `page_fingerprint`; `ON DELETE CASCADE` — state is disposable) · `brand_id` · `url` (URL fetched) · `http_status` · `final_url` (after redirects) · tracked fields `title`, `meta_description`, `h1`, `canonical`, `robots`, `schema_types text[]` (sorted), `content_hash` · conditional-GET cache `etag`, `last_modified` · `first_seen_at`, `last_checked_at`, `last_ok_at`, `consecutive_failures int`.
-**RLS:** enabled + `eywa_authenticated_full_access`.
-**FK:** `page_fp` → page_master `ON DELETE CASCADE` (state only; log and note keep NO ACTION, so a page with history cannot be hard-deleted — archive via `status`).
-
-### 5.5 `seo_page_change_log` 🆕 v1.25 (DR-076) — append-only
-
-> **Purpose:** One immutable row per changed field on a live page. The date the change went live is the date the crawler observed it (`detected_at`), bounded below by `prev_ok_at`.
-> **Sync:** S only
-> **DR:** DR-076
-
-**Columns (10):** `id uuid PK` · `page_fp` → `seo_website_page_master.fingerprint` · `brand_id` · `field` CHECK ∈ `url, final_url, http_status, title, meta_description, h1, canonical, robots, schema_types, content_hash` · `old_value jsonb`, `new_value jsonb` · `detected_at timestamptz` · `prev_ok_at` (last crawl that still saw the old value) · `change_date date` (**GENERATED**, `detected_at` in Asia/Bangkok — the event date used for impact) · `run_id`.
-**Indexes:** `(page_fp, detected_at DESC)`, `(brand_id, change_date)`.
-**Idempotent ids:** the crawler sets `id` = UUID (v5-shaped) from sha256 of `page_fp|field|prev_ok_at|old|new` and writes with `INSERT … ON CONFLICT (id) DO NOTHING`, so a re-detected transition (overlapping or re-run crawl) adds no row and never fires the immutability trigger.
-**Rules:** a fetch failure / 404 / 410 logs nothing until 3 consecutive failures, then one `http_status` row; redirects log `final_url` immediately; a `canonical_url` edit logs one `url` row.
-**Immutability:** `REVOKE UPDATE, DELETE, TRUNCATE` from `anon`/`authenticated`/`service_role` + trigger `trg_page_change_log_immutable` (BEFORE UPDATE OR DELETE, row) + `trg_page_change_log_no_truncate` (BEFORE TRUNCATE) → `fn_page_change_log_immutable()` raises. Triggers stop `service_role`, which bypasses RLS; "admin delete" = owner `postgres` disabling the trigger inside a reviewed migration.
-**RLS:** enabled + `eywa_authenticated_full_access`.
-
-### 5.6 `seo_page_change_note` 🆕 v1.25 (DR-076)
-
-> **Purpose:** Optional intent annotations ("CTR fix round 2: add price to title"). History is complete without them. A note attaches to a change event by `page_fp` when its `created_at` (Bangkok date) falls within 14 days up to the event's `change_date`; an unmatched note is kept.
-> **Sync:** S only (any person, agent or workflow may insert)
-> **DR:** DR-076
-
-**Columns (7):** `id uuid PK` · `brand_id` · `page_fp` → `seo_website_page_master.fingerprint` (required) · `batch_id` (optional label — a bulk change = many rows sharing one `batch_id`) · `note` · `author` · `created_at`.
-**RLS:** enabled + `eywa_authenticated_full_access`.
-
-### 5.7 DR-076 function and views 🆕 v1.25
-
-- **`seo_norm_url(text) → text`** — IMMUTABLE SQL: lowercase scheme + host, drop leading `www.`, drop query + fragment, drop one trailing `/` (empty path → `/`); path %-encoded canonically (non-ASCII → UTF-8 `%XX` uppercase, existing `%xx` → uppercase, ASCII untouched) so decoded Thai `canonical_url` matches %-encoded GSC `page_url`; nothing decoded; non-URL input returned as is. Mirrored in JS (shared cases in `scripts/page-history/fixtures/url-cases.json`).
-- **`v_page_change_events`** — one event = all log rows of one page on one `change_date`: `fields[]`, `event_kind` (`url_change` > `seo_meta` > `content` > `health`), `notes[]`.
-- **`v_page_change_impact`** — per event, GSC before = `[change_date−28, change_date)` vs after = `[change_date+3, change_date+31)`: clicks, impressions, CTR, impression-weighted position, absolute deltas (`d_clicks`, `d_ctr`, `d_pos`) plus brand-relative deltas (`ctr_delta_vs_brand`, `clicks_delta_vs_brand`), `status` (`pending` until the after window is covered by GSC data), `confidence`. GSC rows match by `seo_norm_url` against **every URL the page has ever had** (current `canonical_url` + `old_value`/`new_value` of `url`/`final_url` log rows). `url_change` events cap confidence at `medium`.
-- **`v_page_field_history`** — every value a field has had on a page with `live_from`/`live_to` and the introducing `change_date`; the rollback reader ("which title performed better?").
-- All three: `WITH (security_invoker = true)`, `REVOKE ALL … FROM anon`.
-- **Known limits:** query-sum undercounts page totals (GSC drops anonymised queries) → absolute numbers are a lower bound; `final_url` values join the page's URL set, so a redirect to another page or the home page attributes that target's GSC traffic to this page from then on; `seo_gsc_query_daily` has RLS with no policy, so GSC-based columns return numbers only to `postgres` / `service_role`; no backfill.
-
 ---
 
 ## 6. Group 4 — Keyword & Search Intelligence (4 tables)
@@ -1395,6 +1355,7 @@ Key columns:
 - Localization: `target_market`, `target_language`, `wpml_code`, `translation_group`
 - Difficulty: `qualitative_kd`, `qualitative_kd_number`, `kd_reasoning`, `predicted_serp_features`
 - Entity binding: `primary_entity_fp`, `primary_entity_name`, `keyword_use_as`
+  - `keyword_use_as` (v1.25, DR-076) is kept in step with the pages: `target_keyword` / `semantic_keyword` / null (on no page) / `excluded` (operator-owned, never overwritten). `trg_sync_keyword_use_as` runs on INSERT/UPDATE; `trg_release_keyword_use_as_on_delete` (AFTER DELETE on `seo_website_page_master` → `release_keyword_use_as_on_page_delete()`) releases keywords when a page is deleted.
 - DR-026 Ads track — 🔴 **DORMANT** *(measured 2026-08-24)*: `ad_active` is **false on all 22,710 rows**, `ad_priority_tier` is `'none'` on all 22,710, and `ad_match_type_preferred` is NULL on all 22,710. Only `seo_active` carries signal (22,436 true / 274 false). Columns: `seo_active boolean DEFAULT true`, `ad_active boolean DEFAULT false`, `ad_intent_score smallint 1..10`, `ad_match_type_preferred text` CHECK IN `('exact','phrase','broad','broad_modified')`, `ad_landing_page_fp text` → `seo_website_page_master.page_fingerprint` (real FK since 2026-08-16, ON DELETE SET NULL — *corrected 2026-08-24, the doc said `.fingerprint`*), `ad_priority_tier text DEFAULT 'none'` CHECK IN `('t1','t2','t3','none')`
 - ⚠️ `funnel_stage` on **this** table is Title-Case (`Awareness` 7,201 · `Consideration` 6,968 · `Decision` 3,361 · `None` 563 · `Ambiguous` 1 · NULL 4,616), while `seo_website_page_master.funnel_stage` is lower-case after DR-057. Joining the two on funnel stage requires folding case. *(added 2026-08-24 against live data.)*
 - Notion tier: `notion_tier`, `notion_tier_updated_at`
@@ -2050,6 +2011,15 @@ A "translation group" is implicit: all pages sharing a `source_translation_fp` a
 
 - `trg_brand_scope_names` on `seo_entity_graph`: BEFORE INSERT/UPDATE — populates `brand_scope_id` + `brand_scope_name` denormalized fields when `cardinality(brand_scope) = 1`
 
+
+### F.10 Keyword reuse & alias helpers 🆕 v1.25 (DR-076)
+
+| Function | Used by |
+|---|---|
+| `fn_enforce_page_keyword_no_reuse()` | trigger `trg_page_keyword_no_reuse` on `seo_website_page_master` |
+| `release_keyword_use_as_on_page_delete()` | trigger `trg_release_keyword_use_as_on_delete` on `seo_website_page_master` |
+| `seo_entity_name_list(name text, aliases text) returns text[]` | `v_keyword_near_duplicates` — returns the entity name plus aliases, reading both formats found in `seo_entity_graph.aliases` (Postgres array literal `{a,b}`, 116 rows; comma list, 625 rows) |
+
 ---
 
 ## Appendix G — Entity Uniqueness Guard (EUG) Implementation v2.0
@@ -2251,5 +2221,16 @@ When onboarding new team workspaces per Bible §18.7.8, the connection step must
 >
 > For schema corrections: file an issue in the spec repo or amend via DR-NNN process. Direct edits to this document without a DR are discouraged (the doc is meant to mirror live DB; live DB is the source of truth, this doc is the human-readable index).
 
+---
 
+## Appendix K — Reporting Views changed or added in DR-076 🆕 v1.25
 
+All read-only; none holds data. Definitions live in `migrations/`.
+
+**`v_tsa_keyword_conversion`** (w1a, **redefined**, drop + create) — keyword-level conversions for the Tsaheylu bond. Counts only `tsa_bond.entry_channel = 'organic_search'`. `conversions_28d`, `sessions_28d`, `line_clicks_28d`, `call_clicks_28d` are **numeric, keyword-level**: the page's organic totals × the keyword's share of the page's GSC clicks over 28 days (`seo_gsc_query_daily`). Added columns: `gsc_clicks_28d`, `gsc_click_share_28d`, `page_organic_conversions_28d`, `page_organic_line_clicks_28d`, `page_organic_call_clicks_28d`, `attribution_method` (`gsc_click_share_28d` | `none` | `unattributed_no_gsc_clicks`). Keyword columns may be summed across a page's keywords (they apportion); page totals are `page_organic_*`; all-channel totals are not in this view. **Supersedes** brand DR `DR-EYWA-TSA-003` "collapse to one row per slug before SUM".
+
+**`v_page_keyword_conflicts`** (w1b, new) — one row per (brand, keyword) used on 2+ active pages (target or semantic): `conflict_type`, `suggested_owner_fp`, `pages jsonb`. Merged/Dropped pages ignored. Expected 0 rows after w5a/w5b.
+
+**`v_citation_type_mismatch`** (w1c) — created 2026-10-21, **superseded by gate G14/G14u/G15** (`scripts/citation-gates/run-citation-qa-gates.py`, Citation_Pool_SOP §2) and **dropped 2026-10-22 (DR-077)**. Do not use or build on it.
+
+**`v_keyword_near_duplicates`** (w1d, extended) — also pairs keywords that equal (via `seo_kw_norm`) the name or an alias of the same entity (`seo_entity_name_list`). Appended columns: `match_reason` (`trigram` | `entity_alias` | `entity_alias+trigram`), `entity_fp`. 223 alias pairs added.

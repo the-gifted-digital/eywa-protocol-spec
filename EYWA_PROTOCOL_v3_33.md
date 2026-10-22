@@ -1,8 +1,8 @@
 # 📖 คัมภีร์ EYWA™ PROTOCOL
 ## The Universal Knowledge Graph SEO Specification for the AI Era
 
-**Version:** 3.36  
-**Last Updated:** 2026-10-21  
+**Version:** 3.37  
+**Last Updated:** 2026-10-22  
 **Trademark:** EYWA™ (Class 35+42, DIP Thailand, filed 2026-04-20)  
 **Created by:** The Gifted Digital Marketing Co., Ltd.  
 **Scope:** Universal standard สำหรับการบริหารจัดการ SEO + Knowledge Graph แบบ multi-vertical, multi-brand, multi-specialty, multi-lingual, multi-location, **AI-future-ready** ในยุค AI Search (2026+) — ครอบคลุม healthcare verticals (clinic ทุก specialty, hospital, dental, sleep medicine, aesthetic, wellness, healthcare media) extensible to other regulated YMYL niches  
@@ -144,15 +144,28 @@ Throughout this Bible:
 
 ## 📜 Changelog
 
-### v3.36 (2026-10-21) — DR-076: ประวัติการเปลี่ยนแปลง SEO ระดับหน้า จากการ crawl หน้า live 📜🕷️
+### v3.37 (2026-10-22) — DR-077: citation tier criteria decided — in vitro, cohort, `other`, SR-guideline, unmapped study types 🧮📚
 
-Companion to **DR-076 (Locked 2026-10-21)**. **Schema v1.25:** 3 new tables (`seo_page_live_state`, `seo_page_change_log`, `seo_page_change_note`), function `seo_norm_url()`, 3 views (`v_page_change_events`, `v_page_change_impact`, `v_page_field_history`). Group 3 Page System 3 → 6. No existing table or trigger touched (nothing on `seo_website_page_master`). **The SQL is written but pending operator apply (Supabase SQL editor); objects are specified, not yet confirmed live.**
+Companion to **DR-077 (Accepted 2026-10-22; operator-approved)**. **Schema:** no version bump (Schema v1.25) — the `COMMENT` on `seo_citations.citation_tier` is replaced and the view `v_citation_type_mismatch` is dropped by an operator-run SQL file. Standards basis: Oxford CEBM 2011 and GRADE; tier still decided by conduct per DR-063.
 
-- ➕ **Change history is captured from the LIVE page, not from the DB.** GSC measures what Google sees, so the change date must be the date the edit went live. A nightly crawler (GitHub Actions) compares title / meta description / h1 / canonical / robots / JSON-LD types / content hash / http status / final URL with the last observation and appends one immutable row per changed field. No one has to tag edits; notes are optional extras. One code path covers Astro and WordPress.
-- 🔒 **Append-only by construction:** `REVOKE UPDATE/DELETE/TRUNCATE` + `BEFORE UPDATE OR DELETE` and `BEFORE TRUNCATE` triggers (the triggers stop `service_role`, which bypasses RLS). Views are `security_invoker` with `anon` revoked.
-- 📈 **`v_page_change_impact`:** 28 days before vs 28 days after (3-day recrawl gap) per change event, GSC totals matched by `seo_norm_url()` over every URL the page has ever had, brand-baseline deltas, `pending` / confidence flags. Absolute numbers are a lower bound (GSC anonymised queries are not in the query-sum).
-- 🧰 **Ownership (DR-076):** crawler code + reusable workflow live centrally in `scripts/page-history/` and `.github/workflows/page-history.yml`; each brand repo owns a ~10-line caller (`templates/brand-workflows/page-history.caller.yml`) = its own schedule, on/off switch, version pin. SQL is applied by the operator in the Supabase SQL editor.
-- ⚠️ Known limits: no backfill (history starts the day the crawler first runs); `final_url` redirect attribution (a redirect to another page or the home page attributes that target's GSC traffic to this page from then on); `seo_gsc_query_daily` has RLS with no policy, so impact views return GSC-based numbers only to `postgres` / `service_role`.
+- 🧪 **`in_vitro` -> T6** (was T5 in the SOP, unmapped in the gate); `citation_type` stays `other`; never raised for a lab study that suits the claim. 10 rows (8 drop 5->6).
+- 🧬 **`cohort_study` as `study_type` -> T5**, same as `citation_type`; the "study_type cohort_study = T2" COMMENT/SOP line is withdrawn. 22 rows, 21 already T5; `p8-c3` to be verified on PubMed.
+- 🏷️ **`study_type='other'` is "not yet classified"**, not a valid final value for a row with a PMID (45 rows) — classify from PubMed.
+- 📑 **`systematic_review_guideline`** -> T1 only when the document reports its own full SR, else T3 (2 rows, both T3 now).
+- 🗺️ **Unmapped values decided:** `clinical_study`/`pilot_study` -> rct T2 if randomised else T5; `report` -> T4 if government/regulator else T6; `genetic_association`/MR -> T5; `patient_information_*` -> `patient_resource` T6.
+- 🔧 **Gate G14** (`run-citation-qa-gates.py`) now implements the above through `STUDY_TYPE_SYNONYM` + new `STUDY_TYPE_TIER`; only `report` and `other` stay unmapped (G14u). Citation_Pool_SOP §2 updated.
+- 📌 Open: data fixes via operator-run SQL after PubMed review, then re-run `compute-citation-authority.py`.
+
+### v3.36 (2026-10-22) — DR-076: data-quality round 1 — one intent = one URL enforced on semantic keywords; keyword conversion is organic-only and keyword-level 🧹🔒
+
+Companion to **DR-076 (Accepted — applied to the production DB `lffcbeszjqzioobqfdav` 2026-10-21/22, verified)**. **Schema:** no new table; 3 new views, 1 new function, 3 new triggers, 1 new index, 1 backup table, 1 redefined view (`v_tsa_keyword_conversion`), 1 extended view (`v_keyword_near_duplicates`). Documentation-only for the Bible text itself — the rules below are now enforced by the database, not by SOP discipline.
+
+- 🔒 **"One intent = one URL per brand" now covers `semantic_keywords_fps`, not just `target_keyword_fp`** (which was already globally unique). A keyword may be a page's target **or** a semantic keyword of exactly one active page of its brand — never both, never on two pages. Enforced by trigger `trg_page_keyword_no_reuse` on `seo_website_page_master`; Merged/Dropped pages may carry no semantic keywords. One-time cleanup removed 807 conflicting keywords from every page that listed them (deezy-dental 1,897→1,631 entries, smile-scape-clinic 1,052→215, vth-biodent 1,291→455, vitalsleep-clinic 294 unchanged). **Semantic lists are intentionally thin until the next full re-allocation pass.**
+- 🔄 **`keyword_use_as` reconciled to the pages** (452 rows fixed) and now released on page delete (`trg_release_keyword_use_as_on_delete`) — `'excluded'` stays operator-owned.
+- 📊 **`v_tsa_keyword_conversion` redefined — organic-only, keyword-level.** `conversions_28d` / `sessions_28d` / `line_clicks_28d` / `call_clicks_28d` are the page's organic totals apportioned by the keyword's share of the page's GSC clicks (28d). **This supersedes the brand-DR `DR-EYWA-TSA-003` guidance** ("repeats on every keyword of the page — SUM only after collapsing to one row per slug"): do not collapse; page totals are in `page_organic_*`; all-channel totals are no longer in this view.
+- ➕ **Review view:** `v_page_keyword_conflicts` (should always be 0 rows — re-check after bulk imports, the trigger has no lock). A view `v_citation_type_mismatch` was also created 2026-10-21 and is superseded by gate G14 — to be dropped.
+- ➕ **`v_keyword_near_duplicates` also pairs keywords that equal an entity's name/alias** (`match_reason`, `entity_fp`), via new function `seo_entity_name_list()`.
+- 📌 Open: W3 knowledge-graph clean-up (ICD/MeSH table, 283 alias names → 2+ entities), citation fixes, `v_page_priority`, per-brand importers handling trigger errors.
 
 ### v3.35 (2026-09-20) — DR-073/074/075: the AI side of Pillar 2 is measured; Category F reconciled to what exists 🤖📡
 
@@ -8168,8 +8181,8 @@ Tier 1 — Highest (EvidenceLevelA):
   freshness: ≤ 5 years
 
 Tier 2 — High (EvidenceLevelA single, B multiple):
-  study_type: rct · randomized_controlled_trial · cohort_study
-  # corrected 2026-08-24 against live schema: plain `cohort_study` sits at tier 2, not tier 5.
+  study_type: rct · randomized_controlled_trial · controlled_clinical_trial
+  # decided 2026-10-22 (DR-077): `cohort_study` is tier 5, not tier 2 (withdraws the 2026-08-24 note).
   sources: RCTs (PubMed peer-reviewed), Phase 3 trials
   freshness: ≤ 7 years
 
@@ -8179,22 +8192,25 @@ Tier 3 — Strong (EvidenceLevelB):
   freshness: track latest version
 
 Tier 4 — Strong (EvidenceLevelB):
-  study_type: law · regulation · regulatory_document · report · fact_sheet · survey_report · genetic_association
+  study_type: law · regulation · regulatory_document · report (government/regulator issuer only)
   sources: WHO, CDC, NIH, NHS, NICE, MOH Thailand, FDA
   freshness: ≤ 3 years for stats
 
 Tier 5 — Moderate (EvidenceLevelC):
-  study_type: cross_sectional · in_vitro · retrospective_cohort · prospective_cohort ·
-              case_series · clinical_study · pilot_study
+  study_type: cohort_study · retrospective_cohort · prospective_cohort · case_control ·
+              cross_sectional · survey_report · case_series · clinical_study · pilot_study ·
+              genetic_association · mendelian_randomization   # DR-077
   sources: Observational studies (PubMed)
   freshness: ≤ 7 years
 
 Tier 6 — Foundational (no evidence level):
-  study_type: narrative_review · textbook · manufacturer_document · expert_opinion · consensus_statement
-  sources: Textbooks, expert consensus, hospital case data
+  study_type: narrative_review · scoping_review · textbook · manufacturer_document · expert_opinion ·
+              consensus_statement · in_vitro · fact_sheet · patient_resource · report (non-government)
+  sources: Textbooks, expert consensus, lab/bench studies, hospital case data
   freshness: textbook ≤ 5 years
 
-# ยังไม่มีฐานตัดสิน: scoping_review (พูลมี 3 ใบ ตั้ง 1/5/6 อย่างละใบ) · other (กระจายทั้ง 1/3/5/6)
+# other = ยังไม่ได้จัดประเภท ไม่ใช่ประเภท — ห้ามเป็นค่าสุดท้ายของแถวที่มี PMID (DR-077)
+# systematic_review_guideline: ตัดสินจาก conduct — ทำ SR เองครบ → tier 1 · อ้าง SR คนอื่น → tier 3 (DR-077)
 # ⚠️ ทิศทางของสเกล: tier 1 = แข็งที่สุด. กฎที่เขียนว่า "reject citation tier < 3" จึงปฏิเสธหลักฐาน
 #    ที่แข็งที่สุด — ตรวจทิศทางก่อนคัดลอกเกณฑ์ไปใช้ (corrected 2026-08-24 against live schema)
 ```
@@ -19618,9 +19634,10 @@ Elite SEO: "what kind of citation" = trust signal weight
 > - **`citation_tier` is the column name**, not `evidence_tier` (which does not exist).
 > - **`schema_org_evidence_level` is not a column** — the EvidenceLevelA/B/C values below are
 >   derived at schema-render time. Nothing stores them, so no query can filter on them.
-> - **Plain `cohort_study` sits at tier 2, not tier 5.** Tier 5 covers `retrospective_cohort` /
->   `prospective_cohort` / `cross_sectional` / `in_vitro` / `case_series` / `clinical_study` /
->   `pilot_study`. Part 27.6.1 had tier 3 labelled "cohort study" — that was wrong and is fixed there.
+> - **`cohort_study` (plain or retro/prospective) is tier 5** — decided 2026-10-22 (DR-077), which
+>   withdraws the 2026-08-24 "plain cohort_study = tier 2" note. Tier 5 also covers `case_control` /
+>   `cross_sectional` / `case_series` / `clinical_study` / `pilot_study` / `genetic_association`;
+>   `in_vitro` is tier 6. Part 27.6.1 had tier 3 labelled "cohort study" — that was wrong and is fixed there.
 >
 > Live distribution (551 rows, 2026-08-24): t1 288 · t2 38 · t3 50 · t4 16 · t5 57 · t6 102.
 > ⚠️ Direction: **tier 1 is the strongest**. A rule phrased "reject citation tier < 3" rejects the
@@ -19672,8 +19689,8 @@ TIER 5 — Peer-Reviewed Observational Studies
                      case_series · clinical_study · pilot_study
   examples:
     - Retrospective / prospective cohort studies (STROBE-compliant)
-      # corrected 2026-08-24 against live schema: a citation typed plainly `cohort_study`
-      # belongs at TIER 2, not here. Only the qualified retro/prospective forms sit at tier 5.
+      # decided 2026-10-22 (DR-077): plain `cohort_study` also sits here at tier 5
+      # (withdraws the 2026-08-24 "tier 2" note). `in_vitro` moved to tier 6.
     - Case-control studies
     - Cross-sectional surveys
   freshness_rule: ≤ 7 years
@@ -24649,13 +24666,13 @@ def citation_authority_weight_v1_0(citation: Citation) -> float:
     #    gate G5 in CI enforces it for all three brands. Verified against the 551 live rows:
     #    tier 3 holds clinical_guideline / consensus_guideline / clinical_practice_guideline,
     #    tier 4 holds law / regulation / regulatory_document / report / fact_sheet /
-    #    survey_report, and plain cohort_study sits at tier 2 — not tier 3.
+    #    survey_report. DR-077 (2026-10-22): cohort_study is tier 5, in_vitro tier 6.
     tier_weights = {
         1: 1.00,   # Systematic review / meta-analysis / Cochrane review (highest)
-        2: 0.85,   # RCT · randomized_controlled_trial · cohort_study
+        2: 0.85,   # RCT · randomized_controlled_trial
         3: 0.70,   # Clinical guidelines (medical societies) — was mislabelled "Cohort study"
         4: 0.55,   # Government / regulatory: law, regulation, report, fact_sheet, survey_report
-        5: 0.40,   # Observational: cross_sectional, in_vitro, retro/prospective cohort, case_series
+        5: 0.40,   # Observational: cohort (incl. retro/prospective), case_control, cross_sectional, case_series
         6: 0.25,   # Narrative review / textbook / expert opinion / consensus statement
     }
     base = tier_weights.get(citation.tier, 0.10)
