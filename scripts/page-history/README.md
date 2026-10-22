@@ -79,16 +79,19 @@ Brands call the reusable workflow `.github/workflows/page-history.yml`; copy
 `templates/brand-workflows/page-history.caller.yml` into the brand repo and fill in `<BRAND_ID>`. Runs for
 one brand never overlap (`concurrency`).
 
-Prerequisites checklist (all three, or the run fails):
+Prerequisites checklist:
 
-- [ ] `eywa-protocol-spec` (private) has Settings → Actions → General → Access set to "Accessible from
-  repositories in the 'the-gifted-digital' organization". Without it the brand's `uses:` fails with
-  "workflow not found" before any step runs.
-- [ ] Org secret `SUPABASE_SERVICE_KEY`, shared with the repo: writes to the GTGT database. One place to
-  rotate; a repo that leaves the org loses it.
-- [ ] Org secret `EYWA_SPEC_READ_TOKEN`, shared with the repo: fine-grained token, read-only Contents on
-  `eywa-protocol-spec` only. It exists because a reusable workflow runs with the caller's `GITHUB_TOKEN`,
-  which cannot check out another private repo, so without it the called workflow could not fetch the crawler code.
+- [ ] Repository secret `SUPABASE_SERVICE_KEY` in the brand repo: writes to the GTGT database. (Org secrets
+  are only usable by public repos on the org's current GitHub plan, and brand repos are private, so this
+  is a per-repo secret. Several brand repos already have it for their deploy workflow.)
+- [ ] Nothing else while `eywa-protocol-spec` is **public** (current state, decided 2026-10-23): the default
+  `GITHUB_TOKEN` can check it out. Brand deploy workflows (`eywa-vth-biodent`, `eywa-deezy`,
+  `eywa-deezy-pricing-redesign`) also rely on it being public.
+- If `eywa-protocol-spec` is ever made private: (a) set its Settings → Actions → General → Access to
+  "Accessible from repositories in the 'the-gifted-digital' organization", or `uses:` fails with "workflow
+  not found"; (b) add a repository secret `EYWA_SPEC_READ_TOKEN` (fine-grained token, read-only Contents on
+  `eywa-protocol-spec` only) to every brand repo — the workflow uses it when present; (c) give the brand
+  deploy workflows above the same token, or they stop deploying.
 
 ## If your brand vendors a copy
 
@@ -110,8 +113,8 @@ shasum -a 256 *.mjs brands/_default.json package.json package-lock.json > MANIFE
 ## Handover scenarios
 
 1. **We keep maintaining the brand.** Everything runs as above.
-2. **We stop and hand over the static site only.** Delete the brand's workflow file, or remove the repo from
-   the org secrets. The site build is untouched (the crawler only reads the public site). History stays in our DB.
+2. **We stop and hand over the static site only.** Delete the brand's workflow file, or remove the
+   brand repo's `SUPABASE_SERVICE_KEY` secret. The site build is untouched (the crawler only reads the public site). History stays in our DB.
 3. **We hand over the system too.** Replace the `uses:` reference with a vendored copy (verify with the
-   manifest). First a brand-scoped credential must exist, because the org key can read and write every
+   manifest). First a brand-scoped credential must exist, because the shared service key can read and write every
    brand; also export that brand's rows, or point the copy at its own DB. Deliberately not built in v1.

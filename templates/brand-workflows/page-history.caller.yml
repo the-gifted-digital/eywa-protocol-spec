@@ -1,9 +1,9 @@
 # Copy to <brand-repo>/.github/workflows/page-history.yml and replace <BRAND_ID> with the
 # brand's slug (e.g. vth-biodent). Belongs in the BRAND repo, not in eywa-protocol-spec.
-# Prerequisite: eywa-protocol-spec (private) must have Settings > Actions > General > Access =
-# "Accessible from repositories in the 'the-gifted-digital' organization", else `uses:` fails with
-# "workflow not found". Also share org secrets SUPABASE_SERVICE_KEY and EYWA_SPEC_READ_TOKEN with this repo.
-# To stop crawling: delete this file, or remove the repo from the org secrets.
+# Prerequisite: repository secret SUPABASE_SERVICE_KEY in this repo (GTGT service key).
+# eywa-protocol-spec is public, so no extra token is needed; see scripts/page-history/README.md
+# for what changes if it is ever made private.
+# To stop crawling: delete this file.
 name: page-history
 
 on:

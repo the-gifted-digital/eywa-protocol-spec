@@ -55,8 +55,8 @@
 
 **Handover scenarios** (ผู้ใช้ยังไม่รู้ว่าจะเป็นแบบไหน ออกแบบให้รองรับทั้งสาม):
 1. *เรายังดูแล brand:* รันตามปกติ.
-2. *เราหยุด ส่งมอบเฉพาะ static site:* ลบไฟล์ workflow ของ brand หรือถอน repo ออกจาก org secret — build ของเว็บไม่ถูกแตะเพราะ crawler อ่านแค่ public site; history อยู่ใน DB เรา.
-3. *ส่งมอบทั้งระบบ:* เปลี่ยน `uses:` เป็นสำเนา vendored (ตรวจ manifest) **และต้องมี brand-scoped credential ก่อน** (org key อ่าน/เขียนได้ทุก brand) + export rows ของ brand หรือชี้ไป DB ของเขา — ตั้งใจ **ไม่สร้างใน v1** สร้างเมื่อเกิด handover จริงครั้งแรก.
+2. *เราหยุด ส่งมอบเฉพาะ static site:* ลบไฟล์ workflow ของ brand (หรือลบ repository secret `SUPABASE_SERVICE_KEY` ของ repo นั้น) — build ของเว็บไม่ถูกแตะเพราะ crawler อ่านแค่ public site; history อยู่ใน DB เรา.
+3. *ส่งมอบทั้งระบบ:* เปลี่ยน `uses:` เป็นสำเนา vendored (ตรวจ manifest) **และต้องมี brand-scoped credential ก่อน** (service key ตัวกลางอ่าน/เขียนได้ทุก brand) + export rows ของ brand หรือชี้ไป DB ของเขา — ตั้งใจ **ไม่สร้างใน v1** สร้างเมื่อเกิด handover จริงครั้งแรก.
 
 **Security:** `seo_page_change_log` append-only = `REVOKE UPDATE, DELETE, TRUNCATE` จาก `anon`/`authenticated`/`service_role` + trigger `BEFORE UPDATE OR DELETE` และ `BEFORE TRUNCATE` (ดัก `service_role` ที่ bypass RLS แต่ไม่ bypass trigger; "admin delete" = owner `postgres` ปิด trigger ใน migration ที่ผ่านรีวิว). ทั้ง 3 ตารางเปิด RLS + `eywa_authenticated_full_access`. ทั้ง 3 view เป็น `security_invoker = true` + `REVOKE ALL FROM anon`. ไม่มี DB role ใหม่. Crawler ใช้ Supabase service key เป็น **org secret** (`SUPABASE_SERVICE_KEY`) + `EYWA_SPEC_READ_TOKEN` (fine-grained, read-only Contents บน `eywa-protocol-spec` เท่านั้น — reusable workflow รันด้วย `GITHUB_TOKEN` ของ caller ซึ่ง checkout private repo อื่นไม่ได้). Prerequisite: `eywa-protocol-spec` ต้อง private + Actions access = accessible จาก repo ใน org.
 

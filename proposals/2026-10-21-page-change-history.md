@@ -81,7 +81,7 @@ A note links to change events by `page_fp` when the note's `created_at` falls wi
 - `REVOKE UPDATE, DELETE ON seo_page_change_log FROM anon, authenticated, service_role`.
 - A `BEFORE UPDATE OR DELETE` trigger on `seo_page_change_log` that raises an exception. The trigger also stops `service_role`, which bypasses RLS but not triggers. "Admin delete" means the `postgres` owner temporarily disabling the trigger inside a reviewed migration.
 
-The crawler runs in GitHub Actions and writes with the Supabase service key, held as an organization secret (see §7). `seo_page_live_state` and `seo_page_change_note` need no extra restriction.
+The crawler runs in GitHub Actions and writes with the Supabase service key, held as a repository secret in each brand repo (see §7). `seo_page_live_state` and `seo_page_change_note` need no extra restriction.
 
 ### 4.2 Crawler (daily)
 
@@ -171,10 +171,9 @@ The crawler runs in GitHub Actions and writes with the Supabase service key, hel
 - Edge Function plus pg_cron was considered and rejected: its CPU-per-request limit forces chunking, cursor state and frequent cron, with more moving parts and silent failures.
 
 **Repo prerequisites**
-- `eywa-protocol-spec` must be private.
-- Its Actions access setting must allow use from other repos in the organization; this is required for a private reusable workflow.
+- ~~`eywa-protocol-spec` must be private.~~ Amended 2026-10-23: it stays **public** (brand deploy workflows depend on it). The Actions access setting is only needed if it is ever made private.
 
-**Secret**
+**Secret** (amended 2026-10-23: org secrets are usable only by public repos on the org's GitHub plan, so the service key is a per-brand-repo secret; `eywa-protocol-spec` stays **public**, so `EYWA_SPEC_READ_TOKEN` is optional and only needed if it is ever made private — brand deploy workflows in `eywa-vth-biodent`/`eywa-deezy` also check out the spec without a token)
 - The Supabase key is an **organization secret** shared with selected brand repos. There is one place to rotate it, and a repo that leaves the org loses it automatically.
 - Builder: confirm the org plan supports org secrets for private repos. If it does not, use a per-repo secret.
 - A second org secret, `EYWA_SPEC_READ_TOKEN`, is needed: a fine-grained token with **read-only Contents on `eywa-protocol-spec` only**. Reason: a reusable workflow runs with the *caller's* `GITHUB_TOKEN`, which cannot check out another private repo, so the called workflow cannot fetch the crawler code without it.

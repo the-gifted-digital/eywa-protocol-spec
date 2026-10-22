@@ -15,7 +15,8 @@ on:
       SUPABASE_SERVICE_KEY:
         required: true
       EYWA_SPEC_READ_TOKEN:
-        required: true
+        # Only needed if eywa-protocol-spec is made private. While it is public, the default token reads it.
+        required: false
 
 permissions:
   contents: read
@@ -34,7 +35,7 @@ jobs:
         with:
           repository: the-gifted-digital/eywa-protocol-spec
           ref: ${{ inputs.spec_ref }}
-          token: ${{ secrets.EYWA_SPEC_READ_TOKEN }}
+          token: ${{ secrets.EYWA_SPEC_READ_TOKEN || github.token }}
           path: spec
           persist-credentials: false
       - uses: actions/setup-node@v4
