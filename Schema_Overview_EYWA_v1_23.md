@@ -1,9 +1,9 @@
 # 📊 Schema Overview — EYWA™ PROTOCOL Database
 
-**Version:** v1.24 (2026-09-20) — DR-074 `seo_ai_agent_visits` BUILT (Group 7 → 5 tables) + `tsa_bond.entry_referrer` (DR-075) + `tsa_param` surface `server_only`; four v2.4 AI tables declared superseded · previous: v1.23 (2026-06-11) — DR-038 Canonicalize `seo_media_assets` (Group 11 NEW §13.1, BUILT) + Cloudflare config columns on `brands` (§3.1, BUILT) 🔒🖼️☁️
+**Version:** v1.25 (2026-10-22) — DR-076 data-quality round 1: `trg_page_keyword_no_reuse` + `idx_page_master_semantic_fps` on `seo_website_page_master`, `trg_release_keyword_use_as_on_delete`, view `v_page_keyword_conflicts`, `v_tsa_keyword_conversion` redefined (organic-only, keyword-level), `v_keyword_near_duplicates` + `match_reason`/`entity_fp`, function `seo_entity_name_list()` · previous: v1.24 (2026-09-20) — DR-074 `seo_ai_agent_visits` BUILT (Group 7 → 5 tables) + `tsa_bond.entry_referrer` (DR-075) + `tsa_param` surface `server_only`; four v2.4 AI tables declared superseded · previous: v1.23 (2026-06-11) — DR-038 Canonicalize `seo_media_assets` (Group 11 NEW §13.1, BUILT) + Cloudflare config columns on `brands` (§3.1, BUILT) 🔒🖼️☁️
 **Live database:** Supabase project `lffcbeszjqzioobqfdav` ("GTGT") · region `ap-northeast-1` · Postgres 17
 **Total base tables:** 43 EYWA canonical tables — all 43 confirmed present *(corrected 2026-08-24 against live schema: the count is right, the scope claim was not — `public` also holds non-EYWA tables `tsa_bond`/`tsa_bond_valued`/`tsa_call`/`tsa_event`/`tsa_page_product`/`tsa_param`/`tsa_product_map`/`tsa_product_value`, `fbads_account`/`fbads_daily`/`fbads_sync_log`, `web_lead`, `ss_kw_seed_wave16_20260806`, plus ~140 `_`-prefixed backup/scratch tables and 7 `v_` views. The live list is whatever `GET /rest/v1/` returns as OpenAPI definitions; do not hardcode a total)* — `seo_media_assets` §13.1 (Group 11) canonicalized 2026-06-11 via migration `eywa_w11_08` (DR-038); `brands` §3.1 +4 Cloudflare cols via `eywa_w11_09` (DR-038); `seo_payer_partners` §3.9 canonicalized 2026-06-08 via migration `eywa_w11_07` (DR-037); `seo_entity_symptom` §11.5a built 2026-06-04 via `eywa_w11_06`
-**Spec stack:** Bible v3.32 · Handover v1.18 · Decision Records v1.24
+**Spec stack:** Bible v3.36 · Handover v1.18 · Decision Records v1.43
 **Audit method:** Last full drift audit vs live `information_schema` was **2026-05-30**. A cross-brand reconciliation on 2026-08-23 checked 2,317 documented claims against the live database and found 1,837 that no longer match, including 336 rules that cannot fire at all. **Every column count, allowed-value list and row count in this document was re-checked against the live PostgREST schema + live data on 2026-08-24**; corrections carry an inline `*(corrected 2026-08-24 against live schema)*` marker. Row counts drift daily — treat every number here as a measurement with a date, not a constant. Constraint definitions (CHECK bodies, trigger existence, index lists, partitions) are **not** reachable through PostgREST and remain unverified since 2026-05-30. See `eywa-vth-biodent/content-plan/` reconciliation report.
 
 > **Reader heads-up:** v1.18 is a **full rewrite + audit** of v1.10. Aspirational columns from v1.0–v1.10 that never shipped are dropped (or moved to **Appendix H — Deferred v2.0 Provisions**). Every column under each table reflects the live database. Two new DR waves landed in this version:
@@ -16,6 +16,16 @@
 ---
 
 ## Changelog
+
+### v1.25 (2026-10-22) — DR-076: data-quality round 1 🧹🔒
+
+Paired companion to **DR-076 (Accepted — applied to production 2026-10-21/22, verified)**. No new base table (stays 44). Migrations: `migrations/2026-10-21_w1a…w1d`, `2026-10-22_w5a…w5c`.
+
+- ➕ **§5.1 triggers:** `trg_page_keyword_no_reuse` (BEFORE INSERT/UPDATE OF `target_keyword_fp`, `semantic_keywords_fps`, `status`, `brand_id`) → `fn_enforce_page_keyword_no_reuse()`; GIN index `idx_page_master_semantic_fps`. "One intent = one URL per brand" now holds for semantic keywords. No lock — concurrent writes can race; re-check `v_page_keyword_conflicts`.
+- ➕ **§6.1 trigger:** `trg_release_keyword_use_as_on_delete` (AFTER DELETE on page master) → `release_keyword_use_as_on_page_delete()`. `keyword_use_as` reconciled (452 rows); `'excluded'` is operator-owned.
+- 🔄 **`v_tsa_keyword_conversion` REDEFINED** (Appendix K): organic-only; keyword-level apportioned numerics. **Breaking:** old "repeats on every keyword of the page" semantics are gone.
+- ➕ **Appendix K views:** `v_page_keyword_conflicts`; `v_keyword_near_duplicates` +`match_reason`, +`entity_fp`; function `seo_entity_name_list()` (F.10).
+- 🗃️ **Backup table** `bak_page_semantic_20261022` (1,039 pages / 4,625 entries) holds the pre-cleanup semantic lists; drop after the re-allocation pass is accepted.
 
 ### v1.24 (2026-09-20) — DR-073/074/075: AI-agent retrieval log built; four never-built AI tables retired 🤖📡
 
@@ -1220,6 +1230,7 @@ Preserved in **Appendix H — Deferred v2.0 Provisions**.
 - `trg_refresh_display_name_page_master` BEFORE UPDATE → refresh display_name when slug or brand_slug changes
 - `trg_prevent_fingerprint_change_page_master` BEFORE UPDATE OF fingerprint — DR-008
 - `trg_validate_page_center_slug` BEFORE INSERT/UPDATE OF center_slug → `fn_validate_page_center_slug()` (DR-032) — enforces monolithic→NULL rule and multi_center→exists rule
+- `trg_page_keyword_no_reuse` BEFORE INSERT/UPDATE OF `target_keyword_fp`, `semantic_keywords_fps`, `status`, `brand_id` → `fn_enforce_page_keyword_no_reuse()` 🆕 v1.25 (DR-076) — raises on: own target in own semantic list · duplicate inside the semantic list · semantic = another page's target · target/semantic already a semantic keyword of another active page of the same brand · Merged/Dropped page carrying semantic keywords. Backed by GIN index `idx_page_master_semantic_fps` on `semantic_keywords_fps`. `target_keyword_fp` global uniqueness is the older `uq_page_master_target_keyword_fp`. **Known limit:** no lock, concurrent writes can race — re-check `v_page_keyword_conflicts` (App. K) after bulk imports. Pre-cleanup lists: `bak_page_semantic_20261022`.
 
 #### DR-030 Editorial Review Auto-routing
 
@@ -1343,6 +1354,7 @@ Key columns:
 - Localization: `target_market`, `target_language`, `wpml_code`, `translation_group`
 - Difficulty: `qualitative_kd`, `qualitative_kd_number`, `kd_reasoning`, `predicted_serp_features`
 - Entity binding: `primary_entity_fp`, `primary_entity_name`, `keyword_use_as`
+  - `keyword_use_as` (v1.25, DR-076) is kept in step with the pages: `target_keyword` / `semantic_keyword` / null (on no page) / `excluded` (operator-owned, never overwritten). `trg_sync_keyword_use_as` runs on INSERT/UPDATE; `trg_release_keyword_use_as_on_delete` (AFTER DELETE on `seo_website_page_master` → `release_keyword_use_as_on_page_delete()`) releases keywords when a page is deleted.
 - DR-026 Ads track — 🔴 **DORMANT** *(measured 2026-08-24)*: `ad_active` is **false on all 22,710 rows**, `ad_priority_tier` is `'none'` on all 22,710, and `ad_match_type_preferred` is NULL on all 22,710. Only `seo_active` carries signal (22,436 true / 274 false). Columns: `seo_active boolean DEFAULT true`, `ad_active boolean DEFAULT false`, `ad_intent_score smallint 1..10`, `ad_match_type_preferred text` CHECK IN `('exact','phrase','broad','broad_modified')`, `ad_landing_page_fp text` → `seo_website_page_master.page_fingerprint` (real FK since 2026-08-16, ON DELETE SET NULL — *corrected 2026-08-24, the doc said `.fingerprint`*), `ad_priority_tier text DEFAULT 'none'` CHECK IN `('t1','t2','t3','none')`
 - ⚠️ `funnel_stage` on **this** table is Title-Case (`Awareness` 7,201 · `Consideration` 6,968 · `Decision` 3,361 · `None` 563 · `Ambiguous` 1 · NULL 4,616), while `seo_website_page_master.funnel_stage` is lower-case after DR-057. Joining the two on funnel stage requires folding case. *(added 2026-08-24 against live data.)*
 - Notion tier: `notion_tier`, `notion_tier_updated_at`
@@ -1998,6 +2010,15 @@ A "translation group" is implicit: all pages sharing a `source_translation_fp` a
 
 - `trg_brand_scope_names` on `seo_entity_graph`: BEFORE INSERT/UPDATE — populates `brand_scope_id` + `brand_scope_name` denormalized fields when `cardinality(brand_scope) = 1`
 
+
+### F.10 Keyword reuse & alias helpers 🆕 v1.25 (DR-076)
+
+| Function | Used by |
+|---|---|
+| `fn_enforce_page_keyword_no_reuse()` | trigger `trg_page_keyword_no_reuse` on `seo_website_page_master` |
+| `release_keyword_use_as_on_page_delete()` | trigger `trg_release_keyword_use_as_on_delete` on `seo_website_page_master` |
+| `seo_entity_name_list(name text, aliases text) returns text[]` | `v_keyword_near_duplicates` — returns the entity name plus aliases, reading both formats found in `seo_entity_graph.aliases` (Postgres array literal `{a,b}`, 116 rows; comma list, 625 rows) |
+
 ---
 
 ## Appendix G — Entity Uniqueness Guard (EUG) Implementation v2.0
@@ -2199,5 +2220,16 @@ When onboarding new team workspaces per Bible §18.7.8, the connection step must
 >
 > For schema corrections: file an issue in the spec repo or amend via DR-NNN process. Direct edits to this document without a DR are discouraged (the doc is meant to mirror live DB; live DB is the source of truth, this doc is the human-readable index).
 
+---
 
+## Appendix K — Reporting Views changed or added in DR-076 🆕 v1.25
 
+All read-only; none holds data. Definitions live in `migrations/`.
+
+**`v_tsa_keyword_conversion`** (w1a, **redefined**, drop + create) — keyword-level conversions for the Tsaheylu bond. Counts only `tsa_bond.entry_channel = 'organic_search'`. `conversions_28d`, `sessions_28d`, `line_clicks_28d`, `call_clicks_28d` are **numeric, keyword-level**: the page's organic totals × the keyword's share of the page's GSC clicks over 28 days (`seo_gsc_query_daily`). Added columns: `gsc_clicks_28d`, `gsc_click_share_28d`, `page_organic_conversions_28d`, `page_organic_line_clicks_28d`, `page_organic_call_clicks_28d`, `attribution_method` (`gsc_click_share_28d` | `none` | `unattributed_no_gsc_clicks`). Keyword columns may be summed across a page's keywords (they apportion); page totals are `page_organic_*`; all-channel totals are not in this view. **Supersedes** brand DR `DR-EYWA-TSA-003` "collapse to one row per slug before SUM".
+
+**`v_page_keyword_conflicts`** (w1b, new) — one row per (brand, keyword) used on 2+ active pages (target or semantic): `conflict_type`, `suggested_owner_fp`, `pages jsonb`. Merged/Dropped pages ignored. Expected 0 rows after w5a/w5b.
+
+**`v_citation_type_mismatch`** (w1c) — created 2026-10-21, **superseded by gate G14/G14u/G15** (`scripts/citation-gates/run-citation-qa-gates.py`, Citation_Pool_SOP §2) and to be dropped. Do not use or build on it.
+
+**`v_keyword_near_duplicates`** (w1d, extended) — also pairs keywords that equal (via `seo_kw_norm`) the name or an alias of the same entity (`seo_entity_name_list`). Appended columns: `match_reason` (`trigram` | `entity_alias` | `entity_alias+trigram`), `entity_fp`. 223 alias pairs added.

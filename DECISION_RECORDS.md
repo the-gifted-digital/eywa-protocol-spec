@@ -2,8 +2,8 @@
 
 > **Append-only architectural decision log.** Each record explains WHY a decision was made — not just WHAT.
 
-**Document Version:** 1.42  
-**Last Updated:** 2026-09-20 — DR-073/074/075 accepted (Tsaheylu AI side: `ai_referral` channel · AI-agent retrieval log `seo_ai_agent_visits` · `entry_referrer` on the bond) — all three live on vth-biodent + deezy-dental the day they were written; 4 Category-F tables declared superseded, never built
+**Document Version:** 1.43  
+**Last Updated:** 2026-10-22 — DR-076 accepted (data-quality round 1: "one intent = one URL" enforced on semantic keywords by trigger · keyword conversion view is organic-only and keyword-level · `keyword_use_as` reconciled and released on delete) — applied to production 2026-10-21/22; amends brand DR `DR-EYWA-TSA-003` guidance
 **Format:** Reverse chronological (newest first)
 
 ---
@@ -31,6 +31,40 @@
 ---
 
 ## Decisions Log
+
+### [DR-076] — Data-quality round 1: one intent = one URL enforced on semantic keywords; organic-only keyword conversion (2026-10-22)
+
+**Status:** **Accepted — applied to production (GTGT `lffcbeszjqzioobqfdav`) 2026-10-21/22 and verified; migrations in `migrations/2026-10-21_w1a…w1d` and `2026-10-22_w5a…w5c`**  
+**Scope:** UNIVERSAL  
+**Bible Reference:** Part 20 (KPIs) · Keyword_Assignment_SOP §6.4 / §10 / §10.1 (one-intent rule, QA gates)  
+**Schema Reference:** v1.25 — `seo_website_page_master` triggers + index · `seo_x_ads_keywords_contextual_master` trigger · views `v_tsa_keyword_conversion` (redefined) · `v_page_keyword_conflicts` · `v_keyword_near_duplicates` (extended) · function `seo_entity_name_list()`
+
+**Context:** A data-quality audit of the production DB found four classes of defect, each silently corrupting a downstream read:
+1. `v_tsa_keyword_conversion` repeated the **page's** conversions on every keyword ranking that page and mixed all channels — a keyword with 1 impression showed the homepage's 34 LINE clicks. Brand DR `DR-EYWA-TSA-003` papered over it ("SUM only after collapsing to one row per slug"), which is unsafe advice: it pushes the apportioning problem onto every reader.
+2. `target_keyword_fp` was already globally unique (`uq_page_master_target_keyword_fp`), but **semantic keywords were not governed at all** — the same keyword sat on 2+ active pages of a brand, or equalled another page's (or its own) target. 807 keywords were in conflict; "one intent = one URL" was true only for targets.
+3. `seo_x_ads_keywords_contextual_master.keyword_use_as` had drifted from the pages (452 rows), and `trg_sync_keyword_use_as` ran on INSERT/UPDATE only, so deleting a page never released its keywords.
+4. Review gaps: no view listed keyword conflicts; `v_keyword_near_duplicates` missed pairs that are the same *entity* spelled differently (alias lists exist in two formats: 116 rows as Postgres array literal, 625 as comma list).
+
+**Decision:**
+- **Keyword conversion (w1a).** `v_tsa_keyword_conversion` is redefined (drop + create) to count only `tsa_bond.entry_channel = 'organic_search'`. `conversions_28d`, `sessions_28d`, `line_clicks_28d`, `call_clicks_28d` are now **keyword-level numerics**: the page's organic totals × the keyword's share of the page's GSC clicks over 28 days (`seo_gsc_query_daily`). New columns: `gsc_clicks_28d`, `gsc_click_share_28d`, `page_organic_conversions_28d`, `page_organic_line_clicks_28d`, `page_organic_call_clicks_28d`, `attribution_method` (`gsc_click_share_28d` | `none` | `unattributed_no_gsc_clicks`). **This amends `DR-EYWA-TSA-003`:** the keyword columns may be summed across keywords of a page (they apportion, they do not repeat); page totals are read from `page_organic_*`; all-channel totals are no longer in this view (query `tsa_bond` directly).
+- **Semantic cleanup (w5a).** Operator rule: *one intent = one URL per brand.* Every semantic keyword that sat on 2+ active pages of a brand, or equalled any page's target (including its own), was **removed from ALL pages listing it** (no winner picked — re-allocation decides); duplicates within an array collapsed; Merged/Dropped pages emptied. Result: 807 conflicting keywords; semantic entries deezy-dental 1,897→1,631, smile-scape-clinic 1,052→215, vth-biodent 1,291→455 (+89 entries on 24 Merged vth pages cleared), vitalsleep-clinic 294 unchanged. Backup `bak_page_semantic_20261022` (1,039 pages / 4,625 entries); the rollback statement is in the migration.
+- **Enforcement (w5b).** Trigger `trg_page_keyword_no_reuse` (BEFORE INSERT/UPDATE OF `target_keyword_fp`, `semantic_keywords_fps`, `status`, `brand_id` on `seo_website_page_master`; function `fn_enforce_page_keyword_no_reuse()`; supporting GIN index `idx_page_master_semantic_fps`) rejects: own target in own semantic list · duplicate inside the semantic list · semantic = another page's target · target/semantic already a semantic keyword of another active page in the same brand · a Merged/Dropped page carrying semantic keywords.
+- **`keyword_use_as` (w5c).** Reconciled to the pages: 420 `'semantic_keyword'` on no page → null · 29 targets null → `'target_keyword'` · 2 → `'semantic_keyword'` · 1 legacy `'🟡 Used as Semantic'` → null. `'excluded'` (212 rows) is operator-owned and never overwritten. New trigger `trg_release_keyword_use_as_on_delete` (AFTER DELETE on page master; function `release_keyword_use_as_on_page_delete()`).
+- **Review views (w1b, w1d).** `v_page_keyword_conflicts` — one row per (brand, keyword) used on 2+ active pages (target or semantic): `conflict_type`, `suggested_owner_fp`, `pages jsonb`; Merged/Dropped ignored; **expected 0 rows.** A view `v_citation_type_mismatch` was created 2026-10-21 (w1c) and is superseded by gate G14 — to be dropped. `v_keyword_near_duplicates` gains `match_reason` (`trigram` | `entity_alias` | `entity_alias+trigram`) and `entity_fp` (appended columns; 223 new alias pairs) via `seo_entity_name_list(name, aliases) returns text[]`.
+
+**Rationale:** Apportioning by GSC click share is the least-wrong keyword-level split available without per-keyword conversion data; `attribution_method` makes the fallbacks explicit instead of inventing numbers. Enforcement went in the database because the rule had already failed as SOP text (only vitalsleep's importer applied a no-reuse rule). Removing from **all** pages — rather than keeping a "winner" — avoids a hidden ranking decision inside a cleanup; the later full re-allocation pass makes it properly. Citation mismatches are listed, not corrected: the tier is a judgement about the source, and an auto-fix would launder an unchecked claim.
+
+**Consequences:**
+- **Semantic lists are thin** (see numbers above) until the re-allocation pass — expect lower internal-relevance coverage until then; not a regression, a deliberate reset.
+- **Importers must handle trigger errors.** Writes that violate the rule now fail (plain `raise exception` from `fn_enforce_page_keyword_no_reuse`, message starts `page <page_fingerprint>: …` and names the colliding keyword fp and page); a whole-statement bulk upsert fails as a unit. Each brand's import scripts must catch and report, and de-duplicate before write.
+- **Known limit: no lock.** Concurrent writes can race past the trigger; re-check `v_page_keyword_conflicts` after any bulk import.
+- Readers that summed `conversions_28d` per slug (per DR-EYWA-TSA-003) must stop collapsing; readers that expected all-channel totals must read `tsa_bond` directly. Deezy's repo file `deployment/supabase-load/43_tsaheylu_keyword_conversion.sql` still holds the old definition and must be updated.
+- **Open follow-ups (not done):** W3 knowledge graph (ICD/MeSH code table; entity dedupe — 283 alias names point to 2+ entities, producing wrong edges) · citation fixes (via gate G14) · `v_page_priority` · semantic re-allocation pass.
+- Verified on production after apply: conflicts = 0, `keyword_use_as` drift = 0, trigger tests blocked all four bad writes and allowed normal writes.
+
+**References:** Migrations `2026-10-21_w1a_v_tsa_keyword_conversion_organic_apportioned.sql` · `w1b_v_page_keyword_conflicts` · `w1d_keyword_near_duplicates_alias` · `2026-10-22_w5a_semantic_keyword_cleanup` · `w5b_page_keyword_no_reuse_trigger` · `w5c_keyword_use_as_reconcile` · `BROADCAST-2026-10-22-data-quality-round-1.md` · Keyword_Assignment_SOP §10.1 · brand DR `DR-EYWA-TSA-003` (amended) · DR-048 (head term vs corner term)
+
+---
 
 ### [DR-075] — `entry_referrer`: เว็บไหนส่งคนมา เก็บบน bond (2026-09-20)
 

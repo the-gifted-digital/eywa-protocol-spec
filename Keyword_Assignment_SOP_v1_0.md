@@ -571,6 +571,24 @@ where brand = :brand and page_a is not null and page_b is not null and kw_simila
 
 > ⚠️ ชั้นที่ 3 มี false positive — `ค่ารากฟันเทียม` ⟷ `ผ่ารากฟันเทียม` (0.765) ต่างกันอักษรเดียวแต่คนละความหมายสิ้นเชิง · **ห้าม auto-fix** เหมือนตัวตรวจชั้นสองของ DR-051
 
+### 10.1 การใช้คีย์ซ้ำถูกบล็อกที่ DB แล้ว (DR-076, 2026-10-22)
+
+กฎ "หนึ่ง intent = หนึ่ง URL ต่อแบรนด์" ครอบคลุม **semantic keyword** ด้วย ไม่ใช่แค่ target — trigger `trg_page_keyword_no_reuse` บน `seo_website_page_master` จะ **ปฏิเสธ** การเขียน (INSERT / UPDATE ของ `target_keyword_fp`, `semantic_keywords_fps`, `status`, `brand_id`) เมื่อ:
+
+1. target ของหน้าอยู่ใน semantic list ของหน้าเดียวกัน
+2. semantic list มีคีย์ซ้ำกันเอง
+3. semantic keyword เท่ากับ target ของหน้าอื่น
+4. target/semantic keyword เป็น semantic keyword ของหน้า active อื่นในแบรนด์เดียวกันอยู่แล้ว
+5. หน้า `Merged` / `Dropped` ถือ semantic keyword (ต้องว่าง)
+
+**อ่าน error:** ข้อความขึ้นต้น `page <page_fingerprint>: …` แล้วบอก fp ของคีย์ที่ชนและ `page` ที่ถืออยู่ — ไปแก้ที่ผู้ถือเดิม (หรือเลือกคีย์อื่น) ไม่ใช่ลองเขียนซ้ำ · bulk upsert ที่เจอ 1 แถวผิดจะล้มทั้ง statement จึงต้อง dedupe ใน importer ก่อนเขียน และ catch + รายงานต่อแถว
+
+**ข้อจำกัด:** trigger ไม่มี lock — เขียนพร้อมกันอาจลอดได้ · หลัง bulk import ทุกครั้งให้รัน `select * from v_page_keyword_conflicts` ต้องได้ 0 แถว (view นี้ละ Merged/Dropped)
+
+**`v_keyword_near_duplicates` — คอลัมน์ `match_reason`:** `trigram` (คล้ายตามตัวอักษร ตามชั้นที่ 3 ข้างบน) · `entity_alias` (คีย์เท่ากับชื่อ/alias ของ entity เดียวกัน หลัง `seo_kw_norm` — เป็นคีย์ซ้ำ intent โดยนิยาม) · `entity_alias+trigram` · กรองด้วย `match_reason` ก่อนตัดสิน: คู่ `entity_alias` น่าเชื่อกว่า trigram มาก แต่ยัง **ห้าม auto-fix** · `entity_fp` ระบุ entity ที่ทำให้ชน
+
+> หมายเหตุ: ณ 2026-10-22 semantic list ถูกล้างเพื่อให้เหลือผู้ถือเดียว (807 คีย์ที่ชน — ดู DR-076) จึงบางมากจนกว่าจะมีรอบ re-allocate ทั้งชุด
+
 ---
 
 ## 11. บันทึกและตรวจสอบย้อนหลัง

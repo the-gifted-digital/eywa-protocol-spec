@@ -1,8 +1,8 @@
 # 📖 คัมภีร์ EYWA™ PROTOCOL
 ## The Universal Knowledge Graph SEO Specification for the AI Era
 
-**Version:** 3.35  
-**Last Updated:** 2026-09-20  
+**Version:** 3.36  
+**Last Updated:** 2026-10-22  
 **Trademark:** EYWA™ (Class 35+42, DIP Thailand, filed 2026-04-20)  
 **Created by:** The Gifted Digital Marketing Co., Ltd.  
 **Scope:** Universal standard สำหรับการบริหารจัดการ SEO + Knowledge Graph แบบ multi-vertical, multi-brand, multi-specialty, multi-lingual, multi-location, **AI-future-ready** ในยุค AI Search (2026+) — ครอบคลุม healthcare verticals (clinic ทุก specialty, hospital, dental, sleep medicine, aesthetic, wellness, healthcare media) extensible to other regulated YMYL niches  
@@ -143,6 +143,17 @@ Throughout this Bible:
 
 
 ## 📜 Changelog
+
+### v3.36 (2026-10-22) — DR-076: data-quality round 1 — one intent = one URL enforced on semantic keywords; keyword conversion is organic-only and keyword-level 🧹🔒
+
+Companion to **DR-076 (Accepted — applied to the production DB `lffcbeszjqzioobqfdav` 2026-10-21/22, verified)**. **Schema:** no new table; 3 new views, 1 new function, 3 new triggers, 1 new index, 1 backup table, 1 redefined view (`v_tsa_keyword_conversion`), 1 extended view (`v_keyword_near_duplicates`). Documentation-only for the Bible text itself — the rules below are now enforced by the database, not by SOP discipline.
+
+- 🔒 **"One intent = one URL per brand" now covers `semantic_keywords_fps`, not just `target_keyword_fp`** (which was already globally unique). A keyword may be a page's target **or** a semantic keyword of exactly one active page of its brand — never both, never on two pages. Enforced by trigger `trg_page_keyword_no_reuse` on `seo_website_page_master`; Merged/Dropped pages may carry no semantic keywords. One-time cleanup removed 807 conflicting keywords from every page that listed them (deezy-dental 1,897→1,631 entries, smile-scape-clinic 1,052→215, vth-biodent 1,291→455, vitalsleep-clinic 294 unchanged). **Semantic lists are intentionally thin until the next full re-allocation pass.**
+- 🔄 **`keyword_use_as` reconciled to the pages** (452 rows fixed) and now released on page delete (`trg_release_keyword_use_as_on_delete`) — `'excluded'` stays operator-owned.
+- 📊 **`v_tsa_keyword_conversion` redefined — organic-only, keyword-level.** `conversions_28d` / `sessions_28d` / `line_clicks_28d` / `call_clicks_28d` are the page's organic totals apportioned by the keyword's share of the page's GSC clicks (28d). **This supersedes the brand-DR `DR-EYWA-TSA-003` guidance** ("repeats on every keyword of the page — SUM only after collapsing to one row per slug"): do not collapse; page totals are in `page_organic_*`; all-channel totals are no longer in this view.
+- ➕ **Review view:** `v_page_keyword_conflicts` (should always be 0 rows — re-check after bulk imports, the trigger has no lock). A view `v_citation_type_mismatch` was also created 2026-10-21 and is superseded by gate G14 — to be dropped.
+- ➕ **`v_keyword_near_duplicates` also pairs keywords that equal an entity's name/alias** (`match_reason`, `entity_fp`), via new function `seo_entity_name_list()`.
+- 📌 Open: W3 knowledge-graph clean-up (ICD/MeSH table, 283 alias names → 2+ entities), citation fixes, `v_page_priority`, per-brand importers handling trigger errors.
 
 ### v3.35 (2026-09-20) — DR-073/074/075: the AI side of Pillar 2 is measured; Category F reconciled to what exists 🤖📡
 
