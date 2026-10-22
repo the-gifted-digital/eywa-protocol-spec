@@ -13,7 +13,10 @@ on:
 
 jobs:
   page-history:
-    uses: the-gifted-digital/eywa-protocol-spec/.github/workflows/page-history.yml@main # pin a tag to freeze a version
+    # Pinned release. Bump BOTH the @tag and spec_ref together (the tag selects the workflow file,
+    # spec_ref selects the crawler code it checks out).
+    uses: the-gifted-digital/eywa-protocol-spec/.github/workflows/page-history.yml@page-history-v1
     with:
       brand_id: <BRAND_ID>
+      spec_ref: page-history-v1
     secrets: inherit

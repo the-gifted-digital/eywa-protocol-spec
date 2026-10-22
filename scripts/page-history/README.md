@@ -93,6 +93,20 @@ Prerequisites checklist:
   `eywa-protocol-spec` only) to every brand repo — the workflow uses it when present; (c) give the brand
   deploy workflows above the same token, or they stop deploying.
 
+## Releases (version pinning)
+
+Brand repos call a **pinned tag**, not `main`: `uses: …/page-history.yml@page-history-vN` together with
+`spec_ref: page-history-vN` (the tag picks the workflow file, `spec_ref` picks the crawler code it checks out;
+always move both). A push to `main` here therefore reaches no brand until it is released:
+
+1. Merge and test the change on `main` (both test harnesses, manifest).
+2. Tag it: `git tag -a page-history-vN <sha> -m "…"` and `git push origin page-history-vN`. Never move an
+   existing tag — cut a new N.
+3. Bump the tag in each brand's `.github/workflows/page-history.yml` (both places), one brand first, check its
+   next run, then the rest. Rolling back = point the brand back at the previous tag.
+
+Released: `page-history-v1` = 15802e3 (DR-078 first production release, accepted 2026-10-22).
+
 ## If your brand vendors a copy
 
 Vendoring is fine. Silent divergence is not. After copying, run:
