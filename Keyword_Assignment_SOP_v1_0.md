@@ -84,6 +84,16 @@
 > ลำดับนี้แก้ปัญหาที่เจอในรอบ audit: 154/295 entity ของหน้า VTH ไม่มีคีย์เวิร์ดสังกัดเลย (325 หน้า) — ถ้าไม่มี R2/R3 fallback หน้าเหล่านี้จะตันทั้งหมด
 > **ถ้าไม่มีผู้สมัครใน R1–R3 → ปล่อยว่าง + `flag_review='kw-none'`** ห้ามหยิบคีย์ R4 มายัด (นี่คือต้นเหตุของ §9 ที่พังทั้งหมวด)
 
+### 3.1 กฎ primary entity ของ keyword (DR-081, 2026-10-23)
+
+R1 ขึ้นกับว่า `keyword.primary_entity_fp` ถูกต้อง — ตัดสินด้วยกฎนี้ (ใช้แล้วใน review 145 เคสของ W3.4b):
+
+- **primary entity = สิ่งหลักที่ผู้ค้นหาต้องการ** — modifier ราคา / ค่าใช้จ่าย / รีวิว / ก่อน-หลัง **ไม่เปลี่ยน** entity (เช่น "จัดฟันใส ราคา" → entity ของจัดฟันใส ไม่ใช่ entity ราคา)
+- **entity แบรนด์/แพทย์ใช้เฉพาะเมื่อ keyword ระบุชื่อนั้น** (เช่น nobel biocare, osstem, straumann ผูก entity แบรนด์ได้ และจะขึ้นใน review queue ต่อไป โดยตั้งใจ)
+- **ถ้ามี entity ลูกที่เฉพาะเจาะจงกว่า ให้เลือกลูก**
+- `primary_entity_name` ห้ามเขียนด้วยมือ — trigger คัดลอกจาก `seo_entity_graph.entity_name` เสมอ (ตั้งแค่ `primary_entity_fp`)
+- ฝั่งหน้า: page primary entity = สิ่งที่ schema.org `about`/`mainEntity` ควรระบุ; entity องค์กร/แพทย์ใช้เฉพาะหน้าที่พูดถึงคลินิก/แพทย์. page entity ≠ keyword entity ไม่ได้ผิดเสมอไป (หน้า treatment ที่เล็ง keyword ฝั่งปัญหา, entity หน้าเป็นลูกของ entity keyword, หน้า hub/FAQ = keep_both)
+
 ---
 
 ## 4. Eligibility filter (ตัดออกก่อนให้คะแนน)
@@ -659,6 +669,7 @@ where brand = :brand and page_a is not null and page_b is not null and kw_simila
 ## 12. Change control
 
 - แก้ SOP นี้ = bump version + บันทึกเหตุผลท้ายไฟล์
+- 2026-10-23 · DR-081: เพิ่ม §3.1 กฎ primary entity ของ keyword/หน้า (บทเรียน W3.4a–c)
 - ข้อ 4 (B1, B9) และข้อ 8 (compliance) แก้ไม่ได้โดยฝ่าย SEO ต้องผ่านผู้รับอนุญาตสถานพยาบาล
 - เนื้อหาการแพทย์บนหน้าที่เกิดจาก SOP นี้ยังต้องผ่าน sign-off ของ ทพ.ดร. อมรพงษ์ ตามกระบวนการเดิม (`seo_editorial_reviews`)
 

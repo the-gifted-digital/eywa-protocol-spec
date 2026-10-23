@@ -3,7 +3,7 @@
 **Version:** 1.0
 **Status:** 🔒 Locked 2026-08-07
 **Scope:** **UNIVERSAL** — ทุกแบรนด์ที่ใช้ `seo_entity_graph` และตาราง subtype
-**Decision record:** DR-050 · แก้ไขโดย **DR-079** (2026-10-23: MeSH สำหรับ procedure/treatment/device, residual-code rule, ห้าม `--apply` แบบไม่อ่านผล) และ **DR-080** (2026-10-23: กฎตัดสิน `entity_type` §1.2, checklist merge/retype ฝั่ง brand repo §6.2)
+**Decision record:** DR-050 · แก้ไขโดย **DR-079** (2026-10-23: MeSH สำหรับ procedure/treatment/device, residual-code rule, ห้าม `--apply` แบบไม่อ่านผล) **DR-080** (2026-10-23: กฎตัดสิน `entity_type` §1.2, checklist merge/retype ฝั่ง brand repo §6.2) และ **DR-081** (2026-10-23: checklist §6.2 ครอบทุก brand repo + ทุกการเปลี่ยน identity รวม relink หน้า/keyword, `primary_entity_name` ของ keyword เป็นสำเนาที่ trigger ดูแล)
 **Reference implementation:** `eywa-vth-biodent/web/scripts/{verify-entity-ids,harvest-entity-codes,map-icd10-to-icd11,gen-entity-schema}.mjs`
 
 ---
@@ -247,18 +247,22 @@ ICD-10 ที่ลงท้าย `.8 other specified` / `.9 unspecified` จ�
 
 `--apply` เขียน **ทุก** "proposed" id. รอบ `--all` 2026-10-22 มี proposal 21 รายการ **ผิด 12** — ห้างสรรพสินค้าฮ่องกง (emax-material), วารสาร (pediatric-dentistry, implantologist), "osteoporosis" สำหรับ alveolar-bone-loss, "anatomy" สำหรับ tooth-anatomy, บทความปี 1991 สำหรับ omfs. ให้ตัดสิน id ด้วยมือตามสามด่านใน §2 (อ่าน label + description) แล้วเขียนผ่าน migration ที่ **ไม่ทับค่าเดิม** (`wikidata_id` ต้องว่าง) — ดู `migrations/2026-10-22_w32b_wikidata_adjudicated.sql`. id เดิมที่ชี้ผิดต้อง clear (เช่น periodontal-surgery → "pedicled flap"). สคริปต์ harvest/verify ข้าม entity ที่เป็น `Merged`/`Dropped` และ harvest ปฏิเสธ Wikidata code ที่ผิดรูป
 
-### 6.2 Checklist เมื่อ merge / retype entity — ต้องจบในรอบเดียวกัน (DR-080)
+### 6.2 Checklist เมื่อ merge / retype / relink entity — ต้องจบในรอบเดียวกัน ในทุก brand repo (DR-080, ขยายโดย DR-081)
 
-บทเรียนจาก DR-079 W3.1: merge entity ใน Supabase แล้ว deploy gate ของ vth-biodent แดง เพราะ brand repo ยังชี้ entity เดิม. ทุกครั้งที่ **merge หรือ retype** entity ต้องทำครบก่อนถือว่าเสร็จ:
+บทเรียนจาก DR-079 W3.1: merge entity ใน Supabase แล้ว deploy gate ของ vth-biodent แดง เพราะ brand repo ยังชี้ entity เดิม — และ DR-080 เขียนไว้แค่ vth ทำให้ **Deezy แดงเงียบ ๆ ตั้งแต่ W3.1** (entity-clinical.json stale, YAML + token `(entity:…)` ยังชี้ entity ที่ถูก merge). ทุกครั้งที่ **เปลี่ยน identity ของ entity ใด ๆ** — merge, retype, **relink `primary_entity_fp` ของหน้าหรือ keyword** — ต้องทำครบ **ใน brand repo ทุกตัวที่ bind entity (วันนี้ Deezy และ vth; SmileScape เมื่อมีไฟล์หน้า)** ก่อนถือว่าเสร็จ:
 
 ```
-1.  แก้ YAML entity bindings / bridge files ใน brand repo ให้ชี้ fp ของ winner (merge) หรือ type ใหม่ (retype)
-2.  regenerate JSON ที่ brand สร้างจาก graph: entity-labels · entity-schema · entity-clinical · entity-codes
-3.  รัน gate ของ brand (เช่น vth `check:clinical`) ให้ผ่านก่อน push
+1.  แก้ YAML `primaryEntity` และ token `(entity:…)` ที่อยู่ในเนื้อหา ให้ชี้ fp ของ winner (merge) / type ใหม่ (retype) / entity ใหม่ (relink)
+2.  regenerate JSON ที่ brand สร้างจาก graph: entity-labels · entity-schema · entity-clinical (รวม entity-clinical.json) · entity-codes · page-master/page-context
+3.  รัน gate ของ brand ให้ผ่านก่อน push: `check:sync` / `check:entity-binding` และ `check:clinical`
 4.  broadcast ถึงทุก brand ที่ entity อยู่ใน scope (entity shared → DR-046)
 ```
 
 อย่าทิ้ง "regenerate ทีหลัง" — ถ้า graph เปลี่ยนแล้ว brand ยังไม่ regenerate gate จะแดงตอน deploy ครั้งถัดไป ไม่ใช่ตอนที่เปลี่ยน
+
+**`primary_entity_name` ของ keyword (DR-081):** เป็นสำเนาของ `seo_entity_graph.entity_name` ที่ trigger เขียนทับเสมอ (`trg_keyword_entity_name`, `trg_entity_name_to_keywords`) — ห้ามเขียนด้วยมือ ตั้งแค่ `primary_entity_fp`
+
+**Ops note — หลัง bulk update entity/keyword:** `analyze` ตาราง `seo_x_ads_keywords_contextual_master`, `seo_entity_graph`, `seo_website_page_master` แล้ว `notify pgrst, 'reload schema';` — ไม่งั้น PostgREST อาจ timeout (8 วินาที) บน `v_seo_entity_inventory` ทั้งที่ query ตรงรัน <2 วินาที
 
 ---
 
@@ -317,5 +321,6 @@ select count(*) from seo_entity_condition where icd11_code ~ '\.Z$';
 
 แก้ SOP นี้ได้เมื่อมี DR ใหม่อ้างถึงเท่านั้น · เพิ่มบทเรียนจากการรันจริงได้โดยไม่ต้องมี DR แต่ต้องระบุแบรนด์ + วันที่ + หลักฐาน
 
+- **2026-10-23 · DR-081:** §6.2 checklist ครอบ "ทุก brand repo ที่ bind entity" และทุกการเปลี่ยน identity (merge · retype · relink หน้า/keyword) + ต้อง regenerate `entity-clinical.json` + gate `check:sync`/`check:entity-binding`/`check:clinical` · note `primary_entity_name` ของ keyword เป็นสำเนา trigger · ops note `analyze` + `notify pgrst` หลัง bulk update
 - **2026-10-23 · DR-080:** §1.2 กฎตัดสิน `entity_type` (act = procedure/treatment, object = device, วัสดุ/software medical device = device, umbrella ไม่ตั้งผิด) + ข้อยกเว้นที่เลื่อน · §6.2 checklist merge/retype ต้อง update brand repo bindings + regenerate entity JSON + รัน brand gate ในรอบเดียวกัน
 - **2026-10-23 · DR-079:** §1 procedure/treatment/device → `mesh_id` (ตาราง ext ของตน) · §1.1 note รหัสคง store เดิม + ความครอบคลุมจริง · §4 residual-code rule (".8" ที่ WHO ระบุตามชื่อ) + `icd10_code` = WHO ≤ 4 ตัวอักษร · §6.1 ห้าม `--apply` แบบไม่อ่านผล. (header ของ migration เรียก DR นี้ว่า DR-078 = renumbered)

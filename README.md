@@ -4,11 +4,11 @@
 
 | 📖 Bible | 📊 Schema | 🏗️ Phase | ⚖️ License |
 |----------|-----------|-----------|-------------|
-| **v3.40** | **v1.28** | **1A Built ✅** | Proprietary |
+| **v3.41** | **v1.29** | **1A Built ✅** | Proprietary |
 
 <!-- Badges (render on GitHub.com): -->
-[![Bible](https://img.shields.io/badge/Bible-v3.40-blue?style=flat-square)](./EYWA_PROTOCOL_v3_33.md)
-[![Schema](https://img.shields.io/badge/Schema-v1.28-green?style=flat-square)](./Schema_Overview_EYWA_v1_23.md)
+[![Bible](https://img.shields.io/badge/Bible-v3.41-blue?style=flat-square)](./EYWA_PROTOCOL_v3_33.md)
+[![Schema](https://img.shields.io/badge/Schema-v1.29-green?style=flat-square)](./Schema_Overview_EYWA_v1_23.md)
 [![Migrations](https://img.shields.io/badge/Migrations-Phase%201A%20Built-success?style=flat-square)](./migrations/README.md)
 [![Phase](https://img.shields.io/badge/Phase-1%20Foundation-orange?style=flat-square)](./PHASE_1_DECISIONS.md)
 [![License](https://img.shields.io/badge/License-Proprietary-red?style=flat-square)]()
@@ -35,10 +35,10 @@ EYWA™ is a registered trademark of **The Gifted Digital Marketing Co., Ltd.** 
 | Document | Purpose | Lines | Status |
 |----------|---------|-------|--------|
 | `PROJECT_MEMORY.md` | Project context for AI sessions + onboarding | ~880 | 🧠 Memory (local-only, gitignored) |
-| `EYWA_PROTOCOL_v3_33.md` | The Bible — full specification | ~27,800 | 🔒 Active (v3.40) |
-| `Schema_Overview_EYWA_v1_23.md` | Database schema companion (Group 11 NEW media_assets) — **43 EYWA canonical base tables** *(48 as of v1.28: v1.26 added 3 DR-078 tables, pending operator apply when written; v1.28 added `seo_priority_weights`, applied 2026-10-23)*, all 43 verified present 2026-08-24 *(re-corrected 2026-08-24: the original "43 live base tables" was RIGHT and had been replaced with a raw `public` count. `public` also holds 14 non-EYWA/scratch tables — `logs_2025`/`logs_2026`, `fbads_*`, `tsa_*`, `web_lead`, `ss_kw_seed_*` — so a raw count reads **57** base tables excluding backups and **222** including them. The raw number drifts; the canonical 43 does not — `select count(*) from information_schema.tables where table_schema='public' and table_type='BASE TABLE' and table_name not like '\_%' and table_name !~ '(bak\|backup)'`)* | ~2,000 | 🔒 Active (v1.28) |
+| `EYWA_PROTOCOL_v3_33.md` | The Bible — full specification | ~27,800 | 🔒 Active (v3.41) |
+| `Schema_Overview_EYWA_v1_23.md` | Database schema companion (Group 11 NEW media_assets) — **43 EYWA canonical base tables** *(48 as of v1.28, unchanged in v1.29: v1.26 added 3 DR-078 tables, pending operator apply when written; v1.28 added `seo_priority_weights`, applied 2026-10-23)*, all 43 verified present 2026-08-24 *(re-corrected 2026-08-24: the original "43 live base tables" was RIGHT and had been replaced with a raw `public` count. `public` also holds 14 non-EYWA/scratch tables — `logs_2025`/`logs_2026`, `fbads_*`, `tsa_*`, `web_lead`, `ss_kw_seed_*` — so a raw count reads **57** base tables excluding backups and **222** including them. The raw number drifts; the canonical 43 does not — `select count(*) from information_schema.tables where table_schema='public' and table_type='BASE TABLE' and table_name not like '\_%' and table_name !~ '(bak\|backup)'`)* | ~2,000 | 🔒 Active (v1.28) |
 | `EYWA_HANDOVER.md` | Operating manual for Claude/AI | ~3,100 | 🔒 Active (v1.19) |
-| `DECISION_RECORDS.md` | Architecture decision log | ~5,300 | 🔒 Active (v1.47) |
+| `DECISION_RECORDS.md` | Architecture decision log | ~5,300 | 🔒 Active (v1.48) |
 | `Keyword_Assignment_SOP_v1_0.md` | SOP — เลือกคีย์เวิร์ดหลัก/รอง ผูกเข้าหน้า (DR-043) + บทเรียน L1–L23 | ~540 | 🔒 Active (v1.3) |
 | `Citation_Pool_SOP_v1_0.md` | SOP — สร้าง/ตรวจ/ผูก citation (DR-044) + บทเรียน C1–C20 | ~160 | 🔒 Active (v1.2) |
 | `Entity_Identity_SOP_v1_0.md` | SOP — ICD · Wikidata · Wikipedia → schema markup (DR-050) · สามด่านก่อนเชื่อ identifier + one-store-per-fact | ~200 | 🔒 Active (v1.0) |
@@ -58,10 +58,12 @@ EYWA™ is a registered trademark of **The Gifted Digital Marketing Co., Ltd.** 
 
 ---
 
-## 🆕 Latest Update — Bible v3.40 / Schema v1.28 (2026-10-23)
+## 🆕 Latest Update — Bible v3.41 / Schema v1.29 (2026-10-23)
 
 **Current spec stack — brands bump to these versions:**
-**Bible v3.40** · **Schema v1.28** · **Handover v1.19** · **Decision Records v1.47** · **Content_Templates v1.9** · **PHASE_1 v1.9**
+**Bible v3.41** · **Schema v1.29** · **Handover v1.19** · **Decision Records v1.48** · **Content_Templates v1.9** · **PHASE_1 v1.9**
+
+**DR-081 (Accepted 2026-10-23; applied 2026-10-23):** **Knowledge-graph quality round 3 (W3.4a–c)** — keyword→entity and page→entity links repaired and reviewed: 14 broken keyword links fixed, 194 unlinked keywords linked by exact name/alias, 145 judgement cases (98 keyword relinks, 3 page relinks, 5 wrong aliases removed), 65 live pages with page entity ≠ keyword entity reviewed (36 page relinks, 2 keyword relinks, 21 keep_both, 5 retarget + 3 human open); keyword `primary_entity_name` is now a **trigger-maintained copy** of `seo_entity_graph.entity_name` (`trg_keyword_entity_name`, `trg_entity_name_to_keywords` — never write it by hand); rules in Keyword_Assignment_SOP §3.1; **same-round checklist now covers every brand repo that binds entities** (Deezy and vth: YAML `primaryEntity` + inline `(entity:…)` tokens, regenerate entity JSON incl. `entity-clinical.json`, run brand gates) and `ANALYZE` + `notify pgrst, 'reload schema'` after bulk migrations. No new table (stays 48). See [`BROADCAST-2026-10-23c-keyword-page-entity-links.md`](./BROADCAST-2026-10-23c-keyword-page-entity-links.md).
 
 **DR-080 (Accepted 2026-10-23; applied 2026-10-23):** **Knowledge-graph quality round 2** — a written **`entity_type` rule** (procedure/treatment = an act; device = a physical object, material or regulated software device; umbrella service entities stay `treatment`, deferred) with **12 live entities retyped**; `v_keyword_near_duplicates` rebuilt on the materialized view `mv_keyword_near_pairs` (no more timeouts) plus `v_page_keyword_orphans`; **page priority score** (`v_page_priority`, 0–100 per Live page from 8 within-brand percentile signals weighted by the new table `seo_priority_weights`); both MVs **refresh daily at 07:00 Asia/Bangkok** via pg_cron job `eywa-refresh-quality-mvs`; and a new **merge/retype checklist** — update brand-repo entity bindings, regenerate the entity JSON and run the brand gates in the same round (Entity_Identity_SOP §6.2). Schema v1.28 (+1 table, 47 → 48). Brand sessions: read [`BROADCAST-2026-10-23b-entity-type-and-priority.md`](./BROADCAST-2026-10-23b-entity-type-and-priority.md).
 
@@ -453,7 +455,7 @@ See `DECISION_RECORDS.md` for full rationale.
 
 ## 📐 Schema Overview
 
-The EYWA database schema (**v1.28** — the companion file is `Schema_Overview_EYWA_v1_23.md`; "v1.11" here was stale) consists of **11 groups over 43 EYWA canonical base tables**, *(48 as of v1.28: v1.26 added 3 DR-078 tables, pending operator apply when written; v1.28 added `seo_priority_weights`, applied 2026-10-23)*, all 43 verified present 2026-08-24 *(corrected 2026-08-24 against live schema; re-corrected the same day — an intermediate edit read "9 groups over 57 live base tables", which counted `public`'s non-EYWA tables instead of the schema)*.
+The EYWA database schema (**v1.29** — the companion file is `Schema_Overview_EYWA_v1_23.md`; "v1.11" here was stale) consists of **11 groups over 43 EYWA canonical base tables**, *(48 as of v1.28, unchanged in v1.29: v1.26 added 3 DR-078 tables, pending operator apply when written; v1.28 added `seo_priority_weights`, applied 2026-10-23)*, all 43 verified present 2026-08-24 *(corrected 2026-08-24 against live schema; re-corrected the same day — an intermediate edit read "9 groups over 57 live base tables", which counted `public`'s non-EYWA tables instead of the schema)*.
 
 🔴 **The 9-group numbering below is the superseded v1.11-era organization.** Its numbers and themes no longer line up with the companion's §2 11-group table, where Group 5 = Performance Fact Tables, Group 6 = Backlinks & Off-Page and Group 8 = Data Quality & Governance. Read §2 of `Schema_Overview_EYWA_v1_23.md` as authoritative; the list below is kept only so each stale rule can be marked:
 

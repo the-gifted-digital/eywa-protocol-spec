@@ -1,7 +1,7 @@
 # 📖 คัมภีร์ EYWA™ PROTOCOL
 ## The Universal Knowledge Graph SEO Specification for the AI Era
 
-**Version:** 3.40  
+**Version:** 3.41  
 **Last Updated:** 2026-10-23  
 **Trademark:** EYWA™ (Class 35+42, DIP Thailand, filed 2026-04-20)  
 **Created by:** The Gifted Digital Marketing Co., Ltd.  
@@ -143,6 +143,17 @@ Throughout this Bible:
 
 
 ## 📜 Changelog
+
+### v3.41 (2026-10-23) — DR-081: knowledge-graph quality round 3 (keyword/page entity links, W3.4a–c) 🔗🧭
+
+Companion to **DR-081 (Accepted 2026-10-23; applied to production 2026-10-23)**. **Schema v1.29:** no new base table (stays 48); new functions `fn_keyword_entity_name()` / `fn_entity_name_to_keywords()` and triggers `trg_keyword_entity_name` / `trg_entity_name_to_keywords`. No new Bible Part.
+
+- 🔗 **Keyword→entity links repaired:** 14 broken links fixed (Merged/missing → surviving entity; Dropped → NULL); 194 unlinked keywords linked by exact name/alias match to exactly one live entity in scope; 145 judgement cases reviewed (98 keyword relinks, 3 page relinks, 5 wrong aliases removed).
+- 📄 **Page→entity review:** 65 live pages whose primary entity differed from the target keyword's entity reviewed — 36 page relinks, 2 keyword relinks, 21 keep_both, 5 retarget and 3 human (open). 29 page/keyword differences remain by design.
+- 🧭 **Rules:** a keyword's primary entity is the main thing the searcher wants (price/cost/review/before-after modifiers do not change it; brand/doctor entities only when the keyword names them; prefer the specific child entity) — Keyword_Assignment_SOP §3.1. A page's primary entity is what schema.org `about`/`mainEntity` should name; org/doctor entities only on pages about the clinic/doctor.
+- 🔒 **`primary_entity_name` on the keyword table is now a DB-maintained copy** of `seo_entity_graph.entity_name` (always overwritten by trigger; entity renames propagate). Never write it by hand.
+- 🔁 **Same-round checklist (Entity_Identity_SOP §6.2) now covers every brand repo that binds entities** (today Deezy and vth) and every identity change (merge, retype, page/keyword relink): YAML `primaryEntity` + inline `(entity:…)` tokens, regenerate entity JSON incl. `entity-clinical.json`, run brand gates before pushing. Ops note: `ANALYZE` the touched tables and `notify pgrst, 'reload schema'` after bulk entity/keyword migrations.
+- ⚠️ Open: 5 retarget pages, 3 human pages + 7 human keywords, 7 Deezy device entities without contraindication lists, possible entity duplicates (see DR-081).
 
 ### v3.40 (2026-10-23) — DR-080: knowledge-graph quality round 2 (กฎ `entity_type`, refresh MV รายวัน, page priority) 🧭⏱️📊
 
