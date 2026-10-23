@@ -3,7 +3,7 @@
 **Version:** 1.0
 **Status:** 🔒 Locked 2026-08-07
 **Scope:** **UNIVERSAL** — ทุกแบรนด์ที่ใช้ `seo_entity_graph` และตาราง subtype
-**Decision record:** DR-050 · แก้ไขโดย **DR-079** (2026-10-23: MeSH สำหรับ procedure/treatment/device, residual-code rule, ห้าม `--apply` แบบไม่อ่านผล)
+**Decision record:** DR-050 · แก้ไขโดย **DR-079** (2026-10-23: MeSH สำหรับ procedure/treatment/device, residual-code rule, ห้าม `--apply` แบบไม่อ่านผล) และ **DR-080** (2026-10-23: กฎตัดสิน `entity_type` §1.2, checklist merge/retype ฝั่ง brand repo §6.2)
 **Reference implementation:** `eywa-vth-biodent/web/scripts/{verify-entity-ids,harvest-entity-codes,map-icd10-to-icd11,gen-entity-schema}.mjs`
 
 ---
@@ -52,6 +52,31 @@
 > **รหัสยังอยู่ใน store เดิมของ DR-050** — ข้อเสนอตาราง `seo_entity_codes` ใหม่ถูกปฏิเสธเพราะซ้ำกับ "one store per fact".
 > ตัวเลข "1 จาก 741 entity มี ICD" ใน handover วัดคอลัมน์ `seo_entity_graph.icd_10_code` ที่ปลดระวางแล้ว ไม่ใช่ความครอบคลุมจริง (จริง: ICD-10 91/118 conditions ก่อนรอบ DR-079; หลังรอบ: active conditions ICD-10 (WHO) 78/115 · ICD-11 71 · MeSH 87; procedures MeSH 69 · devices 15).
 > คอลัมน์ `icd10_code` (WHO) ต้องเป็น **WHO ICD-10 เท่านั้น ยาวไม่เกิน 4 ตัวอักษร** — รหัส CM-only (G47.63, R06.83, K08.89, Z91.041 ...) อยู่ใน `icd10_cm_code` (DR-079)
+
+### 1.2 กฎตัดสิน `entity_type` — act หรือ object? (DR-080)
+
+`entity_type` กำหนดว่า entity ผูกกับตาราง ext ไหน (และ MeSH/ICD ใช้ช่องไหน) จึงต้องตัดสินให้ตรงตัวตนจริง ไม่ใช่ตามที่ keyword พูดถึง
+
+| ถ้า entity คือ | ใช้ type | ตาราง ext |
+|---|---|---|
+| **การกระทำที่ทำ** (หัตถการ/การรักษา) | `procedure` หรือ `treatment` | `seo_entity_procedures` |
+| **วัตถุจับต้องได้** — อุปกรณ์ เครื่อง เครื่องมือ วัสดุ หรือ implant/prosthesis ที่เป็น variant ตามวัสดุ/ยี่ห้อ | `device` | `seo_entity_devices` |
+| **วัสดุ** (เซรามิก ทองคำ ฯลฯ) | `device` (ไม่มี type วัสดุ; `ingredient` คือสารออกฤทธิ์ของ skincare เท่านั้น) | `seo_entity_devices` |
+| **ซอฟต์แวร์ที่เป็น medical device ตามกฎหมาย** (FDA/CE-cleared เช่น nemostudio, dental-monitoring-ai) | `device` — เพราะ `technology` ไม่มีตาราง ext | `seo_entity_devices` |
+| ชื่อชุดบริการ/โปรแกรม/แดชบอร์ดของแบรนด์ | `concept` (ดู §8: ไม่มี identifier) | ไม่มี |
+
+**เมื่อชื่อเดียวมีสองความหมาย** (เช่น `mad` = Mandibular Advancement Device เป็นทั้งเครื่องมือและการรักษา): ถ้ามี entity อื่นถือความหมายด้านหนึ่งอยู่แล้ว (เช่น `oral-appliance-therapy` ถือด้านการรักษา) ให้ entity นี้เป็นด้านที่เหลือ — **umbrella ไม่ถูกตั้ง type ผิดเพียงเพราะมีลูกเป็นอีกประเภท**
+
+**ข้อยกเว้นที่ตัดสินแล้ว (operator, 2026-10-23 — เลื่อนไว้ทบทวน):**
+- umbrella service entities (`dental-implant`, `dental-crown`, `dental-veneer`, `denture`, `clear-aligner` ...) คงเป็น `treatment` แม้ MeSH/Wikidata id ของมันจะชี้ที่ตัววัตถุ
+- lab test ที่เก็บเป็น `procedure` (inflammation-panel, genetic-testing, microbiome-testing ...) รอ rollout ของ `lab_test`
+- `space-maintainer` คงเป็น `treatment` (MeSH D013027 คือหัตถการ)
+
+**รอบแรกที่ใช้กฎนี้ (W3.6, 12 entity):** mad, gold-crown, ssc-pedo, orthodontic-retainer, thermoformed-aligner, dental-autoclave, opg-machine, intraoral-scanner, dental-laser → `device`; dental-photography → `procedure`; pncl-dashboard → `concept`; dental-anxiety-child → `condition`. แถว ext ย้ายตาม type (คง `mesh_id` / `contraindications`)
+
+**เศษที่ยังไม่แก้:** cbct-scan (procedure) มีแถว device ext หลงอยู่; gum-swelling (symptom) มีแถว condition ext หลงอยู่; device 9 ตัวยังไม่มีแถว device ext (3d-printer-aligner, acteon-cbct, cool-light-whitening-unit, densah-bur, endodontic-microscope, ptfe-membrane, rotary-endodontic-system, rpm-membrane, trios-intraoral-scanner)
+
+ผลข้างเคียงของการเปลี่ยน type: ไม่มี DB constraint ใดอ่าน `entity_type` นอกจาก `chk_concept_subtype` แต่ output เหล่านี้เปลี่ยน — `v_seo_keyword_pool`, `v_seo_entity_inventory`, `dz_dash_graph()`; SmileScape derive `page_type` จาก primary entity type; Deezy `src/lib/schema.ts` เทียบ @type กับ `entity_type`. entity ส่วนใหญ่ shared (`brand_scope` `*`) จึงต้อง broadcast (DR-046)
 
 ---
 
@@ -222,6 +247,19 @@ ICD-10 ที่ลงท้าย `.8 other specified` / `.9 unspecified` จ�
 
 `--apply` เขียน **ทุก** "proposed" id. รอบ `--all` 2026-10-22 มี proposal 21 รายการ **ผิด 12** — ห้างสรรพสินค้าฮ่องกง (emax-material), วารสาร (pediatric-dentistry, implantologist), "osteoporosis" สำหรับ alveolar-bone-loss, "anatomy" สำหรับ tooth-anatomy, บทความปี 1991 สำหรับ omfs. ให้ตัดสิน id ด้วยมือตามสามด่านใน §2 (อ่าน label + description) แล้วเขียนผ่าน migration ที่ **ไม่ทับค่าเดิม** (`wikidata_id` ต้องว่าง) — ดู `migrations/2026-10-22_w32b_wikidata_adjudicated.sql`. id เดิมที่ชี้ผิดต้อง clear (เช่น periodontal-surgery → "pedicled flap"). สคริปต์ harvest/verify ข้าม entity ที่เป็น `Merged`/`Dropped` และ harvest ปฏิเสธ Wikidata code ที่ผิดรูป
 
+### 6.2 Checklist เมื่อ merge / retype entity — ต้องจบในรอบเดียวกัน (DR-080)
+
+บทเรียนจาก DR-079 W3.1: merge entity ใน Supabase แล้ว deploy gate ของ vth-biodent แดง เพราะ brand repo ยังชี้ entity เดิม. ทุกครั้งที่ **merge หรือ retype** entity ต้องทำครบก่อนถือว่าเสร็จ:
+
+```
+1.  แก้ YAML entity bindings / bridge files ใน brand repo ให้ชี้ fp ของ winner (merge) หรือ type ใหม่ (retype)
+2.  regenerate JSON ที่ brand สร้างจาก graph: entity-labels · entity-schema · entity-clinical · entity-codes
+3.  รัน gate ของ brand (เช่น vth `check:clinical`) ให้ผ่านก่อน push
+4.  broadcast ถึงทุก brand ที่ entity อยู่ใน scope (entity shared → DR-046)
+```
+
+อย่าทิ้ง "regenerate ทีหลัง" — ถ้า graph เปลี่ยนแล้ว brand ยังไม่ regenerate gate จะแดงตอน deploy ครั้งถัดไป ไม่ใช่ตอนที่เปลี่ยน
+
 ---
 
 ## 7. QA gates (ต้องได้ 0 ทุกข้อ)
@@ -279,4 +317,5 @@ select count(*) from seo_entity_condition where icd11_code ~ '\.Z$';
 
 แก้ SOP นี้ได้เมื่อมี DR ใหม่อ้างถึงเท่านั้น · เพิ่มบทเรียนจากการรันจริงได้โดยไม่ต้องมี DR แต่ต้องระบุแบรนด์ + วันที่ + หลักฐาน
 
+- **2026-10-23 · DR-080:** §1.2 กฎตัดสิน `entity_type` (act = procedure/treatment, object = device, วัสดุ/software medical device = device, umbrella ไม่ตั้งผิด) + ข้อยกเว้นที่เลื่อน · §6.2 checklist merge/retype ต้อง update brand repo bindings + regenerate entity JSON + รัน brand gate ในรอบเดียวกัน
 - **2026-10-23 · DR-079:** §1 procedure/treatment/device → `mesh_id` (ตาราง ext ของตน) · §1.1 note รหัสคง store เดิม + ความครอบคลุมจริง · §4 residual-code rule (".8" ที่ WHO ระบุตามชื่อ) + `icd10_code` = WHO ≤ 4 ตัวอักษร · §6.1 ห้าม `--apply` แบบไม่อ่านผล. (header ของ migration เรียก DR นี้ว่า DR-078 = renumbered)

@@ -1,7 +1,7 @@
 # 📖 คัมภีร์ EYWA™ PROTOCOL
 ## The Universal Knowledge Graph SEO Specification for the AI Era
 
-**Version:** 3.39  
+**Version:** 3.40  
 **Last Updated:** 2026-10-23  
 **Trademark:** EYWA™ (Class 35+42, DIP Thailand, filed 2026-04-20)  
 **Created by:** The Gifted Digital Marketing Co., Ltd.  
@@ -143,6 +143,17 @@ Throughout this Bible:
 
 
 ## 📜 Changelog
+
+### v3.40 (2026-10-23) — DR-080: knowledge-graph quality round 2 (กฎ `entity_type`, refresh MV รายวัน, page priority) 🧭⏱️📊
+
+Companion to **DR-080 (Accepted 2026-10-23; applied to production 2026-10-23)**. **Schema v1.28:** new table `seo_priority_weights` (base tables 47 → 48); materialized views `mv_keyword_near_pairs` + `mv_page_priority`; views `v_page_keyword_orphans`, `v_page_priority` (and `v_keyword_near_duplicates` rebuilt on the MV, same name/columns); functions `refresh_keyword_near_pairs()` / `refresh_page_priority()`; pg_cron job `eywa-refresh-quality-mvs`. No new Bible Part.
+
+- 🧭 **`entity_type` decision rule** (Entity_Identity_SOP §1.2): procedure/treatment = an act performed; device = physical object, appliance, machine, material- or brand-specific implant/prosthesis variant; materials stay `device`; regulated software medical devices (FDA/CE-cleared) stay `device` because `technology` has no ext table. 12 live entities retyped (mad, gold-crown, ssc-pedo, orthodontic-retainer, thermoformed-aligner, dental-autoclave, opg-machine, intraoral-scanner, dental-laser → device; dental-photography → procedure; pncl-dashboard → concept; dental-anxiety-child → condition). Umbrella service entities (dental-implant, dental-crown, dental-veneer, denture, clear-aligner …) deliberately stay `treatment` (operator, 2026-10-23); lab tests wait for a `lab_test` rollout.
+- ⏱️ **Daily refresh:** pg_cron `eywa-refresh-quality-mvs` at 00:00 UTC (07:00 Asia/Bangkok, one hour after the 06:01 GSC load) refreshes near-pairs first, then page priority (~2 min).
+- 📊 **Page priority (handover data-quality #7):** one 0–100 score per Live page from 8 within-brand percentile signals weighted by `seo_priority_weights` (v1: 25/20/20/10/10/5/5/5); signals a brand has no data for are dropped and the rest rescaled. Product-value weighting deferred until `tsa_product_value` holds real values.
+- 🔎 **Near-duplicate keywords** now read from a materialized view (the live self-join timed out); `v_page_keyword_orphans` flags page keyword/entity fingerprints that point at nothing or at a Merged/Dropped entity (expected 0 rows).
+- 🔁 **Merge/retype checklist (Entity_Identity_SOP §6.2):** in the same round as a merge or retype, update brand-repo YAML entity bindings / bridge files, regenerate the brand's generated entity JSON (entity-labels / entity-schema / entity-clinical / entity-codes) and run the brand's gates (e.g. vth `check:clinical`) before pushing — lesson from the DR-079 W3.1 vth deploy-gate failure.
+- ⚠️ Known leftovers: cbct-scan (procedure) has a stray device ext row; gum-swelling (symptom) has a stray condition ext row; 9 device entities have no device ext row. Open: W3.4 keyword→entity mislink review; `related_to` (426) retyping; 85 `flagged_review` edges.
 
 ### v3.39 (2026-10-23) — DR-079: knowledge-graph data quality round (W3.0–W3.3) 🧹🧬🔗
 

@@ -2,8 +2,8 @@
 
 > **Append-only architectural decision log.** Each record explains WHY a decision was made — not just WHAT.
 
-**Document Version:** 1.46  
-**Last Updated:** 2026-10-23 — DR-079 accepted (knowledge-graph data-quality round W3.0–W3.3: codes stay in DR-050 stores, MeSH for procedure/device, dedupe, edge verification; migration headers say DR-078 = renumbered) · previously DR-078 accepted (page change history: live-crawl SEO change log, GitHub Actions, central code + brand-owned caller; renumbered after merge) · previously 2026-10-22 — DR-077 accepted (citation tier criteria: in vitro T6, cohort_study T5, `other` = unclassified, SR-guideline by conduct, unmapped study types) · DR-076 accepted (data-quality round 1: "one intent = one URL" enforced on semantic keywords by trigger · keyword conversion view is organic-only and keyword-level · `keyword_use_as` reconciled and released on delete) — applied to production 2026-10-21/22; amends brand DR `DR-EYWA-TSA-003` guidance
+**Document Version:** 1.47  
+**Last Updated:** 2026-10-23 — DR-080 accepted (knowledge-graph quality round 2: `entity_type` decision rule + 12 retypes, daily pg_cron refresh of the quality MVs, page priority score `v_page_priority`, near-duplicate MV + orphan view; merge/retype checklist now includes brand-repo regeneration) · previously DR-079 accepted (knowledge-graph data-quality round W3.0–W3.3: codes stay in DR-050 stores, MeSH for procedure/device, dedupe, edge verification; migration headers say DR-078 = renumbered) · previously DR-078 accepted (page change history: live-crawl SEO change log, GitHub Actions, central code + brand-owned caller; renumbered after merge) · previously 2026-10-22 — DR-077 accepted (citation tier criteria: in vitro T6, cohort_study T5, `other` = unclassified, SR-guideline by conduct, unmapped study types) · DR-076 accepted (data-quality round 1: "one intent = one URL" enforced on semantic keywords by trigger · keyword conversion view is organic-only and keyword-level · `keyword_use_as` reconciled and released on delete) — applied to production 2026-10-21/22; amends brand DR `DR-EYWA-TSA-003` guidance
 **Format:** Reverse chronological (newest first)
 
 ---
@@ -31,6 +31,44 @@
 ---
 
 ## Decisions Log
+
+### [DR-080] — Knowledge-graph quality round 2: กฎ `entity_type` · refresh MV รายวัน · page priority score · checklist merge/retype ฝั่ง brand repo (2026-10-23)
+
+**Status:** **Accepted** (applied to production 2026-10-23) · Scope: **UNIVERSAL** · ต่อยอด **DR-079** (follow-ups W3.4-prep, W4, W3.5, W3.6) · amends **Entity_Identity_SOP** §1/§6/§9  
+**Bible Reference:** v3.40 changelog (ไม่มี Part ใหม่)  
+**Schema Reference:** v1.28 — ตารางใหม่ `seo_priority_weights` (base tables 47 → 48) · materialized views `mv_keyword_near_pairs`, `mv_page_priority` · views `v_keyword_near_duplicates` (นิยามใหม่, ชื่อ/คอลัมน์เดิม), `v_page_keyword_orphans`, `v_page_priority` · functions `refresh_keyword_near_pairs()`, `refresh_page_priority()` · pg_cron job `eywa-refresh-quality-mvs` · backup `bak_w36_20261023_entity_type`  
+**Note on numbering:** migrations ของรอบนี้ (`migrations/2026-10-23_w34…w36`) บางไฟล์อ้าง DR-079 ใน header (เป็น "follow-ups") — เอกสารบันทึกเป็น DR-080 แยก เพราะมีการตัดสินใจใหม่ (กฎ `entity_type`, ตาราง weights, checklist); ไฟล์ migration ไม่ถูกแก้
+
+**Context:** DR-079 ทิ้ง follow-up ไว้ 3 เรื่อง: (1) `v_keyword_near_duplicates` timeout (self-join trigram บน ~22.7k keyword ไทยใช้ ~45 วินาทีต่อการอ่านหนึ่งครั้ง); (2) ~22 entity ที่ `entity_type` ผิด และไม่มีกฎเขียนไว้ว่า device/procedure/technology ต่างกันอย่างไร; (3) handover data-quality #7 ยังไม่มีวิธีจัดลำดับว่าหน้าไหนควรแก้ก่อน. นอกจากนี้ รอบ DR-079 W3.1 (merge entity) ทำให้ deploy gate ของ vth-biodent แดง เพราะ YAML entity binding / bridge file ใน brand repo ยังชี้ entity เดิม
+
+**Decision:**
+1. **Near-duplicate เป็น materialized view (W3.4-prep):** `mv_keyword_near_pairs` (brand, kw_a, kw_b, match_reason, entity_fp, refreshed_at; unique index `uq_mv_keyword_near_pairs`) เก็บเฉพาะ "คู่" ที่หายาก; `v_keyword_near_duplicates` คงชื่อและคอลัมน์เดิม แต่ join MV กับตาราง keyword/page แบบ live (`keyword_use_as`, `page_a`, `page_b` จึงสดเสมอ — เฉพาะคู่ที่ stale). `refresh_keyword_near_pairs()` ตั้ง `pg_trgm.similarity_threshold = 0.72` และ timeout 10 นาที
+2. **`v_page_keyword_orphans` (ใหม่):** รายการ keyword/entity fingerprint ใน `seo_website_page_master` (`target_keyword_fp`, `semantic_keywords_fps`, `primary_entity_fp`, `related_entities_fps`) ที่ไม่ชี้ไปที่อะไร หรือชี้ entity ที่ Merged/Dropped — ตารางนี้ไม่มี FK จึงต้องมี view คอยจับ; คาดหวัง **0 แถว**. ลบ NULL 8 ตัวออกจาก `related_entities_fps` ของ smile-scape
+3. **Page priority score (W4, handover data-quality #7):** ตาราง `seo_priority_weights` (`brand_id` default `'*'`, `signal` CHECK 8 ค่า, `weight`, `version`, `active`, `note`, `created_at`; PK `(brand_id, signal, version)`; RLS `authenticated` full access) — แถว brand ทับ default, version ที่ active สูงสุดชนะ. น้ำหนัก v1: `striking_impressions` 25 · `ctr_gap` 20 · `organic_contacts` 20 · `duplication` 10 · `orphan_risk` 10 · `weak_evidence` 5 · `ux_friction` 5 · `ai_visits` 5. `mv_page_priority` ให้คะแนน 0–100 ต่อหน้า Live หนึ่งแถว: แต่ละ signal เป็น `percent_rank` ภายใน brand (outlier ตัวเดียวไม่ครอบงำ), signal ที่ brand ไม่มีข้อมูลเลยถูกตัดออกแล้ว rescale น้ำหนักให้รวม 100 (ข้อมูลหายไม่ลดคะแนน), `weak_evidence` เป็น binary. คอลัมน์: `brand_id, page_fingerprint, sitemap_node_id, slug, page_type, score, top_signals, suggested_action, signals jsonb, refreshed_at`; unique index บน `page_fingerprint`. `v_page_priority = select * from mv_page_priority`; refresh ด้วย `refresh_page_priority()`. **การถ่วงน้ำหนักตามมูลค่าสินค้า (product value) เลื่อนไว้** จนกว่า `tsa_product_value` จะมีค่าจริง (35 แถวเป็น placeholder ณ 2026-10-23)
+4. **Refresh รายวันด้วย pg_cron (W3.5):** เปิด extension `pg_cron` (schema `pg_catalog`) และ job `eywa-refresh-quality-mvs`, cron `0 0 * * *` (00:00 UTC = 07:00 Asia/Bangkok, หลัง GSC load 06:01 Bangkok หนึ่งชั่วโมง). Command: `select public.refresh_keyword_near_pairs(); select public.refresh_page_priority();` — near-pairs ก่อนเสมอ เพราะ `mv_page_priority` อ่าน `v_keyword_near_duplicates` เป็น duplication signal. รวม ~2 นาที; test run ผ่าน (6,682 pairs, 1,468 pages). ตรวจด้วย `select * from cron.job_run_details order by start_time desc limit 5;`
+5. **กฎ `entity_type` (W3.6):** ใช้ตัดสินทุกครั้งที่สร้าง/แก้ entity —
+   - **procedure / treatment** = การกระทำที่ทำ (ตาราง ext `seo_entity_procedures`)
+   - **device** = วัตถุ/อุปกรณ์/เครื่อง/วัสดุ หรือ implant/prosthesis ที่เป็น variant ตามวัสดุหรือยี่ห้อ (ตาราง ext `seo_entity_devices`)
+   - **วัสดุคงเป็น `device`** (ไม่มี type วัสดุ; `ingredient` คือสารออกฤทธิ์ skincare)
+   - **ซอฟต์แวร์ที่เป็น medical device ตามกฎหมาย** (FDA/CE-cleared เช่น nemostudio, dental-monitoring-ai) คงเป็น `device` — `technology` ไม่มีตาราง ext
+   - **entity ที่มีทั้งสองความหมาย** และมี entity อื่นถือความหมายอีกด้านอยู่แล้ว → umbrella ไม่ถูกตั้ง type ผิด
+6. **Retype 12 entity (W3.6)** (backup `bak_w36_20261023_entity_type`, 17 แถว): mad, gold-crown, ssc-pedo, orthodontic-retainer treatment→device · thermoformed-aligner concept→device · dental-autoclave, opg-machine, intraoral-scanner, dental-laser technology→device · dental-photography technology→procedure · pncl-dashboard device→concept · dental-anxiety-child concept→condition. แถว ext ของ mad, ssc-pedo, orthodontic-retainer ย้าย procedures→devices โดยคง `mesh_id`/`contraindications`; เพิ่มแถว ext stub; ลบแถว device ของ pncl-dashboard. Entity เหล่านี้ shared (`brand_scope` `*`) → ต้อง broadcast ตาม DR-046
+7. **ข้อยกเว้นที่ operator ตัดสิน 2026-10-23 (เลื่อน):** umbrella service entities (dental-implant, dental-crown, dental-veneer, denture, clear-aligner ...) **คงเป็น `treatment`** แม้ MeSH/Wikidata id จะชี้ไปที่ตัววัตถุ — กลับมาทบทวนทีหลัง; lab test ที่เก็บเป็น procedure (inflammation-panel, genetic-testing, microbiome-testing ...) รอ rollout ของ `lab_test`; space-maintainer คงเป็น treatment (MeSH D013027 คือหัตถการ)
+8. **Checklist merge/retype (บทเรียนจาก DR-079 W3.1 ที่ทำให้ vth deploy gate แดง):** เมื่อ entity ถูก merge หรือ retype ใน **รอบเดียวกัน** ต้อง (ก) แก้ YAML entity bindings / bridge files ใน brand repo, (ข) regenerate JSON ที่ brand สร้าง (entity-labels / entity-schema / entity-clinical / entity-codes), (ค) รัน gate ของ brand (เช่น vth `check:clinical`) ก่อน push. เขียนไว้ใน Entity_Identity_SOP §6.2
+
+**Rationale:** MV แยก "คู่" ที่แพงออกจาก "ข้อมูลสด" ที่ถูก — อ่านเร็วโดยไม่เสียความสดของ `keyword_use_as`/page; ตาราง weights เก็บน้ำหนักเป็นข้อมูล (versioned, ทับต่อ brand ได้) เพื่อ re-tune หลังวัดผลเดือนพฤศจิกายนโดยไม่แก้โค้ด; percent_rank + rescale กัน outlier และกัน brand ที่ไม่มีข้อมูลถูกลงโทษ; กฎ `entity_type` ที่ผูกกับตาราง ext ทำให้ type บอกได้ว่าคอลัมน์ไหนมีอยู่; การ refresh ตามหลัง GSC load หนึ่งชั่วโมงทำให้คะแนนสะท้อนข้อมูลวันก่อนเสมอ; checklist ย้ายการ regenerate มาไว้ในรอบเดียวกับการเปลี่ยน graph เพราะ brand gate พังเงียบ ๆ ถ้า binding ค้างของเก่า
+
+**Consequences:**
+- Migrations ที่ apply แล้ว: `2026-10-23_w34_near_duplicates_mv_and_orphans`, `w4_page_priority`, `w35_refresh_cron`, `w36_entity_type_fixes`. Backup: `bak_w36_20261023_entity_type`
+- ผลของ retype ไหลไปที่ output: `v_seo_keyword_pool`, `v_seo_entity_inventory`, `dz_dash_graph()`; SmileScape derive `page_type` จาก primary entity type; ไม่มี DB constraint ใดอ่าน `entity_type` นอกจาก `chk_concept_subtype`
+- **Brand repos ต้อง regenerate:** Deezy `scripts/gen-entity-codes.mjs` → `src/data/entity-codes.json` (และตรวจ `src/lib/schema.ts` ที่เทียบ @type กับ entity_type); vth-biodent `harvest-entity-codes.mjs` route mad/orthodontic-retainer/ssc-pedo ไป devices แล้ว. ดู `BROADCAST-2026-10-23b-entity-type-and-priority.md`
+- `v_keyword_near_duplicates` และ `v_page_priority` สดทุกวัน 07:00 Bangkok; หลัง import keyword ใหญ่ระหว่างวันให้ `select refresh_keyword_near_pairs();` เอง
+- **Known leftovers (ไม่ได้แก้):** cbct-scan (procedure) มีแถว device ext หลงอยู่; gum-swelling (symptom) มีแถว condition ext หลงอยู่; device 9 ตัวไม่มีแถว device ext (3d-printer-aligner, acteon-cbct, cool-light-whitening-unit, densah-bur, endodontic-microscope, ptfe-membrane, rotary-endodontic-system, rpm-membrane, trios-intraoral-scanner)
+- **Open follow-ups (ต่อจาก DR-079):** W3.4 keyword→entity mislink review; retype `related_to` (426); 85 edge `flagged_review` รอ MD แบรนด์; umbrella-service typing และ `lab_test` rollout (ข้อ 7)
+
+**References:** DR-079 (knowledge-graph quality round 1), DR-050 (Entity Identity), DR-042 (entity dedupe), DR-046 (shared-table governance), DR-078 (page change history — `seo_page_change_log` เป็นฐานของ impact view), `Entity_Identity_SOP_v1_0.md` §1/§6.2/§9, `BROADCAST-2026-10-23b-entity-type-and-priority.md`, `migrations/2026-10-23_w34…w36`
+
+---
 
 ### [DR-079] — Knowledge-graph data quality round (W3.0–W3.3): รหัสอยู่ใน store เดิมของ DR-050 · MeSH สำหรับ procedure/device · dedupe · edge verification (2026-10-23)
 

@@ -1,9 +1,9 @@
 # 📊 Schema Overview — EYWA™ PROTOCOL Database
 
-**Version:** v1.27 (2026-10-23) — DR-079 knowledge-graph data quality round (W3.0–W3.3): `mesh_id` on `seo_entity_procedures` + `seo_entity_devices`, `evidence_verified_at/_by` on `seo_entity_relationships`, `chk_entity_aliases_plain_list`, `chk_entity_lifecycle` + `trg_normalise_entity_lifecycle`; 8 migrations applied; no new base table (backup tables only) · previous: v1.26 (2026-10-23) — DR-078 page change history: Group 3 Page System 3 → 6 tables (`seo_page_live_state`, `seo_page_change_log` append-only, `seo_page_change_note`) + `seo_norm_url()` + 3 views; migration written, applied by operator (pending) · previous: v1.25 (2026-10-22) — DR-076 data-quality round 1: `trg_page_keyword_no_reuse` + `idx_page_master_semantic_fps` on `seo_website_page_master`, `trg_release_keyword_use_as_on_delete`, view `v_page_keyword_conflicts`, `v_tsa_keyword_conversion` redefined (organic-only, keyword-level), `v_keyword_near_duplicates` + `match_reason`/`entity_fp`, function `seo_entity_name_list()` · previous: v1.24 (2026-09-20) — DR-074 `seo_ai_agent_visits` BUILT (Group 7 → 5 tables) + `tsa_bond.entry_referrer` (DR-075) + `tsa_param` surface `server_only`; four v2.4 AI tables declared superseded · previous: v1.23 (2026-06-11) — DR-038 Canonicalize `seo_media_assets` (Group 11 NEW §13.1, BUILT) + Cloudflare config columns on `brands` (§3.1, BUILT) 🔒🖼️☁️
+**Version:** v1.28 (2026-10-23) — DR-080 knowledge-graph quality round 2: new table `seo_priority_weights` (47 → 48 base tables; Group 8 → 3), materialized views `mv_keyword_near_pairs` + `mv_page_priority`, views `v_page_priority` + `v_page_keyword_orphans` (+ `v_keyword_near_duplicates` rebuilt on the MV), functions `refresh_keyword_near_pairs()` / `refresh_page_priority()`, pg_cron job `eywa-refresh-quality-mvs` (daily 07:00 Asia/Bangkok), `entity_type` decision rule + 12 retypes; 4 migrations applied · previous: v1.27 (2026-10-23) — DR-079 knowledge-graph data quality round (W3.0–W3.3): `mesh_id` on `seo_entity_procedures` + `seo_entity_devices`, `evidence_verified_at/_by` on `seo_entity_relationships`, `chk_entity_aliases_plain_list`, `chk_entity_lifecycle` + `trg_normalise_entity_lifecycle`; 8 migrations applied; no new base table (backup tables only) · previous: v1.26 (2026-10-23) — DR-078 page change history: Group 3 Page System 3 → 6 tables (`seo_page_live_state`, `seo_page_change_log` append-only, `seo_page_change_note`) + `seo_norm_url()` + 3 views; migration written, applied by operator (pending) · previous: v1.25 (2026-10-22) — DR-076 data-quality round 1: `trg_page_keyword_no_reuse` + `idx_page_master_semantic_fps` on `seo_website_page_master`, `trg_release_keyword_use_as_on_delete`, view `v_page_keyword_conflicts`, `v_tsa_keyword_conversion` redefined (organic-only, keyword-level), `v_keyword_near_duplicates` + `match_reason`/`entity_fp`, function `seo_entity_name_list()` · previous: v1.24 (2026-09-20) — DR-074 `seo_ai_agent_visits` BUILT (Group 7 → 5 tables) + `tsa_bond.entry_referrer` (DR-075) + `tsa_param` surface `server_only`; four v2.4 AI tables declared superseded · previous: v1.23 (2026-06-11) — DR-038 Canonicalize `seo_media_assets` (Group 11 NEW §13.1, BUILT) + Cloudflare config columns on `brands` (§3.1, BUILT) 🔒🖼️☁️
 **Live database:** Supabase project `lffcbeszjqzioobqfdav` ("GTGT") · region `ap-northeast-1` · Postgres 17
-**Total base tables:** 47 EYWA canonical tables *(v1.26: +3 DR-078 tables, 44 → 47; the 3 are written but pending operator apply — verify with the count query below once applied; the 2026-08-24 audit confirmed 43)* — 43 confirmed present at the 2026-08-24 audit *(corrected 2026-08-24 against live schema: the count is right, the scope claim was not — `public` also holds non-EYWA tables `tsa_bond`/`tsa_bond_valued`/`tsa_call`/`tsa_event`/`tsa_page_product`/`tsa_param`/`tsa_product_map`/`tsa_product_value`, `fbads_account`/`fbads_daily`/`fbads_sync_log`, `web_lead`, `ss_kw_seed_wave16_20260806`, plus ~140 `_`-prefixed backup/scratch tables and 7 `v_` views. The live list is whatever `GET /rest/v1/` returns as OpenAPI definitions; do not hardcode a total)* — `seo_media_assets` §13.1 (Group 11) canonicalized 2026-06-11 via migration `eywa_w11_08` (DR-038); `brands` §3.1 +4 Cloudflare cols via `eywa_w11_09` (DR-038); `seo_payer_partners` §3.9 canonicalized 2026-06-08 via migration `eywa_w11_07` (DR-037); `seo_entity_symptom` §11.5a built 2026-06-04 via `eywa_w11_06`
-**Spec stack:** Bible v3.39 · Handover v1.19 · Decision Records v1.46
+**Total base tables:** 48 EYWA canonical tables *(v1.28: +1 `seo_priority_weights`, DR-080, applied 2026-10-23; v1.26: +3 DR-078 tables, 44 → 47; the 3 are written but pending operator apply — verify with the count query below once applied; the 2026-08-24 audit confirmed 43)* — 43 confirmed present at the 2026-08-24 audit *(corrected 2026-08-24 against live schema: the count is right, the scope claim was not — `public` also holds non-EYWA tables `tsa_bond`/`tsa_bond_valued`/`tsa_call`/`tsa_event`/`tsa_page_product`/`tsa_param`/`tsa_product_map`/`tsa_product_value`, `fbads_account`/`fbads_daily`/`fbads_sync_log`, `web_lead`, `ss_kw_seed_wave16_20260806`, plus ~140 `_`-prefixed backup/scratch tables and 7 `v_` views. The live list is whatever `GET /rest/v1/` returns as OpenAPI definitions; do not hardcode a total)* — `seo_media_assets` §13.1 (Group 11) canonicalized 2026-06-11 via migration `eywa_w11_08` (DR-038); `brands` §3.1 +4 Cloudflare cols via `eywa_w11_09` (DR-038); `seo_payer_partners` §3.9 canonicalized 2026-06-08 via migration `eywa_w11_07` (DR-037); `seo_entity_symptom` §11.5a built 2026-06-04 via `eywa_w11_06`
+**Spec stack:** Bible v3.40 · Handover v1.19 · Decision Records v1.47
 **Audit method:** Last full drift audit vs live `information_schema` was **2026-05-30**. A cross-brand reconciliation on 2026-08-23 checked 2,317 documented claims against the live database and found 1,837 that no longer match, including 336 rules that cannot fire at all. **Every column count, allowed-value list and row count in this document was re-checked against the live PostgREST schema + live data on 2026-08-24**; corrections carry an inline `*(corrected 2026-08-24 against live schema)*` marker. Row counts drift daily — treat every number here as a measurement with a date, not a constant. Constraint definitions (CHECK bodies, trigger existence, index lists, partitions) are **not** reachable through PostgREST and remain unverified since 2026-05-30. See `eywa-vth-biodent/content-plan/` reconciliation report.
 
 > **Reader heads-up:** v1.18 is a **full rewrite + audit** of v1.10. Aspirational columns from v1.0–v1.10 that never shipped are dropped (or moved to **Appendix H — Deferred v2.0 Provisions**). Every column under each table reflects the live database. Two new DR waves landed in this version:
@@ -16,6 +16,19 @@
 ---
 
 ## Changelog
+
+### v1.28 (2026-10-23) — DR-080: knowledge-graph quality round 2 (entity_type rule, daily MV refresh, page priority) 🧭⏱️📊
+
+Paired companion to **DR-080** (applied to production 2026-10-23). Migrations `2026-10-23_w34_near_duplicates_mv_and_orphans`, `w4_page_priority`, `w35_refresh_cron`, `w36_entity_type_fixes`.
+
+- ➕ **New base table `seo_priority_weights`** (§10.3, Group 8 → 3 tables). Base tables 47 → **48**. Backup table `bak_w36_20261023_entity_type` is not canonical and is excluded from the count.
+- ➕ **Materialized view `mv_keyword_near_pairs`** (brand, kw_a, kw_b, match_reason, entity_fp, refreshed_at; unique index `uq_mv_keyword_near_pairs`) — `v_keyword_near_duplicates` keeps its name and columns but now joins the MV to the live keyword/page tables (the trigram self-join over ~22.7k keywords took ~45 s per read and timed out). Only the pairs go stale. Details in Appendix L.
+- ➕ **View `v_page_keyword_orphans`** — page-master keyword/entity fingerprint references (`target_keyword_fp`, `semantic_keywords_fps`, `primary_entity_fp`, `related_entities_fps`) that point at nothing or at a Merged/Dropped entity; expected 0 rows. 8 NULLs removed from smile-scape `related_entities_fps`.
+- ➕ **`mv_page_priority`** (one 0–100 `score` per Live page; unique index on `page_fingerprint`) + **`v_page_priority`** (`select * from mv_page_priority`) + functions **`refresh_keyword_near_pairs()`** (sets `pg_trgm.similarity_threshold` 0.72, 10 min timeout) and **`refresh_page_priority()`**. Handover data-quality item #7. Appendix L.
+- ⏱️ **pg_cron** enabled (`create extension pg_cron with schema pg_catalog`, Appendix A) and job **`eywa-refresh-quality-mvs`**, `0 0 * * *` UTC = 07:00 Asia/Bangkok (one hour after the 06:01 Bangkok GSC load): `select public.refresh_keyword_near_pairs(); select public.refresh_page_priority();` — near-pairs first because `mv_page_priority` reads `v_keyword_near_duplicates`. ~2 min total. Monitor: `select * from cron.job_run_details order by start_time desc limit 5;`. F.12.
+- 🧭 **`entity_type` decision rule** documented at §4.1 (`entity_type` CHECK enum): procedure/treatment = act performed, device = physical object/appliance/machine/material- or brand-specific implant/prosthesis, materials stay `device`, regulated software medical devices stay `device` (`technology` has no ext table). Umbrella service entities stay `treatment` (operator, deferred). See Entity_Identity_SOP §1.2.
+- 🔁 **Data (W3.6):** 12 live entities retyped; ext rows moved procedures → devices with `mesh_id`/`contraindications` preserved (mad, ssc-pedo, orthodontic-retainer), stub ext rows added, pncl-dashboard device row removed. Outputs that change: `v_seo_keyword_pool`, `v_seo_entity_inventory`, `dz_dash_graph()`. No DB constraint reads `entity_type` except `chk_concept_subtype`.
+- ⚠️ Known leftovers: cbct-scan (procedure) has a stray `seo_entity_devices` row; gum-swelling (symptom) has a stray `seo_entity_condition` row; 9 device entities have no device ext row (3d-printer-aligner, acteon-cbct, cool-light-whitening-unit, densah-bur, endodontic-microscope, ptfe-membrane, rotary-endodontic-system, rpm-membrane, trios-intraoral-scanner).
 
 ### v1.27 (2026-10-23) — DR-079: knowledge-graph data quality round (W3.0–W3.3) 🧹🧬🔗
 
@@ -240,12 +253,12 @@ v1.10 → v1.0: see `archive/Schema_Overview_EYWA_v1_10.md` for the historical d
 | **Group 5** | Performance Fact Tables | seo_x_ads_keywords_x_url_daily_logs (alias for logs_YYYY partitions), seo_local_rankings (**2**) | S only |
 | **Group 6** | Backlinks & Off-Page | seo_backlinks_data, seo_backlinks_links (**2**) | S only (Ahrefs/Moz/DFS ingest) |
 | **Group 7** | AI Operations & Embeddings | seo_brand_mentions, seo_llm_citations, seo_llm_query_simulations, seo_entity_embeddings, **seo_ai_agent_visits (v1.24, DR-074)** (**5**) | S only |
-| **Group 8** | Data Quality & Governance | seo_data_quality_metrics, seo_schema_changes (**2**) | S only |
+| **Group 8** | Data Quality & Governance | seo_data_quality_metrics, seo_schema_changes, **seo_priority_weights (v1.28, DR-080)** (**3**) | S only |
 | **Group 9** | Entity Extensions & Templates | seo_entity_ingredients, seo_entity_devices, seo_entity_procedures, seo_entity_product, seo_entity_condition, seo_entity_symptom, seo_entity_drug, seo_entity_anatomy, seo_entity_organization, seo_entity_lab_test, seo_programmatic_templates (**11**) | S only (built without notion_id despite spec comment; treat as S-only — see §11 intro). `seo_entity_symptom` built per DR-036 (§11.5a) |
 | **Group 10** | Ads Landing Page Track (column extensions only) | (no new tables; columns on page_master + keyword master) | — |
 | **Group 11** 🆕 v1.23 | Media Assets | seo_media_assets (**1**) | N↔S (Notion master 🖼️ Media Library; n8n → Cloudflare R2 + Supabase mirror per DR-038) |
 
-**Total: 47 EYWA canonical base tables** (incl. the 3 `seo_page_*` history tables of DR-078, v1.26, pending operator apply; `seo_ai_agent_visits` DR-074; `seo_entity_symptom` built 2026-06-04 DR-036; `seo_payer_partners` canonicalized 2026-06-08 DR-037; `seo_media_assets` shipped 2026-06-11 DR-038). *(corrected 2026-08-24 against live schema — all 43 exist; `public` additionally holds non-EYWA tables and ~140 backup/scratch tables that this 43 does not count, see the header note.)*
+**Total: 48 EYWA canonical base tables** (incl. `seo_priority_weights` DR-080, v1.28, applied 2026-10-23; the 3 `seo_page_*` history tables of DR-078, v1.26, pending operator apply; `seo_ai_agent_visits` DR-074; `seo_entity_symptom` built 2026-06-04 DR-036; `seo_payer_partners` canonicalized 2026-06-08 DR-037; `seo_media_assets` shipped 2026-06-11 DR-038). *(corrected 2026-08-24 against live schema — all 43 exist; `public` additionally holds non-EYWA tables and ~140 backup/scratch tables that this 43 does not count, see the header note.)*
 
 > **Note on Group 9 vs spec drift:** Spec comments on Group 9 tables mark them `N↔S`, but they were built without `notion_id` columns — practically these function as **S-only** lookup/detail tables (1:1 with entity_graph). v1.18 keeps the historical N↔S label in the spec comment but flags the practical S-only behavior here.
 
@@ -851,6 +864,8 @@ When `brand_structure='monolithic'`: unchanged DR-004 behavior `{brand_domain}/{
 #### `entity_type` CHECK enum
 
 Documented: `('condition','symptom','treatment','technology','specialty','anatomy','drug','procedure','concept','product','ingredient','device','organization','lab_test')`. The 10 extension types (ingredient/device/procedure/product/condition/**symptom**/drug/anatomy/organization/lab_test) bind to Group 9 detail tables (`symptom` → `seo_entity_symptom` §11.5a per **DR-036**, built 2026-06-04). The remaining enum values (`treatment`/`technology`/`specialty`/`concept`) bind to CPTs without a dedicated extension table.
+
+**`entity_type` decision rule 🆕 v1.28 (DR-080; full text Entity_Identity_SOP §1.2):** `procedure` / `treatment` = an act performed (ext `seo_entity_procedures`); `device` = a physical object, appliance, machine, or a material- or brand-specific implant/prosthesis variant (ext `seo_entity_devices`); materials stay `device` (no material type; `ingredient` = skincare active); regulated software medical devices (FDA/CE-cleared, e.g. nemostudio, dental-monitoring-ai) stay `device` because `technology` has no ext table; when an entity has both senses and another entity already holds the other sense, the umbrella is not mistyped. Deferred (operator, 2026-10-23): umbrella service entities (dental-implant, dental-crown, dental-veneer, denture, clear-aligner …) stay `treatment` even though their MeSH/Wikidata ids point at the object; lab tests stored as `procedure` wait for a `lab_test` rollout; space-maintainer stays `treatment`. No DB constraint reads `entity_type` except `chk_concept_subtype`.
 
 ⚠️ *(corrected 2026-08-24 against live schema)* **The live data contains a 15th value the list above does not: `person` (6 rows — Dr. Amornpong Vachiramon, Dr. Tomas Linkevicius, Dr. Pitchapa Phudphong, Dr. Woraphat Jarangkul, and two TH-named clinicians).** Either the CHECK admits `person` or no CHECK is installed; PostgREST cannot show the constraint body, so which one is true is unverified. Add `person` to any validation list before it rejects rows that already exist. Live value counts 2026-08-24: concept 154 · procedure 142 · condition 127 · treatment 119 · device 73 · organization 25 · anatomy 21 · symptom 21 · specialty 19 · technology 12 · drug 9 · person 6 · product 4 — `ingredient` and `lab_test` have **zero** rows.
 
@@ -1599,7 +1614,7 @@ View **`v_ai_agent_visits_page`**: `+ content_locale` (from the path prefix), `s
 
 Reading rules (DR-074): a retrieval fetch means *read for an answer*, not *cited* — `seo_llm_citations` owns "cited"; a brand that refuses training crawlers at the edge has zero `training` rows by design.
 
-## 10. Group 8 — Data Quality & Governance (2 tables)
+## 10. Group 8 — Data Quality & Governance (3 tables)
 
 ### 10.1 `seo_data_quality_metrics` (13 cols) *(corrected 2026-08-24 against live schema — was documented as 15; the column list below has always enumerated 13)*
 
@@ -1617,6 +1632,15 @@ Columns: `id`, `metric_name`, `metric_category` (e.g. `'completeness'`, `'consis
 Columns: `id`, `change_type` text CHECK IN (`'create_table'`,`'drop_table'`,`'alter_table_add_column'`,`'alter_table_drop_column'`,`'alter_table_alter_column'`,`'rename_table'`,`'rename_column'`,`'add_index'`,`'drop_index'`,`'add_constraint'`,`'drop_constraint'`,`'add_trigger'`,`'drop_trigger'`,`'create_function'`,`'drop_function'`,`'create_view'`,`'drop_view'`,`'enable_rls'`,`'disable_rls'`,`'create_policy'`,`'drop_policy'`,`'other'`), `table_name`, `column_name`, `index_name`, `constraint_name`, `migration_version`, `migration_name`, `related_dr_id`, `spec_version`, `description`, `ddl_statement`, `performed_by`, `performed_at`, `duration_ms`, `rolled_back boolean`, `rolled_back_at`, `rollback_reason`.
 
 **Recent activity:** **54 rows** total, measured 2026-08-24 — 33 of them carry `migration_version LIKE 'eywa_w11_%'`. Logged dates: 2026-05-27, 06-02, 06-04, 06-07, 06-08, 06-11, 07-10, 07-27, 07-28, 07-29. *(corrected 2026-08-24 against live data — was "20 rows logged 2026-05-27". Note the log stops at 2026-07-29: the DR-057 funnel/section/schema migrations of 2026-08-23 are **not** recorded here, so this table is no longer a complete DDL audit trail.)*
+
+### 10.3 `seo_priority_weights` 🆕 v1.28 (DR-080) — page priority weights
+
+> **Purpose:** Versioned weights for `mv_page_priority` / `v_page_priority` (Appendix L). Weights are data so they can be re-tuned after the November measurement without code changes.
+> **Sync:** S only. RLS enabled; policy `authenticated_full_access` (`for all to authenticated`).
+
+Columns: `brand_id text not null default '*'` (`'*'` = default for every brand; a brand row overrides it), `signal text not null` CHECK IN (`'striking_impressions'`,`'ctr_gap'`,`'organic_contacts'`,`'duplication'`,`'orphan_risk'`,`'weak_evidence'`,`'ux_friction'`,`'ai_visits'`), `weight numeric not null` CHECK `>= 0`, `version integer not null default 1`, `active boolean not null default true`, `note text`, `created_at timestamptz not null default now()`. PRIMARY KEY `(brand_id, signal, version)`. Highest active `version` per `(brand_id, signal)` wins.
+
+Default weights, version 1 (`brand_id = '*'`, approved 2026-10-23): `striking_impressions` 25 · `ctr_gap` 20 · `organic_contacts` 20 · `duplication` 10 · `orphan_risk` 10 · `weak_evidence` 5 · `ux_friction` 5 · `ai_visits` 5 (sum 100).
 
 ---
 
@@ -1863,6 +1887,9 @@ CREATE EXTENSION IF NOT EXISTS postgis;
 
 -- 4. Vector (seo_entity_embeddings)
 CREATE EXTENSION IF NOT EXISTS vector;
+
+-- 5. Scheduler (DR-080 — daily refresh of the quality materialized views)
+CREATE EXTENSION IF NOT EXISTS pg_cron WITH SCHEMA pg_catalog;
 ```
 
 ### Extension-to-Table Map
@@ -1875,6 +1902,7 @@ CREATE EXTENSION IF NOT EXISTS vector;
 | `unaccent` | DR-010 `brand_slug` normalization; DR-008 display_name generation |
 | `postgis` | `seo_branches.geo_point geometry(Point,4326)` + `trg_branches_sync_geo_point` |
 | `vector` | `seo_entity_embeddings.embedding vector(N)` |
+| `pg_cron` 🆕 v1.28 | job `eywa-refresh-quality-mvs` (daily 00:00 UTC) — F.12 |
 
 ---
 
@@ -2101,6 +2129,14 @@ A "translation group" is implicit: all pages sharing a `source_translation_fp` a
 
 `seo_entity_name_list(name, aliases)` (F.10) now only ever sees the comma-list format for `seo_entity_graph`; the array-literal branch is kept for safety.
 
+### F.12 Quality MV refresh functions & cron job 🆕 v1.28 (DR-080)
+
+| Object | Kind | Purpose |
+|---|---|---|
+| `refresh_keyword_near_pairs()` | function | refreshes `mv_keyword_near_pairs`; sets `pg_trgm.similarity_threshold = 0.72` and a 10 min `statement_timeout`; ~1 min |
+| `refresh_page_priority()` | function | refreshes `mv_page_priority`; own 10 min `statement_timeout`; must run **after** `refresh_keyword_near_pairs()` (reads `v_keyword_near_duplicates`) |
+| `eywa-refresh-quality-mvs` | pg_cron job | `0 0 * * *` (00:00 UTC = 07:00 Asia/Bangkok): `select public.refresh_keyword_near_pairs(); select public.refresh_page_priority();` ~2 min total; test run 6,682 pairs / 1,468 pages. Monitor with `select * from cron.job_run_details order by start_time desc limit 5;` |
+
 ---
 
 ## Appendix G — Entity Uniqueness Guard (EUG) Implementation v2.0
@@ -2187,6 +2223,10 @@ Recent migration waves applied to live DB (verified via `supabase_migrations.sch
 | **W3.1** 🆕 | **2026-10-22** | `2026-10-22_w31_entity_dedupe` (21 merges, 106 alias removals, 50 `is_a`; duplicate views fixed for `lower()`) · backups `bak_w31_20261022_{graph,rels,pages,kw,ext}` | **DR-079** (DR-042 procedure) |
 | **W3.2a–d** 🆕 | **2026-10-22** | `w32a_mesh_id_procedures_devices` · `w32b_wikidata_adjudicated` · `w32c_merged_ext_lists` (backup `bak_w32c_20261022`) · `w32d_entity_codes` (backup `bak_w32d_20261022`) | **DR-079** |
 | **W3.3a–b** 🆕 | **2026-10-22/23** | `w33a_edge_verification_columns` · `w33b_edge_verification` (backup `bak_w33b_20261022`) | **DR-079** |
+| **W3.4-prep** 🆕 | **2026-10-23** | `2026-10-23_w34_near_duplicates_mv_and_orphans` (`mv_keyword_near_pairs` + `uq_mv_keyword_near_pairs`, `v_keyword_near_duplicates` rebuilt on the MV, `refresh_keyword_near_pairs()`, `v_page_keyword_orphans`, 8 NULLs removed from smile-scape `related_entities_fps`) | **DR-080** *(header: DR-079 follow-ups)* |
+| **W4** 🆕 | **2026-10-23** | `2026-10-23_w4_page_priority` (`seo_priority_weights` + v1 default weights, `mv_page_priority`, `v_page_priority`, `refresh_page_priority()`) | **DR-080** (handover data-quality #7) |
+| **W3.5** 🆕 | **2026-10-23** | `2026-10-23_w35_refresh_cron` (`pg_cron` extension; job `eywa-refresh-quality-mvs`, daily 00:00 UTC) | **DR-080** *(header: DR-079 follow-up)* |
+| **W3.6** 🆕 | **2026-10-23** | `2026-10-23_w36_entity_type_fixes` (12 entities retyped, ext rows moved/added/removed) · backup `bak_w36_20261023_entity_type` (17 rows) | **DR-080** |
 
 ---
 
@@ -2319,3 +2359,32 @@ All read-only; none holds data. Definitions live in `migrations/`.
 **`v_citation_type_mismatch`** (w1c) — created 2026-10-21, **superseded by gate G14/G14u/G15** (`scripts/citation-gates/run-citation-qa-gates.py`, Citation_Pool_SOP §2) and **dropped 2026-10-22 (DR-077)**. Do not use or build on it.
 
 **`v_keyword_near_duplicates`** (w1d, extended) — also pairs keywords that equal (via `seo_kw_norm`) the name or an alias of the same entity (`seo_entity_name_list`). Appended columns: `match_reason` (`trigram` | `entity_alias` | `entity_alias+trigram`), `entity_fp`. 223 alias pairs added.
+
+---
+
+## Appendix L — Quality materialized views & page priority 🆕 v1.28 (DR-080)
+
+Definitions live in `migrations/2026-10-23_w34…w36`. The MVs hold derived data only and are refreshed daily by the pg_cron job in F.12; `refreshed_at` on every row says when.
+
+**`mv_keyword_near_pairs`** (W3.4-prep) — columns `brand, kw_a, kw_b, match_reason, entity_fp, refreshed_at`; unique index `uq_mv_keyword_near_pairs`. Pairs are keywords with trigram similarity > 0.72 (`match_reason = 'trigram'`) or that equal the name/alias of the same entity (`'entity_alias'`; helper `seo_entity_name_list`). Merged/Dropped entities are ignored. Refresh with `select refresh_keyword_near_pairs();` after large keyword imports (about a minute).
+
+**`v_keyword_near_duplicates`** (rebuilt) — same name and columns as v1.25 (Appendix K); joins `mv_keyword_near_pairs` to the **live** keyword and page tables, so `keyword_use_as` / `page_a` / `page_b` are always current and only the pairs can be stale.
+
+**`v_page_keyword_orphans`** (W3.4-prep, new) — one row per reference in `seo_website_page_master` (`target_keyword_fp`, `semantic_keywords_fps`, `primary_entity_fp`, `related_entities_fps`) that points at nothing, or at a Merged/Dropped entity. These columns have no foreign key, so this view is the guard. Expected: 0 rows.
+
+**`mv_page_priority`** (W4, handover data-quality #7) — one row per Live page: `brand_id, page_fingerprint, sitemap_node_id, slug, page_type, score` (0–100), `top_signals`, `suggested_action`, `signals jsonb`, `refreshed_at`; unique index on `page_fingerprint`. Method: each signal becomes a within-brand `percent_rank` (ties share a rank, so one outlier cannot dominate); a signal a brand has no data for at all is excluded and the remaining weights are rescaled to 100 (missing data never lowers a score); `weak_evidence` is binary. Weights come from `seo_priority_weights` (§10.3). Signals (28-day window unless noted):
+
+| Signal | Reads | Suggested action |
+|---|---|---|
+| `striking_impressions` | GSC impressions while ranking 4–20 | push to page 1 |
+| `ctr_gap` | expected clicks (brand's own CTR-by-position curve, 90 d) minus actual | rewrite title/meta |
+| `organic_contacts` | `tsa_bond` contacts whose entry channel is `organic_search` | money page: improve first |
+| `duplication` | title near-duplicates + `v_keyword_near_duplicates` pairs | merge or differentiate |
+| `orphan_risk` | `seo_website_page_master.orphan_risk_score` | add internal links |
+| `weak_evidence` | 1 when the page cites no tier 1–3 source | upgrade citations |
+| `ux_friction` | Clarity quick-backs + dead clicks + rage clicks | fix landing UX |
+| `ai_visits` | AI-agent retrievals (`seo_ai_agent_visits`) | template candidate, keep fresh |
+
+Product-value weighting of contacts is deferred until `tsa_product_value` holds real values (all 35 rows were placeholders on 2026-10-23).
+
+**`v_page_priority`** — `select * from mv_page_priority`. **`refresh_page_priority()`** — refresh; run after `refresh_keyword_near_pairs()`.
