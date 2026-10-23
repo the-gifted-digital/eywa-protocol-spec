@@ -385,8 +385,8 @@ git commit -m "Brand bootstrap: eywa-{brand-id}
 Folder skeleton + brand-config + core docs initialized from
 templates/ baseline. Phase A brand-concept.md ready for editing.
 
-Spec snapshot pinned: Bible v3.41 / Schema v1.29 / Templates v1.9
-                      / Handover v1.19 / DR v1.48
+Spec snapshot pinned: Bible v3.42 / Schema v1.29 / Templates v1.9
+                      / Handover v1.19 / DR v1.49
 
 Per Handover §9.3 — eywa_spec_snapshot block records this entry point.
 Per DR-022 (Locked) — Lean Phase B workflow adopted from inception."

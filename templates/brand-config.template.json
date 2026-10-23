@@ -1,12 +1,13 @@
 {
   "$schema": "https://eywa-protocol.thegifteddigital.com/schemas/brand-config-v1.json",
   "_doc": "Brand-level configuration for {BRAND_NAME} — EYWA Protocol implementation. Replace {PLACEHOLDERS} with actual values. Fields with TBD = pending operator info. See Bible §25.6 for field details.",
-  "_template_version": "1.8",
-  "_template_last_updated": "2026-10-23",
+  "_template_version": "1.9",
+  "_template_last_updated": "2026-10-24",
   "_template_v1_1_changes": "Added brand_structure (DR-032 Locked 2026-05-25) — every brand picks monolithic | multi_center upfront. Added centers[] + parent_network conditional blocks for multi_center brands. See eywa-vitality-hospital/brand-config.json for canonical multi_center example.",
   "_template_v1_2_changes": "Refreshed eywa_spec_snapshot defaults to the latest stack (Bible 3.24 / Schema 1.20 / Templates 1.8 / Handover 1.18 / DR 1.20) as of 2026-06-03; locked/proposed DR sets updated — DR-001..022 + 024/025/028..034 Locked, DR-026 Proposed (lock target 2026-06-21), DR-023/027 reserved/future.",
   "_template_v1_3_changes": "Refreshed eywa_spec_snapshot to Bible 3.26 / Schema 1.21 / DR 1.22 (2026-06-04); added DR-035 (image storage, Astro) + DR-036 (condition/symptom CPT split) to drs_locked_at_snapshot; DR-026 remains the only Proposed. Added tier_1_active.symptom=true — Tier-1 Core is now 9 CPTs per DR-036 (symptom is its own always-on CPT, sibling to condition).",
   "_template_v1_4_changes": "Refreshed eywa_spec_snapshot to Bible 3.33 / Schema 1.23 / Templates 1.9 / DR 1.26 (2026-06-14); added DR-037 (seo_payer_partners canonical), DR-038 (seo_media_assets DAM + Cloudflare config cols), DR-039 (Content Tension Model + T5 service skeleton), DR-040 (R2 per-brand bucket isolation + key/folder naming) to drs_locked_at_snapshot. NEW Astro R2 media skeleton at folder-skeleton/deployment/cloudflare/r2-media.template.md (DR-040/DR-035/DR-038) — Astro/Cloudflare brands copy + fill it; WP brands skip. No new CPT (Tier-1 Core stays 9). DR-026 remains the only Proposed.",
+  "_template_v1_9_changes": "Refreshed eywa_spec_snapshot to Bible 3.42 / Schema 1.29 / DR 1.49 (2026-10-24). DR-082 (site-wide quick-win triage W38-W39: target-or-reason for every Live page, owner = the page Google already ranks, page_master merge convention, 14-day hold rule) is Accepted, not Locked, so it is not added to drs_locked_at_snapshot. No new template files.",
   "_template_v1_8_changes": "Refreshed eywa_spec_snapshot to Bible 3.41 / Schema 1.29 / DR 1.48 (2026-10-23). DR-081 (knowledge-graph quality round 3: keyword/page entity links W3.4a-c, trigger-maintained keyword primary_entity_name, same-round brand-repo checklist for every repo that binds entities) is Accepted, not Locked, so it is not added to drs_locked_at_snapshot. No new template files.",
   "_template_v1_7_changes": "Refreshed eywa_spec_snapshot to Bible 3.40 / Schema 1.28 / DR 1.47 (2026-10-23). DR-080 (knowledge-graph quality round 2: entity_type rule + 12 retypes, daily pg_cron refresh of mv_keyword_near_pairs / mv_page_priority, seo_priority_weights, merge/retype checklist) is Accepted, not Locked, so it is not added to drs_locked_at_snapshot. No new template files.",
   "_template_v1_6_changes": "Refreshed eywa_spec_snapshot to Bible 3.39 / Schema 1.27 / DR 1.46 (2026-10-23); added DR-078 (Page change history — live-crawl SEO change log) to drs_locked_at_snapshot. NEW per-brand caller workflow at templates/brand-workflows/page-history.caller.yml — each brand copies it to .github/workflows/page-history.yml and sets its brand_id. DR-079 (knowledge-graph data quality round: MeSH for procedure/device, evidence_verified_*, aliases/lifecycle CHECKs) is Accepted, not Locked, so it is not added to drs_locked_at_snapshot. Note: DR-042..DR-077 and DR-079 (except DR-078, added here) are still absent from drs_locked_at_snapshot (pre-existing gap, not part of this bump).",
@@ -173,11 +174,11 @@
 
   "eywa_spec_snapshot": {
     "_doc": "Per Handover §9.3 — pin spec versions at Stage entry, re-snapshot at each Stage gate. Brands implement Locked DRs as binding; Proposed DRs are preview/informational unless explicitly opted-in.",
-    "bible_version": "3.41",
+    "bible_version": "3.42",
     "schema_version": "1.29",
     "templates_version": "1.9",
     "handover_version": "1.19",
-    "decision_records_version": "1.48",
+    "decision_records_version": "1.49",
     "drs_locked_at_snapshot": [
       "DR-001", "DR-002", "DR-003", "DR-004", "DR-005",
       "DR-006", "DR-007", "DR-008", "DR-009", "DR-010",

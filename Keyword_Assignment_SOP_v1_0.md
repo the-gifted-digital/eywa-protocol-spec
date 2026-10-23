@@ -599,6 +599,33 @@ where brand = :brand and page_a is not null and page_b is not null and kw_simila
 
 > หมายเหตุ: ณ 2026-10-22 semantic list ถูกล้างเพื่อให้เหลือผู้ถือเดียว (807 คีย์ที่ชน — ดู DR-076) จึงบางมากจนกว่าจะมีรอบ re-allocate ทั้งชุด
 
+### 10.2 เลือก owner และบันทึก merge (DR-082, 2026-10-24)
+
+**หน้าไหนต้องมี target:** หน้า Live ทุกหน้าที่เป็น service / condition / treatment / ราคา / guide / เปรียบเทียบ ต้องมี target หรือมีเหตุผลเขียนไว้ (research gap หรือ cannibal) · หน้าที่**ไม่ต้องมี**: doctor profile, review/before-after, promotion, news/event, policy/legal, contact/about, hub/listing, opt-in/thank-you
+
+**แหล่งคีย์ (เรียงลำดับ):** (a) query ของหน้านั้นเองใน GSC 90 วัน → (b) คีย์ว่างใน registry ของแบรนด์ → (c) DataForSEO search volume TH/th · คีย์ใหม่ใช้ fingerprint `lower(brand||'::'||target_market||'::'||target_language||'::'||keyword)` และเช็ค `kw_norm` ซ้ำในแบรนด์ก่อน insert
+
+**Owner ของ intent ที่หลายหน้าแข่งกัน = หน้าที่ Google จัดอันดับอยู่แล้ว** — ดู GSC page×query 28 วันของ query หลัก (impressions + position) ไม่ใช่ page type หรือแผนเดิม · ถ้า title ของหน้า live ถูกตั้งตรงกับข้อมูลแล้ว ให้ DB ตาม · หน้าอื่นที่แข่งอยู่ = cannibal → merge+301 เข้า owner หรือ re-angle (ห้ามยัดคีย์ที่สองให้)
+
+**บันทึก merge ใน page_master (ทุกแบรนด์แบบเดียวกัน):**
+
+```sql
+update seo_website_page_master
+   set status = 'Merged',
+       redirect_target = 'https://<host>/<target-slug>/',   -- URL เต็ม
+       target_keyword_fp = null,
+       semantic_keywords_fps = null,                        -- trigger DR-076 ข้อ 5
+       reconciliation_notes = coalesce(reconciliation_notes || ' | ', '') || '<wave> merge <date> → /<target-slug>/'
+ where brand_id = :brand and slug = :slug and status = 'Live';
+-- แล้วคำนวณ keyword_use_as ใหม่ทุกคีย์ที่หน้านั้นเคยถือ (excluded ห้ามเขียนทับ)
+```
+
+คีย์ที่ว่างเพราะ merge ถ้าเป็น intent เดียวกับปลายทาง ให้ปลายทางรับไปใน migration เดียวกัน (ปล่อยต้นทางก่อน แล้วค่อย bind ปลายทาง) · 301 ที่เปลี่ยนปลายทางภายหลัง แก้แค่ `redirect_target`
+
+**Hold:** หน้าที่แก้ title/H1/meta หรือเขียนใหม่ใน 14 วันล่าสุด → รอผล 14/28 วัน (DR-078) ก่อนแก้ซ้ำ · หน้าที่แก้แค่ schema/ลิงก์ และการ merge ทำได้ทันที · ผล 14 วันที่ไม่ติดลบอนุญาตให้ทำงานชั้นถัดไปได้เลย
+
+**Schema type ตามเรื่องของหน้า** (ภาวะ = MedicalCondition, หัตถการ = MedicalProcedure) — cluster ใช้กำหนดทิศทางลิงก์เท่านั้น (spoke → hub; ข้าม cluster ได้เฉพาะไป hub)
+
 ---
 
 ## 11. บันทึกและตรวจสอบย้อนหลัง
@@ -670,6 +697,7 @@ where brand = :brand and page_a is not null and page_b is not null and kw_simila
 
 - แก้ SOP นี้ = bump version + บันทึกเหตุผลท้ายไฟล์
 - 2026-10-23 · DR-081: เพิ่ม §3.1 กฎ primary entity ของ keyword/หน้า (บทเรียน W3.4a–c)
+- 2026-10-24 · DR-082: เพิ่ม §10.2 เลือก owner + บันทึก merge + hold rule (บทเรียน W38–W39)
 - ข้อ 4 (B1, B9) และข้อ 8 (compliance) แก้ไม่ได้โดยฝ่าย SEO ต้องผ่านผู้รับอนุญาตสถานพยาบาล
 - เนื้อหาการแพทย์บนหน้าที่เกิดจาก SOP นี้ยังต้องผ่าน sign-off ของ ทพ.ดร. อมรพงษ์ ตามกระบวนการเดิม (`seo_editorial_reviews`)
 

@@ -1,8 +1,8 @@
 # 📖 คัมภีร์ EYWA™ PROTOCOL
 ## The Universal Knowledge Graph SEO Specification for the AI Era
 
-**Version:** 3.41  
-**Last Updated:** 2026-10-23  
+**Version:** 3.42  
+**Last Updated:** 2026-10-24  
 **Trademark:** EYWA™ (Class 35+42, DIP Thailand, filed 2026-04-20)  
 **Created by:** The Gifted Digital Marketing Co., Ltd.  
 **Scope:** Universal standard สำหรับการบริหารจัดการ SEO + Knowledge Graph แบบ multi-vertical, multi-brand, multi-specialty, multi-lingual, multi-location, **AI-future-ready** ในยุค AI Search (2026+) — ครอบคลุม healthcare verticals (clinic ทุก specialty, hospital, dental, sleep medicine, aesthetic, wellness, healthcare media) extensible to other regulated YMYL niches  
@@ -143,6 +143,17 @@ Throughout this Bible:
 
 
 ## 📜 Changelog
+
+### v3.42 (2026-10-24) — DR-082: site-wide quick-win triage (W38–W39) 🎯🔀
+
+Companion to **DR-082 (Accepted 2026-10-24; applied to production 2026-10-23/24)**. **Schema v1.29 unchanged** (data only). No new Bible Part.
+
+- 🎯 **Every Live page that should have a target has one, or a written reason:** source order = the page's own GSC queries (90 days) → free registry keyword → DataForSEO search volume (TH/th). No-target classes: doctor, review/before-after, promotion, news/event, policy/legal, contact/about, hub/listing, opt-in/thank-you. 4 brands: 139 bound, 217 no-target, 79 cannibal, 11 research gap.
+- 👑 **Owner of a contested intent = the page Google already ranks for it** (GSC page×query, 28 days), not the planned page type. 13 owner moves across 4 brands.
+- 🔀 **Merge record convention in page_master:** `status='Merged'`, full-URL `redirect_target`, target and semantics cleared, `keyword_use_as` recomputed; a freed keyword of the same intent goes to the merge target.
+- ⏸️ **Hold rule:** pages with a title/H1/meta edit or rewrite in the last 14 days wait for the DR-078 14/28-day read; schema/link-only pages and merges go now; a non-negative 14-day read allows the next layer of work.
+- 🧩 **Schema type follows the page subject; clusters only set link direction** (e.g. TMD condition cluster separate from orthognathic surgery; condition pages inside a procedure cluster stay MedicalCondition).
+- 📉 Finding: VitalSleep and TC lost most top-10 queries in April 2026 (long-tail that stopped getting impressions); Vertex and Clearisma did not.
 
 ### v3.41 (2026-10-23) — DR-081: knowledge-graph quality round 3 (keyword/page entity links, W3.4a–c) 🔗🧭
 
