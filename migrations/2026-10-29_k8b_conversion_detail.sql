@@ -1,4 +1,4 @@
--- K8b · Kameie: conversion detail — CTA, page type, branch, locale, campaign, behaviour, journeys, call lines · 2026-10-29
+-- K8b · Kameie: conversion detail — CTA, page type, branch, locale, campaign, behaviour, journeys, call lines (applied 2026-10-29) · 2026-10-29
 -- Builds on K8a. Every new dimension is optional: the UI shows a switch / card only when the brand has data for it.
 -- 1) console.mv_conv_detail — per Tsaheylu bond: CTA, page type, branch, locale, campaign name, scroll / time / pages
 --    before converting, journey (query strings stripped), and calls Tsaheylu matched to the bond (none matched yet).
