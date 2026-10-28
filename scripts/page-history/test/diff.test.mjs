@@ -189,3 +189,19 @@ test('log row id is deterministic for the same transition and differs when prev_
   assert.notEqual(a.id, c.id);
   assert.notEqual(a.id, run(prev, ok({}, { title: 'Other' })).log[0].id);
 });
+
+test('Merged page: state gets http_status/final_url, content fields stay null and are never logged', () => {
+  const M = { ...IDS, merged: true };
+  const target = 'https://example.com/b';
+  const m0 = decide(null, ok({ final_url: target, fields: {} }), URL1, T0, 'r0', M);
+  assert.deepEqual(m0.log, []);
+  assert.equal(m0.state.final_url, target); assert.equal(m0.state.http_status, 200);
+  assert.equal(m0.state.consecutive_failures, 0); assert.ok(m0.state.last_ok_at);
+  for (const k of ['title', 'meta_description', 'h1', 'canonical', 'robots', 'content_hash', 'schema_types']) assert.equal(m0.state[k], null);
+  // same redirect next night: nothing logged; a Live page turning Merged drops its fields silently
+  assert.deepEqual(decide(m0.state, ok({ final_url: target }), URL1, T1, 'r1', M).log, []);
+  assert.deepEqual(decide(base(), ok({ final_url: URL1 }), URL1, T1, 'r1', M).log, []);
+  // redirect removed / retargeted: only final_url is logged
+  const moved = decide(m0.state, ok({ final_url: URL1 }), URL1, T1, 'r1', M);
+  assert.deepEqual(moved.log.map((r) => [r.field, r.old_value, r.new_value]), [['final_url', target, URL1]]);
+});

@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join, resolve } from 'node:path';
 import { extractFields } from './extract.mjs';
 import { decide } from './diff.mjs';
-import { loadTargets, loadStates, saveResult } from './db.mjs';
+import { loadTargets, loadStates, saveResult, saveLinks } from './db.mjs';
 
 const SUPABASE_URL = 'https://lffcbeszjqzioobqfdav.supabase.co';
 const UA = 'EYWA-PageHistory/1.0 (+https://eywaintelligence.com)';
@@ -18,10 +18,11 @@ function fail(url, http_status, error) {
   return { kind: 'fail', http_status, error };
 }
 
-export async function fetchPage(url, prev, { timeoutMs = TIMEOUT_MS, ua = UA, cfg = {} } = {}) {
+// merged: a Merged page checked only for its redirect: unconditional GET, body not parsed, no links.
+export async function fetchPage(url, prev, { timeoutMs = TIMEOUT_MS, ua = UA, cfg = {}, merged = false } = {}) {
   const headers = { 'user-agent': ua, accept: 'text/html,application/xhtml+xml' };
   // Conditional GET only against a healthy previous observation of this exact url.
-  if (prev && prev.url === url && prev.last_ok_at && prev.consecutive_failures === 0 &&
+  if (!merged && prev && prev.url === url && prev.last_ok_at && prev.consecutive_failures === 0 &&
       prev.http_status >= 200 && prev.http_status <= 299) {
     if (prev.etag) headers['if-none-match'] = prev.etag;
     if (prev.last_modified) headers['if-modified-since'] = prev.last_modified;
@@ -30,12 +31,12 @@ export async function fetchPage(url, prev, { timeoutMs = TIMEOUT_MS, ua = UA, cf
     const res = await fetch(url, { headers, redirect: 'follow', signal: AbortSignal.timeout(timeoutMs) });
     if (res.status === 304) return { kind: 'not_modified', http_status: 304 };
     if (res.status < 200 || res.status > 299) { await res.body?.cancel(); return fail(url, res.status, `HTTP ${res.status}`); }
-    const html = await res.text();
-    return {
-      kind: 'ok', http_status: res.status, final_url: res.url,
-      etag: res.headers.get('etag'), last_modified: res.headers.get('last-modified'),
-      fields: extractFields(html, cfg),
-    };
+    const meta = { kind: 'ok', http_status: res.status, final_url: res.url,
+      etag: res.headers.get('etag'), last_modified: res.headers.get('last-modified') };
+    if (merged) { await res.body?.cancel(); return { ...meta, fields: {}, links: null }; }
+    const { links, ...fields } = extractFields(await res.text(), cfg, res.url);
+    // links: null = don't touch stored links (non-HTML body)
+    return { ...meta, fields, links: /html/i.test(res.headers.get('content-type') ?? '') ? links : null };
   } catch (e) {
     return fail(url, null, e?.name === 'TimeoutError' ? 'timeout' : String(e?.cause?.code ?? e?.message ?? e));
   }
@@ -69,7 +70,8 @@ async function main() {
 
   const db = createClient(SUPABASE_URL, key);
   const runId = `${args.brand}-${new Date().toISOString()}`;
-  const summary = { checked: 0, ok: 0, not_modified: 0, failed: 0, log_rows: 0 };
+  const runStartedAt = new Date().toISOString();
+  const summary = { checked: 0, ok: 0, not_modified: 0, failed: 0, log_rows: 0, merged: 0, link_pages: 0, link_rows: 0, link_errors: 0 };
   let log = []; let states = [];
   const flush = async () => {
     if (!args.dry) await saveResult(db, { log, states });
@@ -81,8 +83,15 @@ async function main() {
     const prevStates = await loadStates(db, args.brand);
     for (const t of targets) {
       const prev = prevStates.get(t.page_fp) ?? null;
-      const obs = await fetchPage(t.url, prev, { cfg });
-      const r = decide(prev, obs, t.url, new Date(), runId, { page_fp: t.page_fp, brand_id: t.brand_id });
+      const obs = await fetchPage(t.url, prev, { cfg, merged: !!t.merged });
+      const r = decide(prev, obs, t.url, new Date(), runId, { page_fp: t.page_fp, brand_id: t.brand_id, merged: !!t.merged });
+      if (t.merged) summary.merged++;
+      if (obs.links) {
+        summary.link_pages++; summary.link_rows += obs.links.length;
+        if (args.dry) console.log(JSON.stringify({ links: t.page_fp, url: t.url, total: obs.links.length, in_main: obs.links.filter((l) => l.in_main).length }));
+        // A links failure must not stop the change log: warn, count, keep crawling.
+        else await saveLinks(db, t.page_fp, t.brand_id, obs.links, runStartedAt).catch((e) => { summary.link_errors++; console.warn(`links: ${e.message}`); });
+      }
       log.push(...r.log); states.push(r.state);
       summary.checked++; summary.log_rows += r.log.length;
       summary[obs.kind === 'ok' ? 'ok' : obs.kind === 'fail' ? 'failed' : 'not_modified']++;

@@ -1,7 +1,8 @@
 # Page history — live-page change crawler
 
 Brand-agnostic nightly crawler. Every `Live` page of a brand is fetched, its SEO fields are compared with
-the last observation, and each real change is appended to `seo_page_change_log`. Design and rationale:
+the last observation, and each real change is appended to `seo_page_change_log`. Its internal links go to
+`seo_page_live_links`. `Merged` pages are fetched too, only to check their redirect. Design and rationale:
 `proposals/2026-10-21-page-change-history.md`.
 
 ## What it records
@@ -26,6 +27,13 @@ observation of a page is a baseline and writes no log rows.
 Each row carries `old_value`, `new_value`, `detected_at`, `prev_ok_at` (the change went live between
 `prev_ok_at` and `detected_at`), `change_date` (Asia/Bangkok) and `run_id`.
 
+**Merged pages.** Pages with `status = 'Merged'`, a `redirect_target` and a `canonical_url` are crawled
+after the Live ones (plain GET, redirects followed, never conditional, body not parsed). They get a normal
+`seo_page_live_state` row with `http_status` and `final_url`, so `final_url` vs `redirect_target` can be checked
+in SQL. A 301 that lands on a 2xx page is a successful observation (`http_status` is the final 200, not the
+301). Only `http_status` / `final_url` / `url` changes are logged for them; title, h1, `content_hash` etc. stay
+`null` and are never logged (a page going Live → Merged drops them silently). No links are collected.
+
 **Failures.** Every response that is not 2xx and not 304 (including 403, 429 and any 3xx that is not
 followed) and every network error or timeout counts as a failure: it only increments
 `consecutive_failures`; nothing is logged. After **3 consecutive failures** one `http_status` row is logged. A single blip never becomes a
@@ -34,6 +42,24 @@ change. In state, `http_status` `0` means a fetch error (no HTTP response); it i
 **Conditional GET.** If the previous observation of the same URL was healthy (2xx, no failures), the crawler
 sends `If-None-Match` / `If-Modified-Since` from the stored `etag` / `last_modified`. A `304` costs no
 parsing and logs nothing. After a failure or a URL change it fetches unconditionally.
+
+## Internal links
+
+For every Live page fetched with a 2xx HTML body, the crawler replaces that page's rows in
+`seo_page_live_links` (primary key `from_page_fp, to_url`). A 304, a failure or a non-HTML body leaves the
+stored links untouched. Links come from the whole document (before the main-content strip).
+
+| column | meaning |
+|---|---|
+| `to_url` | `<a href>` resolved against the page's final URL; same host only (`www.` = bare host); `mailto:` / `tel:` / `#…` / `javascript:` dropped; query and fragment stripped; normalised like `seo_norm_url` |
+| `to_slug` | path without leading/trailing `/`, root = `home` (same rule as `console.url_slug`). Self-links (slug = the page's own) are dropped |
+| `anchor` | collapsed link text, else `img alt`, else `aria-label`; ≤ 200 chars. With several occurrences: the first in-main one |
+| `in_main` | inside the main-content element (`main_selector` → `main` → `article` → `body`) and not inside `nav` / `header` / `footer`; true if **any** occurrence is |
+| `nofollow` | `rel` contains `nofollow`; true only if **every** occurrence is |
+| `occurrences` | `<a>` count for this `to_url` on the page |
+| `first_seen_at` / `last_seen_at` | first_seen_at is kept across runs; each run upserts with `last_seen_at = now`, then deletes the page's rows with `last_seen_at` before the run start |
+
+A links write failure (after one retry) is warned and counted in `link_errors`; it never stops the change log.
 
 ## Running locally
 
@@ -44,14 +70,15 @@ scheduled run.
 ```bash
 cd scripts/page-history && npm ci
 export SUPABASE_SERVICE_KEY=...                 # service key, never commit it
-node crawl.mjs --brand vth-biodent --dry-run --limit 20   # prints would-be log rows, writes nothing
+node crawl.mjs --brand vth-biodent --dry-run --limit 20   # prints would-be log rows + link counts, writes nothing
 node crawl.mjs --brand vth-biodent                        # real run
 npm test
 ```
 
 Flags: `--brand <brand_id>` (slug, required), `--dry-run` (no DB writes), `--limit N` (first N pages).
 `--brands-dir <dir>` is a test hook that swaps the config directory. The last line of output is a JSON
-summary (`checked`, `ok`, `not_modified`, `failed`, `log_rows`).
+summary (`checked`, `ok`, `not_modified`, `failed`, `log_rows`, `merged`, `link_pages`, `link_rows`,
+`link_errors`).
 
 **Deleting pages.** A page with change-log rows (or notes) cannot be hard-deleted from
 `seo_website_page_master` (FK, NO ACTION). Archive it via `status` instead. Its `seo_page_live_state` row is
