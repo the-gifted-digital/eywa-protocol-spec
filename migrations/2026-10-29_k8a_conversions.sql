@@ -1,4 +1,4 @@
--- K8a · Kameie: conversions from Tsaheylu (public.tsa_bond / tsa_call) · 2026-10-29
+-- K8a · Kameie: conversions from Tsaheylu (public.tsa_bond / tsa_call) (applied 2026-10-29) · 2026-10-29
 -- 1) console.mv_conv_events — one row per Tsaheylu bond (LINE / tel click), PII stripped, with both attributions
 --    resolved against the plan: "convert" (page where the CTA was clicked) and "entry" (landing page of the visit).
 --    Internal only (no grants). Refreshed hourly.
