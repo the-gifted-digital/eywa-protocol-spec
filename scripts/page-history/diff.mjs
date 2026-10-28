@@ -22,6 +22,7 @@ export function logId(page_fp, field, prev_ok_at, old_value, new_value) {
 }
 
 // ids: {page_fp, brand_id} for the target; only needed when prev is null (defaults to prev's).
+// ids.merged: a Merged page crawled to verify its redirect; only http_status / final_url are tracked.
 export function decide(prev, obs, targetUrl, now, runId, ids = {}) {
   const at = now.toISOString();
   const wasOk = !!prev?.last_ok_at;
@@ -60,12 +61,14 @@ export function decide(prev, obs, targetUrl, now, runId, ids = {}) {
   state.last_ok_at = at;
   if (obs.kind === 'not_modified') return { log, state };
 
-  const f = obs.fields;
+  const f = ids.merged ? {} : obs.fields; // merged: content fields stay null, never logged
   if (wasOk) {
     if (!same(prev.http_status, obs.http_status)) row('http_status', logStatus(prev.http_status), obs.http_status);
     if (!same(prev.final_url, obs.final_url)) row('final_url', prev.final_url, obs.final_url);
-    for (const k of TEXT_FIELDS) if (!same(prev[k], f[k])) row(k, prev[k], f[k]);
-    if (!same(sorted(prev.schema_types), sorted(f.schema_types))) row('schema_types', sorted(prev.schema_types), sorted(f.schema_types));
+    if (!ids.merged) {
+      for (const k of TEXT_FIELDS) if (!same(prev[k], f[k])) row(k, prev[k], f[k]);
+      if (!same(sorted(prev.schema_types), sorted(f.schema_types))) row('schema_types', sorted(prev.schema_types), sorted(f.schema_types));
+    }
   }
   Object.assign(state, {
     http_status: obs.http_status, final_url: obs.final_url, etag: obs.etag, last_modified: obs.last_modified,

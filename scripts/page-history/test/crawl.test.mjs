@@ -63,3 +63,22 @@ test('returns fail on 404 and on timeout', async () => {
   const b = await fetchPage(`${base}/slow`, null, opts);
   assert.equal(b.kind, 'fail'); assert.equal(b.http_status, null); assert.ok(b.error);
 });
+
+test('ok HTML returns links; Merged 301 to target is ok with final_url, no fields, no links, no conditional GET', async () => {
+  const o = await fetchPage(`${base}/new`, null, opts);
+  assert.deepEqual(o.links, []);
+  assert.equal(o.fields.links, undefined);
+  const url = `${base}/old`;
+  const m = await fetchPage(url, healthy(url), { ...opts, merged: true });
+  assert.equal(m.kind, 'ok'); assert.equal(m.http_status, 200);
+  assert.equal(m.final_url, `${base}/new`);
+  assert.deepEqual(m.fields, {}); assert.equal(m.links, null);
+  assert.equal(seen.at(-1).h['if-none-match'], undefined);
+});
+
+test('non-HTML 2xx body gives links null (stored links left untouched)', async () => {
+  const o = await fetchPage(`${base}/cond`, null, opts); // text/html
+  assert.ok(Array.isArray(o.links));
+  const s = await fetchPage(`${base}/slow`, null, { ...opts, timeoutMs: 3000 }); // no content-type
+  assert.equal(s.kind, 'ok'); assert.equal(s.links, null);
+});

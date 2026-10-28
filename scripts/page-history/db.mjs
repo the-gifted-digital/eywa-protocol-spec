@@ -17,16 +17,21 @@ async function selectAll(build) {
   }
 }
 
+// Live pages, then Merged pages with a redirect_target (crawled only to verify the 301; merged: true).
+// Live comes first so it wins a url collision and fills --limit first.
 export async function loadTargets(db, brandId) {
-  const rows = await selectAll(() => db.from('seo_website_page_master')
-    .select('fingerprint, brand_id, canonical_url').eq('brand_id', brandId).eq('status', 'Live')
-    .not('canonical_url', 'is', null).order('fingerprint'));
+  const q = (status) => selectAll(() => {
+    const b = db.from('seo_website_page_master').select('fingerprint, brand_id, canonical_url')
+      .eq('brand_id', brandId).eq('status', status).not('canonical_url', 'is', null);
+    return (status === 'Merged' ? b.not('redirect_target', 'is', null) : b).order('fingerprint');
+  });
+  const rows = [...await q('Live'), ...(await q('Merged')).map((r) => ({ ...r, merged: true }))];
   const seen = new Map(); const out = [];
   for (const r of rows) {
     const k = normUrl(r.canonical_url);
     if (seen.has(k)) { console.warn(`url collision: ${r.fingerprint} (${r.canonical_url}) duplicates ${seen.get(k)}; keeping first`); continue; }
     seen.set(k, r.fingerprint);
-    out.push({ page_fp: r.fingerprint, brand_id: r.brand_id, url: r.canonical_url });
+    out.push({ page_fp: r.fingerprint, brand_id: r.brand_id, url: r.canonical_url, ...(r.merged && { merged: true }) });
   }
   return out;
 }
@@ -63,4 +68,16 @@ export async function saveResult(db, { log = [], states = [] }, { wait = sleep }
   const rest = [...stateOf.values()];
   for (let i = 0; i < rest.length; i += CHUNK)
     await step('batch state upsert', wait, () => db.from('seo_page_live_state').upsert(rest.slice(i, i + CHUNK), { onConflict: 'page_fp' }));
+}
+
+// One page's live links: upsert every link seen now (first_seen_at is left to its default / kept), then drop
+// that page's rows not seen since runStartedAt. Only call it for a page fetched with an HTML body.
+export async function saveLinks(db, page_fp, brand_id, links, runStartedAt, { wait = sleep } = {}) {
+  const last_seen_at = new Date().toISOString();
+  const rows = links.map((l) => ({ from_page_fp: page_fp, brand_id, to_url: l.to_url, to_slug: l.to_slug, anchor: l.anchor,
+    in_main: l.in_main, nofollow: l.nofollow, occurrences: l.occurrences, last_seen_at }));
+  for (let i = 0; i < rows.length; i += CHUNK)
+    await step(`${page_fp} links upsert`, wait, () => db.from('seo_page_live_links').upsert(rows.slice(i, i + CHUNK), { onConflict: 'from_page_fp,to_url' }));
+  await step(`${page_fp} stale links delete`, wait, () => db.from('seo_page_live_links').delete()
+    .eq('from_page_fp', page_fp).lt('last_seen_at', runStartedAt));
 }
