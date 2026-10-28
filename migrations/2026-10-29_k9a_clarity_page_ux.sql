@@ -1,4 +1,4 @@
--- K9a · Kameie: page UX from Microsoft Clarity (public.seo_clarity_daily via v_clarity_page_daily) · 2026-10-29
+-- K9a · Kameie: page UX from Microsoft Clarity (public.seo_clarity_daily via v_clarity_page_daily) (applied 2026-10-29) · 2026-10-29
 -- Clarity is pulled once a day per brand (numOfDays=1, URL x Device), so days add up without double counting.
 -- 1) console.mv_clarity_daily   — per brand x day x device: sessions and friction sessions (trend).
 -- 2) console.mv_clarity_page_28d — per brand x page x device ('All' = every device): last 28 days of Clarity data vs the
