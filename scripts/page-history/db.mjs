@@ -19,13 +19,16 @@ async function selectAll(build) {
 
 // Live pages, then Merged pages with a redirect_target (crawled only to verify the 301; merged: true).
 // Live comes first so it wins a url collision and fills --limit first.
+// A Merged page whose canonical_url was already moved to its target is crawled at its old address, rebuilt from the slug.
 export async function loadTargets(db, brandId) {
   const q = (status) => selectAll(() => {
-    const b = db.from('seo_website_page_master').select('fingerprint, brand_id, canonical_url')
+    const b = db.from('seo_website_page_master').select('fingerprint, brand_id, canonical_url, slug, redirect_target')
       .eq('brand_id', brandId).eq('status', status).not('canonical_url', 'is', null);
     return (status === 'Merged' ? b.not('redirect_target', 'is', null) : b).order('fingerprint');
   });
-  const rows = [...await q('Live'), ...(await q('Merged')).map((r) => ({ ...r, merged: true }))];
+  const oldUrl = (r) => (r.slug && normUrl(r.canonical_url) === normUrl(r.redirect_target)
+    ? new URL(`/${r.slug.replace(/^\/+|\/+$/g, '')}/`, r.canonical_url).href : r.canonical_url);
+  const rows = [...await q('Live'), ...(await q('Merged')).map((r) => ({ ...r, canonical_url: oldUrl(r), merged: true }))];
   const seen = new Map(); const out = [];
   for (const r of rows) {
     const k = normUrl(r.canonical_url);

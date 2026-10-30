@@ -125,6 +125,20 @@ test('loadTargets adds Merged pages with a redirect_target after Live ones, flag
     { page_fp: 'm1', brand_id: 'b', url: 'https://e.com/old', merged: true }]);
 });
 
+test('loadTargets crawls a Merged page at its slug, not at a canonical_url that already points to the target', async () => {
+  const rows = [
+    { fingerprint: 'l1', brand_id: 'b', status: 'Live', canonical_url: 'https://e.com/new/' },
+    { fingerprint: 'm1', brand_id: 'b', status: 'Merged', canonical_url: 'https://e.com/new/', slug: 'old-page', redirect_target: 'https://e.com/new/' },
+    { fingerprint: 'm2', brand_id: 'b', status: 'Merged', canonical_url: 'https://e.com/y', slug: '/nested/old/', redirect_target: 'https://e.com/y/' },
+    { fingerprint: 'm3', brand_id: 'b', status: 'Merged', canonical_url: 'https://e.com/locations/a/', slug: 'a', redirect_target: 'https://e.com/b/' },
+  ];
+  assert.deepEqual(await loadTargets(fakeDb({ rows }), 'b'), [
+    { page_fp: 'l1', brand_id: 'b', url: 'https://e.com/new/' },
+    { page_fp: 'm1', brand_id: 'b', url: 'https://e.com/old-page/', merged: true },
+    { page_fp: 'm2', brand_id: 'b', url: 'https://e.com/nested/old/', merged: true },
+    { page_fp: 'm3', brand_id: 'b', url: 'https://e.com/locations/a/', merged: true }]);
+});
+
 test('saveLinks upserts in chunks on (from_page_fp,to_url) without first_seen_at, then deletes stale rows', async () => {
   const db = fakeDb();
   const links = Array.from({ length: 201 }, (_, i) => ({ to_url: `https://e.com/${i}`, to_slug: `${i}`, anchor: 'a', in_main: true, nofollow: false, occurrences: 1 }));
