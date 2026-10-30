@@ -562,6 +562,23 @@ These are Notion-only UI fields; operator-managed in Notion, not synced.
 
 ---
 
+### 3.4a DR-083 Person Authority additions 🆕 v1.30 *(pending operator apply — `migrations/2026-10-30_p1a_person_authority.sql`)*
+
+> Companion: `Person_Authority_SOP_v1_0.md`. All three new tables: RLS on, no policies, no grants to anon/authenticated (K0a).
+
+| Table / change | Purpose | Key columns |
+|---|---|---|
+| `seo_authors_reviewers` + 9 cols | person identity | `person_iri` (unique), `entity_home_url`, `wikidata_id`, `orcid_id`, `license_registry_url`, `knows_about_entity_fps[]`, `alumni_of`, `memberships`, `authority_program` (`none`/`active`/`paused`) |
+| `seo_doctor_assignments` + 2 cols | brand profile node | `profile_url` (unique; `@id` = `profile_url#entity`), `display_title` jsonb |
+| **`seo_reviewer_scope`** (new) | gate for byline + `reviewedBy` | `rvsc_` fp · `author_id` · `brand_id` · `cluster_slug` · `scope_level` (`primary`/`co_review`/`excluded`) · `basis` (required unless excluded) · `co_reviewer_fp` (required for co_review) · unique (author, brand, cluster) |
+| **`seo_person_profiles`** (new) | the only store for `sameAs` | `pprf_` fp · `author_id` · `profile_type` · `url` (unique, https) · `brand_id` (required for brand_profile) · `include_in_same_as` · `name_as_displayed` · `last_http_status` · one `entity_home` per author |
+| **`seo_referral_pathways`** (new) | clinical reason for cross-brand links | `rfpw_` fp · `from_cluster_slug` → `to_cluster_slug` · optional brands · `clinical_reason_th` · `endorsed_by_author_fp` (required when approved) |
+| `seo_page_internal_links` + 1 col | | `referral_pathway_fp` → `seo_referral_pathways.fingerprint` |
+| `seo_brand_mentions`, `seo_llm_citations`, `seo_llm_query_simulations` + 1 col | person-level measurement | `subject_author_fp`; `seo_brand_mentions.brand_id` becomes nullable with CHECK brand or subject |
+| Views | gates | `v_person_same_as` · `v_review_scope_violations` · `v_cross_brand_links_without_pathway` · `v_reviewed_flag_without_record` (all `security_invoker`) |
+
+---
+
 ### 3.5 `seo_reviews` (Local SEO — Multi-platform customer reviews) 🔒 v1.11
 
 > **Purpose:** Multi-platform reviews (GBP, Wongnai, Pantip, Facebook, Google Maps) + PDPA workflow for sensitive testimonials.

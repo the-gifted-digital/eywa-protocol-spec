@@ -2,8 +2,8 @@
 
 > **Append-only architectural decision log.** Each record explains WHY a decision was made — not just WHAT.
 
-**Document Version:** 1.49  
-**Last Updated:** 2026-10-24 — DR-082 accepted (site-wide quick-win triage W38–W39 on 4 brands: unbound Live pages get a target from GSC → registry → DataForSEO or a written reason; owner of a contested intent = the page Google already ranks for it; merges are recorded in page_master with a fixed convention; hold/override rules for pages edited in the last 14 days; schema type follows page subject, not cluster) · previously DR-081 accepted (knowledge-graph quality round 3 W3.4a–c: keyword→entity and page→entity links repaired and reviewed, `primary_entity_name` on the keyword table is now a trigger-maintained copy of the graph name, brand-repo same-round checklist extended, `ANALYZE` ops note) · previously DR-080 accepted (knowledge-graph quality round 2: `entity_type` decision rule + 12 retypes, daily pg_cron refresh of the quality MVs, page priority score `v_page_priority`, near-duplicate MV + orphan view; merge/retype checklist now includes brand-repo regeneration) · previously DR-079 accepted (knowledge-graph data-quality round W3.0–W3.3: codes stay in DR-050 stores, MeSH for procedure/device, dedupe, edge verification; migration headers say DR-078 = renumbered) · previously DR-078 accepted (page change history: live-crawl SEO change log, GitHub Actions, central code + brand-owned caller; renumbered after merge) · previously 2026-10-22 — DR-077 accepted (citation tier criteria: in vitro T6, cohort_study T5, `other` = unclassified, SR-guideline by conduct, unmapped study types) · DR-076 accepted (data-quality round 1: "one intent = one URL" enforced on semantic keywords by trigger · keyword conversion view is organic-only and keyword-level · `keyword_use_as` reconciled and released on delete) — applied to production 2026-10-21/22; amends brand DR `DR-EYWA-TSA-003` guidance
+**Document Version:** 1.50  
+**Last Updated:** 2026-10-31 — DR-083 accepted in principle (Person Authority Layer: canonical Person @id on the doctor's entity home + per-brand profile nodes linked by sameAs; reviewer scope as a gate; sameAs registry; referral pathways for cross-brand links; schema P1a/P1b pending operator apply). Previous: 2026-10-24 — DR-082 accepted (site-wide quick-win triage W38–W39 on 4 brands: unbound Live pages get a target from GSC → registry → DataForSEO or a written reason; owner of a contested intent = the page Google already ranks for it; merges are recorded in page_master with a fixed convention; hold/override rules for pages edited in the last 14 days; schema type follows page subject, not cluster) · previously DR-081 accepted (knowledge-graph quality round 3 W3.4a–c: keyword→entity and page→entity links repaired and reviewed, `primary_entity_name` on the keyword table is now a trigger-maintained copy of the graph name, brand-repo same-round checklist extended, `ANALYZE` ops note) · previously DR-080 accepted (knowledge-graph quality round 2: `entity_type` decision rule + 12 retypes, daily pg_cron refresh of the quality MVs, page priority score `v_page_priority`, near-duplicate MV + orphan view; merge/retype checklist now includes brand-repo regeneration) · previously DR-079 accepted (knowledge-graph data-quality round W3.0–W3.3: codes stay in DR-050 stores, MeSH for procedure/device, dedupe, edge verification; migration headers say DR-078 = renumbered) · previously DR-078 accepted (page change history: live-crawl SEO change log, GitHub Actions, central code + brand-owned caller; renumbered after merge) · previously 2026-10-22 — DR-077 accepted (citation tier criteria: in vitro T6, cohort_study T5, `other` = unclassified, SR-guideline by conduct, unmapped study types) · DR-076 accepted (data-quality round 1: "one intent = one URL" enforced on semantic keywords by trigger · keyword conversion view is organic-only and keyword-level · `keyword_use_as` reconciled and released on delete) — applied to production 2026-10-21/22; amends brand DR `DR-EYWA-TSA-003` guidance
 **Format:** Reverse chronological (newest first)
 
 ---
@@ -31,6 +31,45 @@
 ---
 
 ## Decisions Log
+
+### [DR-083] — Person Authority Layer: แพทย์หนึ่งคน หลายแบรนด์ — canonical Person `@id` · reviewer scope เป็นเกต · sameAs registry · referral pathway (2026-10-31)
+
+**Status:** **Accepted** (principle, 2026-10-31) · DB migration **pending operator apply** (P1a schema + P1b backfill) · Scope: **UNIVERSAL** · ใช้ครั้งแรกกับ ทพ.ดร. อมรพงษ์ วชิรมน (`auth_E964C7C14EED40E4`) · amends **Bible §10.5** (§10.5.1 ใหม่) · ต่อยอด **DR-021** (cross-brand links), **DR-050** / Entity_Identity_SOP (one store per fact), **DR-076** (one intent = one URL)  
+**Bible Reference:** v3.43 · §10.5.1  
+**Schema Reference:** v1.30 — `migrations/2026-10-30_p1a_person_authority.sql`, `migrations/2026-10-30_p1b_amornpong_backfill.sql` · SOP: `Person_Authority_SOP_v1_0.md`
+
+**Context:** TGD ต้องการสร้าง authority ระดับบุคคลให้แพทย์ที่ออกตรวจและ review เนื้อหาให้หลายแบรนด์ในเครือ ให้แบรนด์แข็งแรงไปพร้อมกัน และไม่เป็น PBN — ลิงก์ข้ามแบรนด์เกิดเฉพาะที่เนื้อหาแตะเรื่องเดียวกันจริง. สำรวจ GTGT 2026-10-30:
+- `seo_authors_reviewers` 184 แถว: license verified **0**, board 2, `canonical_names` 4, bio 4, LinkedIn 0
+- `seo_doctor_assignments` 262 แถว: **ไม่มีแพทย์คนใดผูกเกิน 1 แบรนด์** — ทพ.ดร. อมรพงษ์ อยู่ใน DB เฉพาะ vth-biodent ทั้งที่ repo ระบุเป็น Medical Director ของ The Face by Vertex (`eywa-the-face-hospital/web/src/data/doctors.json`) และ KOL ของ Vitality Hospital (`eywa-vitality-hospital/brand-config.json`); operator ยืนยัน 2026-10-31 ว่ามีบทบาทใน 8 แบรนด์
+- Bible §10.5 ให้ `@id` คนละตัวต่อแบรนด์ และ `lib/schema.ts` (the-face, vitality) ใช้ `${profileUrl}#entity` — ถูกเรื่องบริบทบทบาท แต่ไม่มีอะไรบอก Google/LLM ว่าทุก node คือคนเดียวกัน
+- ไม่มีที่เก็บว่าแพทย์ review cluster ไหนได้ในแบรนด์ไหน — `reviewedBy` ไม่มีเกตเรื่องขอบเขตความเชี่ยวชาญ
+- `has_medical_review = true` 1,338 หน้า แต่ 923 หน้าไม่มี medical review ที่ approved; VTH BioDent: 688 review ของแพทย์คนเดียว approved 54
+- `seo_page_internal_links.is_cross_brand` 0 แถว; เหตุผลข้ามแบรนด์ (DR-021) เป็น free text ต่อลิงก์
+- `seo_brand_mentions` / `seo_llm_citations` / `seo_llm_query_simulations` วัดได้แค่ระดับแบรนด์
+- `person` 6 แถวใน `seo_entity_graph` ซ้อนกับ `seo_authors_reviewers`
+
+**Decision:**
+1. **Canonical Person `@id` (hybrid, amends §10.5):** แพทย์ในโปรแกรมมี `person_iri` บน entity home ของตัวเอง (ทพ.ดร. อมรพงษ์: `https://dr-amornpong.com/#person`). หน้าโปรไฟล์ในแต่ละแบรนด์**คง** `${profile_url}#entity` + `jobTitle`/`worksFor` ของแบรนด์ และเพิ่ม entity home ใน `sameAs`. Entity home ประกาศ `Person`+`Physician` ที่ `@id = person_iri` พร้อม `sameAs` = registry (ข้อ 3) และ `worksFor` ทุกแบรนด์ที่ active. `reviewedBy` บนบทความชี้โปรไฟล์ในแบรนด์เดียวกัน — ไม่ข้ามโดเมน
+2. **Reviewer scope เป็นเกต:** `seo_reviewer_scope` (แพทย์ × แบรนด์ × cluster) = `primary` / `co_review` / `excluded` + `basis`. ไม่มี `primary`/`co_review` → ห้ามแสดงชื่อแพทย์และห้ามยิง `reviewedBy`. เนื้อหาที่เกินขอบเขต: **ปรับเนื้อหาให้อยู่ในขอบเขต** หรือหา co-reviewer — ไม่ขยาย scope ตามเนื้อหา. `v_review_scope_violations` = 0 สำหรับแพทย์ที่ `authority_program = 'active'`
+3. **sameAs registry:** `seo_person_profiles` หนึ่งแถวต่อหนึ่ง URL (entity home, โปรไฟล์ในแบรนด์, ทะเบียนสภาวิชาชีพ, LinkedIn/ORCID, สื่อ) + `name_as_displayed`. `sameAs` ทุกที่อ่านจาก `v_person_same_as` เท่านั้น
+4. **Referral pathway:** `seo_referral_pathways` (cluster ต้นทาง → ปลายทาง + เหตุผลทางคลินิก + ผู้รับรอง). ลิงก์ `is_cross_brand` ต้องมี `referral_pathway_fp`; `v_cross_brand_links_without_pathway` = 0. ไม่มี pathway = ไม่มีลิงก์
+5. **ขยายตารางเดิม:** `seo_authors_reviewers` + `person_iri`, `entity_home_url`, `wikidata_id`, `orcid_id`, `license_registry_url`, `knows_about_entity_fps[]`, `alumni_of`, `memberships`, `authority_program`. `seo_doctor_assignments` + `profile_url`, `display_title`
+6. **วัดผลระดับบุคคล:** `subject_author_fp` ใน `seo_brand_mentions`, `seo_llm_citations`, `seo_llm_query_simulations`; mention ของแพทย์ไม่ต้องผูกแบรนด์
+7. **ความถูกต้องของ "reviewed" เป็นงานรายแบรนด์:** แต่ละทีมใช้ `v_reviewed_flag_without_record` เช็กแบรนด์ของตัวเอง; `reviewedBy` / `lastReviewed` มาจาก review ที่ approved เท่านั้น
+8. **งานของแพทย์แต่ละคนอยู่ใน repo ของตัวเอง** (ทพ.ดร. อมรพงษ์: repo แยกสำหรับ dr-amornpong.com + แผน authority); spec ถือหลักการและสคีมา, brand repo ถือหน้าโปรไฟล์และ byline
+
+**Rationale:** `@id` ต่อแบรนด์ให้บริบทบทบาท, `sameAs` ไป entity home ให้ identity ร่วม — ได้ทั้งสองโดยไม่รื้อ `schema.ts` ที่รองรับ `d.sameAs` อยู่แล้ว · ชื่อแพทย์บนเนื้อหานอกขอบเขตทำร้าย E-E-A-T ของทั้งแพทย์และแบรนด์และเสี่ยงต่อข้อบังคับวิชาชีพ จึงต้องเป็นเกต ไม่ใช่ guideline · ลิงก์ข้ามแบรนด์ที่ผูกกับ pathway พิสูจน์ได้ว่าเป็นเครือข่ายการรักษาจริง
+
+**Consequences:**
+- Schema v1.30: +3 ตาราง (`seo_reviewer_scope`, `seo_person_profiles`, `seo_referral_pathways`; RLS on, ไม่มี policy ตาม K0a), ขยาย 6 ตาราง, +4 views — base tables 48 → 51 เมื่อ apply
+- P1a + P1b ทดสอบกับ PGlite บนโครงตารางจำลอง (สร้าง/backfill/views/constraints ผ่าน) — ยังไม่เคยรันกับ GTGT
+- brand repo ที่มี `lib/schema.ts`: เติม `sameAs` จาก `v_person_same_as` และเพิ่มเกต reviewer scope ใน build
+- VTH BioDent: matrix ที่เสนอ (`docs/person-authority/amornpong-reviewer-scope.md`) มี 7 cluster / 106 หน้าเป็น co_review — operator เลือกปรับเนื้อหาให้อยู่ในขอบเขตทันตกรรม; `cross-cutting` + `vth-signature` (171 หน้า) ตัดสินรายหน้า
+- **Open follow-ups:** (1) บทบาท + `profile_url` ของ 5 แบรนด์ (VitalSleep Clinic, TC Smile Dental, Clearisma, HisHer Vitality, VTH Dental Vitality) — operator จะส่งให้ → P1c; (2) เพิ่ม dr-amornpong.com เข้า Cloudflare; (3) re-review reviewer scope matrix กับแพทย์; (4) `brands` มีทั้ง `the-face-by-vertex` (page_master ใช้) และ `the-face-hospital` (0 หน้า) — P1b ใช้ `the-face-by-vertex`; (5) 294 หน้าของ the-face-by-vertex ไม่มี `cluster_id`; (6) license verification 0/184; (7) `person` ใน `seo_entity_graph` — เก็บเป็น node ที่อ้าง author fp หรือ retire
+
+**References:** Bible §10.5/§10.5.1, DR-021, DR-050, DR-076, K0a, `Person_Authority_SOP_v1_0.md`, `Entity_Identity_SOP_v1_0.md` §1, `eywa-the-face-hospital/web/src/lib/schema.ts`, `eywa-vitality-hospital/brand-config.json`
+
+---
 
 ### [DR-082] — Site-wide quick-win triage (W38–W39): target ทุกหน้าที่ต้องมี · owner = หน้าที่ Google จัดอันดับอยู่ · บันทึก merge ใน page_master แบบเดียวกันทุกแบรนด์ (2026-10-24)
 

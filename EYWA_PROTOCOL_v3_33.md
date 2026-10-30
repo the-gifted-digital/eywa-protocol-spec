@@ -1,8 +1,8 @@
 # 📖 คัมภีร์ EYWA™ PROTOCOL
 ## The Universal Knowledge Graph SEO Specification for the AI Era
 
-**Version:** 3.42  
-**Last Updated:** 2026-10-24  
+**Version:** 3.43  
+**Last Updated:** 2026-10-31  
 **Trademark:** EYWA™ (Class 35+42, DIP Thailand, filed 2026-04-20)  
 **Created by:** The Gifted Digital Marketing Co., Ltd.  
 **Scope:** Universal standard สำหรับการบริหารจัดการ SEO + Knowledge Graph แบบ multi-vertical, multi-brand, multi-specialty, multi-lingual, multi-location, **AI-future-ready** ในยุค AI Search (2026+) — ครอบคลุม healthcare verticals (clinic ทุก specialty, hospital, dental, sleep medicine, aesthetic, wellness, healthcare media) extensible to other regulated YMYL niches  
@@ -143,6 +143,16 @@ Throughout this Bible:
 
 
 ## 📜 Changelog
+
+### v3.43 (2026-10-31) — DR-083: Person Authority Layer — one doctor, many brands 👤🔗
+
+Companion to **DR-083 (Accepted in principle 2026-10-31; schema P1a/P1b pending operator apply)** and the new **`Person_Authority_SOP_v1_0.md`**. Schema v1.30 (+3 tables when applied). Amends **§10.5** with **§10.5.1**.
+
+- 👤 **Canonical Person `@id` on the doctor's own entity home** (first: `https://dr-amornpong.com/#person`); per-brand profile nodes keep `${profile_url}#entity` + brand role and list the entity home in `sameAs`. `reviewedBy` stays inside the brand's domain.
+- 🚦 **Reviewer scope is a gate:** `seo_reviewer_scope` (doctor × brand × cluster → primary / co_review / excluded). No scope = no byline, no `reviewedBy`. Out-of-scope content is edited into scope, scope is never widened to fit content.
+- 🪪 **sameAs registry:** `seo_person_profiles` is the only store; read `v_person_same_as`.
+- 🔀 **Cross-brand links need a clinical referral pathway** (`seo_referral_pathways`); extends DR-021.
+- 📏 Person-level measurement: `subject_author_fp` on brand mentions and LLM citation tables.
 
 ### v3.42 (2026-10-24) — DR-082: site-wide quick-win triage (W38–W39) 🎯🔀
 
@@ -11969,6 +11979,37 @@ CREATE TABLE seo_authors_reviewers (
   -- ... other fields
 );
 ```
+
+### 10.5.1 Canonical Person across brands (DR-083) 🆕 v3.43
+
+> **แก้ไขส่วนบน:** `@id` ต่อแบรนด์ยังใช้ — แต่สำหรับแพทย์ที่อยู่ในโปรแกรม person authority (`authority_program = 'active'`) ทุก node ต้องเชื่อมกลับไปตัวตนกลางด้วย `sameAs`. รายละเอียดการทำงาน: `Person_Authority_SOP_v1_0.md`
+
+```json
+// Entity home — https://dr-amornpong.com/
+{
+  "@type": ["Person", "Physician"],
+  "@id": "https://dr-amornpong.com/#person",
+  "name": "Dr. Amornpong Vachiramon",
+  "alternateName": "ทพ.ดร. อมรพงษ์ วชิรมน",
+  "knowsAbout": ["Oral and Maxillofacial Surgery", "Orthodontics", "Dental Sleep Medicine"],
+  "worksFor": [{"@id": "https://www.vthbiodent.com/#organization"}, {"@id": "https://www.vertexclinic.com/#organization"}],
+  "sameAs": ["https://www.vthbiodent.com/doctors/…", "https://www.vertexclinic.com/doctors/…", "<license registry>", "<LinkedIn>"]
+}
+
+// Brand profile — unchanged @id, adds the entity home to sameAs
+{
+  "@type": ["Person", "Physician"],
+  "@id": "https://www.vertexclinic.com/doctors/dr-amornpong#entity",
+  "jobTitle": "Medical Director",
+  "worksFor": {"@id": "https://www.vertexclinic.com/#organization"},
+  "sameAs": ["https://dr-amornpong.com/", "…other profiles from v_person_same_as…"]
+}
+
+// Article on that brand — reviewedBy stays inside the brand's domain
+{ "@type": "MedicalWebPage", "reviewedBy": {"@id": "https://www.vertexclinic.com/doctors/dr-amornpong#entity"}, "lastReviewed": "<approved review completed_at>" }
+```
+
+**Resolution rule (เพิ่มจาก `get_reviewer_for_page`):** แสดงแพทย์เป็น reviewer ได้เมื่อ (1) brand อยู่ใน `brand_scope` (2) มี `seo_reviewer_scope` ระดับ `primary`/`co_review` สำหรับ brand × cluster ของหน้า (3) มี `seo_editorial_reviews` medical ที่ `approved` สำหรับหน้านั้น — ไม่ครบข้อใดข้อหนึ่ง → fallback ไป reviewer อื่นของแบรนด์ หรือไม่แสดง reviewer
 
 ## 10.6 Citation Cross-Brand Pattern
 
