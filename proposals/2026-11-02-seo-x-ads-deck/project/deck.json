@@ -1,0 +1,58 @@
+{
+  "v": 4,
+  "createdOnFiles": {
+    "v": 1,
+    "at": "2026-11-02T10:00:00Z"
+  },
+  "lists": "css",
+  "title": "SEO × Ads Keyword Priority",
+  "order": [
+    "cover",
+    "problem",
+    "idea",
+    "refs",
+    "evidence",
+    "rule",
+    "gates",
+    "value",
+    "scoring",
+    "calc-1",
+    "calc-2",
+    "state",
+    "matrix",
+    "ex-a",
+    "ex-b",
+    "ex-c",
+    "ex-d",
+    "negative",
+    "guardrails",
+    "data",
+    "roadmap",
+    "decide"
+  ],
+  "sections": {
+    "s1": {
+      "description": "ที่มาของปัญหา แหล่งอ้างอิง และหลักฐานที่ใช้ตั้งเกณฑ์",
+      "start": "cover"
+    },
+    "s2": {
+      "description": "เกณฑ์ 3 ขั้น การให้คะแนน และตารางตัดสินใจ",
+      "start": "gates"
+    },
+    "s3": {
+      "description": "ตัวอย่างสถานการณ์ 4 แบบ",
+      "start": "ex-a"
+    },
+    "s4": {
+      "description": "สิ่งที่ต้องรู้ แผนการดำเนินงาน และความพร้อมเริ่ม",
+      "start": "negative"
+    }
+  },
+  "faces": {
+    "ibm-plex-sans-thai": {
+      "family": "IBM Plex Sans Thai",
+      "href": "https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;600;700&display=swap"
+    }
+  },
+  "designSystems": []
+}

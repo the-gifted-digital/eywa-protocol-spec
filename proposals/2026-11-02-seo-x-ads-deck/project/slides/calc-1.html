@@ -1,0 +1,13 @@
+<section id="calc-1" data-transition="fade" style="background:#FBFBFA;color:#37352F;font-family:'IBM Plex Sans Thai',Arial,sans-serif;padding:128px 160px 160px;display:flex;flex-direction:column;gap:28px">
+<div style="display:flex;flex-direction:row;gap:16px;align-items:center"><p style="font-size:24px;font-weight:600;color:#6F6E69">ตัวอย่างการคำนวณ ① จาก 2</p><p style="background:#E3E2E0;color:#32302C;padding:4px 14px;border-radius:6px;font-size:24px">ตัวเลขสมมติ</p></div>
+<h2 style="font-size:60px;font-weight:700;line-height:1.2;color:#37352F">แปลงข้อมูลดิบ ให้เป็นคะแนน 0–100</h2>
+<table style="font-size:26px;color:#37352F">
+<tr><th style="width:24%">คีย์ (แบรนด์เดียวกัน)</th><th style="width:19%">ความตั้งใจซื้อ</th><th style="width:19%">คนติดต่อ 90 วัน</th><th style="width:19%">ราคาบริการต่อเคส</th><th style="width:19%">ยอดค้นหา/เดือน</th></tr>
+<tr><td><b>A</b> รากฟันเทียม ราคา</td><td>ถามราคา → <b>70</b></td><td>8 ราย → <b>75</b></td><td>45,000 ฿ → <b>75</b></td><td>1,000 → <b>25</b></td></tr><tr><td><b>B</b> ทำฟันใกล้ฉัน</td><td>ใกล้ฉัน → <b>100</b></td><td>12 ราย → <b>100</b></td><td>1,500 ฿ → <b>0</b></td><td>2,400 → <b>50</b></td></tr><tr><td><b>C</b> ผ่าฟันคุด ราคา</td><td>ถามราคา → <b>70</b></td><td>5 ราย → <b>50</b></td><td>4,000 ฿ → <b>25</b></td><td>3,000 → <b>75</b></td></tr><tr><td><b>D</b> จัดฟัน ราคา</td><td>ถามราคา → <b>70</b></td><td>3 ราย → <b>25</b></td><td>50,000 ฿ → <b>100</b></td><td>4,500 → <b>100</b></td></tr><tr><td><b>E</b> ฟอกสีฟัน</td><td>ไม่ชัด → <b>40</b></td><td>0 ราย → <b>0</b></td><td>6,000 ฿ → <b>50</b></td><td>800 → <b>0</b></td></tr>
+</table>
+<div style="display:flex;flex-direction:row;gap:20px">
+<div style="flex:1;background:#F1F1EF;border-radius:8px;padding:24px 32px;display:flex;flex-direction:column;gap:8px"><p style="font-size:26px;font-weight:700">ความตั้งใจซื้อ: ให้คะแนนตามตาราง</p><p style="font-size:24px;line-height:1.5;color:#4A4945">จอง/ใกล้ฉัน = 100 · ถามราคา = 70 · ไม่ชัด = 40</p></div>
+<div style="flex:1;background:#F1F1EF;border-radius:8px;padding:24px 32px;display:flex;flex-direction:column;gap:8px"><p style="font-size:26px;font-weight:700">อีก 3 ตัว: เรียงลำดับในแบรนด์</p><p style="font-size:24px;line-height:1.5;color:#4A4945">น้อยสุด = 0 · มากสุด = 100 · ที่เหลือ ไล่ตามลำดับ เพราะหน่วยต่างกัน (ราย / บาท / ครั้ง) ต้องแปลงเป็นสเกลเดียวกันก่อนรวม</p></div>
+</div>
+<p style="position:absolute;left:160px;bottom:64px;width:1600px;font-size:24px;color:#6F6E69">แบรนด์จริงมีคีย์เป็นร้อยคำ คะแนนจึงละเอียดกว่านี้ แต่หลักการเดียวกัน</p>
+</section>
