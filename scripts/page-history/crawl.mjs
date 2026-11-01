@@ -8,8 +8,9 @@ import { decide } from './diff.mjs';
 import { loadTargets, loadStates, saveResult, saveLinks } from './db.mjs';
 
 const SUPABASE_URL = 'https://lffcbeszjqzioobqfdav.supabase.co';
-const UA = 'EYWA-PageHistory/1.0 (+https://eywaintelligence.com)';
+const UA = 'EYWA-PageHistory/2.0 (+https://eywaintelligence.com)';
 const TIMEOUT_MS = 20000;
+const RETRY_DELAY_MS = 4000;
 const SAVE_EVERY = 100;
 const here = dirname(fileURLToPath(import.meta.url));
 
@@ -18,8 +19,18 @@ function fail(url, http_status, error) {
   return { kind: 'fail', http_status, error };
 }
 
+// Transient = timeout/network, 403 (bot challenge), 429, 5xx. One retry; 404/410 are real and not retried.
+const transient = (o) => o.kind === 'fail' && (o.http_status == null || [403, 429].includes(o.http_status) || o.http_status >= 500);
+
+export async function fetchPage(url, prev, opts = {}) {
+  const o = await fetchOnce(url, prev, opts);
+  if (!transient(o)) return o;
+  await sleep(opts.retryDelayMs ?? RETRY_DELAY_MS);
+  return fetchOnce(url, prev, opts);
+}
+
 // merged: a Merged page checked only for its redirect: unconditional GET, body not parsed, no links.
-export async function fetchPage(url, prev, { timeoutMs = TIMEOUT_MS, ua = UA, cfg = {}, merged = false } = {}) {
+async function fetchOnce(url, prev, { timeoutMs = TIMEOUT_MS, ua = UA, cfg = {}, merged = false } = {}) {
   const headers = { 'user-agent': ua, accept: 'text/html,application/xhtml+xml' };
   // Conditional GET only against a healthy previous observation of this exact url.
   if (!merged && prev && prev.url === url && prev.last_ok_at && prev.consecutive_failures === 0 &&

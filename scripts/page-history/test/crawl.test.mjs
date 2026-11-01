@@ -13,6 +13,7 @@ before(async () => {
       if (req.headers['if-none-match'] === '"e1"') { res.writeHead(304); return res.end(); }
       res.writeHead(200, { 'content-type': 'text/html' }); return res.end('<title>x</title>');
     }
+    if (req.url === '/flaky') { const n = seen.filter((x) => x.url === '/flaky').length; res.writeHead(n === 1 ? 503 : 200, { 'content-type': 'text/html' }); return res.end('<title>F</title>'); }
     if (req.url === '/slow') return setTimeout(() => { res.writeHead(200); res.end('late'); }, 1500);
     res.writeHead(404); res.end('nope');
   });
@@ -21,7 +22,7 @@ before(async () => {
 });
 after(() => { server.closeAllConnections?.(); server.close(); });
 
-const opts = { timeoutMs: 200, ua: 'test-ua' };
+const opts = { timeoutMs: 200, ua: 'test-ua', retryDelayMs: 0 };
 const healthy = (url, o = {}) => ({ url, last_ok_at: 'x', consecutive_failures: 0, http_status: 200, etag: '"e1"', last_modified: 'lm', ...o });
 
 test('fetchPage returns ok with final_url after 301', async () => {
@@ -81,4 +82,12 @@ test('non-HTML 2xx body gives links null (stored links left untouched)', async (
   assert.ok(Array.isArray(o.links));
   const s = await fetchPage(`${base}/slow`, null, { ...opts, timeoutMs: 3000 }); // no content-type
   assert.equal(s.kind, 'ok'); assert.equal(s.links, null);
+});
+
+test('retries once on a transient failure, not on 404', async () => {
+  const o = await fetchPage(`${base}/flaky`, null, opts);
+  assert.equal(o.kind, 'ok'); assert.equal(seen.filter((x) => x.url === '/flaky').length, 2);
+  const before = seen.filter((x) => x.url === '/missing').length;
+  await fetchPage(`${base}/missing`, null, opts);
+  assert.equal(seen.filter((x) => x.url === '/missing').length - before, 1);
 });

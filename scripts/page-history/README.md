@@ -132,7 +132,8 @@ always move both). A push to `main` here therefore reaches no brand until it is 
 3. Bump the tag in each brand's `.github/workflows/page-history.yml` (both places), one brand first, check its
    next run, then the rest. Rolling back = point the brand back at the previous tag.
 
-Released: `page-history-v1` = 15802e3 (DR-078 first production release, accepted 2026-10-22).
+Released: `page-history-v1` = 15d2820 (DR-078 first production release, accepted 2026-10-22).
+`page-history-v2` = one retry (after 4 s) on timeout/network/403/429/5xx; 404/410 not retried (2026-11-01).
 
 ## If your brand vendors a copy
 
