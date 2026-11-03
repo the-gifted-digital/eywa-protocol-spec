@@ -20,7 +20,9 @@
 
 ## 2. ให้ทีม VTH ตรวจ / ตัดสินใจ
 
-### 2.1 JavaScript error สูงมากบน 5 หน้า (สำคัญสุด)
+### 2.1 JavaScript error สูงมากบน 5 หน้า: **แก้แล้ว 2026-11-03**
+
+> **อัปเดต:** VTH session ยืนยันว่า error มาจากหน้าที่ capture จาก WordPress ตอนนี้ URL เดิมทั้ง 8 ตัว 301 ไปหน้า `/lp/` แล้ว โดยเก็บ query string ไว้ (Kameie ตรวจด้วย curl `?gclid=x` แล้ว) ลบ `wp-content` และ `wp-includes` แล้ว (commit 27d0c5b) `scan:tracking` ผ่านครบ 7 หน้า `/lp/` ส่วน redirect ของ `/airway-*` กับ `/oral-appliance-therapy` ขึ้นแล้ว (8655304) แจ้งเตือน UX ใน K10a เตือนเฉพาะหน้าที่ยังเจอ error ใน 7 วันล่าสุด แจ้งเตือนของ URL เดิมจึงจะปิดเองภายในประมาณ 7 วัน
 
 ข้อมูลจาก Clarity 28 วัน (ทุกอุปกรณ์):
 
