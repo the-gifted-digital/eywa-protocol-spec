@@ -4,7 +4,7 @@
 --    action_key 'add planned links' (role: webmaster). When the crawler finds the links, the page leaves the feed and an
 --    open / in-progress task is closed automatically with a note.
 -- 2) console.generate_alerts gains kinds 'ux' (Clarity: ≥ 20% of a page's sessions hit a script error, ≥ 30 sessions in
---    28 days) and 'conversion' (Tsaheylu: last 7 full days ≤ 50% of the 4-week average before, average ≥ 10 a week).
+--    28 days, and still erroring in the last 7 days so redirected old URLs stay quiet) and 'conversion' (Tsaheylu: last 7 full days ≤ 50% of the 4-week average before, average ≥ 10 a week).
 --    Both resolve on their own when the condition clears. redirect_missing was already a critical 'health' alert (K4a).
 -- 3) console.page_health_all: redirect_wrong_target compared the landed URL with redirect_target as text, but VTH /
 --    Deezy store the target as a slug or path ('mad', '/why-deezy/'), so every correct redirect there was flagged
@@ -190,6 +190,9 @@ begin
            'ux:js:' || c.brand_slug || ':' || c.page_slug as key
       from console.mv_clarity_page_28d c
      where c.device = 'All' and c.sessions_28d >= 30 and c.script_error_sessions >= 0.2 * c.sessions_28d
+                        and exists (select 1 from public.v_clarity_page_daily v      -- still erroring in the last 7 days
+                                     where v.brand_id = c.brand_slug and v.page_slug = c.page_slug and v.script_error_sessions > 0
+                                       and v.snapshot_date > (select max(s.snapshot_date) from public.seo_clarity_daily s where s.brand_id = c.brand_slug) - 7)
   ), ins as (
     insert into console.alerts (brand_slug, kind, severity, title, body, link, dedupe_key)
     select c.brand_slug, 'ux', 'warning',
@@ -204,7 +207,10 @@ begin
    where a.kind = 'ux' and a.resolved_at is null
      and not exists (select 1 from console.mv_clarity_page_28d c
                       where a.dedupe_key = 'ux:js:' || c.brand_slug || ':' || c.page_slug
-                        and c.device = 'All' and c.sessions_28d >= 30 and c.script_error_sessions >= 0.2 * c.sessions_28d);
+                        and c.device = 'All' and c.sessions_28d >= 30 and c.script_error_sessions >= 0.2 * c.sessions_28d
+                        and exists (select 1 from public.v_clarity_page_daily v      -- still erroring in the last 7 days
+                                     where v.brand_id = c.brand_slug and v.page_slug = c.page_slug and v.script_error_sessions > 0
+                                       and v.snapshot_date > (select max(s.snapshot_date) from public.seo_clarity_daily s where s.brand_id = c.brand_slug) - 7));
 
   -- conversion: last 7 full days (Bangkok) <= 50% of the weekly average over the 4 weeks before, average >= 10
   with t as (select (now() at time zone 'Asia/Bangkok')::date as d
