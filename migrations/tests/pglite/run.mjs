@@ -12,6 +12,7 @@ const SELFTEST = here('../2026-10-21_w12_01_page_change_history.test.sql');
 const MIGRATION2 = here('../../2026-10-23_eywa_w12_02_dr078_impact_14_28.sql');
 const SELFTEST2 = here('../2026-10-23_w12_02_impact_14_28.test.sql');
 const MIGRATION3 = here('../../2026-11-07_eywa_w12_03_dr078_impact_perf.sql');
+const MIGRATION4 = here('../../2026-11-07_eywa_w12_04_dr078_impact_perf2.sql');
 const FIXTURE = here('../../../scripts/page-history/fixtures/url-cases.json');
 
 // Minimal stand-ins for prod (Supabase GTGT). Only the columns the migration
@@ -79,8 +80,10 @@ await step('w12_02 self-test', async () => {
 
 await step('w12_03 migration (1st run)', () => db.exec(readFileSync(MIGRATION3, 'utf8')));
 await step('w12_03 migration (2nd run, idempotent)', () => db.exec(readFileSync(MIGRATION3, 'utf8')));
+await step('w12_04 migration (1st run)', () => db.exec(readFileSync(MIGRATION4, 'utf8')));
+await step('w12_04 migration (2nd run, idempotent)', () => db.exec(readFileSync(MIGRATION4, 'utf8')));
 for (const [name, file] of [['w12_01', SELFTEST], ['w12_02', SELFTEST2]]) {
-  await step(`${name} self-test on the w12_03 view`, async () => {
+  await step(`${name} self-test on the w12_04 view`, async () => {
     notices.length = 0;
     try { await db.exec(readFileSync(file, 'utf8'), { onNotice }); }
     catch (e) { await db.exec('rollback'); throw e; }
