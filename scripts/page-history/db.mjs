@@ -19,20 +19,32 @@ async function selectAll(build) {
 
 // Live pages, then Merged pages with a redirect_target (crawled only to verify the 301; merged: true).
 // Live comes first so it wins a url collision and fills --limit first.
-// A Merged page whose canonical_url was already moved to its target is crawled at its old address, rebuilt from the slug.
+// A Merged page whose canonical_url already points at its target, or at a Live page, is crawled at its old
+// address, rebuilt from the slug. redirect_target may be a full URL or a bare slug ('mad').
+// Skipped collisions are returned as targets.skipped and warned as GitHub annotations, so they never go silent.
+const absUrl = (u, base) => new URL(/^[a-z][a-z0-9+.-]*:/i.test(u) ? u : `/${u.replace(/^\/+/, '')}`, base).href;
+
 export async function loadTargets(db, brandId) {
   const q = (status) => selectAll(() => {
     const b = db.from('seo_website_page_master').select('fingerprint, brand_id, canonical_url, slug, redirect_target')
       .eq('brand_id', brandId).eq('status', status).not('canonical_url', 'is', null);
     return (status === 'Merged' ? b.not('redirect_target', 'is', null) : b).order('fingerprint');
   });
-  const oldUrl = (r) => (r.slug && normUrl(r.canonical_url) === normUrl(r.redirect_target)
-    ? new URL(`/${r.slug.replace(/^\/+|\/+$/g, '')}/`, r.canonical_url).href : r.canonical_url);
-  const rows = [...await q('Live'), ...(await q('Merged')).map((r) => ({ ...r, canonical_url: oldUrl(r), merged: true }))];
-  const seen = new Map(); const out = [];
+  const live = await q('Live');
+  const liveUrls = new Set(live.map((r) => normUrl(r.canonical_url)));
+  const oldUrl = (r) => {
+    const c = normUrl(r.canonical_url);
+    const moved = c === normUrl(absUrl(r.redirect_target, r.canonical_url)) || liveUrls.has(c);
+    return r.slug && moved ? new URL(`/${r.slug.replace(/^\/+|\/+$/g, '')}/`, r.canonical_url).href : r.canonical_url;
+  };
+  const rows = [...live, ...(await q('Merged')).map((r) => ({ ...r, canonical_url: oldUrl(r), merged: true }))];
+  const seen = new Map(); const out = []; Object.defineProperty(out, 'skipped', { value: [] }); // non-enumerable: out stays a plain target list
   for (const r of rows) {
     const k = normUrl(r.canonical_url);
-    if (seen.has(k)) { console.warn(`url collision: ${r.fingerprint} (${r.canonical_url}) duplicates ${seen.get(k)}; keeping first`); continue; }
+    if (seen.has(k)) {
+      console.warn(`::warning::url collision: ${r.fingerprint} (${r.canonical_url}) duplicates ${seen.get(k)}; not crawled`);
+      out.skipped.push(r.fingerprint); continue;
+    }
     seen.set(k, r.fingerprint);
     out.push({ page_fp: r.fingerprint, brand_id: r.brand_id, url: r.canonical_url, ...(r.merged && { merged: true }) });
   }

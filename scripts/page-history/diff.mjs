@@ -44,7 +44,8 @@ export function decide(prev, obs, targetUrl, now, runId, ids = {}) {
   };
 
   // Rule 1 (only once the page has been OK before; never-OK pages have no history to change).
-  if (wasOk && prev.url !== targetUrl) row('url', prev.url, targetUrl);
+  // Merged pages: the crawl address is ours to choose (slug vs canonical), so a change there is not a page event.
+  if (wasOk && !ids.merged && prev.url !== targetUrl) row('url', prev.url, targetUrl);
 
   if (obs.kind === 'fail') {
     state.consecutive_failures = (prev?.consecutive_failures ?? 0) + 1;

@@ -111,6 +111,7 @@ test('loadTargets dedups by normalised url and warns', async () => {
     { page_fp: 'page_A', brand_id: 'b', url: 'https://www.example.com/x/' },
     { page_fp: 'page_C', brand_id: 'b', url: 'https://example.com/y' }]);
   assert.equal(warns.length, 1);
+  assert.deepEqual(t.skipped, ['page_B']);
 });
 
 test('loadTargets adds Merged pages with a redirect_target after Live ones, flagged merged', async () => {
@@ -137,6 +138,22 @@ test('loadTargets crawls a Merged page at its slug, not at a canonical_url that 
     { page_fp: 'm1', brand_id: 'b', url: 'https://e.com/old-page/', merged: true },
     { page_fp: 'm2', brand_id: 'b', url: 'https://e.com/nested/old/', merged: true },
     { page_fp: 'm3', brand_id: 'b', url: 'https://e.com/locations/a/', merged: true }]);
+});
+
+test('loadTargets: bare-slug redirect_target and canonical on a Live page both crawl the Merged page at its slug', async () => {
+  const rows = [
+    { fingerprint: 'l1', brand_id: 'b', status: 'Live', canonical_url: 'https://e.com/mad/' },
+    { fingerprint: 'l2', brand_id: 'b', status: 'Live', canonical_url: 'https://e.com/other/' },
+    { fingerprint: 'm1', brand_id: 'b', status: 'Merged', canonical_url: 'https://e.com/mad/', slug: 'oral-appliance-therapy', redirect_target: 'mad' },
+    { fingerprint: 'm2', brand_id: 'b', status: 'Merged', canonical_url: 'https://e.com/other/', slug: 'snoring', redirect_target: 'https://e.com/elsewhere/' },
+  ];
+  const t = await loadTargets(fakeDb({ rows }), 'b');
+  assert.deepEqual([...t], [
+    { page_fp: 'l1', brand_id: 'b', url: 'https://e.com/mad/' },
+    { page_fp: 'l2', brand_id: 'b', url: 'https://e.com/other/' },
+    { page_fp: 'm1', brand_id: 'b', url: 'https://e.com/oral-appliance-therapy/', merged: true },
+    { page_fp: 'm2', brand_id: 'b', url: 'https://e.com/snoring/', merged: true }]);
+  assert.deepEqual(t.skipped, []);
 });
 
 test('saveLinks upserts in chunks on (from_page_fp,to_url) without first_seen_at, then deletes stale rows', async () => {

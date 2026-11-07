@@ -204,4 +204,6 @@ test('Merged page: state gets http_status/final_url, content fields stay null an
   // redirect removed / retargeted: only final_url is logged
   const moved = decide(m0.state, ok({ final_url: URL1 }), URL1, T1, 'r1', M);
   assert.deepEqual(moved.log.map((r) => [r.field, r.old_value, r.new_value]), [['final_url', target, URL1]]);
+  // crawl address switched (canonical -> slug, slash added): not a page event for a Merged page
+  assert.deepEqual(decide(m0.state, ok({ final_url: target }), `${URL1}/`, T1, 'r1', M).log, []);
 });

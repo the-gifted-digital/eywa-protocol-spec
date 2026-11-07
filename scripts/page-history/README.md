@@ -134,6 +134,7 @@ always move both). A push to `main` here therefore reaches no brand until it is 
 
 Released: `page-history-v1` = 15d2820 (DR-078 first production release, accepted 2026-10-22).
 `page-history-v2` = one retry (after 4 s) on timeout/network/403/429/5xx; 404/410 not retried (2026-11-01).
+`page-history-v3` = Merged pages with a bare-slug `redirect_target` (`mad`) or a canonical_url on a Live page are crawled at their slug; skipped url collisions show as run annotations and `skipped_collisions` in the summary; a Merged page's crawl-address change is not logged (2026-11-07).
 
 ## If your brand vendors a copy
 

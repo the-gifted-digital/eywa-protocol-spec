@@ -8,7 +8,7 @@ import { decide } from './diff.mjs';
 import { loadTargets, loadStates, saveResult, saveLinks } from './db.mjs';
 
 const SUPABASE_URL = 'https://lffcbeszjqzioobqfdav.supabase.co';
-const UA = 'EYWA-PageHistory/2.0 (+https://eywaintelligence.com)';
+const UA = 'EYWA-PageHistory/3.0 (+https://eywaintelligence.com)';
 const TIMEOUT_MS = 20000;
 const RETRY_DELAY_MS = 4000;
 const SAVE_EVERY = 100;
@@ -82,7 +82,7 @@ async function main() {
   const db = createClient(SUPABASE_URL, key);
   const runId = `${args.brand}-${new Date().toISOString()}`;
   const runStartedAt = new Date().toISOString();
-  const summary = { checked: 0, ok: 0, not_modified: 0, failed: 0, log_rows: 0, merged: 0, link_pages: 0, link_rows: 0, link_errors: 0 };
+  const summary = { skipped_collisions: 0, checked: 0, ok: 0, not_modified: 0, failed: 0, log_rows: 0, merged: 0, link_pages: 0, link_rows: 0, link_errors: 0 };
   let log = []; let states = [];
   const flush = async () => {
     if (!args.dry) await saveResult(db, { log, states });
@@ -90,7 +90,9 @@ async function main() {
   };
 
   try {
-    const targets = (await loadTargets(db, args.brand)).filter((t) => !excluded(t.url, cfg.exclude_paths ?? [])).slice(0, args.limit);
+    const all = await loadTargets(db, args.brand);
+    summary.skipped_collisions = all.skipped.length;
+    const targets = all.filter((t) => !excluded(t.url, cfg.exclude_paths ?? [])).slice(0, args.limit);
     const prevStates = await loadStates(db, args.brand);
     for (const t of targets) {
       const prev = prevStates.get(t.page_fp) ?? null;
