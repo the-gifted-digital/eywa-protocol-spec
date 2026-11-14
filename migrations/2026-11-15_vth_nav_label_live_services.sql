@@ -1,0 +1,75 @@
+-- 2026-11-15 · VTH nav_label for Live service/procedure/technology pages (rubric N1/N2, phase 6).
+-- Short page names the sidebar shows. Operator approved the column 2026-11-14; values reviewed before apply.
+DO $$
+DECLARE n int;
+BEGIN
+  UPDATE seo_website_page_master m SET nav_label = v.label
+  FROM (VALUES
+    ('breathing-retraining', 'ฝึกการหายใจ'),
+    ('clear-aligner', 'จัดฟันใส'),
+    ('dental-implant', 'รากฟันเทียม'),
+    ('laser-dentistry', 'ทันตกรรมเลเซอร์'),
+    ('myofunctional-breathing-therapy', 'บำบัดกล้ามเนื้อและการหายใจ'),
+    ('omt', 'บำบัดกล้ามเนื้อช่องปาก (OMT)'),
+    ('orthopostural', 'ประเมินและฟื้นฟูท่าทาง'),
+    ('sleep-study', 'ตรวจการนอนหลับ'),
+    ('tmj-bruxism-relief-program', 'โปรแกรมรักษา TMJ และกัดฟัน'),
+    ('tmj-injection', 'ฉีดยารักษา TMJ'),
+    ('uv-photofunctionalized-implant', 'รากฟันเทียมฉาย UV'),
+    ('airway-development-screening', 'คัดกรองทางเดินหายใจเด็ก'),
+    ('airway-optimization', 'รักษาเพื่อขยายทางเดินหายใจ'),
+    ('arthrocentesis', 'ล้างข้อต่อขากรรไกร'),
+    ('arthroscopy-tmj', 'ส่องกล้องข้อต่อขากรรไกร'),
+    ('bite-rehabilitation', 'ปรับการสบฟันให้มั่นคง'),
+    ('botulinum-toxin-tmj', 'ฉีดโบทูลินัมท็อกซิน'),
+    ('bruxism-assessment', 'ประเมินภาวะกัดฟัน'),
+    ('cbct-scan', 'เอกซเรย์สามมิติ CBCT'),
+    ('certified-myologist', 'นักบำบัดกล้ามเนื้อช่องปาก'),
+    ('child-growth-monitoring', 'ติดตามพัฒนาการใบหน้าเด็ก'),
+    ('clear-aligner-how-it-works', 'หลักการทำงานของจัดฟันใส'),
+    ('composite-veneer', 'วีเนียร์คอมโพสิต'),
+    ('corticosteroid-injection-tmj', 'ฉีดสเตียรอยด์ข้อขากรรไกร'),
+    ('deep-cleaning', 'เกลารากฟัน'),
+    ('dental-veneers', 'วีเนียร์'),
+    ('frenectomy', 'ผ่าพังผืดใต้ลิ้น'),
+    ('gingivectomy', 'ตัดแต่งเหงือก'),
+    ('guided-growth-orthodontics', 'จัดฟันเด็กตามการเจริญ'),
+    ('gum-surgery', 'ผ่าตัดเปิดเหงือก'),
+    ('ha-injection-tmj', 'ฉีดไฮยาลูรอนิกข้อขากรรไกร'),
+    ('home-sleep-test', 'ตรวจการนอนที่บ้าน'),
+    ('laser-periodontal-therapy', 'รักษาโรคเหงือกด้วยเลเซอร์'),
+    ('laser-snoring-treatment', 'รักษานอนกรนด้วยเลเซอร์'),
+    ('laser-teeth-whitening', 'ฟอกสีฟันด้วยเลเซอร์'),
+    ('mad', 'อุปกรณ์เลื่อนขากรรไกร'),
+    ('maxillary-expansion', 'ขยายขากรรไกรบน'),
+    ('myofunction-tmj', 'บำบัดกล้ามเนื้อสำหรับ TMJ'),
+    ('neuromodulation-bruxism', 'กระตุ้นประสาทลดนอนกัดฟัน'),
+    ('night-guard', 'เฝือกสบฟัน'),
+    ('occlusal-rehabilitation', 'แก้ไขการสบฟัน'),
+    ('omt-swallowing', 'ฝึกปิดปากและการกลืน'),
+    ('orthodontic-treatment', 'จัดฟัน'),
+    ('pediatric-dentistry', 'ทันตกรรมเด็ก'),
+    ('pediatric-tmj-bite', 'ข้อขากรรไกรและการสบฟันเด็ก'),
+    ('periodontal-care', 'รักษาโรคเหงือก'),
+    ('polysomnography', 'ตรวจการนอนในห้องแล็บ'),
+    ('prf-tmj', 'ฟื้นฟูข้อต่อด้วย PRF'),
+    ('scaling', 'ขูดหินปูน'),
+    ('stress-bruxism-program', 'ดูแลกัดฟันจากความเครียด'),
+    ('teeth-whitening', 'ฟอกสีฟัน'),
+    ('tmj-assessment', 'ตรวจประเมิน TMJ'),
+    ('tmj-posture-recovery', 'ฟื้นฟูกล้ามเนื้อและท่าทาง'),
+    ('tmj-reconstruction', 'ผ่าตัดสร้างข้อต่อขากรรไกร'),
+    ('volumetric-airway-analysis', 'วัดทางเดินหายใจสามมิติ'),
+    ('zygomatic-implant', 'รากฟันเทียมโหนกแก้ม'),
+    ('digital-airway-imaging', 'ภาพทางเดินหายใจดิจิทัล'),
+    ('digital-smile-design', 'ออกแบบรอยยิ้มดิจิทัล'),
+    ('fotona-lightwalker', 'เลเซอร์ Fotona LightWalker'),
+    ('nightlase', 'เลเซอร์ NightLase'),
+    ('touchwhite-whitening', 'ฟอกสีฟัน TouchWhite'),
+    ('zygomatic-system', 'ระบบรากฟันเทียมโหนกแก้ม')
+  ) AS v(slug, label)
+  WHERE m.brand_id = 'vth-biodent' AND m.slug = v.slug AND m.status = 'Live'
+    AND m.page_type IN ('service_page','procedure_pillar','technology_page');
+  GET DIAGNOSTICS n = ROW_COUNT;
+  IF n <> 62 THEN RAISE EXCEPTION 'expected 62 rows, updated %', n; END IF;
+END $$;
