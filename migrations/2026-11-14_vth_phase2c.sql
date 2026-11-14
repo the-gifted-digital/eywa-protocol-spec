@@ -67,3 +67,13 @@ from (values
 join _kw k on k.kw = n.kw
 join public.seo_website_page_master s on s.brand_id = 'vth-biodent' and s.slug = n.src
 left join public.seo_website_page_master par on par.page_fingerprint = n.parent;
+
+-- 2c follow-up (operator approved 2026-11-14, applied as vth_phase2c_mbm_reparent):
+-- the five MBM component services in §3.5 now sit under the new MBM hub instead of the
+-- precision-diagnostics hub. MBM pages in §3.1/§4.1/§6.7 keep their section parents.
+update public.seo_website_page_master
+set parent_page_fp = 'vth-3.5.6', parent_page_name = 'Mouth BioMapping (hub)', updated_at = now(),
+    reconciliation_notes = concat_ws(' | ', nullif(reconciliation_notes, ''),
+      '2026-11-14 PHASE2C: parent vth-3.5 -> vth-3.5.6 (new MBM hub)')
+where brand_id = 'vth-biodent' and parent_page_fp = 'vth-3.5'
+  and page_fingerprint in ('vth-3.5.5','vth-3.5.9','vth-3.5.10','vth-3.5.11','vth-3.5.12');
