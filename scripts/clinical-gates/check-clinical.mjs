@@ -15,9 +15,22 @@
 //     real data.
 //   optional: --content <dir> (default src/content) --bridge <path> (default src/data/entity-clinical.json)
 //             --collections <csv> (default service,procedure,diagnostic)
+//             --scope content|union (default content — see DR-057 below)
+//
+// DR-057 (2026-11-18) — FRESHNESS IS SCOPED TO THE ENTITIES A BRAND BINDS.
+// seo_entity_procedures/devices/drug are shared by every brand on this schema. Freshness used to
+// compare the union of the whole federation's map against each brand's committed file, so ANY
+// brand's clinical edit turned EVERY other brand's build red, and the only way back to green was
+// to commit the whole federation's clinical content into every repo. Three times in seven weeks
+// for eywa-deezy; the third would have put 681 lines of aesthetic-medicine contraindications
+// (botulinum, fillers, thread lifts) into a dental clinic's repository, rendering nowhere.
+// `--scope content` compares only entities that are the primaryEntity of a Live, published page in
+// the brand's own content tree. `--scope union` restores the old behaviour.
+// Checks 2-4 are unchanged and still read the entire committed file.
 //
 // Four checks:
-//   1. freshness   (FAIL)  — buildClinicalMap() (live DB) must deep-equal the committed JSON. A
+//   1. freshness   (FAIL)  — buildClinicalMap() (live DB) must deep-equal the committed JSON,
+//                            compared over the scope above. A
 //                            bridge file that does not exist yet counts as empty, not as a reason
 //                            to abort — the gate still reports it as a freshness FAIL, plus every
 //                            other check below, rather than stopping before the verdict line.
@@ -62,6 +75,13 @@ const COLLECTIONS = (flagValue('collections') || 'service,procedure,diagnostic')
 const STRICT = argv.includes('--strict');
 const NO_YAML = argv.includes('--no-yaml');
 const SELF_TEST = argv.includes('--self-test');
+// DR-057. `content` (default) checks freshness only for entities this brand's own pages bind;
+// `union` is the pre-2026-11 behaviour — the whole federation's map — kept as an escape hatch.
+const SCOPE = flagValue('scope') || 'content';
+if (SCOPE !== 'content' && SCOPE !== 'union') {
+  console.error(`check:clinical — unknown --scope ${SCOPE} (expected: content | union)`);
+  process.exit(2);
+}
 
 if (!BRAND) {
   console.error(
@@ -142,22 +162,6 @@ try {
   }
 }
 
-// ── check 1: freshness — committed JSON vs a fresh rebuild from the DB ───────────────────────
-const freshnessDiffs = [];
-if (bridgeMissing) freshnessDiffs.push(`bridge file missing at ${BRIDGE_PATH} — run gen-entity-clinical.mjs`);
-{
-  const keys = new Set([...Object.keys(dbMap), ...Object.keys(committed)]);
-  for (const key of [...keys].sort()) {
-    const have = committed[key];
-    const want = dbMap[key];
-    if (!want) { freshnessDiffs.push(`${key} · removed (committed has it, DB no longer does)`); continue; }
-    if (!have) { freshnessDiffs.push(`${key} · added (DB has it, committed does not)`); continue; }
-    if (have.table !== want.table || JSON.stringify(have.contraindications) !== JSON.stringify(want.contraindications)) {
-      freshnessDiffs.push(`${key} · changed`);
-    }
-  }
-}
-
 // ── page_master: every slug this brand has Live ──────────────────────────────────────────────
 const liveSlugs = new Set();
 for (let offset = 0; ; offset += 1000) {
@@ -189,6 +193,68 @@ for (const filePath of files) {
 
   if (contraCount > 0) legacy.push({ file, count: contraCount });
   if (liveSlugs.has(slug) && primaryEntity) candidates.push({ file, slug, primaryEntity });
+}
+
+// ── DR-057: the entities THIS brand can actually render ──────────────────────────────────────
+// Deliberately a wider walk than the one above: that one honours --collections, because a missing
+// list is only a coverage FAILURE on the collections a brand nominates. This one walks the whole
+// content tree, because the question here is different — "could this entity reach a page?" — and
+// the answer must not depend on one brand's template wiring. Deezy mounts SafetyDisclosures from
+// nine templates while nominating four collections, and two of its bound entities live only in the
+// five it does not nominate; scoping freshness by --collections would have made the gate blind to
+// them. Over-include and stay honest; never under-include and go quiet.
+//
+// primaryEntity is the only key the renderer and the JSON-LD builder look up (both read
+// entity-clinical.json by that field), so it is the whole binding surface.
+//
+// NOT filtered by page_master Live, unlike the coverage candidates above. Live is a PLAN-side
+// status that can lag the repository, and a lagging plan would quietly shrink this gate's reach —
+// a page present and published in content renders, whatever the plan currently says. The repo's
+// own render gates (`published: false`, the demo fixture) are the honest test. Measured on both
+// brands that use the bridge at the time of writing: identical either way (deezy-dental 184,
+// vth-biodent 133), so this costs nothing today and closes the hole before it opens.
+const allFiles = existsSync(CONTENT_DIR) ? walk(CONTENT_DIR) : [];
+const scopeEntities = new Set();
+for (const filePath of allFiles) {
+  const { primaryEntity, publishedFalse } = scanYamlLite(readFileSync(filePath, 'utf8'));
+  if (publishedFalse || basename(filePath, '.yaml') === 'demo') continue;
+  if (primaryEntity) scopeEntities.add(primaryEntity);
+}
+
+// A scope narrowed by MISCONFIGURATION would turn this gate off without ever saying so — the
+// failure mode that makes a scoped gate worse than a noisy one. Zero content files is never a
+// legitimate state for a brand running a clinical gate, so it is a config error (exit 2), not a
+// pass. Files present with nothing bound IS legitimate (a brand with no clinical pages yet) and
+// reports as an empty scope in the summary line instead.
+if (SCOPE === 'content' && allFiles.length === 0) {
+  console.error(
+    `check:clinical — --scope content found no .yaml under ${CONTENT_DIR}. Refusing to report a ` +
+    'freshness pass computed over an empty scope; fix --content, or pass --scope union.',
+  );
+  process.exit(2);
+}
+
+// ── check 1: freshness — committed JSON vs a fresh rebuild from the DB ───────────────────────
+const freshnessDiffs = [];
+if (bridgeMissing) freshnessDiffs.push(`bridge file missing at ${BRIDGE_PATH} — run gen-entity-clinical.mjs`);
+{
+  const all = new Set([...Object.keys(dbMap), ...Object.keys(committed)]);
+  // The three source tables are shared by every brand on this schema (gen-entity-clinical.mjs says
+  // so in its own header: `--brand` filters nothing there). Comparing the union made one brand's
+  // clinical edit fail every other brand's build, and the only way back to green was to commit the
+  // whole federation's clinical content into each repo — 681 lines of aesthetic medicine landing in
+  // a dental clinic's, most recently. Checks 2 and 3 are untouched and still read the full
+  // committed file, so nothing a brand actually ships escapes review.
+  const keys = SCOPE === 'union' ? all : new Set([...all].filter((k) => scopeEntities.has(k)));
+  for (const key of [...keys].sort()) {
+    const have = committed[key];
+    const want = dbMap[key];
+    if (!want) { freshnessDiffs.push(`${key} · removed (committed has it, DB no longer does)`); continue; }
+    if (!have) { freshnessDiffs.push(`${key} · added (DB has it, committed does not)`); continue; }
+    if (have.table !== want.table || JSON.stringify(have.contraindications) !== JSON.stringify(want.contraindications)) {
+      freshnessDiffs.push(`${key} · changed`);
+    }
+  }
 }
 
 // entity_type for every candidate's primaryEntity, chunked for the URL length limit
@@ -260,9 +326,12 @@ if (legacy.length) {
 const freshLabel = freshnessDiffs.length
   ? `bridge STALE (${freshnessDiffs.length} diff${freshnessDiffs.length === 1 ? '' : 's'})`
   : 'bridge fresh';
+const scopeLabel = SCOPE === 'union'
+  ? 'scope union (whole federation map)'
+  : `scope ${scopeEntities.size} bound entit${scopeEntities.size === 1 ? 'y' : 'ies'}`;
 const missingLabel = `${missing.length} without a list${missing.length ? (STRICT ? ' (FAIL — --strict)' : ' (warn)') : ''}`;
 const legacyLabel = `${legacy.length} legacy YAML copies${legacy.length ? (NO_YAML ? ' (FAIL — --no-yaml)' : ' (warn)') : ''}`;
-console.log(`clinical: ${freshLabel} · ${liveCheckedCount} Live procedure pages checked · ${missingLabel} · ${legacyLabel} · ${qualityWarns.length} quality warnings`);
+console.log(`clinical: ${freshLabel} · ${scopeLabel} · ${liveCheckedCount} Live procedure pages checked · ${missingLabel} · ${legacyLabel} · ${qualityWarns.length} quality warnings`);
 
 const hardFail = freshnessDiffs.length > 0
   || qualityFails.length > 0
