@@ -73,7 +73,7 @@
 - ฝั่ง vth (นำร่อง): Worker gate + manifest · bucket quarantine ส่วนตัว · Action รายวัน · build gate จาก `v_media_usage_blocked` · ลงทะเบียน hero ของ `/teeth-whitening/` เป็นแถวแรก · ย้าย `seo_authors_reviewers.photo_url` (1 แถว) เข้าทะเบียน
 - **Open follow-ups:** Notion sync (เมื่อระบบเราเสร็จ) · `seo_reviews.review_photos` → ทะเบียน · ช่องทางแจ้งเตือน (LINE/อีเมล) เมื่อ dashboard แบรนด์พร้อม · เอกสารยินยอมเก็บที่ไหน (นอก git, นอก bucket public)
 
-**References:** DR-038 · DR-035 (คำเตือน PDPA ของ bucket public) · DR-040 · DR-078 (central code + brand caller) · DR-083 (บุคคล/แพทย์) · DR-084 + `Ayrel_Image_System_SOP_v1_0.md` · SmileScape SS-DR-015, SS-DR-016, `docs/SESSION-A-MEDIA-PIPELINE.md`
+**References:** `Ayrel_Image_System_SOP_v1_0.md` v1.2 ส่วนที่ 2 (วิธีทำ + runbook) · DR-038 · DR-035 (คำเตือน PDPA ของ bucket public) · DR-040 · DR-078 (central code + brand caller) · DR-083 (บุคคล/แพทย์) · DR-084 + `Ayrel_Image_System_SOP_v1_0.md` · SmileScape SS-DR-015, SS-DR-016, `docs/SESSION-A-MEDIA-PIPELINE.md`
 
 ---
 

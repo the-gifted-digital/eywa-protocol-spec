@@ -44,7 +44,7 @@ EYWA™ is a registered trademark of **The Gifted Digital Marketing Co., Ltd.** 
 | `Entity_Identity_SOP_v1_0.md` | SOP — ICD · Wikidata · Wikipedia → schema markup (DR-050) · สามด่านก่อนเชื่อ identifier + one-store-per-fact | ~200 | 🔒 Active (v1.0) |
 | `Person_Authority_SOP_v1_0.md` | SOP — authority ระดับบุคคลของแพทย์ข้ามแบรนด์ (DR-083) · canonical Person `@id` + sameAs registry · reviewer scope เป็นเกต · referral pathway | ~130 | 🔒 Active (v1.0) |
 | `Pamrel_Content_Writing_SOP_v1_0.md` | **PAMREL** — ระบบเขียนคอนเทนต์ทั้งชุด (DR-045) · pipeline 6 ขั้น + หลักการ P1–P12 + keyword veto + สัญญาของเกต | ~230 | 🔒 Active (v1.0) |
-| `Ayrel_Image_System_SOP_v1_0.md` | **AYREL** — ระบบภาพ (DR-084) · ภาพ AI หนึ่งภาพต่อหน้าใช้ได้ทุกช่อง (hero เดสก์ท็อป · การ์ดมือถือ · การ์ด og ทุกภาษา) · pipeline 9 ขั้น + หลักการ A1–A12 + แม่แบบ prompt + ค่าใช้จ่าย + ติดตั้งให้แบรนด์ใหม่ | ~170 | 🌱 Pilot (v1.1) |
+| `Ayrel_Image_System_SOP_v1_0.md` | **AYREL** — ระบบภาพ (DR-084 + DR-085) · ภาพ AI หนึ่งภาพต่อหน้าใช้ได้ทุกช่องและทุกภาษา · การ์ด og · ทะเบียนภาพ (alt ต่อภาษา, ใช้ซ้ำข้ามหน้า) · ภาพบุคคลปลดอัตโนมัติก่อนหมดอายุ 1 วัน + quarantine 90 วัน · หลักการ A1–A12, B1–B10 · runbook · ติดตั้งให้แบรนด์ใหม่ | ~330 | 🌱 Pilot (v1.2) |
 | `verify-citation-locators.py` | ยิง PMID/DOI กลับไปถาม PubMed + Crossref คืน verdict (DR-044 ขั้นที่ 2) | ~150 | 🧰 Tool |
 | `scripts/entity-identity/` | 🧰 ชุดสคริปต์ entity identity (DR-050) — verify Wikidata สามด่าน · harvest ICD/MeSH/UMLS/SNOMED · map ICD-10→ICD-11 จากตาราง WHO · export JSON-LD · embeddings | 5 ไฟล์ | 🧰 Tool |
 | `citation-qa-gates.sql` | QA gate G1–G11 สำหรับสระ citation ต้องคืน 0 แถวทุกข้อ | ~150 | 🧰 Tool |
