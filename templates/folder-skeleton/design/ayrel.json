@@ -1,0 +1,54 @@
+{
+  "$description": "Ayrel brand profile — fill in during Phase 0 (Ayrel SOP Part 0, §P2). The brand's decisions about images, in one place. Read by `npm run ayrel:doctor`, by the content schema (inline overlay rules) and by whoever writes prompts. Ids only, no secrets. Replace every <...>; delete nothing — a missing key fails the doctor.",
+  "version": 1,
+  "brand": {
+    "key": "<brand key as in seo_website_page_master.brand_id>",
+    "site": "https://<domain>",
+    "stack": "<astro-worker | wordpress | other>",
+    "locales": ["<every locale the site serves>"],
+    "content_locales": ["<locales that have their own page content>"]
+  },
+  "imagery": {
+    "mood": "<one line: e.g. calm, trustworthy, premium clinic; bright airy daylight>",
+    "palette": { "background": ["<hex>", "<hex>"], "accent": ["<hex>", "<hex>"] },
+    "people": "<hands_only | ai_people_allowed | no_people>",
+    "avoid": ["text", "logos", "watermarks", "faces", "patients", "before/after", "blood"],
+    "model": "gpt_image_2_6"
+  },
+  "hero": {
+    "quality": "high",
+    "resolution": "2k",
+    "options_per_page": 1
+  },
+  "inline": {
+    "enabled": true,
+    "templates": {
+      "<template>": { "max": 3, "slots": ["<section ids the template can close with a figure>"], "ratio": "16:9" }
+    },
+    "quality": "medium",
+    "resolution": "1k",
+    "text": {
+      "mode": "<none | overlay>",
+      "max_chars": 48
+    }
+  },
+  "labels": {
+    "result_simulation": {
+      "th": "ภาพจำลองผลลัพธ์ที่สร้างด้วย AI ไม่ใช่ผลการรักษาจริง ผลลัพธ์ของแต่ละคนแตกต่างกัน",
+      "en": "AI-generated simulation, not an actual treatment result. Results vary between individuals."
+    }
+  },
+  "persons": {
+    "require_gate": true
+  },
+  "inventory": {
+    "$note": "Every image file in the repo and every CDN reference, classified by looking at it (paths from the repo root; * = within one folder; cdn:<key> for CDN files). Registered images need no entry.",
+    "real_person_pending_consent": [],
+    "person_origin_unknown": [],
+    "no_person": []
+  },
+  "bootstrap": {
+    "completed": "<YYYY-MM-DD when ayrel:doctor first shows 0 FAIL>",
+    "by": "<who>"
+  }
+}
