@@ -1,4 +1,6 @@
--- 2026-11-20c_media_registry_ayrel.sql — DR-085 (Ayrel media registry) · NOT YET APPLIED (written 2026-11-20)
+-- 2026-11-20c_media_registry_ayrel.sql — DR-085 (Ayrel media registry) · APPLIED 2026-11-20 (operator: "apply ได้เลย";
+-- Supabase migration `media_registry_ayrel` + cron job id 10 `eywa-media-daily-sweep`). Tested 53/53 on Postgres 16 first.
+-- First rows: mda_B6F9C02130644397 (teeth-whitening hero v1, AI) + mda_3D3856E6C01843B9 (og card th v1), 3 usages on vth-3.7.4.
 -- Builds on DR-038 seo_media_assets (37 cols, 0 rows) and restores what SS-DR-015/016 designed but DR-038
 -- left out: the servable view, the daily sweep, quarantine and an audit trail. Additive; the table is empty.
 --
