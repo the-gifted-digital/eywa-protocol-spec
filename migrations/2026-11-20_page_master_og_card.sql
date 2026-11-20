@@ -1,4 +1,7 @@
--- 2026-11-20_page_master_og_card.sql — DR-084 · NOT YET APPLIED (written 2026-11-20, waits for operator)
+-- 2026-11-20_page_master_og_card.sql — DR-084 · APPLIED 2026-11-20 (operator: "apply ได้เลย"; Supabase migration `page_master_og_card`)
+-- Verified after apply: 5 og_* columns, 4 CHECKs, trigger present; v_page_og_card returns all 3,885 rows;
+-- og_display_resolved filled on 2,687 (the 1,198 without primary_entity_fp stay NULL — the generator must
+-- skip or ask for og_display there); og_tagline_resolved filled on 3,742.
 -- Shared table (seo_website_page_master). Additive only: 5 nullable columns, 4 CHECKs, 1 trigger, 1 view.
 -- No existing row changes and no brand code reads these columns yet, so nothing breaks on apply.
 --
