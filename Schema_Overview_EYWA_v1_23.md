@@ -24,6 +24,7 @@ Paired companion to **DR-084**. Migration `migrations/2026-11-20_page_master_og_
 - 🖼️ **`seo_website_page_master` +5 columns, all nullable** — one og card per row = per page per language: `og_display` (line 1, English; NULL = entity name), `og_tagline` (line 2, row language; NULL = `seo_title` before ` | `), `og_style` jsonb (per-page overrides), `og_image_url` (built card, absolute https), `og_image_generated_at`.
 - ✅ **CHECKs:** `chk_page_master_og_display_not_blank`, `chk_page_master_og_tagline_not_blank`, `chk_page_master_og_style_shape` (object; `band` light|dark, `logo` color|white, `display_color` #RRGGBB, `grain` number 0..1, `focus` "X% Y%"; unknown keys allowed), `chk_page_master_og_image_url_https`.
 - 🔁 **`fn_page_og_inputs_changed()` + `trg_page_og_inputs_changed`** (BEFORE UPDATE OF `og_display`, `og_tagline`, `og_style`, `primary_entity_fp`): clears `og_image_generated_at` so the card is rebuilt, keeps `og_image_url` so the live card keeps working; a statement that also sets `og_image_generated_at` (the generator) is left alone.
+- 🏷️ **Addendum `2026-11-20b_page_master_og_image_alt`** (applied 2026-11-20): `og_image_alt` text (override) + `chk_page_master_og_image_alt_not_blank`; the view gains `og_image_alt_resolved` (= card text `line 1 — line 2`, row language) + `og_image_alt_overridden`. Not a rebuild input.
 - 👁️ **View `v_page_og_card`** (security_invoker): `og_display_resolved` / `og_tagline_resolved` with defaults applied, `*_overridden` flags, `og_style` (`{}` when NULL), `og_needs_build`. Generators read this, not the raw columns.
 
 ### v1.29 (2026-10-23) — DR-081: keyword/page entity links, trigger-maintained `primary_entity_name` (W3.4a–c) 🔗
@@ -1220,11 +1221,12 @@ Preserved in **Appendix H — Deferred v2.0 Provisions**.
 - `translations_versions_fps` `text[]` — FK to other-language versions of same content
 - `source_translation_fp` `text` — FK to source-language version
 
-**og card (DR-084, 5) 🆕 v1.31** *(applied 2026-11-20 — `migrations/2026-11-20_page_master_og_card.sql`)* — one designed 1200x630 og:image per row (= per page per language); read through `v_page_og_card`:
+**og card (DR-084 Ayrel, 6) 🆕 v1.31** *(applied 2026-11-20 — `migrations/2026-11-20_page_master_og_card.sql`)* — one designed 1200x630 og:image per row (= per page per language); read through `v_page_og_card`:
 - `og_display` `text` — card line 1, English, brand display face. **NULL = `seo_entity_graph.entity_name` of `primary_entity_fp`**; write only to override. CHECK not blank.
 - `og_tagline` `text` — card line 2, this row's language and face. **NULL = `seo_title` before ` | `**. One line; the generator shrinks to a floor and fails rather than wrap. CHECK not blank.
 - `og_style` `jsonb` — per-page overrides of the brand defaults (defaults live in the brand repo): `band` light|dark · `display_color` #RRGGBB · `grain` 0..1 · `logo` color|white · `focus` "X% Y%" (crop of the source photo; same meaning as CSS `object-position` and Cloudflare `gravity=X×Y`). CHECK `chk_page_master_og_style_shape`.
 - `og_image_url` `text` — built card, absolute https (R2 `og/{slug}-v{n}.jpg`). NULL = site falls back to its crop of the hero. CHECK https.
+- `og_image_alt` `text` — override for `og:image:alt` / `twitter:image:alt`, row language. **NULL = the card text** (`og_display_resolved — og_tagline_resolved`). CHECK not blank. *(addendum 2026-11-20b)*
 - `og_image_generated_at` `timestamptz` — last build; cleared by `trg_page_og_inputs_changed` when the inputs change (NULL = needs a build).
 
 **Hierarchy (3):**
