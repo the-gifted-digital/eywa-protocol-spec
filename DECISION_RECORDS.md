@@ -65,7 +65,7 @@
 - ฟอนต์ ja/ko ของ vth ถูก subset ตามตัวอักษรที่เว็บใช้ — ตัวสร้างการ์ดต้องใช้ฟอนต์เต็มหรือเช็ก glyph ก่อน ไม่งั้น tagline เป็นกล่องว่าง
 - **Open follow-ups:** (1) `ui/Image.astro` ขอไฟล์ตามความกว้างอย่างเดียว — ภาพที่สัดส่วนไม่ตรงกรอบจะเบลอ ให้ขอ `width`+`height`+`fit=cover`+`gravity` แบบเดียวกับการ์ดมือถือ (vth ก่อนใส่ภาพจริงใน Concern/Technology/Branch) (2) หัวข้อ og ใน Bible + BROADCAST เมื่อนำร่องนิ่ง (3) ย้ายตัวสร้างการ์ดเป็นของกลาง
 
-**References:** BROADCAST-2026-11-17-multilingual-rows (1 แถว = 1 หน้า 1 ภาษา) · DR-035 / DR-040 (R2, key convention) · DR-038 (`seo_media_assets`) · vth-biodent commits `4f8159e` (hero), `0e10fb0` (การ์ดมือถือคม), `28e3f49` (og ชิดขวา) · `templates/folder-skeleton/design/brand-foundation/imagery.md`
+**References:** `Ayrel_Image_System_SOP_v1_0.md` (วิธีทำทีละขั้น) · BROADCAST-2026-11-17-multilingual-rows (1 แถว = 1 หน้า 1 ภาษา) · DR-035 / DR-040 (R2, key convention) · DR-038 (`seo_media_assets`) · vth-biodent commits `4f8159e` (hero), `0e10fb0` (การ์ดมือถือคม), `28e3f49` (og ชิดขวา) · `templates/folder-skeleton/design/brand-foundation/imagery.md`
 
 ---
 
