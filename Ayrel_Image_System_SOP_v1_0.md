@@ -303,7 +303,7 @@ no logos, no watermark.
 | ต่อหน้า (ไม่ทำใหม่ / เผื่อ 1.5×) | ≈ $0.21 / $0.31 | ≈ $0.28 / $0.42 | ไม่ประกาศเพดาน |
 | ใช้จาก cloud session | ได้ (MCP) | ต้อง key + เปิดโฮสต์ `api.openai.com` | ต้องรันบนเครื่อง operator |
 
-ตัวเลข OpenAI เป็นค่าประมาณจากราคา token ($30/ล้าน output token, Batch $15) — ยืนยันกับบิลจริงก่อนตัดสิน · จุดคุ้มทุน Higgsfield vs OpenAI Standard ≈ 115–120 หน้า/เดือน · **ตัดสินใจ 2026-11-21: ใช้ Higgsfield ไปก่อน ลอง OpenAI API กับบางแบรนด์ แล้วเทียบ** ด้วย query นี้:
+ตัวเลข OpenAI เป็นค่าประมาณจากราคา token ($30/ล้าน output token, Batch $15) — ยืนยันกับบิลจริงก่อนตัดสิน · จุดคุ้มทุน Higgsfield vs OpenAI Standard ≈ 115–120 หน้า/เดือน · **ตัดสินใจ 2026-11-21: ใช้ Higgsfield ไปก่อน ลอง OpenAI API กับบางแบรนด์ แล้วเทียบ** · แนวทางรายเดือน (operator): **เดือนที่ทำภาพจำนวนมาก** (หน้าใหม่ทั้งหมวด, ชุดภาพ) → ซื้อ Higgsfield เดือนนั้น · **เดือนเก็บตก / optimize** (แก้ทีละภาพ, เติมภาพประกอบ) → OpenAI API จ่ายตามที่ใช้ · ทั้งสองทางใช้โมเดลตระกูลเดียวกัน prompt และ pipeline ส่วนอื่นใช้ร่วมกันได้ · ก่อนเดือนแรกที่ใช้ OpenAI API ต้องเตรียม: key ผ่านแบบฟอร์ม credential ของ environment + อนุญาตโฮสต์ `api.openai.com` + สคริปต์สร้างภาพที่เขียนผลลง `generation_model` เป็น `… (OpenAI API)` · เทียบด้วย query นี้:
 
 ```sql
 select brand_id, generation_model, count(*) filter (where status = 'Active') as accepted,
