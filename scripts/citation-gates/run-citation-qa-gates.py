@@ -30,6 +30,8 @@ import eywa_supabase  # noqa: E402 — resolves the key without assuming where t
 SB = eywa_supabase.SB_ORIGIN  # one definition of the host, in eywa_supabase.py
 
 # Bible 23.1 tier per citation_type. Mirrors G5 in the .sql — keep in step.
+# Also mirrored by fn_citation_tier_for_type() in the database (DR-086), whose trigger refuses a
+# mismatching write — change the two together, or G5 and the trigger will disagree.
 TIER_BY_TYPE = {
     "systematic_review": 1, "meta_analysis": 1,
     "rct": 2,

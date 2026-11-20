@@ -66,6 +66,8 @@ where url ~ 'pubmed\.ncbi\.nlm\.nih\.gov/[0-9]+'
 
 -- ---------------------------------------------------------------------------
 -- G5  citation_tier agrees with citation_type per Bible 23.1.
+-- Since DR-086 the database refuses a mismatching write (trg_citation_tier_by_type, map in
+-- fn_citation_tier_for_type()), so a row here means the trigger was bypassed or the maps diverged.
 --     T1 SR/MA · T2 RCT · T3 society guideline/consensus · T4 gov/regulator
 --     T5 observational · T6 textbook/expert/first-party/industry
 -- ---------------------------------------------------------------------------

@@ -2,8 +2,8 @@
 
 > **Append-only architectural decision log.** Each record explains WHY a decision was made — not just WHAT.
 
-**Document Version:** 1.52  
-**Last Updated:** 2026-11-20 — DR-085 accepted in principle (**Ayrel media registry**: one register for every image/video, alt per locale, reuse across pages, person media taken down the day before consent ends, warnings 15/7/3, L3 gated Worker + L2 private quarantine 90 days, five anti-backflow layers; migration tested 53/53 and applied 2026-11-20). Previous: 2026-11-20 — DR-084 accepted and applied (**Ayrel** og card: one designed 1200x630 og:image per page per language, built from the page's own photo; `og_display` defaults to the entity name, `og_tagline` to the page title; per-template hero slot spec in each brand repo decides crops; 5 nullable columns + view on page_master applied 2026-11-20; pilot vth-biodent). Previous: 2026-10-31 — DR-083 accepted in principle (Person Authority Layer: canonical Person @id on the doctor's entity home + per-brand profile nodes linked by sameAs; reviewer scope as a gate; sameAs registry; referral pathways for cross-brand links; schema P1a/P1b pending operator apply). Previous: 2026-10-24 — DR-082 accepted (site-wide quick-win triage W38–W39 on 4 brands: unbound Live pages get a target from GSC → registry → DataForSEO or a written reason; owner of a contested intent = the page Google already ranks for it; merges are recorded in page_master with a fixed convention; hold/override rules for pages edited in the last 14 days; schema type follows page subject, not cluster) · previously DR-081 accepted (knowledge-graph quality round 3 W3.4a–c: keyword→entity and page→entity links repaired and reviewed, `primary_entity_name` on the keyword table is now a trigger-maintained copy of the graph name, brand-repo same-round checklist extended, `ANALYZE` ops note) · previously DR-080 accepted (knowledge-graph quality round 2: `entity_type` decision rule + 12 retypes, daily pg_cron refresh of the quality MVs, page priority score `v_page_priority`, near-duplicate MV + orphan view; merge/retype checklist now includes brand-repo regeneration) · previously DR-079 accepted (knowledge-graph data-quality round W3.0–W3.3: codes stay in DR-050 stores, MeSH for procedure/device, dedupe, edge verification; migration headers say DR-078 = renumbered) · previously DR-078 accepted (page change history: live-crawl SEO change log, GitHub Actions, central code + brand-owned caller; renumbered after merge) · previously 2026-10-22 — DR-077 accepted (citation tier criteria: in vitro T6, cohort_study T5, `other` = unclassified, SR-guideline by conduct, unmapped study types) · DR-076 accepted (data-quality round 1: "one intent = one URL" enforced on semantic keywords by trigger · keyword conversion view is organic-only and keyword-level · `keyword_use_as` reconciled and released on delete) — applied to production 2026-10-21/22; amends brand DR `DR-EYWA-TSA-003` guidance
+**Document Version:** 1.53  
+**Last Updated:** 2026-11-20 — DR-086 accepted and applied (**citation tier enforced on write**: a trigger on `seo_citations` fills or derives `citation_tier` from `citation_type` and refuses a mismatch, so a brand writing the shared pool with another evidence scale fails at its own insert instead of breaking other brands' deploys through gate G5; myobrace-center 20 rows + 1 vth row normalised). Previous: 2026-11-20 — DR-085 accepted in principle (**Ayrel media registry**: one register for every image/video, alt per locale, reuse across pages, person media taken down the day before consent ends, warnings 15/7/3, L3 gated Worker + L2 private quarantine 90 days, five anti-backflow layers; migration tested 53/53 and applied 2026-11-20). Previous: 2026-11-20 — DR-084 accepted and applied (**Ayrel** og card: one designed 1200x630 og:image per page per language, built from the page's own photo; `og_display` defaults to the entity name, `og_tagline` to the page title; per-template hero slot spec in each brand repo decides crops; 5 nullable columns + view on page_master applied 2026-11-20; pilot vth-biodent). Previous: 2026-10-31 — DR-083 accepted in principle (Person Authority Layer: canonical Person @id on the doctor's entity home + per-brand profile nodes linked by sameAs; reviewer scope as a gate; sameAs registry; referral pathways for cross-brand links; schema P1a/P1b pending operator apply). Previous: 2026-10-24 — DR-082 accepted (site-wide quick-win triage W38–W39 on 4 brands: unbound Live pages get a target from GSC → registry → DataForSEO or a written reason; owner of a contested intent = the page Google already ranks for it; merges are recorded in page_master with a fixed convention; hold/override rules for pages edited in the last 14 days; schema type follows page subject, not cluster) · previously DR-081 accepted (knowledge-graph quality round 3 W3.4a–c: keyword→entity and page→entity links repaired and reviewed, `primary_entity_name` on the keyword table is now a trigger-maintained copy of the graph name, brand-repo same-round checklist extended, `ANALYZE` ops note) · previously DR-080 accepted (knowledge-graph quality round 2: `entity_type` decision rule + 12 retypes, daily pg_cron refresh of the quality MVs, page priority score `v_page_priority`, near-duplicate MV + orphan view; merge/retype checklist now includes brand-repo regeneration) · previously DR-079 accepted (knowledge-graph data-quality round W3.0–W3.3: codes stay in DR-050 stores, MeSH for procedure/device, dedupe, edge verification; migration headers say DR-078 = renumbered) · previously DR-078 accepted (page change history: live-crawl SEO change log, GitHub Actions, central code + brand-owned caller; renumbered after merge) · previously 2026-10-22 — DR-077 accepted (citation tier criteria: in vitro T6, cohort_study T5, `other` = unclassified, SR-guideline by conduct, unmapped study types) · DR-076 accepted (data-quality round 1: "one intent = one URL" enforced on semantic keywords by trigger · keyword conversion view is organic-only and keyword-level · `keyword_use_as` reconciled and released on delete) — applied to production 2026-10-21/22; amends brand DR `DR-EYWA-TSA-003` guidance
 **Format:** Reverse chronological (newest first)
 
 ---
@@ -31,6 +31,37 @@
 ---
 
 ## Decisions Log
+
+### [DR-086] — citation_tier บังคับตาม citation_type ตอนเขียน (trigger) · ไม่ใช่แค่ใน CI (2026-11-20)
+
+**Status:** **Accepted & applied** (2026-11-20) · Scope: **UNIVERSAL** (คลัง `seo_citations` ใช้ร่วมทุกแบรนด์)
+**Bible Reference:** §23.1 (ไม่เปลี่ยนสเกล — เปลี่ยนแค่จุดที่บังคับ)
+**Schema Reference:** v1.33 — `migrations/2026-11-20d_citation_tier_by_type.sql` · ต่อยอด DR-057 §4 (COMMENT = ฉบับจริง) · DR-063 · DR-077
+
+**Context:**
+- กฎ "tier ตาม citation_type" อยู่แค่ใน COMMENT ของคอลัมน์ + gate G5 ใน CI ของแต่ละแบรนด์ · ตารางเองมีแค่ CHECK 1–6 → ใครเขียนตรงเข้าตารางโดยไม่รัน gate ใส่ tier อะไรก็ได้
+- 2026-11-20 17:50 myobrace-center ลง 20 แถวจากไฟล์ content-plan ด้วย**สเกลพีระมิดอีกแบบ** (guideline = 1 · SR/MA = 2 · cohort/cross-sectional = 3 · case series = 4 · patient resource = 3) และ `study_type` เป็นข้อความอิสระ ("Uncontrolled (n=23)", "Content analysis") · repo ของแบรนด์ยังว่าง (โหลดจาก session ที่ไม่ได้ push) — ไม่มีโค้ดต้นทางให้แก้
+- G5 ตรวจทั้งคลังกลาง (ตั้งใจ — tier ผิดหนึ่งแถวกระทบทุกแบรนด์ที่อ้าง) → **deploy ของ vth-biodent ล้ม 3 รอบ (454–456)** ขณะที่แบรนด์ที่เขียนผิดไม่รู้เลย · ก่อนหน้านั้นในวันเดียวกัน vth เองก็ลง expert_opinion เป็น T2 หนึ่งแถว (vth-4.4.2)
+- ปัญหาเชิงระบบ: **คนที่ถูกลงโทษไม่ใช่คนที่ทำผิด** และกฎไม่ปรากฏตรงจุดที่เขียน
+
+**Decision (operator 2026-11-20):**
+1. **บังคับที่ฐานข้อมูล:** `fn_citation_tier_for_type(text)` (immutable) = แผนที่เดียวกับ `TIER_BY_TYPE` · trigger `trg_citation_tier_by_type` BEFORE INSERT / UPDATE OF citation_type, citation_tier:
+   - ไม่ใส่ tier → เติมจาก type
+   - UPDATE เปลี่ยน type แต่ไม่แตะ tier → tier ตาม type ใหม่ (จัดประเภทใหม่ได้ในคำสั่งเดียว)
+   - ไม่ตรงแบบอื่น → **ปฏิเสธ** (23514) พร้อม tier ที่ถูกและ hint
+   - type ที่ไม่มี tier ตายตัว (`other`, `news_article`) → ผู้เขียนใส่เอง เหมือน G5
+2. **G5 ยังอยู่** — ตรวจซ้ำใน CI · ต่อจากนี้ถ้า G5 ล้มแปลว่ามีคนปิด trigger หรือแผนที่สองฝั่งไม่ตรงกัน
+3. **แผนที่มีสองที่ ต้องแก้คู่กัน:** SQL function กับ `TIER_BY_TYPE` ใน `run-citation-qa-gates.py` (comment ทั้งสองฝั่งชี้หากัน)
+4. **ข้อมูลที่แก้แล้ว (2026-11-20):** myobrace-center 20 แถว — tier ตาม type · AAO "first orthodontic check-up by age 7" type `expert_opinion` → `clinical_guideline` (T3) · `study_type` ข้อความอิสระ → ค่ามาตรฐาน · ค่าเดิมทุกตัวเก็บใน `maintenance_log` · vth `cite_4A98405E392920CE` T2 → T6 · หลังแก้: 0 แถวขัดกฎทั้งคลัง
+5. **ยังไม่บังคับ `study_type` ที่ฐานข้อมูล** (G14u เตือน ~29 แถวสะกดนอกมาตรฐาน) — ทำเมื่อเก็บกวาดครบ
+
+**Consequences:**
+- ✅ แบรนด์ที่เขียนผิดล้มที่ตัวเองทันที พร้อมข้อความบอกค่าที่ถูก · deploy ของแบรนด์อื่นไม่ถูกลากล้ม
+- ✅ ETL ไม่ต้องคำนวณ tier เอง — ไม่ส่งมาก็ได้
+- ⚠️ ETL ที่ส่ง tier ผิดมาด้วยจะล้ม (ตั้งใจ) — ต้องแก้ที่ ETL ไม่ใช่ปิด trigger
+- ↩️ Rollback อยู่ใน header ของ migration
+
+---
 
 ### [DR-085] — Ayrel media registry: ทะเบียนภาพ/วิดีโอกลาง · alt ต่อภาษา · ใช้ซ้ำข้ามหน้า · ภาพบุคคลปลดอัตโนมัติก่อนหมดอายุ 1 วัน · quarantine 90 วัน · กันไหลย้อน (2026-11-20)
 
