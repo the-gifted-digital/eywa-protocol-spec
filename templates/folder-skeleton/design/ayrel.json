@@ -5,15 +5,37 @@
     "key": "<brand key as in seo_website_page_master.brand_id>",
     "site": "https://<domain>",
     "stack": "<astro-worker | wordpress | other>",
-    "locales": ["<every locale the site serves>"],
-    "content_locales": ["<locales that have their own page content>"]
+    "locales": [
+      "<every locale the site serves>"
+    ],
+    "content_locales": [
+      "<locales that have their own page content>"
+    ]
   },
   "imagery": {
     "mood": "<one line: e.g. calm, trustworthy, premium clinic; bright airy daylight>",
-    "palette": { "background": ["<hex>", "<hex>"], "accent": ["<hex>", "<hex>"] },
+    "palette": {
+      "background": [
+        "<hex>",
+        "<hex>"
+      ],
+      "accent": [
+        "<hex>",
+        "<hex>"
+      ]
+    },
     "people": "<hands_only | ai_people_allowed | no_people>",
-    "avoid": ["text", "logos", "watermarks", "faces", "patients", "before/after", "blood"],
-    "model": "gpt_image_2_6"
+    "avoid": [
+      "text",
+      "logos",
+      "watermarks",
+      "faces",
+      "patients",
+      "before/after",
+      "blood"
+    ],
+    "model": "gpt_image_2_6",
+    "provider": "<higgsfield | openai_api>"
   },
   "hero": {
     "quality": "high",
@@ -23,7 +45,13 @@
   "inline": {
     "enabled": true,
     "templates": {
-      "<template>": { "max": 3, "slots": ["<section ids the template can close with a figure>"], "ratio": "16:9" }
+      "<template>": {
+        "max": 3,
+        "slots": [
+          "<section ids the template can close with a figure>"
+        ],
+        "ratio": "16:9"
+      }
     },
     "quality": "medium",
     "resolution": "1k",
