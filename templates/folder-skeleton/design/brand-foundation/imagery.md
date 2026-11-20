@@ -27,7 +27,8 @@ Example: "Calm authority. Natural light dominant. Real patients (consented) over
 
 - **Brand photoshoot (preferred)** — `brand-assets/photography/raw/`
 - **Stock (interim)** — Unsplash, Pexels with brand-fitting collections — note in commit which used
-- **AI-generated (case-by-case)** — disclose per Bible Part 23 (transparency); avoid for patient-facing trust content
+- **AI-generated (Ayrel, DR-084)** — illustrative images (hands, equipment, models, ambience, mechanism) carry **no AI label**. No AI faces that read as real doctors or patients.
+- **AI-generated result images** — anything that shows or implies a treatment outcome (simulated result, before/after, "what you could look like") **must carry a visible label on the image itself**, e.g. TH "ภาพจำลองผลลัพธ์ที่สร้างด้วย AI ไม่ใช่ผลการรักษาจริง ผลลัพธ์ของแต่ละคนแตกต่างกัน" / EN "AI-generated simulation — not an actual treatment result. Results vary.", and the same sentence in the alt text. Check against the brand's medical-advertising rules before publishing. See `Ayrel_Image_System_SOP_v1_0.md` A10.
 
 ### Patient consent + PDPA
 
