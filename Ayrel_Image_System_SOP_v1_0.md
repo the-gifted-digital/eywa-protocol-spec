@@ -1,6 +1,6 @@
 # 🖼️ AYREL — EYWA Image System
 
-> **เวอร์ชัน:** 1.4 · **ประกาศใช้:** 2026-11-20 (นำร่อง) · **v1.4:** ส่วนที่ 0 Bootstrap — โปรไฟล์แบรนด์ `design/ayrel.json` · สำรวจภาพทุกไฟล์ · `ayrel:doctor` · ข้อความบนภาพประกอบเป็น overlay (A15) · ผลตรวจขั้นสุดท้าย · **v1.3:** ภาพประกอบในเนื้อหา (สูงสุด 3 ช่องต่อหน้า Service) · ทำภาพครบทั้งหน้า (hero + ภาพประกอบ + og) · ย้ายภาพบุคคลออกจาก CDN public · **v1.2:** ส่วนที่ 2 ทะเบียนภาพ (DR-085) — ลงทะเบียน · alt ต่อภาษา · ใช้ซ้ำข้ามหน้า · ภาพบุคคลปลดอัตโนมัติ · quarantine 90 วัน · กันไหลย้อน · runbook
+> **เวอร์ชัน:** 1.5 · **ประกาศใช้:** 2026-11-20 (นำร่อง) · **v1.5:** ภาพประกอบ medium 1K เป็นค่าเริ่ม (operator ยืนยัน) · รูปทีมงาน 5 คนเข้าประตู · inventory แก้ตามการดูภาพจริง · **v1.4:** ส่วนที่ 0 Bootstrap — โปรไฟล์แบรนด์ `design/ayrel.json` · สำรวจภาพทุกไฟล์ · `ayrel:doctor` · ข้อความบนภาพประกอบเป็น overlay (A15) · ผลตรวจขั้นสุดท้าย · **v1.3:** ภาพประกอบในเนื้อหา (สูงสุด 3 ช่องต่อหน้า Service) · ทำภาพครบทั้งหน้า (hero + ภาพประกอบ + og) · ย้ายภาพบุคคลออกจาก CDN public · **v1.2:** ส่วนที่ 2 ทะเบียนภาพ (DR-085) — ลงทะเบียน · alt ต่อภาษา · ใช้ซ้ำข้ามหน้า · ภาพบุคคลปลดอัตโนมัติ · quarantine 90 วัน · กันไหลย้อน · runbook
 > **ขอบเขต:** **UNIVERSAL** (คอลัมน์ `og_*` + ทะเบียนภาพในตารางแชร์) · เครื่องมือฝั่งแบรนด์ยังอยู่ใน repo แบรนด์นำร่อง (vth) — ย้ายเป็นของกลางเมื่อนิ่ง
 > **ที่มา:** field-tested กับ VTH BioDent — `/teeth-whitening/` (hero → การ์ดมือถือ → og card, 2026-11-20) · ทดสอบปลดภาพครบวงจรบนเว็บจริง (2026-11-21) · `/dental-veneers/` ทำภาพครบทั้งหน้า + ย้ายรูปแพทย์เข้าประตู `/media` (2026-11-21)
 > **Companion:** DR-084 (การ์ด og) · DR-085 (ทะเบียนภาพ) · DR-038 `seo_media_assets` · DR-035 / DR-040 R2 · BROADCAST-2026-11-17 แถวต่อภาษา · SmileScape SS-DR-015/016 · `templates/folder-skeleton/design/brand-foundation/imagery.md`
@@ -52,8 +52,8 @@
 
 vth สร้าง Ayrel ไปพร้อมกับใช้ ไม่มีขั้นเตรียม — ตรวจขั้นสุดท้าย (2026-11-21) จึงพบสิ่งที่ควรรู้ตั้งแต่วันแรก:
 - **ภาพคนจริง 7 ไฟล์อยู่นอกทะเบียน** — รูปแพทย์ไฟล์ที่สอง (ตัดพื้นหลัง) บน CDN public · `founder.webp` ที่ไม่มีโค้ดใช้แล้วแต่ยังเสิร์ฟอยู่ · รูปทีมงาน 5 คนใน `public/` ของ repo — ระบบปลดภาพปลดได้เฉพาะภาพที่รู้จัก
-- **ภาพคนอีก 25 ไฟล์ไม่รู้ที่มา** (AI หรือ stock) — สองแบบนี้ต้องทำต่างกันตามกฎหมาย
-- แบรนด์ไม่ได้ใช้ stack เดียวกัน (Deezy เป็น WordPress) · template ต่างกัน · บางแบรนด์อยากมีข้อความบนภาพ
+- **ภาพคนอีก 22 ไฟล์ไม่รู้ที่มา** (AI หรือ stock) — สองแบบนี้ต้องทำต่างกันตามกฎหมาย · ตอนแรกจัดกลุ่มจากชื่อไฟล์ได้ 25 ไฟล์ — ดูภาพจริงแล้ว 3 ไฟล์ไม่มีคน (`mbm-dashboard`, `slide-mbm`, `sq-slide-mbm`) → ยืนยันว่าต้องดูทีละไฟล์
+- แบรนด์แต่ละแบรนด์ template ต่างกัน · ภาพเก่าอาจยังอยู่ที่ระบบเดิม (เช่น รูปแพทย์ Deezy ยังชี้ไป WordPress เดิม แม้เว็บใหม่เป็น Astro) · บางแบรนด์อยากมีข้อความบนภาพ
 
 ## P2. แบบสอบถาม → `design/ayrel.json`
 
@@ -67,7 +67,7 @@ vth สร้าง Ayrel ไปพร้อมกับใช้ ไม่ม�
 | `imagery.people` | ภาพ AI มีคนได้แค่ไหน | **`hands_only`** (ค่าเริ่ม) · `ai_people_allowed` · `no_people` |
 | `hero.quality` / `resolution` | คุณภาพ hero | **high · 2k** (A12) |
 | `inline.enabled` · `templates` | template ไหนมีภาพประกอบ · กี่ภาพ · ช่องไหน · สัดส่วน | Service: 3 · 16:9 (A13) |
-| `inline.quality` / `resolution` | คุณภาพภาพประกอบ | **medium · 1k** (0.5 เครดิต) — high · 2k ถ้าแบรนด์ต้องการคมสุดบนจอ 2x |
+| `inline.quality` / `resolution` | คุณภาพภาพประกอบ | **medium · 1k** (0.5 เครดิต) — ค่าเริ่ม ยืนยันแล้ว (A16) · high · 2k เฉพาะภาพที่มีรายละเอียดเล็กมาก |
 | `inline.text.mode` | อยากมีข้อความบนภาพประกอบไหม | `none` · **`overlay`** + `max_chars` (A15) — ไม่มีตัวเลือกให้ AI วาดตัวอักษร |
 | `labels.result_simulation` | ป้ายภาพจำลองผลลัพธ์ต่อภาษา | ข้อความตาม A10 — แปลให้ครบ `locales` ที่จะใช้ภาพแบบนี้ |
 | `persons.require_gate` | ภาพคนจริงต้องผ่านประตูไหม | **true** เสมอ (B1) |
@@ -134,8 +134,9 @@ CLOUDFLARE_MEDIA_TOKEN=… SUPABASE_SERVICE_KEY=… npm run ayrel:doctor      # 
  1. slot       อ่าน design/hero-slots.json ของ template หน้านั้น      → สัดส่วน + safe zone
                + เลือกหัวข้อสำหรับภาพประกอบ (ไม่เกิน 3 · หัวข้อละ 1 · A13) จากเนื้อหาจริงของหัวข้อนั้น
  2. prompt     เขียน prompt ตาม §3 (จุดเด่นใน safe zone · สีจาก tokens) — hero 1 + ภาพประกอบทีละหัวข้อ
- 3. generate   Higgsfield gpt_image_2_6 · 2K · high — ส่งทั้งชุดใน generate_image_batch ครั้งเดียว
-               (hero 2.4:1 ขอ 12:5 → ได้ 21:9 แล้วครอปกลางเป็น 2.4:1 — A14) → ~2.75 เครดิต/ภาพ
+ 3. generate   Higgsfield gpt_image_2_6 — ส่งทั้งชุดใน generate_image_batch ครั้งเดียว
+               hero: high · 2k (2.75 เครดิต · 12:5 → ได้ 21:9 แล้วครอปกลางเป็น 2.4:1 — A14)
+               ภาพประกอบ: medium · 1k (0.5 เครดิต · 1344x752 → ครอปเป็น 1337x752 — A16)
  4. preview    ฉีดภาพลงหน้าเว็บจริงในเบราว์เซอร์ (Playwright: แทน <source>/<img> ของ hero ·
                แทรก <figure> ท้ายหัวข้อ) เดสก์ท็อป 1440 + มือถือ 390 · ส่งภาพหน้าจอให้ operator
  5. approve    operator เลือกภาพ — ก่อนแตะ R2 หรือ repo
@@ -208,6 +209,9 @@ CDN จำผล 404 ของ key ที่เคยถูกเรียกก
 ### A12 · 2K พอ
 CDN ส่งภาพ hero กว้างสุด 1600px · สร้างที่ 2K (2.75 เครดิต) ไม่ใช่ 4K (4.25) · ภาพที่ไม่แสดงบนหน้า (Knowledge, Procedure) สร้างที่รูป og ตรง ๆ
 
+### A16 · ภาพประกอบใช้ medium 1K
+ทดสอบบนหน้า `/scaling/` (2026-11-21): ไฟล์ 1337x752 · มือถือ DPR 3 ต้องการ 1074 → พอ · เดสก์ท็อป DPR 2 ต้องการ 1544 → ขยาย ~15% · เทียบพิกเซลต่อพิกเซลกับ 2K แล้วขีดบนเครื่องมือและผิวหินปูนยังคม · operator ประเมินบนเว็บจริงแล้ว "เพียงพอ" → **ค่าเริ่มของทุกแบรนด์** · ส่งไฟล์ตามขนาดที่ได้ ห้ามขยายเองก่อนอัปโหลด (CDN ไม่ขยายเกินต้นฉบับ) · ใช้ 2K เมื่อภาพต้องอ่านรายละเอียดเล็ก (ตัวเลขบนเครื่องมือขนาดเล็ก ลายเส้นละเอียด)
+
 ### A13 · ภาพประกอบ: ท้ายหัวข้อ · หัวข้อละ 1 · ไม่เกิน 3 · ไม่ครอป
 - วาง**ท้าย**หัวข้อเท่านั้น ห้ามแทรกกลางย่อหน้า — ภาพไม่ตัดเหตุผลที่กำลังอ่าน · ช่องที่ Service รองรับ: `definition` · `whoFor` · `process` · `comparison` · `clinicalInsight` · ลำดับบนหน้าตามลำดับหัวข้อ ไม่ใช่ลำดับใน YAML
 - ภาพเต็มคอลัมน์เนื้อหา (772px เดสก์ท็อป · จอ − 2rem มือถือ) **สัดส่วนเดียวทุกจอ ไม่มีครอป** → ไม่มี safe zone · จัดองค์ประกอบทั้งเฟรม ให้วัตถุหลักอยู่ใน 90% กลาง · ค่าเริ่ม 16:9 (มี 3:2 · 4:3)
@@ -269,7 +273,7 @@ no logos, no watermark.
 | วิดีโอ 5 วิ (ภายหลัง) | Grok 1.5 Lite 720p / premium 1080p | 5 / 35–40 |
 
 ต่อหน้า (hero 2 ตัวเลือก + การ์ดทุกภาษา) ≈ **5.5 เครดิต** · Plus 1,000 เครดิต ≈ 180 หน้า
-ต่อหน้าแบบครบ (hero 1 + ภาพประกอบ 3 ที่ 2K high + การ์ด) ≈ **11 เครดิต** (วัดจริง dental-veneers) · Plus 1,000 เครดิต ≈ 90 หน้า · ประหยัดได้ด้วยภาพประกอบ medium 1K (0.5) ถ้าคุณภาพพอ — ยังไม่ได้ทดสอบบนหน้าจริง · ผ่าน MCP ใช้เครดิตเสมอ (สิทธิ์ unlimited ของแพ็กเกจใช้ได้เฉพาะบนเว็บ Higgsfield — ห้ามขับเบราว์เซอร์ไปใช้แทน ขัดเงื่อนไขของผู้ให้บริการ)
+ต่อหน้าแบบครบ (hero 1 ที่ 2K high + ภาพประกอบ 3 ที่ **medium 1K** + การ์ด) ≈ **4.25 เครดิต** (วัดจริง scaling) · Plus 1,000 เครดิต ≈ **235 หน้า** · (ภาพประกอบ 2K high ทั้งชุด ≈ 11 เครดิต ≈ 90 หน้า — dental-veneers) · ผ่าน MCP ใช้เครดิตเสมอ (สิทธิ์ unlimited ของแพ็กเกจใช้ได้เฉพาะบนเว็บ Higgsfield — ห้ามขับเบราว์เซอร์ไปใช้แทน ขัดเงื่อนไขของผู้ให้บริการ)
 
 ---
 
@@ -441,8 +445,9 @@ values ('<slug> hero v1', 'treatment', '<brand uuid>', '<entity fp>', 'ayrel', '
 - migration DR-085 ทดสอบ 53/53 บน Postgres 16 ก่อน apply · Worker gate 5 test + Worker เดิม 48 test ผ่าน
 - **ภาพครบทั้งหน้า `/dental-veneers/`** (vth-3.7.10, 2026-11-21, deploy run 458 `29a9f84`): hero `mda_6C6680E898E94A93` (hero + mobile_card) · ภาพประกอบ `definition` `mda_0AA2C33EA43C4A6D` · `process` `mda_4A047FC1DFAD4301` · `clinicalInsight` `mda_FDA6B40D7C644502` · การ์ด og `mda_6DBA1B173FFA47DE` (`og_tagline` = "เลือกวัสดุแบบไหนดี และควรตรวจอะไรก่อนทำ") · ~11 เครดิต · preview บนหน้าจริงก่อนอัปโหลด → operator อนุมัติ → ตรวจหน้าจริงครบทุก key
 - **ช่องภาพประกอบ** ใน Service template: `635d9a2` (schema + `SectionFigure` + slot spec)
-- **หน้า `/scaling/` ภาพประกอบ medium 1K** (vth-3.7.6.1, `1fe2c7f` + `e2a09c8`): hero `mda_115BDE82A70D4D7E` · ภาพประกอบ `mda_275BCFEB5370411F` `mda_D4333222EBBE4409` `mda_E3E0DDFB35A54C81` (1337x752, 0.5 เครดิต/ภาพ) · การ์ด og v2 `mda_01EF0659EDFA4387` (operator เปลี่ยน tagline → key ใหม่ แถวใหม่ supersedes v1) · ทั้งหน้า ~4.25 เครดิต · บนจอ 2x เดสก์ท็อปขยาย ~15% — ดูขนาดปกติไม่ต่าง · **รอ operator ตัดสินว่าใช้เป็นค่าเริ่มได้**
+- **หน้า `/scaling/` ภาพประกอบ medium 1K** (vth-3.7.6.1, `1fe2c7f` + `e2a09c8`): hero `mda_115BDE82A70D4D7E` · ภาพประกอบ `mda_275BCFEB5370411F` `mda_D4333222EBBE4409` `mda_E3E0DDFB35A54C81` (1337x752, 0.5 เครดิต/ภาพ) · การ์ด og v2 `mda_01EF0659EDFA4387` (operator เปลี่ยน tagline → key ใหม่ แถวใหม่ supersedes v1) · ทั้งหน้า ~4.25 เครดิต · บนจอ 2x เดสก์ท็อปขยาย ~15% — ดูขนาดปกติไม่ต่าง · **operator ยืนยัน 2026-11-21: เพียงพอ → ค่าเริ่ม (A16)**
 - **ตรวจขั้นสุดท้าย (2026-11-21):** ทะเบียน 17 แถวของ vth · view เตือน/ปลด/บล็อกว่าง · quarantine 1 (ทดสอบ, ไม่รั่ว) · pg_cron รันสำเร็จ · ทุกหน้าที่ใช้ Ayrel โหลดภาพครบที่ iPhone DPR 3 และเดสก์ท็อป DPR 2 · og:image + og:image:alt ถูกทุกหน้า · พบภาพคนนอกทะเบียน (P1) → รูปแพทย์ไฟล์ที่สองย้ายเข้าประตูแล้ว (`1c51dd2`: `mda_678421CF2C044B20` 1080w · `mda_9EE74AB51EA1432B` 600w · alt 10 ภาษา) · `founder.webp` ลบ · alt ภาษาที่ขาดของรูปแพทย์ภาพแรกเติมครบ 10 ภาษา
+- **รูปทีมงาน 5 คนเข้าประตู** (`6018e7a`, operator ยืนยันความยินยอม 2026-11-21 · ไม่มีวันสิ้นสุด → `use_forever`): `mda_46E307CB06E4468D` `mda_9F93CD4122634CC8` `mda_9169451E78824D54` `mda_3987F4797CD640B6` `mda_BE2B75AFACDD4CE7` · alt 10 ภาษาจาก home-copy · ไฟล์ใน `public/images/live/team-*` ลบ · manifest 8 key = `seo_servable_media` 8 แถว · ยังไม่มีแถวใน `seo_authors_reviewers` → `person_fp` ว่าง
 - **Bootstrap ย้อนหลังให้ vth** (`58fb2c4`): `design/ayrel.json` + inventory 71 ไฟล์ + 8 cdn() · `ayrel:doctor` = 40 pass · 2 warn · 0 fail (database SKIP ใน sandbox — ไม่มี key)
 - **รูปแพทย์ภาพแรกเข้าประตู** `mda_1DB10A8FC0104217` (ทพ. อมรพงศ์ · staff · use_forever · usage vth-2.3): หน้าแพทย์ + หน้าที่มี reviewer ใช้ `/media/doctors/dr-amornpong/portrait-v1.webp` (200) · ไฟล์ public เดิม `dr-amornpong-vachiramon.webp` ลบ + purge → 404 ทั้ง URL ตรงและ URL ย่อหลัง ~5 นาที (B11)
 
@@ -455,14 +460,12 @@ values ('<slug> hero v1', 'treatment', '<brand uuid>', '<entity fp>', 'ayrel', '
 | `ui/Image.astro` ขอแค่ความกว้าง | ภาพที่สัดส่วนไม่ตรงกรอบจะเบลอ (Concern 48 · Technology 9 · Branch · LocalService · Quiz) | vth `web/src/components/ui/Image.astro` |
 | component ยังอ่าน `src` จาก YAML / `team.ts` | alt ใน YAML กับทะเบียนอาจเพี้ยนกัน · ภาพบุคคลต้องชี้ `/media/<key>` เอง · ยังไม่มี helper ที่ดึงจากทะเบียน + `seo_servable_media` ตอน build | vth |
 | ช่องภาพประกอบมีแค่ Service | Concern · Technology · Knowledge ฯลฯ ยังไม่มี `illustrations` | เพิ่มทีละ template ตาม A13 |
-| รูปทีมงาน vth 5 คน (`public/images/live/team-*.webp`) | คนจริง ยังเสิร์ฟ public จาก repo · ระบบปลดไม่ได้ | รอข้อมูลความยินยอมรายคน → runbook §8 |
-| ภาพคน 25 ไฟล์ไม่รู้ที่มา (vth) | ถ้าเป็น stock ต้องมีวันหมด license + ผ่านประตู · ถ้า AI ต้องลงทะเบียน | หาที่มาแล้วย้ายออกจาก `person_origin_unknown` |
+| ภาพคน 22 ไฟล์ไม่รู้ที่มา (vth) | ถ้าเป็น stock ต้องมีวันหมด license + ผ่านประตู · ถ้า AI ต้องลงทะเบียน | หาที่มาแล้วย้ายออกจาก `person_origin_unknown` |
 | usage ของภาพบุคคลลงมือเอง | รูปแพทย์โชว์ใน byline ~500 หน้า แต่ usage มีแค่หน้าแพทย์/หน้าแรก · ถ้าหมดอายุ ประตูตอบ 404 (ไม่รั่ว) แต่ด่าน build ไม่รู้ว่าหน้าไหนจะภาพแตก | บันทึก usage อัตโนมัติจาก HTML ที่ build ได้ (แบบเดียวกับขั้นบันทึก internal links) |
 | ส่วน database ของ `ayrel:doctor` | ยังไม่ได้รันจริง (sandbox ไม่มี key) | รันใน CI หรือเครื่องที่มี key ครั้งแรก |
-| ภาพประกอบ medium 1K เป็นค่าเริ่ม | โปรไฟล์ vth ตั้งไว้แล้ว | operator ประเมินหน้า scaling |
-| รูปแพทย์ Deezy ใน `seo_authors_reviewers.photo_url` (1 แถว, WordPress) | ยังไม่อยู่ในทะเบียน ไม่มีวันหมดอายุ | ตอน Deezy ติดตั้ง Ayrel ส่วนที่ 2 |
+| รูปแพทย์ Deezy ใน `seo_authors_reviewers.photo_url` (1 แถว, ชี้ไป WordPress เดิม) | ยังไม่อยู่ในทะเบียน ไม่มีวันหมดอายุ | Deezy (Astro) ติดตั้ง Ayrel เองที่ repo — เริ่มจากส่วนที่ 0 |
+| ไฟล์ใน `public/` ที่ไม่มีโค้ดใช้แต่ยังเสิร์ฟ | เช่น `mbm-dashboard.webp` · ไม่ใช่ภาพคนจึงไม่เร่ง แต่ทำให้ inventory ยาวโดยไม่จำเป็น | ลบตอนเก็บกวาด |
 | `og_display` เป็นเอกพจน์ตามชื่อ entity | "Dental Veneer" ขณะหน้าเป็นบริการ (พหูพจน์อ่านธรรมชาติกว่า) | override รายหน้าถ้า operator ต้องการ |
-| ภาพประกอบ medium 1K | ยังไม่รู้ว่าคมพอที่ 772px × DPR 2 หรือไม่ | ทดสอบหน้าถัดไป |
 | `seo_reviews.review_photos` | ภาพรีวิวคนจริงอยู่นอกทะเบียน (ตอนนี้ 0 แถว) | ย้ายเข้าทะเบียนก่อนมีข้อมูลจริง |
 | ป้ายภาพจำลองผลลัพธ์บนตัวภาพ | ทะเบียนเตือนที่ alt แล้ว แต่ component ยังไม่วางป้ายบนภาพอัตโนมัติ | component + Ayrel builder |
 | bucket gated ของ vth อยู่ ENAM | ภาพบุคคลช้าขึ้น ~0.1–0.2 วิ | สร้างใหม่ที่ APAC ผ่าน Dashboard ถ้าต้องการ |
@@ -477,6 +480,7 @@ values ('<slug> hero v1', 'treatment', '<brand uuid>', '<entity fp>', 'ayrel', '
 
 | เวอร์ชัน | วันที่ | อะไร |
 |---|---|---|
+| 1.5 | 2026-11-21 | A16 ภาพประกอบ medium 1K เป็นค่าเริ่ม (operator ยืนยัน) · ค่าใช้จ่ายต่อหน้า 4.25 เครดิต · รูปทีมงาน 5 คนเข้าประตู · inventory ภาพคนไม่รู้ที่มา 25 → 22 หลังดูภาพจริง · แก้ข้อมูล Deezy (Astro) · vth: `6018e7a` |
 | 1.4 | 2026-11-21 | **ส่วนที่ 0 Bootstrap** (P1–P8): แบบสอบถาม → `design/ayrel.json` · สำรวจ template · stack/adapter · inventory ภาพทุกไฟล์ · `ayrel:doctor` · นำร่อง · A15 overlay แทนตัวอักษรจาก AI · ผลตรวจขั้นสุดท้าย + scaling (medium 1K) · ค้างใหม่ (ทีมงาน 5 · ภาพคนไม่รู้ที่มา 25 · usage อัตโนมัติ) · vth: `1fe2c7f` `e2a09c8` `1c51dd2` `58fb2c4` · ต้นแบบโปรไฟล์ `templates/folder-skeleton/design/ayrel.json` |
 | 1.3 | 2026-11-21 | ภาพประกอบในเนื้อหา (A13) · สัดส่วนที่ได้จาก Higgsfield (A14) · edge cache หลังลบ (B11) · pipeline ครบทั้งหน้า (batch · preview แบบฉีดภาพ · register slot `inline` · `--rows/--no-db`) · prompt ภาพประกอบ · ค่าใช้จ่ายต่อหน้าแบบครบ · runbook ย้ายภาพบุคคลออกจาก public + deploy ล้มที่ด่านอื่น · ผลนำร่อง dental-veneers + รูปแพทย์ภาพแรก · vth: `635d9a2` (ช่องภาพประกอบ) · `814e721` (รูปแพทย์) · `29a9f84` (dental-veneers) |
 | 1.2 | 2026-11-21 | ส่วนที่ 2 ทะเบียนภาพ (DR-085): §5–§9 · หลักการ B1–B10 · วงจรรายวัน · runbook · view · ติดตั้ง ข้อ 5–11 · ผลนำร่อง · pipeline เพิ่มขั้น register · vth: `83e9c93` (gate/sweep/build gate) · `ccb784d` (workflow บน main) · `6a6273e` (unverified ≠ leak) |
