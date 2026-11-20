@@ -1,8 +1,8 @@
 # 🖼️ AYREL — EYWA Image System
 
-> **เวอร์ชัน:** 1.2 · **ประกาศใช้:** 2026-11-20 (นำร่อง) · **v1.2:** ส่วนที่ 2 ทะเบียนภาพ (DR-085) — ลงทะเบียน · alt ต่อภาษา · ใช้ซ้ำข้ามหน้า · ภาพบุคคลปลดอัตโนมัติ · quarantine 90 วัน · กันไหลย้อน · runbook
+> **เวอร์ชัน:** 1.3 · **ประกาศใช้:** 2026-11-20 (นำร่อง) · **v1.3:** ภาพประกอบในเนื้อหา (สูงสุด 3 ช่องต่อหน้า Service) · ทำภาพครบทั้งหน้า (hero + ภาพประกอบ + og) · ย้ายภาพบุคคลออกจาก CDN public · **v1.2:** ส่วนที่ 2 ทะเบียนภาพ (DR-085) — ลงทะเบียน · alt ต่อภาษา · ใช้ซ้ำข้ามหน้า · ภาพบุคคลปลดอัตโนมัติ · quarantine 90 วัน · กันไหลย้อน · runbook
 > **ขอบเขต:** **UNIVERSAL** (คอลัมน์ `og_*` + ทะเบียนภาพในตารางแชร์) · เครื่องมือฝั่งแบรนด์ยังอยู่ใน repo แบรนด์นำร่อง (vth) — ย้ายเป็นของกลางเมื่อนิ่ง
-> **ที่มา:** field-tested กับ VTH BioDent — `/teeth-whitening/` (hero → การ์ดมือถือ → og card, 2026-11-20) · ทดสอบปลดภาพครบวงจรบนเว็บจริง (2026-11-21)
+> **ที่มา:** field-tested กับ VTH BioDent — `/teeth-whitening/` (hero → การ์ดมือถือ → og card, 2026-11-20) · ทดสอบปลดภาพครบวงจรบนเว็บจริง (2026-11-21) · `/dental-veneers/` ทำภาพครบทั้งหน้า + ย้ายรูปแพทย์เข้าประตู `/media` (2026-11-21)
 > **Companion:** DR-084 (การ์ด og) · DR-085 (ทะเบียนภาพ) · DR-038 `seo_media_assets` · DR-035 / DR-040 R2 · BROADCAST-2026-11-17 แถวต่อภาษา · SmileScape SS-DR-015/016 · `templates/folder-skeleton/design/brand-foundation/imagery.md`
 >
 > **Ayrel** [aj.ˈrɛl] — Na'vi แปลว่า "ภาพ (หลายภาพ)" (*ay-* พหูพจน์ + *rel* ภาพ) เข้าชุดกับ **EYWA** (เครือข่ายความรู้) · **Tsaheylu** (สัญญาณ conversion) · **Pamrel** (การเขียน — *pam* เสียง + *rel* ภาพ)
@@ -12,7 +12,7 @@
 
 ## 0. AYREL คืออะไร
 
-1. **ภาพเดียว ใช้ได้มากที่สุด** — ภาพจาก AI หนึ่งภาพต่อหน้า ออกแบบตั้งแต่ตอนสั่งสร้างให้ใช้ได้ทุกช่องของ template (hero เดสก์ท็อป · การ์ดมือถือ · การ์ด og) และ**ทุกภาษา**
+1. **ภาพเดียว ใช้ได้มากที่สุด** — ภาพ hero จาก AI หนึ่งภาพต่อหน้า ออกแบบตั้งแต่ตอนสั่งสร้างให้ใช้ได้ทุกช่องของ template (hero เดสก์ท็อป · การ์ดมือถือ · การ์ด og) และ**ทุกภาษา** · บวก**ภาพประกอบในเนื้อหา**ได้สูงสุด 3 ภาพ (A13)
 2. **ทะเบียนภาพเดียว** — ทุกไฟล์ภาพ/วิดีโอมีแถวใน `seo_media_assets`: ที่มา · ชนิด · alt ต่อภาษา · ใช้ที่หน้าไหน · ใครอยู่ในภาพ · ใช้ได้ถึงวันไหน
 3. **ภาพบุคคลจริงไม่เคยค้างเกินสัญญา** — ปลดอัตโนมัติก่อนวันหมดอายุ 1 วัน · ย้ายเข้า quarantine 90 วัน · ไม่มีทางไหลกลับขึ้นเว็บเอง
 
@@ -27,12 +27,13 @@
 | **สเปกกลาง** | ฉบับนี้ · DR-084 · DR-085 | `eywa-protocol-spec/` |
 | | การ์ด og: `og_display` · `og_tagline` · `og_style` · `og_image_url` · `og_image_generated_at` · `og_image_alt` + `v_page_og_card` | `seo_website_page_master` (Schema v1.31) |
 | | ทะเบียนภาพ: `seo_media_assets` (+17 คอลัมน์) · `seo_media_asset_texts` · `seo_media_asset_usages` · `seo_media_asset_events` + 6 view + pg_cron `eywa-media-daily-sweep` | Schema v1.32 |
-| **ของแบรนด์** | **Ayrel slot spec** — สัดส่วน · ครอปต่อช่อง · สิ่งที่ทับ · safe zone ต่อ template | `<brand>/design/hero-slots.json` |
+| **ของแบรนด์** | **Ayrel slot spec** — สัดส่วน · ครอปต่อช่อง · สิ่งที่ทับ · safe zone ต่อ template · ช่องภาพประกอบ (`templates.service.illustrations`) | `<brand>/design/hero-slots.json` |
 | | ค่าตั้งต้นการ์ด og | `<brand>/design/og-card.json` |
 | | ค่าทะเบียน: brand_id · account/zone · 3 bucket (public / gated / quarantine) · host · 90 วัน | `<brand>/design/media.json` |
 | **เครื่องมือ** | `npm run ayrel:build` — การ์ด og | `<brand>/web/scripts/ayrel/` |
 | | `npm run ayrel:sweep` — ปลดภาพ · quarantine · manifest · ตรวจ 404 · ลบถาวร | `<brand>/web/scripts/ayrel/media-sweep.mjs` |
 | | `npm run check:media` — ด่านตอน build | `<brand>/web/scripts/ayrel/check-media.mjs` |
+| | ภาพประกอบในเนื้อหา: field `illustrations` (Zod) + `SectionFigure` | `<brand>/web/src/content.config.ts` · `web/src/components/blocks/SectionFigure.astro` · `layouts/templates/Service.astro` |
 | | ประตูภาพบุคคล `/media/<key>` | `<brand>/web/worker/media-gate.ts` |
 | | Action รายวัน 00:20 ICT | `<brand>/.github/workflows/media-sweep.yml` (ต้องอยู่บน `main`) |
 | | สร้างภาพ: Higgsfield MCP `generate_image` (`gpt_image_2_6`) | connector ของ session |
@@ -47,15 +48,23 @@
 
 ```
  1. slot       อ่าน design/hero-slots.json ของ template หน้านั้น      → สัดส่วน + safe zone
- 2. prompt     เขียน prompt ตาม §3 (จุดเด่นใน safe zone · สีจาก tokens)
- 3. generate   Higgsfield gpt_image_2_6 · 2K · count 2 (เลือก 1)        → ~5.5 เครดิต
- 4. preview    สลับภาพบนหน้าเว็บจริงในเบราว์เซอร์ (เดสก์ท็อป 1440 + iPhone DPR 3)
+               + เลือกหัวข้อสำหรับภาพประกอบ (ไม่เกิน 3 · หัวข้อละ 1 · A13) จากเนื้อหาจริงของหัวข้อนั้น
+ 2. prompt     เขียน prompt ตาม §3 (จุดเด่นใน safe zone · สีจาก tokens) — hero 1 + ภาพประกอบทีละหัวข้อ
+ 3. generate   Higgsfield gpt_image_2_6 · 2K · high — ส่งทั้งชุดใน generate_image_batch ครั้งเดียว
+               (hero 2.4:1 ขอ 12:5 → ได้ 21:9 แล้วครอปกลางเป็น 2.4:1 — A14) → ~2.75 เครดิต/ภาพ
+ 4. preview    ฉีดภาพลงหน้าเว็บจริงในเบราว์เซอร์ (Playwright: แทน <source>/<img> ของ hero ·
+               แทรก <figure> ท้ายหัวข้อ) เดสก์ท็อป 1440 + มือถือ 390 · ส่งภาพหน้าจอให้ operator
  5. approve    operator เลือกภาพ — ก่อนแตะ R2 หรือ repo
- 6. upload     R2 <prefix>/<slug>/hero-v<n>.webp (2160x900 สำหรับ 2.4:1, WebP q82, < 200 KB)
+ 6. upload     R2 <prefix>/<slug>/hero-v<n>.webp (2160x900 สำหรับ 2.4:1, WebP q82–86, < 200 KB)
+               + <prefix>/<slug>/<section>-v<n>.webp (2048x1152 สำหรับ 16:9) → ตรวจ CDN 200 ทุกไฟล์
  7. register   แถวใน seo_media_assets (origin, kind, generation_model/job/prompt, key) + alt ทุกภาษาที่หน้ามี
-               (seo_media_asset_texts, written_for_key = key) + usage ต่อช่อง (hero, mobile_card, og) — §8
- 8. content    hero.image.src + alt ใน src/content/<template>/<locale>/<slug>.yaml → push → ตรวจหน้าจริง
+               (seo_media_asset_texts, written_for_key = key) + usage ต่อช่อง (hero, mobile_card, og ·
+               ภาพประกอบ = slot 'inline', position 1–3 ตามลำดับบนหน้า) — §8
+ 8. content    hero.image.src + alt · `illustrations:` (after / src / alt) ใน src/content/<template>/<locale>/<slug>.yaml
+               → build ในเครื่อง → push → ตรวจหน้าจริงว่ามีทุก key
  9. og         og_tagline / og_display (ถ้าต้อง override) → npm run ayrel:build -- --slug <slug> --dry-run
+               (ไม่มี SUPABASE_SERVICE_KEY ในเครื่อง: dump แถว v_page_og_card เป็น JSON → --rows <file> --no-db
+               แล้วรัน UPDATE ที่สคริปต์พิมพ์ออกมาเอง)
                → ดู out/*.jpg → รันจริง → ลงทะเบียนการ์ด (kind og_card, origin render) → commit og-cards.json
                → push → ตรวจ og:image + og:image:alt บนหน้าจริง
 10. refresh    Facebook Sharing Debugger → Scrape Again (LINE อัปเดตเองภายในไม่กี่วัน)
@@ -115,6 +124,16 @@ CDN จำผล 404 ของ key ที่เคยถูกเรียกก
 ### A12 · 2K พอ
 CDN ส่งภาพ hero กว้างสุด 1600px · สร้างที่ 2K (2.75 เครดิต) ไม่ใช่ 4K (4.25) · ภาพที่ไม่แสดงบนหน้า (Knowledge, Procedure) สร้างที่รูป og ตรง ๆ
 
+### A13 · ภาพประกอบ: ท้ายหัวข้อ · หัวข้อละ 1 · ไม่เกิน 3 · ไม่ครอป
+- วาง**ท้าย**หัวข้อเท่านั้น ห้ามแทรกกลางย่อหน้า — ภาพไม่ตัดเหตุผลที่กำลังอ่าน · ช่องที่ Service รองรับ: `definition` · `whoFor` · `process` · `comparison` · `clinicalInsight` · ลำดับบนหน้าตามลำดับหัวข้อ ไม่ใช่ลำดับใน YAML
+- ภาพเต็มคอลัมน์เนื้อหา (772px เดสก์ท็อป · จอ − 2rem มือถือ) **สัดส่วนเดียวทุกจอ ไม่มีครอป** → ไม่มี safe zone · จัดองค์ประกอบทั้งเฟรม ให้วัตถุหลักอยู่ใน 90% กลาง · ค่าเริ่ม 16:9 (มี 3:2 · 4:3)
+- ภาพต้อง**ตอบเรื่องของหัวข้อนั้น** ไม่ใช่ภาพสวยทั่วไป: วัสดุ → เทียบวัสดุ · ขั้นตอน → สิ่งที่เกิดก่อนเริ่มทำ · ความเชื่อผิด → สิ่งที่หักล้าง (เช่น วีเนียร์แก้แรงกัดไม่ได้ → ภาพเช็กการสบฟัน)
+- schema ปฏิเสธ: placeholder · ไฟล์ที่ไม่อยู่บน CDN ของแบรนด์ · 2 ภาพในหัวข้อเดียว · เกิน 3 · alt สั้นกว่า 10 ตัวอักษร
+- kind ในทะเบียน: `illustration` (ค่าเริ่ม) · `diagram` · `equipment` · `clinic_space` · ห้ามคนจริง · ห้ามข้อความในภาพ · ภาพจำลองผลลัพธ์ต้องมีป้าย (A10)
+
+### A14 · สัดส่วนที่ขอ ≠ สัดส่วนที่ได้
+Higgsfield ปัดไปสัดส่วนที่รองรับที่ใกล้สุด และบอกใน `adjustments` (12:5 → 21:9 = 2688x1152) · ขอให้กว้างกว่าหรือเท่ากรอบเสมอ แล้ว**ครอปกลาง**ให้ได้สัดส่วนจริงก่อนอัปโหลด · 16:9 ได้ 2688x1520 (1.768) → ครอปบน-ล่างเล็กน้อยเป็น 16:9 · เขียนขนาดที่สร้างและที่ส่งจริงไว้ใน `generation_prompt`
+
 ---
 
 ## 3. Prompt — แม่แบบ
@@ -136,6 +155,17 @@ AVOID: text, letters, logos, watermarks, faces, patients, before/after, blood, s
 clutter, harsh light, colour casts, extra fingers.
 ```
 
+**ภาพประกอบ (16:9):**
+```
+Photorealistic <macro still life | photograph | close-up>, 16:9, <light clinical surface/room>.
+<what the section is about, as objects: materials / models / equipment / hands in gloves>.
+Soft daylight, neutral white and pale blue-grey palette, shallow depth of field,
+subject centred within the middle 90% of the frame, no face, no patient, no text, no labels,
+no logos, no watermark.
+```
+
+ตัวอย่างที่ใช้จริง (dental-veneers, 2026-11-21): hero = มือคีบแผ่นวีเนียร์เหนือโมเดลฟัน + ถาดวีเนียร์ + แผ่นเทียบสี · `definition` = แผ่นเซรามิกบางใส vs หลอดคอมโพสิต · `process` = โมเดลแว็กซ์จำลอง + หน้าจอสแกน 3 มิติ · `clinicalInsight` = กระดาษเช็กการสบฟันบน articulator
+
 ตัวอย่างที่ใช้จริง (teeth-whitening, Service 2.4:1): มือในถุงมือถือแผ่นเทียบสีข้างโมเดลฟัน · พื้น `#F6FAFE`→`#EAF4FF` · accent `#375172` / `#3F60B2` · เก็บ prompt ฉบับใช้จริงไว้ใน `seo_media_assets.generation_prompt`
 
 ---
@@ -151,7 +181,8 @@ clutter, harsh light, colour casts, extra fingers.
 | การ์ด og ต่อภาษา | HTML render | **0** |
 | วิดีโอ 5 วิ (ภายหลัง) | Grok 1.5 Lite 720p / premium 1080p | 5 / 35–40 |
 
-ต่อหน้า (hero 2 ตัวเลือก + การ์ดทุกภาษา) ≈ **5.5 เครดิต** · Plus 1,000 เครดิต ≈ 180 หน้า · ผ่าน MCP ใช้เครดิตเสมอ (สิทธิ์ unlimited ของแพ็กเกจใช้ได้เฉพาะบนเว็บ Higgsfield — ห้ามขับเบราว์เซอร์ไปใช้แทน ขัดเงื่อนไขของผู้ให้บริการ)
+ต่อหน้า (hero 2 ตัวเลือก + การ์ดทุกภาษา) ≈ **5.5 เครดิต** · Plus 1,000 เครดิต ≈ 180 หน้า
+ต่อหน้าแบบครบ (hero 1 + ภาพประกอบ 3 ที่ 2K high + การ์ด) ≈ **11 เครดิต** (วัดจริง dental-veneers) · Plus 1,000 เครดิต ≈ 90 หน้า · ประหยัดได้ด้วยภาพประกอบ medium 1K (0.5) ถ้าคุณภาพพอ — ยังไม่ได้ทดสอบบนหน้าจริง · ผ่าน MCP ใช้เครดิตเสมอ (สิทธิ์ unlimited ของแพ็กเกจใช้ได้เฉพาะบนเว็บ Higgsfield — ห้ามขับเบราว์เซอร์ไปใช้แทน ขัดเงื่อนไขของผู้ให้บริการ)
 
 ---
 
@@ -213,6 +244,9 @@ SmileScape เดิมใช้ `_quarantine/` ใน bucket public — รู�
 ### B9 · CHECK ต้องกัน NULL เอง
 CHECK ของ Postgres ผ่านเมื่อผลเป็น NULL — `consent_status = 'Obtained'` กับค่า NULL เคยปล่อยภาพบุคคลที่ไม่มีความยินยอมเป็น Active ได้ (เจอตอนทดสอบ) · ใช้ `coalesce(consent_status, '') = 'Obtained'` · trigger แบบ BEFORE มองไม่เห็นค่าใหม่ของ generated column (`remove_on`) → คำนวณจาก `use_until − 1` ในตัว trigger
 
+### B11 · ลบไฟล์ public แล้ว edge ยังเสิร์ฟได้อีกหลายนาที — ตรวจจนเป็น 404 จริง
+purge URL ต้นฉบับสำเร็จแล้ว edge ยังส่งสำเนาเดิมได้ราว 5 นาที (วัดจริง 2026-11-21) · ภาพย่อ `/cdn-cgi/image/...` **purge ทีละ URL ไม่ได้** (Cloudflare error 1132) — หายตามต้นฉบับเอง · **อย่ายิงทดสอบ URL ย่อทันทีหลัง purge** การเรียกนั้นเองจะสร้างสำเนาใหม่จาก cache ต้นฉบับที่ยังไม่หมด · ตรวจซ้ำทุก 15 วินาทีจนทั้ง URL ตรงและ URL ย่อเป็น 404 แล้วจึงบันทึกว่าเสร็จ
+
 ### B10 · งานตั้งเวลาของ GitHub รันจาก default branch เท่านั้น
 `media-sweep.yml` ต้องอยู่บน `main` · ตัว job checkout branch ที่มีโค้ดเว็บ (vth: `feat/content-templates`) · ถ้าไฟล์อยู่แค่บน branch deploy, schedule จะไม่เคยรัน
 
@@ -258,6 +292,16 @@ values ('<slug> hero v1', 'treatment', '<brand uuid>', '<entity fp>', 'ayrel', '
 3. แถว: `consent_subject` · `delivery = 'gated_worker'` · `consent_status = 'Obtained'` · `use_until` หรือ `use_forever` · `person_fp` (แพทย์)
 4. รัน `npm run ayrel:sweep` (หรือรอคืนนี้) ให้ manifest มี key → หน้าใช้ `/media/<key>`
 5. ตรวจ: `/media/<key>` = 200 · `cdn.<brand>/<key>` = 404
+
+**ย้ายภาพบุคคลที่อยู่บน CDN public อยู่แล้ว** (เช่น รูปแพทย์เดิม)
+1. ลงทะเบียน + อัปโหลดเข้า gated ตามหัวข้อก่อนหน้า · ใส่ alt ทุกภาษา · usage ต่อหน้าที่ใช้ (slot `portrait`)
+2. แก้โค้ด/ข้อมูลให้ชี้ `/media/<key>` → push → **รอ deploy ขึ้นจริง** แล้วตรวจทุกหน้าที่ใช้: มี URL ใหม่ · ไม่เหลือชื่อไฟล์เดิม
+3. ค้นชื่อไฟล์เดิมทั้ง repo · build output · `seo_authors_reviewers` · `seo_media_assets` — ต้องไม่เหลือ
+4. ลบ object เดิมจาก bucket public + purge URL เดิม → ตรวจจน 404 ทั้ง URL ตรงและ URL ย่อ (B11)
+5. บันทึก event `note` บนแถวของภาพ (ลบอะไร · purge อะไร · ตรวจอะไร)
+ห้ามลบไฟล์เดิมก่อนข้อ 2 — หน้าเว็บจะขึ้นภาพแตกระหว่างรอ deploy
+
+**deploy ล้มที่ด่านที่ไม่เกี่ยวกับภาพ** — ภาพที่อัปโหลดแล้วยังไม่ขึ้นหน้า แต่ไฟล์ public อยู่บน CDN แล้ว (ไม่เป็นไรสำหรับภาพ AI) · **ห้ามลบไฟล์ภาพบุคคลเดิมจนกว่า deploy ใหม่จะขึ้น** · ตัวอย่าง 2026-11-20: ด่าน citation G5 ล้มเพราะอีกแบรนด์ลงข้อมูลผิดสเกล → แก้ต้นเหตุด้วย DR-086
 
 **ความยินยอมถูกเพิกถอนวันนี้** — `update seo_media_assets set consent_status = 'Revoked' where id = …` → status เป็น Revoked ทันที · รัน Action **media-sweep** เอง (ไม่ติ๊ก dry_run) ไม่ต้องรอคืนนี้ · ตรวจ `v_media_quarantine` ว่ามีแถว และ `open_leak = false`
 
@@ -306,6 +350,9 @@ values ('<slug> hero v1', 'treatment', '<brand uuid>', '<entity fp>', 'ayrel', '
 - ทะเบียน: `mda_B6F9C02130644397` hero AI ของ `/teeth-whitening/` · `mda_3D3856E6C01843B9` การ์ด og th · usage 3 · alt th ครบ
 - ทดสอบปลดภาพบนเว็บจริงด้วยภาพสังเคราะห์ `mda_DCC402F7072B4D0D`: `/media` 200 → Expired อัตโนมัติ → quarantine (สำเนาตรงทุก byte) → `/media` 404 → ตรวจ 404 ครบ 3 host จาก GitHub Actions → พยายามเปลี่ยนกลับเป็น Active ถูกปฏิเสธ · ลบถาวรตามกำหนด 2027-02-18
 - migration DR-085 ทดสอบ 53/53 บน Postgres 16 ก่อน apply · Worker gate 5 test + Worker เดิม 48 test ผ่าน
+- **ภาพครบทั้งหน้า `/dental-veneers/`** (vth-3.7.10, 2026-11-21, deploy run 458 `29a9f84`): hero `mda_6C6680E898E94A93` (hero + mobile_card) · ภาพประกอบ `definition` `mda_0AA2C33EA43C4A6D` · `process` `mda_4A047FC1DFAD4301` · `clinicalInsight` `mda_FDA6B40D7C644502` · การ์ด og `mda_6DBA1B173FFA47DE` (`og_tagline` = "เลือกวัสดุแบบไหนดี และควรตรวจอะไรก่อนทำ") · ~11 เครดิต · preview บนหน้าจริงก่อนอัปโหลด → operator อนุมัติ → ตรวจหน้าจริงครบทุก key
+- **ช่องภาพประกอบ** ใน Service template: `635d9a2` (schema + `SectionFigure` + slot spec)
+- **รูปแพทย์ภาพแรกเข้าประตู** `mda_1DB10A8FC0104217` (ทพ. อมรพงศ์ · staff · use_forever · usage vth-2.3): หน้าแพทย์ + หน้าที่มี reviewer ใช้ `/media/doctors/dr-amornpong/portrait-v1.webp` (200) · ไฟล์ public เดิม `dr-amornpong-vachiramon.webp` ลบ + purge → 404 ทั้ง URL ตรงและ URL ย่อหลัง ~5 นาที (B11)
 
 ---
 
@@ -314,8 +361,12 @@ values ('<slug> hero v1', 'treatment', '<brand uuid>', '<entity fp>', 'ayrel', '
 | เรื่อง | ผลกระทบ | ที่ |
 |---|---|---|
 | `ui/Image.astro` ขอแค่ความกว้าง | ภาพที่สัดส่วนไม่ตรงกรอบจะเบลอ (Concern 48 · Technology 9 · Branch · LocalService · Quiz) | vth `web/src/components/ui/Image.astro` |
-| component ยังอ่าน `src` จาก YAML | ภาพบุคคลต้องชี้ `/media/<key>` เอง · ยังไม่มี helper ที่ดึงจากทะเบียน + `seo_servable_media` ตอน build | vth — ทำพร้อมภาพบุคคลภาพแรก |
-| รูปแพทย์ใน `seo_authors_reviewers.photo_url` (1 แถว) | ยังไม่อยู่ในทะเบียน ไม่มีวันหมดอายุ | รอข้อมูลความยินยอมของแพทย์ |
+| component ยังอ่าน `src` จาก YAML / `team.ts` | alt ใน YAML กับทะเบียนอาจเพี้ยนกัน · ภาพบุคคลต้องชี้ `/media/<key>` เอง · ยังไม่มี helper ที่ดึงจากทะเบียน + `seo_servable_media` ตอน build | vth |
+| ช่องภาพประกอบมีแค่ Service | Concern · Technology · Knowledge ฯลฯ ยังไม่มี `illustrations` | เพิ่มทีละ template ตาม A13 |
+| รูปแพทย์อื่นของ vth ใน `team.ts` | ยังอยู่บน CDN public (มีแค่ ทพ. อมรพงศ์ที่ย้ายแล้ว) | ย้ายตาม runbook เมื่อได้ข้อมูลความยินยอม |
+| รูปแพทย์ Deezy ใน `seo_authors_reviewers.photo_url` (1 แถว, WordPress) | ยังไม่อยู่ในทะเบียน ไม่มีวันหมดอายุ | ตอน Deezy ติดตั้ง Ayrel ส่วนที่ 2 |
+| `og_display` เป็นเอกพจน์ตามชื่อ entity | "Dental Veneer" ขณะหน้าเป็นบริการ (พหูพจน์อ่านธรรมชาติกว่า) | override รายหน้าถ้า operator ต้องการ |
+| ภาพประกอบ medium 1K | ยังไม่รู้ว่าคมพอที่ 772px × DPR 2 หรือไม่ | ทดสอบหน้าถัดไป |
 | `seo_reviews.review_photos` | ภาพรีวิวคนจริงอยู่นอกทะเบียน (ตอนนี้ 0 แถว) | ย้ายเข้าทะเบียนก่อนมีข้อมูลจริง |
 | ป้ายภาพจำลองผลลัพธ์บนตัวภาพ | ทะเบียนเตือนที่ alt แล้ว แต่ component ยังไม่วางป้ายบนภาพอัตโนมัติ | component + Ayrel builder |
 | bucket gated ของ vth อยู่ ENAM | ภาพบุคคลช้าขึ้น ~0.1–0.2 วิ | สร้างใหม่ที่ APAC ผ่าน Dashboard ถ้าต้องการ |
@@ -330,6 +381,7 @@ values ('<slug> hero v1', 'treatment', '<brand uuid>', '<entity fp>', 'ayrel', '
 
 | เวอร์ชัน | วันที่ | อะไร |
 |---|---|---|
+| 1.3 | 2026-11-21 | ภาพประกอบในเนื้อหา (A13) · สัดส่วนที่ได้จาก Higgsfield (A14) · edge cache หลังลบ (B11) · pipeline ครบทั้งหน้า (batch · preview แบบฉีดภาพ · register slot `inline` · `--rows/--no-db`) · prompt ภาพประกอบ · ค่าใช้จ่ายต่อหน้าแบบครบ · runbook ย้ายภาพบุคคลออกจาก public + deploy ล้มที่ด่านอื่น · ผลนำร่อง dental-veneers + รูปแพทย์ภาพแรก · vth: `635d9a2` (ช่องภาพประกอบ) · `814e721` (รูปแพทย์) · `29a9f84` (dental-veneers) |
 | 1.2 | 2026-11-21 | ส่วนที่ 2 ทะเบียนภาพ (DR-085): §5–§9 · หลักการ B1–B10 · วงจรรายวัน · runbook · view · ติดตั้ง ข้อ 5–11 · ผลนำร่อง · pipeline เพิ่มขั้น register · vth: `83e9c93` (gate/sweep/build gate) · `ccb784d` (workflow บน main) · `6a6273e` (unverified ≠ leak) |
 | 1.1 | 2026-11-20 | A6a alt การ์ด og (`og_image_alt` + `og_image_alt_resolved`, migration `2026-11-20b`) · A10: ภาพ AI ทั่วไปไม่ติดป้าย · ภาพผลลัพธ์/ก่อน-หลังจาก AI ติดป้ายบนภาพ (operator) · `imagery.md` แก้ตาม |
 | 1.0 | 2026-11-20 | ฉบับแรก จากนำร่อง vth `/teeth-whitening/`: hero `4f8159e` · การ์ดมือถือคม `0e10fb0` · og ชิดขวา `28e3f49` · Ayrel builder `fc0f2e2` · การ์ดแรก `e82e412` · ตั้งชื่อ `05b2e17` |
