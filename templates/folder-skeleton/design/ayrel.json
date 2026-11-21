@@ -39,8 +39,9 @@
   },
   "hero": {
     "quality": "high",
-    "resolution": "2k",
-    "options_per_page": 1
+    "resolution": "1k",
+    "options_per_page": 1,
+    "why": "high 1K (1344x560 after the 2.4:1 crop): the CDN serves heroes at most 1600px wide, so 2K gained little; operator-approved 2026-11-21 (SOP A19). Use 2k only for a hero with fine detail."
   },
   "inline": {
     "enabled": true,
